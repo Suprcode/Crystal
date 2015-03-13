@@ -1,1 +1,1 @@
-# mir2
+# Legend of Mir 2
