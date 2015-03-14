@@ -13103,7 +13103,13 @@ namespace Server.MirObjects
             if (CurrentQuests.Count >= Globals.MaxConcurrentQuests)
             {
                 ReceiveChat("Maximum amount of quests already taken.", ChatType.System);
-                canAccept = false;
+                return;
+            }
+
+            if (CompletedQuests.Contains(index))
+            {
+                ReceiveChat("Quest has already been completed.", ChatType.System);
+                return;
             }
 
             //check previous chained quests have been completed
