@@ -682,8 +682,18 @@ namespace Server
 
         private void ImportButton_Click(object sender, EventArgs e)
         {
+            string Path = string.Empty;
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Text File|*.txt";
+            ofd.ShowDialog();
+
+            if (ofd.FileName == string.Empty) return;
+
+            Path = ofd.FileName;
+
             string data;
-            using (var sr = new StreamReader(MonsterListPath))
+            using (var sr = new StreamReader(Path))
             {
                 data = sr.ReadToEnd();
             }

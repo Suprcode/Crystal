@@ -12944,11 +12944,14 @@ namespace Server.MirObjects
                 FishFound = false;
 
                 UserItem item = GetBait(1);
-                if (item != null)
+
+                if (item == null)
                 {
-                    ConsumeItem(item, 1);
+                    ReceiveChat("You need bait.", ChatType.System);
+                    return;
                 }
 
+                ConsumeItem(item, 1);
                 Fishing = true;
             }
             else
