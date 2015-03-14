@@ -1030,7 +1030,7 @@ namespace Server.MirObjects
             if ((killer == null) || ((pkbodydrop) || (killer.Race != ObjectType.Player)))
             {
                 UserItem temp = Info.Equipment[(int)EquipmentSlot.Stone];
-                if ((temp != null) && (killer.Race != ObjectType.Player))
+                if ((temp != null) && ((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
                 {
                     Info.Equipment[(int)EquipmentSlot.Stone] = null;
                     Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
