@@ -1383,6 +1383,11 @@ namespace Server.MirObjects
                 case "REFRESHEFFECTS":
                     acts.Add(new NPCActions(ActionType.RefreshEffects));
                     break;
+
+                case "CANGAINEXP":
+                    if (parts.Length < 2) return;
+                    acts.Add(new NPCActions(ActionType.CanGainExp, parts[1]));
+                    break;
             }
 
         }
@@ -2427,6 +2432,11 @@ namespace Server.MirObjects
                         player.Enqueue(p);
                         player.Broadcast(p);
                         break;
+
+                    case ActionType.CanGainExp:
+                        bool.TryParse(param[0], out tempBool);
+                        player.CanGainExp = tempBool;
+                        break;
                 }
             }
         }
@@ -2544,7 +2554,8 @@ namespace Server.MirObjects
         AddToGuild,
         RemoveFromGuild,
         RefreshEffects,
-        ChangeHair
+        ChangeHair,
+        CanGainExp
     }
     public enum CheckType
     {
@@ -2571,6 +2582,6 @@ namespace Server.MirObjects
         PetCount,
         CheckCalc,
         InGuild,
-        CheckMap
+        CheckMap,
     }
 }

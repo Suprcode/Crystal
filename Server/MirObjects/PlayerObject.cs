@@ -252,6 +252,7 @@ namespace Server.MirObjects
         public byte Reflect;
         public bool UnlockCurse = false;
         public bool FastRun = false;
+        public bool CanGainExp = true;
 
         public bool CanCreateGuild = false;
         public GuildObject MyGuild = null;
@@ -1227,6 +1228,8 @@ namespace Server.MirObjects
 
         public void GainExp(uint amount)
         {
+            if (!CanGainExp) return;
+
             if (amount == 0) return;
 
             Experience += amount;
