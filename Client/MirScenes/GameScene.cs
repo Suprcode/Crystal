@@ -4528,6 +4528,8 @@ namespace Client.MirScenes
                     case ItemType.Food:
                         text += string.Format(" Nutrition {0}", HoverItem.CurrentDura);
                         break;
+                    case ItemType.Gem:
+                        break;
                     default:
                         text += string.Format(" Durability {0}/{1}", Math.Round(HoverItem.CurrentDura / 1000M),
                                                    Math.Round(HoverItem.MaxDura / 1000M));
@@ -4599,9 +4601,32 @@ namespace Client.MirScenes
             int minValue = 0;
             int maxValue = 0;
             int addValue = 0;
+            string text = "";
+
+            #region Dura gem
+            minValue = realItem.Durability;
+
+            if (minValue > 0 &&  realItem.Type == ItemType.Gem)
+            {
+                count++;
+                text = "Adds Durability";
+                MirLabel DuraLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DuraLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DuraLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
 
             #region DC
-    
             minValue = realItem.MinDC;
             maxValue = realItem.MaxDC;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.DC : 0;
@@ -4609,6 +4634,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "DC + {0}~{1} (+{2})" : "DC + {0}~{1}", minValue, maxValue + addValue, addValue);
+                else
+                    text = "Adds DC";
                 MirLabel DCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4617,7 +4646,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("DC + {0}~{1}", minValue, maxValue + addValue)
-                    Text = string.Format(addValue > 0 ? "DC + {0}~{1} (+{2})" : "DC + {0}~{1}", minValue, maxValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DCLabel.DisplayRectangle.Right + 4),
@@ -4635,6 +4664,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "MC + {0}~{1} (+{2})" : "MC + {0}~{1}", minValue, maxValue + addValue, addValue);
+                else
+                    text = "Adds MC";
                 MirLabel MCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4643,7 +4676,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("MC + {0}~{1}", minValue, maxValue + addValue)
-                    Text = string.Format(addValue > 0 ? "MC + {0}~{1} (+{2})" : "MC + {0}~{1}", minValue, maxValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MCLabel.DisplayRectangle.Right + 4),
@@ -4661,6 +4694,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "SC + {0}~{1} (+{2})" : "SC + {0}~{1}", minValue, maxValue + addValue, addValue);
+                else
+                    text = "Adds SC";
                 MirLabel SCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4669,7 +4706,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("SC + {0}~{1}", minValue, maxValue + addValue)
-                    Text = string.Format(addValue > 0 ? "SC + {0}~{1} (+{2})" : "SC + {0}~{1}", minValue, maxValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SCLabel.DisplayRectangle.Right + 4),
@@ -4717,6 +4754,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "Accuracy: + {0} (+{1})" : "Accuracy: + {0}", minValue + addValue, addValue);
+                else
+                    text = "Adds Accuracy";
                 MirLabel ACCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4725,7 +4766,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Accuracy + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Accuracy: + {0} (+{1})" : "Accuracy: + {0}", minValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, ACCLabel.DisplayRectangle.Right + 4),
@@ -4769,6 +4810,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
+                else
+                    text = "Adds A.Speed";
                 MirLabel ASPEEDLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4777,7 +4822,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("A.Speed + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, ASPEEDLabel.DisplayRectangle.Right + 4),
@@ -4795,6 +4840,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "Freezing: + {0} (+{1})" : "Freezing: + {0}", minValue + addValue, addValue);
+                else
+                    text = "Adds Freezing";
                 MirLabel FREEZINGLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4803,7 +4852,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Freezing + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Freezing: + {0} (+{1})" : "Freezing: + {0}", minValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, FREEZINGLabel.DisplayRectangle.Right + 4),
@@ -4821,6 +4870,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "Poison: + {0} (+{1})" : "Poison: + {0}", minValue + addValue, addValue);
+                else
+                    text = "Adds Poison";
                 MirLabel POISONLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4829,7 +4882,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Poison + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Poison: + {0} (+{1})" : "Poison: + {0}", minValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, POISONLabel.DisplayRectangle.Right + 4),
@@ -4956,6 +5009,7 @@ namespace Client.MirScenes
             int maxValue = 0;
             int addValue = 0;
 
+            string text = "";
             #region AC
 
             minValue = realItem.MinAC;
@@ -4965,6 +5019,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "AC + {0}~{1} (+{2})" : "AC + {0}~{1}", minValue, maxValue + addValue, addValue);
+                else
+                    text = "Adds AC";
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -4973,7 +5031,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("AC + {0}~{1}", minValue, maxValue + addValue)
-                    Text = string.Format(addValue > 0 ? "AC + {0}~{1} (+{2})" : "AC + {0}~{1}", minValue, maxValue + addValue, addValue)
+                    Text = text
                 };
 
                 if (fishingItem)
@@ -5007,6 +5065,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "MAC + {0}~{1} (+{2})" : "MAC + {0}~{1}", minValue, maxValue + addValue, addValue);
+                else
+                    text = "Adds MAC";
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5015,7 +5077,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("MAC + {0}~{1}", minValue, maxValue + addValue)
-                    Text = string.Format(addValue > 0 ? "MAC + {0}~{1} (+{2})" : "MAC + {0}~{1}", minValue, maxValue + addValue, addValue)
+                    Text = text
                 };
 
                 if (fishingItem)
@@ -5324,6 +5386,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "Poison Resist + {0} (+{1})" : "Poison Resist + {0}", minValue + addValue, addValue);
+                else
+                    text = "Adds Poison Resist";
                 MirLabel POISON_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5332,7 +5398,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Poison Resist + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Poison Resist + {0} (+{1})" : "Poison Resist + {0}", minValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, POISON_RESISTLabel.DisplayRectangle.Right + 4),
@@ -5350,6 +5416,10 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? "Magic Resist + {0} (+{1})" : "Magic Resist + {0}", minValue + addValue, addValue);
+                else
+                    text = "Adds Magic Resist";
                 MirLabel MAGIC_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5358,7 +5428,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Magic Resist + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Magic Resist + {0} (+{1})" : "Magic Resist + {0}", minValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAGIC_RESISTLabel.DisplayRectangle.Right + 4),
@@ -6063,9 +6133,243 @@ namespace Client.MirScenes
 
             #endregion
 
+            #region Gems
+
+            if (HoverItem.Info.Type == ItemType.Gem)
+            {
+                #region UseOn text
+                count++;
+                string Text = "";
+                if (HoverItem.Info.Unique == SpecialItemMode.None)
+                {
+                    Text = "Cannot be used on any item.";
+                }
+                else
+                {
+                    Text = "Can be used on: ";
+                }
+                MirLabel GemUseOn = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Yellow,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = Text
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemUseOn.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, GemUseOn.DisplayRectangle.Bottom));
+                #endregion
+                #region Weapon text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Paralize))
+                {
+                    MirLabel GemWeapon = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Weapon"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemWeapon.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, GemWeapon.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Armour text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Teleport))
+                {
+                    MirLabel GemArmour = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Armour"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemArmour.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, GemArmour.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Helmet text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Clearring))
+                {
+                    MirLabel Gemhelmet = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Helmet"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemhelmet.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, Gemhelmet.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Necklace text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Protection))
+                {
+                    MirLabel Gemnecklace = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Necklace"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemnecklace.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, Gemnecklace.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Bracelet text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Revival))
+                {
+                    MirLabel GemBracelet = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Bracelet"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemBracelet.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, GemBracelet.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Ring text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Muscle))
+                {
+                    MirLabel GemRing = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Ring"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemRing.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, GemRing.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Amulet text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Flame))
+                {
+                    MirLabel Gemamulet = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Amulet"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemamulet.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, Gemamulet.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Belt text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Healing))
+                {
+                    MirLabel Gembelt = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Belt"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gembelt.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, Gembelt.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Boots text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Probe))
+                {
+                    MirLabel Gemboots = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Boots"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemboots.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, Gemboots.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Stone text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Skill))
+                {
+                    MirLabel Gemstone = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Stone"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemstone.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, Gemstone.DisplayRectangle.Bottom));
+                }
+                #endregion
+                #region Torch text
+                count++;
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.NoDuraLoss))
+                {
+                    MirLabel Gemtorch = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "-Candle"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemtorch.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, Gemtorch.DisplayRectangle.Bottom));
+                }
+                #endregion
+
+
+
+
+            }
+
+            #endregion
+
             #region CANTAWAKEN
 
-            if (HoverItem.Info.CanAwakening != true)
+            if ((HoverItem.Info.CanAwakening != true) && (HoverItem.Info.Type!= ItemType.Gem))
             {
                 count++;
                 MirLabel CANTAWAKENINGLabel = new MirLabel

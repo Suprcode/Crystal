@@ -9081,6 +9081,58 @@ namespace Server.MirObjects
             RefreshStats();
         }
 
+        public bool ValidGemForItem(UserItem Gem, byte itemtype)
+        {
+            switch (itemtype)
+            {
+                case 1: //weapon
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Paralize))
+                        return true;
+                    break;
+                case 2: //Armour
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Teleport))
+                        return true;
+                    break;
+                case 4: //Helmet
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Clearring))
+                        return true;
+                    break;
+                case 5: //necklace
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Protection))
+                        return true;
+                    break;
+                case 6: //bracelet
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Revival))
+                        return true;
+                    break;
+                case 7: //ring
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Muscle))
+                        return true;
+                    break;
+                case 8: //amulet
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Flame))
+                        return true;
+                    break;
+                case 9://belt
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Healing))
+                        return true;
+                    break;
+                case 10: //boots
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Probe))
+                        return true;
+                    break;
+                case 11: //stone
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Skill))
+                        return true;
+                    break;
+                case 12:///torch
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.NoDuraLoss))
+                        return true;
+                    break;
+            }
+            return false;
+        }
+
         public void CombineItem(ulong fromID, ulong toID)
         {
             S.CombineItem p = new S.CombineItem { IDFrom = fromID, IDTo = toID, Success = false };
@@ -9197,33 +9249,41 @@ namespace Server.MirObjects
                         return;
                     }
 
+
                     //check if combine will succeed
                     bool succeeded = Envir.Random.Next(10) < (5 + (Luck / 2));
                     canUpgrade = true;
 
                     byte itemType = (byte)tempTo.Info.Type;
+
+                    if (!ValidGemForItem(tempFrom, itemType))
+                    {
+                        ReceiveChat("Invalid combination", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
                     
-                    if ((tempFrom.Info.MaxDC + tempFrom.DC) > 0 && (itemType != 2 && itemType != 9 && itemType != 4 && itemType != 10))
+                    if ((tempFrom.Info.MaxDC + tempFrom.DC) > 0)
                     {
                         if (succeeded) tempTo.DC = (byte)Math.Min(byte.MaxValue, tempTo.DC + tempFrom.Info.MaxDC + tempFrom.DC);
                     }
 
-                    else if ((tempFrom.Info.MaxMC + tempFrom.MC) > 0 && (itemType != 2 && itemType != 9 && itemType != 4 && itemType != 10))
+                    else if ((tempFrom.Info.MaxMC + tempFrom.MC) > 0)
                     {
                         if (succeeded) tempTo.MC = (byte)Math.Min(byte.MaxValue, tempTo.MC + tempFrom.Info.MaxMC + tempFrom.MC);
                     }
 
-                    else if ((tempFrom.Info.MaxSC + tempFrom.SC) > 0 && (itemType != 2 && itemType != 9 && itemType != 4 && itemType != 10))
+                    else if ((tempFrom.Info.MaxSC + tempFrom.SC) > 0)
                     {
                         if (succeeded) tempTo.SC = (byte)Math.Min(byte.MaxValue, tempTo.SC + tempFrom.Info.MaxSC + tempFrom.SC);
                     }
 
-                    else if ((tempFrom.Info.MaxAC + tempFrom.AC) > 0 && (itemType != 5 && itemType != 1))
+                    else if ((tempFrom.Info.MaxAC + tempFrom.AC) > 0)
                     {
                         if (succeeded) tempTo.AC = (byte)Math.Min(byte.MaxValue, tempTo.AC + tempFrom.Info.MaxAC + tempFrom.AC);
                     }
 
-                    else if ((tempFrom.Info.MaxMAC + tempFrom.MAC) > 0 && (itemType != 5 && itemType != 1))
+                    else if ((tempFrom.Info.MaxMAC + tempFrom.MAC) > 0)
                     {
                         if (succeeded) tempTo.MAC = (byte)Math.Min(byte.MaxValue, tempTo.MAC + tempFrom.Info.MaxMAC + tempFrom.MAC);
                     }
@@ -9233,37 +9293,37 @@ namespace Server.MirObjects
                         if (succeeded) tempTo.MaxDura = (ushort)Math.Min(ushort.MaxValue, tempTo.MaxDura + tempFrom.MaxDura);
                     }
 
-                    else if ((tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed) > 0 && (itemType == 5 || itemType == 7 || itemType == 1))
+                    else if ((tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed) > 0)
                     {
                         if (succeeded) tempTo.AttackSpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, tempTo.AttackSpeed + tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed)));
                     }
 
-                    else if ((tempFrom.Info.Agility + tempFrom.Agility) > 0 && (itemType != 4 && itemType != 5 && itemType != 7 && itemType != 1))
+                    else if ((tempFrom.Info.Agility + tempFrom.Agility) > 0)
                     {
                         if (succeeded) tempTo.Agility = (byte)Math.Min(byte.MaxValue, tempFrom.Info.Agility + tempTo.Agility + tempFrom.Agility);
                     }
 
-                    else if ((tempFrom.Info.Accuracy + tempFrom.Accuracy) > 0 && (itemType != 2 && itemType != 7 && itemType != 10 && itemType != 1))
+                    else if ((tempFrom.Info.Accuracy + tempFrom.Accuracy) > 0)
                     {
                         if (succeeded) tempTo.Accuracy = (byte)Math.Min(byte.MaxValue, tempFrom.Info.Accuracy + tempTo.Accuracy + tempFrom.Accuracy);
                     }
 
-                    else if ((tempFrom.Info.PoisonAttack + tempFrom.PoisonAttack) > 0 && (itemType == 5 || itemType == 7 || itemType == 1))
+                    else if ((tempFrom.Info.PoisonAttack + tempFrom.PoisonAttack) > 0)
                     {
                         if (succeeded) tempTo.PoisonAttack = (byte)Math.Min(byte.MaxValue, tempFrom.Info.PoisonAttack + tempTo.PoisonAttack + tempFrom.PoisonAttack);
                     }
 
-                    else if ((tempFrom.Info.Freezing + tempFrom.Freezing) > 0 && (itemType == 5 || itemType == 7 || itemType == 1))
+                    else if ((tempFrom.Info.Freezing + tempFrom.Freezing) > 0)
                     {
                         if (succeeded) tempTo.Freezing = (byte)Math.Min(byte.MaxValue, tempFrom.Info.Freezing + tempTo.Freezing + tempFrom.Freezing);
                     }
 
-                    else if ((tempFrom.Info.MagicResist + tempFrom.MagicResist) > 0 && (itemType == 2 || itemType == 4 || itemType == 5))
+                    else if ((tempFrom.Info.MagicResist + tempFrom.MagicResist) > 0)
                     {
                         if (succeeded) tempTo.MagicResist = (byte)Math.Min(byte.MaxValue, tempFrom.Info.MagicResist + tempTo.MagicResist + tempFrom.MagicResist);
                     }
 
-                    else if ((tempFrom.Info.PoisonResist + tempFrom.PoisonResist) > 0 && (itemType == 2 || itemType == 9 || itemType == 4))
+                    else if ((tempFrom.Info.PoisonResist + tempFrom.PoisonResist) > 0)
                     {
                         if (succeeded) tempTo.PoisonResist = (byte)Math.Min(byte.MaxValue, tempFrom.Info.PoisonResist + tempTo.PoisonResist + tempFrom.PoisonResist);
                     }
@@ -9414,6 +9474,7 @@ namespace Server.MirObjects
             for (int i = 0; i < cell.Objects.Count; i++)
             {
                 MapObject ob = cell.Objects[i];
+                
                 if (ob.Race != ObjectType.Item) continue;
 
                 if (ob.Owner != null && ob.Owner != this && !IsGroupMember(ob.Owner)) //Or Group member.

@@ -50,6 +50,42 @@ namespace Server
             UpdateInterface();
         }
 
+        public void RefreshUniqueTab()
+        {
+            if ((ITypeComboBox.SelectedItem != null) && ((ItemType)ITypeComboBox.SelectedItem == ItemType.Gem))
+            {
+                tabControl1.TabPages[3].Text = "Usable on";
+                ParalysischeckBox.Text = "Weapon";
+                TeleportcheckBox.Text = "Armour";
+                ClearcheckBox.Text = "Helmet";
+                ProtectioncheckBox.Text = "Necklace";
+                RevivalcheckBox.Text = "Bracelet";
+                MusclecheckBox.Text = "Ring";
+                FlamecheckBox.Text = "Amulet";
+                HealingcheckBox.Text = "Belt";
+                ProbecheckBox.Text = "Boots";
+                SkillcheckBox.Text = "Stone";
+                NoDuraLosscheckBox.Text = "Torch";
+                PickaxecheckBox.Text = "unused atm";
+            }
+            else
+            {
+                tabControl1.TabPages[3].Text = "Special Stats";
+                ParalysischeckBox.Text = "Paralysis ring";
+                TeleportcheckBox.Text = "Teleport ring";
+                ClearcheckBox.Text = "Clear ring";
+                ProtectioncheckBox.Text = "Protection ring";
+                RevivalcheckBox.Text = "Revival ring";
+                MusclecheckBox.Text = "Muscle ring";
+                FlamecheckBox.Text = "Flame ring";
+                HealingcheckBox.Text = "Healing ring";
+                ProbecheckBox.Text = "Probe necklace";
+                SkillcheckBox.Text = "Skill necklace";
+                NoDuraLosscheckBox.Text = "No dura loss";
+                PickaxecheckBox.Text = "Pickaxe";
+            }
+        }
+
         public void UpdateInterface(bool refreshList = false)
         {
             if (refreshList)
@@ -362,6 +398,7 @@ namespace Server
                 if (CanAwaken.Checked != info.CanAwakening) CanAwaken.CheckState = CheckState.Indeterminate;
                 if (TooltipTextBox.Text != info.ToolTip) TooltipTextBox.Text = string.Empty;
             }
+            RefreshUniqueTab();
         }
 
         private void RefreshItemList()
