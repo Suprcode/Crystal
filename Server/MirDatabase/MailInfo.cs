@@ -37,7 +37,7 @@ namespace Server.MirEnvir
 
         public bool Collected;
 
-        public bool Parcel //parcel if item contains gold or items. Must be collected from postbox.
+        public bool Parcel //parcel if item contains gold or items.
         {
             get { return Gold > 0 || Items.Count > 0; }
         }
@@ -101,7 +101,32 @@ namespace Server.MirEnvir
         {
             if (Sent) return;
 
-            Collected = !Parcel;
+            Collected = true;
+
+            if (Parcel)
+            {
+                if(Items.Count > 0 && Gold > 0)
+                {
+                    if(!Settings.MailAutoSendGold || !Settings.MailAutoSendItems)
+                    {
+                        Collected = false;
+                    }
+                }
+                if(Items.Count > 0)
+                {
+                    if (!Settings.MailAutoSendItems)
+                    {
+                        Collected = false;
+                    }
+                }
+                else
+                {
+                    if (!Settings.MailAutoSendGold)
+                    {
+                        Collected = false;
+                    }
+                }
+            }
 
             if (SMain.Envir.Mail.Contains(this)) return;
 

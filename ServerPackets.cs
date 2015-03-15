@@ -4475,4 +4475,24 @@ namespace ServerPackets
             writer.Write(Result);
         }
     }
+
+    public sealed class MailCost : Packet
+    {
+        public uint Cost;
+
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.MailCost; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Cost = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Cost);
+        }
+    }
 }

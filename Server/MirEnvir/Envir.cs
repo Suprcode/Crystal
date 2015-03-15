@@ -301,22 +301,7 @@ namespace Server.MirEnvir
 
                     if(mail.Receive())
                     {
-                        if (mail.Items.Count > 0 || mail.Gold > 0)
-                        {
-                            if (mail.Items.Count > 0)
-                            {
-                                SMain.EnqueueDebugging("Parcel recieved " + mail.Items[0].Info.Name);
-                            }
-                            else
-                            {
-                                SMain.EnqueueDebugging("Parcel recieved " + mail.Gold);
-                            }
-                        }
-                        else
-                        {
-                            SMain.EnqueueDebugging("Mail recieved");
-                            //collected mail ok
-                        }
+                        //collected mail ok
                     }
                 }
 

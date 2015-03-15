@@ -1264,17 +1264,15 @@ namespace Client.MirControls
                                 GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
                                 return;
                             }
-                            //if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
-                            //{
-                            //    GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
-                            //    return;
-                            //}
+
                             if (ItemArray[ItemSlot] == null)
                             {
                                 Item = GameScene.SelectedCell.Item;
                                 GameScene.SelectedCell.Locked = true;
                                 MailComposeParcelDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell.Item.UniqueID;
-                                GameScene.SelectedCell = null;                              
+                                GameScene.SelectedCell = null;
+                                GameScene.Scene.MailComposeParcelDialog.CalculatePostage();
+
                                 return;
                             }
                         }

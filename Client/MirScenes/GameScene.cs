@@ -1311,6 +1311,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ParcelCollected:
                     ParcelCollected((S.ParcelCollected)p);
                     break;
+                case (short)ServerPacketIds.MailCost:
+                    MailCost((S.MailCost)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -4359,6 +4362,17 @@ namespace Client.MirScenes
                 case 1:
                     GameScene.Scene.MailReadParcelDialog.Hide();
                     break;
+            }
+        }
+
+        private void MailCost(S.MailCost p)
+        {
+            if(GameScene.Scene.MailComposeParcelDialog.Visible)
+            {
+                if (p.Cost > 0)
+                    SoundManager.PlaySound(SoundList.Gold);
+
+                GameScene.Scene.MailComposeParcelDialog.ParcelCostLabel.Text = p.Cost.ToString();
             }
         }
 

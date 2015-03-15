@@ -1449,6 +1449,7 @@ public sealed class AwakeningNeedMaterials : Packet
         public string Message;
         public uint Gold;
         public ulong[] ItemsIdx = new ulong[5];
+        public bool Stamped;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1460,6 +1461,8 @@ public sealed class AwakeningNeedMaterials : Packet
             {
                 ItemsIdx[i] = reader.ReadUInt64();
             }
+
+            Stamped = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -1471,6 +1474,8 @@ public sealed class AwakeningNeedMaterials : Packet
             {
                 writer.Write(ItemsIdx[i]);
             }
+
+            writer.Write(Stamped);
         }
     }
 
@@ -1557,6 +1562,38 @@ public sealed class AwakeningNeedMaterials : Packet
         {
             writer.Write(UniqueID);
             writer.Write(Locked);
+        }
+    }
+
+    public sealed class MailCost : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MailCost; } }
+
+        public uint Gold;
+        public ulong[] ItemsIdx = new ulong[5];
+        public bool Stamped;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Gold = reader.ReadUInt32();
+
+            for (int i = 0; i < 5; i++)
+            {
+                ItemsIdx[i] = reader.ReadUInt64();
+            }
+
+            Stamped = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Gold);
+
+            for (int i = 0; i < 5; i++)
+            {
+                writer.Write(ItemsIdx[i]);
+            }
+
+            writer.Write(Stamped);
         }
     }
 }

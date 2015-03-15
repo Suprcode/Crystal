@@ -465,6 +465,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MailLockedItem:
                     Enqueue(new S.MailLockedItem { UniqueID = ((C.MailLockedItem)p).UniqueID, Locked = ((C.MailLockedItem)p).Locked });
                     break;
+                case (short)ClientPacketIds.MailCost:
+                    MailCost((C.MailCost)p);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -1201,7 +1204,7 @@ namespace Server.MirNetwork
 
             if (p.Gold > 0 || p.ItemsIdx.Length > 0)
             {
-                Player.SendParcel(p.Name, p.Message, p.Gold, p.ItemsIdx);
+                Player.SendMail(p.Name, p.Message, p.Gold, p.ItemsIdx, p.Stamped);
             }
             else
             {
@@ -1220,7 +1223,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.CollectParcel(p.MailID);
+            Player.CollectMail(p.MailID);
         }
 
         public void DeleteMail(C.DeleteMail p)
@@ -1235,6 +1238,15 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.LockMail(p.MailID, p.Lock);
+        }
+
+        public void MailCost(C.MailCost p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            uint cost = Player.GetMailCost(p.ItemsIdx, p.Gold, p.Stamped);
+
+            Enqueue(new S.MailCost { Cost = cost });
         }
     }
 }

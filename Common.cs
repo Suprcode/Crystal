@@ -984,7 +984,8 @@ public enum ServerPacketIds : short
     MailLockedItem,
     MailSendRequest,
     MailSent,
-    ParcelCollected
+    ParcelCollected,
+    MailCost
 }
 
 public enum ClientPacketIds : short
@@ -1082,7 +1083,8 @@ public enum ClientPacketIds : short
     CollectParcel,
     DeleteMail,
     LockMail,
-    MailLockedItem
+    MailLockedItem,
+    MailCost
 }
 
 public class InIReader
@@ -2492,7 +2494,7 @@ public class UserItem
         return (p * Count) - Price();
     }
 
-public uint Quality()
+    public uint Quality()
     {
         uint q = (uint)(AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack + Awake.getAwakeLevel() + 1);
 
@@ -3467,6 +3469,8 @@ public abstract class Packet
                 return new C.LockMail();
             case (short)ClientPacketIds.MailLockedItem:
                 return new C.MailLockedItem();
+            case (short)ClientPacketIds.MailCost:
+                return new C.MailCost();
             default:
                 throw new NotImplementedException();
         }
@@ -3848,6 +3852,8 @@ public abstract class Packet
                 return new S.MailSendRequest();
             case (short)ServerPacketIds.ParcelCollected:
                 return new S.ParcelCollected();
+            case (short)ServerPacketIds.MailCost:
+                return new S.MailCost();
             default:
                 throw new NotImplementedException();
         }

@@ -113,9 +113,11 @@ namespace Server
         public static string FishingMonster = "GiantKeratoid";
 
         //Mail Settings
-        public static bool MailAutoSendLetters = true;
         public static bool MailAutoSendGold = false;
         public static bool MailAutoSendItems = false;
+        public static bool MailFreeWithStamp = true;
+        public static uint MailChargePer1KGold = 100;
+        public static uint MailItemInsurancePercentage = 5;
 
         //character settings
         private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };

@@ -643,9 +643,10 @@ namespace Client.MirScenes.Dialogs
     }
     public class MailComposeParcelDialog : MirImageControl
     {
-        MirLabel RecipientNameLabel, GoldSendLabel;
+        public MirLabel RecipientNameLabel, ParcelCostLabel, GoldSendLabel;
         MirTextBox MessageTextBox;
-        MirButton SendButton, CancelButton, CloseButton;
+        MirButton StampButton, SendButton, CancelButton, CloseButton;
+        MirImageControl ItemCover;
 
         public MirItemCell[] Cells = new MirItemCell[5];
 
@@ -653,6 +654,7 @@ namespace Client.MirScenes.Dialogs
         public static ulong[] ItemsIdx = new ulong[5];
 
         public uint GiftGoldAmount = 0;
+        public bool Stamped = false;
 
         public MailComposeParcelDialog()
         {
@@ -701,8 +703,30 @@ namespace Client.MirScenes.Dialogs
 
             MessageTextBox.MultiLine();
 
+            StampButton = new MirButton
+            {
+                Index = 203,
+                HoverIndex = 203,
+                PressedIndex = 203,
+                Location = new Point(89, 54),
+                Size = new Size(20,20),
+                Library = Libraries.Prguse2,
+                Parent = this,             
+                Sound = SoundList.ButtonA,
+            };
+            StampButton.Click += (o, e) =>
+            {
+                StampParcel();
+            };
 
-
+            ItemCover = new MirImageControl
+            {
+                Index = 676,
+                Location = new Point(63, 310),
+                Size = new Size(144, 33),
+                Library = Libraries.Title,
+                Parent = this
+            };
 
             for (int i = 0; i < Cells.Length; i++)
             {
@@ -716,9 +740,16 @@ namespace Client.MirScenes.Dialogs
                     Location = new Point(27 + (i * 36), 311),
                     ItemSlot = i
                 };
-                //Cells[i].Click += (o, e) => ItemCell_Click();
-
             }
+
+            ParcelCostLabel = new MirLabel
+            {
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Font = new Font(Settings.FontName, 8F),
+                Location = new Point(63, 269),
+                Parent = this,
+                Size = new Size(143, 15),
+            };
 
             GoldSendLabel = new MirLabel
             {
@@ -744,14 +775,14 @@ namespace Client.MirScenes.Dialogs
                         }
 
                         GoldSendLabel.Text = GiftGoldAmount.ToString("###,###,##0");
+
+                        CalculatePostage();
                     };
 
                     amountBox.Show();
                     GameScene.PickedUpGold = false;
                 }
             };
-
-
 
             SendButton = new MirButton
             {
@@ -765,7 +796,7 @@ namespace Client.MirScenes.Dialogs
             };
             SendButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.SendMail { Name = RecipientNameLabel.Text, Message = MessageTextBox.Text, Gold = GiftGoldAmount, ItemsIdx = ItemsIdx });
+                Network.Enqueue(new C.SendMail { Name = RecipientNameLabel.Text, Message = MessageTextBox.Text, Gold = GiftGoldAmount, ItemsIdx = ItemsIdx, Stamped = Stamped });
             };
 
             CancelButton = new MirButton
@@ -797,6 +828,7 @@ namespace Client.MirScenes.Dialogs
         {
             GameScene.Gold += GiftGoldAmount;
             GiftGoldAmount = 0;
+            Stamped = false;
 
             ResetLockedCells();
         }
@@ -813,6 +845,62 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
+        private void StampParcel()
+        {
+            if(!Stamped)
+            {
+                for (int i = 0; i < GameScene.User.Inventory.Length; i++)
+                {
+                    UserItem item = GameScene.User.Inventory[i];
+                    if (item == null || item.Info.Type != ItemType.Nothing || item.Info.Shape != 1) continue;
+
+                    Stamped = true;
+                    break;
+                }
+            }
+            else
+                Stamped = false;
+
+            CalculatePostage();
+            UpdateParcel();
+        }
+
+        private void UpdateParcel()
+        {
+            if (Stamped)
+            {
+                StampButton.Index = 204;
+                StampButton.HoverIndex = 204;
+                StampButton.PressedIndex = 204;
+
+                for (int i = 1; i < Cells.Length; i++)
+                {
+                    Cells[i].Enabled = true;
+                }
+
+                ItemCover.Visible = false;
+            }
+            else
+            {
+                StampButton.Index = 203;
+                StampButton.HoverIndex = 203;
+                StampButton.PressedIndex = 203;
+
+                for (int i = 1; i < Cells.Length; i++)
+                {
+                    Cells[i].Enabled = false;
+                }
+
+                ItemCover.Visible = true;
+            }
+        }
+
+
+        public void CalculatePostage()
+        {
+            Network.Enqueue(new C.MailCost { Gold = GiftGoldAmount, ItemsIdx = ItemsIdx, Stamped = Stamped });
+        }
+
         public void ComposeMail(string recipientName)
         {
             if (string.IsNullOrEmpty(recipientName)) return;
@@ -821,7 +909,16 @@ namespace Client.MirScenes.Dialogs
             MessageTextBox.Text = string.Empty;
             MessageTextBox.SetFocus();
 
-            GoldSendLabel.Text = string.Empty;
+            UpdateParcel();
+
+            //Disable last 4 item slots
+            for (int i = 1; i < Cells.Length; i++)
+            {
+                Cells[i].Enabled = false;
+            }
+
+            ParcelCostLabel.Text = "0";
+            GoldSendLabel.Text = "0";
 
             ResetLockedCells();
 

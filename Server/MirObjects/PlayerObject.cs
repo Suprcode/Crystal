@@ -9488,7 +9488,7 @@ namespace Server.MirObjects
                 {
                     if (!CanGainItem(item.Item)) continue;
 
-                    if (item.Item.Info.ShowGroupPickup)
+                    if (item.Item.Info.ShowGroupPickup && IsGroupMember(this))
                         for (int j = 0; j < GroupMembers.Count; j++)
                             GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.Name + "}",
                                 ChatType.System);
@@ -13501,7 +13501,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            //sent from client
+            //sent from player
             MailInfo mail = new MailInfo(player.Index, true)
             {
                 MailID = ++Envir.NextMailID,
@@ -13513,7 +13513,7 @@ namespace Server.MirObjects
             mail.Send();
         }
 
-        public void SendParcel(string name, string message, uint gold, ulong[] items)
+        public void SendMail(string name, string message, uint gold, ulong[] items, bool stamped)
         {
             CharacterInfo player = Envir.GetCharacterInfo(name);
 
@@ -13523,15 +13523,40 @@ namespace Server.MirObjects
                 return;
             }
 
-            List<UserItem> giftItems = new List<UserItem>();
+            bool hasStamp = false;
+            uint totalGold = 0;
+            uint parcelCost = GetMailCost(items, gold, stamped);
 
-            if (Account.Gold < gold)
+            totalGold = gold + parcelCost;
+
+            if (Account.Gold < totalGold)
             {
                 Enqueue(new S.MailSent { Result = -1 });
                 return;
             }
 
-            for (int j = 0; j < 5; j++)
+            //Validate user has stamp
+            if (stamped)
+            {
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    UserItem item = Info.Inventory[i];
+
+                    if (item == null || item.Info.Type != ItemType.Nothing || item.Info.Shape != 1 || item.Count < 1) continue;
+
+                    hasStamp = true;
+
+                    if (item.Count > 1) item.Count--;
+                    else Info.Inventory[i] = null;
+
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = 1 });
+                    break;
+                }
+            }
+
+            List<UserItem> giftItems = new List<UserItem>();
+
+            for (int j = 0; j < (hasStamp ? 5 : 1); j++)
             {
                 if (items[j] < 1) continue;
 
@@ -13548,13 +13573,13 @@ namespace Server.MirObjects
                 }
             }
 
-            if (gold > 0)
+            if (totalGold > 0)
             {
-                Account.Gold -= gold;
-                Enqueue(new S.LoseGold { Gold = gold });
+                Account.Gold -= totalGold;
+                Enqueue(new S.LoseGold { Gold = totalGold });
             }
 
-            //sent from client
+            //Create parcel
             MailInfo mail = new MailInfo(player.Index, true)
             {
                 MailID = ++Envir.NextMailID,
@@ -13580,7 +13605,7 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void CollectParcel(ulong mailID)
+        public void CollectMail(ulong mailID)
         {
             MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
 
@@ -13588,7 +13613,7 @@ namespace Server.MirObjects
 
             if(!mail.Collected)
             {
-                ReceiveChat("Parcel must be collected from the post office.", ChatType.System);
+                ReceiveChat("Mail must be collected from the post office.", ChatType.System);
                 return;
             }
 
@@ -13646,6 +13671,39 @@ namespace Server.MirObjects
             mail.Locked = lockMail;
 
             GetMail();
+        }
+
+        public uint GetMailCost(ulong[] items, uint gold, bool stamped)
+        {
+            uint cost = 0;
+
+            if (!Settings.MailFreeWithStamp || !stamped)
+            {
+                if (gold > 0 && Settings.MailChargePer1KGold > 0)
+                {
+                    cost += (uint)Math.Floor((decimal)gold / 1000) * Settings.MailChargePer1KGold;
+                }
+
+                if (items != null && items.Length > 0 && Settings.MailItemInsurancePercentage > 0)
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        if (items[j] < 1) continue;
+
+                        for (int i = 0; i < Info.Inventory.Length; i++)
+                        {
+                            UserItem item = Info.Inventory[i];
+
+                            if (item == null || items[j] != item.UniqueID) continue;
+
+                            cost += (uint)Math.Floor((double)item.Price() / 100 * Settings.MailItemInsurancePercentage);
+                        }
+                    }
+                }
+            }
+
+
+            return cost;
         }
 
         public void GetMail()
