@@ -643,6 +643,12 @@ namespace Client.MirScenes
                         return;
                     }
 
+                    if (CMain.Time < CounterAttackTime)
+                    {
+                        Scene.OutputMessage(string.Format("You cannot cast counter attack for another {0} seconds.", (GameScene.CounterAttackTime - CMain.Time - 1) / 1000 + 1));
+                        return;
+                    }
+
                     SoundManager.PlaySound(20000 + (ushort)Spell.CounterAttack * 10);
                     CounterAttackTime = CMain.Time + 24000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
@@ -8092,18 +8098,6 @@ namespace Client.MirScenes
                         return;
                     }
                     isTargetSpell = false;
-                    break;
-                case Spell.CounterAttack:
-                    if (CMain.Time < GameScene.CounterAttackTime)
-                    {
-                        if (CMain.Time >= OutputDelay)
-                        {
-                            OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast counter attack for another {0} seconds.", (GameScene.CounterAttackTime - CMain.Time - 1) / 1000 + 1));
-                        }
-                        User.ClearMagic();
-                        return;
-                    }
                     break;
                 default:
                     isTargetSpell = false;
