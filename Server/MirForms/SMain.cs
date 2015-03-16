@@ -297,5 +297,12 @@ namespace Server
             e.Cancel = true;
             e.NewWidth = PlayersOnlineListView.Columns[e.ColumnIndex].Width;
         }
+
+        private void mailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(1);
+
+            form.ShowDialog();
+        }
     }
 }

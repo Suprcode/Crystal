@@ -13679,14 +13679,14 @@ namespace Server.MirObjects
 
             if (!Settings.MailFreeWithStamp || !stamped)
             {
-                if (gold > 0 && Settings.MailChargePer1KGold > 0)
+                if (gold > 0 && Settings.MailCostPer1KGold > 0)
                 {
-                    cost += (uint)Math.Floor((decimal)gold / 1000) * Settings.MailChargePer1KGold;
+                    cost += (uint)Math.Floor((decimal)gold / 1000) * Settings.MailCostPer1KGold;
                 }
 
                 if (items != null && items.Length > 0 && Settings.MailItemInsurancePercentage > 0)
                 {
-                    for (int j = 0; j < 1; j++)
+                    for (int j = 0; j < (stamped ? 5 : 1); j++)
                     {
                         if (items[j] < 1) continue;
 

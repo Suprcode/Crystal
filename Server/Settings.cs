@@ -116,7 +116,7 @@ namespace Server
         public static bool MailAutoSendGold = false;
         public static bool MailAutoSendItems = false;
         public static bool MailFreeWithStamp = true;
-        public static uint MailChargePer1KGold = 100;
+        public static uint MailCostPer1KGold = 100;
         public static uint MailItemInsurancePercentage = 5;
 
         //character settings
@@ -158,6 +158,21 @@ namespace Server
         public static List<long> Guild_ExperienceList = new List<long>();
         public static List<int> Guild_MembercapList = new List<int>();
         public static List<GuildBuff> Guild_BuffList = new List<GuildBuff>();
+
+        public static void LoadVersion()
+        {
+            try
+            {
+                if (File.Exists(VersionPath))
+                    using (FileStream stream = new FileStream(VersionPath, FileMode.Open, FileAccess.Read))
+                    using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+                        VersionHash = md5.ComputeHash(stream);
+            }
+            catch (Exception ex)
+            {
+                SMain.Enqueue(ex);
+            }
+        }
 
         public static void Load()
         {
@@ -309,21 +324,7 @@ namespace Server
             LoadGuildSettings();
 			LoadAwakeAttribute();
             LoadFishing();
-        }
-
-        public static void LoadVersion()
-        {
-            try
-            {
-                if (File.Exists(VersionPath))
-                    using (FileStream stream = new FileStream(VersionPath, FileMode.Open, FileAccess.Read))
-                    using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
-                        VersionHash = md5.ComputeHash(stream);
-            }
-            catch (Exception ex)
-            {
-                SMain.Enqueue(ex);
-            }
+            LoadMail();
         }
         public static void Save()
         {
@@ -926,7 +927,6 @@ namespace Server
             FishingMobSpawnChance = reader.ReadInt32("Rates", "MonsterSpawnChance", FishingMobSpawnChance);
             FishingMonster = reader.ReadString("Game", "Monster", FishingMonster);
         }
-
         public static void SaveFishing()
         {
             File.Delete(ConfigPath + @".\FishingSystem.ini");
@@ -938,5 +938,33 @@ namespace Server
             reader.Write("Rates", "MonsterSpawnChance", FishingMobSpawnChance);
             reader.Write("Game", "Monster", FishingMonster);
         }
+
+        public static void LoadMail()
+        {
+            if (!File.Exists(ConfigPath + @".\MailSystem.ini"))
+            {
+                SaveMail();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\MailSystem.ini");
+            MailAutoSendGold = reader.ReadBoolean("AutoSend", "Gold", MailAutoSendGold);
+            MailAutoSendItems = reader.ReadBoolean("AutoSend", "Items", MailAutoSendItems);
+            MailFreeWithStamp = reader.ReadBoolean("Rates", "FreeWithStamp", MailFreeWithStamp);
+            MailCostPer1KGold = reader.ReadUInt32("Rates", "CostPer1k", MailCostPer1KGold);
+            MailItemInsurancePercentage = reader.ReadUInt32("Rates", "InsurancePerItem", MailItemInsurancePercentage);
+        }
+        public static void SaveMail()
+        {
+            File.Delete(ConfigPath + @".\MailSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\MailSystem.ini");
+            reader.Write("AutoSend", "Gold", MailAutoSendGold);
+            reader.Write("AutoSend", "Items", MailAutoSendItems);
+            reader.Write("Rates", "FreeWithStamp", MailFreeWithStamp);
+            reader.Write("Rates", "CostPer1k", MailCostPer1KGold);
+            reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
+        }
+
+
     }
 }

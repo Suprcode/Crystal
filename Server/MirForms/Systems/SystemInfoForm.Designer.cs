@@ -44,9 +44,19 @@
             this.FishingAttemptsTextBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.MailAutoSendGoldCheckbox = new System.Windows.Forms.CheckBox();
+            this.MailAutoSendItemsCheckbox = new System.Windows.Forms.CheckBox();
+            this.MailFreeWithStampCheckbox = new System.Windows.Forms.CheckBox();
+            this.MailCostPer1kTextBox = new System.Windows.Forms.TextBox();
+            this.MailInsurancePercentageTextBox = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -197,6 +207,12 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.MailInsurancePercentageTextBox);
+            this.tabPage2.Controls.Add(this.MailCostPer1kTextBox);
+            this.tabPage2.Controls.Add(this.MailFreeWithStampCheckbox);
+            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -204,6 +220,84 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Mail";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.MailAutoSendItemsCheckbox);
+            this.groupBox2.Controls.Add(this.MailAutoSendGoldCheckbox);
+            this.groupBox2.Location = new System.Drawing.Point(7, 7);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(90, 69);
+            this.groupBox2.TabIndex = 0;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Auto Send";
+            // 
+            // MailAutoSendGoldCheckbox
+            // 
+            this.MailAutoSendGoldCheckbox.AutoSize = true;
+            this.MailAutoSendGoldCheckbox.Location = new System.Drawing.Point(7, 20);
+            this.MailAutoSendGoldCheckbox.Name = "MailAutoSendGoldCheckbox";
+            this.MailAutoSendGoldCheckbox.Size = new System.Drawing.Size(48, 17);
+            this.MailAutoSendGoldCheckbox.TabIndex = 0;
+            this.MailAutoSendGoldCheckbox.Text = "Gold";
+            this.MailAutoSendGoldCheckbox.UseVisualStyleBackColor = true;
+            this.MailAutoSendGoldCheckbox.CheckedChanged += new System.EventHandler(this.MailAutoSendGoldCheckbox_CheckedChanged);
+            // 
+            // MailAutoSendItemsCheckbox
+            // 
+            this.MailAutoSendItemsCheckbox.AutoSize = true;
+            this.MailAutoSendItemsCheckbox.Location = new System.Drawing.Point(7, 44);
+            this.MailAutoSendItemsCheckbox.Name = "MailAutoSendItemsCheckbox";
+            this.MailAutoSendItemsCheckbox.Size = new System.Drawing.Size(51, 17);
+            this.MailAutoSendItemsCheckbox.TabIndex = 1;
+            this.MailAutoSendItemsCheckbox.Text = "Items";
+            this.MailAutoSendItemsCheckbox.UseVisualStyleBackColor = true;
+            this.MailAutoSendItemsCheckbox.CheckedChanged += new System.EventHandler(this.MailAutoSendItemsCheckbox_CheckedChanged);
+            // 
+            // MailFreeWithStampCheckbox
+            // 
+            this.MailFreeWithStampCheckbox.AutoSize = true;
+            this.MailFreeWithStampCheckbox.Location = new System.Drawing.Point(120, 7);
+            this.MailFreeWithStampCheckbox.Name = "MailFreeWithStampCheckbox";
+            this.MailFreeWithStampCheckbox.Size = new System.Drawing.Size(150, 17);
+            this.MailFreeWithStampCheckbox.TabIndex = 1;
+            this.MailFreeWithStampCheckbox.Text = "Send Mail Free with stamp";
+            this.MailFreeWithStampCheckbox.UseVisualStyleBackColor = true;
+            this.MailFreeWithStampCheckbox.CheckedChanged += new System.EventHandler(this.MailFreeWithStampCheckbox_CheckedChanged);
+            // 
+            // MailCostPer1kTextBox
+            // 
+            this.MailCostPer1kTextBox.Location = new System.Drawing.Point(235, 30);
+            this.MailCostPer1kTextBox.Name = "MailCostPer1kTextBox";
+            this.MailCostPer1kTextBox.Size = new System.Drawing.Size(100, 20);
+            this.MailCostPer1kTextBox.TabIndex = 2;
+            this.MailCostPer1kTextBox.TextChanged += new System.EventHandler(this.MailCostPer1kTextBox_TextChanged);
+            // 
+            // MailInsurancePercentageTextBox
+            // 
+            this.MailInsurancePercentageTextBox.Location = new System.Drawing.Point(235, 56);
+            this.MailInsurancePercentageTextBox.Name = "MailInsurancePercentageTextBox";
+            this.MailInsurancePercentageTextBox.Size = new System.Drawing.Size(100, 20);
+            this.MailInsurancePercentageTextBox.TabIndex = 3;
+            this.MailInsurancePercentageTextBox.TextChanged += new System.EventHandler(this.MailInsurancePercentageTextBox_TextChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(117, 33);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(61, 13);
+            this.label7.TabIndex = 4;
+            this.label7.Text = "Cost per 1k";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(117, 59);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(107, 13);
+            this.label8.TabIndex = 5;
+            this.label8.Text = "Insurance % Per Item";
             // 
             // SystemInfoForm
             // 
@@ -222,6 +316,10 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -244,6 +342,14 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox MailAutoSendItemsCheckbox;
+        private System.Windows.Forms.CheckBox MailAutoSendGoldCheckbox;
+        private System.Windows.Forms.CheckBox MailFreeWithStampCheckbox;
+        private System.Windows.Forms.TextBox MailCostPer1kTextBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox MailInsurancePercentageTextBox;
 
     }
 }
