@@ -507,6 +507,8 @@ namespace Server.MirObjects
             if (Master == null)
                  Drop();
 
+            Master = null;
+
             PoisonList.Clear();
             Envir.MonsterCount--;
             CurrentMap.MonsterCount--;
