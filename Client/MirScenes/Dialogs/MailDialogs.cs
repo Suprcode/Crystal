@@ -648,10 +648,12 @@ namespace Client.MirScenes.Dialogs
         MirButton StampButton, SendButton, CancelButton, CloseButton;
         MirImageControl ItemCover;
 
-        public MirItemCell[] Cells = new MirItemCell[5];
+        private const uint _cellCount = 5;
 
-        public static UserItem[] Items = new UserItem[5];
-        public static ulong[] ItemsIdx = new ulong[5];
+        public MirItemCell[] Cells = new MirItemCell[_cellCount];
+
+        public static UserItem[] Items = new UserItem[_cellCount];
+        public static ulong[] ItemsIdx = new ulong[_cellCount];
 
         public uint GiftGoldAmount = 0;
         public bool Stamped = false;
@@ -835,13 +837,17 @@ namespace Client.MirScenes.Dialogs
 
         public void ResetLockedCells()
         {
-            foreach (var item in Cells)
+            for (int i = 0; i < _cellCount; i++)
             {
-                if (item.Item != null)
+                MirItemCell cell = Cells[i];
+
+                if (cell.Item != null)
                 {
-                    Network.Enqueue(new C.MailLockedItem { UniqueID = item.Item.UniqueID, Locked = false });
-                    item.Item = null;
+                    Network.Enqueue(new C.MailLockedItem { UniqueID = cell.Item.UniqueID, Locked = false });
+                    cell.Item = null;
                 }
+
+                ItemsIdx[i] = 0;
             }
         }
 
@@ -863,6 +869,7 @@ namespace Client.MirScenes.Dialogs
 
             CalculatePostage();
             UpdateParcel();
+            ResetLockedCells();
         }
 
         private void UpdateParcel()

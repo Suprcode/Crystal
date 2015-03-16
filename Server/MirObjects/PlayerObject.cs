@@ -13686,7 +13686,7 @@ namespace Server.MirObjects
 
                 if (items != null && items.Length > 0 && Settings.MailItemInsurancePercentage > 0)
                 {
-                    for (int j = 0; j < 5; j++)
+                    for (int j = 0; j < 1; j++)
                     {
                         if (items[j] < 1) continue;
 
