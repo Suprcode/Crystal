@@ -67,6 +67,10 @@ namespace Server
                 SkillcheckBox.Text = "Stone";
                 NoDuraLosscheckBox.Text = "Torch";
                 PickaxecheckBox.Text = "unused atm";
+                label50.Text = "Base rate%";
+                label52.Text = "succes drop";
+                label51.Text = "Max stats (all)";
+                label49.Text = "Max gem stat";
             }
             else
             {
@@ -83,6 +87,10 @@ namespace Server
                 SkillcheckBox.Text = "Skill necklace";
                 NoDuraLosscheckBox.Text = "No dura loss";
                 PickaxecheckBox.Text = "Pickaxe";
+                label50.Text = "Critical rate:";
+                label52.Text = "Reflect:";
+                label51.Text = "Critical Dmg:";
+                label49.Text = "HP Drain:";
             }
         }
 
