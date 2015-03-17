@@ -13381,6 +13381,33 @@ namespace Server.MirObjects
             else
                 CheckNeedQuestKill(mInfo);
         }
+        public bool CheckGroupQuestItem(UserItem item)
+        {
+            bool itemCollected = false;
+
+            if (GroupMembers != null)
+            {
+                foreach (PlayerObject player in GroupMembers.
+                    Where(player => player.CurrentMap == CurrentMap &&
+                        Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
+                        !player.Dead))
+                {
+                    if(player.CheckNeedQuestItem(item))
+                    {
+                        itemCollected = true;
+                    }
+                }
+            }
+            else
+            {
+                if(CheckNeedQuestItem(item))
+                {
+                    itemCollected = true;
+                }
+            }
+
+            return itemCollected;
+        }
 
         public bool CheckNeedQuestItem(UserItem item, bool gainItem = true)
         {
