@@ -165,6 +165,21 @@ namespace Server.MirObjects.Monsters
 
         public override void Die()
         {
+            base.Die();
+
+            if (Dead)//fix for snaketotem not disapearing
+            {
+                CurrentMap.RemoveObject(this);
+                if (Master != null)
+                {
+                    Master.Pets.Remove(this);
+                    Master = null;
+                }
+
+                Despawn();
+                return;
+            }
+			
             if (Master == null)
             {
                 //Kill Minions
@@ -175,7 +190,6 @@ namespace Server.MirObjects.Monsters
                         Pets.RemoveAt(i);
                     }
             }
-            base.Die();
         }
 
         public override void Spawned()
