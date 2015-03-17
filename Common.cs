@@ -806,7 +806,7 @@ public enum ServerPacketIds : short
     ChangePasswordBanned,
     Login,
     LoginBanned,
-    LoginSucces,
+    LoginSuccess,
     NewCharacter,
     NewCharacterSuccess,
     DeleteCharacter,
@@ -3496,7 +3496,7 @@ public abstract class Packet
                 return new S.Login();
             case (short)ServerPacketIds.LoginBanned:
                 return new S.LoginBanned();
-            case (short)ServerPacketIds.LoginSucces:
+            case (short)ServerPacketIds.LoginSuccess:
                 return new S.LoginSuccess();
             case (short)ServerPacketIds.NewCharacter:
                 return new S.NewCharacter();

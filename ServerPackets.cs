@@ -202,7 +202,7 @@ namespace ServerPackets
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.LoginSucces; }
+            get { return (short)ServerPacketIds.LoginSuccess; }
         }
 
         public List<SelectInfo> Characters = new List<SelectInfo>();

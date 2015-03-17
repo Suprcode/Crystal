@@ -9285,12 +9285,12 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    int succeschance = tempFrom.Info.Reflect * (int)tempTo.GemCount;
-                    succeschance = succeschance >= tempFrom.Info.CriticalRate ? 0 : tempFrom.Info.CriticalRate - succeschance;
+                    int successchance = tempFrom.Info.Reflect * (int)tempTo.GemCount;
+                    successchance = successchance >= tempFrom.Info.CriticalRate ? 0 : tempFrom.Info.CriticalRate - successchance;
 
                     //check if combine will succeed
 
-                    bool succeeded = Envir.Random.Next(100) < succeschance;
+                    bool succeeded = Envir.Random.Next(100) < successchance;
                     canUpgrade = true;
 
                     byte itemType = (byte)tempTo.Info.Type;
