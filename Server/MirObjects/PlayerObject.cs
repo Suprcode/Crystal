@@ -9080,8 +9080,7 @@ namespace Server.MirObjects
             Enqueue(p);
             RefreshStats();
         }
-
-        public bool ValidGemForItem(UserItem Gem, byte itemtype)
+        private bool ValidGemForItem(UserItem Gem, byte itemtype)
         {
             switch (itemtype)
             {
@@ -9131,6 +9130,43 @@ namespace Server.MirObjects
                     break;
             }
             return false;
+        }
+
+        private int GetCurrentStatCount(UserItem gem, UserItem item)
+        {
+            if ((gem.Info.MaxDC + gem.DC) > 0)
+                return item.DC;
+            else if ((gem.Info.MaxMC + gem.MC) > 0)
+                return item.MC;
+            else if ((gem.Info.MaxSC + gem.SC) > 0)
+                return item.SC;
+            else if ((gem.Info.MaxAC + gem.AC) > 0)
+                return item.AC;
+            else if ((gem.Info.MaxMAC + gem.MAC) > 0)
+                return item.MAC;
+
+            else if ((gem.Info.Durability) > 0)
+                return item.Info.Durability > item.MaxDura ? 0 : ((item.MaxDura - item.Info.Durability) / 1000);
+
+            else if ((gem.Info.AttackSpeed + gem.AttackSpeed) > 0)
+                return item.AttackSpeed;
+
+            else if ((gem.Info.Agility + gem.Agility) > 0)
+                return item.Agility;
+
+            else if ((gem.Info.Accuracy + gem.Accuracy) > 0)
+                return item.Accuracy;
+
+            else if ((gem.Info.PoisonAttack + gem.PoisonAttack) > 0)
+                return item.PoisonAttack;
+
+            else if ((gem.Info.Freezing + gem.Freezing) > 0)
+                return item.Freezing;
+            else if ((gem.Info.MagicResist + gem.MagicResist) > 0)
+                return item.MagicResist;
+            else if ((gem.Info.PoisonResist + gem.PoisonResist) > 0)
+                return item.PoisonResist;
+            return 0;
         }
 
         public void CombineItem(ulong fromID, ulong toID)
@@ -9242,16 +9278,19 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if (tempTo.GemCount >= 7)
+                    if ((tempTo.GemCount >= tempFrom.Info.CriticalDamage) || (GetCurrentStatCount(tempFrom,tempTo) >= tempFrom.Info.HpDrainRate))
                     {
                         ReceiveChat("Item has already reached maximum added stats", ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
 
+                    int succeschance = tempFrom.Info.Reflect * (int)tempTo.GemCount;
+                    succeschance = succeschance >= tempFrom.Info.CriticalRate ? 0 : tempFrom.Info.CriticalRate - succeschance;
 
                     //check if combine will succeed
-                    bool succeeded = Envir.Random.Next(10) < (5 + (Luck / 2));
+
+                    bool succeeded = Envir.Random.Next(100) < succeschance;
                     canUpgrade = true;
 
                     byte itemType = (byte)tempTo.Info.Type;
