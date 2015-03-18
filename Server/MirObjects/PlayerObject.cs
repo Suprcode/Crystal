@@ -9290,12 +9290,12 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    int succeschance = tempFrom.Info.Reflect * (int)tempTo.GemCount;
-                    succeschance = succeschance >= tempFrom.Info.CriticalRate ? 0 : tempFrom.Info.CriticalRate - succeschance;
+                    int successchance = tempFrom.Info.Reflect * (int)tempTo.GemCount;
+                    successchance = successchance >= tempFrom.Info.CriticalRate ? 0 : tempFrom.Info.CriticalRate - successchance;
 
                     //check if combine will succeed
 
-                    bool succeeded = Envir.Random.Next(100) < succeschance;
+                    bool succeeded = Envir.Random.Next(100) < successchance;
                     canUpgrade = true;
 
                     byte itemType = (byte)tempTo.Info.Type;
@@ -13429,6 +13429,33 @@ namespace Server.MirObjects
             }
             else
                 CheckNeedQuestKill(mInfo);
+        }
+        public bool CheckGroupQuestItem(UserItem item)
+        {
+            bool itemCollected = false;
+
+            if (GroupMembers != null)
+            {
+                foreach (PlayerObject player in GroupMembers.
+                    Where(player => player.CurrentMap == CurrentMap &&
+                        Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
+                        !player.Dead))
+                {
+                    if(player.CheckNeedQuestItem(item))
+                    {
+                        itemCollected = true;
+                    }
+                }
+            }
+            else
+            {
+                if(CheckNeedQuestItem(item))
+                {
+                    itemCollected = true;
+                }
+            }
+
+            return itemCollected;
         }
 
         public bool CheckNeedQuestItem(UserItem item, bool gainItem = true)

@@ -1821,7 +1821,7 @@ namespace Server.MirObjects
                         failed = (!Compare(param[1], SMain.Envir.Objects.Count((
                             d => d.CurrentMap == map && 
                                 d.Race == ObjectType.Monster && 
-                                string.Equals(d.Name, param[0], StringComparison.OrdinalIgnoreCase) && 
+                                string.Equals(d.Name.Replace(" ",""), param[0], StringComparison.OrdinalIgnoreCase) && 
                                 !d.Dead)), tempInt));
 
                         break;

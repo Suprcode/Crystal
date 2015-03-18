@@ -147,7 +147,7 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.LoginBanned:
                     Login((S.LoginBanned) p);
                     break;
-                case (short)ServerPacketIds.LoginSucces:
+                case (short)ServerPacketIds.LoginSuccess:
                     Login((S.LoginSuccess) p);
                     break;
                 default:

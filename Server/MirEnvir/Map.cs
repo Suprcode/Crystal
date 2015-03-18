@@ -534,7 +534,7 @@ namespace Server.MirEnvir
 
         private void ProcessRespawns()
         {
-            bool Succes = true;
+            bool Success = true;
             for (int i = 0; i < Respawns.Count; i++)
             {
                 MapRespawn respawn = Respawns[i];
@@ -544,9 +544,9 @@ namespace Server.MirEnvir
                     int count = respawn.Info.Count - respawn.Count;
 
                     for (int c = 0; c < count; c++)
-                        Succes = respawn.Spawn();
+                        Success = respawn.Spawn();
                 }
-                if (Succes)
+                if (Success)
                 {
                     respawn.ErrorCount = 0;
                     respawn.RespawnTime = Envir.Time + (respawn.Info.Delay * Settings.Minute);

@@ -66,9 +66,9 @@ namespace Server
                 ProbecheckBox.Text = "Boots";
                 SkillcheckBox.Text = "Stone";
                 NoDuraLosscheckBox.Text = "Torch";
-                PickaxecheckBox.Text = "unused atm";
+                PickaxecheckBox.Text = "Unused";
                 label50.Text = "Base rate%";
-                label52.Text = "succes drop";
+                label52.Text = "Success drop";
                 label51.Text = "Max stats (all)";
                 label49.Text = "Max gem stat";
             }
