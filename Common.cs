@@ -646,6 +646,7 @@ public enum Spell : byte
     MagicBooster = 51,
     MeteorStrike = 52,
     IceThrust = 53,
+    Blink = 54,
 
     //Taoist
     Healing = 61,

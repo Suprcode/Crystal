@@ -108,7 +108,7 @@ namespace Server.MirObjects
             {
                 if (_observer == value) return;
                 _observer = value;
-                if (_observer)
+                if (!_observer)
                     BroadcastInfo();
                 else
                     Broadcast(new S.ObjectRemove { ObjectID = ObjectID });

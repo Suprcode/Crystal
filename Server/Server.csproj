@@ -209,7 +209,6 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
-    <Compile Include="MirObjects\Monsters\ArcherSummons.cs" />
     <Compile Include="MirObjects\Monsters\AxeSkeleton.cs" />
     <Compile Include="MirObjects\Monsters\BoneFamiliar.cs" />
     <Compile Include="MirObjects\Monsters\BugBagMaggot.cs" />

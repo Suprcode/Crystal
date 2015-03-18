@@ -527,6 +527,8 @@ namespace Client.MirScenes.Dialogs
             SenderLabel.Text = Mail.SenderName;
             MessageLabel.Text = Mail.Locked ? "[*] " + Mail.Message.Replace("\r\n", " ") : Mail.Message.Replace("\r\n", " ");
 
+            Hint = string.Format("Sender: {0}\nSent: {1}{2}\n{3}", Mail.SenderName, Mail.DateSent.ToString("dd/MM/yy H:mm:ss"), Mail.Gold > 0 ? "\nGold: " + Mail.Gold : "", Mail.Opened ? "[Old]" : "[New]");
+
             SelectedImage.Visible = Selected;
         }
 
@@ -1056,7 +1058,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             SenderNameLabel.Text = Mail.SenderName;
-            DateSentLabel.Text = Mail.DateSent.ToString("MM/dd/yy H:mm:ss");
+            DateSentLabel.Text = Mail.DateSent.ToString("dd/MM/yy H:mm:ss");
             MessageLabel.Text = Mail.Message;
 
             Visible = true;
@@ -1179,7 +1181,7 @@ namespace Client.MirScenes.Dialogs
             ResetCells();
 
             SenderNameLabel.Text = Mail.SenderName;
-            DateSentLabel.Text = Mail.DateSent.ToString("MM/dd/yy H:mm:ss");
+            DateSentLabel.Text = Mail.DateSent.ToString("dd/MM/yy H:mm:ss");
             MessageLabel.Text = Mail.Message;
             GoldSendLabel.Text = Mail.Gold.ToString("###,###,##0");
 
