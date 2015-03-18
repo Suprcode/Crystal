@@ -1,2 +1,2 @@
 language: csharp
-solution: Legend of Mir.sln
+solution: Server/Server.csproj
