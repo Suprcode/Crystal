@@ -2396,6 +2396,7 @@ public class UserItem
         if (version <= 40) return;
 
         Awake = new Awake(reader);
+        
     }
 
     public void Save(BinaryWriter writer)

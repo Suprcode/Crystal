@@ -1610,6 +1610,8 @@ namespace Server.MirObjects
             GetObjects();
             Enqueue(new S.Revived());
             Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
+            Fishing = false;
+            Enqueue(GetFishInfo());
         }
         public void TownRevive()
         {
@@ -1650,6 +1652,8 @@ namespace Server.MirObjects
 
 
             InSafeZone = true;
+            Fishing = false;
+            Enqueue(GetFishInfo());
         }
 
         private void GetItemInfo()
@@ -7611,8 +7615,9 @@ namespace Server.MirObjects
             }
             else
                 InSafeZone = false;
-
-            return true;
+            Fishing = false;
+            Enqueue(GetFishInfo());
+            return true;            
         }
 
 
@@ -13059,6 +13064,11 @@ namespace Server.MirObjects
             }
             else
             {
+                if (!Fishing)
+                {
+                    Enqueue(GetFishInfo());
+                    return;
+                }
                 Fishing = false;
 
                 if (FishingProgress > 99)

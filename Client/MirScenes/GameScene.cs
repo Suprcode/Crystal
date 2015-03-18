@@ -14764,8 +14764,10 @@ namespace Client.MirScenes
 
         public void Cancel()
         {
-            Hide();
+            if (Visible)
             Network.Enqueue(new C.FishingCast { CastOut = false });
+            Hide();
+            
         }
         public void Hide()
         {
