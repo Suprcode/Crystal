@@ -450,6 +450,10 @@ namespace ServerPackets
 
         public List<ClientMagic> Magics = new List<ClientMagic>();
 
+        public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
+        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;//IntelligentCreature
+        public bool CreatureSummoned;//IntelligentCreature
+
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
@@ -508,6 +512,13 @@ namespace ServerPackets
 
             for (int i = 0; i < count; i++)
                 Magics.Add(new ClientMagic(reader));
+
+            //IntelligentCreature
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                IntelligentCreatures.Add(new ClientIntelligentCreature(reader));
+            SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
+            CreatureSummoned = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -578,6 +589,13 @@ namespace ServerPackets
             writer.Write(Magics.Count);
             for (int i = 0; i < Magics.Count; i++)
                 Magics[i].Save(writer);
+
+            //IntelligentCreature
+            writer.Write(IntelligentCreatures.Count);
+            for (int i = 0; i < IntelligentCreatures.Count; i++)
+                IntelligentCreatures[i].Save(writer);
+            writer.Write((byte)SummonedCreatureType);
+            writer.Write(CreatureSummoned);
         }
     }
     public sealed class UserLocation : Packet
@@ -4493,6 +4511,54 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Cost);
+        }
+    }
+
+    public sealed class NewIntelligentCreature : Packet//IntelligentCreature
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewIntelligentCreature; }
+        }
+
+        public ClientIntelligentCreature Creature;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Creature = new ClientIntelligentCreature(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Creature.Save(writer);
+        }
+    }
+    public sealed class UpdateIntelligentCreatureList : Packet//IntelligentCreature
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.UpdateIntelligentCreatureList; }
+        }
+
+        public List<ClientIntelligentCreature> CreatureList = new List<ClientIntelligentCreature>();
+        public bool CreatureSummoned = false;
+        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                CreatureList.Add(new ClientIntelligentCreature(reader));
+            CreatureSummoned = reader.ReadBoolean();
+            SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(CreatureList.Count);
+            for (int i = 0; i < CreatureList.Count; i++)
+                CreatureList[i].Save(writer);
+            writer.Write(CreatureSummoned);
+            writer.Write((byte)SummonedCreatureType);
         }
     }
 }
