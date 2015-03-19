@@ -13943,7 +13943,8 @@ namespace Server.MirObjects
                 ((IntelligentCreatureObject)monster).ItemFilter = Info.IntelligentCreatures[i].Filter;
                 ((IntelligentCreatureObject)monster).CurrentPickupMode = Info.IntelligentCreatures[i].petMode;
                 ((IntelligentCreatureObject)monster).Fullness = Info.IntelligentCreatures[i].Fullness;
-                ((IntelligentCreatureObject)monster).Timeleft = Info.IntelligentCreatures[i].ExpireTime;//time left in seconds
+                //((IntelligentCreatureObject)monster).Timeleft = Info.IntelligentCreatures[i].ExpireTime;//time left in seconds
+                ((IntelligentCreatureObject)monster).blackstoneTime = Info.IntelligentCreatures[i].BlackstoneTime;
 
 
                 monster.Spawn(CurrentMap, Front);
@@ -14039,13 +14040,29 @@ namespace Server.MirObjects
             }
 
             //update client
-            GetCreaturesInfo();
+            //GetCreaturesInfo();
+        }
+
+        public void UpdateCreatureBlackstoneTime(IntelligentCreatureType pType, long blackstonetime)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+                Info.IntelligentCreatures[i].BlackstoneTime = blackstonetime;
+                break;
+            }
+
+            //update client
+            //GetCreaturesInfo();
         }
 
         public void RefreshCreaturesTimeLeft()
         {
             if (Envir.Time > CreatureTimeLeftTicker)
             {
+                //ExpireTime
                 List<int> releasedPets = new List<int>();
                 CreatureTimeLeftTicker = Envir.Time + CreatureTimeLeftDelay;
                 for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
@@ -14066,6 +14083,18 @@ namespace Server.MirObjects
                     ReleaseIntelligentCreature(Info.IntelligentCreatures[releasedPets[i]].PetType, false);//release creature
                 }
 
+                if (Info.CreatureSummoned && Info.SummonedCreatureType != IntelligentCreatureType.None)
+                {
+                    for (int i = 0; i < Pets.Count; i++)
+                    {
+                        if (Pets[i].Info.AI != 64) continue;
+                        if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+
+                        ((IntelligentCreatureObject)Pets[i]).ProcessBlackStoneProduction();
+                        break;
+                    }
+                }
+
                 //update client
                 GetCreaturesInfo();
             }
@@ -14080,8 +14109,8 @@ namespace Server.MirObjects
                 if (Pets[i].Info.AI != 64) continue;
                 if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
 
-                ((IntelligentCreatureObject)Pets[i]).MouseLocation = atlocation;
-                ((IntelligentCreatureObject)Pets[i]).ManualPickup(mousemode);
+                //((IntelligentCreatureObject)Pets[i]).MouseLocation = atlocation;
+                ((IntelligentCreatureObject)Pets[i]).ManualPickup(mousemode, atlocation);
                 break;
             }
         }

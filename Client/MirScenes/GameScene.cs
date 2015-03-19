@@ -17529,6 +17529,8 @@ namespace Client.MirScenes
         public bool AnimSwitched = false;
         public bool AnimNeedSwitch = false;
 
+        private const long blackstoneProduceTime = 10800;//3 hours in seconds
+
         private bool showing = false;
 
         public IntelligentCreatureDialog()
@@ -17741,6 +17743,8 @@ namespace Client.MirScenes
                 Visible = true,
                 NotControl = true,
             };
+            BlackStoneImageBG.MouseEnter += Control_MouseEnter;
+            BlackStoneImageBG.MouseLeave += Control_MouseLeave;
 
             BlackStoneImageFG = new MirImageControl
             {
@@ -17750,9 +17754,11 @@ namespace Client.MirScenes
                 Parent = this,
                 Visible = true,
                 DrawImage = false,
-                NotControl = true,
+                //NotControl = true,
             };
             BlackStoneImageFG.AfterDraw += BlackStoneImageFG_AfterDraw;
+            BlackStoneImageFG.MouseEnter += Control_MouseEnter;
+            BlackStoneImageFG.MouseLeave += Control_MouseLeave;
 
             #endregion
 
@@ -17866,9 +17872,17 @@ namespace Client.MirScenes
             int selectedCreature = BeforeAfterDraw();
             if (selectedCreature < 0) return;
 
-            double percent = GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime / ((double)10800);
+            double percent = GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime / ((double)blackstoneProduceTime);
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
+
+            if (HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == BlackStoneImageFG)
+            {
+                if(GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.CanProduceBlackStone)
+                    HoverLabel.Text = string.Format("{0}", PrintTimeSpan(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
+                else
+                    HoverLabel.Text = "No Production.";
+            }
 
             Rectangle section = new Rectangle
             {
@@ -17897,6 +17911,14 @@ namespace Client.MirScenes
                 HoverLabel.Size = FullnessFG.Size;
                 HoverLabel.Location = new Point(FullnessFG.Location.X, FullnessFG.Location.Y - 2);
                 HoverLabelParent = FullnessFG;
+            }
+            if (sender == BlackStoneImageBG || sender == BlackStoneImageFG)
+            {
+                HoverLabel.Visible = true;
+                HoverLabel.Text = string.Format("{0}", PrintTimeSpan(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
+                HoverLabel.Size = BlackStoneImageBG.Size;
+                HoverLabel.Location = new Point(BlackStoneImageBG.Location.X + 5, BlackStoneImageBG.Location.Y - 2);
+                HoverLabelParent = BlackStoneImageFG;
             }
         }
         private void Control_MouseLeave(object sender, EventArgs e)
