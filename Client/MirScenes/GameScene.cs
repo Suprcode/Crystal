@@ -4441,7 +4441,17 @@ namespace Client.MirScenes
         private void NewIntelligentCreature(S.NewIntelligentCreature p)//IntelligentCreature
         {
             User.IntelligentCreatures.Add(p.Creature);
-            if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
+
+            MirInputBox inputBox = new MirInputBox("Please give your creature a name.");
+            inputBox.InputTextBox.Text = GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count-1].CustomName;
+            inputBox.OKButton.Click += (o1, e1) =>
+            {
+                if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();//refresh changes
+                GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count - 1].CustomName = inputBox.InputTextBox.Text;
+                Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count - 1] });
+                inputBox.Dispose();
+            };
+            inputBox.Show();
         }
 
         private void UpdateIntelligentCreatureList(S.UpdateIntelligentCreatureList p)//IntelligentCreature
@@ -17575,6 +17585,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 572,
                 Sound = SoundList.ButtonA,
+                Visible = false,
             };
             CreatureRenameButton.Click += ButtonClick;
 
@@ -18281,7 +18292,7 @@ namespace Client.MirScenes
             //}
             else // more than 1 day
             {
-                answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.TotalHours, t.Minutes, t.Seconds);
+                answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
             }
 
             return answer;

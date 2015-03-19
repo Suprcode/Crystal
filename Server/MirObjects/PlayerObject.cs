@@ -9935,7 +9935,7 @@ namespace Server.MirObjects
                     }
                     break;
                 case ItemType.Pets://IntelligentCreature
-                    if (item.Info.Shape >= 20 && item.Info.Shape != 22)
+                    if (item.Info.Shape >= 20 && item.Info.Shape != 21)
                     {
                         if (!Info.CreatureSummoned)
                         {

@@ -751,14 +751,14 @@ namespace Client.MirObjects
 
             //6 - BlackKitten
             HelperPets.Add(frame = new FrameSet());
-            //frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
-            //frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
-            //frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));          // paw stretch
-            //frame.Frames.Add(MirAction.Attack2, new Frame(144, 10, 0, 100));        // tail up
-            //frame.Frames.Add(MirAction.Attack3, new Frame(224, 10, 0, 100));        // rolling
-            //frame.Frames.Add(MirAction.Attack4, new Frame(304, 7, 0, 100));         // boxing
-            //frame.Frames.Add(MirAction.Die, new Frame(224, 3, 7, 100));
-            //frame.Frames.Add(MirAction.Dead, new Frame(226, 1, 9, 1000));
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));          // paw stretch
+            frame.Frames.Add(MirAction.Attack2, new Frame(144, 10, 0, 100));        // tail up
+            frame.Frames.Add(MirAction.Attack3, new Frame(224, 10, 0, 100));        // rolling
+            frame.Frames.Add(MirAction.Attack4, new Frame(304, 7, 0, 100));         // boxing
+            frame.Frames.Add(MirAction.Die, new Frame(224, 3, 7, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(226, 1, 9, 1000));
 
             //7 - BabyDragon
             HelperPets.Add(frame = new FrameSet());

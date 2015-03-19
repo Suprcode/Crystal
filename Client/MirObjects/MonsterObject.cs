@@ -729,6 +729,8 @@ namespace Client.MirObjects
                                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 230 + (CMain.Random.Next(5) * 10), 5, 400, source, CMain.Time + CMain.Random.Next(1000)));
                                 }
                                 break;
+                            case Monster.OlympicFlame:
+                                break;
                         }
                         break;
                     case MirAction.Attack2:
@@ -1115,6 +1117,17 @@ namespace Client.MirObjects
                         }
                         else
                         {
+
+                            switch (BaseImage)
+                            {
+                                case Monster.BabySnowMan:
+                                    if (FrameIndex == 1)
+                                    {
+                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "SnowmanSnow") < 0)
+                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 208, 11, 1500, this), "SnowmanSnow"));
+                                    }
+                                    break;
+                            }
                             if (FrameIndex == 3) PlaySwingSound();
                             NextMotion += FrameInterval;
                         }
@@ -1134,6 +1147,21 @@ namespace Client.MirObjects
                         }
                         else
                         {
+                            switch (BaseImage)
+                            {
+                                case Monster.OlympicFlame:
+                                    if (FrameIndex == 1)
+                                    {
+                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureFlame") < 0)
+                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 280, 4, 800, this), "CreatureFlame"));
+                                    }
+                                    if (FrameIndex == 4)
+                                    {
+                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureSmoke") < 0)
+                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 256, 3, 1000, this), "CreatureSmoke"));
+                                    }
+                                    break;
+                            }
                             NextMotion += FrameInterval;
                         }
                     }
