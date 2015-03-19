@@ -7923,7 +7923,7 @@ namespace Client.MirScenes
 
             int cost = magic.Level * magic.LevelCost + magic.BaseCost;
 
-            if (magic.Spell == Spell.Teleport)
+            if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink)
             {
                 for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
                 {

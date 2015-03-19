@@ -1598,6 +1598,15 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region Blink
+
+                            case Spell.Blink:
+                                Effects.Add(new Effect(Libraries.Magic, 1590, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region Hiding
 
                             case Spell.Hiding:
