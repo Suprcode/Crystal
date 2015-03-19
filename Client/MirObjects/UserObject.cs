@@ -140,7 +140,7 @@ namespace Client.MirObjects
             
             if (this == User && Light < 3) Light = 3;
             AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
-            if (AttackSpeed < 600) AttackSpeed = 600;
+            if (AttackSpeed < 550) AttackSpeed = 550;
             GameScene.Scene.Redraw();
         }
         private void RefreshLevelStats()

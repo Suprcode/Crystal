@@ -1855,7 +1855,7 @@ namespace Server.MirObjects
 
 
 
-            if (AttackSpeed < 600) AttackSpeed = 600;
+            if (AttackSpeed < 550) AttackSpeed = 550;
         }
 
         private void RefreshLevelStats()
