@@ -900,7 +900,7 @@ namespace Client.MirScenes
 
                 Library = Libraries.Title;
 
-                Index = 661 + (byte) info.Class;
+                Index = 660 + (byte) info.Class;
 
                 if (Selected) Index += 5;
 
