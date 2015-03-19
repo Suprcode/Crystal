@@ -1340,7 +1340,25 @@ namespace Server.MirObjects
 
             if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll)
             {
-                for (int i = 40; i < Info.Inventory.Length; i++)
+                for (int i = 0; i < 4; i++)
+                {
+                    if (Info.Inventory[i] != null) continue;
+                    Info.Inventory[i] = item;
+                    return;
+                }
+            }
+            else if (item.Info.Type == ItemType.Amulet)
+            {
+                for (int i = 4; i < 6; i++)
+                {
+                    if (Info.Inventory[i] != null) continue;
+                    Info.Inventory[i] = item;
+                    return;
+                }
+            }
+            else
+            {
+                for (int i = 6; i < Info.Inventory.Length; i++)
                 {
                     if (Info.Inventory[i] != null) continue;
                     Info.Inventory[i] = item;
@@ -2662,9 +2680,9 @@ namespace Server.MirObjects
                     ReceiveChat(string.Format("You cannot shout for another {0} seconds.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
                     return;
                 }
-                if (Level < 7)
+                if (Level < 8)
                 {
-                    ReceiveChat("You need to be level 7 before you can shout.", ChatType.System);
+                    ReceiveChat("You need to be level 8 before you can shout.", ChatType.System);
                     return;
                 }
 
@@ -3603,6 +3621,23 @@ namespace Server.MirObjects
                             enemyGuild.SendMessage(string.Format("{0} has started a war", MyGuild.Name), ChatType.System);
                         }
 
+                        break;
+
+                    case "ADDINVENTORY":
+                        int openLevel = (int)((Info.Inventory.Length - 46) / 4);
+                        uint openGold = (uint)(1000000 + openLevel * 1000000);
+
+                        if (Account.Gold >= openGold)
+                        {
+                            Account.Gold -= openGold;
+                            Enqueue(new S.LoseGold { Gold = openGold });
+                            Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
+                            ReceiveChat("Inventory size increased.", ChatType.System);
+                        }
+                        else
+                        {
+                            ReceiveChat("Not enough gold.", ChatType.System);
+                        }
                         break;
 
                     default:

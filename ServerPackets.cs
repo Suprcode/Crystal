@@ -4495,4 +4495,20 @@ namespace ServerPackets
             writer.Write(Cost);
         }
     }
+
+	public sealed class ResizeInventory : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ResizeInventory; } }
+
+        public int Size;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Size = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Size);
+        }
+    }
 }

@@ -132,6 +132,9 @@ namespace Server.MirDatabase
             }
 
             int count = reader.ReadInt32();
+
+            Array.Resize(ref Inventory, count);
+
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
@@ -347,6 +350,21 @@ namespace Server.MirDatabase
                     Gender = Gender,
                     LastAccess = LastDate
                 };
+        }
+
+        public int ResizeInventory()
+        {
+            if (Inventory.Length >= 86)
+                Array.Resize(ref Inventory, 86);
+            else
+            {
+                if (Inventory.Length == 46)
+                    Array.Resize(ref Inventory, Inventory.Length + 8);
+                else
+                    Array.Resize(ref Inventory, Inventory.Length + 4);
+            }
+
+            return Inventory.Length;
         }
     }
 

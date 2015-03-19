@@ -589,14 +589,14 @@ public enum ItemSet : byte
     NokChi = 10,
     TaoProtect = 11,
     Mir = 12,
-    Bone,
-    Bug,
-    WhiteGold,
-    WhiteGoldH,
-    RedJade,
-    RedJadeH,
-    Nephrite,
-    NephriteH
+    Bone = 13,
+    Bug = 14,
+    WhiteGold = 15,
+    WhiteGoldH = 16,
+    RedJade = 17,
+    RedJadeH = 18,
+    Nephrite = 19,
+    NephriteH = 20
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -957,9 +957,9 @@ public enum ServerPacketIds : short
     RequestReincarnation,
     UserBackStep,
     ObjectBackStep,
-    UserAttackMove,
     UserDashAttack,
     ObjectDashAttack,
+    UserAttackMove,
     CombineItem,
     ItemUpgraded,
     SetConcentration,
@@ -986,7 +986,8 @@ public enum ServerPacketIds : short
     MailSendRequest,
     MailSent,
     ParcelCollected,
-    MailCost
+    MailCost,
+	ResizeInventory,
 }
 
 public enum ClientPacketIds : short
@@ -2569,40 +2570,43 @@ public class UserItem
         Array.Resize(ref Slots, amount);
     }
 
-    public ushort GetRealItemImage()
+    public ushort Image
     {
-        switch (Info.Type)
+        get
         {
-            #region Amulet and Poison Stack Image changes
-            case ItemType.Amulet:
-                if (Info.StackSize > 0)
-                {
-                    switch(Info.Shape)
+            switch (Info.Type)
+            {
+                #region Amulet and Poison Stack Image changes
+                case ItemType.Amulet:
+                    if (Info.StackSize > 0)
                     {
-                        case 0: //Amulet
-                            if (Count >= 300) return 3662;
-                            if (Count >= 200) return 3661;
-                            if (Count >= 100) return 3660;
-                            return 3660;
-                        case 1: //Grey Poison
-                            if (Count >= 150) return 3675;
-                            if (Count >= 100) return 2960;
-                            if (Count >= 50) return 3674;
-                            return 3673;
-                        case 2: //Yellow Poison
-                            if (Count >= 150) return 3672;
-                            if (Count >= 100) return 2961;
-                            if (Count >= 50) return 3671;
-                            return 3670;
+                        switch (Info.Shape)
+                        {
+                            case 0: //Amulet
+                                if (Count >= 300) return 3662;
+                                if (Count >= 200) return 3661;
+                                if (Count >= 100) return 3660;
+                                return 3660;
+                            case 1: //Grey Poison
+                                if (Count >= 150) return 3675;
+                                if (Count >= 100) return 2960;
+                                if (Count >= 50) return 3674;
+                                return 3673;
+                            case 2: //Yellow Poison
+                                if (Count >= 150) return 3672;
+                                if (Count >= 100) return 2961;
+                                if (Count >= 50) return 3671;
+                                return 3670;
+                        }
                     }
+                    break;
                 }
-                break;
+
             #endregion
-        }
-
-        return Info.Image;
-    }
-
+            
+			return Info.Image;
+			}
+		}
 
     public UserItem Clone()
     {
@@ -2641,7 +2645,8 @@ public class UserItem
                 Freezing = Freezing,
                 PoisonAttack = PoisonAttack,
 
-                Slots = Slots
+                Slots = Slots,
+				Awake = Awake,
             };
 
         return item;
@@ -3856,6 +3861,8 @@ public abstract class Packet
                 return new S.ParcelCollected();
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
+			case (short)ServerPacketIds.ResizeInventory:
+                return new S.ResizeInventory();
             default:
                 throw new NotImplementedException();
         }
