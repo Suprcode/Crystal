@@ -48,6 +48,7 @@ namespace Client.MirObjects
         public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
         public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;//IntelligentCreature
         public bool CreatureSummoned;//IntelligentCreature
+        public int PearlCount = 0;
 
         public List<ClientQuestProgress> CurrentQuests = new List<ClientQuestProgress>();
         public List<int> CompletedQuests = new List<int>();

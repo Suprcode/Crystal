@@ -3416,6 +3416,7 @@ public class ClientIntelligentCreature//IntelligentCreature
     public int Fullness;
     public int SlotIndex;
     public long ExpireTime;//in days
+    public long BlackstoneTime;
 
     public IntelligentCreaturePickupMode petMode = IntelligentCreaturePickupMode.SemiAutomatic;
 
@@ -3436,6 +3437,7 @@ public class ClientIntelligentCreature//IntelligentCreature
         Fullness = reader.ReadInt32();
         SlotIndex = reader.ReadInt32();
         ExpireTime = reader.ReadInt64();
+        BlackstoneTime = reader.ReadInt64();
 
         petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
@@ -3452,6 +3454,7 @@ public class ClientIntelligentCreature//IntelligentCreature
         writer.Write(Fullness);
         writer.Write(SlotIndex);
         writer.Write(ExpireTime);
+        writer.Write(BlackstoneTime);
 
         writer.Write((byte)petMode);
 

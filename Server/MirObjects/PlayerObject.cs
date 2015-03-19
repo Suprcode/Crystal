@@ -8881,7 +8881,27 @@ namespace Server.MirObjects
                 case ItemType.Pets://IntelligentCreature
                     if (item.Info.Shape >= 20)
                     {
-                        //this is reserved for food and other pet items
+                        switch (item.Info.Shape)
+                        {
+                            case 20://Mirror
+                                break;
+                            case 21://Nuts
+                                break;
+                            case 22://BlackStone
+                                break;
+                            case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
+                            case 24://WonderPill
+                                if (Info.CreatureSummoned)
+                                    for (int i = 0; i < Pets.Count; i++)
+                                    {
+                                        if (Pets[i].Info.AI != 64) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
+                                            ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
+                                        break;
+                                    }
+                                break;
+                        }
                     }
                     else
                     {
@@ -8899,7 +8919,7 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        ReceiveChat("Obtained a new creature. {" + petInfo.CustomName + "} Slot: " + slotIndex.ToString(), ChatType.Hint);
+                        ReceiveChat("Obtained a new creature {" + petInfo.CustomName + "}.", ChatType.Hint);
 
                         Info.IntelligentCreatures.Add(petInfo);
                         Enqueue(petInfo.GetInfo());
@@ -9915,8 +9935,32 @@ namespace Server.MirObjects
                     }
                     break;
                 case ItemType.Pets://IntelligentCreature
-                    //need code for certain petitems
-                    return true;
+                    if (item.Info.Shape >= 20 && item.Info.Shape != 22)
+                    {
+                        if (!Info.CreatureSummoned)
+                        {
+                            ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                            return false;
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Pets.Count; i++)
+                            {
+                                if (Pets[i].Info.AI != 64) continue;
+                                if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+
+                                if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
+                                    ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
+                                else
+                                {
+                                    ReceiveChat(" Creature is not hungry", ChatType.System);
+                                    return false;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    break;
             }
 
             if (RidingMount && item.Info.Type != ItemType.Scroll && item.Info.Type != ItemType.Potion)
@@ -13983,7 +14027,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void DecreaseCreatureFullness(IntelligentCreatureType pType, int fullness)
+        public void UpdateCreatureFullness(IntelligentCreatureType pType, int fullness)
         {
             if (pType == IntelligentCreatureType.None) return;
 
@@ -13993,6 +14037,7 @@ namespace Server.MirObjects
                 Info.IntelligentCreatures[i].Fullness = fullness;
                 break;
             }
+
             //update client
             GetCreaturesInfo();
         }
@@ -14001,7 +14046,7 @@ namespace Server.MirObjects
         {
             if (Envir.Time > CreatureTimeLeftTicker)
             {
-                int releaseMe = -1;
+                List<int> releasedPets = new List<int>();
                 CreatureTimeLeftTicker = Envir.Time + CreatureTimeLeftDelay;
                 for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
                 {
@@ -14012,14 +14057,13 @@ namespace Server.MirObjects
                         Info.IntelligentCreatures[i].ExpireTime = 0;
                         if (Info.CreatureSummoned && Info.SummonedCreatureType == Info.IntelligentCreatures[i].PetType)
                             UnSummonIntelligentCreature(Info.SummonedCreatureType, false);//unsummon creature
-
-                        releaseMe = i;
+                        releasedPets.Add(i);
                     }
                 }
-                if (releaseMe >= 0)
+                for (int i = (releasedPets.Count-1); i >= 0; i--)//start with largest value
                 {
-                    ReceiveChat((string.Format("Creature {0} has expired.", Info.IntelligentCreatures[releaseMe].CustomName)), ChatType.System);
-                    ReleaseIntelligentCreature(Info.IntelligentCreatures[releaseMe].PetType, false);//release creature
+                    ReceiveChat((string.Format("Creature {0} has expired.", Info.IntelligentCreatures[releasedPets[i]].CustomName)), ChatType.System);
+                    ReleaseIntelligentCreature(Info.IntelligentCreatures[releasedPets[i]].PetType, false);//release creature
                 }
 
                 //update client
@@ -14027,21 +14071,7 @@ namespace Server.MirObjects
             }
         }
 
-        private void GetCreaturesInfo()
-        {
-            S.UpdateIntelligentCreatureList packet = new S.UpdateIntelligentCreatureList
-            {
-                CreatureSummoned = Info.CreatureSummoned,
-                SummonedCreatureType = Info.SummonedCreatureType,
-            };
-
-            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
-                packet.CreatureList.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
-
-            Enqueue(packet);
-        }
-
-        public void IntelligentCreaturePickup(bool mousemode)
+        public void IntelligentCreaturePickup(bool mousemode, Point atlocation)
         {
             if (!Info.CreatureSummoned) return;
 
@@ -14050,12 +14080,46 @@ namespace Server.MirObjects
                 if (Pets[i].Info.AI != 64) continue;
                 if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
 
-                if (mousemode) ((IntelligentCreatureObject)Pets[i]).DoMousePickup();
-                else ((IntelligentCreatureObject)Pets[i]).DoSemiAutoPickup();
-
+                ((IntelligentCreatureObject)Pets[i]).MouseLocation = atlocation;
+                ((IntelligentCreatureObject)Pets[i]).ManualPickup(mousemode);
                 break;
             }
         }
+
+        public void IntelligentCreatureProducePearl()
+        {
+            Info.PearlCount++;
+        }
+
+        public bool IntelligentCreatureProduceBlackStone()
+        {
+            ItemInfo iInfo = Envir.GetItemInfo(Settings.CreatureBlackStoneName);
+            if (iInfo == null) return false;
+
+            UserItem item = Envir.CreateDropItem(iInfo);
+            item.Count = 1;
+
+            if (!CanGainItem(item, false)) return false;
+
+            GainItem(item);
+            return true;
+        }
+
+        private void GetCreaturesInfo()
+        {
+            S.UpdateIntelligentCreatureList packet = new S.UpdateIntelligentCreatureList
+            {
+                CreatureSummoned = Info.CreatureSummoned,
+                SummonedCreatureType = Info.SummonedCreatureType,
+                PearlCount = Info.PearlCount,
+            };
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+                packet.CreatureList.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
+
+            Enqueue(packet);
+        }
+
 
         #endregion
 

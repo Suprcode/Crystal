@@ -4542,6 +4542,7 @@ namespace ServerPackets
         public List<ClientIntelligentCreature> CreatureList = new List<ClientIntelligentCreature>();
         public bool CreatureSummoned = false;
         public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
+        public int PearlCount = 0;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -4550,6 +4551,7 @@ namespace ServerPackets
                 CreatureList.Add(new ClientIntelligentCreature(reader));
             CreatureSummoned = reader.ReadBoolean();
             SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
+            PearlCount = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -4559,6 +4561,7 @@ namespace ServerPackets
                 CreatureList[i].Save(writer);
             writer.Write(CreatureSummoned);
             writer.Write((byte)SummonedCreatureType);
+            writer.Write(PearlCount);
         }
     }
 }

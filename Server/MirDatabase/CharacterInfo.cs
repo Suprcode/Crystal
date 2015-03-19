@@ -72,6 +72,7 @@ namespace Server.MirDatabase
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
         public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
         public bool CreatureSummoned;
+        public int PearlCount;
 
         public List<QuestProgressInfo> CurrentQuests = new List<QuestProgressInfo>();
 
@@ -237,6 +238,7 @@ namespace Server.MirDatabase
                 }
                 SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
                 CreatureSummoned = reader.ReadBoolean();
+                PearlCount = reader.ReadInt32();
             }
         }
 
@@ -346,6 +348,7 @@ namespace Server.MirDatabase
                 IntelligentCreatures[i].Save(writer);
             writer.Write((byte)SummonedCreatureType);
             writer.Write(CreatureSummoned);
+            writer.Write(PearlCount);
 
         }
 
@@ -546,6 +549,7 @@ namespace Server.MirDatabase
         public int Fullness;
         public int SlotIndex;
         public long ExpireTime = -9999;//
+        public long BlackstoneTime = 0;
 
         public UserIntelligentCreature(IntelligentCreatureType creatureType, int slot, byte effect = 0)
         {
@@ -557,6 +561,8 @@ namespace Server.MirDatabase
 
             if (effect > 0) ExpireTime = effect * 86400;//effect holds the amount in days
             else ExpireTime = -9999;
+
+            BlackstoneTime = 0;
 
             Filter = new IntelligentCreatureItemFilter();
         }
@@ -570,6 +576,7 @@ namespace Server.MirDatabase
             Fullness = reader.ReadInt32();
             SlotIndex = reader.ReadInt32();
             ExpireTime = reader.ReadInt64();
+            BlackstoneTime = reader.ReadInt64();
 
             petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
@@ -584,6 +591,7 @@ namespace Server.MirDatabase
             writer.Write(Fullness);
             writer.Write(SlotIndex);
             writer.Write(ExpireTime);
+            writer.Write(BlackstoneTime);
 
             writer.Write((byte)petMode);
 
@@ -608,6 +616,7 @@ namespace Server.MirDatabase
                 Fullness = Fullness,
                 SlotIndex = SlotIndex,
                 ExpireTime = ExpireTime,
+                BlackstoneTime = BlackstoneTime,
 
                 petMode = petMode,
 

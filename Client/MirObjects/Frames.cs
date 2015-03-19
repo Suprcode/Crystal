@@ -687,9 +687,10 @@ namespace Client.MirObjects
             HelperPets.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(96, 9, 0, 100));      // normal pickup
-            frame.Frames.Add(MirAction.Struck, new Frame(168, 5, 0, 100));
-            frame.Frames.Add(MirAction.Attack2, new Frame(208, 10, 0, 100));    // mass pickup
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 9, 0, 100));      //Standing Variant_0
+            frame.Frames.Add(MirAction.Attack2, new Frame(168, 5, 0, 100));     //Standing Variant_1
+            frame.Frames.Add(MirAction.Attack3, new Frame(208, 10, 0, 100));    //Standing Variant_2
+            frame.Frames.Add(MirAction.Attack4, new Frame(288, 10, 0, 100));    //Standing Variant_3
             frame.Frames.Add(MirAction.Die, new Frame(288, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(297, 1, 9, 1000));
 
@@ -698,20 +699,20 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
             frame.Frames.Add(MirAction.Attack1, new Frame(80, 10, 0, 100));         // normal pickup
-            frame.Frames.Add(MirAction.Special, new Frame(160, 8, 0, 100));         // cleaning himself ?
-            frame.Frames.Add(MirAction.Attack2, new Frame(224, 17, 0, 100));        // flying?
-            frame.Frames.Add(MirAction.Struck, new Frame(360, 9, 0, 100));          // chirping or gulping worm ?
+            frame.Frames.Add(MirAction.Attack2, new Frame(160, 8, 0, 100));         // cleaning himself ?
+            frame.Frames.Add(MirAction.Attack3, new Frame(224, 17, 0, 100));        // flying?
+            frame.Frames.Add(MirAction.Attack4, new Frame(360, 9, 0, 100));         // chirping or gulping worm ?
             frame.Frames.Add(MirAction.Die, new Frame(360, 1, 9, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(360, 1, 9, 1000));
 
-            //2 - Kitten
+            //2 - Kitten - BlackKitten
             HelperPets.Add(frame = new FrameSet());
-            frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
-            frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));          // slipping ?
-            frame.Frames.Add(MirAction.Special, new Frame(144, 10, 0, 100));        // pickup ?
-            frame.Frames.Add(MirAction.Attack2, new Frame(224, 10, 0, 100));        // rolling ?
-            frame.Frames.Add(MirAction.Struck, new Frame(304, 7, 0, 100));          // boxing ?
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));          // slipping
+            frame.Frames.Add(MirAction.Attack2, new Frame(144, 10, 0, 100));        // pickup
+            frame.Frames.Add(MirAction.Attack3, new Frame(224, 10, 0, 100));        // rolling
+            frame.Frames.Add(MirAction.Attack4, new Frame(304, 7, 0, 100));         // boxing
             frame.Frames.Add(MirAction.Die, new Frame(224, 3, 7, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(226, 1, 9, 1000));
 
@@ -720,9 +721,9 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
             frame.Frames.Add(MirAction.Attack1, new Frame(80, 7, 0, 100));          // headbutt
-            frame.Frames.Add(MirAction.Special, new Frame(136, 10, 0, 100));        // head rotate
-            frame.Frames.Add(MirAction.Attack2, new Frame(216, 8, 0, 100));         // ?
-            frame.Frames.Add(MirAction.Struck, new Frame(280, 20, 0, 100));         // die and revive ?
+            frame.Frames.Add(MirAction.Attack2, new Frame(136, 10, 0, 100));        // head rotate
+            frame.Frames.Add(MirAction.Attack3, new Frame(216, 8, 0, 100));         // poking
+            frame.Frames.Add(MirAction.Attack4, new Frame(280, 20, 0, 100));        // die and revive
             frame.Frames.Add(MirAction.Die, new Frame(280, 10, 10, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(290, 1, 19, 1000));
 
@@ -731,43 +732,53 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
             frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));          // mace swing
-            frame.Frames.Add(MirAction.Special, new Frame(144, 10, 0, 100));        // ?
-            frame.Frames.Add(MirAction.Attack2, new Frame(224, 7, 0, 100));         // ?
-            frame.Frames.Add(MirAction.Struck, new Frame(280, 5, 0, 100));          // ?
+            frame.Frames.Add(MirAction.Attack2, new Frame(144, 10, 0, 100));        // mace tap
+            frame.Frames.Add(MirAction.Attack3, new Frame(224, 7, 0, 100));         // dance
+            frame.Frames.Add(MirAction.Attack4, new Frame(280, 5, 0, 100));         // ears dance
+            frame.Frames.Add(MirAction.Die, new Frame(280, 5, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(284, 1, 4, 1000));
 
             //5 - Wimaen
             HelperPets.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(96, 7, 0, 100));          // handstand ?
-            frame.Frames.Add(MirAction.Special, new Frame(152, 10, 0, 100));        // punch
-            frame.Frames.Add(MirAction.Attack2, new Frame(232, 6, 0, 100));         // rolling
-            frame.Frames.Add(MirAction.Struck, new Frame(280, 4, 0, 100));          //
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 7, 0, 100));          // handstand
+            frame.Frames.Add(MirAction.Attack2, new Frame(152, 10, 0, 100));        // punch
+            frame.Frames.Add(MirAction.Attack3, new Frame(232, 6, 0, 100));         // rolling
+            frame.Frames.Add(MirAction.Attack4, new Frame(280, 4, 0, 100));          // wave
+            frame.Frames.Add(MirAction.Die, new Frame(280, 4, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(283, 1, 3, 1000));
 
             //6 - BlackKitten
             HelperPets.Add(frame = new FrameSet());
-            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
-            frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));          // slipping ?
-            frame.Frames.Add(MirAction.Special, new Frame(144, 10, 0, 100));        // pickup ?
-            frame.Frames.Add(MirAction.Attack2, new Frame(224, 10, 0, 100));        // rolling
-            frame.Frames.Add(MirAction.Struck, new Frame(304, 7, 0, 100));          // boxing ?
+            //frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
+            //frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
+            //frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));          // paw stretch
+            //frame.Frames.Add(MirAction.Attack2, new Frame(144, 10, 0, 100));        // tail up
+            //frame.Frames.Add(MirAction.Attack3, new Frame(224, 10, 0, 100));        // rolling
+            //frame.Frames.Add(MirAction.Attack4, new Frame(304, 7, 0, 100));         // boxing
+            //frame.Frames.Add(MirAction.Die, new Frame(224, 3, 7, 100));
+            //frame.Frames.Add(MirAction.Dead, new Frame(226, 1, 9, 1000));
 
             //7 - BabyDragon
             HelperPets.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(96, 7, 0, 100));          // bow ?
-            frame.Frames.Add(MirAction.Special, new Frame(152, 6, 0, 100));         // ball trow?
-            frame.Frames.Add(MirAction.Attack2, new Frame(200, 10, 0, 100));        // mass pickup turning head?
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 7, 0, 100));          // bow down
+            frame.Frames.Add(MirAction.Attack2, new Frame(152, 6, 0, 100));         // ball play
+            frame.Frames.Add(MirAction.Attack3, new Frame(200, 10, 0, 100));        // tail swing
+            frame.Frames.Add(MirAction.Die, new Frame(200, 5, 5, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(204, 1, 9, 1000));
 
             //8 - OlympicFlame
             HelperPets.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(96, 3, 0, 100));          // pickup ?
-            frame.Frames.Add(MirAction.Special, new Frame(112, 8, 0, 100));         // jump ?
-            frame.Frames.Add(MirAction.Attack2, new Frame(176, 10, 0, 100));        // die and revive?
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 3, 0, 100));          // bow down
+            frame.Frames.Add(MirAction.Attack2, new Frame(112, 8, 0, 100));         // jump
+            frame.Frames.Add(MirAction.Attack3, new Frame(176, 10, 0, 100));        // lay down
+            frame.Frames.Add(MirAction.Die, new Frame(176, 8, 2, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(183, 1, 9, 1000));
             //Effect1 Smoke : 256,3,0,100
             //Effect2 Fire : 280,4,0,100
 
@@ -775,8 +786,10 @@ namespace Client.MirObjects
             HelperPets.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 7, 0, 100));
-            frame.Frames.Add(MirAction.Struck, new Frame(104, 6, 0, 100));          // struck?
-            frame.Frames.Add(MirAction.Die, new Frame(152, 7, 0, 100));             // melting?
+            frame.Frames.Add(MirAction.Attack1, new Frame(104, 6, 0, 100));         // belly dance :P
+            frame.Frames.Add(MirAction.Attack2, new Frame(152, 7, 0, 100));         // melting
+            frame.Frames.Add(MirAction.Die, new Frame(152, 7, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(158, 1, 6, 1000));
             //Effect1 Snow : 208,11,0,100
 
             #endregion

@@ -462,8 +462,8 @@ namespace Client.MirScenes
                     BeltDialog.Grid[5].UseItem();
                     break;
                 case Keys.X:
-                    //IntelligentCreature mousepickup mode
-                    if (!CMain.Ctrl && !CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup {MouseMode = true});
+                    //IntelligentCreature mousepickup mode              MapObject.MouseObject.CurrentLocation
+                    if (!CMain.Ctrl && !CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
                     if (!CMain.Alt) break;
                     LogOut();
                     break;
@@ -496,7 +496,7 @@ namespace Client.MirScenes
                         }
                     }
                     //IntelligentCreature semiauto pickup mode
-                    if (!CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false });
+                    if (!CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
                     break;
                 case Keys.H:
                     if (CMain.Ctrl)
@@ -4448,6 +4448,7 @@ namespace Client.MirScenes
         {
             User.CreatureSummoned = p.CreatureSummoned;
             User.SummonedCreatureType = p.SummonedCreatureType;
+            User.PearlCount = p.PearlCount;
             if (p.CreatureList.Count != User.IntelligentCreatures.Count)
             {
                 User.IntelligentCreatures.Clear();
@@ -17521,6 +17522,7 @@ namespace Client.MirScenes
         public MirButton AutomaticModeButton, SemiAutoModeButton, OptionsMenuButton;
         public CreatureButton[] CreatureButtons;
         public int SelectedCreatureSlot = -1;
+        public MirControl HoverLabelParent = null;
 
         private MirAnimatedControl CreatureImage;
         public long SwitchAnimTime;
@@ -17841,6 +17843,9 @@ namespace Client.MirScenes
                 return;
             }
 
+            if (HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == FullnessFG)
+                HoverLabel.Text = GameScene.User.IntelligentCreatures[selectedCreature].Fullness.ToString() + " / 10000";
+
             Rectangle section = new Rectangle
             {
                 Size = new Size((int)((FullnessFG.Size.Width) * percent), FullnessFG.Size.Height)
@@ -17861,8 +17866,7 @@ namespace Client.MirScenes
             int selectedCreature = BeforeAfterDraw();
             if (selectedCreature < 0) return;
 
-            //double percent = GameScene.User.IntelligentCreatures[selectedCreature].BlackStoneProgress / ((double)1000);
-            double percent = 0.1;
+            double percent = GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime / ((double)10800);
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
 
@@ -17892,12 +17896,15 @@ namespace Client.MirScenes
                 HoverLabel.Text = GameScene.User.IntelligentCreatures[selectedCreature].Fullness.ToString() + " / 10000";
                 HoverLabel.Size = FullnessFG.Size;
                 HoverLabel.Location = new Point(FullnessFG.Location.X, FullnessFG.Location.Y - 2);
+                HoverLabelParent = FullnessFG;
             }
         }
         private void Control_MouseLeave(object sender, EventArgs e)
         {
             HoverLabel.Text = "";
             HoverLabel.Visible = false;
+            HoverLabel.Parent = this;
+            HoverLabelParent = null;
         }
 
         private void ButtonClick(object sender, EventArgs e)
@@ -18001,6 +18008,8 @@ namespace Client.MirScenes
         }
         private void RefreshInfo()
         {
+            CreaturePearls.Text = GameScene.User.PearlCount.ToString();
+
             int SelectedButton = -1;
 
             for (int i = 0; i < CreatureButtons.Length; i++)
@@ -18099,6 +18108,8 @@ namespace Client.MirScenes
                     SummonButton.Enabled = true;
                 }
             }
+
+
         }
         private void RefreshMode()
         {

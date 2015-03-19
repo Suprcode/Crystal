@@ -1304,7 +1304,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.IntelligentCreaturePickup(p.MouseMode);
+            Player.IntelligentCreaturePickup(p.MouseMode, p.Location);
         }
 
     }

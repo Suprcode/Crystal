@@ -105,7 +105,7 @@ namespace Server
 
         //IntelligentCreature
         public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan" };
-
+        public static string CreatureBlackStoneName = "BlackCreatureStone";
 
         //Fishing settings
         public static int FishingAttempts = 30;
@@ -293,9 +293,8 @@ namespace Server
 
             //IntelligentCreature
             for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
-            {
                 IntelligentCreatureNameList[i] = Reader.ReadString("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
-            }
+            CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             if (!Directory.Exists(EnvirPath))
                 Directory.CreateDirectory(EnvirPath);
@@ -451,9 +450,8 @@ namespace Server
 
             //IntelligentCreature
             for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
-            {
                 Reader.Write("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
-            }
+            Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             SaveAwakeAttribute();
         }
