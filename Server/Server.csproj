@@ -44,7 +44,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\Mir 2\Mir 2 Server\</OutputPath>
+    <OutputPath>..\..\Mir 2\Server\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -209,7 +209,6 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
-    <Compile Include="MirObjects\Monsters\ArcherSummons.cs" />
     <Compile Include="MirObjects\Monsters\AxeSkeleton.cs" />
     <Compile Include="MirObjects\Monsters\BoneFamiliar.cs" />
     <Compile Include="MirObjects\Monsters\BugBagMaggot.cs" />
