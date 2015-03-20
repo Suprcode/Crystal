@@ -12979,8 +12979,8 @@ namespace Client.MirScenes
 
             foreach (UserItem item in list)
             {
-                item.CurrentDura = item.Info.Durability;
-                item.MaxDura = item.Info.Durability;
+                //item.CurrentDura = item.Info.Durability;
+                //item.MaxDura = item.Info.Durability;
                 Goods.Add(item);
             }
 

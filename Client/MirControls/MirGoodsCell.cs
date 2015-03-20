@@ -53,7 +53,7 @@ namespace Client.MirControls
             if (Item == null || Item.Info == null) return;
             NameLabel.Text = Item.Info.FriendlyName;
             CountLabel.Text = (Item.Count <= 1) ? "" : Item.Count.ToString();
-            PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Info.Price*Item.Count*GameScene.NPCRate));
+            PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Price() * GameScene.NPCRate));
         }
 
         protected override Vector2[] BorderInfo
