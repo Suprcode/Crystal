@@ -123,6 +123,10 @@ namespace Client.MirObjects
                 case 152:
                 case 163:
                 case 178:
+                case 187:
+                case 188:
+                case 189:
+                case 190:
                     Frames = FrameSet.NPCs[2];
                     break;
                 #endregion
@@ -260,6 +264,7 @@ namespace Client.MirObjects
 
                 #region 1 frame + animation(8 frames)
                 case 155:
+                case 191:
                     Frames = FrameSet.NPCs[11];
                     CanChangeDir = false;
                     break;

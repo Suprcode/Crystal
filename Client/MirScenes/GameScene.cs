@@ -2787,6 +2787,11 @@ namespace Client.MirScenes
         }
         private void NPCGoods(S.NPCGoods p)
         {
+            for (int i = 0; i < p.List.Count; i++)
+            {
+                p.List[i].Info = GetInfo(p.List[i].ItemIndex);
+            }
+
             NPCRate = p.Rate;
             if (!NPCDialog.Visible) return;
             NPCGoodsDialog.NewGoods(p.List);
@@ -12701,9 +12706,9 @@ namespace Client.MirScenes
     public sealed class NPCGoodsDialog : MirImageControl
     {
         public int StartIndex;
-        public ItemInfo SelectedItem;
+        public UserItem SelectedItem;
 
-        public List<ItemInfo> Goods = new List<ItemInfo>();
+        public List<UserItem> Goods = new List<UserItem>();
         public MirGoodsCell[] Cells;
         public MirButton BuyButton, CloseButton;
         public MirImageControl BuyLabel;
@@ -12822,6 +12827,7 @@ namespace Client.MirScenes
         private void BuyItem()
         {
             if (SelectedItem == null) return;
+            /*
             if (SelectedItem.StackSize > 1)
             {
                 UserItem temp = new UserItem(SelectedItem) { Count = SelectedItem.StackSize };
@@ -12879,6 +12885,30 @@ namespace Client.MirScenes
 
                 Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
             }
+            */
+            if (SelectedItem.Price() > GameScene.Gold)
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
+                return;
+            }
+
+            if (SelectedItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("Your bag is over weight.", ChatType.System);
+                return;
+            }
+
+            for (int i = 0; i < MapObject.User.Inventory.Length; i++)
+            {
+                if (MapObject.User.Inventory[i] == null) break;
+                if (i == MapObject.User.Inventory.Length - 1)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("Not enough space in your inventory.", ChatType.System);
+                    return;
+                }
+            }
+
+            Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID });
         }
         private void NPCGoodsPanel_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -12941,17 +12971,17 @@ namespace Client.MirScenes
         }
 
 
-        public void NewGoods(List<int> list)
+        public void NewGoods(List<UserItem> list)
         {
             Goods.Clear();
             StartIndex = 0;
             SelectedItem = null;
 
-            for (int i = 0; i < list.Count; i++)
+            foreach (UserItem item in list)
             {
-                ItemInfo info = GameScene.GetInfo(list[i]);
-                if (info == null) continue;
-                Goods.Add(info);
+                item.CurrentDura = item.Info.Durability;
+                item.MaxDura = item.Info.Durability;
+                Goods.Add(item);
             }
 
             Update();
@@ -13200,7 +13230,7 @@ namespace Client.MirScenes
             if (GameScene.SelectedCell == null || GameScene.SelectedCell.GridType != MirGridType.Inventory ||
                 (PType != PanelType.Sell && PType != PanelType.Consign && GameScene.SelectedCell.Item != null && GameScene.SelectedCell.Item.Info.Durability == 0))
                 return;
-
+            /*
             if (GameScene.SelectedCell.Item != null && (GameScene.SelectedCell.Item.Info.StackSize > 1 && GameScene.SelectedCell.Item.Count > 1))
             {
                 MirAmountBox amountBox = new MirAmountBox("Sell Amount:", GameScene.SelectedCell.Item.Image, GameScene.SelectedCell.Item.Count);
@@ -13226,7 +13256,12 @@ namespace Client.MirScenes
                 GameScene.SelectedCell = null;
                 if (Hold) Confirm();
             }
-
+            */
+            TargetItem = GameScene.SelectedCell.Item;
+            OldCell = GameScene.SelectedCell;
+            OldCell.Locked = true;
+            GameScene.SelectedCell = null;
+            if (Hold) Confirm();
         }
 
         private void NPCDropPanel_BeforeDraw(object sender, EventArgs e)
@@ -13234,7 +13269,20 @@ namespace Client.MirScenes
             string text;
 
             HoldButton.Visible = true;
-            
+
+            Index = 392;
+            Library = Libraries.Prguse;
+            Location = new Point(264, 224);
+
+            ConfirmButton.HoverIndex = 291;
+            ConfirmButton.Index = 290;
+            ConfirmButton.PressedIndex = 292;
+            ConfirmButton.Location = new Point(114, 62);
+
+            InfoLabel.Location = new Point(30, 10);
+           
+            ItemCell.Location = new Point(38, 72);
+
             switch (PType)
             {
                 case PanelType.Sell:
@@ -13252,6 +13300,18 @@ namespace Client.MirScenes
                 case PanelType.Disassemble:
                     text = "Disassemble: ";
                     HoldButton.Visible = false;
+                    Index = 711;
+                    Library = Libraries.Title;
+                    Location = new Point(234, 224);
+
+                    ConfirmButton.HoverIndex = 716;
+                    ConfirmButton.Index = 715;
+                    ConfirmButton.PressedIndex = 717;
+                    ConfirmButton.Location = new Point(62, 190);
+
+                    InfoLabel.Location = new Point(75, 150);
+
+                    ItemCell.Location = new Point(86, 94);
                     break;
                 case PanelType.Downgrade:
                     text = "Downgrade: ";

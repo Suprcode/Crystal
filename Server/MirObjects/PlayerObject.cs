@@ -10358,7 +10358,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void BuyItem(int index, uint count)
+        public void BuyItem(ulong index, uint count)
         {
             if (Dead) return;
 
@@ -10380,7 +10380,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.SellKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.SellKey, StringComparison.CurrentCultureIgnoreCase)))
             {
                 Enqueue(p);
                 return;
@@ -10437,7 +10437,7 @@ namespace Server.MirObjects
                 }
                 else Info.Inventory[index] = null;
 
-                ob.Sell(temp);
+                ob.Sell(this, temp);
                 p.Success = true;
                 Enqueue(p);
                 GainGold(temp.Price() / 2);

@@ -354,15 +354,12 @@ namespace Server.MirDatabase
 
         public int ResizeInventory()
         {
-            if (Inventory.Length >= 86)
-                Array.Resize(ref Inventory, 86);
+            if (Inventory.Length >= 86) return Inventory.Length;
+
+            if (Inventory.Length == 46)
+                Array.Resize(ref Inventory, Inventory.Length + 8);
             else
-            {
-                if (Inventory.Length == 46)
-                    Array.Resize(ref Inventory, Inventory.Length + 8);
-                else
-                    Array.Resize(ref Inventory, Inventory.Length + 4);
-            }
+                Array.Resize(ref Inventory, Inventory.Length + 4);
 
             return Inventory.Length;
         }

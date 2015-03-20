@@ -2308,6 +2308,8 @@ public class UserItem
 
     public UserItem[] Slots = new UserItem[5];
 
+    public DateTime BuybackExpiryDate;
+
 	public Awake Awake = new Awake();
     public bool IsAdded
     {

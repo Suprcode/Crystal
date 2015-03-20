@@ -1210,6 +1210,13 @@ namespace Server.MirEnvir
                     MaxDura = info.Durability
                 };
         }
+        public UserItem CreateFreshItem(UserItem item)
+        {
+            item.UniqueID = ++NextUserItemID;
+            item.CurrentDura = item.Info.Durability;
+            item.MaxDura = item.Info.Durability;
+            return item;
+        }
         public UserItem CreateDropItem(int index)
         {
             return CreateDropItem(GetItemInfo(index));
