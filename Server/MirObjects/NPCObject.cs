@@ -25,6 +25,7 @@ namespace Server.MirObjects
             MainKey = "[@MAIN]",
             BuyKey = "[@BUY]",
             SellKey = "[@SELL]",
+            BuySellKey = "[@BUYSELL]",
             RepairKey = "[@REPAIR]",
             SRepairKey = "[@SREPAIR]",
             BuyBackKey = "[@BUYBACK]",
@@ -818,12 +819,11 @@ namespace Server.MirObjects
             player.NPCSuccess = page.Check(player);
             player.NPCPage = page;
 
+            List<UserItem> allGoods = new List<UserItem>();
+
             switch (page.Key.ToUpper())
             {
                 case BuyKey:
-
-                    List<UserItem> allGoods = new List<UserItem>();
-
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
@@ -834,9 +834,21 @@ namespace Server.MirObjects
                     allGoods.AddRange(UsedGoods);
 
                     player.Enqueue(new S.NPCGoods { List = allGoods, Rate = Info.PriceRate });
-                    player.Enqueue(new S.NPCSell());
                     break;
                 case SellKey:
+                    player.Enqueue(new S.NPCSell());
+                    break;
+                case BuySellKey:
+                    for (int i = 0; i < Goods.Count; i++)
+                        player.CheckItem(Goods[i]);
+
+                    for (int i = 0; i < UsedGoods.Count; i++)
+                        player.CheckItem(UsedGoods[i]);
+
+                    allGoods.AddRange(Goods);
+                    allGoods.AddRange(UsedGoods);
+
+                    player.Enqueue(new S.NPCGoods { List = allGoods, Rate = Info.PriceRate });
                     player.Enqueue(new S.NPCSell());
                     break;
                 case RepairKey:
