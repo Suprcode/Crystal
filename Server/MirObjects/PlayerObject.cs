@@ -1871,7 +1871,7 @@ namespace Server.MirObjects
 
 
 
-            if (AttackSpeed < 600) AttackSpeed = 600;
+            if (AttackSpeed < 550) AttackSpeed = 550;
         }
 
         private void RefreshLevelStats()
@@ -2364,33 +2364,6 @@ namespace Server.MirObjects
                 MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.MP + temp.MP);
 
                 ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
-                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
-            }
-        }
-
-        public void RefreshFishingStats()
-        {
-            UserItem FishingRod = Info.Equipment[(int)EquipmentSlot.Weapon];
-
-            if (FishingRod == null) return;
-
-            UserItem[] Slots = FishingRod.Slots;
-
-            for (int i = 0; i < Slots.Length; i++)
-            {
-                UserItem temp = Slots[i];
-                if (temp == null) continue;
-
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
-
-                CurrentWearWeight = (byte)Math.Min(byte.MaxValue, CurrentWearWeight + temp.Weight);
-
-                if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
-
-                //flexibility
-                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.CriticalRate + RealItem.CriticalRate)));
-
-                //success
                 Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
             }
         }
@@ -4677,7 +4650,7 @@ namespace Server.MirObjects
 
             int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
 
-            if (spell == Spell.Teleport)
+            if (spell == Spell.Teleport || spell == Spell.Blink)
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     if (Buffs[i].Type != BuffType.Teleport) continue;
@@ -4746,6 +4719,7 @@ namespace Server.MirObjects
                     SummonSkeleton(magic);
                     break;
                 case Spell.Teleport:
+                case Spell.Blink:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 200, magic, location));
                     break;
                 case Spell.Hiding:
@@ -6669,7 +6643,7 @@ namespace Server.MirObjects
             UserMagic magic = (UserMagic)data[0];
             int value;
             MapObject target;
-
+            Point location;
             MonsterObject monster;
             switch (magic.Spell)
             {
@@ -6809,18 +6783,46 @@ namespace Server.MirObjects
                 #endregion
 
                 #region Teleport
-
                 case Spell.Teleport:
-                    Point location = (Point)data[1];
+                    Map temp = Envir.GetMap(BindMapIndex);
+                    int mapSizeX = temp.Width / (magic.Level + 1);
+                    int mapSizeY = temp.Height / (magic.Level + 1);
+
                     if (CurrentMap.Info.NoTeleport)
                     {
                         ReceiveChat(("You cannot teleport on this map"), ChatType.System);
                         return;
                     }
-                    if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
-                    LevelMagic(magic);
+
+                    for (int i = 0; i < 200; i++)
+                    {
+                        location = new Point(BindLocation.X + Envir.Random.Next(-mapSizeX, mapSizeX),
+                                             BindLocation.Y + Envir.Random.Next(-mapSizeY, mapSizeY));
+
+                        if (Teleport(temp, location)) break;
+                    }
+
                     AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    LevelMagic(magic);
+
+                    break;
+                #endregion
+
+                #region Blink
+
+                case Spell.Blink:
+                    {
+                        location = (Point)data[1];
+                        if (CurrentMap.Info.NoTeleport)
+                        {
+                            ReceiveChat(("You cannot teleport on this map"), ChatType.System);
+                            return;
+                        }
+                        if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
+                        LevelMagic(magic);
+                        AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    }
                     break;
 
                 #endregion
@@ -13177,6 +13179,7 @@ namespace Server.MirObjects
                 {
                     FishingChanceCounter++;
                 }
+
                 int getChance = FishingChance + (FishFound ? Envir.Random.Next(10, 24) : 0) + (FishingProgress < 99 ? flexibilityStat / 2 : 0);
                 getChance = Math.Min(100, Math.Max(0, getChance));
 
@@ -13197,6 +13200,12 @@ namespace Server.MirObjects
                         }
                     }
 
+                    if (FreeSpace(Info.Inventory) < 1)
+                    {
+                        ReceiveChat("No more space.", ChatType.System);
+                        return;
+                    }
+
                     if (dropItem != null)
                         GainItem(dropItem);
 
@@ -13213,8 +13222,9 @@ namespace Server.MirObjects
 
                     DamagedFishingItem(FishingSlot.Reel, 1);
                 }
-                //else
-                //    ReceiveChat("Fishing Failed." + getChance, ChatType.System);
+                else
+                    ReceiveChat("Fish Escaped.", ChatType.System);
+
                 FishFound = false;
                 FishFirstFound = false;
             }

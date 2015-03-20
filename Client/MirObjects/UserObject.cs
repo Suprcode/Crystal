@@ -149,7 +149,7 @@ namespace Client.MirObjects
             
             if (this == User && Light < 3) Light = 3;
             AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
-            if (AttackSpeed < 600) AttackSpeed = 600;
+            if (AttackSpeed < 550) AttackSpeed = 550;
             GameScene.Scene.Redraw();
         }
         private void RefreshLevelStats()
@@ -681,33 +681,6 @@ namespace Client.MirObjects
                 MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.MP + temp.MP);
 
                 ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
-                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
-            }
-        }
-
-        public void RefreshFishingStats()
-        {
-            UserItem FishingRod = Equipment[(int)EquipmentSlot.Weapon];
-
-            if (FishingRod == null) return;
-
-            UserItem[] Slots = FishingRod.Slots;
-
-            for (int i = 0; i < Slots.Length; i++)
-            {
-                UserItem temp = Slots[i];
-                if (temp == null) continue;
-
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
-
-                CurrentWearWeight = (byte)Math.Min(byte.MaxValue, CurrentWearWeight + temp.Weight);
-
-                if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
-
-                //flexibility
-                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.CriticalRate + RealItem.CriticalRate)));
-
-                //success
                 Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
             }
         }

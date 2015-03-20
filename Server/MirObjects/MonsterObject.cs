@@ -798,6 +798,7 @@ namespace Server.MirObjects
 
         public void PetRecall()
         {
+            if (Master == null) return;
             if (!Teleport(Master.CurrentMap, Master.Back))
                 Teleport(Master.CurrentMap, Master.CurrentLocation);
         }

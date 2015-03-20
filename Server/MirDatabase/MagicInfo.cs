@@ -53,7 +53,8 @@ namespace Server.MirDatabase
                                 Blizzard,
                                 MagicBooster,
                                 MeteorStrike,
-                                IceThrust;
+                                IceThrust,
+                                Blink;
 
         //Taoist
         public static MagicInfo Healing,
@@ -117,7 +118,7 @@ namespace Server.MirDatabase
                                 CrippleShot,
                                 SummonSnakes,
                                 NapalmShot,
-                                OneWithNature,//buffs vampireshot and poisonshot ?
+                                OneWithNature,
                                 MentalState;
 
 
@@ -170,6 +171,7 @@ namespace Server.MirDatabase
             MagicBooster = new MagicInfo { Spell = Spell.MagicBooster, Icon = 73, Level1 = 47, Level2 = 49, Level3 = 52, Need1 = 12000, Need2 = 18000, Need3 = 24000, BaseCost = 150, LevelCost = 15 };
             MeteorStrike = new MagicInfo { Spell = Spell.MeteorStrike, Icon = 52, Level1 = 49, Level2 = 52, Level3 = 55, Need1 = 15000, Need2 = 20000, Need3 = 25000, BaseCost = 115, LevelCost = 17 };
             IceThrust = new MagicInfo { Spell = Spell.IceThrust, Icon = 56, Level1 = 53, Level2 = 56, Level3 = 59, Need1 = 17000, Need2 = 22000, Need3 = 27000, BaseCost = 100, LevelCost = 20 };
+            Blink = new MagicInfo { Spell = Spell.Blink, Icon = 20, Level1 = 19, Level2 = 22, Level3 = 25, Need1 = 350, Need2 = 1000, Need3 = 2000, BaseCost = 10, LevelCost = 3 };
 
             //Taoist
             Healing = new MagicInfo { Spell = Spell.Healing, Icon = 1, Level1 = 7, Level2 = 11, Level3 = 14, Need1 = 150, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2 };
