@@ -4761,11 +4761,6 @@ namespace Client.MirScenes
                     Text = string.Format(minValue + addValue > 0 ? "Luck + {0} " : "Curse + {0}", minValue + addValue)
                 };
 
-                if(fishingItem)
-                {
-                    LUCKLabel.Text = string.Format(minValue + addValue > 0 ? "Success: {0}% " : "Failure: {0}%", minValue + addValue);
-                }
-
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, LUCKLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, LUCKLabel.DisplayRectangle.Bottom));
             }
@@ -5119,11 +5114,11 @@ namespace Client.MirScenes
                     }
                     else if (HoverItem.Info.Type == ItemType.Finder)
                     {
-                        ACLabel.Text = string.Format("Failed Fishing Increase + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Finder Increase + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
                     }
                     else
                     {
-                        ACLabel.Text = string.Format("Success Chance + " + (addValue > 0 ? "{0}% (+{2})" : "{0}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Success Chance + " + (addValue > 0 ? "{0}% (+{1})" : "{0}%"), maxValue, maxValue + addValue);
                     }
                 }
 
@@ -7930,7 +7925,7 @@ namespace Client.MirScenes
 
             int cost = magic.Level * magic.LevelCost + magic.BaseCost;
 
-            if (magic.Spell == Spell.Teleport)
+            if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink)
             {
                 for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
                 {
@@ -14771,8 +14766,10 @@ namespace Client.MirScenes
 
         public void Cancel()
         {
-            Hide();
+            if (Visible)
             Network.Enqueue(new C.FishingCast { CastOut = false });
+            Hide();
+            
         }
         public void Hide()
         {

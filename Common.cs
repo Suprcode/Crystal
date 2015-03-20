@@ -646,6 +646,7 @@ public enum Spell : byte
     MagicBooster = 51,
     MeteorStrike = 52,
     IceThrust = 53,
+    Blink = 54,
 
     //Taoist
     Healing = 61,
@@ -2396,6 +2397,7 @@ public class UserItem
         if (version <= 40) return;
 
         Awake = new Awake(reader);
+        
     }
 
     public void Save(BinaryWriter writer)
