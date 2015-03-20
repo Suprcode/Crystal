@@ -130,6 +130,7 @@ namespace Client.MirScenes
         public static float NPCRate;
         public static uint DefaultNPCID;
 
+
         public long ToggleTime;
         public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
         public static long SpellTime;
@@ -406,6 +407,7 @@ namespace Client.MirScenes
                     NPCAwakeDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+                    fish = !fish;
                     break;
                 case Keys.O:
                 case Keys.F12:
@@ -730,7 +732,6 @@ namespace Client.MirScenes
         {
             if (MapControl == null || User == null)
                 return;
-
             if (CMain.Time >= MoveTime)
             {
                 MoveTime += 100; //Move Speed
@@ -2248,6 +2249,12 @@ namespace Client.MirScenes
         {
             ItemObject ob = new ItemObject(p.ObjectID);
             ob.Load(p);
+
+            string[] Warnings = new string[] {"HeroNecklace","AdamantineNecklace","8TrigramWheel","HangMaWheel","BaekTaGlove","SpiritReformer","BokMaWheel","BoundlessRing","ThunderRing","TaeGukRing","OmaSpiritRing","NobleRing"};
+            if (Warnings.Contains(p.Name))
+            {
+                ChatDialog.ReceiveChat(string.Format("{0} at {1}", p.Name, p.Location), ChatType.Hint);
+            }
         }
         private void ObjectGold(S.ObjectGold p)
         {

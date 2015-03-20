@@ -331,7 +331,7 @@ namespace Server.MirObjects
                 CurrentMapIndex = BindMapIndex;
             }
         }
-        public void StopGame()
+        public void StopGame(byte reason)
         {
             if (Node == null) return;
 
