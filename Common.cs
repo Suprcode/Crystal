@@ -1001,7 +1001,8 @@ public enum ServerPacketIds : short
     MailCost,
 
     NewIntelligentCreature,
-    UpdateIntelligentCreatureList
+    UpdateIntelligentCreatureList,
+    IntelligentCreatureEnableRename
 }
 
 public enum ClientPacketIds : short
@@ -4112,6 +4113,8 @@ public abstract class Packet
                 return new S.NewIntelligentCreature();
             case (short)ServerPacketIds.UpdateIntelligentCreatureList://IntelligentCreature
                 return new S.UpdateIntelligentCreatureList();
+            case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
+                return new S.IntelligentCreatureEnableRename();
             default:
                 throw new NotImplementedException();
         }

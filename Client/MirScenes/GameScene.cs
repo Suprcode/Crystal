@@ -1335,6 +1335,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.UpdateIntelligentCreatureList://IntelligentCreature
                     UpdateIntelligentCreatureList((S.UpdateIntelligentCreatureList)p);
                     break;
+                case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
+                    IntelligentCreatureEnableRename((S.IntelligentCreatureEnableRename)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -4476,6 +4479,12 @@ namespace Client.MirScenes
                     User.IntelligentCreatures[i] = p.CreatureList[i];
                 if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
             }
+        }
+
+        private void IntelligentCreatureEnableRename(S.IntelligentCreatureEnableRename p)//IntelligentCreature
+        {
+            IntelligentCreatureDialog.CreatureRenameButton.Visible = true;
+            if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
         }
 
 
@@ -17959,6 +17968,7 @@ namespace Client.MirScenes
                     inputBox.Dispose();
                 };
                 inputBox.Show();
+                CreatureRenameButton.Visible = false;
                 return;
             }
             if (sender == SummonButton)

@@ -4564,4 +4564,20 @@ namespace ServerPackets
             writer.Write(PearlCount);
         }
     }
+
+    public sealed class IntelligentCreatureEnableRename : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.IntelligentCreatureEnableRename; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
 }

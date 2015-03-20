@@ -8884,10 +8884,11 @@ namespace Server.MirObjects
                         switch (item.Info.Shape)
                         {
                             case 20://Mirror
+                                Enqueue(new S.IntelligentCreatureEnableRename());
                                 break;
-                            case 21://Nuts
+                            case 21://BlackStone
                                 break;
-                            case 22://BlackStone
+                            case 22://Nuts
                                 break;
                             case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
                             case 24://WonderPill
@@ -9935,30 +9936,41 @@ namespace Server.MirObjects
                     }
                     break;
                 case ItemType.Pets://IntelligentCreature
-                    if (item.Info.Shape >= 20 && item.Info.Shape != 21)
+                    switch (item.Info.Shape)
                     {
-                        if (!Info.CreatureSummoned)
-                        {
-                            ReceiveChat("Can only be used with a creature summoned", ChatType.System);
-                            return false;
-                        }
-                        else
-                        {
-                            for (int i = 0; i < Pets.Count; i++)
+                        case 20://mirror rename creature
+                            if (Info.IntelligentCreatures.Count == 0) return false;
+                            break;
+                        case 21://creature stone
+                            //if (Info.IntelligentCreatures.Count == 0) return false;
+                            break;
+                        case 22://nuts maintain food levels
+                        case 23://basic creature food
+                        case 24://wonderpill vitalize creature
+                            if (!Info.CreatureSummoned)
                             {
-                                if (Pets[i].Info.AI != 64) continue;
-                                if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
-
-                                if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
-                                    ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
-                                else
-                                {
-                                    ReceiveChat(" Creature is not hungry", ChatType.System);
-                                    return false;
-                                }
-                                break;
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
                             }
-                        }
+                            else
+                            {
+                                for (int i = 0; i < Pets.Count; i++)
+                                {
+                                    if (Pets[i].Info.AI != 64) continue;
+                                    if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+
+                                    if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        ReceiveChat(" Creature is not hungry", ChatType.System);
+                                        return false;
+                                    }
+                                }
+                                return false;
+                            }
                     }
                     break;
             }
