@@ -13115,6 +13115,7 @@ namespace Server.MirObjects
                 {
                     FishingChanceCounter++;
                 }
+
                 int getChance = FishingChance + (FishFound ? Envir.Random.Next(10, 24) : 0) + (FishingProgress < 99 ? flexibilityStat / 2 : 0);
                 getChance = Math.Min(100, Math.Max(0, getChance));
 
@@ -13135,6 +13136,12 @@ namespace Server.MirObjects
                         }
                     }
 
+                    if (FreeSpace(Info.Inventory) < 1)
+                    {
+                        ReceiveChat("No more space.", ChatType.System);
+                        return;
+                    }
+
                     if (dropItem != null)
                         GainItem(dropItem);
 
@@ -13151,8 +13158,9 @@ namespace Server.MirObjects
 
                     DamagedFishingItem(FishingSlot.Reel, 1);
                 }
-                //else
-                //    ReceiveChat("Fishing Failed." + getChance, ChatType.System);
+                else
+                    ReceiveChat("Fish Escaped.", ChatType.System);
+
                 FishFound = false;
                 FishFirstFound = false;
             }
