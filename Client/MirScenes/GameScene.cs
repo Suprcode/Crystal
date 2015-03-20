@@ -9128,8 +9128,8 @@ namespace Client.MirScenes
             switch (type)
             {
                 case ChatType.Hint:
-                    backColour = Color.Transparent;
-                    foreColour = Color.Green;
+                    backColour = Color.White;
+                    foreColour = Color.DarkGreen;
                     break;
                 case ChatType.Announcement:
                     backColour = Color.Blue;
@@ -9148,27 +9148,27 @@ namespace Client.MirScenes
                     foreColour = Color.White;
                     break;
                 case ChatType.Group:
-                    backColour = Color.Transparent;
+                    backColour = Color.White;
                     foreColour = Color.Brown;
                     break;
                 case ChatType.WhisperOut:
                     foreColour = Color.CornflowerBlue;
-                    backColour = Color.Transparent;
+                    backColour = Color.White;
                     break;
                 case ChatType.WhisperIn:
                     foreColour = Color.DarkBlue;
                     backColour = Color.White;
                     break;
                 case ChatType.Guild:
-                    backColour = Color.Transparent;
-                    foreColour = Color.Purple;
+                    backColour = Color.White;
+                    foreColour = Color.Green;
                     break;
                 case ChatType.LevelUp:
                     backColour = Color.FromArgb(255, 225,185, 250);
                     foreColour = Color.Blue;
                     break;
                 default:
-                    backColour = Color.Transparent;
+                    backColour = Color.White;
                     foreColour = Color.Black;
                     break;
             }
