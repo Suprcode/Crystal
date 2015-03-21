@@ -759,10 +759,11 @@ namespace Server.MirObjects
             {
                 HealTime = Envir.Time + HealDelay;
 
+                int incHeal = (Level / 10) + (HealAmount / 10);
                 if (HealAmount > 5)
                 {
-                    healthRegen += 5;
-                    HealAmount -= 5;
+                    healthRegen += (5 + incHeal);
+                    HealAmount -= (ushort)(5 + incHeal);
                 }
                 else
                 {
@@ -1024,7 +1025,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (LastHitter != null && LastHitter.Race == ObjectType.Player && !CurrentMap.Info.Fight && !AtWar((PlayerObject)LastHitter))
+            if (LastHitter != null && LastHitter.Race == ObjectType.Player && !AtWar((PlayerObject)LastHitter))
             {
                 if (Envir.Time > BrownTime && PKPoints < 200)
                 {
@@ -1234,34 +1235,48 @@ namespace Server.MirObjects
         }
 
 
-        public override void WinExp(uint amount)
+        public override void WinExp(uint amount, uint targetLevel = 0)
         {
-            amount = (uint)(amount * Settings.ExpRate);
+            int expPoint;
 
-            if (ExpRateOffset > 0)
-                amount += (uint)(amount * (ExpRateOffset / 100));
+            if (Level < targetLevel + 10)
+            {
+                expPoint = (int)amount;
+            }
+            else
+            {
+                expPoint = (int)amount - (int)Math.Round((amount / 15) * ((double)Level - (targetLevel + 10)));
+            }
+
+            if (expPoint <= 0) expPoint = 1;
+
+            expPoint = (int)(expPoint * Settings.ExpRate);
+
+            //party
+            float[] partyExpRate = { 1.3F, 1.4F, 1.5F, 1.6F, 1.7F, 1.8F, 1.9F, 2F, 2.1F, 2.2F };
 
             if (GroupMembers != null)
             {
+                int sumLevel = 0;
                 for (int i = 0; i < GroupMembers.Count; i++)
                 {
                     PlayerObject player = GroupMembers[i];
-                    if (player == this) continue;
-                    if (player.CurrentMap != CurrentMap || !Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.Dead) continue;
-
-                    amount = (uint)(amount * 0.75F);
-                    break;
+                    sumLevel += player.Level;
                 }
 
                 for (int i = 0; i < GroupMembers.Count; i++)
                 {
                     PlayerObject player = GroupMembers[i];
-                    if (player.CurrentMap == CurrentMap && Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) && !player.Dead)
-                        player.GainExp(amount);
+                    if (player.CurrentMap == CurrentMap &&
+                        Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
+                        !player.Dead)
+                    {
+                        player.GainExp((uint)((float)expPoint * partyExpRate[GroupMembers.Count - 2] * (float)player.Level / (float)sumLevel));
+                    }
                 }
             }
             else
-                GainExp(amount);
+                GainExp((uint)expPoint);
         }
 
         public void GainExp(uint amount)
@@ -1269,6 +1284,9 @@ namespace Server.MirObjects
             if (!CanGainExp) return;
 
             if (amount == 0) return;
+
+            if (ExpRateOffset > 0)
+                amount += (uint)(amount * (ExpRateOffset / 100));
 
             Experience += amount;
 
@@ -1900,7 +1918,6 @@ namespace Server.MirObjects
             RefreshBuffs();
             RefreshStatCaps();
             RefreshMountStats();
-            //RefreshFishingStats();
 
             //Location Stats ?
 
@@ -4455,7 +4472,7 @@ namespace Server.MirObjects
                 {
                     case Spell.Slaying:
                         magic = GetMagic(Spell.Slaying);
-                        damage += (magic.Level + 1) * 8;
+                        damage += 5 + magic.Level;
                         LevelMagic(magic);
                         break;
                     case Spell.DoubleSlash:
@@ -4542,6 +4559,7 @@ namespace Server.MirObjects
             if (spell == Spell.HalfMoon)
             {
                 dir = Functions.PreviousDir(dir);
+
                 magic = GetMagic(spell);
                 damage = damage * (magic.Level + 3) / 10;
                 for (int i = 0; i < 4; i++)
@@ -4919,7 +4937,7 @@ namespace Server.MirObjects
                     PoisonSword(magic);
                     break;
                 case Spell.DarkBody:
-                    DarkBody(magic);
+                    DarkBody(target, magic);
                     break;
                 case Spell.CrescentSlash:
                     CrescentSlash(magic);
@@ -6151,7 +6169,7 @@ namespace Server.MirObjects
             if (Functions.InRange(CurrentLocation, target.CurrentLocation, 1) == false) return;
             if (Envir.Random.Next(10) > magic.Level + 6) return;
             Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.CounterAttack, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = GetMagic(Spell.CounterAttack).Level, SelfBroadcast = true });
-            DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, damage, DefenceType.AC, true);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, 1000, DefenceType.AC, true);
             ActionList.Add(action);
             LevelMagic(magic);
             bCounterAttack = false;
@@ -6247,7 +6265,7 @@ namespace Server.MirObjects
             ConsumeItem(item, 1);
             return true;
         }
-        private void DarkBody(UserMagic magic)
+        private void DarkBody(MapObject target, UserMagic magic)
         {
             MonsterObject monster;
             for (int i = 0; i < Pets.Count; i++)
@@ -6262,6 +6280,7 @@ namespace Server.MirObjects
             MonsterInfo info = Envir.GetMonsterInfo(Settings.AssassinCloneName);
             if (info == null) return;
 
+            if (target == null) return;
 
             LevelMagic(magic);
 
@@ -6270,6 +6289,7 @@ namespace Server.MirObjects
             monster.Direction = Direction;
             monster.ActionTime = Envir.Time + 500;
             monster.RefreshNameColour(false);
+            monster.Target = target;
             Pets.Add(monster);
 
             monster.Spawn(CurrentMap, CurrentLocation);
@@ -6522,7 +6542,6 @@ namespace Server.MirObjects
 
             CellTime = Envir.Time + 500;
         }
-
         private bool DelayedExplosion(MapObject target, UserMagic magic)//ArcherSpells - DelayedExplosion
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
@@ -6534,7 +6553,6 @@ namespace Server.MirObjects
             ActionList.Add(action);
             return true;
         }
-
         private void ExplosiveTrap(UserMagic magic, Point location)//ArcherSpells - Explosive Trap
         {
             int trapCount = 0;
@@ -6572,7 +6590,6 @@ namespace Server.MirObjects
                 ArcherTrapObjectsArray[obIDX, j] = null;
             }
         }
-
         public void DoKnockback(MapObject target, UserMagic magic)//ElementalShot - knockback
         {
             Cell cell = CurrentMap.GetCell(target.CurrentLocation);
@@ -6589,7 +6606,6 @@ namespace Server.MirObjects
 
             target.Pushed(this, dir, distance);
         }
-
         public void BindingShot(UserMagic magic, MapObject target, out bool cast)//ArcherSpells - BindingShot
         {
             cast = false;
@@ -6609,7 +6625,6 @@ namespace Server.MirObjects
 
             cast = true;
         }
-
         public void SpecialArrowShot(MapObject target, UserMagic magic)//ArcherSpells - VampireShot,PoisonShot,CrippleShot
         {
             if (target == null || !target.IsAttackTarget(this)) return;
@@ -6625,7 +6640,6 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
             ActionList.Add(action);
         }
-
         public void NapalmShot(MapObject target, UserMagic magic)//ArcherSpells - NapalmShot
         {
             if (target == null || !target.IsAttackTarget(this)) return;
@@ -6640,7 +6654,6 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, damage, target.CurrentLocation);
             CurrentMap.ActionList.Add(action);
         }
-
         public void ArcherSummon(UserMagic magic, MapObject target, Point location)//ArcherSpells - Summons
         {
             if (target != null && target.IsAttackTarget(this))
@@ -7658,7 +7671,21 @@ namespace Server.MirObjects
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
+            Map tempCurrentMap = CurrentMap;
+
             if (!base.Teleport(temp, location, effects)) return false;
+
+            if (tempCurrentMap.Info.Index != temp.Info.Index)
+            {
+                foreach (var ac in ActionList.Where(d => d.Type == DelayedType.NPC))
+                {
+                    if (ac.StartTime + 100 <= Envir.Time)
+                    {
+                        ac.Time = Envir.Time;
+                        return false;
+                    }
+                }
+            }
 
             Enqueue(new S.MapChanged
             {
@@ -8010,7 +8037,7 @@ namespace Server.MirObjects
             RegenTime = Envir.Time + RegenDelay;
             LogTime = Envir.Time + Globals.LogDelay;
 
-            if (Envir.Time > BrownTime && PKPoints < 200 && !CurrentMap.Info.Fight && !AtWar(attacker))
+            if (Envir.Time > BrownTime && PKPoints < 200 && !AtWar(attacker))
                 attacker.BrownTime = Envir.Time + Settings.Minute;
 
             if (attacker.HasParalysisRing && 1 == Envir.Random.Next(1, 15))
@@ -8111,6 +8138,7 @@ namespace Server.MirObjects
 
             DamageDura();
             ActiveBlizzard = false;
+            ActiveReincarnation = false;
 
             CounterAttack(GetMagic(Spell.CounterAttack), LastHitter);
 
@@ -9309,7 +9337,11 @@ namespace Server.MirObjects
 
             switch (tempFrom.Info.Shape)
             {
-                case 1: //repair weapons
+                case 1: //BoneHammer
+                case 2: //SewingSupplies
+                case 5: //SpecialHammer
+                case 6: //SpecialSewingSupplies
+
                     if (tempTo.Info.Bind.HasFlag(BindMode.DontRepair))
                     {
                         Enqueue(p);
@@ -9318,13 +9350,26 @@ namespace Server.MirObjects
 
                     switch (tempTo.Info.Type)
                     {
-                        case ItemType.Weapon:
-                            canRepair = true;
+						case ItemType.Weapon:
+                        case ItemType.Necklace:
+                        case ItemType.Ring:
+                        case ItemType.Bracelet:
+                            if (tempFrom.Info.Shape == 1 || tempFrom.Info.Shape == 5)
+                                canRepair = true;
+                            break;
+                        case ItemType.Armour:
+                        case ItemType.Helmet:
+                        case ItemType.Boots:
+                        case ItemType.Belt:
+                            if (tempFrom.Info.Shape == 2 || tempFrom.Info.Shape == 6)
+                                canRepair = true;
+                            break;
+                        default:
+                            canRepair = false;
                             break;
                     }
-                    break;
-                case 2: //repair armour + accessories
-                    if (tempTo.Info.Bind.HasFlag(BindMode.DontRepair))
+
+                    if (canRepair != true)
                     {
                         Enqueue(p);
                         return;
@@ -9335,18 +9380,6 @@ namespace Server.MirObjects
                         ReceiveChat("Item does not need to be repaired.", ChatType.Hint);
                         Enqueue(p);
                         return;
-                    }
-
-                    switch (tempTo.Info.Type)
-                    {
-                        case ItemType.Armour:
-                        case ItemType.Helmet:
-                        case ItemType.Ring:
-                        case ItemType.Bracelet:
-                        case ItemType.Boots:
-                        case ItemType.Belt:
-                            canRepair = true;
-                            break;
                     }
                     break;
                 case 3: //gems
@@ -9455,9 +9488,7 @@ namespace Server.MirObjects
 
                     if (!succeeded)
                     {
-                        //upgrade has no effect
-                        ReceiveChat("Upgrade has no effect.", ChatType.Hint);
-
+                        
                         if ((tempFrom.Info.Shape == 3) && (Envir.Random.Next(15) < 3))
                         {
                             //item destroyed
@@ -9466,6 +9497,11 @@ namespace Server.MirObjects
                             Info.Inventory[indexTo] = null;
                             p.Destroy = true;
                         }
+						else
+						{
+							//upgrade has no effect
+                        	ReceiveChat("Upgrade has no effect.", ChatType.Hint);
+						}
 
                         canUpgrade = false;
                     }
@@ -9481,7 +9517,18 @@ namespace Server.MirObjects
 
             if (canRepair && Info.Inventory[indexTo] != null)
             {
-                tempTo.CurrentDura = (ushort)Math.Min(tempTo.MaxDura, tempTo.CurrentDura + tempFrom.CurrentDura);
+                switch (tempTo.Info.Shape)
+                {
+                    case 1:
+                    case 2:
+                        {
+                            tempTo.MaxDura = (ushort)Math.Max(0, Math.Min(tempTo.MaxDura, tempTo.MaxDura - 100 * Envir.Random.Next(10)));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                tempTo.CurrentDura = tempTo.MaxDura;
                 tempTo.DuraChanged = false;
 
                 ReceiveChat("Item has been repaired.", ChatType.Hint);
@@ -12657,6 +12704,8 @@ namespace Server.MirObjects
 
         public bool AtWar(PlayerObject attacker)
         {
+            if (CurrentMap.Info.Fight) return true;
+
             if (MyGuild == null) return false;
 
             if (attacker == null || attacker.MyGuild == null) return false;
