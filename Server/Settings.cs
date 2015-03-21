@@ -122,8 +122,9 @@ namespace Server
 
         //Goods Settings
         public static bool GoodsOn = true;
-        public static uint GoodsBuyBackTime = 60;
         public static uint GoodsMaxStored = 50;
+        public static uint GoodsBuyBackTime = 60;
+        public static uint GoodBuyBackMaxStored = 20;
 
 
         //character settings

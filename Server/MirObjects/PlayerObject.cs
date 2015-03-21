@@ -398,7 +398,7 @@ namespace Server.MirObjects
         {
             switch (reason)
             {
-                    //0-10 are 'senddisconnect to client'
+                //0-10 are 'senddisconnect to client'
                 case 0:
                     SMain.Enqueue(string.Format("{0} Has logged out. Reason: Server closed", Name));
                     return;
@@ -406,7 +406,7 @@ namespace Server.MirObjects
                     SMain.Enqueue(string.Format("{0} Has logged out. Reason: Double login", Name));
                     return;
                 case 2:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Chat message to long", Name));
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Chat message too long", Name));
                     return;
                 case 3:
                     SMain.Enqueue(string.Format("{0} Has logged out. Reason: Server crashed", Name));
@@ -418,7 +418,7 @@ namespace Server.MirObjects
                     SMain.Enqueue(string.Format("{0} Has logged out. Reason: Wrong client version", Name));
                     return;
                 case 20:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User gone missing/disconnected", Name));
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User gone missing / disconnected", Name));
                     return;
                 case 21:
                     SMain.Enqueue(string.Format("{0} Has logged out. Reason: Connection timed out", Name));

@@ -606,25 +606,22 @@ namespace Server.MirObjects
                     {
                         deleteList.Add(BuyBack[playerGoods.Key][i]);
 
-                        if (!SellingItem(item))
+                        if (UsedGoods.Count >= Settings.GoodsMaxStored)
                         {
-                            if (UsedGoods.Count >= Settings.GoodsMaxStored)
+                            UserItem nonAddedItem = UsedGoods.First(e => e.IsAdded == false);
+
+                            if (nonAddedItem != null)
                             {
-                                UserItem nonAddedItem = UsedGoods.First(e => e.IsAdded == false);
-
-                                if (nonAddedItem != null)
-                                {
-                                    UsedGoods.Remove(nonAddedItem);
-                                }
-                                else
-                                {
-                                    UsedGoods.RemoveAt(0);
-                                }
+                                UsedGoods.Remove(nonAddedItem);
                             }
-
-                            UsedGoods.Add(item);
-                            NeedSave = true;
+                            else
+                            {
+                                UsedGoods.RemoveAt(0);
+                            }
                         }
+
+                        UsedGoods.Add(item);
+                        NeedSave = true;
                     }
                 }
 
@@ -824,26 +821,11 @@ namespace Server.MirObjects
             /* Handle Item Sale */
             if (!BuyBack.ContainsKey(player.Name)) BuyBack[player.Name] = new List<UserItem>();
 
-            if (BuyBack[player.Name].Count >= 20)
+            if (BuyBack[player.Name].Count >= Settings.GoodBuyBackMaxStored)
                 BuyBack[player.Name].RemoveAt(0);
 
             item.BuybackExpiryDate = Envir.Now;
             BuyBack[player.Name].Add(item);
-        }
-
-        private bool SellingItem(UserItem item)
-        {
-            for (int i = 0; i < Goods.Count; i++)
-            {
-                UserItem goods = Goods[i];
-
-                if (goods.Info != item.Info) continue;
-
-                if (goods.Info.Durability == 0) return true;
-                if ((goods.CurrentDura - item.CurrentDura) < 1000) return true;
-            }
-
-            return false;
         }
 
         private void ProcessPage(PlayerObject player, NPCPage page)

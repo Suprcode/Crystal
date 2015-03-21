@@ -77,6 +77,7 @@ namespace Client.MirScenes
 
         public SkillBarDialog SkillBarDialog;
         public ChatOptionDialog ChatOptionDialog;
+        public ChatNoticeDialog ChatNoticeDialog;
 
         public QuestListDialog QuestListDialog;
         public QuestDetailDialog QuestDetailDialog;
@@ -192,8 +193,9 @@ namespace Client.MirScenes
             TradeDialog = new TradeDialog { Parent = this, Visible = false };
             GuestTradeDialog = new GuestTradeDialog { Parent = this, Visible = false };
 
-            ChatOptionDialog = new ChatOptionDialog { Parent = this, Visible = false };
             SkillBarDialog = new SkillBarDialog { Parent = this, Visible = false };
+            ChatOptionDialog = new ChatOptionDialog { Parent = this, Visible = false };
+            ChatNoticeDialog = new ChatNoticeDialog { Parent = this, Visible = false };
 
             QuestListDialog = new QuestListDialog { Parent = this, Visible = false };
             QuestDetailDialog = new QuestDetailDialog {Parent = this, Visible = false};
@@ -2269,12 +2271,12 @@ namespace Client.MirScenes
         {
             Bind(p.Item);
             AddQuestItem(p.Item);
-
-            //OutputMessage(string.Format("You found {0}.", p.Item.Name), OutputMessageType.Quest);
         }
 
         private void GainedGold(S.GainedGold p)
         {
+            if (p.Gold == 0) return;
+
             Gold += p.Gold;
             SoundManager.PlaySound(SoundList.Gold);
             OutputMessage(string.Format("You gained {0:###,###,###} Gold.", p.Gold));
@@ -2584,7 +2586,7 @@ namespace Client.MirScenes
             OutputMessage("Level Increased!");
             User.Effects.Add(new Effect(Libraries.Magic2, 1200, 20, 2000, User));
             SoundManager.PlaySound(SoundList.LevelUp);
-            ChatDialog.ReceiveChat("Congratulations! You have leveled up. HP, MP have been restored.", ChatType.LevelUp); 
+            ChatDialog.ReceiveChat("Congratulations! You have leveled up. Your HP and MP have been restored.", ChatType.LevelUp); 
         }
         private void ObjectLeveled(S.ObjectLeveled p)
         {
@@ -4605,6 +4607,8 @@ namespace Client.MirScenes
                         text += string.Format(" Nutrition {0}", HoverItem.CurrentDura);
                         break;
                     case ItemType.Gem:
+                        break;
+                    case ItemType.Potion:
                         break;
                     default:
                         text += string.Format(" Durability {0}/{1}", Math.Round(HoverItem.CurrentDura / 1000M),
@@ -9139,6 +9143,7 @@ namespace Client.MirScenes
                 case ChatType.Announcement:
                     backColour = Color.Blue;
                     foreColour = Color.White;
+                    GameScene.Scene.ChatNoticeDialog.ShowNotice(text);
                     break;
                 case ChatType.Shout:
                     backColour = Color.Yellow;
@@ -9789,7 +9794,7 @@ namespace Client.MirScenes
             {
                 int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
-                MirMessageBox messageBox = new MirMessageBox(string.Format("Are you should you would like to unlock 4 extra slots for {0:###,###} gold ?\n" +
+                MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you would like to unlock 4 extra slots for {0:###,###} gold ?\n" +
                                                     "This will take your inventory space up to {1} slots in total.", openGold, GameScene.User.Inventory.Length+4), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
@@ -9891,7 +9896,7 @@ namespace Client.MirScenes
         {
             if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
-                MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 8 extra slots for 100,000 gold?\n" +
+                MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
                     "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.", MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
