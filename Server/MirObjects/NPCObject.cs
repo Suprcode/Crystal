@@ -53,6 +53,7 @@ namespace Server.MirObjects
         public NPCInfo Info;
         private const long TurnDelay = 10000;
         public long TurnTime, UsedGoodsTime;
+        public bool NeedSave;
 
         public List<UserItem> Goods = new List<UserItem>();
         public List<UserItem> UsedGoods = new List<UserItem>();
@@ -561,7 +562,7 @@ namespace Server.MirObjects
             if (UsedGoodsTime < SMain.Envir.Time)
             {
                 UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * 2);
-                ProcessBuyBackList();
+                ProcessUsedGoodsList();
             }
         }
 
@@ -738,6 +739,8 @@ namespace Server.MirObjects
                 newGoodsList.AddRange(Goods);
                 newGoodsList.AddRange(UsedGoods);
 
+                NeedSave = true;
+
                 player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = Info.PriceRate });
             }
 
@@ -759,7 +762,7 @@ namespace Server.MirObjects
             BuyBack[player.Name].Add(item);
         }
 
-        public void ProcessBuyBackList()
+        public void ProcessUsedGoodsList(bool clear = false)
         {
             var maxCount = 50;
             var usedGoodsOn = true;
@@ -776,12 +779,15 @@ namespace Server.MirObjects
                 {
                     UserItem item = items[i];
 
-                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(2), Envir.Now) <= 0)
+                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(2), Envir.Now) <= 0 || clear)
                     {
                         deleteList.Add(BuyBack[playerGoods.Key][i]);
 
                         if (!SellingItem(item) && UsedGoods.Count < maxCount)
+                        {
                             UsedGoods.Add(item);
+                            NeedSave = true;
+                        }
                     }
                 }
 

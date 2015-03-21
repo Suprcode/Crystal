@@ -11530,6 +11530,7 @@ namespace Client.MirScenes
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
             };
+            MailButton.Click += (o, e) => GameScene.Scene.MailComposeLetterDialog.ComposeMail(Name);
 
             TradeButton = new MirButton
             {
@@ -11541,10 +11542,7 @@ namespace Client.MirScenes
                 PressedIndex = 525,
                 Sound = SoundList.ButtonA,
             };
-            TradeButton.Click += (o, e) =>
-            {
-                Network.Enqueue(new C.TradeRequest());
-            };
+            TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 
             NameLabel = new MirLabel
             {

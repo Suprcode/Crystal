@@ -16,6 +16,7 @@ namespace Server
                             ExportPath = @".\Exports\",
                             GuildPath = @".\Guilds\",
                             NPCPath = EnvirPath + @".\NPCs\",
+                            GoodsPath = EnvirPath + @".\Goods\",
                             QuestPath = EnvirPath + @".\Quests\",
                             DropPath = EnvirPath + @".\Drops\",
                             RoutePath = EnvirPath + @".\Routes\",
@@ -94,10 +95,10 @@ namespace Server
                              BombSpiderName = "BombSpider",
                              CloneName = "Clone",
                              AssassinCloneName = "AssassinClone",
-                             VampireName = "VampireSpider",//SummonVampire
-                             ToadName = "SpittingToad",//SummonToad
-                             SnakeTotemName = "SnakeTotem",//SummonSnakes Totem
-                             SnakesName = "CharmedSnake";//SummonSnakes
+                             VampireName = "VampireSpider",
+                             ToadName = "SpittingToad",
+                             SnakeTotemName = "SnakeTotem",
+                             SnakesName = "CharmedSnake";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -148,7 +149,7 @@ namespace Server
                               PvpCanResistPoison = false,
                               PvpCanFreeze = false;
 
-        //guild related settings
+        //Guild related settings
         public static byte Guild_RequiredLevel = 22, Guild_PointPerLevel = 0;
         public static float Guild_ExpRate = 0.01f;
         public static uint Guild_WarCost = 3000;
@@ -297,6 +298,8 @@ namespace Server
                 Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(NPCPath))
                 Directory.CreateDirectory(NPCPath);
+            if (!Directory.Exists(GoodsPath))
+                Directory.CreateDirectory(GoodsPath);
             if (!Directory.Exists(QuestPath))
                 Directory.CreateDirectory(QuestPath);
             if (!Directory.Exists(DropPath))
@@ -964,7 +967,6 @@ namespace Server
             reader.Write("Rates", "CostPer1k", MailCostPer1KGold);
             reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
         }
-
 
     }
 }
