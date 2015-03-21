@@ -416,9 +416,26 @@ namespace Server.MirEnvir
                     GuildList[i].Save(writer);
                     FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".msdn", FileMode.Create);
                     byte[] data = mStream.ToArray();
-                    fStream.BeginWrite(data, 0, data.Length, EndSaveAsync, fStream);
+                    fStream.BeginWrite(data, 0, data.Length, EndSaveGuildsAsync, fStream);
                 }
             }
+        }
+        private void EndSaveGuildsAsync(IAsyncResult result)
+        {
+            FileStream fStream = result.AsyncState as FileStream;
+            if (fStream != null)
+            {
+                string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                string newfilename = fStream.Name;
+                fStream.EndWrite(result);
+                fStream.Dispose();
+                if (File.Exists(oldfilename))
+                    File.Move(oldfilename, oldfilename + "o");
+                File.Move(newfilename, oldfilename);
+                if (File.Exists(oldfilename + "o"))
+                    File.Delete(oldfilename + "o");
+            }
+
         }
 
         private void SaveGoods(bool forced = false)
@@ -437,7 +454,7 @@ namespace Server.MirEnvir
 
                     if (forced)
                     {
-                        npc.ProcessUsedGoodsList(forced);
+                        npc.ProcessGoods(forced);
                     }
 
                     if (!npc.NeedSave) continue;
@@ -456,12 +473,11 @@ namespace Server.MirEnvir
 
                     FileStream fStream = new FileStream(path, FileMode.Create);
                     byte[] data = mStream.ToArray();
-                    fStream.BeginWrite(data, 0, data.Length, EndSaveAsync, fStream);
+                    fStream.BeginWrite(data, 0, data.Length, EndSaveGoodsAsync, fStream);
                 }
             }
         }
-
-        private void EndSaveAsync(IAsyncResult result)
+        private void EndSaveGoodsAsync(IAsyncResult result)
         {
             FileStream fStream = result.AsyncState as FileStream;
             if (fStream != null)
@@ -682,41 +698,6 @@ namespace Server.MirEnvir
             }
         }
 
-        public void LoadGoods()
-        {
-            lock (LoadLock)
-            {
-                for (int i = 0; i < MapList.Count; i++)
-                {
-                    Map map = MapList[i];
-
-                    for (int j = 0; j < map.NPCs.Count; j++)
-                    {
-                        NPCObject npc = map.NPCs[j];
-
-                        string path = Settings.GoodsPath + npc.Info.Index.ToString() + ".msd";
-
-                        if (!File.Exists(path)) continue;
-
-                        using (FileStream stream = File.OpenRead(path))
-                        {
-                            using (BinaryReader reader = new BinaryReader(stream))
-                            {
-                                int count = reader.ReadInt32();
-
-                                for (int k = 0; k < count; k++)
-                                {
-                                    UserItem item = new UserItem(reader, Version);
-                                    if (SMain.Envir.BindItem(item))
-                                        npc.UsedGoods.Add(item);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         public void LoadFishingDrops()
         {
             FishingDrops.Clear();
@@ -873,8 +854,6 @@ namespace Server.MirEnvir
             LoadAccounts();
 
             LoadGuilds();
-
-            LoadGoods();
 
             _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
             _listener.Start();

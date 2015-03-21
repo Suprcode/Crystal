@@ -105,7 +105,7 @@ namespace Server
                              ParalysisRing = "Paralysis";
 
         
-        //Fishing settings
+        //Fishing Settings
         public static int FishingAttempts = 30;
         public static int FishingSuccessStart = 10;
         public static int FishingSuccessMultiplier = 10;
@@ -119,6 +119,12 @@ namespace Server
         public static bool MailFreeWithStamp = true;
         public static uint MailCostPer1KGold = 100;
         public static uint MailItemInsurancePercentage = 5;
+
+        //Goods Settings
+        public static bool GoodsOn = true;
+        public static uint GoodsBuyBackTime = 60;
+        public static uint GoodsMaxStored = 50;
+
 
         //character settings
         private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };

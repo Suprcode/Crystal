@@ -10362,7 +10362,7 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
-            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) || !String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase))) return;
 
             for (int i = 0; i < CurrentMap.NPCs.Count; i++)
             {

@@ -58,7 +58,7 @@ namespace Server.MirObjects
         public List<UserItem> Goods = new List<UserItem>();
         public List<UserItem> UsedGoods = new List<UserItem>();
         public Dictionary<string, List<UserItem>> BuyBack = new Dictionary<string, List<UserItem>>();
-        //public List<UserItem> BuyBack = new List<UserItem>();
+
         public List<ItemType> Types = new List<ItemType>();
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<QuestInfo> Quests = new List<QuestInfo>();
@@ -112,6 +112,7 @@ namespace Server.MirObjects
             }
 
             LoadInfo();
+            LoadGoods();
         }
 
         public void LoadInfo(bool clear = false)
@@ -135,6 +136,28 @@ namespace Server.MirObjects
             }
             else
                 SMain.Enqueue(string.Format("File Not Found: {0}, NPC: {1}", Info.FileName, Info.Name));
+        }
+
+        public void LoadGoods()
+        {
+            string path = Settings.GoodsPath + Info.Index.ToString() + ".msd";
+
+            if (!File.Exists(path)) return;
+
+            using (FileStream stream = File.OpenRead(path))
+            {
+                using (BinaryReader reader = new BinaryReader(stream))
+                {
+                    int count = reader.ReadInt32();
+
+                    for (int k = 0; k < count; k++)
+                    {
+                        UserItem item = new UserItem(reader, Envir.LoadVersion);
+                        if (SMain.Envir.BindItem(item))
+                            UsedGoods.Add(item);
+                    }
+                }
+            }
         }
 
         public void ClearInfo()
@@ -464,7 +487,6 @@ namespace Server.MirObjects
                 }
             }
         }
-
         private void ParseQuests(IList<string> lines)
         {
             for (int i = 0; i < lines.Count; i++)
@@ -561,8 +583,55 @@ namespace Server.MirObjects
 
             if (UsedGoodsTime < SMain.Envir.Time)
             {
-                UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * 2);
-                ProcessUsedGoodsList();
+                UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
+                ProcessGoods();
+            }
+        }
+
+        public void ProcessGoods(bool clear = false)
+        {
+            if (!Settings.GoodsOn) return;
+
+            List<UserItem> deleteList = new List<UserItem>();
+
+            foreach (var playerGoods in BuyBack)
+            {
+                List<UserItem> items = playerGoods.Value;
+
+                for (int i = 0; i < items.Count; i++)
+                {
+                    UserItem item = items[i];
+
+                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
+                    {
+                        deleteList.Add(BuyBack[playerGoods.Key][i]);
+
+                        if (!SellingItem(item))
+                        {
+                            if (UsedGoods.Count >= Settings.GoodsMaxStored)
+                            {
+                                UserItem nonAddedItem = UsedGoods.First(e => e.IsAdded == false);
+
+                                if (nonAddedItem != null)
+                                {
+                                    UsedGoods.Remove(nonAddedItem);
+                                }
+                                else
+                                {
+                                    UsedGoods.RemoveAt(0);
+                                }
+                            }
+
+                            UsedGoods.Add(item);
+                            NeedSave = true;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < deleteList.Count; i++)
+                {
+                    BuyBack[playerGoods.Key].Remove(deleteList[i]);
+                }
             }
         }
 
@@ -760,48 +829,6 @@ namespace Server.MirObjects
 
             item.BuybackExpiryDate = Envir.Now;
             BuyBack[player.Name].Add(item);
-        }
-
-        public void ProcessUsedGoodsList(bool clear = false)
-        {
-            var maxCount = 50;
-            var usedGoodsOn = true;
-
-            if (!usedGoodsOn) return;
-
-            List<UserItem> deleteList = new List<UserItem>();
-
-            foreach (var playerGoods in BuyBack)
-            {
-                List<UserItem> items = playerGoods.Value;
-
-                for (int i = 0; i < items.Count; i++)
-                {
-                    UserItem item = items[i];
-
-                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(2), Envir.Now) <= 0 || clear)
-                    {
-                        deleteList.Add(BuyBack[playerGoods.Key][i]);
-
-                        if (!SellingItem(item) && UsedGoods.Count < maxCount)
-                        {
-                            UsedGoods.Add(item);
-                            NeedSave = true;
-                        }
-                    }
-                }
-
-                for (int i = 0; i < deleteList.Count; i++)
-                {
-                    BuyBack[playerGoods.Key].Remove(deleteList[i]);
-                }
-            }
-
-
-            //Max 50 items -- changable in settings
-            //can turn on/off -- changable in settings
-            //order by level/type??
-            //ignore if identical item already being sold??
         }
 
         private bool SellingItem(UserItem item)
