@@ -821,7 +821,7 @@ namespace Server.MirObjects
             /* Handle Item Sale */
             if (!BuyBack.ContainsKey(player.Name)) BuyBack[player.Name] = new List<UserItem>();
 
-            if (BuyBack[player.Name].Count >= Settings.GoodBuyBackMaxStored)
+            if (BuyBack[player.Name].Count >= Settings.GoodsBuyBackMaxStored)
                 BuyBack[player.Name].RemoveAt(0);
 
             item.BuybackExpiryDate = Envir.Now;
@@ -2470,8 +2470,7 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.BreakTimeRecall:
-                        foreach (var ac in player.ActionList.Where(d => d.Type == DelayedType.NPC))
-                            player.ActionList.Remove(ac);
+                        player.ActionList.RemoveAll(d => d.Type == DelayedType.NPC);
                         break;
 
                     case ActionType.DelayGoto:

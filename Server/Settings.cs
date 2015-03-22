@@ -124,7 +124,7 @@ namespace Server
         public static bool GoodsOn = true;
         public static uint GoodsMaxStored = 50;
         public static uint GoodsBuyBackTime = 60;
-        public static uint GoodBuyBackMaxStored = 20;
+        public static uint GoodsBuyBackMaxStored = 20;
 
 
         //character settings
@@ -973,6 +973,30 @@ namespace Server
             reader.Write("Rates", "FreeWithStamp", MailFreeWithStamp);
             reader.Write("Rates", "CostPer1k", MailCostPer1KGold);
             reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
+        }
+
+        public static void LoadGoods()
+        {
+            if (!File.Exists(ConfigPath + @".\GoodsSystem.ini"))
+            {
+                SaveGoods();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\GoodsSystem.ini");
+            GoodsOn = reader.ReadBoolean("Goods", "On", GoodsOn);
+            GoodsMaxStored = reader.ReadUInt32("Goods", "MaxStored", GoodsMaxStored);
+            GoodsBuyBackTime = reader.ReadUInt32("Goods", "BuyBackTime", GoodsBuyBackTime);
+            GoodsBuyBackMaxStored = reader.ReadUInt32("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
+        }
+        public static void SaveGoods()
+        {
+            File.Delete(ConfigPath + @".\GoodsSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\GoodsSystem.ini");
+            reader.Write("Goods", "On", GoodsOn);
+            reader.Write("Goods", "MaxStored", GoodsMaxStored);
+            reader.Write("Goods", "BuyBackTime", GoodsBuyBackTime);
+            reader.Write("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
         }
 
     }
