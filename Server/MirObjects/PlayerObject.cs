@@ -1245,7 +1245,7 @@ namespace Server.MirObjects
             }
             else
             {
-                expPoint = (int)amount - (int)Math.Round((amount / 15) * ((double)Level - (targetLevel + 10)));
+                expPoint = (int)amount - (int)Math.Round(Math.Max(amount / 15, 1) * ((double)Level - (targetLevel + 10)));
             }
 
             if (expPoint <= 0) expPoint = 1;
@@ -1268,8 +1268,7 @@ namespace Server.MirObjects
                 {
                     PlayerObject player = GroupMembers[i];
                     if (player.CurrentMap == CurrentMap &&
-                        Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
-                        !player.Dead)
+                        Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
                         player.GainExp((uint)((float)expPoint * partyExpRate[GroupMembers.Count - 2] * (float)player.Level / (float)sumLevel));
                     }

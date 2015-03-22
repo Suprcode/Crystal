@@ -4322,6 +4322,7 @@ namespace Client.MirScenes
         private void ReceiveMail(S.ReceiveMail p)
         {
             NewMail = false;
+            NewMailCounter = 0;
             User.Mail.Clear();
 
             User.Mail = p.Mail.OrderBy(e => !e.Locked).ThenBy(e => e.DateSent).ToList();
@@ -11062,15 +11063,13 @@ namespace Client.MirScenes
     }
     public sealed class MiniMapDialog : MirImageControl
     {
-        public MirImageControl LightSetting;
+        public MirImageControl LightSetting, NewMail;
         public MirButton ToggleButton, BigMapButton, MailButton;
         public MirLabel LocationLabel, MapNameLabel;
         private float _fade = 1F;
         private bool _bigMode = true, _realBigMode = true;
 
         public MirLabel AModeLabel, PModeLabel;
-
-        //public MirLabel QuestSymbolLabel;
 
         public List<MirLabel> QuestIcons = new List<MirLabel>(); 
 
@@ -11080,7 +11079,6 @@ namespace Client.MirScenes
             Library = Libraries.Prguse;
             Location = new Point(Settings.ScreenWidth - 126, 0);
             PixelDetect = true;
-            //Movable = true;
 
             BeforeDraw += MiniMap_BeforeDraw;
             AfterDraw += MiniMapDialog_AfterDraw;
@@ -11115,6 +11113,16 @@ namespace Client.MirScenes
                 Hint = "Mail"
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailListDialog.Toggle();
+
+            NewMail = new MirImageControl
+            {
+                Index = 544,
+                Location = new Point(5, 132),
+                Parent = this,
+                Library = Libraries.Prguse,
+                Visible = false,
+                NotControl = true
+            };
 
             BigMapButton = new MirButton
             {
@@ -11173,18 +11181,7 @@ namespace Client.MirScenes
 
         private void MiniMapDialog_AfterDraw(object sender, EventArgs e)
         {
-            if (GameScene.Scene.NewMail)
-            {
-                Point p = Location;
-                Libraries.Prguse.Draw(544, new Point(p.X + 5, Size.Height - 22), Color.White, true, 1F);
-                //double time = (CMain.Time) / 100D;
-
-                //if (Math.Round(time) % 10 < 5)
-                //{
-                //    Point p = Location;
-                //    Libraries.Prguse.Draw(544, new Point(p.X + 5, Size.Height - 22), Color.White, true, 1F);
-                //}
-            }
+            
         }
 
         private void MiniMap_BeforeDraw(object sender, EventArgs e)
@@ -11355,6 +11352,7 @@ namespace Client.MirScenes
             Index = 2091;
             int y = Size.Height - 23;
             MailButton.Location = new Point(4, y);
+            NewMail.Location = new Point(5, y + 1);
             BigMapButton.Location = new Point(25, y);
             LocationLabel.Location = new Point(46, y);
             LightSetting.Location = new Point(102, y);
@@ -11370,6 +11368,7 @@ namespace Client.MirScenes
             Index = 2090;
             int y = Size.Height - 23;
             MailButton.Location = new Point(4, y);
+            NewMail.Location = new Point(5, y + 1);
             BigMapButton.Location = new Point(25, y);
             LocationLabel.Location = new Point(46, y);
             LightSetting.Location = new Point(102, y);
@@ -11395,7 +11394,28 @@ namespace Client.MirScenes
             GameScene.Scene.MainDialog.AModeLabel.Location = new Point(Settings.HighResolution ? 899 : 675,
                 Settings.HighResolution ? -448 - offset : -280 - offset);
 
-            
+            if (GameScene.Scene.NewMail)
+            {
+                double time = (CMain.Time) / 100D;
+
+                if (Math.Round(time) % 10 < 5 || GameScene.Scene.NewMailCounter >= 10)
+                {
+                    NewMail.Visible = true;
+                }
+                else
+                {
+                    if(NewMail.Visible)
+                    {
+                        GameScene.Scene.NewMailCounter++;
+                    }
+
+                    NewMail.Visible = false;
+                }
+            }
+            else
+            {
+                NewMail.Visible = false;
+            }
         }
     }
     public sealed class InspectDialog : MirImageControl
@@ -18126,7 +18146,7 @@ namespace Client.MirScenes
                             text = string.Format("Trick shot:\nMinimal damage\nCan shoot over walls.", Value);
                             break;
                         case 2:
-                            text = string.Format("Group Mode:\nMedium damage\nDont steal agro.", Value);
+                            text = string.Format("Group Mode:\nMedium damage\nDon't steal agro.", Value);
                             break;
                     }
                     break;
