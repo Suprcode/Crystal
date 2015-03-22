@@ -2312,8 +2312,7 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.BreakTimeRecall:
-                        foreach (var ac in player.ActionList.Where(d => d.Type == DelayedType.NPC))
-                            player.ActionList.Remove(ac);
+                        player.ActionList.RemoveAll(d => d.Type == DelayedType.NPC);
                         break;
 
                     case ActionType.DelayGoto:
