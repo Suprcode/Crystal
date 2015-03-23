@@ -141,6 +141,8 @@ namespace Server.MirObjects
                     return new SnakeTotem(info);//SummonSnakes Totem
                 case 63:
                     return new CharmedSnake(info);//SummonSnakes
+                case 64:
+                    return new IntelligentCreatureObject(info);//IntelligentCreature
                 default:
                     return new MonsterObject(info);
             }

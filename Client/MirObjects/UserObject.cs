@@ -46,6 +46,11 @@ namespace Client.MirObjects
         public List<ItemSets> ItemSets = new List<ItemSets>();
         public List<EquipmentSlot> MirSet = new List<EquipmentSlot>();
 
+        public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
+        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;//IntelligentCreature
+        public bool CreatureSummoned;//IntelligentCreature
+        public int PearlCount = 0;
+
         public List<ClientQuestProgress> CurrentQuests = new List<ClientQuestProgress>();
         public List<int> CompletedQuests = new List<int>();
         public List<ClientMail> Mail = new List<ClientMail>();
@@ -91,6 +96,10 @@ namespace Client.MirObjects
             QuestInventory = info.QuestInventory;
 
             Magics = info.Magics;
+
+            IntelligentCreatures = info.IntelligentCreatures;//IntelligentCreature
+            SummonedCreatureType = info.SummonedCreatureType;//IntelligentCreature
+            CreatureSummoned = info.CreatureSummoned;//IntelligentCreature
 
             BindAllItems();
 

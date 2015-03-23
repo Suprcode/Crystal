@@ -183,8 +183,8 @@ namespace Server.MirObjects
             }
         }
 
-        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime;
+        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker;
 
         public bool MagicShield;
         public byte MagicShieldLv;
@@ -338,6 +338,14 @@ namespace Server.MirObjects
             for (int i = 0; i < Pets.Count; i++)
             {
                 MonsterObject pet = Pets[i];
+
+                if (pet.Info.AI == 64)//IntelligentCreature
+                {
+                    //dont save Creatures they will miss alot of AI-Info when they get spawned on login
+                    UnSummonIntelligentCreature(((IntelligentCreatureObject)Pets[i]).petType, false);
+                    continue;
+                }
+
                 pet.Master = null;
 
                 if (!pet.Dead)
@@ -547,6 +555,8 @@ namespace Server.MirObjects
             ProcessInfiniteBuffs();
             ProcessRegen();
             ProcessPoison();
+
+            RefreshCreaturesTimeLeft();//IntelligentCreature
 
             /*  if (HealthChanged)
               {
@@ -1796,6 +1806,12 @@ namespace Server.MirObjects
             Info.Inventory.CopyTo(packet.Inventory, 0);
             Info.Equipment.CopyTo(packet.Equipment, 0);
             Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
+
+            //IntelligentCreature
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+                packet.IntelligentCreatures.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
+            packet.SummonedCreatureType = Info.SummonedCreatureType;
+            packet.CreatureSummoned = Info.CreatureSummoned;
 
             Enqueue(packet);
         }
@@ -8964,6 +8980,54 @@ namespace Server.MirObjects
 
                     RefreshStats();
                     break;
+                case ItemType.Pets://IntelligentCreature
+                    if (item.Info.Shape >= 20)
+                    {
+                        switch (item.Info.Shape)
+                        {
+                            case 20://Mirror
+                                Enqueue(new S.IntelligentCreatureEnableRename());
+                                break;
+                            case 21://BlackStone
+                                break;
+                            case 22://Nuts
+                                break;
+                            case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
+                            case 24://WonderPill
+                                if (Info.CreatureSummoned)
+                                    for (int i = 0; i < Pets.Count; i++)
+                                    {
+                                        if (Pets[i].Info.AI != 64) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
+                                            ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
+                                        break;
+                                    }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        int slotIndex = Info.IntelligentCreatures.Count;
+                        UserIntelligentCreature petInfo = new UserIntelligentCreature((IntelligentCreatureType)item.Info.Shape, slotIndex, item.Info.Effect);
+                        if (Info.CheckHasIntelligentCreature((IntelligentCreatureType)item.Info.Shape))
+                        {
+                            ReceiveChat("You already have this creature.", ChatType.Hint);
+                            petInfo = null;
+                        }
+
+                        if (petInfo == null || slotIndex >= 10)
+                        {
+                            Enqueue(p);
+                            return;
+                        }
+
+                        ReceiveChat("Obtained a new creature {" + petInfo.CustomName + "}.", ChatType.Hint);
+
+                        Info.IntelligentCreatures.Add(petInfo);
+                        Enqueue(petInfo.GetInfo());
+                    }
+                    break;
                 default:
                     return;
             }
@@ -9990,6 +10054,44 @@ namespace Server.MirObjects
                     {
                         ReceiveChat("Can only be used with a fishing rod", ChatType.System);
                         return false;
+                    }
+                    break;
+                case ItemType.Pets://IntelligentCreature
+                    switch (item.Info.Shape)
+                    {
+                        case 20://mirror rename creature
+                            if (Info.IntelligentCreatures.Count == 0) return false;
+                            break;
+                        case 21://creature stone
+                            //if (Info.IntelligentCreatures.Count == 0) return false;
+                            break;
+                        case 22://nuts maintain food levels
+                        case 23://basic creature food
+                        case 24://wonderpill vitalize creature
+                            if (!Info.CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Pets.Count; i++)
+                                {
+                                    if (Pets[i].Info.AI != 64) continue;
+                                    if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+
+                                    if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        ReceiveChat(" Creature is not hungry", ChatType.System);
+                                        return false;
+                                    }
+                                }
+                                return false;
+                            }
                     }
                     break;
             }
@@ -13944,6 +14046,255 @@ namespace Server.MirObjects
         }
 
         #endregion
+
+        #region IntelligentCreatures
+
+        public void SummonIntelligentCreature(IntelligentCreatureType pType)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+
+                //if (!IsGM) return;
+
+                MonsterInfo mInfo = Envir.GetMonsterInfo(Settings.IntelligentCreatureNameList[(byte)pType]);
+                if (mInfo == null) return;
+
+                byte petlevel = 0;//for future use
+
+                MonsterObject monster = MonsterObject.GetMonster(mInfo);
+                if (monster == null) return;
+                monster.PetLevel = petlevel;
+                monster.Master = this;
+                monster.MaxPetLevel = 7;
+                monster.Direction = Direction;
+                monster.ActionTime = Envir.Time + 1000;
+                ((IntelligentCreatureObject)monster).CustomName = Info.IntelligentCreatures[i].CustomName;
+                ((IntelligentCreatureObject)monster).CreatureRules = new IntelligentCreatureRules
+                {
+                    MinimalFullness = Info.IntelligentCreatures[i].Info.MinimalFullness,
+                    MousePickupEnabled = Info.IntelligentCreatures[i].Info.MousePickupEnabled,
+                    MousePickupRange = Info.IntelligentCreatures[i].Info.MousePickupRange,
+                    AutoPickupEnabled = Info.IntelligentCreatures[i].Info.AutoPickupEnabled,
+                    AutoPickupRange = Info.IntelligentCreatures[i].Info.AutoPickupRange,
+                    SemiAutoPickupEnabled = Info.IntelligentCreatures[i].Info.SemiAutoPickupEnabled,
+                    SemiAutoPickupRange = Info.IntelligentCreatures[i].Info.SemiAutoPickupRange,
+                    CanProduceBlackStone = Info.IntelligentCreatures[i].Info.CanProduceBlackStone
+                };
+                ((IntelligentCreatureObject)monster).ItemFilter = Info.IntelligentCreatures[i].Filter;
+                ((IntelligentCreatureObject)monster).CurrentPickupMode = Info.IntelligentCreatures[i].petMode;
+                ((IntelligentCreatureObject)monster).Fullness = Info.IntelligentCreatures[i].Fullness;
+                //((IntelligentCreatureObject)monster).Timeleft = Info.IntelligentCreatures[i].ExpireTime;//time left in seconds
+                ((IntelligentCreatureObject)monster).blackstoneTime = Info.IntelligentCreatures[i].BlackstoneTime;
+
+
+                monster.Spawn(CurrentMap, Front);
+                Pets.Add(monster);//make a new creaturelist ? 
+
+                Info.CreatureSummoned = true;
+                Info.SummonedCreatureType = pType;
+
+                ReceiveChat((string.Format("Creature {0} has been summoned.", Info.IntelligentCreatures[i].CustomName)), ChatType.System);
+                break;
+            }
+            //update client
+            GetCreaturesInfo();
+        }
+        public void UnSummonIntelligentCreature(IntelligentCreatureType pType, bool doUpdate = true)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != pType) continue;
+
+                if (doUpdate) ReceiveChat((string.Format("Creature {0} has been dismissed.", ((IntelligentCreatureObject)Pets[i]).CustomName)), ChatType.System);
+
+                Pets[i].Die();
+
+                Info.CreatureSummoned = false;
+                Info.SummonedCreatureType = IntelligentCreatureType.None;
+                break;
+            }
+            //update client
+            if (doUpdate) GetCreaturesInfo();
+        }
+        public void ReleaseIntelligentCreature(IntelligentCreatureType pType, bool doUpdate = true)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            //remove creature
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+
+                if (doUpdate) ReceiveChat((string.Format("Creature {0} has been released.", Info.IntelligentCreatures[i].CustomName)), ChatType.System);
+
+                Info.IntelligentCreatures.Remove(Info.IntelligentCreatures[i]);
+                break;
+            }
+
+            //re-arange slots
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+                Info.IntelligentCreatures[i].SlotIndex = i;
+
+            //update client
+            if (doUpdate) GetCreaturesInfo();
+        }
+
+        public void UpdateSummonedCreature(IntelligentCreatureType pType)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            UserIntelligentCreature creatureInfo = null;
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+
+                creatureInfo = Info.IntelligentCreatures[i];
+                break;
+            }
+            if (creatureInfo == null) return;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != pType) continue;
+
+                ((IntelligentCreatureObject)Pets[i]).CustomName = creatureInfo.CustomName;
+                ((IntelligentCreatureObject)Pets[i]).ItemFilter = creatureInfo.Filter;
+                ((IntelligentCreatureObject)Pets[i]).CurrentPickupMode = creatureInfo.petMode;
+                break;
+            }
+        }
+
+        public void UpdateCreatureFullness(IntelligentCreatureType pType, int fullness)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+                Info.IntelligentCreatures[i].Fullness = fullness;
+                break;
+            }
+
+            //update client
+            //GetCreaturesInfo();
+        }
+
+        public void UpdateCreatureBlackstoneTime(IntelligentCreatureType pType, long blackstonetime)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+                Info.IntelligentCreatures[i].BlackstoneTime = blackstonetime;
+                break;
+            }
+
+            //update client
+            //GetCreaturesInfo();
+        }
+
+        public void RefreshCreaturesTimeLeft()
+        {
+            if (Envir.Time > CreatureTimeLeftTicker)
+            {
+                //ExpireTime
+                List<int> releasedPets = new List<int>();
+                CreatureTimeLeftTicker = Envir.Time + CreatureTimeLeftDelay;
+                for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+                {
+                    if (Info.IntelligentCreatures[i].ExpireTime == -9999) continue;//permanent
+                    Info.IntelligentCreatures[i].ExpireTime = Info.IntelligentCreatures[i].ExpireTime - 1;
+                    if (Info.IntelligentCreatures[i].ExpireTime <= 0)
+                    {
+                        Info.IntelligentCreatures[i].ExpireTime = 0;
+                        if (Info.CreatureSummoned && Info.SummonedCreatureType == Info.IntelligentCreatures[i].PetType)
+                            UnSummonIntelligentCreature(Info.SummonedCreatureType, false);//unsummon creature
+                        releasedPets.Add(i);
+                    }
+                }
+                for (int i = (releasedPets.Count-1); i >= 0; i--)//start with largest value
+                {
+                    ReceiveChat((string.Format("Creature {0} has expired.", Info.IntelligentCreatures[releasedPets[i]].CustomName)), ChatType.System);
+                    ReleaseIntelligentCreature(Info.IntelligentCreatures[releasedPets[i]].PetType, false);//release creature
+                }
+
+                if (Info.CreatureSummoned && Info.SummonedCreatureType != IntelligentCreatureType.None)
+                {
+                    for (int i = 0; i < Pets.Count; i++)
+                    {
+                        if (Pets[i].Info.AI != 64) continue;
+                        if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+
+                        ((IntelligentCreatureObject)Pets[i]).ProcessBlackStoneProduction();
+                        break;
+                    }
+                }
+
+                //update client
+                GetCreaturesInfo();
+            }
+        }
+
+        public void IntelligentCreaturePickup(bool mousemode, Point atlocation)
+        {
+            if (!Info.CreatureSummoned) return;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+
+                //((IntelligentCreatureObject)Pets[i]).MouseLocation = atlocation;
+                ((IntelligentCreatureObject)Pets[i]).ManualPickup(mousemode, atlocation);
+                break;
+            }
+        }
+
+        public void IntelligentCreatureProducePearl()
+        {
+            Info.PearlCount++;
+        }
+
+        public bool IntelligentCreatureProduceBlackStone()
+        {
+            ItemInfo iInfo = Envir.GetItemInfo(Settings.CreatureBlackStoneName);
+            if (iInfo == null) return false;
+
+            UserItem item = Envir.CreateDropItem(iInfo);
+            item.Count = 1;
+
+            if (!CanGainItem(item, false)) return false;
+
+            GainItem(item);
+            return true;
+        }
+
+        private void GetCreaturesInfo()
+        {
+            S.UpdateIntelligentCreatureList packet = new S.UpdateIntelligentCreatureList
+            {
+                CreatureSummoned = Info.CreatureSummoned,
+                SummonedCreatureType = Info.SummonedCreatureType,
+                PearlCount = Info.PearlCount,
+            };
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+                packet.CreatureList.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
+
+            Enqueue(packet);
+        }
+
+
+        #endregion
+
     }
 }
 

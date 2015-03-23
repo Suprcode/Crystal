@@ -19,7 +19,7 @@ namespace Client.MirObjects
         }
         public override bool Blocking
         {
-            get { return !Dead; }
+            get { return AI == 64 ? false : !Dead; }
         }
         public Point ManualLocationOffset
         {
@@ -100,6 +100,19 @@ namespace Client.MirObjects
                 case Monster.EvilMir:
                 case Monster.DragonStatue:
                     BodyLibrary = Libraries.Dragon;
+                    break;
+                //IntelligentCreature
+                case Monster.BabyPig:
+                case Monster.Chick:
+                case Monster.Kitten:
+                case Monster.BabySkeleton:
+                case Monster.Baekdon:
+                case Monster.Wimaen:
+                case Monster.BlackKitten:
+                case Monster.BabyDragon:
+                case Monster.OlympicFlame:
+                case Monster.BabySnowMan:
+                    BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];
@@ -359,6 +372,20 @@ namespace Client.MirObjects
                 case Monster.CharmedSnake://SummonSnakes
                     Frames = FrameSet.Monsters[52];
                     break;
+                case Monster.BabyPig://IntelligentCreature
+                case Monster.Chick:
+                case Monster.Kitten:
+                case Monster.BabySkeleton:
+                case Monster.Baekdon:
+                case Monster.Wimaen:
+                case Monster.BabyDragon:
+                case Monster.OlympicFlame:
+                case Monster.BabySnowMan:
+                    Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
+                    break;
+                case Monster.BlackKitten:
+                    Frames = FrameSet.HelperPets[2];
+                    break;
                 default:
                     Frames = FrameSet.Monsters[0];
                     break;
@@ -518,6 +545,23 @@ namespace Client.MirObjects
                     case MirAction.Pushed:
                         return false;
                 }
+            }
+
+            //IntelligentCreature
+            switch (BaseImage)
+            {
+                case Monster.BabyPig:
+                case Monster.Chick:
+                case Monster.Kitten:
+                case Monster.BabySkeleton:
+                case Monster.Baekdon:
+                case Monster.Wimaen:
+                case Monster.BlackKitten:
+                case Monster.BabyDragon:
+                case Monster.OlympicFlame:
+                case Monster.BabySnowMan:
+                    BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
+                    break;
             }
 
             if (ActionFeed.Count == 0)
@@ -684,6 +728,8 @@ namespace Client.MirObjects
 
                                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 230 + (CMain.Random.Next(5) * 10), 5, 400, source, CMain.Time + CMain.Random.Next(1000)));
                                 }
+                                break;
+                            case Monster.OlympicFlame:
                                 break;
                         }
                         break;
@@ -1071,6 +1117,17 @@ namespace Client.MirObjects
                         }
                         else
                         {
+
+                            switch (BaseImage)
+                            {
+                                case Monster.BabySnowMan:
+                                    if (FrameIndex == 1)
+                                    {
+                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "SnowmanSnow") < 0)
+                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 208, 11, 1500, this), "SnowmanSnow"));
+                                    }
+                                    break;
+                            }
                             if (FrameIndex == 3) PlaySwingSound();
                             NextMotion += FrameInterval;
                         }
@@ -1090,6 +1147,21 @@ namespace Client.MirObjects
                         }
                         else
                         {
+                            switch (BaseImage)
+                            {
+                                case Monster.OlympicFlame:
+                                    if (FrameIndex == 1)
+                                    {
+                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureFlame") < 0)
+                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 280, 4, 800, this), "CreatureFlame"));
+                                    }
+                                    if (FrameIndex == 4)
+                                    {
+                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureSmoke") < 0)
+                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 256, 3, 1000, this), "CreatureSmoke"));
+                                    }
+                                    break;
+                            }
                             NextMotion += FrameInterval;
                         }
                     }
@@ -1944,12 +2016,30 @@ namespace Client.MirObjects
 
             string[] splitName = Name.Split('_');
 
+            //IntelligentCreature
+            int yOffset = 0;
+            switch (BaseImage)
+            {
+                case Monster.BabyPig:
+                case Monster.Chick:
+                case Monster.Kitten:
+                case Monster.BabySkeleton:
+                case Monster.Baekdon:
+                case Monster.Wimaen:
+                case Monster.BlackKitten:
+                case Monster.BabyDragon:
+                case Monster.OlympicFlame:
+                case Monster.BabySnowMan:
+                    yOffset = -20;
+                    break;
+            }
+
             for (int s = 0; s < splitName.Count(); s++)
             {
                 CreateMonsterLabel(splitName[s], s);
 
                 TempLabel.Text = splitName[s];
-                TempLabel.Location = new Point(DisplayRectangle.X + (48 - TempLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - TempLabel.Size.Height / 2) + (Dead ? 35 : 8) - (((splitName.Count() - 1) * 10) / 2) + (s * 12));
+                TempLabel.Location = new Point(DisplayRectangle.X + (48 - TempLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - TempLabel.Size.Height / 2) + (Dead ? 35 : 8) - (((splitName.Count() - 1) * 10) / 2) + (s * 12) + yOffset);
                 TempLabel.Draw();
             }
         }
