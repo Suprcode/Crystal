@@ -411,6 +411,7 @@ namespace Client.MirControls
                 case ItemType.Book:
                 case ItemType.Food:
                 case ItemType.Script:
+                case ItemType.Pets://IntelligentCreature
                     if (CanUseItem() && GridType == MirGridType.Inventory)
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;

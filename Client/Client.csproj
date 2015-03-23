@@ -108,6 +108,7 @@
     <Compile Include="MirControls\MirAnimatedButton.cs" />
     <Compile Include="MirControls\MirAnimatedControl.cs" />
     <Compile Include="MirControls\MirButton.cs" />
+    <Compile Include="MirControls\MirCheckBox.cs" />
     <Compile Include="MirControls\MirControl.cs" />
     <Compile Include="MirControls\MirDropDownBox.cs" />
     <Compile Include="MirControls\MirGoodsCell.cs" />
