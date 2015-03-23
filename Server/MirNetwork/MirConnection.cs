@@ -155,7 +155,7 @@ namespace Server.MirNetwork
         {
             if (_client == null || !_client.Connected)
             {
-                Disconnect();
+                Disconnect(20);
                 return;
             }
 
@@ -172,7 +172,7 @@ namespace Server.MirNetwork
 
             if (SMain.Envir.Time > TimeOutTime)
             {
-                Disconnect();
+                Disconnect(21);
                 return;
             }
 
@@ -197,7 +197,7 @@ namespace Server.MirNetwork
                     ClientVersion((C.ClientVersion) p);
                     break;
                 case (short)ClientPacketIds.Disconnect:
-                    Disconnect();
+                    Disconnect(22);
                     break;
                 case (short)ClientPacketIds.KeepAlive: // Keep Alive
                     return;
@@ -479,7 +479,7 @@ namespace Server.MirNetwork
             }
         }
 
-        public void SoftDisconnect()
+        public void SoftDisconnect(byte reason)
         {
             Stage = GameStage.Disconnected;
             TimeDisconnected = SMain.Envir.Time;
@@ -487,7 +487,7 @@ namespace Server.MirNetwork
             lock (Envir.AccountLock)
             {
                 if (Player != null)
-                    Player.StopGame();
+                    Player.StopGame(reason);
 
                 if (Account != null && Account.Connection == this)
                     Account.Connection = null;
@@ -495,7 +495,7 @@ namespace Server.MirNetwork
 
             Account = null;
         }
-        public void Disconnect()
+        public void Disconnect(byte reason)
         {
             if (!Connected) return;
 
@@ -509,7 +509,7 @@ namespace Server.MirNetwork
             lock (Envir.AccountLock)
             {
                 if (Player != null)
-                    Player.StopGame();
+                    Player.StopGame(reason);
 
                 if (Account != null && Account.Connection == this)
                     Account.Connection = null;
@@ -531,7 +531,7 @@ namespace Server.MirNetwork
             if (!Connected)
             {
                 Disconnecting = true;
-                SoftDisconnect();
+                SoftDisconnect(reason);
                 return;
             }
             
@@ -542,7 +542,7 @@ namespace Server.MirNetwork
             data.AddRange(new S.Disconnect { Reason = reason }.GetPacketBytes());
 
             BeginSend(data);
-            SoftDisconnect();
+            SoftDisconnect(reason);
         }
 
         private void ClientVersion(C.ClientVersion p)
@@ -559,7 +559,7 @@ namespace Server.MirNetwork
                     data.AddRange(new S.ClientVersion {Result = 0}.GetPacketBytes());
 
                     BeginSend(data);
-                    SoftDisconnect();
+                    SoftDisconnect(10);
                     SMain.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
@@ -689,7 +689,7 @@ namespace Server.MirNetwork
                 return;
             }
 
-            Player.StopGame();
+            Player.StopGame(23);
 
             Stage = GameStage.Select;
             Player = null;

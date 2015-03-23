@@ -331,7 +331,7 @@ namespace Server.MirObjects
                 CurrentMapIndex = BindMapIndex;
             }
         }
-        public void StopGame()
+        public void StopGame(byte reason)
         {
             if (Node == null) return;
 
@@ -392,7 +392,7 @@ namespace Server.MirObjects
 
             TradeCancel();
 
-            SMain.Enqueue(string.Format("{0} Has logged out.", Name));
+            DisplayLogOutMsg(reason);
 
             Fishing = false;
 
@@ -400,6 +400,44 @@ namespace Server.MirObjects
             Info.LastDate = Envir.Now;
 
             CleanUp();
+        }
+
+        private void DisplayLogOutMsg(byte reason)
+        {
+            switch (reason)
+            {
+                    //0-10 are 'senddisconnect to client'
+                case 0:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Server closed", Name));
+                    return;
+                case 1:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Double login", Name));
+                    return;
+                case 2:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Chat message to long", Name));
+                    return;
+                case 3:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Server crashed", Name));
+                    return;
+                case 4:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Kicked by admin", Name));
+                    return;
+                case 10:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Wrong client version", Name));
+                    return;
+                case 20:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User gone missing/disconnected", Name));
+                    return;
+                case 21:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Connection timed out", Name));
+                    return;
+                case 22:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User closed game", Name));
+                    return;
+                case 23:
+                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User returned to select char", Name));
+                    return;
+            }
         }
 
         private void NewCharacter()
@@ -6094,7 +6132,7 @@ namespace Server.MirObjects
             if (Functions.InRange(CurrentLocation, target.CurrentLocation, 1) == false) return;
             if (Envir.Random.Next(10) > magic.Level + 6) return;
             Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.CounterAttack, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = GetMagic(Spell.CounterAttack).Level, SelfBroadcast = true });
-            DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, 1000, DefenceType.AC, true);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, damage, DefenceType.AC, true);
             ActionList.Add(action);
             LevelMagic(magic);
             bCounterAttack = false;
