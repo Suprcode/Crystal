@@ -238,6 +238,10 @@ namespace Server.MirDatabase
                 SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
                 CreatureSummoned = reader.ReadBoolean();
                 PearlCount = reader.ReadInt32();
+                //there will nevver be a summoned creature when loading character
+                SummonedCreatureType = IntelligentCreatureType.None;
+                CreatureSummoned = false;
+
             }
         }
 
