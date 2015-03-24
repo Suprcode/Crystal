@@ -1596,4 +1596,53 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(Stamped);
         }
     }
+
+    public sealed class UpdateIntelligentCreature : Packet//IntelligentCreature
+    {
+        public override short Index { get { return (short)ClientPacketIds.UpdateIntelligentCreature; } }
+
+
+        public ClientIntelligentCreature Creature;
+        public bool SummonMe = false;
+        public bool UnSummonMe = false;
+        public bool ReleaseMe = false;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Creature = new ClientIntelligentCreature(reader);
+            SummonMe = reader.ReadBoolean();
+            UnSummonMe = reader.ReadBoolean();
+            ReleaseMe = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Creature.Save(writer);
+            writer.Write(SummonMe);
+            writer.Write(UnSummonMe);
+            writer.Write(ReleaseMe);
+        }
+    }
+
+    public sealed class IntelligentCreaturePickup : Packet//IntelligentCreature
+    {
+        public override short Index { get { return (short)ClientPacketIds.IntelligentCreaturePickup; } }
+
+        public bool MouseMode = false;
+        public Point Location = new Point(0,0);
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            MouseMode = reader.ReadBoolean();
+            Location.X = reader.ReadInt32();
+            Location.Y = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(MouseMode);
+            writer.Write(Location.X);
+            writer.Write(Location.Y);
+        }
+    }
 }

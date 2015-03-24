@@ -27,7 +27,8 @@ namespace Client
                             AHumEffectPath = @".\Data\AHumEffect\",
                             ARHumEffectPath = @".\Data\ARHumEffect\",
                             MountPath = @".\Data\Mount\",
-                            FishingPath = @".\Data\Fishing\";
+                            FishingPath = @".\Data\Fishing\",
+                            PetsPath = @".\Data\Pet\";//IntelligentCreature
 
         //Logs
         public static bool LogErrors = true;

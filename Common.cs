@@ -80,7 +80,7 @@ public enum DefaultNPCType : byte
     Daily = 9
 }
 
-public enum IntelligentCreatureType : byte
+public enum IntelligentCreatureType : byte//IntelligentCreature
 {
     None = 99,
     BabyPig = 0,
@@ -258,6 +258,18 @@ public enum Monster : ushort
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
+
+    //IntelligentCreature System
+    BabyPig = 10000,//Permanent
+    Chick = 10001,//Special
+    Kitten = 10002,//Permanent
+    BabySkeleton = 10003,//Special
+    Baekdon = 10004,//Special
+    Wimaen = 10005,//Event
+    BlackKitten = 10006,//unknown
+    BabyDragon = 10007,//unknown
+    OlympicFlame = 10008,//unknown
+    BabySnowMan = 10009,//unknown
 }
 
 public enum MirAction : byte
@@ -418,6 +430,7 @@ public enum ItemType : byte
     Fish = 33,
     Quest = 34,
 	Awakening = 35,
+    Pets = 36,//IntelligentCreature
 }
 
 public enum MirGridType : byte
@@ -986,7 +999,11 @@ public enum ServerPacketIds : short
     MailSendRequest,
     MailSent,
     ParcelCollected,
-    MailCost
+    MailCost,
+
+    NewIntelligentCreature,
+    UpdateIntelligentCreatureList,
+    IntelligentCreatureEnableRename
 }
 
 public enum ClientPacketIds : short
@@ -1085,7 +1102,10 @@ public enum ClientPacketIds : short
     DeleteMail,
     LockMail,
     MailLockedItem,
-    MailCost
+    MailCost,
+
+    UpdateIntelligentCreature,
+    IntelligentCreaturePickup
 }
 
 public class InIReader
@@ -3216,6 +3236,236 @@ public class ClientMail
 }
 
 
+
+public enum IntelligentCreaturePickupMode : byte//IntelligentCreature
+{
+    Automatic = 0,
+    SemiAutomatic = 1,
+}
+
+public class IntelligentCreatureRules//IntelligentCreature
+{
+    public int MinimalFullness = 1;
+
+    public bool MousePickupEnabled = false;
+    public int MousePickupRange = 0;
+    public bool AutoPickupEnabled = false;
+    public int AutoPickupRange = 0;
+    public bool SemiAutoPickupEnabled = false;
+    public int SemiAutoPickupRange = 0;
+
+    public bool CanProduceBlackStone = false;
+
+    public string Info = "";
+    public string Info1 = "";
+    public string Info2 = "";
+
+    public IntelligentCreatureRules()
+    {
+    }
+
+    public IntelligentCreatureRules(BinaryReader reader)
+    {
+        MinimalFullness = reader.ReadInt32();
+        MousePickupEnabled = reader.ReadBoolean();
+        MousePickupRange = reader.ReadInt32();
+        AutoPickupEnabled = reader.ReadBoolean();
+        AutoPickupRange = reader.ReadInt32();
+        SemiAutoPickupEnabled = reader.ReadBoolean();
+        SemiAutoPickupRange = reader.ReadInt32();
+
+        CanProduceBlackStone = reader.ReadBoolean();
+
+        Info = reader.ReadString();
+        Info1 = reader.ReadString();
+        Info2 = reader.ReadString();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(MinimalFullness);
+        writer.Write(MousePickupEnabled);
+        writer.Write(MousePickupRange);
+        writer.Write(AutoPickupEnabled);
+        writer.Write(AutoPickupRange);
+        writer.Write(SemiAutoPickupEnabled);
+        writer.Write(SemiAutoPickupRange);
+
+        writer.Write(CanProduceBlackStone);
+
+        writer.Write(Info);
+        writer.Write(Info1);
+        writer.Write(Info2);
+    }
+}
+
+public class IntelligentCreatureItemFilter//IntelligentCreature
+{
+    public bool PetPickupAll = true;
+    public bool PetPickupGold = false;
+    public bool PetPickupWeapons = false;
+    public bool PetPickupArmours = false;
+    public bool PetPickupHelmets = false;
+    public bool PetPickupBoots = false;
+    public bool PetPickupBelts = false;
+    public bool PetPickupAccessories = false;
+    public bool PetPickupOthers = false;
+
+    public IntelligentCreatureItemFilter()
+    {
+    }
+
+    public void SetItemFilter(int idx)
+    {
+        switch (idx)
+        {
+            case 0://all items
+                PetPickupAll = true;
+                PetPickupGold = false;
+                PetPickupWeapons = false;
+                PetPickupArmours = false;
+                PetPickupHelmets = false;
+                PetPickupBoots = false;
+                PetPickupBelts = false;
+                PetPickupAccessories = false;
+                PetPickupOthers = false;
+                break;
+            case 1://gold
+                PetPickupAll = false;
+                PetPickupGold = !PetPickupGold;
+                break;
+            case 2://weapons
+                PetPickupAll = false;
+                PetPickupWeapons = !PetPickupWeapons;
+                break;
+            case 3://armours
+                PetPickupAll = false;
+                PetPickupArmours = !PetPickupArmours;
+                break;
+            case 4://helmets
+                PetPickupAll = false;
+                PetPickupHelmets = !PetPickupHelmets;
+                break;
+            case 5://boots
+                PetPickupAll = false;
+                PetPickupBoots = !PetPickupBoots;
+                break;
+            case 6://belts
+                PetPickupAll = false;
+                PetPickupBelts = !PetPickupBelts;
+                break;
+            case 7://jewelry
+                PetPickupAll = false;
+                PetPickupAccessories = !PetPickupAccessories;
+                break;
+            case 8://others
+                PetPickupAll = false;
+                PetPickupOthers = !PetPickupOthers;
+                break;
+        }
+        if (PetPickupGold && PetPickupWeapons && PetPickupArmours && PetPickupHelmets && PetPickupBoots && PetPickupBelts && PetPickupAccessories && PetPickupOthers)
+        {
+            PetPickupAll = true;
+            PetPickupGold = false;
+            PetPickupWeapons = false;
+            PetPickupArmours = false;
+            PetPickupHelmets = false;
+            PetPickupBoots = false;
+            PetPickupBelts = false;
+            PetPickupAccessories = false;
+            PetPickupOthers = false;
+        }
+        else
+            if (!PetPickupGold && !PetPickupWeapons && !PetPickupArmours && !PetPickupHelmets && !PetPickupBoots && !PetPickupBelts && !PetPickupAccessories && !PetPickupOthers)
+            {
+                PetPickupAll = true;
+            }
+    }
+
+    public IntelligentCreatureItemFilter(BinaryReader reader)
+    {
+        PetPickupAll = reader.ReadBoolean();
+        PetPickupGold = reader.ReadBoolean();
+        PetPickupWeapons = reader.ReadBoolean();
+        PetPickupArmours = reader.ReadBoolean();
+        PetPickupHelmets = reader.ReadBoolean();
+        PetPickupBoots = reader.ReadBoolean();
+        PetPickupBelts = reader.ReadBoolean();
+        PetPickupAccessories = reader.ReadBoolean();
+        PetPickupOthers = reader.ReadBoolean();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(PetPickupAll);
+        writer.Write(PetPickupGold);
+        writer.Write(PetPickupWeapons);
+        writer.Write(PetPickupArmours);
+        writer.Write(PetPickupHelmets);
+        writer.Write(PetPickupBoots);
+        writer.Write(PetPickupBelts);
+        writer.Write(PetPickupAccessories);
+        writer.Write(PetPickupOthers);
+    }
+}
+
+public class ClientIntelligentCreature//IntelligentCreature
+{
+    public IntelligentCreatureType PetType;
+    public int Icon;
+
+    public string CustomName;
+    public int Fullness;
+    public int SlotIndex;
+    public long ExpireTime;//in days
+    public long BlackstoneTime;
+
+    public IntelligentCreaturePickupMode petMode = IntelligentCreaturePickupMode.SemiAutomatic;
+
+    public IntelligentCreatureRules CreatureRules;
+    public IntelligentCreatureItemFilter Filter;
+
+
+    public ClientIntelligentCreature()
+    {
+    }
+
+    public ClientIntelligentCreature(BinaryReader reader)
+    {
+        PetType = (IntelligentCreatureType)reader.ReadByte();
+        Icon = reader.ReadInt32();
+
+        CustomName = reader.ReadString();
+        Fullness = reader.ReadInt32();
+        SlotIndex = reader.ReadInt32();
+        ExpireTime = reader.ReadInt64();
+        BlackstoneTime = reader.ReadInt64();
+
+        petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
+
+        CreatureRules = new IntelligentCreatureRules(reader);
+        Filter = new IntelligentCreatureItemFilter(reader);
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write((byte)PetType);
+        writer.Write(Icon);
+
+        writer.Write(CustomName);
+        writer.Write(Fullness);
+        writer.Write(SlotIndex);
+        writer.Write(ExpireTime);
+        writer.Write(BlackstoneTime);
+
+        writer.Write((byte)petMode);
+
+        CreatureRules.Save(writer);
+        Filter.Save(writer);
+    }
+}
+
+
 public abstract class Packet
 {
     public static bool IsServer;
@@ -3473,6 +3723,10 @@ public abstract class Packet
                 return new C.MailLockedItem();
             case (short)ClientPacketIds.MailCost:
                 return new C.MailCost();
+            case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
+                return new C.UpdateIntelligentCreature();
+            case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
+                return new C.IntelligentCreaturePickup();
             default:
                 throw new NotImplementedException();
         }
@@ -3856,6 +4110,12 @@ public abstract class Packet
                 return new S.ParcelCollected();
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
+            case (short)ServerPacketIds.NewIntelligentCreature://IntelligentCreature
+                return new S.NewIntelligentCreature();
+            case (short)ServerPacketIds.UpdateIntelligentCreatureList://IntelligentCreature
+                return new S.UpdateIntelligentCreatureList();
+            case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
+                return new S.IntelligentCreatureEnableRename();
             default:
                 throw new NotImplementedException();
         }
