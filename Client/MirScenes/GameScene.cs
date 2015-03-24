@@ -121,6 +121,7 @@ namespace Client.MirScenes
         public bool NewMail;
         public int NewMailCounter = 0;
 
+
         public AttackMode AMode;
         public PetMode PMode;
         public LightSetting Lights;
@@ -400,14 +401,13 @@ namespace Client.MirScenes
                     InspectDialog.Hide();
                     StorageDialog.Hide();
                     TrustMerchantDialog.Hide();
-                    CharacterDuraPanel.Hide();
+                    //CharacterDuraPanel.Hide();
                     QuestListDialog.Hide();
                     QuestDetailDialog.Hide();
                     QuestLogDialog.Hide();
                     NPCAwakeDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
-                    fish = !fish;
                     break;
                 case Keys.O:
                 case Keys.F12:
@@ -732,6 +732,7 @@ namespace Client.MirScenes
         {
             if (MapControl == null || User == null)
                 return;
+
             if (CMain.Time >= MoveTime)
             {
                 MoveTime += 100; //Move Speed
@@ -2303,6 +2304,11 @@ namespace Client.MirScenes
             }
             mob = new MonsterObject(p.ObjectID);
             mob.Load(p);
+            string[] mobs = new string[] { "OmaKing", "DarkDevil", "MinotaurKing" };
+            if (mobs.Contains(mob.Name))
+            {
+                ChatDialog.ReceiveChat(string.Format("{0} at {1}", p.Name, p.Location), ChatType.Hint);
+            }
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
