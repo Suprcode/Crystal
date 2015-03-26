@@ -138,6 +138,9 @@ namespace Server.MirDatabase
             }
 
             int count = reader.ReadInt32();
+
+            Array.Resize(ref Inventory, count);
+
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
@@ -390,7 +393,17 @@ namespace Server.MirDatabase
                 if (IntelligentCreatures[i].PetType == petType) return true;
             return false;
         }
-    }
+        public int ResizeInventory()
+        {
+            if (Inventory.Length >= 86) return Inventory.Length;
+
+            if (Inventory.Length == 46)
+                Array.Resize(ref Inventory, Inventory.Length + 8);
+            else
+                Array.Resize(ref Inventory, Inventory.Length + 4);
+
+            return Inventory.Length;
+        }    }
 
     public class PetInfo
     {

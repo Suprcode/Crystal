@@ -304,5 +304,12 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        private void goodsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(2);
+
+            form.ShowDialog();
+        }
     }
 }

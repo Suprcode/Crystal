@@ -16,6 +16,7 @@ namespace Server
                             ExportPath = @".\Exports\",
                             GuildPath = @".\Guilds\",
                             NPCPath = EnvirPath + @".\NPCs\",
+                            GoodsPath = EnvirPath + @".\Goods\",
                             QuestPath = EnvirPath + @".\Quests\",
                             DropPath = EnvirPath + @".\Drops\",
                             RoutePath = EnvirPath + @".\Routes\",
@@ -94,10 +95,10 @@ namespace Server
                              BombSpiderName = "BombSpider",
                              CloneName = "Clone",
                              AssassinCloneName = "AssassinClone",
-                             VampireName = "VampireSpider",//SummonVampire
-                             ToadName = "SpittingToad",//SummonToad
-                             SnakeTotemName = "SnakeTotem",//SummonSnakes Totem
-                             SnakesName = "CharmedSnake";//SummonSnakes
+                             VampireName = "VampireSpider",
+                             ToadName = "SpittingToad",
+                             SnakeTotemName = "SnakeTotem",
+                             SnakesName = "CharmedSnake";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -107,7 +108,7 @@ namespace Server
         public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan" };
         public static string CreatureBlackStoneName = "BlackCreatureStone";
 
-        //Fishing settings
+        //Fishing Settings
         public static int FishingAttempts = 30;
         public static int FishingSuccessStart = 10;
         public static int FishingSuccessMultiplier = 10;
@@ -121,6 +122,13 @@ namespace Server
         public static bool MailFreeWithStamp = true;
         public static uint MailCostPer1KGold = 100;
         public static uint MailItemInsurancePercentage = 5;
+
+        //Goods Settings
+        public static bool GoodsOn = true;
+        public static uint GoodsMaxStored = 50;
+        public static uint GoodsBuyBackTime = 60;
+        public static uint GoodsBuyBackMaxStored = 20;
+
 
         //character settings
         private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
@@ -151,7 +159,7 @@ namespace Server
                               PvpCanResistPoison = false,
                               PvpCanFreeze = false;
 
-        //guild related settings
+        //Guild related settings
         public static byte Guild_RequiredLevel = 22, Guild_PointPerLevel = 0;
         public static float Guild_ExpRate = 0.01f;
         public static uint Guild_WarCost = 3000;
@@ -305,6 +313,8 @@ namespace Server
                 Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(NPCPath))
                 Directory.CreateDirectory(NPCPath);
+            if (!Directory.Exists(GoodsPath))
+                Directory.CreateDirectory(GoodsPath);
             if (!Directory.Exists(QuestPath))
                 Directory.CreateDirectory(QuestPath);
             if (!Directory.Exists(DropPath))
@@ -979,6 +989,29 @@ namespace Server
             reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
         }
 
+        public static void LoadGoods()
+        {
+            if (!File.Exists(ConfigPath + @".\GoodsSystem.ini"))
+            {
+                SaveGoods();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\GoodsSystem.ini");
+            GoodsOn = reader.ReadBoolean("Goods", "On", GoodsOn);
+            GoodsMaxStored = reader.ReadUInt32("Goods", "MaxStored", GoodsMaxStored);
+            GoodsBuyBackTime = reader.ReadUInt32("Goods", "BuyBackTime", GoodsBuyBackTime);
+            GoodsBuyBackMaxStored = reader.ReadUInt32("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
+        }
+        public static void SaveGoods()
+        {
+            File.Delete(ConfigPath + @".\GoodsSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\GoodsSystem.ini");
+            reader.Write("Goods", "On", GoodsOn);
+            reader.Write("Goods", "MaxStored", GoodsMaxStored);
+            reader.Write("Goods", "BuyBackTime", GoodsBuyBackTime);
+            reader.Write("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
+        }
 
     }
 }

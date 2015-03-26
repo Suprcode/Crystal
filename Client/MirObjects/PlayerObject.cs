@@ -374,6 +374,7 @@ namespace Client.MirObjects
                             case MirAction.Walking:
                             case MirAction.Running:
                             case MirAction.Die:
+                            case MirAction.Struck:
                             case MirAction.Attack1:
                             case MirAction.Attack2:
                             case MirAction.Attack3:

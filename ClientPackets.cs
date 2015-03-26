@@ -618,12 +618,12 @@ namespace ClientPackets
     {
         public override short Index { get { return (short)ClientPacketIds.BuyItem; } }
 
-        public int ItemIndex;
+        public ulong ItemIndex;
         public uint Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            ItemIndex = reader.ReadInt32();
+            ItemIndex = reader.ReadUInt64();
             Count = reader.ReadUInt32();
         }
         protected override void WritePacket(BinaryWriter writer)

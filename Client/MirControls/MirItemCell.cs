@@ -204,7 +204,7 @@ namespace Client.MirControls
 
                                 if (Item.Count > 1)
                                 {
-                                    MirAmountBox amountBox = new MirAmountBox("Split Amount:", Item.GetRealItemImage(), Item.Count - 1);
+                                    MirAmountBox amountBox = new MirAmountBox("Split Amount:", Item.Image, Item.Count - 1);
 
                                     amountBox.OKButton.Click += (o, a) =>
                                     {
@@ -244,7 +244,7 @@ namespace Client.MirControls
             MirAmountBox amountBox;
             if (Item.Count > 1)
             {
-                amountBox = new MirAmountBox("Purchase Amount:", Item.GetRealItemImage(), Item.Count);
+                amountBox = new MirAmountBox("Purchase Amount:", Item.Image, Item.Count);
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
@@ -254,7 +254,7 @@ namespace Client.MirControls
             }
             else
             {
-                amountBox = new MirAmountBox("Purchase", Item.GetRealItemImage(), string.Format("Value: {0:#,##0} Gold", Item.Price()));
+                amountBox = new MirAmountBox("Purchase", Item.Image, string.Format("Value: {0:#,##0} Gold", Item.Price()));
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
@@ -417,9 +417,9 @@ namespace Client.MirControls
                         if (CMain.Time < GameScene.UseItemTime) return;
                         Network.Enqueue(new C.UseItem { UniqueID = Item.UniqueID });
 
-                        if (Item.Count == 1 && ItemSlot >= 40)
+                        if (Item.Count == 1 && ItemSlot < 6)
                         {
-                            for (int i = 0; i < 40; i++)
+                            for (int i = 5; i < GameScene.User.Inventory.Length; i++)
                                 if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
                                 {
                                     Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = i, To = ItemSlot });
@@ -611,7 +611,7 @@ namespace Client.MirControls
 
                 if (itemCell.Item != null) continue;
 
-                Network.Enqueue(new C.RemoveItem { Grid = MirGridType.Inventory, UniqueID = Item.UniqueID, To = i });
+                Network.Enqueue(new C.RemoveItem { Grid = MirGridType.Inventory, UniqueID = Item.UniqueID, To = itemCell.ItemSlot });
 
                 Locked = true;
 
@@ -625,15 +625,9 @@ namespace Client.MirControls
         {
             if (GridType == MirGridType.BuyBack || GridType == MirGridType.DropPanel || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant) return;
 
-            if (GameScene.SelectedCell == this)
-            {
-                GameScene.SelectedCell = null;
-                return;
-            }
-
             if (GameScene.SelectedCell != null)
             {
-                if (GameScene.SelectedCell.Item == null)
+                if (GameScene.SelectedCell.Item == null || GameScene.SelectedCell == this)
                 {
                     GameScene.SelectedCell = null;
                     return;
@@ -719,7 +713,7 @@ namespace Client.MirControls
                                     {
                                         Network.Enqueue(new C.RemoveItem { Grid = GridType, UniqueID = GameScene.SelectedCell.Item.UniqueID, To = x });
 
-                                        MirItemCell temp = x < 40 ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - 40];
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
 
                                         if (temp != null) temp.Locked = true;
                                         GameScene.SelectedCell.Locked = true;
@@ -779,7 +773,7 @@ namespace Client.MirControls
                                     {
                                         Network.Enqueue(new C.TakeBackItem { From = GameScene.SelectedCell.ItemSlot, To = x });
 
-                                        MirItemCell temp = x < 40 ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - 40];
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - GameScene.User.BeltIdx];
                                        // MirItemCell Temp = GameScene.Scene.BagDialog.Grid.FirstOrDefault(A => A.ItemSlot == X) ??
                                         //                   GameScene.Scene.BeltDialog.Grid.FirstOrDefault(A => A.ItemSlot == X);
 
@@ -859,7 +853,7 @@ namespace Client.MirControls
                                     {
                                         Network.Enqueue(new C.RetrieveTradeItem { From = GameScene.SelectedCell.ItemSlot, To = x });
 
-                                        MirItemCell temp = x < 48 ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - 48];
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
                                         // MirItemCell Temp = GameScene.Scene.BagDialog.Grid.FirstOrDefault(A => A.ItemSlot == X) ??
                                         //                   GameScene.Scene.BeltDialog.Grid.FirstOrDefault(A => A.ItemSlot == X);
 
@@ -1665,7 +1659,7 @@ namespace Client.MirControls
 
                 if (Library != null)
                 {
-                    ushort image = Item.GetRealItemImage();
+                    ushort image = Item.Image;
 
                     Size imgSize = Library.GetTrueSize(image);
 
@@ -1680,7 +1674,7 @@ namespace Client.MirControls
 
                 if (Library != null)
                 {
-                    ushort image = Item.GetRealItemImage();
+                    ushort image = Item.Image;
 
                     Size imgSize = Library.GetTrueSize(image);
 
