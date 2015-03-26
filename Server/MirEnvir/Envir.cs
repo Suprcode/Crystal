@@ -96,6 +96,9 @@ namespace Server.MirEnvir
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
 
+        public List<DropInfo> StrongboxDrops = new List<DropInfo>();
+        public List<DropInfo> BlackstoneDrops = new List<DropInfo>();
+
         public List<GuildAtWar> GuildsAtWar = new List<GuildAtWar>();
 
         static Envir()
@@ -708,6 +711,86 @@ namespace Server.MirEnvir
             }
 
             AwakeningDrops.Sort((drop1, drop2) =>
+            {
+                if (drop1.Chance > 0 && drop2.Chance == 0)
+                    return 1;
+                if (drop1.Chance == 0 && drop2.Chance > 0)
+                    return -1;
+
+                return drop1.Item.Type.CompareTo(drop2.Item.Type);
+            });
+        }
+
+        public void LoadStrongBoxDrops()
+        {
+            StrongboxDrops.Clear();
+
+            string path = Path.Combine(Settings.DropPath, Settings.StrongboxDropFilename + ".txt");
+
+            if (!File.Exists(path))
+            {
+                FileStream newfile = File.Create(path);
+                newfile.Close();
+
+            }
+
+            string[] lines = File.ReadAllLines(path);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                DropInfo drop = DropInfo.FromLine(lines[i]);
+                if (drop == null)
+                {
+                    SMain.Enqueue(string.Format("Could not load strongbox drop: {0}", lines[i]));
+                    continue;
+                }
+
+                StrongboxDrops.Add(drop);
+            }
+
+            StrongboxDrops.Sort((drop1, drop2) =>
+            {
+                if (drop1.Chance > 0 && drop2.Chance == 0)
+                    return 1;
+                if (drop1.Chance == 0 && drop2.Chance > 0)
+                    return -1;
+
+                return drop1.Item.Type.CompareTo(drop2.Item.Type);
+            });
+        }
+
+        public void LoadBlackStoneDrops()
+        {
+            BlackstoneDrops.Clear();
+
+            string path = Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt");
+
+            if (!File.Exists(path))
+            {
+                FileStream newfile = File.Create(path);
+                newfile.Close();
+
+            }
+
+            string[] lines = File.ReadAllLines(path);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                DropInfo drop = DropInfo.FromLine(lines[i]);
+                if (drop == null)
+                {
+                    SMain.Enqueue(string.Format("Could not load blackstone drop: {0}", lines[i]));
+                    continue;
+                }
+
+                BlackstoneDrops.Add(drop);
+            }
+
+            BlackstoneDrops.Sort((drop1, drop2) =>
             {
                 if (drop1.Chance > 0 && drop2.Chance == 0)
                     return 1;

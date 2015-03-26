@@ -628,8 +628,9 @@ namespace Server.MirObjects
         {
             if (Fullness >= 10000) return;
             fullnessTicker = Envir.Time + fullnessDelay;
-
             Fullness += amount;
+            if (Fullness < CreatureRules.MinimalFullness) CreatureSay("*Hmmm*");
+            else CreatureSay("*Burp*");
             if (Fullness > 10000) Fullness = 10000;
 
             if (Master != null)
@@ -644,6 +645,7 @@ namespace Server.MirObjects
                 fullnessTicker = Envir.Time + fullnessDelay;
                 Fullness -= amount;
                 if (Fullness < 0) Fullness = 0;
+                if (Fullness < CreatureRules.MinimalFullness) CreatureSay("*Me Hungry*");
 
                 if (Master != null)
                     ((PlayerObject)Master).UpdateCreatureFullness(petType, Fullness);
@@ -674,6 +676,20 @@ namespace Server.MirObjects
 
             if (Master != null)
                 ((PlayerObject)Master).UpdateCreatureBlackstoneTime(petType, blackstoneTime);
+        }
+
+        public void CreatureSay(string message)
+        {
+            if (Master != null)
+            {
+                message = String.Format("{0}:{1}", CustomName, message);
+                ((PlayerObject)Master).IntelligentCreatureSay(petType, message);
+            }
+        }
+
+        public override void ReceiveChat(string text, ChatType type)
+        {
+            if (type == ChatType.WhisperIn) CreatureSay("What?");
         }
 
         public override bool IsAttackTarget(PlayerObject attacker)

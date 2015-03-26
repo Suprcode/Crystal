@@ -2681,6 +2681,12 @@ namespace Server.MirObjects
 
                 if (player == null)
                 {
+                    IntelligentCreatureObject creature = GetCreatureByName(parts[0]);
+                    if (creature != null)
+                    {
+                        creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
+                        return;
+                    }
                     ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
                     return;
                 }
@@ -14192,6 +14198,118 @@ namespace Server.MirObjects
 
             GainItem(item);
             return true;
+        }
+
+        public void IntelligentCreatureSay(IntelligentCreatureType pType,string message)
+        {
+            if(!Info.CreatureSummoned || message == "" ) return;
+            if(pType != Info.SummonedCreatureType) return;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != pType) continue;
+
+                Enqueue(new S.ObjectChat { ObjectID = Pets[i].ObjectID, Text = message, Type = ChatType.Normal });
+                return;
+            }
+        }
+
+        public void StrongboxRewardItem(int boxtype)
+        {
+            int highRate = int.MaxValue;
+            DropInfo dynamicItem = null;
+            UserItem dropItem = null;
+            foreach (DropInfo drop in Envir.StrongboxDrops)
+            {
+                int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate);
+                if (rate < 1) rate = 1;
+
+                if (highRate > rate)
+                {
+                    highRate = rate;
+                    dynamicItem = drop;
+                }
+            }
+
+            if (dynamicItem == null) return;
+
+            if (dynamicItem.Item.Type == ItemType.Pets && dynamicItem.Item.Shape == 26)
+            {
+                //dropItem = CreateDynamicWonderDrugInfo(boxtype, dynamicItem.Item);
+                dropItem.Info.ToolTip = "blaa";
+            }
+            else
+                dropItem = Envir.CreateDropItem(dynamicItem.Item);
+
+
+            if (FreeSpace(Info.Inventory) < 1)
+            {
+                ReceiveChat("No more space.", ChatType.System);
+                return;
+            }
+
+            if (dropItem != null) GainItem(dropItem);
+        }
+
+        public void BlackstoneRewardItem()
+        {
+            int highRate = int.MaxValue;
+            UserItem dropItem = null;
+            foreach (DropInfo drop in Envir.BlackstoneDrops)
+            {
+                int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate); if (rate < 1) rate = 1;
+
+                if (highRate > rate)
+                {
+                    highRate = rate;
+                    dropItem = Envir.CreateDropItem(drop.Item);
+                }
+            }
+            if (FreeSpace(Info.Inventory) < 1)
+            {
+                ReceiveChat("No more space.", ChatType.System);
+                return;
+            }
+            if (dropItem != null) GainItem(dropItem);
+        }
+
+        private IntelligentCreatureObject GetCreatureByName(string creaturename)
+        {
+            if (!Info.CreatureSummoned || creaturename == "") return null;
+            if (Info.SummonedCreatureType == IntelligentCreatureType.None) return null;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+
+                return ((IntelligentCreatureObject)Pets[i]);
+            }
+            return null;
+        }
+
+        private string CreateTimeString(double secs)
+        {
+            TimeSpan t = TimeSpan.FromSeconds(secs);
+            string answer;
+            if (t.TotalMinutes < 1.0)
+            {
+                answer = string.Format("{0}s", t.Seconds);
+            }
+            else if (t.TotalHours < 1.0)
+            {
+                answer = string.Format("{0}m", t.Minutes);
+            }
+            else if (t.TotalDays < 1.0)
+            {
+                answer = string.Format("{0}h {1:D2}m", (int)t.TotalHours, t.Minutes);
+            }
+            else // t.TotalDays >= 1.0
+            {
+                answer = string.Format("{0}d {1}h {2:D2}m", (int)t.TotalDays, (int)t.Hours, t.Minutes);
+            }
+            return answer;
         }
 
         private void GetCreaturesInfo()

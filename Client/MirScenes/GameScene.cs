@@ -18555,10 +18555,12 @@ namespace Client.MirScenes
     {
         public readonly string[] OptionNames = { "All Items", "Gold", "Weapons", "Armours", "Helmets", "Boots", "Belts", "Jewelry", "Others" };
         public IntelligentCreatureItemFilter Filter;
-        public Point locationOffset = new Point(452, 63);
+        public Point locationOffset = new Point(450, 63);
 
         public MirButton OptionsSaveButton, OptionsCancelButton;
         public MirCheckBox[] CreatureOptions;
+        //public MirImageControl GradeBG;
+        //public MirDropDownBox GradeType;
 
         public IntelligentCreatureOptionsDialog()
         {
@@ -18569,11 +18571,21 @@ namespace Client.MirScenes
             Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
             BeforeDraw += IntelligentCreatureOptionsDialog_BeforeDraw;
 
+            //Size = new Size(this.Size.Width, GameScene.Scene.IntelligentCreatureDialog.Size.Height);
+
+            //GradeBG = new MirImageControl
+            //{
+            //    Index = 469,
+            //    Library = Libraries.Title,
+            //    Location = new Point(0, -62),
+            //    Parent = this,
+            //};
+
             CreatureOptions = new MirCheckBox[9];
             for (int i = 0; i < CreatureOptions.Length; i++)
             {
                 int offsetY = i * 30;
-                CreatureOptions[i] = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(16, 16 + offsetY), Library = Libraries.Prguse };
+                CreatureOptions[i] = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(16, (16 + offsetY)), Library = Libraries.Prguse };
                 CreatureOptions[i].LabelText = OptionNames[i];
                 CreatureOptions[i].Click += CheckBoxClick;
             }
@@ -18601,6 +18613,25 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
             };
             OptionsCancelButton.Click += ButtonClick;
+
+            //GradeType = new MirDropDownBox()
+            //{
+            //    Parent = this,
+            //    Location = new Point(16, 256),
+            //    Size = new Size(100, 24),
+            //    ForeColour = Color.Black,
+            //    BorderColour = Color.Gray,
+            //    BackColour = Color.White,
+            //    Visible = true,
+            //    Enabled = true,
+            //};
+            //GradeType.ValueChanged += OnGradeTypeSelect;
+            //GradeType.Items.Add("All");
+            //GradeType.Items.Add("Common");
+            //GradeType.Items.Add("Rare");
+            //GradeType.Items.Add("Mythical");
+            //GradeType.Items.Add("Legendary");
+            //GradeType.SelectedIndex = 0;
         }
 
         private void ButtonClick(object sender, EventArgs e)
@@ -18637,6 +18668,11 @@ namespace Client.MirScenes
             }
             Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
         }
+
+        //void OnGradeTypeSelect(object sender, EventArgs e)
+        //{
+        //    GradeType.SelectedIndex = GradeType._WantedIndex;
+        //}
 
         private void RefreshFilter()
         {

@@ -196,7 +196,7 @@ namespace Client.MirObjects
             };
             ChatTime = CMain.Time + 5000;
         }
-        public void DrawChat()
+        public virtual void DrawChat()
         {
             if (ChatLabel == null || ChatLabel.IsDisposed) return;
 

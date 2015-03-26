@@ -2020,8 +2020,10 @@ namespace Client.MirObjects
             int yOffset = 0;
             switch (BaseImage)
             {
-                case Monster.BabyPig:
                 case Monster.Chick:
+                    yOffset = -10;
+                    break;
+                case Monster.BabyPig:
                 case Monster.Kitten:
                 case Monster.BabySkeleton:
                 case Monster.Baekdon:
@@ -2071,6 +2073,42 @@ namespace Client.MirObjects
 
             TempLabel.Disposing += (o, e) => LabelList.Remove(TempLabel);
             LabelList.Add(TempLabel);
+        }
+
+        public override void DrawChat()
+        {
+            if (ChatLabel == null || ChatLabel.IsDisposed) return;
+
+            if (CMain.Time > ChatTime)
+            {
+                ChatLabel.Dispose();
+                ChatLabel = null;
+                return;
+            }
+
+            //IntelligentCreature
+            int yOffset = 0;
+            switch (BaseImage)
+            {
+                case Monster.Chick:
+                    yOffset = 30;
+                    break;
+                case Monster.BabyPig:
+                case Monster.Kitten:
+                case Monster.BabySkeleton:
+                case Monster.Baekdon:
+                case Monster.Wimaen:
+                case Monster.BlackKitten:
+                case Monster.BabyDragon:
+                case Monster.OlympicFlame:
+                case Monster.BabySnowMan:
+                    yOffset = 20;
+                    break;
+            }
+
+            ChatLabel.ForeColour = Dead ? Color.Gray : Color.White;
+            ChatLabel.Location = new Point(DisplayRectangle.X + (48 - ChatLabel.Size.Width) / 2, DisplayRectangle.Y - (60 + ChatLabel.Size.Height) - (Dead ? 35 : 0) + yOffset);
+            ChatLabel.Draw();
         }
     }
 }
