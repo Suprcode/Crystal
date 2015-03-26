@@ -487,11 +487,12 @@ namespace Server.MirObjects
         {
             bool singleitem = CurrentPickupMode == IntelligentCreaturePickupMode.SemiAutomatic ? true : false;
             PickupAllItems(Target.CurrentLocation);
-            Target = null;
 
             if (Target.CurrentLocation != CurrentLocation)
                 Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            Target = null;
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
