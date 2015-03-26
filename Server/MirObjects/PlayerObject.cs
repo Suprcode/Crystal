@@ -14063,8 +14063,6 @@ namespace Server.MirObjects
             {
                 if (Info.IntelligentCreatures[i].PetType != pType) continue;
 
-                //if (!IsGM) return;
-
                 MonsterInfo mInfo = Envir.GetMonsterInfo(Settings.IntelligentCreatureNameList[(byte)pType]);
                 if (mInfo == null) return;
 
