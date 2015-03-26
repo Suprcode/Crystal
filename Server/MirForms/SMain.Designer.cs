@@ -76,8 +76,9 @@ namespace Server
             this.miningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.guildsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fishingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
             this.mailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
+            this.goodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -430,7 +431,8 @@ namespace Server
             this.miningToolStripMenuItem,
             this.guildsToolStripMenuItem,
             this.fishingToolStripMenuItem,
-            this.mailToolStripMenuItem});
+            this.mailToolStripMenuItem,
+            this.goodsToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
             this.systemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.systemToolStripMenuItem.Text = "System";
@@ -463,17 +465,24 @@ namespace Server
             this.fishingToolStripMenuItem.Text = "Fishing";
             this.fishingToolStripMenuItem.Click += new System.EventHandler(this.fishingToolStripMenuItem_Click);
             // 
-            // InterfaceTimer
-            // 
-            this.InterfaceTimer.Enabled = true;
-            this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
-            // 
             // mailToolStripMenuItem
             // 
             this.mailToolStripMenuItem.Name = "mailToolStripMenuItem";
             this.mailToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.mailToolStripMenuItem.Text = "Mail";
             this.mailToolStripMenuItem.Click += new System.EventHandler(this.mailToolStripMenuItem_Click);
+            // 
+            // InterfaceTimer
+            // 
+            this.InterfaceTimer.Enabled = true;
+            this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
+            // 
+            // goodsToolStripMenuItem
+            // 
+            this.goodsToolStripMenuItem.Name = "goodsToolStripMenuItem";
+            this.goodsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.goodsToolStripMenuItem.Text = "Goods";
+            this.goodsToolStripMenuItem.Click += new System.EventHandler(this.goodsToolStripMenuItem_Click);
             // 
             // SMain
             // 
@@ -554,6 +563,7 @@ namespace Server
         private ColumnHeader genderHeader;
         private ColumnHeader indexHeader;
         private ToolStripMenuItem mailToolStripMenuItem;
+        private ToolStripMenuItem goodsToolStripMenuItem;
     }
 }
 
