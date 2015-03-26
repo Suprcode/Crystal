@@ -63,8 +63,9 @@ namespace Client.MirGraphics
                                           ARHumEffect = new MLibrary[3],
                                           Monsters = new MLibrary[369],
                                           Mounts = new MLibrary[12],
+                                          NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[10];//IntelligentCreature
+                                          Pets = new MLibrary[10];
 
         static Libraries()
         {

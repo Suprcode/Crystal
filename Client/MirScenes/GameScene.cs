@@ -9824,7 +9824,7 @@ namespace Client.MirScenes
 
             ItemButton2 = new MirButton
             {
-                Index = -1,
+                Index = 169,
                 Library = Libraries.Title,
                 Location = new Point(78, 7),
                 Parent = this,
@@ -9835,7 +9835,7 @@ namespace Client.MirScenes
 
             QuestButton = new MirButton
             {
-                Index = -1,
+                Index = 739,
                 Library = Libraries.Title,
                 Location = new Point(148, 7),
                 Parent = this,
@@ -9846,9 +9846,9 @@ namespace Client.MirScenes
 
             AddButton = new MirButton
             {
-                Index = 596,
-                HoverIndex = 597,
-                PressedIndex = 598,
+                Index = 483,
+                HoverIndex = 484,
+                PressedIndex = 485,
                 Library = Libraries.Title,
                 Location = new Point(235, 5),
                 Parent = this,
@@ -9984,9 +9984,14 @@ namespace Client.MirScenes
                 }
                 else if (sender == QuestButton)
                 {
-                    ItemButton.Index = -1;
-                    ItemButton2.Index = -1;
+                    ItemButton.Index = 737;
+                    ItemButton2.Index = 738;
                     QuestButton.Index = 198;
+
+                    if (GameScene.User.Inventory.Length == 46)
+                    {
+                        ItemButton2.Index = 169;
+                    }
 
                     foreach (var grid in QuestGrid)
                     {
@@ -10019,8 +10024,13 @@ namespace Client.MirScenes
         public void RefreshInventory()
         {
             ItemButton.Index = 197;
-            ItemButton2.Index = -1;
-            QuestButton.Index = -1;
+            ItemButton2.Index = 738;
+            QuestButton.Index = 739;
+
+            if (GameScene.User.Inventory.Length == 46)
+            {
+                ItemButton2.Index = 169;
+            }
 
             foreach (var grid in Grid)
             {
@@ -10033,9 +10043,9 @@ namespace Client.MirScenes
 
         public void RefreshInventory2()
         {
-            ItemButton.Index = -1;
+            ItemButton.Index = 737;
             ItemButton2.Index = 168;
-            QuestButton.Index = -1;
+            QuestButton.Index = 739;
 
             foreach (var grid in Grid)
             {

@@ -6184,7 +6184,7 @@ namespace Server.MirObjects
             if (Functions.InRange(CurrentLocation, target.CurrentLocation, 1) == false) return;
             if (Envir.Random.Next(10) > magic.Level + 6) return;
             Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.CounterAttack, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = GetMagic(Spell.CounterAttack).Level, SelfBroadcast = true });
-            DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, 1000, DefenceType.AC, true);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, damage, DefenceType.AC, true);
             ActionList.Add(action);
             LevelMagic(magic);
             bCounterAttack = false;

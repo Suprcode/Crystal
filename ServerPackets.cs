@@ -4594,4 +4594,5 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
         }
-    }}}
+    }
+}
