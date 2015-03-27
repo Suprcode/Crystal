@@ -69,8 +69,6 @@ namespace Server.MirDatabase
 
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
-        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
-        public bool CreatureSummoned;
         public int PearlCount;
 
         public List<QuestProgressInfo> CurrentQuests = new List<QuestProgressInfo>();
@@ -238,13 +236,14 @@ namespace Server.MirDatabase
                     if (creature.Info == null) continue;
                     IntelligentCreatures.Add(creature);
                 }
-                SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
-                CreatureSummoned = reader.ReadBoolean();
-                PearlCount = reader.ReadInt32();
 
-                //there will nevver be a summoned creature when loading character
-                SummonedCreatureType = IntelligentCreatureType.None;
-                CreatureSummoned = false;
+                if (Envir.LoadVersion == 45)
+                {
+                    var old1 = (IntelligentCreatureType)reader.ReadByte();
+                    var old2 = reader.ReadBoolean();
+                }
+
+                PearlCount = reader.ReadInt32();
 
             }
         }
@@ -356,8 +355,9 @@ namespace Server.MirDatabase
             writer.Write(IntelligentCreatures.Count);
             for (int i = 0; i < IntelligentCreatures.Count; i++)
                 IntelligentCreatures[i].Save(writer);
-            writer.Write((byte)SummonedCreatureType);
-            writer.Write(CreatureSummoned);
+
+            //writer.Write((byte)SummonedCreatureType);
+            //writer.Write(CreatureSummoned);
             writer.Write(PearlCount);
 
         }
