@@ -373,6 +373,10 @@ namespace Server.MirObjects
         {
             throw new NotSupportedException();
         }
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            throw new NotSupportedException();
+        }
 
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
         {

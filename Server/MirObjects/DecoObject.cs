@@ -114,6 +114,11 @@ namespace Server.MirObjects
         {
             throw new NotSupportedException();
         }
+
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            throw new NotSupportedException();
+        }
         public override bool IsFriendlyTarget(PlayerObject ally)
         {
             throw new NotSupportedException();

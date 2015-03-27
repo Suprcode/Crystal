@@ -1824,6 +1824,37 @@ namespace Server.MirObjects
             return damage - armour;
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            int armour = 0;
+
+            switch (type)
+            {
+                case DefenceType.ACAgility:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.AC:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.MACAgility:
+                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.MAC:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.Agility:
+                    break;
+            }
+
+            armour = (int)(armour * PoisonRate);
+
+            if (armour >= damage) return 0;
+            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
+
+            ChangeHP(armour - damage);
+            return damage - armour;
+        }
+
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
         {
             if (p.Owner != null && p.Owner.IsAttackTarget(this))

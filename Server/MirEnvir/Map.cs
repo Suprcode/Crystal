@@ -501,25 +501,70 @@ namespace Server.MirEnvir
         public void Process()
         {
             ProcessRespawns();
-
             if ((Info.Lightning) && Envir.Time > LightningTime)
             {
-                LightningTime = Envir.Time + Envir.Random.Next(5000, 60000);
+                LightningTime = Envir.Time + Envir.Random.Next(3000, 15000);
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
+                    Point Location;
+                    if (Envir.Random.Next(4) == 0)
+                    {
+                        Location = player.CurrentLocation;
+                        
+                    }
+                    else
+                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
 
-                    Broadcast(new S.ObjectEffect { ObjectID = player.ObjectID, Effect = SpellEffect.MapLightning }, player.CurrentLocation);
+                    if (!ValidPoint(Location)) continue;
+
+                    SpellObject Lightning = null;
+                    Lightning = new SpellObject
+                    {
+                        Spell = Spell.MapLightning,
+                        Value = Envir.Random.Next(Info.LightningDamage),
+                        ExpireTime = Envir.Time + (1000),
+                        TickSpeed = 500,
+                        Caster = null,
+                        CurrentLocation = Location,
+                        CurrentMap = this,
+                        Direction = MirDirection.Up
+                    };
+                    AddObject(Lightning);
+                    Lightning.Spawned();
                 }
             }
             if ((Info.Fire) && Envir.Time > FireTime)
             {
-                FireTime = Envir.Time + Envir.Random.Next(5000, 60000);
+                FireTime = Envir.Time + Envir.Random.Next(3000, 15000);
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
+                    Point Location;
+                    if (Envir.Random.Next(4) == 0)
+                    {
+                        Location = player.CurrentLocation;
 
-                    Broadcast(new S.ObjectEffect { ObjectID = player.ObjectID, Effect = SpellEffect.MapFire }, player.CurrentLocation);
+                    }
+                    else
+                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
+
+                    if (!ValidPoint(Location)) continue;
+
+                    SpellObject Lightning = null;
+                    Lightning = new SpellObject
+                    {
+                        Spell = Spell.MapLava,
+                        Value = Envir.Random.Next(Info.FireDamage),
+                        ExpireTime = Envir.Time + (1000),
+                        TickSpeed = 500,
+                        Caster = null,
+                        CurrentLocation = Location,
+                        CurrentMap = this,
+                        Direction = MirDirection.Up
+                    };
+                    AddObject(Lightning);
+                    Lightning.Spawned();
                 }
             }
 

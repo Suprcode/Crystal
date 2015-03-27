@@ -8103,6 +8103,67 @@ namespace Server.MirObjects
         }
 
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            int armour = 0;
+            if (Hidden)
+            {
+                for (int i = 0; i < Buffs.Count; i++)
+                {
+                    switch (Buffs[i].Type)
+                    {
+                        //case BuffType.Hiding:
+                        case BuffType.MoonLight:
+                        case BuffType.DarkBody:
+                            Buffs[i].ExpireTime = 0;
+                            break;
+                    }
+                }
+            }
+
+            switch (type)
+            {
+                case DefenceType.ACAgility:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.AC:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.MACAgility:
+                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.MAC:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.Agility:
+                    break;
+            }
+
+            armour = (int)(armour * PoisonRate);
+            if (MagicShield)
+                damage -= damage * (MagicShieldLv + 2) / 10;
+
+            if (ElementalBarrier)//ArcherSpells - Elemental system
+                damage -= damage * (ElementalBarrierLv + 1) / 10;
+
+            if (armour >= damage) return 0;
+
+            MagicShieldTime -= (damage - armour) * 60;
+
+            ElementalBarrierTime -= (damage - armour) * 60;//ArcherSpells - Elemental system
+            RegenTime = Envir.Time + RegenDelay;
+            LogTime = Envir.Time + Globals.LogDelay;
+
+            DamageDura();
+            ActiveBlizzard = false;
+
+            Enqueue(new S.Struck { AttackerID = 0});
+            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
+
+            ChangeHP(armour - damage);
+            return damage - armour;
+        }
+
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
         {
             if ((Caster != null) || (!NoResist))
