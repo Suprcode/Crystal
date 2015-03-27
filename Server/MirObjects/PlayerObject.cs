@@ -1249,7 +1249,7 @@ namespace Server.MirObjects
         {
             int expPoint;
 
-            if (Level < targetLevel + 10)
+            if (Level < targetLevel + 10 || !Settings.ExpMobLevelDifference)
             {
                 expPoint = (int)amount;
             }
@@ -1263,15 +1263,21 @@ namespace Server.MirObjects
             expPoint = (int)(expPoint * Settings.ExpRate);
 
             //party
-            float[] partyExpRate = { 1.3F, 1.4F, 1.5F, 1.6F, 1.7F, 1.8F, 1.9F, 2F, 2.1F, 2.2F };
+            float[] partyExpRate = { 1.0F, 1.3F, 1.4F, 1.5F, 1.6F, 1.7F, 1.8F, 1.9F, 2F, 2.1F, 2.2F };
 
             if (GroupMembers != null)
             {
                 int sumLevel = 0;
+                int nearCount = 0;
                 for (int i = 0; i < GroupMembers.Count; i++)
                 {
                     PlayerObject player = GroupMembers[i];
-                    sumLevel += player.Level;
+
+                    if (Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange))
+                    {
+                        sumLevel += player.Level;
+                        nearCount++;
+                    }
                 }
 
                 for (int i = 0; i < GroupMembers.Count; i++)
@@ -1280,7 +1286,7 @@ namespace Server.MirObjects
                     if (player.CurrentMap == CurrentMap &&
                         Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
-                        player.GainExp((uint)((float)expPoint * partyExpRate[GroupMembers.Count - 2] * (float)player.Level / (float)sumLevel));
+                        player.GainExp((uint)((float)expPoint * partyExpRate[nearCount - 1] * (float)player.Level / (float)sumLevel));
                     }
                 }
             }
@@ -1649,7 +1655,7 @@ namespace Server.MirObjects
                 buff.Caster = this;
                 buff.ExpireTime += Envir.Time;
                 
-                UpdateBuff(buff);
+                AddBuff(buff);
             }
 
             Info.Buffs.Clear();
@@ -8213,15 +8219,15 @@ namespace Server.MirObjects
             RefreshStats();
         }
 
-        public void UpdateBuff(Buff b)
-        {
-            S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = b.Caster.Name, Expire = b.ExpireTime - Envir.Time, Value = b.Value, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
-            Enqueue(addBuff);
+        //public void UpdateBuff(Buff b)
+        //{
+        //    S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = b.Caster.Name, Expire = b.ExpireTime - Envir.Time, Value = b.Value, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
+        //    Enqueue(addBuff);
 
-            if (b.Visible) Broadcast(addBuff);
+        //    if (b.Visible) Broadcast(addBuff);
 
-            RefreshStats();
-        }
+        //    RefreshStats();
+        //}
 
         public void DepositTradeItem(int from, int to)
         {

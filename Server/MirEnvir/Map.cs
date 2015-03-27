@@ -500,7 +500,10 @@ namespace Server.MirEnvir
 
         public void Process()
         {
-            ProcessRespawns();
+            if (Envir.Time > 2 * Settings.Minute)
+            {
+                ProcessRespawns();
+            }
 
             if ((Info.Lightning) && Envir.Time > LightningTime)
             {

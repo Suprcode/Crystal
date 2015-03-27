@@ -302,6 +302,7 @@ namespace Server.MirObjects
                         switch (parts[0].ToUpper())
                         {
                             case "GOTO":
+                            case "GROUPGOTO":
                                 gotoButtons.Add(string.Format("[{0}]", parts[1].ToUpper()));
                                 break;
                             case "TIMERECALL":
@@ -1571,6 +1572,10 @@ namespace Server.MirObjects
                 case "SENDMAIL":
                     acts.Add(new NPCActions(ActionType.SendMail));
                     break;
+
+                case "GROUPGOTO":
+                    acts.Add(new NPCActions(ActionType.GroupGoto, parts[1]));
+                    break;
             }
 
         }
@@ -2686,6 +2691,16 @@ namespace Server.MirObjects
                         mailInfo.Send();
 
                         break;
+
+                    case ActionType.GroupGoto:
+                        if (player.GroupMembers == null) return;
+
+                        for (i = 0; i < player.GroupMembers.Count(); i++)
+                        {
+                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, player.NPCID, "[" + param[0] + "]");
+                            player.GroupMembers[i].ActionList.Add(action);
+                        }
+                        break;
                 }
             }
         }
@@ -2808,7 +2823,8 @@ namespace Server.MirObjects
         ComposeMail,
         AddMailItem,
         AddMailGold,
-        SendMail
+        SendMail,
+        GroupGoto
     }
     public enum CheckType
     {

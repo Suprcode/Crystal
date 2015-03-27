@@ -241,6 +241,7 @@ namespace Server.MirDatabase
                 SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
                 CreatureSummoned = reader.ReadBoolean();
                 PearlCount = reader.ReadInt32();
+
                 //there will nevver be a summoned creature when loading character
                 SummonedCreatureType = IntelligentCreatureType.None;
                 CreatureSummoned = false;
@@ -342,7 +343,10 @@ namespace Server.MirDatabase
 
             writer.Write(Buffs.Count);
             for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Infinite) continue;
                 Buffs[i].Save(writer);
+            }
 
             writer.Write(Mail.Count);
             for (int i = 0; i < Mail.Count; i++)
