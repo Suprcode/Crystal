@@ -2274,7 +2274,7 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.NPCGoods; } }
 
-        public List<int> List = new List<int>();
+        public List<UserItem> List = new List<UserItem>();
         public float Rate;
 
         protected override void ReadPacket(BinaryReader reader)
@@ -2282,7 +2282,7 @@ namespace ServerPackets
             int count = reader.ReadInt32();
 
             for (int i = 0; i < count; i++)
-                List.Add(reader.ReadInt32());
+                List.Add(new UserItem(reader));
 
             Rate = reader.ReadSingle();
         }
@@ -2291,7 +2291,7 @@ namespace ServerPackets
             writer.Write(List.Count);
 
             for (int i = 0; i < List.Count; i++)
-                writer.Write(List[i]);
+                List[i].Save(writer);
 
             writer.Write(Rate);
         }
@@ -4514,7 +4514,22 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NewIntelligentCreature : Packet//IntelligentCreature
+	public sealed class ResizeInventory : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ResizeInventory; } }
+
+        public int Size;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Size = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Size);
+        }
+    }
+   public sealed class NewIntelligentCreature : Packet//IntelligentCreature
     {
         public override short Index
         {

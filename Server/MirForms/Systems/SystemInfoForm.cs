@@ -19,8 +19,7 @@ namespace Server
             get { return SMain.EditEnvir; }
         }
 
-        public bool FishingChanged = false;
-        public bool MailChanged = false;
+        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false;
 
         public SystemInfoForm()
         {
@@ -37,6 +36,7 @@ namespace Server
 
             UpdateFishing();
             UpdateMail();
+            UpdateGoods();
         }
 
         #region Update
@@ -70,6 +70,14 @@ namespace Server
             MailInsurancePercentageTextBox.Text = Settings.MailItemInsurancePercentage.ToString();
         }
 
+        private void UpdateGoods()
+        {
+            GoodsOnCheckBox.Checked = Settings.GoodsOn;
+            GoodsMaxStoredTextBox.Text = Settings.GoodsMaxStored.ToString();
+            GoodsBuyBackTimeTextBox.Text = Settings.GoodsBuyBackTime.ToString();
+            GoodsBuyBackMaxStoredTextBox.Text = Settings.GoodsBuyBackMaxStored.ToString();
+        }
+
         #endregion
 
         private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -79,6 +87,9 @@ namespace Server
 
             if (MailChanged)
                 Settings.SaveMail();
+
+            if (GoodsChanged)
+                Settings.SaveGoods();
         }
 
         #region Fishing
@@ -234,6 +245,66 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
             Settings.MailItemInsurancePercentage = temp;
             MailChanged = true;
+        }
+
+        #endregion    
+
+        #region Goods
+
+        private void GoodsOnCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.GoodsOn = GoodsOnCheckBox.Checked;
+            GoodsChanged = true;
+        }
+
+        private void GoodsMaxStoredTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            uint temp;
+
+            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.GoodsMaxStored = temp;
+            GoodsChanged = true;
+        }
+
+        private void GoodsBuyBackTimeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            uint temp;
+
+            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 1440 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.GoodsBuyBackTime = temp;
+            GoodsChanged = true;
+        }
+
+        private void GoodsBuyBackMaxStoredTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            uint temp;
+
+            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.GoodsBuyBackMaxStored = temp;
+            GoodsChanged = true;
         }
 
         #endregion

@@ -212,6 +212,7 @@ namespace Server.MirEnvir
                         saveTime = Time + Settings.SaveDelay * Settings.Minute;
                         BeginSaveAccounts();
                         SaveGuilds();
+                        SaveGoods();
                     }
 
                     if (Time >= userTime)
@@ -412,19 +413,19 @@ namespace Server.MirEnvir
                     GuildList[i].NeedSave = false;
                     MemoryStream mStream = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(mStream);
-                    GuildList[i].Save(writer); //mir guild data :p
-                    FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".mgdn", FileMode.Create);
+                    GuildList[i].Save(writer);
+                    FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".msdn", FileMode.Create);
                     byte[] data = mStream.ToArray();
-                    fStream.BeginWrite(data, 0, data.Length, EndSaveGuilds, fStream);
+                    fStream.BeginWrite(data, 0, data.Length, EndSaveGuildsAsync, fStream);
                 }
             }
         }
-        private void EndSaveGuilds(IAsyncResult result)
+        private void EndSaveGuildsAsync(IAsyncResult result)
         {
             FileStream fStream = result.AsyncState as FileStream;
             if (fStream != null)
             {
-                string oldfilename = fStream.Name.Substring(0,fStream.Name.Length-1);
+                string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
                 string newfilename = fStream.Name;
                 fStream.EndWrite(result);
                 fStream.Dispose();
@@ -436,6 +437,64 @@ namespace Server.MirEnvir
             }
 
         }
+
+        private void SaveGoods(bool forced = false)
+        {
+            if (!Directory.Exists(Settings.GoodsPath)) Directory.CreateDirectory(Settings.GoodsPath);
+
+            for (int i = 0; i < MapList.Count; i++)
+            {
+                Map map = MapList[i];
+
+                if (map.NPCs.Count < 1) continue;
+
+                for (int j = 0; j < map.NPCs.Count; j++)
+                {
+                    NPCObject npc = map.NPCs[j];
+
+                    if (forced)
+                    {
+                        npc.ProcessGoods(forced);
+                    }
+
+                    if (!npc.NeedSave) continue;
+
+                    string path = Settings.GoodsPath + npc.Info.Index.ToString() + ".msdd";
+
+                    MemoryStream mStream = new MemoryStream();
+                    BinaryWriter writer = new BinaryWriter(mStream);
+
+                    writer.Write(npc.UsedGoods.Count);
+
+                    for (int k = 0; k < npc.UsedGoods.Count; k++)
+                    {
+                        npc.UsedGoods[k].Save(writer);
+                    }
+
+                    FileStream fStream = new FileStream(path, FileMode.Create);
+                    byte[] data = mStream.ToArray();
+                    fStream.BeginWrite(data, 0, data.Length, EndSaveGoodsAsync, fStream);
+                }
+            }
+        }
+        private void EndSaveGoodsAsync(IAsyncResult result)
+        {
+            FileStream fStream = result.AsyncState as FileStream;
+            if (fStream != null)
+            {
+                string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                string newfilename = fStream.Name;
+                fStream.EndWrite(result);
+                fStream.Dispose();
+                if (File.Exists(oldfilename))
+                    File.Move(oldfilename, oldfilename + "o");
+                File.Move(newfilename, oldfilename);
+                if (File.Exists(oldfilename + "o"))
+                    File.Delete(oldfilename + "o");
+            }
+
+        }
+
         private void BeginSaveAccounts()
         {
             if (Saving) return;
@@ -480,6 +539,7 @@ namespace Server.MirEnvir
 
             Saving = false;
         }
+
 
         public void LoadDB()
         {
@@ -803,6 +863,8 @@ namespace Server.MirEnvir
 
         private void StopEnvir()
         {
+            SaveGoods(true);
+
             MapList.Clear();
             StartPoints.Clear();
             StartItems.Clear();
@@ -1297,16 +1359,10 @@ namespace Server.MirEnvir
             return true;
         }
 
-
         public Map GetMap(int index)
         {
             return MapList.FirstOrDefault(t => t.Info.Index == index);
         }
-
-        //public Map GetMapByName(string name)
-        //{
-        //    return MapList.FirstOrDefault(t => String.Equals(t.Info.FileName, name, StringComparison.CurrentCultureIgnoreCase));
-        //}
 
         public Map GetMapByNameAndInstance(string name, int instanceValue = 0)
         {

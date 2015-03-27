@@ -370,7 +370,7 @@ namespace Server.MirObjects
 
         public abstract Packet GetInfo();
 
-        public virtual void WinExp(uint experience)
+        public virtual void WinExp(uint amount, uint targetLevel = 0)
         {
 
 

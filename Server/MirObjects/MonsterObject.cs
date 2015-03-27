@@ -497,7 +497,7 @@ namespace Server.MirObjects
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
             {
-                EXPOwner.WinExp(Experience);
+                EXPOwner.WinExp(Experience, Level);
 
                 PlayerObject playerObj = (PlayerObject)EXPOwner;
                 playerObj.CheckGroupQuestKill(Info);
