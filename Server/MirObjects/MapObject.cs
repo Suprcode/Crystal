@@ -520,7 +520,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Race == ObjectType.Monster && !AutoRev) return;
+            if (Race == ObjectType.Monster && !AutoRev && Master == null) return;
 
             if (Race == ObjectType.Player)
             {
