@@ -729,7 +729,9 @@ public enum Spell : byte
 
     //Map Events
     DigOutZombie = 200,
-    Rubble = 201
+    Rubble = 201,
+    MapLightning = 202,
+    MapLava = 203
 }
 
 public enum SpellEffect : byte
@@ -745,8 +747,6 @@ public enum SpellEffect : byte
     MagicShieldDown,
     FlameSwordCharge,
     GreatFoxSpirit,
-    MapLightning,
-    MapFire,
     Entrapment,
     Reflect,
     Critical,

@@ -552,6 +552,11 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            throw new NotSupportedException();
+        }
+
         public override void SendHealth(PlayerObject player)
         {
             throw new NotSupportedException();

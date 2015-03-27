@@ -3100,15 +3100,6 @@ namespace Client.MirScenes
                     case SpellEffect.GreatFoxSpirit:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, ob));
                         break;
-                    case SpellEffect.MapLightning:
-                        ob.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 600, ob));
-                        SoundManager.PlaySound(20000 + (ushort)Spell.ThunderBolt * 10);
-                        break;
-                    case SpellEffect.MapFire:
-                        ob.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, ob) { Blend = false });
-                        ob.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, ob));
-                        SoundManager.PlaySound(20000 + (ushort)Spell.ThunderBolt * 10);
-                        break;
                     case SpellEffect.Entrapment:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1010, 10, 1500, ob));
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1020, 8, 1200, ob));
@@ -7069,7 +7060,6 @@ namespace Client.MirScenes
 
             for (int i = Effects.Count - 1; i >= 0; i--)
                 Effects[i].Process();
-
             if (Lightning && CMain.Time > LightningTime)
             {
                 LightningTime = CMain.Time + CMain.Random.Next(2000, 5000);
