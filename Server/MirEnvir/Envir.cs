@@ -111,6 +111,7 @@ namespace Server.MirEnvir
         }
 
         public static int LastCount = 0, LastRealCount = 0;
+        public static long LastRunTime = 0;
         public int MonsterCount;
 
         public long dayTime, warTime, mailTime;
@@ -124,6 +125,7 @@ namespace Server.MirEnvir
             long userTime = Time + Settings.Minute * 5;
 
             long processTime = Time + 1000;
+            long StartTime = Time;
             int processCount = 0;
             int processRealCount = 0;
 
@@ -179,7 +181,11 @@ namespace Server.MirEnvir
                     if (current == null)
                         current = Objects.First;
 
-
+                    if (current == Objects.First)
+                    {
+                        LastRunTime = Time - StartTime;
+                        StartTime = Time;
+                    }
                     for (int i = 0; i < 100; i++)
                     {
                         if (current == null) break;
@@ -191,6 +197,7 @@ namespace Server.MirEnvir
                         {
 
                             processRealCount++;
+                            //thedeath
                             current.Value.Process();
                             current.Value.SetOperateTime();
 
@@ -199,10 +206,10 @@ namespace Server.MirEnvir
                         current = next;
                     }
 
-
+                    
                     for (int i = 0; i < MapList.Count; i++)
                         MapList[i].Process();
-
+                    
                     if (DragonSystem != null) DragonSystem.Process();
 
                     Process();
