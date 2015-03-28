@@ -14241,7 +14241,6 @@ namespace Server.MirObjects
                 break;
             }
         }
-
         public void UpdateCreatureFullness(IntelligentCreatureType pType, int fullness)
         {
             if (pType == IntelligentCreatureType.None) return;
@@ -14256,7 +14255,6 @@ namespace Server.MirObjects
             //update client
             //GetCreaturesInfo();
         }
-
         public void UpdateCreatureBlackstoneTime(IntelligentCreatureType pType, long blackstonetime)
         {
             if (pType == IntelligentCreatureType.None) return;
@@ -14276,6 +14274,9 @@ namespace Server.MirObjects
         {
             if (Envir.Time > CreatureTimeLeftTicker)
             {
+                //Make sure summoned vars are in correct state
+                RefreshCreatureSummoned();
+
                 //ExpireTime
                 List<int> releasedPets = new List<int>();
                 CreatureTimeLeftTicker = Envir.Time + CreatureTimeLeftDelay;
@@ -14313,6 +14314,31 @@ namespace Server.MirObjects
                 GetCreaturesInfo();
             }
         }
+        public void RefreshCreatureSummoned()
+        {
+            if (SummonedCreatureType == IntelligentCreatureType.None || !CreatureSummoned)
+            {
+                //make sure both are in the unsummoned state
+                CreatureSummoned = false;
+                SummonedCreatureType = IntelligentCreatureType.None;
+                return;
+            }
+            bool petFound = false;
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+                petFound = true;
+                break;
+            }
+            if (!petFound)
+            {
+                SMain.EnqueueDebugging(string.Format("{0}: SummonedCreature no longer exists?!?. {1}", Name, SummonedCreatureType.ToString()));
+                CreatureSummoned = false;
+                SummonedCreatureType = IntelligentCreatureType.None;
+            }
+        }
+
 
         public void IntelligentCreaturePickup(bool mousemode, Point atlocation)
         {
@@ -14328,12 +14354,10 @@ namespace Server.MirObjects
                 break;
             }
         }
-
         public void IntelligentCreatureProducePearl()
         {
             Info.PearlCount++;
         }
-
         public bool IntelligentCreatureProduceBlackStone()
         {
             ItemInfo iInfo = Envir.GetItemInfo(Settings.CreatureBlackStoneName);
