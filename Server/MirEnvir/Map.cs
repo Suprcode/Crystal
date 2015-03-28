@@ -501,6 +501,7 @@ namespace Server.MirEnvir
         public void Process()
         {
             ProcessRespawns();
+
             if ((Info.Lightning) && Envir.Time > LightningTime)
             {
                 LightningTime = Envir.Time + Envir.Random.Next(3000, 15000);

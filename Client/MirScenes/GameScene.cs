@@ -17887,7 +17887,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(425, 3),
+                Location = new Point(Size.Width - 25, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -17899,7 +17899,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 258,
                 Index = 257,
-                Location = new Point(385, 6),
+                Location = new Point(Size.Width - 48, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 259,

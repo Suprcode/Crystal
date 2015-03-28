@@ -27,20 +27,20 @@ namespace Server.MirObjects
 
         public int Fullness = 0;
         public long fullnessTicker = 0;
-        public const long fullnessDelay = 1000;
+        public const long fullnessDelay = Settings.Second;
 
         public bool doDelayedPickup = false;
         public long delayedpickupTicker = 0;
-        public const long delayedpickupDelay = 1000;//1 second
+        public const long delayedpickupDelay = Settings.Second;//1 second
 
         public long blackstoneTime = 0;
-        public const long blackstoneProduceTime = 10800;//3 hours in seconds
+        public const long blackstoneProduceTime = 3 * Settings.Hour;//3 hours in seconds
 
         public long pearlTicker = 0;
         public const long pearlProduceCount = 1000;//1000 items = 1 pearl
 
         public long animvariantTicker = 0;
-        public const long animvariantDelay = 10000;//10 seconds
+        public const long animvariantDelay = 10 * Settings.Second;//10 seconds
 
         private bool shortcheck = true;
 

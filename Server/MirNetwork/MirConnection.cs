@@ -1292,9 +1292,9 @@ namespace Server.MirNetwork
                     else continue;
                 }
 
-                if (Player.Info.CreatureSummoned)
+                if (Player.CreatureSummoned)
                 {
-                    if (Player.Info.SummonedCreatureType == petUpdate.PetType)
+                    if (Player.SummonedCreatureType == petUpdate.PetType)
                         Player.UpdateSummonedCreature(petUpdate.PetType);
                 }
             }

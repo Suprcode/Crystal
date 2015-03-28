@@ -214,6 +214,10 @@ namespace Server.MirObjects
         public long ElementalBarrierTime;
         //Elemental system end
 
+        //Creatures
+        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
+        public bool CreatureSummoned;
+
         public LevelEffects LevelEffects = LevelEffects.None;
 
         private int _stepCounter, _runCounter, _fishCounter;
@@ -1249,7 +1253,7 @@ namespace Server.MirObjects
         {
             int expPoint;
 
-            if (Level < targetLevel + 10)
+            if (Level < targetLevel + 10 || !Settings.ExpMobLevelDifference)
             {
                 expPoint = (int)amount;
             }
@@ -1263,15 +1267,21 @@ namespace Server.MirObjects
             expPoint = (int)(expPoint * Settings.ExpRate);
 
             //party
-            float[] partyExpRate = { 1.3F, 1.4F, 1.5F, 1.6F, 1.7F, 1.8F, 1.9F, 2F, 2.1F, 2.2F };
+            float[] partyExpRate = { 1.0F, 1.3F, 1.4F, 1.5F, 1.6F, 1.7F, 1.8F, 1.9F, 2F, 2.1F, 2.2F };
 
             if (GroupMembers != null)
             {
                 int sumLevel = 0;
+                int nearCount = 0;
                 for (int i = 0; i < GroupMembers.Count; i++)
                 {
                     PlayerObject player = GroupMembers[i];
-                    sumLevel += player.Level;
+
+                    if (Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange))
+                    {
+                        sumLevel += player.Level;
+                        nearCount++;
+                    }
                 }
 
                 for (int i = 0; i < GroupMembers.Count; i++)
@@ -1280,7 +1290,7 @@ namespace Server.MirObjects
                     if (player.CurrentMap == CurrentMap &&
                         Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
-                        player.GainExp((uint)((float)expPoint * partyExpRate[GroupMembers.Count - 2] * (float)player.Level / (float)sumLevel));
+                        player.GainExp((uint)((float)expPoint * partyExpRate[nearCount - 1] * (float)player.Level / (float)sumLevel));
                     }
                 }
             }
@@ -1649,7 +1659,7 @@ namespace Server.MirObjects
                 buff.Caster = this;
                 buff.ExpireTime += Envir.Time;
                 
-                UpdateBuff(buff);
+                AddBuff(buff);
             }
 
             Info.Buffs.Clear();
@@ -1810,8 +1820,8 @@ namespace Server.MirObjects
             //IntelligentCreature
             for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
                 packet.IntelligentCreatures.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
-            packet.SummonedCreatureType = Info.SummonedCreatureType;
-            packet.CreatureSummoned = Info.CreatureSummoned;
+            packet.SummonedCreatureType = SummonedCreatureType;
+            packet.CreatureSummoned = CreatureSummoned;
 
             Enqueue(packet);
         }
@@ -8274,15 +8284,15 @@ namespace Server.MirObjects
             RefreshStats();
         }
 
-        public void UpdateBuff(Buff b)
-        {
-            S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = b.Caster.Name, Expire = b.ExpireTime - Envir.Time, Value = b.Value, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
-            Enqueue(addBuff);
+        //public void UpdateBuff(Buff b)
+        //{
+        //    S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = b.Caster.Name, Expire = b.ExpireTime - Envir.Time, Value = b.Value, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
+        //    Enqueue(addBuff);
 
-            if (b.Visible) Broadcast(addBuff);
+        //    if (b.Visible) Broadcast(addBuff);
 
-            RefreshStats();
-        }
+        //    RefreshStats();
+        //}
 
         public void DepositTradeItem(int from, int to)
         {
@@ -9055,11 +9065,11 @@ namespace Server.MirObjects
                                 break;
                             case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
                             case 24://WonderPill
-                                if (Info.CreatureSummoned)
+                                if (CreatureSummoned)
                                     for (int i = 0; i < Pets.Count; i++)
                                     {
                                         if (Pets[i].Info.AI != 64) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
                                         if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
                                             ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
                                         break;
@@ -10129,7 +10139,7 @@ namespace Server.MirObjects
                         case 22://nuts maintain food levels
                         case 23://basic creature food
                         case 24://wonderpill vitalize creature
-                            if (!Info.CreatureSummoned)
+                            if (!CreatureSummoned)
                             {
                                 ReceiveChat("Can only be used with a creature summoned", ChatType.System);
                                 return false;
@@ -10139,7 +10149,7 @@ namespace Server.MirObjects
                                 for (int i = 0; i < Pets.Count; i++)
                                 {
                                     if (Pets[i].Info.AI != 64) continue;
-                                    if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                                    if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
 
                                     if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
                                     {
@@ -14154,8 +14164,8 @@ namespace Server.MirObjects
                 monster.Spawn(CurrentMap, Front);
                 Pets.Add(monster);//make a new creaturelist ? 
 
-                Info.CreatureSummoned = true;
-                Info.SummonedCreatureType = pType;
+                CreatureSummoned = true;
+                SummonedCreatureType = pType;
 
                 ReceiveChat((string.Format("Creature {0} has been summoned.", Info.IntelligentCreatures[i].CustomName)), ChatType.System);
                 break;
@@ -14176,8 +14186,8 @@ namespace Server.MirObjects
 
                 Pets[i].Die();
 
-                Info.CreatureSummoned = false;
-                Info.SummonedCreatureType = IntelligentCreatureType.None;
+                CreatureSummoned = false;
+                SummonedCreatureType = IntelligentCreatureType.None;
                 break;
             }
             //update client
@@ -14276,8 +14286,8 @@ namespace Server.MirObjects
                     if (Info.IntelligentCreatures[i].ExpireTime <= 0)
                     {
                         Info.IntelligentCreatures[i].ExpireTime = 0;
-                        if (Info.CreatureSummoned && Info.SummonedCreatureType == Info.IntelligentCreatures[i].PetType)
-                            UnSummonIntelligentCreature(Info.SummonedCreatureType, false);//unsummon creature
+                        if (CreatureSummoned && SummonedCreatureType == Info.IntelligentCreatures[i].PetType)
+                            UnSummonIntelligentCreature(SummonedCreatureType, false);//unsummon creature
                         releasedPets.Add(i);
                     }
                 }
@@ -14287,12 +14297,12 @@ namespace Server.MirObjects
                     ReleaseIntelligentCreature(Info.IntelligentCreatures[releasedPets[i]].PetType, false);//release creature
                 }
 
-                if (Info.CreatureSummoned && Info.SummonedCreatureType != IntelligentCreatureType.None)
+                if (CreatureSummoned && SummonedCreatureType != IntelligentCreatureType.None)
                 {
                     for (int i = 0; i < Pets.Count; i++)
                     {
                         if (Pets[i].Info.AI != 64) continue;
-                        if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
 
                         ((IntelligentCreatureObject)Pets[i]).ProcessBlackStoneProduction();
                         break;
@@ -14306,12 +14316,12 @@ namespace Server.MirObjects
 
         public void IntelligentCreaturePickup(bool mousemode, Point atlocation)
         {
-            if (!Info.CreatureSummoned) return;
+            if (!CreatureSummoned) return;
 
             for (int i = 0; i < Pets.Count; i++)
             {
                 if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
 
                 //((IntelligentCreatureObject)Pets[i]).MouseLocation = atlocation;
                 ((IntelligentCreatureObject)Pets[i]).ManualPickup(mousemode, atlocation);
@@ -14342,8 +14352,8 @@ namespace Server.MirObjects
         {
             S.UpdateIntelligentCreatureList packet = new S.UpdateIntelligentCreatureList
             {
-                CreatureSummoned = Info.CreatureSummoned,
-                SummonedCreatureType = Info.SummonedCreatureType,
+                CreatureSummoned = CreatureSummoned,
+                SummonedCreatureType = SummonedCreatureType,
                 PearlCount = Info.PearlCount,
             };
 
