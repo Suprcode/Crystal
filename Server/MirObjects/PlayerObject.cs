@@ -7711,18 +7711,6 @@ namespace Server.MirObjects
 
             if (!base.Teleport(temp, location, effects)) return false;
 
-            if (tempCurrentMap.Info.Index != temp.Info.Index)
-            {
-                foreach (var ac in ActionList.Where(d => d.Type == DelayedType.NPC))
-                {
-                    if (ac.StartTime + 100 <= Envir.Time)
-                    {
-                        ac.Time = Envir.Time;
-                        return false;
-                    }
-                }
-            }
-
             Enqueue(new S.MapChanged
             {
                 FileName = CurrentMap.Info.FileName,
