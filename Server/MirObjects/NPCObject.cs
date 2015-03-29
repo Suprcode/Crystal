@@ -1244,13 +1244,13 @@ namespace Server.MirObjects
                     string tempx = parts.Length > 3 ? parts[2] : "0";
                     string tempy = parts.Length > 3 ? parts[3] : "0";
 
-                    acts.Add(new NPCActions(ActionType.Teleport, parts[1], tempx, tempy));
+                    acts.Add(new NPCActions(ActionType.Move, parts[1], tempx, tempy));
                     break;
 
                 case "INSTANCEMOVE":
                     if (parts.Length < 5) return;
 
-                    acts.Add(new NPCActions(ActionType.InstanceTeleport, parts[1], parts[2], parts[3], parts[4]));
+                    acts.Add(new NPCActions(ActionType.InstanceMove, parts[1], parts[2], parts[3], parts[4]));
                     break;
 
                 case "GIVEGOLD":
@@ -2106,7 +2106,7 @@ namespace Server.MirObjects
 
                 switch (act.Type)
                 {
-                    case ActionType.Teleport:
+                    case ActionType.Move:
                         Map map = SMain.Envir.GetMapByNameAndInstance(param[0]);
                         if (map == null) return;
 
@@ -2119,7 +2119,7 @@ namespace Server.MirObjects
                         else player.TeleportRandom(200, 0, map);
                         break;
 
-                    case ActionType.InstanceTeleport:
+                    case ActionType.InstanceMove:
                         int instanceId;
                         if (!int.TryParse(param[1], out instanceId)) return;
                         if (!int.TryParse(param[2], out x)) return;
@@ -2784,8 +2784,8 @@ namespace Server.MirObjects
 
     public enum ActionType
     {
-        Teleport,
-        InstanceTeleport,
+        Move,
+        InstanceMove,
         GiveGold,
         TakeGold,
         GiveItem,

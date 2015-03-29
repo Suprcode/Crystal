@@ -364,6 +364,8 @@ namespace Server.MirObjects
             for (int i = 0; i < Buffs.Count; i++ )
             {
                 Buff buff = Buffs[i];
+                if (buff.Infinite) continue;
+
                 buff.ExpireTime -= Envir.Time;
 
                 Info.Buffs.Add(new Buff(buff));
@@ -679,6 +681,7 @@ namespace Server.MirObjects
         private void ProcessInfiniteBuffs()
         {
             bool hiding = false;
+            bool mentalState = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -693,6 +696,9 @@ namespace Server.MirObjects
                     case BuffType.Hiding:
                         hiding = true;
                         if (!HasClearRing) removeBuff = true;
+                        break;
+                    case BuffType.MentalState:
+                        mentalState = true;
                         break;
                 }
 
@@ -713,6 +719,11 @@ namespace Server.MirObjects
             if(HasClearRing && !hiding)
             {
                 AddBuff(new Buff { Type = BuffType.Hiding, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
+            }
+
+            if (GetMagic(Spell.MentalState) != null && !mentalState)
+            {
+                AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Value = Info.MentalState, Infinite = true });
             }
         }
 
@@ -2508,13 +2519,13 @@ namespace Server.MirObjects
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + MaxSC * (magic.Level + 1) * 0.1F);
                         break;
                     case Spell.MentalState:
-                        Info.MentalStateLvl = magic.Level;
-                        for (int j = 0; j < Buffs.Count; j ++)
-                        {
-                            if (Buffs[j].Type == BuffType.MentalState)
-                                return;
-                        }
-                        AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true, Value = 0});
+                        //Info.MentalStateLvl = magic.Level;
+                        //for (int j = 0; j < Buffs.Count; j ++)
+                        //{
+                        //    if (Buffs[j].Type == BuffType.MentalState)
+                        //        return;
+                        //}
+                        //AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true, Value = Info.MentalState});
                         break;
                 }
             }

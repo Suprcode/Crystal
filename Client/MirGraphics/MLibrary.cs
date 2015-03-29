@@ -460,6 +460,9 @@ namespace Client.MirGraphics
             {
                 if (!mi.TextureValid)
                 {
+                    if ((mi.Width == 0) || (mi.Height == 0))
+                        return Size.Empty;
+
                     _fStream.Seek(_indexList[index] + 17, SeekOrigin.Begin);
                     mi.CreateTexture(_reader);
                 }

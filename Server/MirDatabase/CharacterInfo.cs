@@ -181,6 +181,11 @@ namespace Server.MirDatabase
             CrossHalfMoon = reader.ReadBoolean();
             DoubleSlash = reader.ReadBoolean();
 
+            if(Envir.LoadVersion > 46)
+            {
+                MentalState = reader.ReadByte();
+            }
+
             if (Envir.LoadVersion < 4) return;
 
             count = reader.ReadInt32();
@@ -322,7 +327,7 @@ namespace Server.MirDatabase
             writer.Write(HalfMoon);
             writer.Write(CrossHalfMoon);
             writer.Write(DoubleSlash);
-
+            writer.Write(MentalState);
 
             writer.Write(Pets.Count);
             for (int i = 0; i < Pets.Count; i++)
@@ -343,7 +348,6 @@ namespace Server.MirDatabase
             writer.Write(Buffs.Count);
             for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Buffs[i].Infinite) continue;
                 Buffs[i].Save(writer);
             }
 

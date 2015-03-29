@@ -12436,7 +12436,7 @@ namespace Client.MirScenes
             Index = 995;
             Library = Libraries.Prguse;
 
-            TextLabel = new MirLabel[12];
+            TextLabel = new MirLabel[30];
             TextButtons = new List<MirLabel>();
 
             MouseWheel += NPCDialog_MouseWheel;
@@ -19310,13 +19310,13 @@ namespace Client.MirScenes
                     switch (Value)
                     {
                         case 0:
-                            text = string.Format("Agressive:\nFull damage\nCan't shoot over walls.", Value);
+                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Value);
                             break;
                         case 1:
-                            text = string.Format("Trick shot:\nMinimal damage\nCan shoot over walls.", Value);
+                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Value);
                             break;
                         case 2:
-                            text = string.Format("Group Mode:\nMedium damage\nDon't steal agro.", Value);
+                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Value);
                             break;
                     }
                     break;
