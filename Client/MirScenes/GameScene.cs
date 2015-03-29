@@ -7074,6 +7074,11 @@ namespace Client.MirScenes
                 MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, source));
             }
 
+            if (MapObject.TargetObject != null && MapObject.TargetObject is MonsterObject && MapObject.TargetObject.AI == 64)
+                MapObject.TargetObject = null;
+            if (MapObject.MagicObject != null && MapObject.MagicObject is MonsterObject && MapObject.MagicObject.AI == 64)
+                MapObject.MagicObject = null;
+
             CheckInput();
 
             MapObject bestmouseobject = null;
@@ -7761,7 +7766,7 @@ namespace Client.MirScenes
 
 
             if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && !(MapObject.MouseObject is ItemObject) &&
-                !(MapObject.MouseObject is NPCObject))
+                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64))
             {
                 MapObject.TargetObject = MapObject.MouseObject;
                 if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI != 6)

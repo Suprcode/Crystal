@@ -552,16 +552,16 @@ namespace Server.MirObjects
                 {
                     if (!((PlayerObject)Master).CanGainItem(item.Item)) continue;
 
-                    ((PlayerObject)Master).GainItem(item.Item);
-                    CurrentMap.RemoveObject(ob);
-                    ob.Despawn();
-
-                    if (item.Item.Info.ShowGroupPickup)
+                    if (item.Item.Info.ShowGroupPickup && IsMasterGroupMember(Master))
                         for (int j = 0; j < Master.GroupMembers.Count; j++)
                             Master.GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.Name + "}", ChatType.Hint);
 
                     if(item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary)
                         Master.ReceiveChat("Pet Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+
+                    ((PlayerObject)Master).GainItem(item.Item);
+                    CurrentMap.RemoveObject(ob);
+                    ob.Despawn();
                     return;
                 }
                 else
@@ -714,8 +714,9 @@ namespace Server.MirObjects
         private bool IsMasterGroupMember(MapObject player)
         {
             if (player.Race != ObjectType.Player || Master == null) return false;
-            return Master.GroupMembers != null && Master.GroupMembers.Contains((PlayerObject)player);
+            return ((PlayerObject)Master).GroupMembers != null && ((PlayerObject)Master).GroupMembers.Contains((PlayerObject)player);
         }
+
 
         public override void Spawned()
         {
@@ -732,12 +733,6 @@ namespace Server.MirObjects
             if (Dead)
             {
                 CurrentMap.RemoveObject(this);
-                if (Master != null)
-                {
-                    Master.Pets.Remove(this);
-                    Master = null;
-                }
-
                 Despawn();
                 return;
             }
