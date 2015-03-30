@@ -424,7 +424,7 @@ namespace Server.MirEnvir
                     MemoryStream mStream = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(mStream);
                     GuildList[i].Save(writer);
-                    FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".msdn", FileMode.Create);
+                    FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".mgdn", FileMode.Create);
                     byte[] data = mStream.ToArray();
                     fStream.BeginWrite(data, 0, data.Length, EndSaveGuildsAsync, fStream);
                 }
@@ -469,7 +469,7 @@ namespace Server.MirEnvir
 
                     if (!npc.NeedSave) continue;
 
-                    string path = Settings.GoodsPath + npc.Info.Index.ToString() + ".msdd";
+                    string path = Settings.GoodsPath + npc.Info.Index.ToString() + ".msdn";
 
                     MemoryStream mStream = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(mStream);
