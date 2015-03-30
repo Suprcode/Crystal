@@ -248,6 +248,9 @@ namespace Server.MirEnvir
                     for (int i = Connections.Count - 1; i >= 0; i--)
                         Connections[i].SendDisconnect(3);
                 }
+
+                File.AppendAllText(@".\Error.txt",
+                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
 
             StopNetwork();

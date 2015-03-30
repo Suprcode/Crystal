@@ -1221,6 +1221,12 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.InGuild, guildName));
                     break;
+
+                case "CHECKQUEST":
+                    if (parts.Length < 3) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckQuest, parts[1], parts[2]));
+                    break;
             }
 
         }
@@ -2070,6 +2076,25 @@ namespace Server.MirObjects
 
                         failed = player.MyGuild == null;
                         break;
+
+                    case CheckType.CheckQuest:
+                        if (!int.TryParse(param[0], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        string tempString = param[1].ToUpper();
+                        
+                        if(tempString == "ACTIVE")
+                        {
+                            failed = !player.CurrentQuests.Any(e => e.Index == tempInt);
+                        }
+                        else //COMPLETE
+                        {
+                            failed = !player.CompletedQuests.Contains(tempInt);
+                        }
+                        break;
                 }
 
                 if (!failed) continue;
@@ -2857,5 +2882,6 @@ namespace Server.MirObjects
         CheckCalc,
         InGuild,
         CheckMap,
+        CheckQuest
     }
 }
