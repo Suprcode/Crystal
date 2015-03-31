@@ -614,7 +614,7 @@ namespace Server.MirObjects
 
                         if (UsedGoods.Count >= Settings.GoodsMaxStored)
                         {
-                            UserItem nonAddedItem = UsedGoods.First(e => e.IsAdded == false);
+                            UserItem nonAddedItem = UsedGoods.FirstOrDefault(e => e.IsAdded == false);
 
                             if (nonAddedItem != null)
                             {
