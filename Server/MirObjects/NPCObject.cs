@@ -421,7 +421,7 @@ namespace Server.MirObjects
         {
             if (key.StartsWith("[@_")) return key; //Default NPC page so doesn't use arguments in this way
 
-            Regex r = new Regex(@"\((.*?)\)");
+            Regex r = new Regex(@"\((.*)\)");
 
             Match match = r.Match(key);
             if (!match.Success) return key;
