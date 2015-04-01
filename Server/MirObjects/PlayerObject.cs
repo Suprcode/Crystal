@@ -3735,13 +3735,23 @@ namespace Server.MirObjects
                         {
                             if (!IsGM) return;
 
-                            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
-                            Cell cell = CurrentMap.GetCell(target);
                             MapObject ob = null;
 
-                            if (cell.Objects == null || cell.Objects.Count < 1) return;
+                            if(parts.Length < 2)
+                            {
+                                Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+                                Cell cell = CurrentMap.GetCell(target);          
 
-                            ob = cell.Objects[0];
+                                if (cell.Objects == null || cell.Objects.Count < 1) return;
+
+                                ob = cell.Objects[0];
+                            }
+                            else
+                            {
+                                ob = Envir.GetPlayer(parts[1]);
+                            }
+
+                            if (ob == null) return;
 
                             switch(ob.Race)
                             {
