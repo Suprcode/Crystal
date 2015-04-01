@@ -4941,9 +4941,14 @@ namespace Client.MirScenes
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
+                string plus = (addValue + minValue < 0) ? "" : "+";
+
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
+                {
+                    text = string.Format(addValue > 0 ? "A.Speed: " + plus + "{0} (+{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue);
+                    //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
+                }
                 else
                     text = string.Format("Adds {0}A.Speed", minValue + maxValue + addValue);
                 MirLabel ASPEEDLabel = new MirLabel
@@ -12979,6 +12984,7 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
             }
             */
+
             if (SelectedItem.Price() > GameScene.Gold)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);

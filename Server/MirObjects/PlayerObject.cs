@@ -3731,6 +3731,42 @@ namespace Server.MirObjects
                         }
                         break;
 
+                    case "INFO":
+                        {
+                            if (!IsGM) return;
+
+                            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+                            Cell cell = CurrentMap.GetCell(target);
+                            MapObject ob = null;
+
+                            if (cell.Objects == null || cell.Objects.Count < 1) return;
+
+                            ob = cell.Objects[0];
+
+                            switch(ob.Race)
+                            {
+                                case ObjectType.Player:
+                                    PlayerObject plOb = (PlayerObject)ob;
+                                    ReceiveChat("--Player Info--", ChatType.System2);
+                                    ReceiveChat(string.Format("Name : {0}, Level : {1}, X : {2}, Y : {3}", plOb.Name, plOb.Level, plOb.CurrentLocation.X, plOb.CurrentLocation.Y), ChatType.System2);
+                                    break;
+                                case ObjectType.Monster:
+                                    MonsterObject monOb = (MonsterObject)ob;
+                                    ReceiveChat("--Monster Info--", ChatType.System2);
+                                    ReceiveChat(string.Format("ID : {0}, Name : {1}", monOb.Info.Index, monOb.Name), ChatType.System2);
+                                    ReceiveChat(string.Format("Level : {0}, X : {1}, Y : {2}", monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y), ChatType.System2);
+                                    break;
+                                case ObjectType.Merchant:
+                                    NPCObject npcOb = (NPCObject)ob;
+                                    ReceiveChat("--NPC Info--", ChatType.System2);
+                                    ReceiveChat(string.Format("ID : {0}, Name : {1}", npcOb.Info.Index, npcOb.Name), ChatType.System2);
+                                    ReceiveChat(string.Format("X : {0}, Y : {1}", ob.CurrentLocation.X, ob.CurrentLocation.Y), ChatType.System2);
+                                    ReceiveChat(string.Format("File : {0}", npcOb.Info.FileName), ChatType.System2);
+                                    break;
+                            }
+                        }
+                        break;
+
                     default:
                         foreach (string command in Envir.CustomCommands)
                         {
@@ -14337,7 +14373,6 @@ namespace Server.MirObjects
                 SummonedCreatureType = IntelligentCreatureType.None;
             }
         }
-
 
         public void IntelligentCreaturePickup(bool mousemode, Point atlocation)
         {
