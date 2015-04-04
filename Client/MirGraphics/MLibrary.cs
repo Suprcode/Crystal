@@ -62,10 +62,10 @@ namespace Client.MirGraphics
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
                                           Monsters = new MLibrary[369],
-                                          NPCs = new MLibrary[186],
                                           Mounts = new MLibrary[12],
+                                          NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[10];//IntelligentCreature
+                                          Pets = new MLibrary[10];
 
         static Libraries()
         {
@@ -460,6 +460,9 @@ namespace Client.MirGraphics
             {
                 if (!mi.TextureValid)
                 {
+                    if ((mi.Width == 0) || (mi.Height == 0))
+                        return Size.Empty;
+
                     _fStream.Seek(_indexList[index] + 17, SeekOrigin.Begin);
                     mi.CreateTexture(_reader);
                 }

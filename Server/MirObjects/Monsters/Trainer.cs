@@ -131,6 +131,11 @@ namespace Server.MirObjects.Monsters
             return 1;
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
+        }
+
         private void ResetStats()
         {
             _currentAttacker = null;

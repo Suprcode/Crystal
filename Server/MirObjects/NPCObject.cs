@@ -25,6 +25,7 @@ namespace Server.MirObjects
             MainKey = "[@MAIN]",
             BuyKey = "[@BUY]",
             SellKey = "[@SELL]",
+            BuySellKey = "[@BUYSELL]",
             RepairKey = "[@REPAIR]",
             SRepairKey = "[@SREPAIR]",
             BuyBackKey = "[@BUYBACK]",
@@ -51,10 +52,13 @@ namespace Server.MirObjects
         public static Regex Regex = new Regex(@"<.*?/(\@.*?)>");
         public NPCInfo Info;
         private const long TurnDelay = 10000;
-        public long TurnTime;
+        public long TurnTime, UsedGoodsTime;
+        public bool NeedSave;
 
-        public List<ItemInfo> Goods = new List<ItemInfo>();
-        public List<int> GoodsIndex = new List<int>();
+        public List<UserItem> Goods = new List<UserItem>();
+        public List<UserItem> UsedGoods = new List<UserItem>();
+        public Dictionary<string, List<UserItem>> BuyBack = new Dictionary<string, List<UserItem>>();
+
         public List<ItemType> Types = new List<ItemType>();
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<QuestInfo> Quests = new List<QuestInfo>();
@@ -108,6 +112,7 @@ namespace Server.MirObjects
             }
 
             LoadInfo();
+            LoadGoods();
         }
 
         public void LoadInfo(bool clear = false)
@@ -133,10 +138,31 @@ namespace Server.MirObjects
                 SMain.Enqueue(string.Format("File Not Found: {0}, NPC: {1}", Info.FileName, Info.Name));
         }
 
+        public void LoadGoods()
+        {
+            string path = Settings.GoodsPath + Info.Index.ToString() + ".msd";
+
+            if (!File.Exists(path)) return;
+
+            using (FileStream stream = File.OpenRead(path))
+            {
+                using (BinaryReader reader = new BinaryReader(stream))
+                {
+                    int count = reader.ReadInt32();
+
+                    for (int k = 0; k < count; k++)
+                    {
+                        UserItem item = new UserItem(reader, Envir.LoadVersion);
+                        if (SMain.Envir.BindItem(item))
+                            UsedGoods.Add(item);
+                    }
+                }
+            }
+        }
+
         public void ClearInfo()
         {
-            Goods = new List<ItemInfo>();
-            GoodsIndex = new List<int>();
+            Goods = new List<UserItem>();
             Types = new List<ItemType>();
             NPCSections = new List<NPCPage>();
 
@@ -196,10 +222,6 @@ namespace Server.MirObjects
 
             ParseGoods(lines);
             ParseTypes(lines);
-
-            for (int i = 0; i < Goods.Count; i++)
-                GoodsIndex.Add(Goods[i].Index);
-
             ParseQuests(lines);
         }
 
@@ -280,6 +302,7 @@ namespace Server.MirObjects
                         switch (parts[0].ToUpper())
                         {
                             case "GOTO":
+                            case "GROUPGOTO":
                                 gotoButtons.Add(string.Format("[{0}]", parts[1].ToUpper()));
                                 break;
                             case "TIMERECALL":
@@ -398,7 +421,7 @@ namespace Server.MirObjects
         {
             if (key.StartsWith("[@_")) return key; //Default NPC page so doesn't use arguments in this way
 
-            Regex r = new Regex(@"\((.*?)\)");
+            Regex r = new Regex(@"\((.*)\)");
 
             Match match = r.Match(key);
             if (!match.Success) return key;
@@ -444,18 +467,27 @@ namespace Server.MirObjects
                     if (lines[i].StartsWith("[")) return;
                     if (String.IsNullOrEmpty(lines[i])) continue;
 
-                    ItemInfo info = SMain.Envir.GetItemInfo(lines[i]);
-                    if (info == null || Goods.Contains(info))
+                    var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
+                    if (info == null)
+                        continue;
+                    UserItem goods = new UserItem(info) { CurrentDura = info.Durability, MaxDura = info.Durability };
+                    if (goods == null || Goods.Contains(goods))
                     {
                         SMain.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], Info.FileName));
                         continue;
                     }
+                    uint count = 1;
+                    if (data.Length == 2)
+                        uint.TryParse(data[1], out count);
+                    goods.Count = count;
+                    goods.UniqueID = (ulong)i;
 
-                    Goods.Add(info);
+                    Goods.Add(goods);
                 }
             }
         }
-
         private void ParseQuests(IList<string> lines)
         {
             for (int i = 0; i < lines.Count; i++)
@@ -520,6 +552,11 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            throw new NotSupportedException();
+        }
+
         public override void SendHealth(PlayerObject player)
         {
             throw new NotSupportedException();
@@ -549,6 +586,56 @@ namespace Server.MirObjects
 
             TurnTime = Envir.Time + TurnDelay;
             Turn((MirDirection) Envir.Random.Next(3));
+
+            if (UsedGoodsTime < SMain.Envir.Time)
+            {
+                UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
+                ProcessGoods();
+            }
+        }
+
+        public void ProcessGoods(bool clear = false)
+        {
+            if (!Settings.GoodsOn) return;
+
+            List<UserItem> deleteList = new List<UserItem>();
+
+            foreach (var playerGoods in BuyBack)
+            {
+                List<UserItem> items = playerGoods.Value;
+
+                for (int i = 0; i < items.Count; i++)
+                {
+                    UserItem item = items[i];
+
+                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
+                    {
+                        deleteList.Add(BuyBack[playerGoods.Key][i]);
+
+                        if (UsedGoods.Count >= Settings.GoodsMaxStored)
+                        {
+                            UserItem nonAddedItem = UsedGoods.FirstOrDefault(e => e.IsAdded == false);
+
+                            if (nonAddedItem != null)
+                            {
+                                UsedGoods.Remove(nonAddedItem);
+                            }
+                            else
+                            {
+                                UsedGoods.RemoveAt(0);
+                            }
+                        }
+
+                        UsedGoods.Add(item);
+                        NeedSave = true;
+                    }
+                }
+
+                for (int i = 0; i < deleteList.Count; i++)
+                {
+                    BuyBack[playerGoods.Key].Remove(deleteList[i]);
+                }
+            }
         }
 
         public override void SetOperateTime()
@@ -636,7 +723,6 @@ namespace Server.MirObjects
             key = key.ToUpper();
 
             if(!player.NPCDelayed)
-            //if (player.NPCJumpList.NextPage == null || !player.NPCJumpList.NextPage.Active)
             {
                 if (key != MainKey) // && ObjectID != player.DefaultNPC.ObjectID
                 {
@@ -665,38 +751,87 @@ namespace Server.MirObjects
             }
         }
 
-        public void Buy(PlayerObject player, int index, uint count)
+        public void Buy(PlayerObject player, ulong index, uint count)
         {
-            ItemInfo info = null;
+            UserItem goods = null;
 
             for (int i = 0; i < Goods.Count; i++)
             {
-                if (Goods[i].Index != index) continue;
-                info = Goods[i];
+                if (Goods[i].UniqueID != index) continue;
+                goods = Goods[i];
                 break;
             }
 
-            if (count == 0 || info == null || count > info.StackSize) return;
+            bool isUsed = false;
+            if(goods == null)
+            {
+                for (int i = 0; i < UsedGoods.Count; i++)
+                {
+                    if (UsedGoods[i].UniqueID != index) continue;
+                    goods = UsedGoods[i];
+                    isUsed = true;
+                    break;
+                }
+            }
 
-            uint cost = info.Price*count;
+            bool isBuyBack = false;
+            if (goods == null)
+            {
+                if (!BuyBack.ContainsKey(player.Name)) BuyBack[player.Name] = new List<UserItem>();
+                for (int i = 0; i < BuyBack[player.Name].Count; i++)
+                {
+                    if (BuyBack[player.Name][i].UniqueID != index) continue;
+                    goods = BuyBack[player.Name][i];
+                    isBuyBack = true;
+                    break;
+                }
+            }
+
+            if (goods == null || goods.Count == 0 || goods.Count > goods.Info.StackSize) return;
+
+            uint cost = goods.Price();
             cost = (uint) (cost*Info.PriceRate);
 
             if (cost > player.Account.Gold) return;
 
-            UserItem item = Envir.CreateFreshItem(info);
-            item.Count = count;
+            UserItem item = (isBuyBack || isUsed ? goods : Envir.CreateFreshItem(goods.Info));
+            item.Count = goods.Count;
 
             if (!player.CanGainItem(item)) return;
 
             player.Account.Gold -= cost;
             player.Enqueue(new S.LoseGold {Gold = cost});
             player.GainItem(item);
+
+            if(isUsed)
+            {
+                UsedGoods.Remove(goods);
+
+                List<UserItem> newGoodsList = new List<UserItem>();
+                newGoodsList.AddRange(Goods);
+                newGoodsList.AddRange(UsedGoods);
+
+                NeedSave = true;
+
+                player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = Info.PriceRate });
+            }
+
+            if (isBuyBack)
+            {
+                BuyBack[player.Name].Remove(goods);
+                player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = Info.PriceRate });
+            }
         }
-        public void Sell(UserItem item)
+        public void Sell(PlayerObject player, UserItem item)
         {
             /* Handle Item Sale */
+            if (!BuyBack.ContainsKey(player.Name)) BuyBack[player.Name] = new List<UserItem>();
 
+            if (BuyBack[player.Name].Count >= Settings.GoodsBuyBackMaxStored)
+                BuyBack[player.Name].RemoveAt(0);
 
+            item.BuybackExpiryDate = Envir.Now;
+            BuyBack[player.Name].Add(item);
         }
 
         private void ProcessPage(PlayerObject player, NPCPage page)
@@ -705,15 +840,36 @@ namespace Server.MirObjects
             player.NPCSuccess = page.Check(player);
             player.NPCPage = page;
 
+            List<UserItem> allGoods = new List<UserItem>();
+
             switch (page.Key.ToUpper())
             {
                 case BuyKey:
                     for (int i = 0; i < Goods.Count; i++)
-                        player.CheckItemInfo(Goods[i]);
+                        player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods {List = GoodsIndex, Rate = Info.PriceRate});
+                    for (int i = 0; i < UsedGoods.Count; i++)
+                        player.CheckItem(UsedGoods[i]);
+
+                    allGoods.AddRange(Goods);
+                    allGoods.AddRange(UsedGoods);
+
+                    player.Enqueue(new S.NPCGoods { List = allGoods, Rate = Info.PriceRate });
                     break;
                 case SellKey:
+                    player.Enqueue(new S.NPCSell());
+                    break;
+                case BuySellKey:
+                    for (int i = 0; i < Goods.Count; i++)
+                        player.CheckItem(Goods[i]);
+
+                    for (int i = 0; i < UsedGoods.Count; i++)
+                        player.CheckItem(UsedGoods[i]);
+
+                    allGoods.AddRange(Goods);
+                    allGoods.AddRange(UsedGoods);
+
+                    player.Enqueue(new S.NPCGoods { List = allGoods, Rate = Info.PriceRate });
                     player.Enqueue(new S.NPCSell());
                     break;
                 case RepairKey:
@@ -727,6 +883,14 @@ namespace Server.MirObjects
                     player.Enqueue(new S.NPCStorage());
                     break;
                 case BuyBackKey:
+                    if (!BuyBack.ContainsKey(player.Name)) BuyBack[player.Name] = new List<UserItem>();
+
+                    for (int i = 0; i < BuyBack[player.Name].Count; i++)
+                    {
+                        player.CheckItem(BuyBack[player.Name][i]);
+                    }
+
+                    player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = Info.PriceRate });
                     break;
                 case ConsignKey:
                     player.Enqueue(new S.NPCConsign());
@@ -1057,6 +1221,12 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.InGuild, guildName));
                     break;
+
+                case "CHECKQUEST":
+                    if (parts.Length < 3) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckQuest, parts[1], parts[2]));
+                    break;
             }
 
         }
@@ -1080,13 +1250,13 @@ namespace Server.MirObjects
                     string tempx = parts.Length > 3 ? parts[2] : "0";
                     string tempy = parts.Length > 3 ? parts[3] : "0";
 
-                    acts.Add(new NPCActions(ActionType.Teleport, parts[1], tempx, tempy));
+                    acts.Add(new NPCActions(ActionType.Move, parts[1], tempx, tempy));
                     break;
 
                 case "INSTANCEMOVE":
                     if (parts.Length < 5) return;
 
-                    acts.Add(new NPCActions(ActionType.InstanceTeleport, parts[1], parts[2], parts[3], parts[4]));
+                    acts.Add(new NPCActions(ActionType.InstanceMove, parts[1], parts[2], parts[3], parts[4]));
                     break;
 
                 case "GIVEGOLD":
@@ -1412,6 +1582,10 @@ namespace Server.MirObjects
 
                 case "SENDMAIL":
                     acts.Add(new NPCActions(ActionType.SendMail));
+                    break;
+
+                case "GROUPGOTO":
+                    acts.Add(new NPCActions(ActionType.GroupGoto, parts[1]));
                     break;
             }
 
@@ -1902,6 +2076,25 @@ namespace Server.MirObjects
 
                         failed = player.MyGuild == null;
                         break;
+
+                    case CheckType.CheckQuest:
+                        if (!int.TryParse(param[0], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        string tempString = param[1].ToUpper();
+                        
+                        if(tempString == "ACTIVE")
+                        {
+                            failed = !player.CurrentQuests.Any(e => e.Index == tempInt);
+                        }
+                        else //COMPLETE
+                        {
+                            failed = !player.CompletedQuests.Contains(tempInt);
+                        }
+                        break;
                 }
 
                 if (!failed) continue;
@@ -1938,7 +2131,7 @@ namespace Server.MirObjects
 
                 switch (act.Type)
                 {
-                    case ActionType.Teleport:
+                    case ActionType.Move:
                         Map map = SMain.Envir.GetMapByNameAndInstance(param[0]);
                         if (map == null) return;
 
@@ -1951,7 +2144,7 @@ namespace Server.MirObjects
                         else player.TeleportRandom(200, 0, map);
                         break;
 
-                    case ActionType.InstanceTeleport:
+                    case ActionType.InstanceMove:
                         int instanceId;
                         if (!int.TryParse(param[1], out instanceId)) return;
                         if (!int.TryParse(param[2], out x)) return;
@@ -2528,6 +2721,16 @@ namespace Server.MirObjects
                         mailInfo.Send();
 
                         break;
+
+                    case ActionType.GroupGoto:
+                        if (player.GroupMembers == null) return;
+
+                        for (i = 0; i < player.GroupMembers.Count(); i++)
+                        {
+                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, player.NPCID, "[" + param[0] + "]");
+                            player.GroupMembers[i].ActionList.Add(action);
+                        }
+                        break;
                 }
             }
         }
@@ -2606,8 +2809,8 @@ namespace Server.MirObjects
 
     public enum ActionType
     {
-        Teleport,
-        InstanceTeleport,
+        Move,
+        InstanceMove,
         GiveGold,
         TakeGold,
         GiveItem,
@@ -2650,7 +2853,8 @@ namespace Server.MirObjects
         ComposeMail,
         AddMailItem,
         AddMailGold,
-        SendMail
+        SendMail,
+        GroupGoto
     }
     public enum CheckType
     {
@@ -2678,5 +2882,6 @@ namespace Server.MirObjects
         CheckCalc,
         InGuild,
         CheckMap,
+        CheckQuest
     }
 }

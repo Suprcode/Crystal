@@ -27,20 +27,20 @@ namespace Server.MirObjects
 
         public int Fullness = 0;
         public long fullnessTicker = 0;
-        public const long fullnessDelay = 1000;
+        public const long fullnessDelay = Settings.Second;
 
         public bool doDelayedPickup = false;
         public long delayedpickupTicker = 0;
-        public const long delayedpickupDelay = 1000;//1 second
+        public const long delayedpickupDelay = Settings.Second;//1 second
 
         public long blackstoneTime = 0;
-        public const long blackstoneProduceTime = 10800;//3 hours in seconds
+        public const long blackstoneProduceTime = 3 * Settings.Hour;//3 hours in seconds
 
         public long pearlTicker = 0;
         public const long pearlProduceCount = 1000;//1000 items = 1 pearl
 
         public long animvariantTicker = 0;
-        public const long animvariantDelay = 10000;//10 seconds
+        public const long animvariantDelay = 10 * Settings.Second;//10 seconds
 
         private bool shortcheck = true;
 
@@ -552,16 +552,16 @@ namespace Server.MirObjects
                 {
                     if (!((PlayerObject)Master).CanGainItem(item.Item)) continue;
 
-                    ((PlayerObject)Master).GainItem(item.Item);
-                    CurrentMap.RemoveObject(ob);
-                    ob.Despawn();
-
-                    if (item.Item.Info.ShowGroupPickup)
+                    if (item.Item.Info.ShowGroupPickup && IsMasterGroupMember(Master))
                         for (int j = 0; j < Master.GroupMembers.Count; j++)
                             Master.GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.Name + "}", ChatType.Hint);
 
                     if(item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary)
                         Master.ReceiveChat("Pet Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+
+                    ((PlayerObject)Master).GainItem(item.Item);
+                    CurrentMap.RemoveObject(ob);
+                    ob.Despawn();
                     return;
                 }
                 else
@@ -700,6 +700,12 @@ namespace Server.MirObjects
         {
             return 0;
         }
+
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
+        }
+
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
         {
             //FindTarget();
@@ -708,8 +714,9 @@ namespace Server.MirObjects
         private bool IsMasterGroupMember(MapObject player)
         {
             if (player.Race != ObjectType.Player || Master == null) return false;
-            return Master.GroupMembers != null && Master.GroupMembers.Contains((PlayerObject)player);
+            return ((PlayerObject)Master).GroupMembers != null && ((PlayerObject)Master).GroupMembers.Contains((PlayerObject)player);
         }
+
 
         public override void Spawned()
         {
@@ -726,12 +733,6 @@ namespace Server.MirObjects
             if (Dead)
             {
                 CurrentMap.RemoveObject(this);
-                if (Master != null)
-                {
-                    Master.Pets.Remove(this);
-                    Master = null;
-                }
-
                 Despawn();
                 return;
             }

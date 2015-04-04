@@ -92,5 +92,9 @@ namespace Server.MirObjects.Monsters
 
             return 0;
         }
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
+        }
     }
 }

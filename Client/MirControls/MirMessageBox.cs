@@ -61,7 +61,7 @@ namespace Client.MirControls
                         Library = Libraries.Title,
                         Location = new Point(260, 157),
                         Parent = this,
-                        PressedIndex = 022,
+                        PressedIndex = 202,
                     };
                     OKButton.Click += (o, e) => Dispose();
                     CancelButton = new MirButton

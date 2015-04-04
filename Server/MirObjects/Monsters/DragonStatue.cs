@@ -99,6 +99,11 @@ namespace Server.MirObjects.Monsters
             return Sleeping ? 0 : base.Attacked(attacker, damage, type, damageWeapon);
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
+        }
+
         public override void Die()
         {
             if (Dead || Sleeping) return;

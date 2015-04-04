@@ -360,6 +360,9 @@ namespace Server.MirObjects
         public abstract bool IsAttackTarget(MonsterObject attacker);
         public abstract int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
         public abstract int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility);
+
+        public abstract int Struck(int damage, DefenceType type = DefenceType.ACAgility);
+
         public abstract bool IsFriendlyTarget(PlayerObject ally);
         public abstract bool IsFriendlyTarget(MonsterObject ally);
 
@@ -367,7 +370,7 @@ namespace Server.MirObjects
 
         public abstract Packet GetInfo();
 
-        public virtual void WinExp(uint experience)
+        public virtual void WinExp(uint amount, uint targetLevel = 0)
         {
 
 
@@ -517,7 +520,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Race == ObjectType.Monster && !AutoRev) return;
+            if (Race == ObjectType.Monster && !AutoRev && Master == null) return;
 
             if (Race == ObjectType.Player)
             {

@@ -66,7 +66,7 @@ namespace Server
         {
             try
             {
-                Text = string.Format("Total: {0}, Real: {1}", Envir.LastCount, Envir.LastRealCount);
+                Text = string.Format("Total: {0}, Real: {1}, CycleDelay: {2}", Envir.LastCount, Envir.LastRealCount, Envir.LastRunTime);
 
                 PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
                 MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
@@ -301,6 +301,13 @@ namespace Server
         private void mailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SystemInfoForm form = new SystemInfoForm(1);
+
+            form.ShowDialog();
+        }
+
+        private void goodsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(2);
 
             form.ShowDialog();
         }

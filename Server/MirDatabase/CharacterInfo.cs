@@ -69,8 +69,6 @@ namespace Server.MirDatabase
 
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
-        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
-        public bool CreatureSummoned;
         public int PearlCount;
 
         public List<QuestProgressInfo> CurrentQuests = new List<QuestProgressInfo>();
@@ -138,6 +136,9 @@ namespace Server.MirDatabase
             }
 
             int count = reader.ReadInt32();
+
+            Array.Resize(ref Inventory, count);
+
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
@@ -179,6 +180,11 @@ namespace Server.MirDatabase
             HalfMoon = reader.ReadBoolean();
             CrossHalfMoon = reader.ReadBoolean();
             DoubleSlash = reader.ReadBoolean();
+
+            if(Envir.LoadVersion > 46)
+            {
+                MentalState = reader.ReadByte();
+            }
 
             if (Envir.LoadVersion < 4) return;
 
@@ -235,12 +241,14 @@ namespace Server.MirDatabase
                     if (creature.Info == null) continue;
                     IntelligentCreatures.Add(creature);
                 }
-                SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
-                CreatureSummoned = reader.ReadBoolean();
+
+                if (Envir.LoadVersion == 45)
+                {
+                    var old1 = (IntelligentCreatureType)reader.ReadByte();
+                    var old2 = reader.ReadBoolean();
+                }
+
                 PearlCount = reader.ReadInt32();
-                //there will nevver be a summoned creature when loading character
-                SummonedCreatureType = IntelligentCreatureType.None;
-                CreatureSummoned = false;
 
             }
         }
@@ -319,7 +327,7 @@ namespace Server.MirDatabase
             writer.Write(HalfMoon);
             writer.Write(CrossHalfMoon);
             writer.Write(DoubleSlash);
-
+            writer.Write(MentalState);
 
             writer.Write(Pets.Count);
             for (int i = 0; i < Pets.Count; i++)
@@ -339,7 +347,9 @@ namespace Server.MirDatabase
 
             writer.Write(Buffs.Count);
             for (int i = 0; i < Buffs.Count; i++)
+            {
                 Buffs[i].Save(writer);
+            }
 
             writer.Write(Mail.Count);
             for (int i = 0; i < Mail.Count; i++)
@@ -349,8 +359,9 @@ namespace Server.MirDatabase
             writer.Write(IntelligentCreatures.Count);
             for (int i = 0; i < IntelligentCreatures.Count; i++)
                 IntelligentCreatures[i].Save(writer);
-            writer.Write((byte)SummonedCreatureType);
-            writer.Write(CreatureSummoned);
+
+            //writer.Write((byte)SummonedCreatureType);
+            //writer.Write(CreatureSummoned);
             writer.Write(PearlCount);
 
         }
@@ -390,7 +401,17 @@ namespace Server.MirDatabase
                 if (IntelligentCreatures[i].PetType == petType) return true;
             return false;
         }
-    }
+        public int ResizeInventory()
+        {
+            if (Inventory.Length >= 86) return Inventory.Length;
+
+            if (Inventory.Length == 46)
+                Array.Resize(ref Inventory, Inventory.Length + 8);
+            else
+                Array.Resize(ref Inventory, Inventory.Length + 4);
+
+            return Inventory.Length;
+        }    }
 
     public class PetInfo
     {

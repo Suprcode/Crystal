@@ -55,6 +55,10 @@ namespace Server.MirObjects.Monsters
         public override bool IsAttackTarget(MonsterObject attacker) { return false; }
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true) { throw new NotSupportedException(); }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility) { throw new NotSupportedException(); }
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
+        }
         protected override bool DropItem(UserItem item) { throw new NotSupportedException(); }
         protected override bool DropGold(uint gold) { throw new NotSupportedException(); }
         public override void Die() { }
