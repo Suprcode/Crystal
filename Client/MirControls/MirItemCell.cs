@@ -419,11 +419,11 @@ namespace Client.MirControls
 
                         if (Item.Count == 1 && ItemSlot < 6)
                         {
-                            for (int i = 5; i < GameScene.User.Inventory.Length; i++)
+                            for (int i = 6; i < GameScene.User.Inventory.Length; i++)
                                 if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
                                 {
                                     Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = i, To = ItemSlot });
-                                    GameScene.Scene.InventoryDialog.Grid[i].Locked = true;
+                                    GameScene.Scene.InventoryDialog.Grid[i - 6].Locked = true;
                                     break;
                                 }
                         }

@@ -12572,7 +12572,7 @@ namespace Client.MirScenes
 
             if (_index == 0 && count >= 0) return;
             if (_index == CurrentLines.Count - 1 && count <= 0) return;
-            if (CurrentLines.Count - 1 <= MaximumLines) return;
+            if (CurrentLines.Count <= MaximumLines) return;
 
             _index -= count;
 
