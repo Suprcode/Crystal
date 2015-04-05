@@ -66,6 +66,7 @@ namespace Server.MirDatabase
         public List<PetInfo> Pets = new List<PetInfo>();
         public List<Buff> Buffs = new List<Buff>();
         public List<MailInfo> Mail = new List<MailInfo>();
+        public List<FriendInfo> Friends = new List<FriendInfo>();
 
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
@@ -495,6 +496,12 @@ namespace Server.MirDatabase
         {
             Player = ob;
         }
+    }
+
+    public class FriendInfo
+    {
+        public int CharacterIndex;
+        public string Memo;
     }
 
     //IntelligentCreature

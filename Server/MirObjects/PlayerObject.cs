@@ -190,7 +190,7 @@ namespace Server.MirObjects
         public byte MagicShieldLv;
         public long MagicShieldTime;
 
-        //ArcherSpells - Elemental system
+        #region Elemental System
         public bool HasElemental;
         public int ElementsLevel;
         private bool _concentrating;
@@ -212,9 +212,8 @@ namespace Server.MirObjects
         public bool ElementalBarrier;
         public byte ElementalBarrierLv;
         public long ElementalBarrierTime;
-        //Elemental system end
+        #endregion
 
-        //Creatures
         public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
         public bool CreatureSummoned;
 
@@ -236,6 +235,9 @@ namespace Server.MirObjects
         public NPCPage NPCPage;
         public bool NPCSuccess;
         public bool NPCDelayed;
+
+        public Map NPCMoveMap;
+        public Point NPCMoveCoord;
 
         public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
 
@@ -289,7 +291,6 @@ namespace Server.MirObjects
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing;
 
         public bool HasMuscleRing, HasClearRing, HasParalysisRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss;
-
 
         public PlayerObject GroupInvitation;
         public PlayerObject TradeInvitation;
@@ -3240,7 +3241,7 @@ namespace Server.MirObjects
 
                         count = 1;
                         if (parts.Length >= 3)
-                            if (!uint.TryParse(parts[2], out count) || count > 50) count = 1;
+                            if (!uint.TryParse(parts[2], out count)) count = 1;
 
                         for (int i = 0; i < count; i++)
                         {
@@ -7694,13 +7695,20 @@ namespace Server.MirObjects
                         continue;
                 }
 
+                if (info.NeedMove) //use with ENTERMAP npc command
+                {
+                    NPCMoveMap = Envir.GetMap(info.MapIndex);
+                    NPCMoveCoord = info.Destination;
+                    continue;
+                }
+
                 Map temp = Envir.GetMap(info.MapIndex);
 
                 if (temp == null || !temp.ValidPoint(info.Destination)) continue;
-
+                
                 CurrentMap.RemoveObject(this);
                 Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
-                //ActionList.Add(new DelayedAction(DelayedType.MapMovement, Envir.Time + 500, temp, info.Destination, CurrentMap, CurrentLocation));
+
                 CompleteMapMovement(temp, info.Destination, CurrentMap, CurrentLocation);
                 return true;
             }
@@ -7708,7 +7716,6 @@ namespace Server.MirObjects
             return false;
         }
         private void CompleteMapMovement(params object[] data)
-        //private void CompleteMapMovement(IList<object> data)
         {
             if (this == null) return;
             Map temp = (Map)data[0];
@@ -7749,11 +7756,13 @@ namespace Server.MirObjects
             }
             else
                 InSafeZone = false;
+
+            CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
         }
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
-            Map tempCurrentMap = CurrentMap;
+            bool mapChanged = temp != CurrentMap;
 
             if (!base.Teleport(temp, location, effects)) return false;
 
@@ -7787,8 +7796,15 @@ namespace Server.MirObjects
             }
             else
                 InSafeZone = false;
+
             Fishing = false;
             Enqueue(GetFishInfo());
+
+            if (mapChanged)
+            {
+                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+            }
+
             return true;            
         }
 
@@ -10571,6 +10587,10 @@ namespace Server.MirObjects
                     if (value.Length < 3) return;
                     key = string.Format("MapCoord({0},{1},{2})", value[0], value[1], value[2]);
                     break;
+                case DefaultNPCType.MapEnter:
+                    if (value.Length < 1) return;
+                    key = string.Format("MapEnter({0})", value[0]);
+                    break;
                 case DefaultNPCType.Die:
                     key = "Die";
                     break;
@@ -10619,6 +10639,16 @@ namespace Server.MirObjects
                 
                 ob.Call(this, key.ToUpper());
                 break;
+            }
+
+            //process any new npc calls immediately
+            for (int i = 0; i < ActionList.Count; i++)
+            {
+                if (ActionList[i].Type != DelayedType.NPC || Envir.Time < ActionList[i].Time) continue;
+                var action = ActionList[i];
+
+                ActionList.RemoveAt(i);
+                CompleteNPC(action.Params);
             }
         }
 
@@ -14435,52 +14465,54 @@ namespace Server.MirObjects
         #endregion
 
     }
-}
 
-public class ItemSets
-{
-    public ItemSet Set;
-    public List<ItemType> Type;
-    private byte Amount
+    public class ItemSets
     {
-        get
+        public ItemSet Set;
+        public List<ItemType> Type;
+        private byte Amount
         {
-            switch (Set)
+            get
             {
-                case ItemSet.Mundane:
-                case ItemSet.NokChi:
-                case ItemSet.TaoProtect:
-                    return 2;
-                case ItemSet.RedOrchid:
-                case ItemSet.RedFlower:
-                case ItemSet.Smash:
-                case ItemSet.HwanDevil:
-                case ItemSet.Purity:
-                case ItemSet.FiveString:
-                case ItemSet.Bone:
-                case ItemSet.Bug:
-                    return 3;
-                case ItemSet.Recall:
-                    return 4;
-                case ItemSet.Spirit:
-                case ItemSet.WhiteGold:
-                case ItemSet.WhiteGoldH:
-                case ItemSet.RedJade:
-                case ItemSet.RedJadeH:
-                case ItemSet.Nephrite:
-                case ItemSet.NephriteH:
-                    return 5;
-                default:
-                    return 0;
+                switch (Set)
+                {
+                    case ItemSet.Mundane:
+                    case ItemSet.NokChi:
+                    case ItemSet.TaoProtect:
+                        return 2;
+                    case ItemSet.RedOrchid:
+                    case ItemSet.RedFlower:
+                    case ItemSet.Smash:
+                    case ItemSet.HwanDevil:
+                    case ItemSet.Purity:
+                    case ItemSet.FiveString:
+                    case ItemSet.Bone:
+                    case ItemSet.Bug:
+                        return 3;
+                    case ItemSet.Recall:
+                        return 4;
+                    case ItemSet.Spirit:
+                    case ItemSet.WhiteGold:
+                    case ItemSet.WhiteGoldH:
+                    case ItemSet.RedJade:
+                    case ItemSet.RedJadeH:
+                    case ItemSet.Nephrite:
+                    case ItemSet.NephriteH:
+                        return 5;
+                    default:
+                        return 0;
+                }
+            }
+        }
+        public byte Count;
+        public bool SetComplete
+        {
+            get
+            {
+                return Count == Amount;
             }
         }
     }
-    public byte Count;
-    public bool SetComplete
-    {
-        get
-        {
-            return Count == Amount;
-        }
-    }
+
 }
+

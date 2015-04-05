@@ -1148,10 +1148,8 @@ namespace Server.MirObjects
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
-
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
-
                         for (int i = 0; i < cell.Objects.Count; i++)
                         {
                             MapObject ob = cell.Objects[i];

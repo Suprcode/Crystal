@@ -12333,7 +12333,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
-                Visible = false
+                Visible = true
             };
             FriendButton.Click += (o, e) =>
             {

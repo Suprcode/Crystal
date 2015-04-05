@@ -189,7 +189,13 @@ namespace Server.MirObjects
 
                     if (map == null) continue;
 
-                    map.Info.ActiveCoords.Add(new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value)));
+                    Point point = new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value));
+
+                    if (!map.Info.ActiveCoords.Contains(point))
+                    {
+                        map.Info.ActiveCoords.Add(point);
+                    }
+
                 }
                 if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
                 {
@@ -1585,7 +1591,12 @@ namespace Server.MirObjects
                     break;
 
                 case "GROUPGOTO":
+                    if (parts.Length < 2) return;
                     acts.Add(new NPCActions(ActionType.GroupGoto, parts[1]));
+                    break;
+
+                case "ENTERMAP":
+                    acts.Add(new NPCActions(ActionType.EnterMap));
                     break;
             }
 
@@ -2731,6 +2742,13 @@ namespace Server.MirObjects
                             player.GroupMembers[i].ActionList.Add(action);
                         }
                         break;
+
+                    case ActionType.EnterMap:
+                        if (player.NPCMoveMap == null || player.NPCMoveCoord.IsEmpty) return;
+                        player.Teleport(player.NPCMoveMap, player.NPCMoveCoord, false);
+                        player.NPCMoveMap = null;
+                        player.NPCMoveCoord = Point.Empty;
+                        break;
                 }
             }
         }
@@ -2854,7 +2872,8 @@ namespace Server.MirObjects
         AddMailItem,
         AddMailGold,
         SendMail,
-        GroupGoto
+        GroupGoto,
+        EnterMap
     }
     public enum CheckType
     {

@@ -353,6 +353,7 @@ namespace Server
                 SourceXTextBox.Text = string.Empty;
                 SourceYTextBox.Text = string.Empty;
                 NeedHoleMCheckBox.Checked = false;
+                NeedMoveMCheckBox.Checked = false;
                 DestMapComboBox.SelectedItem = null;
                 DestXTextBox.Text = string.Empty;
                 DestYTextBox.Text = string.Empty;
@@ -366,6 +367,7 @@ namespace Server
             SourceXTextBox.Text = info.Source.X.ToString();
             SourceYTextBox.Text = info.Source.Y.ToString();
             NeedHoleMCheckBox.Checked = info.NeedHole;
+            NeedMoveMCheckBox.Checked = info.NeedMove;
             DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
             DestXTextBox.Text = info.Destination.X.ToString();
             DestYTextBox.Text = info.Destination.Y.ToString();
@@ -981,6 +983,15 @@ namespace Server
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
                 _selectedMovementInfos[i].NeedHole = NeedHoleMCheckBox.Checked;
         }
+
+        private void NeedScriptMCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMovementInfos.Count; i++)
+                _selectedMovementInfos[i].NeedMove = NeedMoveMCheckBox.Checked;
+        }
+
         private void MovementInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateMovementInterface();
@@ -1359,6 +1370,7 @@ namespace Server
                         (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].toY)));
 
                     newmoveinfo.NeedHole = false;
+                    newmoveinfo.NeedMove = false;
 
                     Envir.MapInfoList[Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].fromIndex) - 1].Movements.Add(newmoveinfo);
                 }
@@ -1617,6 +1629,7 @@ namespace Server
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].NoFight = NoFightCheckbox.Checked;
         }
+
 
     }
 }
