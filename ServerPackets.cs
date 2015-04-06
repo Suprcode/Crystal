@@ -4600,7 +4600,7 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.NPCPearlGoods; } }
 
-        public List<int> List = new List<int>();
+        public List<UserItem> List = new List<UserItem>();
         public float Rate;
 
         protected override void ReadPacket(BinaryReader reader)
@@ -4608,7 +4608,7 @@ namespace ServerPackets
             int count = reader.ReadInt32();
 
             for (int i = 0; i < count; i++)
-                List.Add(reader.ReadInt32());
+                List.Add(new UserItem(reader));
 
             Rate = reader.ReadSingle();
         }
@@ -4617,7 +4617,7 @@ namespace ServerPackets
             writer.Write(List.Count);
 
             for (int i = 0; i < List.Count; i++)
-                writer.Write(List[i]);
+                List[i].Save(writer);
 
             writer.Write(Rate);
         }

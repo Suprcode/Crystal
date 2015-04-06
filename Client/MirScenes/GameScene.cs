@@ -1343,6 +1343,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
                     IntelligentCreatureEnableRename((S.IntelligentCreatureEnableRename)p);
                     break;
+                case (short)ServerPacketIds.NPCPearlGoods://pearl currency
+                    NPCPearlGoods((S.NPCPearlGoods)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -1516,6 +1519,12 @@ namespace Client.MirScenes
                     return 204 + 20000; //MagIcon
                 case BuffType.MentalState:
                     return 905;//todo replace with it's own custom buff icon (maybe make it change depending on state)
+                case BuffType.WonderShield:
+                    return 864;
+                case BuffType.MagicWonderShield:
+                    return 864;
+                case BuffType.BagWeight:
+                    return 872;
                 default:
                     return 0;
             }
@@ -2814,6 +2823,7 @@ namespace Client.MirScenes
 
             NPCRate = p.Rate;
             if (!NPCDialog.Visible) return;
+            NPCGoodsDialog.usePearls = false;
             NPCGoodsDialog.NewGoods(p.List);
             NPCGoodsDialog.Show();
         }
@@ -4528,6 +4538,19 @@ namespace Client.MirScenes
             if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
         }
 
+        private void NPCPearlGoods(S.NPCPearlGoods p)//pearl currency
+        {
+            for (int i = 0; i < p.List.Count; i++)
+            {
+                p.List[i].Info = GetInfo(p.List[i].ItemIndex);
+            }
+
+            NPCRate = p.Rate;
+            if (!NPCDialog.Visible) return;
+            NPCGoodsDialog.usePearls = true;
+            NPCGoodsDialog.NewGoods(p.List);
+            NPCGoodsDialog.Show();
+        }
 
         public void AddItem(UserItem item)
         {
@@ -4639,8 +4662,8 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Grade != ItemGrade.None ? HoverItem.Info.FriendlyName +
-                "\n" + HoverItem.Info.Grade.ToString() : HoverItem.Info.FriendlyName
+                Text = HoverItem.Info.Grade != ItemGrade.None ? HoverItem.Info.FriendlyName + "\n" + HoverItem.Info.Grade.ToString() : 
+                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName
             };
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
@@ -4675,6 +4698,13 @@ namespace Client.MirScenes
                     case ItemType.Gem:
                         break;
                     case ItemType.Potion:
+                        break;
+                    case ItemType.Pets:
+                        if (HoverItem.Info.Shape == 26)//WonderDrug
+                        {
+                            string strTime = CreateTimeString((HoverItem.CurrentDura * 3600));
+                            text += "\n" + string.Format(" Duration {0}", strTime);
+                        }
                         break;
                     default:
                         text += string.Format(" Durability {0}/{1}", Math.Round(HoverItem.CurrentDura / 1000M),
@@ -4737,6 +4767,9 @@ namespace Client.MirScenes
                 case ItemType.Weapon:
                     if (HoverItem.Info.Shape == 49 || HoverItem.Info.Shape == 50)
                         fishingItem = true;
+                    break;
+                case ItemType.Pets:
+                    if (HoverItem.Info.Shape == 26) return null;
                     break;
                 default:
                     fishingItem = false;
@@ -5189,6 +5222,9 @@ namespace Client.MirScenes
                 case ItemType.Weapon:
                     if (HoverItem.Info.Shape == 49 || HoverItem.Info.Shape == 50)
                         fishingItem = true;
+                    break;
+                case ItemType.Pets:
+                    if (HoverItem.Info.Shape == 26) return null;
                     break;
                 default:
                     fishingItem = false;
@@ -6715,6 +6751,41 @@ namespace Client.MirScenes
 
             #region TOOLTIP
 
+            if (realItem.Type == ItemType.Pets && realItem.Shape == 26)//Dynamic wonderDrug
+            {
+                string strTime = CreateTimeString((HoverItem.CurrentDura * 3600));
+                switch ((int)realItem.Effect)
+                {
+                    case 0://exp low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase experience gained by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        break;
+                    case 1://drop low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase droprate by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        break;
+                    case 2://hp low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase MaxHP +{0} for {1}.", HoverItem.HP + realItem.HP, strTime);
+                        break;
+                    case 3://mp low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase MaxMP +{0} for {1}.", HoverItem.MP + realItem.MP, strTime);
+                        break;
+                    case 4://ac low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase AC {0}-{1} for {2}.", HoverItem.AC + realItem.MaxAC, strTime);
+                        break;
+                    case 5://amc low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase AMC {0}-{1} for {2}.", HoverItem.MAC + realItem.MaxAC, strTime);
+                        break;
+                    case 6://speed low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
+                        break;
+                    case 7://knapsack low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        //strTime = CreateTimeString((dropitem.Durability * 3600) * 1000);
+                        //dropitem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", dropitem.Info.BagWeight, strTime);
+                        break;
+                }
+            }
+
+
             if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
             {
                 count++;
@@ -6934,6 +7005,30 @@ namespace Client.MirScenes
             UserIdList.Add(new UserId() { Id = id, UserName = "Unknown" });
             return "";
         }
+
+        private string CreateTimeString(double secs)
+        {
+            TimeSpan t = TimeSpan.FromSeconds(secs);
+            string answer;
+            if (t.TotalMinutes < 1.0)
+            {
+                answer = string.Format("{0}s", t.Seconds);
+            }
+            else if (t.TotalHours < 1.0)
+            {
+                answer = string.Format("{0}m", t.Minutes);
+            }
+            else if (t.TotalDays < 1.0)
+            {
+                answer = string.Format("{0}h {1:D2}m", (int)t.TotalHours, t.Minutes);
+            }
+            else // t.TotalDays >= 1.0
+            {
+                answer = string.Format("{0}d {1}h {2:D2}m", (int)t.TotalDays, (int)t.Hours, t.Minutes);
+            }
+            return answer;
+        }
+
     }
 
 
@@ -12813,6 +12908,8 @@ namespace Client.MirScenes
 
         public MirButton UpButton, DownButton, PositionBar;
 
+        public bool usePearls = false;//pearl currency
+
         public NPCGoodsDialog()
         {
             Index = 1000;
@@ -12984,6 +13081,15 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
             }
             */
+            if (usePearls)//pearl currency
+            {
+                if (SelectedItem.Price() > GameScene.User.PearlCount)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
+                    return;
+                }
+            }
+            else
             if (SelectedItem.Price() > GameScene.Gold)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
@@ -13045,6 +13151,7 @@ namespace Client.MirScenes
 
                 Cells[i].Item = Goods[i + StartIndex];
                 Cells[i].Border = SelectedItem != null && Cells[i].Item == SelectedItem;
+                Cells[i].usePearls = usePearls;//pearl currency
             }
 
 
@@ -19365,6 +19472,15 @@ namespace Client.MirScenes
                             text = string.Format("Group Mode:\nMedium damage\nDon't steal agro.", Value);
                             break;
                     }
+                    break;
+                case BuffType.WonderShield:
+                    text = string.Format("WonderShield\nIncreases AC by: {0}-{0}.\n", Value);
+                    break;
+                case BuffType.MagicWonderShield:
+                    text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Value);
+                    break;
+                case BuffType.BagWeight:
+                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Value);
                     break;
             }
 

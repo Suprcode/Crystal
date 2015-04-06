@@ -796,7 +796,10 @@ public enum BuffType : byte
     VampireShot,
     PoisonShot,
     CounterAttack,
-    MentalState
+    MentalState,
+    WonderShield,
+    MagicWonderShield,
+    BagWeight
 }
 
 public enum DefenceType : byte

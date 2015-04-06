@@ -791,7 +791,6 @@ namespace Server.MirEnvir
             {
                 FileStream newfile = File.Create(path);
                 newfile.Close();
-
             }
 
             string[] lines = File.ReadAllLines(path);
@@ -913,6 +912,8 @@ namespace Server.MirEnvir
 
             LoadFishingDrops();
             LoadAwakeningMaterials();
+            LoadStrongBoxDrops();
+            LoadBlackStoneDrops();
             SMain.Enqueue("Drops Loaded.");
 
             if (DragonInfo.Enabled)
