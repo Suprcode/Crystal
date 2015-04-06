@@ -2920,13 +2920,10 @@ namespace Server.MirObjects
         AddMailItem,
         AddMailGold,
         SendMail,
-<<<<<<< HEAD
+        GroupGoto,
+        EnterMap,
         GivePearls,
         TakePearls
-=======
-        GroupGoto,
-        EnterMap
->>>>>>> 223de4a014ff46b56f0fc8314ed24664bca12611
     }
     public enum CheckType
     {

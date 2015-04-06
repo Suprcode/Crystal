@@ -9178,11 +9178,11 @@ namespace Server.MirObjects
                             case 22://Nuts
                                 break;
                             case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
-                                if (Info.CreatureSummoned)
+                                if (CreatureSummoned)
                                     for (int i = 0; i < Pets.Count; i++)
                                     {
                                         if (Pets[i].Info.AI != 64) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
                                         if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
                                             ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
                                         break;
@@ -14533,7 +14533,6 @@ namespace Server.MirObjects
                 break;
             }
         }
-<<<<<<< HEAD
 
         public void IntelligentCreatureGainPearls(int amount)
         {
@@ -14547,8 +14546,6 @@ namespace Server.MirObjects
             if (Info.PearlCount < 0) Info.PearlCount = 0;
         }
 
-=======
->>>>>>> 223de4a014ff46b56f0fc8314ed24664bca12611
         public void IntelligentCreatureProducePearl()
         {
             Info.PearlCount++;
@@ -14569,8 +14566,8 @@ namespace Server.MirObjects
 
         public void IntelligentCreatureSay(IntelligentCreatureType pType,string message)
         {
-            if(!Info.CreatureSummoned || message == "" ) return;
-            if(pType != Info.SummonedCreatureType) return;
+            if(!CreatureSummoned || message == "" ) return;
+            if(pType != SummonedCreatureType) return;
 
             for (int i = 0; i < Pets.Count; i++)
             {
@@ -14690,13 +14687,13 @@ namespace Server.MirObjects
 
         private IntelligentCreatureObject GetCreatureByName(string creaturename)
         {
-            if (!Info.CreatureSummoned || creaturename == "") return null;
-            if (Info.SummonedCreatureType == IntelligentCreatureType.None) return null;
+            if (!CreatureSummoned || creaturename == "") return null;
+            if (SummonedCreatureType == IntelligentCreatureType.None) return null;
 
             for (int i = 0; i < Pets.Count; i++)
             {
                 if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).petType != Info.SummonedCreatureType) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
 
                 return ((IntelligentCreatureObject)Pets[i]);
             }

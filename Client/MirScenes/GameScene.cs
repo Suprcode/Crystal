@@ -13081,7 +13081,6 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
             }
             */
-<<<<<<< HEAD
             if (usePearls)//pearl currency
             {
                 if (SelectedItem.Price() > GameScene.User.PearlCount)
@@ -13090,11 +13089,7 @@ namespace Client.MirScenes
                     return;
                 }
             }
-            else
-=======
-
->>>>>>> 223de4a014ff46b56f0fc8314ed24664bca12611
-            if (SelectedItem.Price() > GameScene.Gold)
+            else if (SelectedItem.Price() > GameScene.Gold)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
                 return;
