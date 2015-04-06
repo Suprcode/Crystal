@@ -3110,15 +3110,6 @@ namespace Client.MirScenes
                     case SpellEffect.GreatFoxSpirit:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, ob));
                         break;
-                    case SpellEffect.MapLightning:
-                        ob.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 600, ob));
-                        SoundManager.PlaySound(20000 + (ushort)Spell.ThunderBolt * 10);
-                        break;
-                    case SpellEffect.MapFire:
-                        ob.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, ob) { Blend = false });
-                        ob.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, ob));
-                        SoundManager.PlaySound(20000 + (ushort)Spell.ThunderBolt * 10);
-                        break;
                     case SpellEffect.Entrapment:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1010, 10, 1500, ob));
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1020, 8, 1200, ob));
@@ -4983,9 +4974,14 @@ namespace Client.MirScenes
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
+                string plus = (addValue + minValue < 0) ? "" : "+";
+
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
+                {
+                    text = string.Format(addValue > 0 ? "A.Speed: " + plus + "{0} (+{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue);
+                    //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
+                }
                 else
                     text = string.Format("Adds {0}A.Speed", minValue + maxValue + addValue);
                 MirLabel ASPEEDLabel = new MirLabel
@@ -7164,7 +7160,6 @@ namespace Client.MirScenes
 
             for (int i = Effects.Count - 1; i >= 0; i--)
                 Effects[i].Process();
-
             if (Lightning && CMain.Time > LightningTime)
             {
                 LightningTime = CMain.Time + CMain.Random.Next(2000, 5000);
@@ -7178,6 +7173,11 @@ namespace Client.MirScenes
                 MapControl.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, source) { Blend = false });
                 MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, source));
             }
+
+            if (MapObject.TargetObject != null && MapObject.TargetObject is MonsterObject && MapObject.TargetObject.AI == 64)
+                MapObject.TargetObject = null;
+            if (MapObject.MagicObject != null && MapObject.MagicObject is MonsterObject && MapObject.MagicObject.AI == 64)
+                MapObject.MagicObject = null;
 
             CheckInput();
 
@@ -7866,7 +7866,7 @@ namespace Client.MirScenes
 
 
             if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && !(MapObject.MouseObject is ItemObject) &&
-                !(MapObject.MouseObject is NPCObject))
+                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64))
             {
                 MapObject.TargetObject = MapObject.MouseObject;
                 if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI != 6)
@@ -12428,7 +12428,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
-                Visible = false
+                Visible = true
             };
             FriendButton.Click += (o, e) =>
             {
@@ -12541,7 +12541,7 @@ namespace Client.MirScenes
             Index = 995;
             Library = Libraries.Prguse;
 
-            TextLabel = new MirLabel[12];
+            TextLabel = new MirLabel[30];
             TextButtons = new List<MirLabel>();
 
             MouseWheel += NPCDialog_MouseWheel;
@@ -12667,7 +12667,7 @@ namespace Client.MirScenes
 
             if (_index == 0 && count >= 0) return;
             if (_index == CurrentLines.Count - 1 && count <= 0) return;
-            if (CurrentLines.Count - 1 <= MaximumLines) return;
+            if (CurrentLines.Count <= MaximumLines) return;
 
             _index -= count;
 
@@ -13081,6 +13081,7 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
             }
             */
+<<<<<<< HEAD
             if (usePearls)//pearl currency
             {
                 if (SelectedItem.Price() > GameScene.User.PearlCount)
@@ -13090,6 +13091,9 @@ namespace Client.MirScenes
                 }
             }
             else
+=======
+
+>>>>>>> 223de4a014ff46b56f0fc8314ed24664bca12611
             if (SelectedItem.Price() > GameScene.Gold)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
@@ -18004,7 +18008,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(425, 3),
+                Location = new Point(Size.Width - 25, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -18016,7 +18020,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 258,
                 Index = 257,
-                Location = new Point(385, 6),
+                Location = new Point(Size.Width - 48, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 259,
@@ -19463,13 +19467,13 @@ namespace Client.MirScenes
                     switch (Value)
                     {
                         case 0:
-                            text = string.Format("Agressive:\nFull damage\nCan't shoot over walls.", Value);
+                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Value);
                             break;
                         case 1:
-                            text = string.Format("Trick shot:\nMinimal damage\nCan shoot over walls.", Value);
+                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Value);
                             break;
                         case 2:
-                            text = string.Format("Group Mode:\nMedium damage\nDon't steal agro.", Value);
+                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Value);
                             break;
                     }
                     break;

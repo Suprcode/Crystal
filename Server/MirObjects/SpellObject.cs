@@ -94,6 +94,7 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(CurrentLocation);
             for (int i = 0; i < cell.Objects.Count; i++)
                 ProcessSpell(cell.Objects[i]);
+            if ((Spell == Spell.MapLava) || (Spell == Spell.MapLightning)) Value = 0;
         }
         public void ProcessSpell(MapObject ob)
         {
@@ -159,6 +160,13 @@ namespace Server.MirObjects
                     if (DetonatedTrap) return;//make sure explosion happens only once
                     DetonateTrapNow();
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                    break;
+                case Spell.MapLava:
+                case Spell.MapLightning:
+                    if (Value == 0) return;
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                    if (ob.Dead) return;
+                    ob.Struck(Value, DefenceType.MAC);
                     break;
             }
         }
@@ -235,6 +243,11 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
         {
             throw new NotSupportedException();
         }

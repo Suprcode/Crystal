@@ -68,16 +68,17 @@ public enum QuestState : byte
 
 public enum DefaultNPCType : byte
 {
-    Login = 0,
-    LevelUp = 1,
-    UseItem = 2,
-    MapCoord = 3,
-    Die = 4,
-    Trigger = 5,
-    CustomCommand = 6,
-    OnAcceptQuest = 7,
-    OnFinishQuest = 8,
-    Daily = 9
+    Login,
+    LevelUp,
+    UseItem,
+    MapCoord,
+    MapEnter,
+    Die,
+    Trigger,
+    CustomCommand,
+    OnAcceptQuest,
+    OnFinishQuest,
+    Daily
 }
 
 public enum IntelligentCreatureType : byte//IntelligentCreature
@@ -729,7 +730,9 @@ public enum Spell : byte
 
     //Map Events
     DigOutZombie = 200,
-    Rubble = 201
+    Rubble = 201,
+    MapLightning = 202,
+    MapLava = 203
 }
 
 public enum SpellEffect : byte
@@ -745,8 +748,6 @@ public enum SpellEffect : byte
     MagicShieldDown,
     FlameSwordCharge,
     GreatFoxSpirit,
-    MapLightning,
-    MapFire,
     Entrapment,
     Reflect,
     Critical,

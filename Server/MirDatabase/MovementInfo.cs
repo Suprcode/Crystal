@@ -12,7 +12,7 @@ namespace Server.MirDatabase
     {
         public int MapIndex;
         public Point Source, Destination;
-        public bool NeedHole;
+        public bool NeedHole, NeedMove;
 
         public MovementInfo()
         {
@@ -27,6 +27,9 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion < 16) return;
             NeedHole = reader.ReadBoolean();
+
+            if (Envir.LoadVersion < 48) return;
+            NeedMove = reader.ReadBoolean();
         }
         public void Save(BinaryWriter writer)
         {
@@ -36,6 +39,7 @@ namespace Server.MirDatabase
             writer.Write(Destination.X);
             writer.Write(Destination.Y);
             writer.Write(NeedHole);
+            writer.Write(NeedMove);
         }
 
 

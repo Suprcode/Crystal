@@ -609,7 +609,15 @@ namespace Server.MirObjects
 
                 if (drop.Gold > 0)
                 {
-                    int gold = Envir.Random.Next((int)(drop.Gold / 2), (int)(drop.Gold + drop.Gold / 2)); //Messy
+                    int lowerGoldRange = (int)(drop.Gold / 2);
+                    int upperGoldRange = (int)(drop.Gold + drop.Gold / 2);
+
+                    if (EXPOwner != null && EXPOwner.GoldDropRateOffset > 0)
+                        lowerGoldRange += (int)(lowerGoldRange * (EXPOwner.GoldDropRateOffset / 100));
+
+                    if (lowerGoldRange > upperGoldRange) lowerGoldRange = upperGoldRange;
+
+                    int gold = Envir.Random.Next(lowerGoldRange, upperGoldRange);
 
                     if (gold <= 0) continue;
 
@@ -1140,10 +1148,8 @@ namespace Server.MirObjects
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
-
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
-
                         for (int i = 0; i < cell.Objects.Count; i++)
                         {
                             MapObject ob = cell.Objects[i];
@@ -1824,6 +1830,37 @@ namespace Server.MirObjects
             return damage - armour;
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            int armour = 0;
+
+            switch (type)
+            {
+                case DefenceType.ACAgility:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.AC:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.MACAgility:
+                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.MAC:
+                    armour = GetAttackPower(MinAC, MaxAC);
+                    break;
+                case DefenceType.Agility:
+                    break;
+            }
+
+            armour = (int)(armour * PoisonRate);
+
+            if (armour >= damage) return 0;
+            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
+
+            ChangeHP(armour - damage);
+            return damage - armour;
+        }
+
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
         {
             if (p.Owner != null && p.Owner.IsAttackTarget(this))
@@ -2491,8 +2528,7 @@ namespace Server.MirObjects
 
         public override void SendHealth(PlayerObject player)
         {
-            if (!player.IsMember(Master) && !player.IsMember(EXPOwner) && Envir.Time > RevTime) return;
-
+            if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
             byte time = Math.Min(byte.MaxValue, (byte) Math.Max(5, (RevTime - Envir.Time)/1000));
             player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
         }

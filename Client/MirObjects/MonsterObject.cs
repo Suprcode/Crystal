@@ -378,13 +378,11 @@ namespace Client.MirObjects
                 case Monster.BabySkeleton:
                 case Monster.Baekdon:
                 case Monster.Wimaen:
+                case Monster.BlackKitten:
                 case Monster.BabyDragon:
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
-                    break;
-                case Monster.BlackKitten:
-                    Frames = FrameSet.HelperPets[2];
                     break;
                 default:
                     Frames = FrameSet.Monsters[0];
@@ -728,8 +726,6 @@ namespace Client.MirObjects
 
                                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 230 + (CMain.Random.Next(5) * 10), 5, 400, source, CMain.Time + CMain.Random.Next(1000)));
                                 }
-                                break;
-                            case Monster.OlympicFlame:
                                 break;
                         }
                         break;

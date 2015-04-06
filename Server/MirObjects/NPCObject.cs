@@ -190,7 +190,13 @@ namespace Server.MirObjects
 
                     if (map == null) continue;
 
-                    map.Info.ActiveCoords.Add(new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value)));
+                    Point point = new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value));
+
+                    if (!map.Info.ActiveCoords.Contains(point))
+                    {
+                        map.Info.ActiveCoords.Add(point);
+                    }
+
                 }
                 if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
                 {
@@ -303,6 +309,7 @@ namespace Server.MirObjects
                         switch (parts[0].ToUpper())
                         {
                             case "GOTO":
+                            case "GROUPGOTO":
                                 gotoButtons.Add(string.Format("[{0}]", parts[1].ToUpper()));
                                 break;
                             case "TIMERECALL":
@@ -421,7 +428,7 @@ namespace Server.MirObjects
         {
             if (key.StartsWith("[@_")) return key; //Default NPC page so doesn't use arguments in this way
 
-            Regex r = new Regex(@"\((.*?)\)");
+            Regex r = new Regex(@"\((.*)\)");
 
             Match match = r.Match(key);
             if (!match.Success) return key;
@@ -552,6 +559,11 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            throw new NotSupportedException();
+        }
+
         public override void SendHealth(PlayerObject player)
         {
             throw new NotSupportedException();
@@ -609,7 +621,7 @@ namespace Server.MirObjects
 
                         if (UsedGoods.Count >= Settings.GoodsMaxStored)
                         {
-                            UserItem nonAddedItem = UsedGoods.First(e => e.IsAdded == false);
+                            UserItem nonAddedItem = UsedGoods.FirstOrDefault(e => e.IsAdded == false);
 
                             if (nonAddedItem != null)
                             {
@@ -1233,6 +1245,12 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.InGuild, guildName));
                     break;
+
+                case "CHECKQUEST":
+                    if (parts.Length < 3) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckQuest, parts[1], parts[2]));
+                    break;
             }
 
         }
@@ -1256,13 +1274,13 @@ namespace Server.MirObjects
                     string tempx = parts.Length > 3 ? parts[2] : "0";
                     string tempy = parts.Length > 3 ? parts[3] : "0";
 
-                    acts.Add(new NPCActions(ActionType.Teleport, parts[1], tempx, tempy));
+                    acts.Add(new NPCActions(ActionType.Move, parts[1], tempx, tempy));
                     break;
 
                 case "INSTANCEMOVE":
                     if (parts.Length < 5) return;
 
-                    acts.Add(new NPCActions(ActionType.InstanceTeleport, parts[1], parts[2], parts[3], parts[4]));
+                    acts.Add(new NPCActions(ActionType.InstanceMove, parts[1], parts[2], parts[3], parts[4]));
                     break;
 
                 case "GIVEGOLD":
@@ -1600,6 +1618,15 @@ namespace Server.MirObjects
 
                 case "SENDMAIL":
                     acts.Add(new NPCActions(ActionType.SendMail));
+                    break;
+
+                case "GROUPGOTO":
+                    if (parts.Length < 2) return;
+                    acts.Add(new NPCActions(ActionType.GroupGoto, parts[1]));
+                    break;
+
+                case "ENTERMAP":
+                    acts.Add(new NPCActions(ActionType.EnterMap));
                     break;
             }
 
@@ -2090,6 +2117,25 @@ namespace Server.MirObjects
 
                         failed = player.MyGuild == null;
                         break;
+
+                    case CheckType.CheckQuest:
+                        if (!int.TryParse(param[0], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        string tempString = param[1].ToUpper();
+                        
+                        if(tempString == "ACTIVE")
+                        {
+                            failed = !player.CurrentQuests.Any(e => e.Index == tempInt);
+                        }
+                        else //COMPLETE
+                        {
+                            failed = !player.CompletedQuests.Contains(tempInt);
+                        }
+                        break;
                 }
 
                 if (!failed) continue;
@@ -2127,7 +2173,7 @@ namespace Server.MirObjects
 
                 switch (act.Type)
                 {
-                    case ActionType.Teleport:
+                    case ActionType.Move:
                         Map map = SMain.Envir.GetMapByNameAndInstance(param[0]);
                         if (map == null) return;
 
@@ -2140,7 +2186,7 @@ namespace Server.MirObjects
                         else player.TeleportRandom(200, 0, map);
                         break;
 
-                    case ActionType.InstanceTeleport:
+                    case ActionType.InstanceMove:
                         int instanceId;
                         if (!int.TryParse(param[1], out instanceId)) return;
                         if (!int.TryParse(param[2], out x)) return;
@@ -2734,6 +2780,23 @@ namespace Server.MirObjects
                         mailInfo.Send();
 
                         break;
+
+                    case ActionType.GroupGoto:
+                        if (player.GroupMembers == null) return;
+
+                        for (i = 0; i < player.GroupMembers.Count(); i++)
+                        {
+                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, player.NPCID, "[" + param[0] + "]");
+                            player.GroupMembers[i].ActionList.Add(action);
+                        }
+                        break;
+
+                    case ActionType.EnterMap:
+                        if (player.NPCMoveMap == null || player.NPCMoveCoord.IsEmpty) return;
+                        player.Teleport(player.NPCMoveMap, player.NPCMoveCoord, false);
+                        player.NPCMoveMap = null;
+                        player.NPCMoveCoord = Point.Empty;
+                        break;
                 }
             }
         }
@@ -2812,8 +2875,8 @@ namespace Server.MirObjects
 
     public enum ActionType
     {
-        Teleport,
-        InstanceTeleport,
+        Move,
+        InstanceMove,
         GiveGold,
         TakeGold,
         GiveItem,
@@ -2857,8 +2920,13 @@ namespace Server.MirObjects
         AddMailItem,
         AddMailGold,
         SendMail,
+<<<<<<< HEAD
         GivePearls,
         TakePearls
+=======
+        GroupGoto,
+        EnterMap
+>>>>>>> 223de4a014ff46b56f0fc8314ed24664bca12611
     }
     public enum CheckType
     {
@@ -2886,5 +2954,6 @@ namespace Server.MirObjects
         CheckCalc,
         InGuild,
         CheckMap,
+        CheckQuest
     }
 }

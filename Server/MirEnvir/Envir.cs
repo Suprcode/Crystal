@@ -19,7 +19,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 45;
+        public const int Version = 48;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
@@ -114,6 +114,7 @@ namespace Server.MirEnvir
         }
 
         public static int LastCount = 0, LastRealCount = 0;
+        public static long LastRunTime = 0;
         public int MonsterCount;
 
         public long dayTime, warTime, mailTime;
@@ -127,6 +128,7 @@ namespace Server.MirEnvir
             long userTime = Time + Settings.Minute * 5;
 
             long processTime = Time + 1000;
+            long StartTime = Time;
             int processCount = 0;
             int processRealCount = 0;
 
@@ -182,7 +184,11 @@ namespace Server.MirEnvir
                     if (current == null)
                         current = Objects.First;
 
-
+                    if (current == Objects.First)
+                    {
+                        LastRunTime = Time - StartTime;
+                        StartTime = Time;
+                    }
                     for (int i = 0; i < 100; i++)
                     {
                         if (current == null) break;
@@ -194,6 +200,7 @@ namespace Server.MirEnvir
                         {
 
                             processRealCount++;
+                            //thedeath
                             current.Value.Process();
                             current.Value.SetOperateTime();
 
@@ -202,10 +209,10 @@ namespace Server.MirEnvir
                         current = next;
                     }
 
-
+                    
                     for (int i = 0; i < MapList.Count; i++)
                         MapList[i].Process();
-
+                    
                     if (DragonSystem != null) DragonSystem.Process();
 
                     Process();
@@ -244,6 +251,9 @@ namespace Server.MirEnvir
                     for (int i = Connections.Count - 1; i >= 0; i--)
                         Connections[i].SendDisconnect(3);
                 }
+
+                File.AppendAllText(@".\Error.txt",
+                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
 
             StopNetwork();
@@ -417,7 +427,7 @@ namespace Server.MirEnvir
                     MemoryStream mStream = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(mStream);
                     GuildList[i].Save(writer);
-                    FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".msdn", FileMode.Create);
+                    FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".mgdn", FileMode.Create);
                     byte[] data = mStream.ToArray();
                     fStream.BeginWrite(data, 0, data.Length, EndSaveGuildsAsync, fStream);
                 }
@@ -462,7 +472,7 @@ namespace Server.MirEnvir
 
                     if (!npc.NeedSave) continue;
 
-                    string path = Settings.GoodsPath + npc.Info.Index.ToString() + ".msdd";
+                    string path = Settings.GoodsPath + npc.Info.Index.ToString() + ".msdn";
 
                     MemoryStream mStream = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(mStream);
@@ -685,19 +695,24 @@ namespace Server.MirEnvir
         {
             lock (LoadLock)
             {
+                int count = 0;
+
                 for (int i = 0; i < GuildCount; i++)
                 {
                     GuildObject newGuild;
-                    if (!File.Exists(Settings.GuildPath + i.ToString() + ".mgd"))
-                        newGuild = new GuildObject();
-                    else
+                    if (File.Exists(Settings.GuildPath + i.ToString() + ".mgd"))
                     {
                         using (FileStream stream = File.OpenRead(Settings.GuildPath + i.ToString() + ".mgd"))
                         using (BinaryReader reader = new BinaryReader(stream))
                             newGuild = new GuildObject(reader);
+
+                        GuildList.Add(newGuild);
+
+                        count++;
                     }
-                    GuildList.Add(newGuild);
                 }
+
+                if (count != GuildCount) GuildCount = count;
             }
         }
 
