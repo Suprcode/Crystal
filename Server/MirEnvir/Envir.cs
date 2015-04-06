@@ -19,7 +19,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 47;
+        public const int Version = 48;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
@@ -691,19 +691,24 @@ namespace Server.MirEnvir
         {
             lock (LoadLock)
             {
+                int count = 0;
+
                 for (int i = 0; i < GuildCount; i++)
                 {
                     GuildObject newGuild;
-                    if (!File.Exists(Settings.GuildPath + i.ToString() + ".mgd"))
-                        newGuild = new GuildObject();
-                    else
+                    if (File.Exists(Settings.GuildPath + i.ToString() + ".mgd"))
                     {
                         using (FileStream stream = File.OpenRead(Settings.GuildPath + i.ToString() + ".mgd"))
                         using (BinaryReader reader = new BinaryReader(stream))
                             newGuild = new GuildObject(reader);
+
+                        GuildList.Add(newGuild);
+
+                        count++;
                     }
-                    GuildList.Add(newGuild);
                 }
+
+                if (count != GuildCount) GuildCount = count;
             }
         }
 

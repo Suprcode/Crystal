@@ -609,7 +609,15 @@ namespace Server.MirObjects
 
                 if (drop.Gold > 0)
                 {
-                    int gold = Envir.Random.Next((int)(drop.Gold / 2), (int)(drop.Gold + drop.Gold / 2)); //Messy
+                    int lowerGoldRange = (int)(drop.Gold / 2);
+                    int upperGoldRange = (int)(drop.Gold + drop.Gold / 2);
+
+                    if (EXPOwner != null && EXPOwner.GoldDropRateOffset > 0)
+                        lowerGoldRange += (int)(lowerGoldRange * (EXPOwner.GoldDropRateOffset / 100));
+
+                    if (lowerGoldRange > upperGoldRange) lowerGoldRange = upperGoldRange;
+
+                    int gold = Envir.Random.Next(lowerGoldRange, upperGoldRange);
 
                     if (gold <= 0) continue;
 
@@ -1140,10 +1148,8 @@ namespace Server.MirObjects
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
-
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
-
                         for (int i = 0; i < cell.Objects.Count; i++)
                         {
                             MapObject ob = cell.Objects[i];

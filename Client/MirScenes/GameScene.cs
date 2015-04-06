@@ -12334,7 +12334,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
-                Visible = false
+                Visible = true
             };
             FriendButton.Click += (o, e) =>
             {
@@ -12573,7 +12573,7 @@ namespace Client.MirScenes
 
             if (_index == 0 && count >= 0) return;
             if (_index == CurrentLines.Count - 1 && count <= 0) return;
-            if (CurrentLines.Count - 1 <= MaximumLines) return;
+            if (CurrentLines.Count <= MaximumLines) return;
 
             _index -= count;
 
