@@ -204,15 +204,23 @@ namespace Client.MirGraphics
 
         static void LoadLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length + 
+            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
-                CHumEffect.Length + 15;
+                ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
+                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length + 19;
 
             Dragon.Initialize();
             Progress++;
 
+            ChrSel.Initialize();
+            Progress++;
+
+            Prguse.Initialize();
+            Progress++;
+
             Prguse2.Initialize();
             Progress++;
+
             Help.Initialize();
             Progress++;
 
@@ -305,7 +313,31 @@ namespace Client.MirGraphics
 
             for (int i = 0; i < AWeaponsR.Length; i++)
             {
-               AWeaponsR[i].Initialize();
+                AWeaponsR[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARArmours.Length; i++)
+            {
+                ARArmours[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARHair.Length; i++)
+            {
+                ARHair[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARWeapons.Length; i++)
+            {
+                ARWeapons[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARWeaponsS.Length; i++)
+            {
+                ARWeaponsS[i].Initialize();
                 Progress++;
             }
 
@@ -315,13 +347,31 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
+            for (int i = 0; i < AHumEffect.Length; i++)
+            {
+                AHumEffect[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARHumEffect.Length; i++)
+            {
+                ARHumEffect[i].Initialize();
+                Progress++;
+            }
+
             for (int i = 0; i < Mounts.Length; i++)
             {
                 Mounts[i].Initialize();
                 Progress++;
             }
 
-            //IntelligentCreature
+
+            for (int i = 0; i < Fishing.Length; i++)
+            {
+                Fishing[i].Initialize();
+                Progress++;
+            }
+
             for (int i = 0; i < Pets.Length; i++)
             {
                 Pets[i].Initialize();

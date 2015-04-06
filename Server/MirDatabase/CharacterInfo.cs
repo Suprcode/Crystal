@@ -501,7 +501,29 @@ namespace Server.MirDatabase
     public class FriendInfo
     {
         public int CharacterIndex;
+        public CharacterInfo CharacterInfo;
+
         public string Memo;
+
+        public FriendInfo(int charIndex) 
+        {
+            CharacterIndex = charIndex;
+            //CharacterInfo = SMain.Envir.GetCharacterInfo(CharacterIndex);
+        }
+
+        public FriendInfo(BinaryReader reader)
+        {
+            CharacterIndex = reader.ReadInt32();
+            //CharacterInfo = SMain.Envir.GetCharacterInfo(CharacterIndex);
+
+            Memo = reader.ReadString();
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(CharacterIndex);
+            writer.Write(Memo);
+        }
     }
 
     //IntelligentCreature
