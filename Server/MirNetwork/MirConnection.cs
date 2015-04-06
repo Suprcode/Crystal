@@ -423,6 +423,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.AcceptReincarnation:
                     Revive();
                     break;
+                case (short)ClientPacketIds.CancelReincarnation:
+                     CancelReincarnation();
+                    break;
                 case (short)ClientPacketIds.CombineItem:
                     CombineItem((C.CombineItem)p);
                     break;
@@ -1153,6 +1156,13 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.Revive((uint)Player.MaxHP / 2, true);
+        }
+
+        private void CancelReincarnation()
+        {
+            if (Stage != GameStage.Game) return;
+            Player.ReincarnationExpireTime = SMain.Envir.Time;
+
         }
 
         private void CombineItem(C.CombineItem p)
