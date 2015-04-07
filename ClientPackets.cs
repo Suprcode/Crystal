@@ -741,6 +741,7 @@ namespace ClientPackets
             writer.Write(Location.Y);
         }
     }
+
     public sealed class SwitchGroup : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.SwitchGroup; } }
@@ -1286,6 +1287,18 @@ namespace ClientPackets
     public sealed class AcceptReincarnation : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.AcceptReincarnation; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class CancelReincarnation : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.CancelReincarnation; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {

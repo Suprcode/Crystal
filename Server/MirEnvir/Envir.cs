@@ -133,7 +133,6 @@ namespace Server.MirEnvir
             int processRealCount = 0;
 
             LinkedListNode<MapObject> current = null;
-
             StartEnvir();
             if (StartPoints.Count == 0)
             {

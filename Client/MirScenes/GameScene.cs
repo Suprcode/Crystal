@@ -2380,7 +2380,8 @@ namespace Client.MirScenes
             NextRunTime = CMain.Time + 2500;
             User.BlizzardFreezeTime = 0;
             User.ClearMagic();
-
+            if (User.ReincarnationStopTime > CMain.Time)
+                Network.Enqueue(new C.CancelReincarnation {});
             //if (User.CurrentAction == MirAction.Struck) return;
 
             MirDirection dir = User.Direction;

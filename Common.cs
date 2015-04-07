@@ -1091,6 +1091,7 @@ public enum ClientPacketIds : short
     ShareQuest,
 
     AcceptReincarnation,
+    CancelReincarnation,
     CombineItem,
 
     SetConcentration,
@@ -3713,6 +3714,8 @@ public abstract class Packet
                 return new C.ShareQuest();
             case (short)ClientPacketIds.AcceptReincarnation:
                 return new C.AcceptReincarnation();
+            case (short)ClientPacketIds.CancelReincarnation:
+                return new C.CancelReincarnation();
             case (short)ClientPacketIds.CombineItem:
                 return new C.CombineItem();
             case (short)ClientPacketIds.SetConcentration://ArcherSpells - Elemental system
