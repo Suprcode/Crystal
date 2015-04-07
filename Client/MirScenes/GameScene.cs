@@ -94,6 +94,7 @@ namespace Client.MirScenes
 
         public IntelligentCreatureDialog IntelligentCreatureDialog;//IntelligentCreature
         public IntelligentCreatureOptionsDialog IntelligentCreatureOptionsDialog;//IntelligentCreature
+        public IntelligentCreatureOptionsGradeDialog IntelligentCreatureOptionsGradeDialog;//IntelligentCreature
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -214,6 +215,7 @@ namespace Client.MirScenes
 
             IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };//IntelligentCreature
             IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };//IntelligentCreature
+            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -396,6 +398,7 @@ namespace Client.MirScenes
                     RankingDialog.Hide();
                     IntelligentCreatureDialog.Hide();//IntelligentCreature
                     IntelligentCreatureOptionsDialog.Hide();//IntelligentCreature
+                    IntelligentCreatureOptionsGradeDialog.Hide();//IntelligentCreature
                     MountDialog.Hide();
                     FishingDialog.Hide();
                     FriendDialog.Hide();
@@ -18428,12 +18431,24 @@ namespace Client.MirScenes
             }
             if (sender == ReleaseButton)
             {
-                //clear all and get new info after server got update
-                for (int i = 0; i < CreatureButtons.Length; i++)
-                    CreatureButtons[i].Clear();
-                needRelease = true;
-                needUpdate = true;
-                Hide();
+                MirInputBox verificationBox = new MirInputBox("Please enter the creature's name for verification.");
+                verificationBox.OKButton.Click += (o1, e1) =>
+                {
+                    if (String.Compare(verificationBox.InputTextBox.Text, GameScene.User.IntelligentCreatures[selectedCreature].CustomName, StringComparison.OrdinalIgnoreCase) != 0)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("Verification Failed!!", ChatType.System);
+                    }
+                    else
+                    {
+                        //clear all and get new info after server got update
+                        for (int i = 0; i < CreatureButtons.Length; i++) CreatureButtons[i].Clear();
+                        Hide();
+                        Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], ReleaseMe = true });
+                    }
+                    verificationBox.Dispose();
+                };
+                verificationBox.Show();
+                return;
             }
             if (sender == SemiAutoModeButton)
             {
@@ -18461,6 +18476,7 @@ namespace Client.MirScenes
             {
                 //show ItemFilter
                 if (!GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.Show(GameScene.User.IntelligentCreatures[selectedCreature].Filter);
+                if (!GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Show(GameScene.User.IntelligentCreatures[selectedCreature].Filter.PickupGrade);
             }
 
             if (needUpdate)
@@ -18745,9 +18761,17 @@ namespace Client.MirScenes
             return answer;
         }
 
+        public override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.BringToFront();
+            if (GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.BringToFront();
+        }
+
         public void Hide()
         {
             if (!Visible) return;
+            if (GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
             if (GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.Hide();
             AnimSwitched = false;
             AnimNeedSwitch = false;
@@ -19001,8 +19025,6 @@ namespace Client.MirScenes
 
         public MirButton OptionsSaveButton, OptionsCancelButton;
         public MirCheckBox[] CreatureOptions;
-        //public MirImageControl GradeBG;
-        //public MirDropDownBox GradeType;
 
         public IntelligentCreatureOptionsDialog()
         {
@@ -19012,16 +19034,6 @@ namespace Client.MirScenes
             Sort = true;
             Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
             BeforeDraw += IntelligentCreatureOptionsDialog_BeforeDraw;
-
-            //Size = new Size(this.Size.Width, GameScene.Scene.IntelligentCreatureDialog.Size.Height);
-
-            //GradeBG = new MirImageControl
-            //{
-            //    Index = 469,
-            //    Library = Libraries.Title,
-            //    Location = new Point(0, -62),
-            //    Parent = this,
-            //};
 
             CreatureOptions = new MirCheckBox[9];
             for (int i = 0; i < CreatureOptions.Length; i++)
@@ -19055,31 +19067,14 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
             };
             OptionsCancelButton.Click += ButtonClick;
-
-            //GradeType = new MirDropDownBox()
-            //{
-            //    Parent = this,
-            //    Location = new Point(16, 256),
-            //    Size = new Size(100, 24),
-            //    ForeColour = Color.Black,
-            //    BorderColour = Color.Gray,
-            //    BackColour = Color.White,
-            //    Visible = true,
-            //    Enabled = true,
-            //};
-            //GradeType.ValueChanged += OnGradeTypeSelect;
-            //GradeType.Items.Add("All");
-            //GradeType.Items.Add("Common");
-            //GradeType.Items.Add("Rare");
-            //GradeType.Items.Add("Mythical");
-            //GradeType.Items.Add("Legendary");
-            //GradeType.SelectedIndex = 0;
         }
 
         private void ButtonClick(object sender, EventArgs e)
         {
             if (sender == OptionsSaveButton)
             {
+                Filter.PickupGrade = GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType;
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
                 GameScene.Scene.IntelligentCreatureDialog.SaveItemFilter(Filter);
                 Hide();
             }
@@ -19110,11 +19105,6 @@ namespace Client.MirScenes
             }
             Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
         }
-
-        //void OnGradeTypeSelect(object sender, EventArgs e)
-        //{
-        //    GradeType.SelectedIndex = GradeType._WantedIndex;
-        //}
 
         private void RefreshFilter()
         {
@@ -19164,6 +19154,133 @@ namespace Client.MirScenes
             Filter = filter;
             Visible = true;
             RefreshFilter();
+        }
+    }
+    public sealed class IntelligentCreatureOptionsGradeDialog : MirImageControl
+    {
+        private string[] GradeStrings = { "All", "Common", "Rare", "Mythical", "Legendary" };
+
+        public MirButton NextButton, PrevButton;
+        public MirLabel GradeLabel;
+        public int SelectedGrade = 0;
+        public ItemGrade GradeType;
+
+        public Point locationOffset = new Point(449, 39);
+
+        public IntelligentCreatureOptionsGradeDialog()
+        {
+            Index = 237;
+            Library = Libraries.Prguse;
+            Movable = false;
+            Sort = true;
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+            BeforeDraw += IntelligentCreatureOptionsGradeDialog_BeforeDraw;
+
+            NextButton = new MirButton()
+            {
+                HoverIndex = 396,
+                Index = 396,
+                Location = new Point(96, 5),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 397,
+                Sound = SoundList.ButtonA,
+            };
+            NextButton.Click += Button_Click;
+
+            PrevButton = new MirButton()
+            {
+                HoverIndex = 398,
+                Index = 398,
+                Location = new Point(76, 5),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 399,
+                Sound = SoundList.ButtonA,
+            };
+            PrevButton.Click += Button_Click;
+
+            GradeLabel = new MirLabel()
+            {
+                Parent = this,
+                Location = new Point(8, 0),
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Size = new Size(70, 21),
+                NotControl = true,
+            };
+        }
+
+        void Button_Click(object sender, EventArgs e)
+        {
+            if (sender == NextButton)
+            {
+                SelectedGrade++;
+                if (SelectedGrade >= GradeStrings.Length) SelectedGrade = GradeStrings.Length - 1;
+            }
+            if (sender == PrevButton)
+            {
+                SelectedGrade--;
+                if (SelectedGrade <= 0) SelectedGrade = 0;
+            }
+
+            GradeLabel.Text = GradeStrings[SelectedGrade];
+            GradeType = (ItemGrade)((byte)SelectedGrade);
+
+            GradeLabel.ForeColour = GradeNameColor(GradeType);
+        }
+
+        private Color GradeNameColor(ItemGrade grade)
+        {
+            switch (grade)
+            {
+                case ItemGrade.Common:
+                    return Color.Yellow;
+                case ItemGrade.Rare:
+                    return Color.DeepSkyBlue;
+                case ItemGrade.Legendary:
+                    return Color.DarkOrange;
+                case ItemGrade.Mythical:
+                    return Color.Plum;
+                default:
+                    return Color.White;
+            }
+        }
+
+       // public override void OnMouseDown(MouseEventArgs e)
+        //{
+       //     GameScene.Scene.IntelligentCreatureOptionsDialog.BringToFront();
+        //    base.OnMouseDown(e);
+       // }
+
+        void IntelligentCreatureOptionsGradeDialog_BeforeDraw(object sender, EventArgs e)
+        {
+            if (!GameScene.Scene.IntelligentCreatureDialog.Visible)
+            {
+                Hide();
+                return;
+            }
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+        }
+
+        private void RefreshGradeFilter()
+        {
+            SelectedGrade = (int)((byte)GradeType);
+            GradeLabel.Text = GradeStrings[SelectedGrade];
+            GradeLabel.ForeColour = GradeNameColor(GradeType);
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+
+        public void Show(ItemGrade grade)
+        {
+            if (Visible) return;
+            Visible = true;
+            GradeType = grade;
+            RefreshGradeFilter();
         }
     }
 

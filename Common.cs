@@ -3322,6 +3322,8 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
     public bool PetPickupAccessories = false;
     public bool PetPickupOthers = false;
 
+    public ItemGrade PickupGrade = ItemGrade.None;
+
     public IntelligentCreatureItemFilter()
     {
     }
