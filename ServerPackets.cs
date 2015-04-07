@@ -2495,7 +2495,6 @@ namespace ServerPackets
             writer.Write(Level);
         }
     }
-    
 
     public sealed class ObjectMagic : Packet
     {
@@ -3876,9 +3875,11 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.RequestReincarnation; } }
 
+
         protected override void ReadPacket(BinaryReader reader)
         {
         }
+
         protected override void WritePacket(BinaryWriter writer)
         {
         }
