@@ -3434,6 +3434,7 @@ public class ClientIntelligentCreature//IntelligentCreature
     public int SlotIndex;
     public long ExpireTime;//in days
     public long BlackstoneTime;
+    public long MaintainFoodTime;
 
     public IntelligentCreaturePickupMode petMode = IntelligentCreaturePickupMode.SemiAutomatic;
 
@@ -3461,6 +3462,7 @@ public class ClientIntelligentCreature//IntelligentCreature
         CreatureRules = new IntelligentCreatureRules(reader);
         Filter = new IntelligentCreatureItemFilter(reader);
         Filter.PickupGrade = (ItemGrade)reader.ReadByte();
+        MaintainFoodTime = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -3479,6 +3481,7 @@ public class ClientIntelligentCreature//IntelligentCreature
         CreatureRules.Save(writer);
         Filter.Save(writer);
         writer.Write((byte)Filter.PickupGrade);
+        writer.Write(MaintainFoodTime);
     }
 }
 

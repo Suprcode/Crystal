@@ -42,6 +42,11 @@ namespace Server.MirObjects
         public long animvariantTicker = 0;
         public const long animvariantDelay = 10 * Settings.Second;//10 seconds
 
+        public long maintainfoodTime = 0;
+
+        public long timedSayTicker = 0;
+        public const long timedSayDelay = 20 * Settings.Second;
+
         private bool shortcheck = true;
 
         public override bool Blocking
@@ -97,6 +102,12 @@ namespace Server.MirObjects
                 }
 
                 Despawn();
+                return;
+            }
+
+            if (Fullness == 0)//unable to operate with food level 0
+            {
+                CreatureTimedSay("I'm starving!!.");
                 return;
             }
 
@@ -640,14 +651,14 @@ namespace Server.MirObjects
         }
         public void DecreaseFullness(int amount)
         {
-            if (Fullness <= 0) return;
+            if (Fullness <= 0 || maintainfoodTime > 0) return;
 
             if (Envir.Time > fullnessTicker)
             {
                 fullnessTicker = Envir.Time + fullnessDelay;
                 Fullness -= amount;
                 if (Fullness < 0) Fullness = 0;
-                if (Fullness < CreatureRules.MinimalFullness) CreatureSay("*Me Hungry*");
+                if (Fullness < CreatureRules.MinimalFullness) CreatureTimedSay("*Me Hungry*");
 
                 if (Master != null)
                     ((PlayerObject)Master).UpdateCreatureFullness(petType, Fullness);
@@ -678,6 +689,27 @@ namespace Server.MirObjects
 
             if (Master != null)
                 ((PlayerObject)Master).UpdateCreatureBlackstoneTime(petType, blackstoneTime);
+        }
+
+        public void ProcessMaintainFoodBuff()
+        {
+            if (maintainfoodTime > 0)
+            {
+                maintainfoodTime--;
+                if (maintainfoodTime < 0) maintainfoodTime = 0;
+
+                if (Master != null)
+                    ((PlayerObject)Master).UpdateCreatureMaintainFoodTime(petType, maintainfoodTime);
+            }
+        }
+
+        public void CreatureTimedSay(string message)
+        {
+            if (Envir.Time > timedSayTicker)
+            {
+                CreatureSay(message);
+                timedSayTicker = Envir.Time + timedSayDelay;
+            }
         }
 
         public void CreatureSay(string message)

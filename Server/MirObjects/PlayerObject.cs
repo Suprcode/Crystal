@@ -9176,6 +9176,15 @@ namespace Server.MirObjects
                                 BlackstoneRewardItem();
                                 return;
                             case 22://Nuts
+                                if (CreatureSummoned)
+                                    for (int i = 0; i < Pets.Count; i++)
+                                    {
+                                        if (Pets[i].Info.AI != 64) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+                                        ((IntelligentCreatureObject)Pets[i]).maintainfoodTime = item.Info.Effect * Settings.Hour / 1000;
+                                        UpdateCreatureMaintainFoodTime(SummonedCreatureType, 0);
+                                        break;
+                                    }
                                 break;
                             case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
                                 if (CreatureSummoned)
@@ -9194,8 +9203,8 @@ namespace Server.MirObjects
                                     {
                                         if (Pets[i].Info.AI != 64) continue;
                                         if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
-                                            ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
+                                        if (((IntelligentCreatureObject)Pets[i]).Fullness == 0)
+                                            ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(100);
                                         break;
                                     }
                                 break;
@@ -9208,7 +9217,7 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 StrongboxRewardItem(boxtype);
                                 return;
-                            case 26://Wonderdrugs
+                            case 26://Wonderdrugs + Knapsack
                                 int time = item.Info.Durability * 3600;
                                 switch (item.Info.Effect)
                                 {
@@ -10301,8 +10310,13 @@ namespace Server.MirObjects
                         case 21://creature stone
                             break;
                         case 22://nuts maintain food levels
+                            if (!CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            break;
                         case 23://basic creature food
-                        case 24://wonderpill vitalize creature
                             if (!CreatureSummoned)
                             {
                                 ReceiveChat("Can only be used with a creature summoned", ChatType.System);
@@ -10319,6 +10333,29 @@ namespace Server.MirObjects
                                     if (((IntelligentCreatureObject)Pets[i]).Fullness > 9900)
                                     {
                                         ReceiveChat(((IntelligentCreatureObject)Pets[i]).Name + " is not hungry", ChatType.System);
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                                return false;
+                            }
+                        case 24://wonderpill vitalize creature
+                            if (!CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Pets.Count; i++)
+                                {
+                                    if (Pets[i].Info.AI != 64) continue;
+                                    if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+
+
+                                    if (((IntelligentCreatureObject)Pets[i]).Fullness > 0)
+                                    {
+                                        ReceiveChat(((IntelligentCreatureObject)Pets[i]).Name + " does not need to be vitalized", ChatType.System);
                                         return false;
                                     }
                                     return true;
@@ -14337,8 +14374,8 @@ namespace Server.MirObjects
                 ((IntelligentCreatureObject)monster).ItemFilter = Info.IntelligentCreatures[i].Filter;
                 ((IntelligentCreatureObject)monster).CurrentPickupMode = Info.IntelligentCreatures[i].petMode;
                 ((IntelligentCreatureObject)monster).Fullness = Info.IntelligentCreatures[i].Fullness;
-                //((IntelligentCreatureObject)monster).Timeleft = Info.IntelligentCreatures[i].ExpireTime;//time left in seconds
                 ((IntelligentCreatureObject)monster).blackstoneTime = Info.IntelligentCreatures[i].BlackstoneTime;
+                ((IntelligentCreatureObject)monster).maintainfoodTime = Info.IntelligentCreatures[i].MaintainFoodTime;
 
 
                 monster.Spawn(CurrentMap, Front);
@@ -14449,6 +14486,20 @@ namespace Server.MirObjects
             //update client
             //GetCreaturesInfo();
         }
+        public void UpdateCreatureMaintainFoodTime(IntelligentCreatureType pType, long maintainfoodtime)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+                Info.IntelligentCreatures[i].MaintainFoodTime = maintainfoodtime;
+                break;
+            }
+
+            //update client
+            //GetCreaturesInfo();
+        }
 
         public void RefreshCreaturesTimeLeft()
         {
@@ -14486,6 +14537,7 @@ namespace Server.MirObjects
                         if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
 
                         ((IntelligentCreatureObject)Pets[i]).ProcessBlackStoneProduction();
+                        ((IntelligentCreatureObject)Pets[i]).ProcessMaintainFoodBuff();
                         break;
                     }
                 }

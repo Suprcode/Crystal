@@ -17976,7 +17976,7 @@ namespace Client.MirScenes
     {
         public MirImageControl FullnessBG, FullnessFG, FullnessMin, FullnessNow;
         public MirImageControl PearlImage, BlackStoneImageBG, BlackStoneImageFG;
-        public MirLabel CreatureName, CreatureDeadline, CreaturePearls, CreatureInfo, CreatureInfo1, CreatureInfo2, HoverLabel;
+        public MirLabel CreatureName, CreatureDeadline, CreaturePearls, CreatureInfo, CreatureInfo1, CreatureInfo2, CreatureMaintainFoodBuff, HoverLabel;
         public MirButton CloseButton, HelpPetButton, CreatureRenameButton, SummonButton, DismissButton, ReleaseButton;
         public MirButton AutomaticModeButton, SemiAutoModeButton, OptionsMenuButton;
         public CreatureButton[] CreatureButtons;
@@ -18279,6 +18279,15 @@ namespace Client.MirScenes
                 NotControl = true,
             };
 
+            CreatureMaintainFoodBuff = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(25, 25),
+                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
+                Size = new Size(166, 21),
+                NotControl = true,
+            };
+
             HoverLabel = new MirLabel
             {
                 Parent = this,
@@ -18413,6 +18422,11 @@ namespace Client.MirScenes
             }
             if (sender == SummonButton)
             {
+                //if (GameScene.User.IntelligentCreatures[selectedCreature].Fullness == 0)
+                //{
+                //    GameScene.Scene.ChatDialog.ReceiveChat((string.Format("Creature {0} is starving, revitalize first.", GameScene.User.IntelligentCreatures[selectedCreature].CustomName)), ChatType.System);
+                //}
+
                 needSummon = true;
                 needUpdate = true;
 
@@ -18672,6 +18686,10 @@ namespace Client.MirScenes
             else
                 CreatureDeadline.Text = string.Format("Expire: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
             //
+            if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
+                CreatureMaintainFoodBuff.Text = "0";
+            else
+                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
 
             int StartIndex = CreatureButtons[SelectedCreatureSlot].AnimDefaultIdx;
             int AnimCount = CreatureButtons[SelectedCreatureSlot].AnimDefaultCount;
