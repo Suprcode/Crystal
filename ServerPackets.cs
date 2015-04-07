@@ -4596,4 +4596,31 @@ namespace ServerPackets
         {
         }
     }
+
+    public sealed class NPCPearlGoods : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.NPCPearlGoods; } }
+
+        public List<UserItem> List = new List<UserItem>();
+        public float Rate;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int count = reader.ReadInt32();
+
+            for (int i = 0; i < count; i++)
+                List.Add(new UserItem(reader));
+
+            Rate = reader.ReadSingle();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(List.Count);
+
+            for (int i = 0; i < List.Count; i++)
+                List[i].Save(writer);
+
+            writer.Write(Rate);
+        }
+    }
 }

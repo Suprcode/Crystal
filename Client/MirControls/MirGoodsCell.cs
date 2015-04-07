@@ -12,6 +12,7 @@ namespace Client.MirControls
         //public ItemInfo Item;
         public UserItem Item;
         public MirLabel NameLabel, PriceLabel, CountLabel;
+        public bool usePearls = false;//pearl currency
 
         public MirGoodsCell()
         {
@@ -53,7 +54,16 @@ namespace Client.MirControls
             if (Item == null || Item.Info == null) return;
             NameLabel.Text = Item.Info.FriendlyName;
             CountLabel.Text = (Item.Count <= 1) ? "" : Item.Count.ToString();
-            PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Price() * GameScene.NPCRate));
+
+            if (usePearls)//pearl currency
+            {
+                if (Item.Price() > 1)
+                    PriceLabel.Text = string.Format("Price: {0} pearls", (uint)(Item.Price() * GameScene.NPCRate));
+                else
+                    PriceLabel.Text = string.Format("Price: {0} pearl", (uint)(Item.Price() * GameScene.NPCRate));
+            }
+            else
+                PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Price() * GameScene.NPCRate));
         }
 
         protected override Vector2[] BorderInfo

@@ -19,7 +19,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 48;
+        public const int Version = 49;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
@@ -95,6 +95,9 @@ namespace Server.MirEnvir
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
+
+        public List<DropInfo> StrongboxDrops = new List<DropInfo>();
+        public List<DropInfo> BlackstoneDrops = new List<DropInfo>();
 
         public List<GuildAtWar> GuildsAtWar = new List<GuildAtWar>();
 
@@ -792,6 +795,85 @@ namespace Server.MirEnvir
             });
         }
 
+        public void LoadStrongBoxDrops()
+        {
+            StrongboxDrops.Clear();
+
+            string path = Path.Combine(Settings.DropPath, Settings.StrongboxDropFilename + ".txt");
+
+            if (!File.Exists(path))
+            {
+                FileStream newfile = File.Create(path);
+                newfile.Close();
+            }
+
+            string[] lines = File.ReadAllLines(path);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                DropInfo drop = DropInfo.FromLine(lines[i]);
+                if (drop == null)
+                {
+                    SMain.Enqueue(string.Format("Could not load strongbox drop: {0}", lines[i]));
+                    continue;
+                }
+
+                StrongboxDrops.Add(drop);
+            }
+
+            StrongboxDrops.Sort((drop1, drop2) =>
+            {
+                if (drop1.Chance > 0 && drop2.Chance == 0)
+                    return 1;
+                if (drop1.Chance == 0 && drop2.Chance > 0)
+                    return -1;
+
+                return drop1.Item.Type.CompareTo(drop2.Item.Type);
+            });
+        }
+
+        public void LoadBlackStoneDrops()
+        {
+            BlackstoneDrops.Clear();
+
+            string path = Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt");
+
+            if (!File.Exists(path))
+            {
+                FileStream newfile = File.Create(path);
+                newfile.Close();
+
+            }
+
+            string[] lines = File.ReadAllLines(path);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                DropInfo drop = DropInfo.FromLine(lines[i]);
+                if (drop == null)
+                {
+                    SMain.Enqueue(string.Format("Could not load blackstone drop: {0}", lines[i]));
+                    continue;
+                }
+
+                BlackstoneDrops.Add(drop);
+            }
+
+            BlackstoneDrops.Sort((drop1, drop2) =>
+            {
+                if (drop1.Chance > 0 && drop2.Chance == 0)
+                    return 1;
+                if (drop1.Chance == 0 && drop2.Chance > 0)
+                    return -1;
+
+                return drop1.Item.Type.CompareTo(drop2.Item.Type);
+            });
+        }
+
         private bool BindCharacter(AuctionInfo auction)
         {
             for (int i = 0; i < CharacterList.Count; i++)
@@ -844,6 +926,8 @@ namespace Server.MirEnvir
 
             LoadFishingDrops();
             LoadAwakeningMaterials();
+            LoadStrongBoxDrops();
+            LoadBlackStoneDrops();
             SMain.Enqueue("Drops Loaded.");
 
             if (DragonInfo.Enabled)

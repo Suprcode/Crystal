@@ -360,9 +360,6 @@ namespace Server.MirDatabase
             writer.Write(IntelligentCreatures.Count);
             for (int i = 0; i < IntelligentCreatures.Count; i++)
                 IntelligentCreatures[i].Save(writer);
-
-            //writer.Write((byte)SummonedCreatureType);
-            //writer.Write(CreatureSummoned);
             writer.Write(PearlCount);
 
         }
@@ -600,6 +597,7 @@ namespace Server.MirDatabase
         public int SlotIndex;
         public long ExpireTime = -9999;//
         public long BlackstoneTime = 0;
+        public long MaintainFoodTime = 0;
 
         public UserIntelligentCreature(IntelligentCreatureType creatureType, int slot, byte effect = 0)
         {
@@ -613,6 +611,7 @@ namespace Server.MirDatabase
             else ExpireTime = -9999;//permanent
 
             BlackstoneTime = 0;
+            MaintainFoodTime = 0;
 
             Filter = new IntelligentCreatureItemFilter();
         }
@@ -631,6 +630,12 @@ namespace Server.MirDatabase
             petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
             Filter = new IntelligentCreatureItemFilter(reader);
+            if (Envir.LoadVersion > 48)
+            {
+                Filter.PickupGrade = (ItemGrade)reader.ReadByte();
+                
+                MaintainFoodTime = reader.ReadInt64();//maintain food buff
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -646,6 +651,10 @@ namespace Server.MirDatabase
             writer.Write((byte)petMode);
 
             Filter.Save(writer);
+            writer.Write((byte)Filter.PickupGrade);//since Envir.Version 49
+
+            writer.Write(MaintainFoodTime);//maintain food buff
+
         }
 
         public Packet GetInfo()
@@ -667,6 +676,7 @@ namespace Server.MirDatabase
                 SlotIndex = SlotIndex,
                 ExpireTime = ExpireTime,
                 BlackstoneTime = BlackstoneTime,
+                MaintainFoodTime = MaintainFoodTime,
 
                 petMode = petMode,
 

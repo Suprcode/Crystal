@@ -2628,6 +2628,17 @@ namespace Server.MirObjects
                     case BuffType.ManaAid:
                         MP = (ushort)Math.Min(ushort.MaxValue, MP + buff.Value);
                         break;
+                    case BuffType.WonderShield:
+                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Value);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        break;
+                    case BuffType.MagicWonderShield:
+                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Value);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        break;
+                    case BuffType.BagWeight:
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + buff.Value);
+                        break;
                 }
 
             }
@@ -2752,6 +2763,12 @@ namespace Server.MirObjects
 
                 if (player == null)
                 {
+                    IntelligentCreatureObject creature = GetCreatureByName(parts[0]);
+                    if (creature != null)
+                    {
+                        creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
+                        return;
+                    }
                     ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
                     return;
                 }
@@ -3345,6 +3362,36 @@ namespace Server.MirObjects
 
                         player.GainGold(count);
                         SMain.Enqueue(string.Format("Player {0} has been given {1} gold", player.Name, count));
+                        break;
+
+                    case "GIVEPEARLS":
+                        if (!IsGM) return;
+                        if (parts.Length < 2) return;
+
+                        player = this;
+
+                        if (parts.Length > 2)
+                        {
+                            if (!uint.TryParse(parts[2], out count)) return;
+                            player = Envir.GetPlayer(parts[1]);
+
+                            if (player == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+
+                        else if (!uint.TryParse(parts[1], out count)) return;
+
+                        if (count + player.Info.PearlCount >= int.MaxValue)
+                            count = (uint)(int.MaxValue - player.Info.PearlCount);
+
+                        player.IntelligentCreatureGainPearls((int)count);
+                        if(count > 1)
+                            SMain.Enqueue(string.Format("Player {0} has been given {1} pearls", player.Name, count));
+                        else
+                            SMain.Enqueue(string.Format("Player {0} has been given {1} pearl", player.Name, count));
                         break;
 
                     case "GIVESKILL":
@@ -9133,11 +9180,25 @@ namespace Server.MirObjects
                                 Enqueue(new S.IntelligentCreatureEnableRename());
                                 break;
                             case 21://BlackStone
-                                break;
+                                if (item.Count > 1) item.Count--;
+                                else Info.Inventory[index] = null;
+                                RefreshBagWeight();
+                                p.Success = true;
+                                Enqueue(p);
+                                BlackstoneRewardItem();
+                                return;
                             case 22://Nuts
+                                if (CreatureSummoned)
+                                    for (int i = 0; i < Pets.Count; i++)
+                                    {
+                                        if (Pets[i].Info.AI != 64) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+                                        ((IntelligentCreatureObject)Pets[i]).maintainfoodTime = item.Info.Effect * Settings.Hour / 1000;
+                                        UpdateCreatureMaintainFoodTime(SummonedCreatureType, 0);
+                                        break;
+                                    }
                                 break;
                             case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
-                            case 24://WonderPill
                                 if (CreatureSummoned)
                                     for (int i = 0; i < Pets.Count; i++)
                                     {
@@ -9147,6 +9208,58 @@ namespace Server.MirObjects
                                             ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
                                         break;
                                     }
+                                break;
+                            case 24://WonderPill
+                                if (CreatureSummoned)
+                                    for (int i = 0; i < Pets.Count; i++)
+                                    {
+                                        if (Pets[i].Info.AI != 64) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+                                        if (((IntelligentCreatureObject)Pets[i]).Fullness == 0)
+                                            ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(100);
+                                        break;
+                                    }
+                                break;
+                            case 25://Strongbox
+                                byte boxtype = item.Info.Effect;
+                                if (item.Count > 1) item.Count--;
+                                else Info.Inventory[index] = null;
+                                RefreshBagWeight();
+                                p.Success = true;
+                                Enqueue(p);
+                                StrongboxRewardItem(boxtype);
+                                return;
+                            case 26://Wonderdrugs + Knapsack
+                                int time = item.Info.Durability * 3600;
+                                switch (item.Info.Effect)
+                                {
+                                    case 0://exp low/med/high
+                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.Luck + item.Luck });
+                                        break;
+                                    case 1://drop low/med/high
+                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.Luck + item.Luck });
+                                        break;
+                                    case 2://hp low/med/high
+                                        AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.HP + item.HP });
+                                        break;
+                                    case 3://mp low/med/high
+                                        AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MP + item.MP });
+                                        break;
+                                    case 4://ac-ac low/med/high
+                                        AddBuff(new Buff { Type = BuffType.WonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MaxAC + item.AC });
+                                        break;
+                                    case 5://mac-mac low/med/high
+                                        AddBuff(new Buff { Type = BuffType.MagicWonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MaxMAC + item.MAC });
+                                        break;
+                                    case 6://speed low/med/high
+                                        AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.AttackSpeed + item.AttackSpeed });
+                                        break;
+                                    case 7://knapsack low/med/high
+                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.Luck + item.Luck });
+                                        break;
+                                }
+                                break;
+                            case 27://FortuneCookies
                                 break;
                         }
                     }
@@ -10207,10 +10320,37 @@ namespace Server.MirObjects
                             if (Info.IntelligentCreatures.Count == 0) return false;
                             break;
                         case 21://creature stone
-                            //if (Info.IntelligentCreatures.Count == 0) return false;
                             break;
                         case 22://nuts maintain food levels
+                            if (!CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            break;
                         case 23://basic creature food
+                            if (!CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Pets.Count; i++)
+                                {
+                                    if (Pets[i].Info.AI != 64) continue;
+                                    if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+
+
+                                    if (((IntelligentCreatureObject)Pets[i]).Fullness > 9900)
+                                    {
+                                        ReceiveChat(((IntelligentCreatureObject)Pets[i]).Name + " is not hungry", ChatType.System);
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                                return false;
+                            }
                         case 24://wonderpill vitalize creature
                             if (!CreatureSummoned)
                             {
@@ -10224,18 +10364,22 @@ namespace Server.MirObjects
                                     if (Pets[i].Info.AI != 64) continue;
                                     if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
 
-                                    if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
+
+                                    if (((IntelligentCreatureObject)Pets[i]).Fullness > 0)
                                     {
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        ReceiveChat(" Creature is not hungry", ChatType.System);
+                                        ReceiveChat(((IntelligentCreatureObject)Pets[i]).Name + " does not need to be vitalized", ChatType.System);
                                         return false;
                                     }
+                                    return true;
                                 }
                                 return false;
                             }
+                        case 25://Strongbox
+                            break;
+                        case 26://Wonderdrugs
+                            break;
+                        case 27://Fortunecookies
+                            break;
                     }
                     break;
             }
@@ -10668,7 +10812,7 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
-            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.BuyBackKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.BuyBackKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.PearlBuyKey, StringComparison.CurrentCultureIgnoreCase))) return;
 
             for (int i = 0; i < CurrentMap.NPCs.Count; i++)
             {
@@ -14215,8 +14359,6 @@ namespace Server.MirObjects
             {
                 if (Info.IntelligentCreatures[i].PetType != pType) continue;
 
-                //if (!IsGM) return;
-
                 MonsterInfo mInfo = Envir.GetMonsterInfo(Settings.IntelligentCreatureNameList[(byte)pType]);
                 if (mInfo == null) return;
 
@@ -14244,8 +14386,8 @@ namespace Server.MirObjects
                 ((IntelligentCreatureObject)monster).ItemFilter = Info.IntelligentCreatures[i].Filter;
                 ((IntelligentCreatureObject)monster).CurrentPickupMode = Info.IntelligentCreatures[i].petMode;
                 ((IntelligentCreatureObject)monster).Fullness = Info.IntelligentCreatures[i].Fullness;
-                //((IntelligentCreatureObject)monster).Timeleft = Info.IntelligentCreatures[i].ExpireTime;//time left in seconds
                 ((IntelligentCreatureObject)monster).blackstoneTime = Info.IntelligentCreatures[i].BlackstoneTime;
+                ((IntelligentCreatureObject)monster).maintainfoodTime = Info.IntelligentCreatures[i].MaintainFoodTime;
 
 
                 monster.Spawn(CurrentMap, Front);
@@ -14356,6 +14498,20 @@ namespace Server.MirObjects
             //update client
             //GetCreaturesInfo();
         }
+        public void UpdateCreatureMaintainFoodTime(IntelligentCreatureType pType, long maintainfoodtime)
+        {
+            if (pType == IntelligentCreatureType.None) return;
+
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
+                if (Info.IntelligentCreatures[i].PetType != pType) continue;
+                Info.IntelligentCreatures[i].MaintainFoodTime = maintainfoodtime;
+                break;
+            }
+
+            //update client
+            //GetCreaturesInfo();
+        }
 
         public void RefreshCreaturesTimeLeft()
         {
@@ -14393,6 +14549,7 @@ namespace Server.MirObjects
                         if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
 
                         ((IntelligentCreatureObject)Pets[i]).ProcessBlackStoneProduction();
+                        ((IntelligentCreatureObject)Pets[i]).ProcessMaintainFoodBuff();
                         break;
                     }
                 }
@@ -14440,6 +14597,19 @@ namespace Server.MirObjects
                 break;
             }
         }
+
+        public void IntelligentCreatureGainPearls(int amount)
+        {
+            Info.PearlCount += amount;
+            if (Info.PearlCount > int.MaxValue) Info.PearlCount = int.MaxValue;
+        }
+
+        public void IntelligentCreatureLosePearls(int amount)
+        {
+            Info.PearlCount -= amount;
+            if (Info.PearlCount < 0) Info.PearlCount = 0;
+        }
+
         public void IntelligentCreatureProducePearl()
         {
             Info.PearlCount++;
@@ -14456,6 +14626,165 @@ namespace Server.MirObjects
 
             GainItem(item);
             return true;
+        }
+
+        public void IntelligentCreatureSay(IntelligentCreatureType pType,string message)
+        {
+            if(!CreatureSummoned || message == "" ) return;
+            if(pType != SummonedCreatureType) return;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != pType) continue;
+
+                Enqueue(new S.ObjectChat { ObjectID = Pets[i].ObjectID, Text = message, Type = ChatType.Normal });
+                return;
+            }
+        }
+
+        public void StrongboxRewardItem(int boxtype)
+        {
+            int highRate = int.MaxValue;
+            UserItem dropItem = null;
+            foreach (DropInfo drop in Envir.StrongboxDrops)
+            {
+                int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate);
+                if (rate < 1) rate = 1;
+
+                if (highRate > rate)
+                {
+                    highRate = rate;
+                    dropItem = Envir.CreateFreshItem(drop.Item);
+                }
+            }
+
+            if (dropItem.Info.Type == ItemType.Pets && dropItem.Info.Shape == 26)
+            {
+                dropItem = CreateDynamicWonderDrug(boxtype, dropItem);
+            }
+            else
+                dropItem = Envir.CreateDropItem(dropItem.Info);
+
+            if (FreeSpace(Info.Inventory) < 1)
+            {
+                ReceiveChat("No more space.", ChatType.System);
+                return;
+            }
+
+            if (dropItem != null) GainItem(dropItem);
+        }
+
+        public void BlackstoneRewardItem()
+        {
+            int highRate = int.MaxValue;
+            UserItem dropItem = null;
+            foreach (DropInfo drop in Envir.BlackstoneDrops)
+            {
+                int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate); if (rate < 1) rate = 1;
+
+                if (highRate > rate)
+                {
+                    highRate = rate;
+                    dropItem = Envir.CreateDropItem(drop.Item);
+                }
+            }
+            if (FreeSpace(Info.Inventory) < 1)
+            {
+                ReceiveChat("No more space.", ChatType.System);
+                return;
+            }
+            if (dropItem != null) GainItem(dropItem);
+        }
+
+        private UserItem CreateDynamicWonderDrug(int boxtype, UserItem dropitem)
+        {
+            dropitem.CurrentDura = (ushort)1;//* 3600
+            switch ((int)dropitem.Info.Effect)
+            {
+                case 0://exp low/med/high
+                    dropitem.Luck = (sbyte)5;
+                    if (boxtype > 0) dropitem.Luck = (sbyte)10;
+                    if (boxtype > 1) dropitem.Luck = (sbyte)20;
+                    break;
+                case 1://drop low/med/high
+                    dropitem.Luck = (sbyte)10;
+                    if (boxtype > 0) dropitem.Luck = (sbyte)20;
+                    if (boxtype > 1) dropitem.Luck = (sbyte)50;
+                    break;
+                case 2://hp low/med/high
+                    dropitem.HP = (byte)50;
+                    if (boxtype > 0) dropitem.HP = (byte)100;
+                    if (boxtype > 1) dropitem.HP = (byte)200;
+                    break;
+                case 3://mp low/med/high
+                    dropitem.MP = (byte)50;
+                    if (boxtype > 0) dropitem.MP = (byte)100;
+                    if (boxtype > 1) dropitem.MP = (byte)200;
+                    break;
+                case 4://ac low/med/high
+                    dropitem.AC = (byte)1;
+                    if (boxtype > 0) dropitem.AC = (byte)3;
+                    if (boxtype > 1) dropitem.AC = (byte)5;
+                    break;
+                case 5://amc low/med/high
+                    dropitem.MAC = (byte)1;
+                    if (boxtype > 0) dropitem.MAC = (byte)3;
+                    if (boxtype > 1) dropitem.MAC = (byte)5;
+                    break;
+                case 6://speed low/med/high
+                    dropitem.AttackSpeed = (sbyte)2;
+                    if (boxtype > 0) dropitem.AttackSpeed = (sbyte)3;
+                    if (boxtype > 1) dropitem.AttackSpeed = (sbyte)4;
+                    break;
+                case 7://knapsack low/med/high
+                    dropitem.CurrentDura = (ushort)5;//* 3600
+                    dropitem.Luck = (sbyte)3;
+                    if (boxtype > 0) dropitem.Luck = (sbyte)5;
+                    if (boxtype > 1) dropitem.Luck = (sbyte)9;
+                    break;
+            }
+            //string dbg = String.Format(" Img: {0} Effect: {1} Dura: {2} Exp: {3} Drop: {3} HP: {4} MP: {5} AC: {6} MAC: {7} ASpeed: {8} BagWeight: {9}", dropitem.Image, dropitem.Info.Effect, dropitem.CurrentDura, dropitem.Luck, dropitem.HP, dropitem.MP, dropitem.AC, dropitem.MAC, dropitem.AttackSpeed, dropitem.Luck);
+            //ReceiveChat(dropitem.Name + dbg, ChatType.System);
+            return dropitem;
+        }
+
+        private IntelligentCreatureObject GetCreatureByName(string creaturename)
+        {
+            if (!CreatureSummoned || creaturename == "") return null;
+            if (SummonedCreatureType == IntelligentCreatureType.None) return null;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                if (Pets[i].Info.AI != 64) continue;
+                if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+
+                return ((IntelligentCreatureObject)Pets[i]);
+            }
+            return null;
+        }
+
+        private string CreateTimeString(double secs)
+        {
+            TimeSpan t = TimeSpan.FromSeconds(secs);
+            string answer;
+            if (t.TotalMinutes < 1.0)
+            {
+                answer = string.Format("{0}s", t.Seconds);
+            }
+            else if (t.TotalHours < 1.0)
+            {
+                answer = string.Format("{0}m", t.Minutes);
+            }
+            else if (t.TotalDays < 1.0)
+            {
+                answer = string.Format("{0}h {1:D2}m", (int)t.TotalHours, t.Minutes);
+            }
+            else // t.TotalDays >= 1.0
+            {
+                answer = string.Format("{0}d {1}h {2:D2}m", (int)t.TotalDays, (int)t.Hours, t.Minutes);
+            }
+            return answer;
         }
 
         private void GetCreaturesInfo()

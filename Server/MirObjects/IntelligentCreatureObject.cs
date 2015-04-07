@@ -42,6 +42,11 @@ namespace Server.MirObjects
         public long animvariantTicker = 0;
         public const long animvariantDelay = 10 * Settings.Second;//10 seconds
 
+        public long maintainfoodTime = 0;
+
+        public long timedSayTicker = 0;
+        public const long timedSayDelay = 20 * Settings.Second;
+
         private bool shortcheck = true;
 
         public override bool Blocking
@@ -97,6 +102,12 @@ namespace Server.MirObjects
                 }
 
                 Despawn();
+                return;
+            }
+
+            if (Fullness == 0)//unable to operate with food level 0
+            {
+                CreatureTimedSay("I'm starving!!.");
                 return;
             }
 
@@ -313,7 +324,8 @@ namespace Server.MirObjects
                                 if (CheckItemAgainstFilter(item.Item.Info.Type))
                                 {
                                     //Master.ReceiveChat("YEAH ITEM I CAN GAIN {" + item.Item.FriendlyName + "} " + item.Item.Info.Type.ToString(), ChatType.System);
-                                    Target = ob;
+                                    if (item.Item.Info.Grade >= ItemFilter.PickupGrade)
+                                        Target = ob;
                                     shortcheck = false;
                                     return;
                                 }
@@ -372,7 +384,8 @@ namespace Server.MirObjects
                                 if (!((PlayerObject)Master).CanGainItem(item.Item)) continue;
                                 if (CheckItemAgainstFilter(item.Item.Info.Type))
                                 {
-                                    TargetList.Add(ob);
+                                    if(item.Item.Info.Grade >= ItemFilter.PickupGrade)
+                                        TargetList.Add(ob);
                                     break;
                                 }
                             }
@@ -628,8 +641,9 @@ namespace Server.MirObjects
         {
             if (Fullness >= 10000) return;
             fullnessTicker = Envir.Time + fullnessDelay;
-
             Fullness += amount;
+            if (Fullness < CreatureRules.MinimalFullness) CreatureSay("*Hmmm*");
+            else CreatureSay("*Burp*");
             if (Fullness > 10000) Fullness = 10000;
 
             if (Master != null)
@@ -637,13 +651,14 @@ namespace Server.MirObjects
         }
         public void DecreaseFullness(int amount)
         {
-            if (Fullness <= 0) return;
+            if (Fullness <= 0 || maintainfoodTime > 0) return;
 
             if (Envir.Time > fullnessTicker)
             {
                 fullnessTicker = Envir.Time + fullnessDelay;
                 Fullness -= amount;
                 if (Fullness < 0) Fullness = 0;
+                if (Fullness < CreatureRules.MinimalFullness) CreatureTimedSay("*Me Hungry*");
 
                 if (Master != null)
                     ((PlayerObject)Master).UpdateCreatureFullness(petType, Fullness);
@@ -674,6 +689,41 @@ namespace Server.MirObjects
 
             if (Master != null)
                 ((PlayerObject)Master).UpdateCreatureBlackstoneTime(petType, blackstoneTime);
+        }
+
+        public void ProcessMaintainFoodBuff()
+        {
+            if (maintainfoodTime > 0)
+            {
+                maintainfoodTime--;
+                if (maintainfoodTime < 0) maintainfoodTime = 0;
+
+                if (Master != null)
+                    ((PlayerObject)Master).UpdateCreatureMaintainFoodTime(petType, maintainfoodTime);
+            }
+        }
+
+        public void CreatureTimedSay(string message)
+        {
+            if (Envir.Time > timedSayTicker)
+            {
+                CreatureSay(message);
+                timedSayTicker = Envir.Time + timedSayDelay;
+            }
+        }
+
+        public void CreatureSay(string message)
+        {
+            if (Master != null)
+            {
+                message = String.Format("{0}:{1}", CustomName, message);
+                ((PlayerObject)Master).IntelligentCreatureSay(petType, message);
+            }
+        }
+
+        public override void ReceiveChat(string text, ChatType type)
+        {
+            if (type == ChatType.WhisperIn) CreatureSay("What?");
         }
 
         public override bool IsAttackTarget(PlayerObject attacker)
