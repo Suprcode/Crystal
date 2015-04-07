@@ -253,7 +253,7 @@ namespace Server.MirObjects
         public int MPEaterCount, HemorrhageAttackCount;
         public long FlamingSwordTime, PoisonCloudTime, SlashingBurstTime, FuryTime, TrapTime, SwiftFeetTime, CounterAttackTime;
         public bool ActiveBlizzard, ActiveReincarnation, ActiveSwiftFeet, ReincarnationReady;
-        public PlayerObject ReincarnationTarget;
+        public PlayerObject ReincarnationTarget, ReincarnationHost;
         public long ReincarnationExpireTime;
         public byte Reflect;
         public bool UnlockCurse = false;
@@ -517,12 +517,14 @@ namespace Server.MirObjects
             {
                 ReincarnationReady = false;
                 ActiveReincarnation = false;
+                ReincarnationTarget = null;
                 ReceiveChat("Reincarnation failed.", ChatType.System);
             }
-            if ((ReincarnationReady || ActiveReincarnation) && !ReincarnationTarget.Dead)
+            if ((ReincarnationReady || ActiveReincarnation) && (ReincarnationTarget == null || !ReincarnationTarget.Dead))
             {
                 ReincarnationReady = false;
                 ActiveReincarnation = false;
+                ReincarnationTarget = null;
             }
 
             if (Envir.Time > RunTime && _runCounter > 0)
@@ -5778,6 +5780,9 @@ namespace Server.MirObjects
                 ActiveReincarnation = true;
                 ReincarnationTarget = target;
                 ReincarnationExpireTime = ExpireTime + 5000;
+
+                target.ReincarnationHost = this;
+
                 SpellObject ob = new SpellObject
                 {
                     Spell = Spell.Reincarnation,
