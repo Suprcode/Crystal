@@ -508,14 +508,11 @@ namespace Server.MirDatabase
         public FriendInfo(int charIndex) 
         {
             CharacterIndex = charIndex;
-            //CharacterInfo = SMain.Envir.GetCharacterInfo(CharacterIndex);
         }
 
         public FriendInfo(BinaryReader reader)
         {
             CharacterIndex = reader.ReadInt32();
-            //CharacterInfo = SMain.Envir.GetCharacterInfo(CharacterIndex);
-
             Memo = reader.ReadString();
         }
 

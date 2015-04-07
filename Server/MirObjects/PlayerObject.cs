@@ -1722,7 +1722,20 @@ namespace Server.MirObjects
         {
             if (!Dead) return;
 
-            Map temp = Envir.GetMap(BindMapIndex);
+            Map temp = null;
+            Point bindLocation;
+
+            if (Info.PKPoints >= 200)
+            {
+                temp = Envir.GetMapByNameAndInstance(Settings.PKTownMapName, 1);
+                bindLocation = new Point(Settings.PKTownPositionX, Settings.PKTownPositionY);
+            }
+
+            if (temp == null)
+            {
+                temp = Envir.GetMap(BindMapIndex);
+                bindLocation = BindLocation;
+            }
 
             if (temp == null || !temp.ValidPoint(BindLocation)) return;
 

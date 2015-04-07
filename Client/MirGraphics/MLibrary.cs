@@ -121,14 +121,12 @@ namespace Client.MirGraphics
             for (int i = 0; i < NPCs.Length; i++)
                 NPCs[i] = new MLibrary(Settings.NPCPath + i.ToString("00"));
 
-
             for (int i = 0; i < Mounts.Length; i++)
                 Mounts[i] = new MLibrary(Settings.MountPath + i.ToString("00"));
 
             for (int i = 0; i < Fishing.Length; i++)
                 Fishing[i] = new MLibrary(Settings.FishingPath + i.ToString("00"));
 
-            //IntelligentCreature
             for (int i = 0; i < Pets.Length; i++)
                 Pets[i] = new MLibrary(Settings.PetsPath + i.ToString("00"));
 
