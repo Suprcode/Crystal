@@ -18722,6 +18722,8 @@ namespace Client.MirScenes
         }
         #endregion
 
+        #endregion
+
         public void SaveItemFilter(IntelligentCreatureItemFilter filter)
         {
             int selectedCreature = BeforeAfterDraw();
@@ -18730,8 +18732,6 @@ namespace Client.MirScenes
             GameScene.User.IntelligentCreatures[selectedCreature].Filter = filter;
             Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
         }
-
-        #endregion
 
         private string PrintTimeSpan(double secs)
         {
@@ -19081,6 +19081,9 @@ namespace Client.MirScenes
             if (sender == OptionsCancelButton)
             {
                 Filter = new IntelligentCreatureItemFilter();
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType = ItemGrade.None;
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.RefreshGradeFilter();
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
                 RefreshFilter();
                 Hide();
             }
@@ -19262,7 +19265,7 @@ namespace Client.MirScenes
             Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
         }
 
-        private void RefreshGradeFilter()
+        public void RefreshGradeFilter()
         {
             SelectedGrade = (int)((byte)GradeType);
             GradeLabel.Text = GradeStrings[SelectedGrade];

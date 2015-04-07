@@ -313,7 +313,8 @@ namespace Server.MirObjects
                                 if (CheckItemAgainstFilter(item.Item.Info.Type))
                                 {
                                     //Master.ReceiveChat("YEAH ITEM I CAN GAIN {" + item.Item.FriendlyName + "} " + item.Item.Info.Type.ToString(), ChatType.System);
-                                    Target = ob;
+                                    if (item.Item.Info.Grade >= ItemFilter.PickupGrade)
+                                        Target = ob;
                                     shortcheck = false;
                                     return;
                                 }
@@ -372,7 +373,8 @@ namespace Server.MirObjects
                                 if (!((PlayerObject)Master).CanGainItem(item.Item)) continue;
                                 if (CheckItemAgainstFilter(item.Item.Info.Type))
                                 {
-                                    TargetList.Add(ob);
+                                    if(item.Item.Info.Grade >= ItemFilter.PickupGrade)
+                                        TargetList.Add(ob);
                                     break;
                                 }
                             }

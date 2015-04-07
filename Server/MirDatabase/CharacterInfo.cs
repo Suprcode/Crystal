@@ -360,9 +360,6 @@ namespace Server.MirDatabase
             writer.Write(IntelligentCreatures.Count);
             for (int i = 0; i < IntelligentCreatures.Count; i++)
                 IntelligentCreatures[i].Save(writer);
-
-            //writer.Write((byte)SummonedCreatureType);
-            //writer.Write(CreatureSummoned);
             writer.Write(PearlCount);
 
         }
@@ -612,6 +609,7 @@ namespace Server.MirDatabase
             petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
             Filter = new IntelligentCreatureItemFilter(reader);
+            if (Envir.LoadVersion > 48) Filter.PickupGrade = (ItemGrade)reader.ReadByte();
         }
 
         public void Save(BinaryWriter writer)
@@ -627,6 +625,7 @@ namespace Server.MirDatabase
             writer.Write((byte)petMode);
 
             Filter.Save(writer);
+            writer.Write((byte)Filter.PickupGrade);//since Envir.Version 49
         }
 
         public Packet GetInfo()

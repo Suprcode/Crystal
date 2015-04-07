@@ -3406,6 +3406,7 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
         PetPickupBelts = reader.ReadBoolean();
         PetPickupAccessories = reader.ReadBoolean();
         PetPickupOthers = reader.ReadBoolean();
+        //PickupGrade = (ItemGrade)reader.ReadByte();
     }
 
     public void Save(BinaryWriter writer)
@@ -3419,6 +3420,7 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
         writer.Write(PetPickupBelts);
         writer.Write(PetPickupAccessories);
         writer.Write(PetPickupOthers);
+        //writer.Write((byte)PickupGrade);
     }
 }
 
@@ -3458,6 +3460,7 @@ public class ClientIntelligentCreature//IntelligentCreature
 
         CreatureRules = new IntelligentCreatureRules(reader);
         Filter = new IntelligentCreatureItemFilter(reader);
+        Filter.PickupGrade = (ItemGrade)reader.ReadByte();
     }
 
     public void Save(BinaryWriter writer)
@@ -3475,6 +3478,7 @@ public class ClientIntelligentCreature//IntelligentCreature
 
         CreatureRules.Save(writer);
         Filter.Save(writer);
+        writer.Write((byte)Filter.PickupGrade);
     }
 }
 
