@@ -421,7 +421,7 @@ namespace Server.MirNetwork
                     ShareQuest((C.ShareQuest)p);
                     break;
                 case (short)ClientPacketIds.AcceptReincarnation:
-                    Revive();
+                    AcceptReincarnation();
                     break;
                 case (short)ClientPacketIds.CancelReincarnation:
                      CancelReincarnation();
@@ -1151,11 +1151,18 @@ namespace Server.MirNetwork
             Player.ShareQuest(p.QuestIndex);
         }
 
-        private void Revive()
+        private void AcceptReincarnation()
         {
             if (Stage != GameStage.Game) return;
 
-            Player.Revive((uint)Player.MaxHP / 2, true);
+            if (Player.ReincarnationHost != null && Player.ReincarnationHost.ReincarnationReady)
+            {
+                Player.Revive((uint)Player.MaxHP / 2, true);
+                Player.ReincarnationHost = null;
+                return;
+            }
+
+            Player.ReceiveChat("Reincarnation failed", ChatType.System);
         }
 
         private void CancelReincarnation()

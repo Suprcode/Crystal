@@ -253,7 +253,7 @@ namespace Server.MirObjects
         public int MPEaterCount, HemorrhageAttackCount;
         public long FlamingSwordTime, PoisonCloudTime, SlashingBurstTime, FuryTime, TrapTime, SwiftFeetTime, CounterAttackTime;
         public bool ActiveBlizzard, ActiveReincarnation, ActiveSwiftFeet, ReincarnationReady;
-        public PlayerObject ReincarnationTarget;
+        public PlayerObject ReincarnationTarget, ReincarnationHost;
         public long ReincarnationExpireTime;
         public byte Reflect;
         public bool UnlockCurse = false;
@@ -517,12 +517,14 @@ namespace Server.MirObjects
             {
                 ReincarnationReady = false;
                 ActiveReincarnation = false;
+                ReincarnationTarget = null;
                 ReceiveChat("Reincarnation failed.", ChatType.System);
             }
-            if ((ReincarnationReady || ActiveReincarnation) && !ReincarnationTarget.Dead)
+            if ((ReincarnationReady || ActiveReincarnation) && (ReincarnationTarget == null || !ReincarnationTarget.Dead))
             {
                 ReincarnationReady = false;
                 ActiveReincarnation = false;
+                ReincarnationTarget = null;
             }
 
             if (Envir.Time > RunTime && _runCounter > 0)
@@ -904,7 +906,7 @@ namespace Server.MirObjects
             CurrentPoison = type;
         }
 
-        private bool ProcessDelayedExplosion(Poison poison)//ArcherSpells - DelayedExplosion
+        private bool ProcessDelayedExplosion(Poison poison)
         {
             if (Dead) return false;
 
@@ -1723,7 +1725,20 @@ namespace Server.MirObjects
         {
             if (!Dead) return;
 
-            Map temp = Envir.GetMap(BindMapIndex);
+            Map temp = null;
+            Point bindLocation;
+
+            if (Info.PKPoints >= 200)
+            {
+                temp = Envir.GetMapByNameAndInstance(Settings.PKTownMapName, 1);
+                bindLocation = new Point(Settings.PKTownPositionX, Settings.PKTownPositionY);
+            }
+
+            if (temp == null)
+            {
+                temp = Envir.GetMap(BindMapIndex);
+                bindLocation = BindLocation;
+            }
 
             if (temp == null || !temp.ValidPoint(BindLocation)) return;
 
@@ -2484,7 +2499,6 @@ namespace Server.MirObjects
                 Enqueue(magic.GetInfo());
             }
         }
-
         private void RemoveTempSkills(IEnumerable<string> skillsToRemove)
         {
             foreach (var skill in skillsToRemove)
@@ -5075,7 +5089,7 @@ namespace Server.MirObjects
         }
 
 
-        //ArcherSpells - Elemental system
+        #region Elemental System
         private void Concentration(UserMagic magic)
         {
             int duration = 45 + (15 * magic.Level);
@@ -5234,9 +5248,9 @@ namespace Server.MirObjects
 
             return 0;
         }
-        //Elemental system END
+        #endregion
 
-        #region Wizard/archer* Skills
+        #region Wizard/Archer* Skills
         private bool Fireball(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
@@ -5766,6 +5780,9 @@ namespace Server.MirObjects
                 ActiveReincarnation = true;
                 ReincarnationTarget = target;
                 ReincarnationExpireTime = ExpireTime + 5000;
+
+                target.ReincarnationHost = this;
+
                 SpellObject ob = new SpellObject
                 {
                     Spell = Spell.Reincarnation,
@@ -7725,6 +7742,8 @@ namespace Server.MirObjects
 
             if (CurrentMap != checkmap || CurrentLocation != checklocation) return;
 
+            bool mapChanged = temp != CurrentMap;
+
             CurrentMap = temp;
             CurrentLocation = destination;
 
@@ -7757,7 +7776,10 @@ namespace Server.MirObjects
             else
                 InSafeZone = false;
 
-            CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+            if (mapChanged)
+            {
+                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+            }
         }
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
@@ -8344,16 +8366,6 @@ namespace Server.MirObjects
 
             RefreshStats();
         }
-
-        //public void UpdateBuff(Buff b)
-        //{
-        //    S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = b.Caster.Name, Expire = b.ExpireTime - Envir.Time, Value = b.Value, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
-        //    Enqueue(addBuff);
-
-        //    if (b.Visible) Broadcast(addBuff);
-
-        //    RefreshStats();
-        //}
 
         public void DepositTradeItem(int from, int to)
         {
@@ -14464,6 +14476,45 @@ namespace Server.MirObjects
 
         #endregion
 
+        #region Friends
+
+        public void AddFriend(int index)
+        {
+            CharacterInfo info = Envir.GetCharacterInfo(index);
+
+            if (info == null) return;
+
+            if (Info.Friends.Any(e => e.CharacterIndex == index)) return;
+
+            FriendInfo friend = new FriendInfo(index);
+
+            Info.Friends.Add(friend);
+        }
+
+        public void RemoveFriend(int index)
+        {
+            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.CharacterIndex == index);
+
+            if (friend == null) return;
+
+            Info.Friends.Remove(friend);
+        }
+
+        public void AddMemo(int index, string memo)
+        {
+            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.CharacterIndex == index);
+
+            if (friend == null) return;
+
+            friend.Memo = memo;
+        }
+
+        public void GetFriends()
+        {
+
+        }
+
+        #endregion
     }
 
     public class ItemSets
