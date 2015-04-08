@@ -299,11 +299,14 @@ namespace Server.MirObjects
         public bool TradeLocked = false;
         public uint TradeGoldAmount = 0;
 
-        public List<int> CompletedQuests = new List<int>();
-
         public List<QuestProgressInfo> CurrentQuests
         {
             get { return Info.CurrentQuests; }
+        }
+
+        public List<int> CompletedQuests
+        {
+            get { return Info.CompletedQuests; }
         }
 
         public PlayerObject(CharacterInfo info, MirConnection connection)
@@ -1626,8 +1629,16 @@ namespace Server.MirObjects
 
             GetMail();
 
-            foreach (var quest in CurrentQuests)
+            for (int i = 0; i < CurrentQuests.Count; i++)
             {
+                QuestProgressInfo quest = CurrentQuests[i];
+
+                if (quest.Info == null) //fail safe incase the quest was deleted
+                {
+                    CurrentQuests.RemoveAt(i);
+                    continue;
+                }
+
                 quest.ResyncTasks();
                 SendUpdateQuest(quest, QuestState.Add);
             }
@@ -3563,9 +3574,6 @@ namespace Server.MirObjects
                         {
                             player.Info.Flags[i] = false;
                         }
-
-                        player.GetCompletedQuests();
-                        //player.SendQuestUpdate();
                         break;
 
                     case "CHANGECLASS": //@changeclass [Player] [Class]
@@ -3836,6 +3844,90 @@ namespace Server.MirObjects
                                     ReceiveChat(string.Format("X : {0}, Y : {1}", ob.CurrentLocation.X, ob.CurrentLocation.Y), ChatType.System2);
                                     ReceiveChat(string.Format("File : {0}", npcOb.Info.FileName), ChatType.System2);
                                     break;
+                            }
+                        }
+                        break;
+
+                    case "CLEARQUESTS":
+                        if (!IsGM) return;
+
+                        player = parts.Length > 1 ? Envir.GetPlayer(parts[1]) : this;
+
+                        if (player == null)
+                        {
+                            ReceiveChat(parts[1] + " is not online", ChatType.System);
+                            return;
+                        }
+
+                        foreach (var quest in player.CurrentQuests)
+                        {
+                            SendUpdateQuest(quest, QuestState.Remove);
+                        }
+
+                        player.CurrentQuests.Clear();
+
+                        player.CompletedQuests.Clear();
+                        player.GetCompletedQuests();
+
+                        break;
+
+                    case "SETQUEST":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 3) return;
+
+                        player = parts.Length > 3 ? Envir.GetPlayer(parts[3]) : this;
+
+                        if (player == null)
+                        {
+                            ReceiveChat(parts[3] + " is not online", ChatType.System);
+                            return;
+                        }
+
+                        int questid = 0;
+                        int questState = 0;
+
+                        int.TryParse(parts[1], out questid);
+                        int.TryParse(parts[2], out questState);
+
+                        if (questid < 1) return;
+                        
+                        var activeQuest = player.CurrentQuests.FirstOrDefault(e => e.Index == questid);
+
+                        //remove from active list
+                        if (activeQuest != null)
+                        {
+                            player.SendUpdateQuest(activeQuest, QuestState.Remove);
+                            player.CurrentQuests.Remove(activeQuest);
+                        }
+
+                        switch(questState)
+                        {
+                            case 0: //cancel
+                                if (player.CompletedQuests.Contains(questid))
+                                    player.CompletedQuests.Remove(questid);
+                                break;
+                            case 1: //complete
+                                if (!player.CompletedQuests.Contains(questid))
+                                    player.CompletedQuests.Add(questid);
+                                break;
+                        }
+
+                        player.GetCompletedQuests();
+                        break;
+
+                    case "QUESTMIGRATE":
+                        if (!IsGM) return;
+
+                        foreach (var character in Envir.CharacterList)
+                        {
+                            for (int i = 1000; i < character.Flags.Length; i++)
+                            {
+                                if (character.Flags[i] == false) continue;
+                                if (character.CompletedQuests.Contains(i)) continue;
+
+                                character.CompletedQuests.Add(i);
+                                character.Flags[i] = false;
                             }
                         }
                         break;
@@ -10800,7 +10892,7 @@ namespace Server.MirObjects
             //process any new npc calls immediately
             for (int i = 0; i < ActionList.Count; i++)
             {
-                if (ActionList[i].Type != DelayedType.NPC || Envir.Time < ActionList[i].Time) continue;
+                if (ActionList[i].Type != DelayedType.NPC || ActionList[i].Time != -1) continue;
                 var action = ActionList[i];
 
                 ActionList.RemoveAt(i);
@@ -13884,8 +13976,7 @@ namespace Server.MirObjects
 
             if (quest.Info.Type != QuestType.Repeatable)
             {
-                Info.Flags[1000 + quest.Index] = true;
-
+                Info.CompletedQuests.Add(quest.Index);
                 GetCompletedQuests();
             }
 
@@ -14088,9 +14179,9 @@ namespace Server.MirObjects
 
         public void GetCompletedQuests()
         {
-            CompletedQuests.Clear();
-            for (int i = 1000; i < Globals.FlagIndexCount; i++)
-                if (Info.Flags[i]) CompletedQuests.Add(i - 1000);
+            //CompletedQuests.Clear();
+            //for (int i = 1000; i < Globals.FlagIndexCount; i++)
+            //    if (Info.Flags[i]) CompletedQuests.Add(i - 1000);
 
             Enqueue(new S.CompleteQuest
             {

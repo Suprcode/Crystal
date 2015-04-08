@@ -73,6 +73,7 @@ namespace Server.MirDatabase
         public int PearlCount;
 
         public List<QuestProgressInfo> CurrentQuests = new List<QuestProgressInfo>();
+        public List<int> CompletedQuests = new List<int>();
 
         public bool[] Flags = new bool[Globals.FlagIndexCount];
 
@@ -250,7 +251,13 @@ namespace Server.MirDatabase
                 }
 
                 PearlCount = reader.ReadInt32();
+            }
 
+            if (Envir.LoadVersion > 49)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                    CompletedQuests.Add(reader.ReadInt32());
             }
         }
 
@@ -362,6 +369,9 @@ namespace Server.MirDatabase
                 IntelligentCreatures[i].Save(writer);
             writer.Write(PearlCount);
 
+            writer.Write(CompletedQuests.Count);
+            for (int i = 0; i < CompletedQuests.Count; i++)
+                writer.Write(CompletedQuests[i]);
         }
 
         public ListViewItem CreateListView()

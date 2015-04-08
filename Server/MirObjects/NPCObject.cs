@@ -218,9 +218,9 @@ namespace Server.MirObjects
 
             for (int i = 0; i < buttons.Count; i++)
             {
-                string section = buttons[i].ToUpper();
+                string section = buttons[i];
 
-                bool match = NPCSections.Any(t => t.Key == section);
+                bool match = NPCSections.Any(t => t.Key.ToUpper() == section.ToUpper());
 
                 if (match) continue;
 
@@ -248,11 +248,11 @@ namespace Server.MirObjects
             List<string> currentSay = say, currentButtons = buttons;
 
             //Used to fake page name
-            string tempSectionName = ArgumentParse(sectionName).ToUpper();
+            string tempSectionName = ArgumentParse(sectionName);
 
             for (int i = 0; i < lines.Count; i++)
             {
-                if (!lines[i].ToUpper().StartsWith(tempSectionName)) continue;
+                if (!lines[i].ToUpper().StartsWith(tempSectionName.ToUpper())) continue;
 
                 for (int x = i + 1; x < lines.Count; x++)
                 {
@@ -2475,7 +2475,7 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.Goto:
-                        DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, player.NPCID, "[" + param[0] + "]");
+                        DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
                         player.ActionList.Add(action);
                         break;
 
@@ -2786,7 +2786,7 @@ namespace Server.MirObjects
 
                         for (i = 0; i < player.GroupMembers.Count(); i++)
                         {
-                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, player.NPCID, "[" + param[0] + "]");
+                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time, player.NPCID, "[" + param[0] + "]");
                             player.GroupMembers[i].ActionList.Add(action);
                         }
                         break;
