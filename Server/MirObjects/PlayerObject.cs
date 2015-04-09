@@ -3924,9 +3924,9 @@ namespace Server.MirObjects
                             for (int i = 1000; i < character.Flags.Length; i++)
                             {
                                 if (character.Flags[i] == false) continue;
-                                if (character.CompletedQuests.Contains(i)) continue;
+                                if (character.CompletedQuests.Contains(i - 1000)) continue;
 
-                                character.CompletedQuests.Add(i);
+                                character.CompletedQuests.Add(i - 1000);
                                 character.Flags[i] = false;
                             }
                         }
