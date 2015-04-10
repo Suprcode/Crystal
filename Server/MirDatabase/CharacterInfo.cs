@@ -66,12 +66,14 @@ namespace Server.MirDatabase
         public List<PetInfo> Pets = new List<PetInfo>();
         public List<Buff> Buffs = new List<Buff>();
         public List<MailInfo> Mail = new List<MailInfo>();
+        public List<FriendInfo> Friends = new List<FriendInfo>();
 
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
         public int PearlCount;
 
         public List<QuestProgressInfo> CurrentQuests = new List<QuestProgressInfo>();
+        public List<int> CompletedQuests = new List<int>();
 
         public bool[] Flags = new bool[Globals.FlagIndexCount];
 
@@ -249,7 +251,13 @@ namespace Server.MirDatabase
                 }
 
                 PearlCount = reader.ReadInt32();
+            }
 
+            if (Envir.LoadVersion > 49)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                    CompletedQuests.Add(reader.ReadInt32());
             }
         }
 
@@ -359,11 +367,11 @@ namespace Server.MirDatabase
             writer.Write(IntelligentCreatures.Count);
             for (int i = 0; i < IntelligentCreatures.Count; i++)
                 IntelligentCreatures[i].Save(writer);
-
-            //writer.Write((byte)SummonedCreatureType);
-            //writer.Write(CreatureSummoned);
             writer.Write(PearlCount);
 
+            writer.Write(CompletedQuests.Count);
+            for (int i = 0; i < CompletedQuests.Count; i++)
+                writer.Write(CompletedQuests[i]);
         }
 
         public ListViewItem CreateListView()
@@ -497,6 +505,31 @@ namespace Server.MirDatabase
         }
     }
 
+    public class FriendInfo
+    {
+        public int CharacterIndex;
+        public CharacterInfo CharacterInfo;
+
+        public string Memo;
+
+        public FriendInfo(int charIndex) 
+        {
+            CharacterIndex = charIndex;
+        }
+
+        public FriendInfo(BinaryReader reader)
+        {
+            CharacterIndex = reader.ReadInt32();
+            Memo = reader.ReadString();
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(CharacterIndex);
+            writer.Write(Memo);
+        }
+    }
+
     //IntelligentCreature
     public class IntelligentCreatureInfo
     {
@@ -574,6 +607,7 @@ namespace Server.MirDatabase
         public int SlotIndex;
         public long ExpireTime = -9999;//
         public long BlackstoneTime = 0;
+        public long MaintainFoodTime = 0;
 
         public UserIntelligentCreature(IntelligentCreatureType creatureType, int slot, byte effect = 0)
         {
@@ -587,6 +621,7 @@ namespace Server.MirDatabase
             else ExpireTime = -9999;//permanent
 
             BlackstoneTime = 0;
+            MaintainFoodTime = 0;
 
             Filter = new IntelligentCreatureItemFilter();
         }
@@ -605,6 +640,12 @@ namespace Server.MirDatabase
             petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
             Filter = new IntelligentCreatureItemFilter(reader);
+            if (Envir.LoadVersion > 48)
+            {
+                Filter.PickupGrade = (ItemGrade)reader.ReadByte();
+                
+                MaintainFoodTime = reader.ReadInt64();//maintain food buff
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -620,6 +661,10 @@ namespace Server.MirDatabase
             writer.Write((byte)petMode);
 
             Filter.Save(writer);
+            writer.Write((byte)Filter.PickupGrade);//since Envir.Version 49
+
+            writer.Write(MaintainFoodTime);//maintain food buff
+
         }
 
         public Packet GetInfo()
@@ -641,6 +686,7 @@ namespace Server.MirDatabase
                 SlotIndex = SlotIndex,
                 ExpireTime = ExpireTime,
                 BlackstoneTime = BlackstoneTime,
+                MaintainFoodTime = MaintainFoodTime,
 
                 petMode = petMode,
 

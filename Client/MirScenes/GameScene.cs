@@ -94,6 +94,7 @@ namespace Client.MirScenes
 
         public IntelligentCreatureDialog IntelligentCreatureDialog;//IntelligentCreature
         public IntelligentCreatureOptionsDialog IntelligentCreatureOptionsDialog;//IntelligentCreature
+        public IntelligentCreatureOptionsGradeDialog IntelligentCreatureOptionsGradeDialog;//IntelligentCreature
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -216,6 +217,7 @@ namespace Client.MirScenes
 
             IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };//IntelligentCreature
             IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };//IntelligentCreature
+            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -398,6 +400,7 @@ namespace Client.MirScenes
                     RankingDialog.Hide();
                     IntelligentCreatureDialog.Hide();//IntelligentCreature
                     IntelligentCreatureOptionsDialog.Hide();//IntelligentCreature
+                    IntelligentCreatureOptionsGradeDialog.Hide();//IntelligentCreature
                     MountDialog.Hide();
                     FishingDialog.Hide();
                     FriendDialog.Hide();
@@ -1345,6 +1348,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
                     IntelligentCreatureEnableRename((S.IntelligentCreatureEnableRename)p);
                     break;
+                case (short)ServerPacketIds.NPCPearlGoods://pearl currency
+                    NPCPearlGoods((S.NPCPearlGoods)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -1518,6 +1524,12 @@ namespace Client.MirScenes
                     return 204 + 20000; //MagIcon
                 case BuffType.MentalState:
                     return 905;//todo replace with it's own custom buff icon (maybe make it change depending on state)
+                case BuffType.WonderShield:
+                    return 864;
+                case BuffType.MagicWonderShield:
+                    return 864;
+                case BuffType.BagWeight:
+                    return 872;
                 default:
                     return 0;
             }
@@ -2381,7 +2393,8 @@ namespace Client.MirScenes
             NextRunTime = CMain.Time + 2500;
             User.BlizzardFreezeTime = 0;
             User.ClearMagic();
-
+            if (User.ReincarnationStopTime > CMain.Time)
+                Network.Enqueue(new C.CancelReincarnation {});
             //if (User.CurrentAction == MirAction.Struck) return;
 
             MirDirection dir = User.Direction;
@@ -2827,6 +2840,7 @@ namespace Client.MirScenes
 
             NPCRate = p.Rate;
             if (!NPCDialog.Visible) return;
+            NPCGoodsDialog.usePearls = false;
             NPCGoodsDialog.NewGoods(p.List);
             NPCGoodsDialog.Show();
         }
@@ -4532,6 +4546,19 @@ namespace Client.MirScenes
             if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
         }
 
+        private void NPCPearlGoods(S.NPCPearlGoods p)//pearl currency
+        {
+            for (int i = 0; i < p.List.Count; i++)
+            {
+                p.List[i].Info = GetInfo(p.List[i].ItemIndex);
+            }
+
+            NPCRate = p.Rate;
+            if (!NPCDialog.Visible) return;
+            NPCGoodsDialog.usePearls = true;
+            NPCGoodsDialog.NewGoods(p.List);
+            NPCGoodsDialog.Show();
+        }
 
         public void AddItem(UserItem item)
         {
@@ -4643,8 +4670,8 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Grade != ItemGrade.None ? HoverItem.Info.FriendlyName +
-                "\n" + HoverItem.Info.Grade.ToString() : HoverItem.Info.FriendlyName
+                Text = HoverItem.Info.Grade != ItemGrade.None ? HoverItem.Info.FriendlyName + "\n" + HoverItem.Info.Grade.ToString() : 
+                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName
             };
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
@@ -4679,6 +4706,13 @@ namespace Client.MirScenes
                     case ItemType.Gem:
                         break;
                     case ItemType.Potion:
+                        break;
+                    case ItemType.Pets:
+                        if (HoverItem.Info.Shape == 26)//WonderDrug
+                        {
+                            string strTime = CreateTimeString((HoverItem.CurrentDura * 3600));
+                            text += "\n" + string.Format(" Duration {0}", strTime);
+                        }
                         break;
                     default:
                         text += string.Format(" Durability {0}/{1}", Math.Round(HoverItem.CurrentDura / 1000M),
@@ -4741,6 +4775,9 @@ namespace Client.MirScenes
                 case ItemType.Weapon:
                     if (HoverItem.Info.Shape == 49 || HoverItem.Info.Shape == 50)
                         fishingItem = true;
+                    break;
+                case ItemType.Pets:
+                    if (HoverItem.Info.Shape == 26) return null;
                     break;
                 default:
                     fishingItem = false;
@@ -5198,6 +5235,9 @@ namespace Client.MirScenes
                 case ItemType.Weapon:
                     if (HoverItem.Info.Shape == 49 || HoverItem.Info.Shape == 50)
                         fishingItem = true;
+                    break;
+                case ItemType.Pets:
+                    if (HoverItem.Info.Shape == 26) return null;
                     break;
                 default:
                     fishingItem = false;
@@ -6724,6 +6764,41 @@ namespace Client.MirScenes
 
             #region TOOLTIP
 
+            if (realItem.Type == ItemType.Pets && realItem.Shape == 26)//Dynamic wonderDrug
+            {
+                string strTime = CreateTimeString((HoverItem.CurrentDura * 3600));
+                switch ((int)realItem.Effect)
+                {
+                    case 0://exp low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase experience gained by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        break;
+                    case 1://drop low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase droprate by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        break;
+                    case 2://hp low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase MaxHP +{0} for {1}.", HoverItem.HP + realItem.HP, strTime);
+                        break;
+                    case 3://mp low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase MaxMP +{0} for {1}.", HoverItem.MP + realItem.MP, strTime);
+                        break;
+                    case 4://ac low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase AC {0}-{1} for {2}.", HoverItem.AC + realItem.MaxAC, strTime);
+                        break;
+                    case 5://amc low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase AMC {0}-{1} for {2}.", HoverItem.MAC + realItem.MaxAC, strTime);
+                        break;
+                    case 6://speed low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
+                        break;
+                    case 7://knapsack low/med/high
+                        HoverItem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        //strTime = CreateTimeString((dropitem.Durability * 3600) * 1000);
+                        //dropitem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", dropitem.Info.BagWeight, strTime);
+                        break;
+                }
+            }
+
+
             if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
             {
                 count++;
@@ -6943,6 +7018,30 @@ namespace Client.MirScenes
             UserIdList.Add(new UserId() { Id = id, UserName = "Unknown" });
             return "";
         }
+
+        private string CreateTimeString(double secs)
+        {
+            TimeSpan t = TimeSpan.FromSeconds(secs);
+            string answer;
+            if (t.TotalMinutes < 1.0)
+            {
+                answer = string.Format("{0}s", t.Seconds);
+            }
+            else if (t.TotalHours < 1.0)
+            {
+                answer = string.Format("{0}m", t.Minutes);
+            }
+            else if (t.TotalDays < 1.0)
+            {
+                answer = string.Format("{0}h {1:D2}m", (int)t.TotalHours, t.Minutes);
+            }
+            else // t.TotalDays >= 1.0
+            {
+                answer = string.Format("{0}d {1}h {2:D2}m", (int)t.TotalDays, (int)t.Hours, t.Minutes);
+            }
+            return answer;
+        }
+
     }
 
 
@@ -10092,7 +10191,7 @@ namespace Client.MirScenes
         public void Show()
         {
             Visible = true;
-            RefreshInventory();
+            //RefreshInventory();
         }
 
         private void WeightBar_BeforeDraw(object sender, EventArgs e)
@@ -12346,7 +12445,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
-                Visible = false
+                Visible = true
             };
             FriendButton.Click += (o, e) =>
             {
@@ -12826,6 +12925,8 @@ namespace Client.MirScenes
 
         public MirButton UpButton, DownButton, PositionBar;
 
+        public bool usePearls = false;//pearl currency
+
         public NPCGoodsDialog()
         {
             Index = 1000;
@@ -12997,8 +13098,15 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
             }
             */
-
-            if (SelectedItem.Price() > GameScene.Gold)
+            if (usePearls)//pearl currency
+            {
+                if (SelectedItem.Price() > GameScene.User.PearlCount)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
+                    return;
+                }
+            }
+            else if (SelectedItem.Price() > GameScene.Gold)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
                 return;
@@ -13059,6 +13167,7 @@ namespace Client.MirScenes
 
                 Cells[i].Item = Goods[i + StartIndex];
                 Cells[i].Border = SelectedItem != null && Cells[i].Item == SelectedItem;
+                Cells[i].usePearls = usePearls;//pearl currency
             }
 
 
@@ -17881,7 +17990,7 @@ namespace Client.MirScenes
     {
         public MirImageControl FullnessBG, FullnessFG, FullnessMin, FullnessNow;
         public MirImageControl PearlImage, BlackStoneImageBG, BlackStoneImageFG;
-        public MirLabel CreatureName, CreatureDeadline, CreaturePearls, CreatureInfo, CreatureInfo1, CreatureInfo2, HoverLabel;
+        public MirLabel CreatureName, CreatureDeadline, CreaturePearls, CreatureInfo, CreatureInfo1, CreatureInfo2, CreatureMaintainFoodBuff, HoverLabel;
         public MirButton CloseButton, HelpPetButton, CreatureRenameButton, SummonButton, DismissButton, ReleaseButton;
         public MirButton AutomaticModeButton, SemiAutoModeButton, OptionsMenuButton;
         public CreatureButton[] CreatureButtons;
@@ -18184,6 +18293,15 @@ namespace Client.MirScenes
                 NotControl = true,
             };
 
+            CreatureMaintainFoodBuff = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(25, 25),
+                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
+                Size = new Size(166, 21),
+                NotControl = true,
+            };
+
             HoverLabel = new MirLabel
             {
                 Parent = this,
@@ -18318,6 +18436,11 @@ namespace Client.MirScenes
             }
             if (sender == SummonButton)
             {
+                //if (GameScene.User.IntelligentCreatures[selectedCreature].Fullness == 0)
+                //{
+                //    GameScene.Scene.ChatDialog.ReceiveChat((string.Format("Creature {0} is starving, revitalize first.", GameScene.User.IntelligentCreatures[selectedCreature].CustomName)), ChatType.System);
+                //}
+
                 needSummon = true;
                 needUpdate = true;
 
@@ -18336,12 +18459,24 @@ namespace Client.MirScenes
             }
             if (sender == ReleaseButton)
             {
-                //clear all and get new info after server got update
-                for (int i = 0; i < CreatureButtons.Length; i++)
-                    CreatureButtons[i].Clear();
-                needRelease = true;
-                needUpdate = true;
-                Hide();
+                MirInputBox verificationBox = new MirInputBox("Please enter the creature's name for verification.");
+                verificationBox.OKButton.Click += (o1, e1) =>
+                {
+                    if (String.Compare(verificationBox.InputTextBox.Text, GameScene.User.IntelligentCreatures[selectedCreature].CustomName, StringComparison.OrdinalIgnoreCase) != 0)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("Verification Failed!!", ChatType.System);
+                    }
+                    else
+                    {
+                        //clear all and get new info after server got update
+                        for (int i = 0; i < CreatureButtons.Length; i++) CreatureButtons[i].Clear();
+                        Hide();
+                        Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], ReleaseMe = true });
+                    }
+                    verificationBox.Dispose();
+                };
+                verificationBox.Show();
+                return;
             }
             if (sender == SemiAutoModeButton)
             {
@@ -18369,6 +18504,7 @@ namespace Client.MirScenes
             {
                 //show ItemFilter
                 if (!GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.Show(GameScene.User.IntelligentCreatures[selectedCreature].Filter);
+                if (!GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Show(GameScene.User.IntelligentCreatures[selectedCreature].Filter.PickupGrade);
             }
 
             if (needUpdate)
@@ -18564,6 +18700,10 @@ namespace Client.MirScenes
             else
                 CreatureDeadline.Text = string.Format("Expire: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
             //
+            if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
+                CreatureMaintainFoodBuff.Text = "0";
+            else
+                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
 
             int StartIndex = CreatureButtons[SelectedCreatureSlot].AnimDefaultIdx;
             int AnimCount = CreatureButtons[SelectedCreatureSlot].AnimDefaultCount;
@@ -18614,6 +18754,8 @@ namespace Client.MirScenes
         }
         #endregion
 
+        #endregion
+
         public void SaveItemFilter(IntelligentCreatureItemFilter filter)
         {
             int selectedCreature = BeforeAfterDraw();
@@ -18622,8 +18764,6 @@ namespace Client.MirScenes
             GameScene.User.IntelligentCreatures[selectedCreature].Filter = filter;
             Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
         }
-
-        #endregion
 
         private string PrintTimeSpan(double secs)
         {
@@ -18653,9 +18793,17 @@ namespace Client.MirScenes
             return answer;
         }
 
+        public override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.BringToFront();
+            if (GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.BringToFront();
+        }
+
         public void Hide()
         {
             if (!Visible) return;
+            if (GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
             if (GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.Hide();
             AnimSwitched = false;
             AnimNeedSwitch = false;
@@ -18905,7 +19053,7 @@ namespace Client.MirScenes
     {
         public readonly string[] OptionNames = { "All Items", "Gold", "Weapons", "Armours", "Helmets", "Boots", "Belts", "Jewelry", "Others" };
         public IntelligentCreatureItemFilter Filter;
-        public Point locationOffset = new Point(452, 63);
+        public Point locationOffset = new Point(450, 63);
 
         public MirButton OptionsSaveButton, OptionsCancelButton;
         public MirCheckBox[] CreatureOptions;
@@ -18923,7 +19071,7 @@ namespace Client.MirScenes
             for (int i = 0; i < CreatureOptions.Length; i++)
             {
                 int offsetY = i * 30;
-                CreatureOptions[i] = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(16, 16 + offsetY), Library = Libraries.Prguse };
+                CreatureOptions[i] = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(16, (16 + offsetY)), Library = Libraries.Prguse };
                 CreatureOptions[i].LabelText = OptionNames[i];
                 CreatureOptions[i].Click += CheckBoxClick;
             }
@@ -18957,12 +19105,17 @@ namespace Client.MirScenes
         {
             if (sender == OptionsSaveButton)
             {
+                Filter.PickupGrade = GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType;
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
                 GameScene.Scene.IntelligentCreatureDialog.SaveItemFilter(Filter);
                 Hide();
             }
             if (sender == OptionsCancelButton)
             {
                 Filter = new IntelligentCreatureItemFilter();
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType = ItemGrade.None;
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.RefreshGradeFilter();
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
                 RefreshFilter();
                 Hide();
             }
@@ -19036,6 +19189,133 @@ namespace Client.MirScenes
             Filter = filter;
             Visible = true;
             RefreshFilter();
+        }
+    }
+    public sealed class IntelligentCreatureOptionsGradeDialog : MirImageControl
+    {
+        private string[] GradeStrings = { "All", "Common", "Rare", "Mythical", "Legendary" };
+
+        public MirButton NextButton, PrevButton;
+        public MirLabel GradeLabel;
+        public int SelectedGrade = 0;
+        public ItemGrade GradeType;
+
+        public Point locationOffset = new Point(449, 39);
+
+        public IntelligentCreatureOptionsGradeDialog()
+        {
+            Index = 237;
+            Library = Libraries.Prguse;
+            Movable = false;
+            Sort = true;
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+            BeforeDraw += IntelligentCreatureOptionsGradeDialog_BeforeDraw;
+
+            NextButton = new MirButton()
+            {
+                HoverIndex = 396,
+                Index = 396,
+                Location = new Point(96, 5),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 397,
+                Sound = SoundList.ButtonA,
+            };
+            NextButton.Click += Button_Click;
+
+            PrevButton = new MirButton()
+            {
+                HoverIndex = 398,
+                Index = 398,
+                Location = new Point(76, 5),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 399,
+                Sound = SoundList.ButtonA,
+            };
+            PrevButton.Click += Button_Click;
+
+            GradeLabel = new MirLabel()
+            {
+                Parent = this,
+                Location = new Point(8, 0),
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Size = new Size(70, 21),
+                NotControl = true,
+            };
+        }
+
+        void Button_Click(object sender, EventArgs e)
+        {
+            if (sender == NextButton)
+            {
+                SelectedGrade++;
+                if (SelectedGrade >= GradeStrings.Length) SelectedGrade = GradeStrings.Length - 1;
+            }
+            if (sender == PrevButton)
+            {
+                SelectedGrade--;
+                if (SelectedGrade <= 0) SelectedGrade = 0;
+            }
+
+            GradeLabel.Text = GradeStrings[SelectedGrade];
+            GradeType = (ItemGrade)((byte)SelectedGrade);
+
+            GradeLabel.ForeColour = GradeNameColor(GradeType);
+        }
+
+        private Color GradeNameColor(ItemGrade grade)
+        {
+            switch (grade)
+            {
+                case ItemGrade.Common:
+                    return Color.Yellow;
+                case ItemGrade.Rare:
+                    return Color.DeepSkyBlue;
+                case ItemGrade.Legendary:
+                    return Color.DarkOrange;
+                case ItemGrade.Mythical:
+                    return Color.Plum;
+                default:
+                    return Color.White;
+            }
+        }
+
+       // public override void OnMouseDown(MouseEventArgs e)
+        //{
+       //     GameScene.Scene.IntelligentCreatureOptionsDialog.BringToFront();
+        //    base.OnMouseDown(e);
+       // }
+
+        void IntelligentCreatureOptionsGradeDialog_BeforeDraw(object sender, EventArgs e)
+        {
+            if (!GameScene.Scene.IntelligentCreatureDialog.Visible)
+            {
+                Hide();
+                return;
+            }
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+        }
+
+        public void RefreshGradeFilter()
+        {
+            SelectedGrade = (int)((byte)GradeType);
+            GradeLabel.Text = GradeStrings[SelectedGrade];
+            GradeLabel.ForeColour = GradeNameColor(GradeType);
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+
+        public void Show(ItemGrade grade)
+        {
+            if (Visible) return;
+            Visible = true;
+            GradeType = grade;
+            RefreshGradeFilter();
         }
     }
 
@@ -19343,6 +19623,15 @@ namespace Client.MirScenes
                             text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Value);
                             break;
                     }
+                    break;
+                case BuffType.WonderShield:
+                    text = string.Format("WonderShield\nIncreases AC by: {0}-{0}.\n", Value);
+                    break;
+                case BuffType.MagicWonderShield:
+                    text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Value);
+                    break;
+                case BuffType.BagWeight:
+                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Value);
                     break;
             }
 

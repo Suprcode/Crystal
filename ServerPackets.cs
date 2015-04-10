@@ -2495,7 +2495,6 @@ namespace ServerPackets
             writer.Write(Level);
         }
     }
-    
 
     public sealed class ObjectMagic : Packet
     {
@@ -3876,9 +3875,11 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.RequestReincarnation; } }
 
+
         protected override void ReadPacket(BinaryReader reader)
         {
         }
+
         protected override void WritePacket(BinaryWriter writer)
         {
         }
@@ -4593,6 +4594,33 @@ namespace ServerPackets
 
         protected override void WritePacket(BinaryWriter writer)
         {
+        }
+    }
+
+    public sealed class NPCPearlGoods : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.NPCPearlGoods; } }
+
+        public List<UserItem> List = new List<UserItem>();
+        public float Rate;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int count = reader.ReadInt32();
+
+            for (int i = 0; i < count; i++)
+                List.Add(new UserItem(reader));
+
+            Rate = reader.ReadSingle();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(List.Count);
+
+            for (int i = 0; i < List.Count; i++)
+                List[i].Save(writer);
+
+            writer.Write(Rate);
         }
     }
 }

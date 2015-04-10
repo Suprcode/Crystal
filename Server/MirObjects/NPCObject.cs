@@ -45,7 +45,8 @@ namespace Server.MirObjects
             AwakeningKey = "[@AWAKENING]",
             DisassembleKey = "[@DISASSEMBLE]",
             DowngradeKey = "[@DOWNGRADE]",
-            ResetKey = "[@RESET]";
+            ResetKey = "[@RESET]",
+            PearlBuyKey = "[@PEARLBUY]";//pearl currency
 
 
         //public static Regex Regex = new Regex(@"[^\{\}]<.*?/(.*?)>");
@@ -189,7 +190,13 @@ namespace Server.MirObjects
 
                     if (map == null) continue;
 
-                    map.Info.ActiveCoords.Add(new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value)));
+                    Point point = new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value));
+
+                    if (!map.Info.ActiveCoords.Contains(point))
+                    {
+                        map.Info.ActiveCoords.Add(point);
+                    }
+
                 }
                 if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
                 {
@@ -211,9 +218,9 @@ namespace Server.MirObjects
 
             for (int i = 0; i < buttons.Count; i++)
             {
-                string section = buttons[i].ToUpper();
+                string section = buttons[i];
 
-                bool match = NPCSections.Any(t => t.Key == section);
+                bool match = NPCSections.Any(t => t.Key.ToUpper() == section.ToUpper());
 
                 if (match) continue;
 
@@ -241,11 +248,11 @@ namespace Server.MirObjects
             List<string> currentSay = say, currentButtons = buttons;
 
             //Used to fake page name
-            string tempSectionName = ArgumentParse(sectionName).ToUpper();
+            string tempSectionName = ArgumentParse(sectionName);
 
             for (int i = 0; i < lines.Count; i++)
             {
-                if (!lines[i].ToUpper().StartsWith(tempSectionName)) continue;
+                if (!lines[i].ToUpper().StartsWith(tempSectionName.ToUpper())) continue;
 
                 for (int x = i + 1; x < lines.Count; x++)
                 {
@@ -792,15 +799,26 @@ namespace Server.MirObjects
             uint cost = goods.Price();
             cost = (uint) (cost*Info.PriceRate);
 
-            if (cost > player.Account.Gold) return;
+            if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
+            {
+                if (cost > player.Info.PearlCount) return;
+            }
+            else if (cost > player.Account.Gold) return;
 
             UserItem item = (isBuyBack || isUsed ? goods : Envir.CreateFreshItem(goods.Info));
             item.Count = goods.Count;
 
             if (!player.CanGainItem(item)) return;
 
-            player.Account.Gold -= cost;
-            player.Enqueue(new S.LoseGold {Gold = cost});
+            if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
+            {
+                player.Info.PearlCount -= (int)cost;
+            }
+            else
+            {
+                player.Account.Gold -= cost;
+                player.Enqueue(new S.LoseGold { Gold = cost });
+            }
             player.GainItem(item);
 
             if(isUsed)
@@ -963,6 +981,12 @@ namespace Server.MirObjects
                     break;
                 case ResetKey:
                     player.Enqueue(new S.NPCReset());
+                    break;
+                case PearlBuyKey://pearl currency
+                    for (int i = 0; i < Goods.Count; i++)
+                        player.CheckItem(Goods[i]);
+                    allGoods.AddRange(Goods);
+                    player.Enqueue(new S.NPCPearlGoods { List = allGoods, Rate = Info.PriceRate });
                     break;
             }
 
@@ -1269,6 +1293,18 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
 
                     acts.Add(new NPCActions(ActionType.TakeGold, parts[1]));
+                    break;
+
+                case "GIVEPEARLS":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.GivePearls, parts[1]));
+                    break;
+
+                case "TAKEPEARLS":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.TakePearls, parts[1]));
                     break;
 
                 case "GIVEITEM":
@@ -1585,7 +1621,12 @@ namespace Server.MirObjects
                     break;
 
                 case "GROUPGOTO":
+                    if (parts.Length < 2) return;
                     acts.Add(new NPCActions(ActionType.GroupGoto, parts[1]));
+                    break;
+
+                case "ENTERMAP":
+                    acts.Add(new NPCActions(ActionType.EnterMap));
                     break;
             }
 
@@ -2115,6 +2156,7 @@ namespace Server.MirObjects
             for (var i = 0; i < acts.Count; i++)
             {
                 uint gold;
+                uint Pearls;
                 uint count;
                 string tempString = string.Empty;
                 int x, y;
@@ -2171,6 +2213,23 @@ namespace Server.MirObjects
 
                         player.Account.Gold -= gold;
                         player.Enqueue(new S.LoseGold { Gold = gold });
+                        break;
+
+                    case ActionType.GivePearls:
+                        if (!uint.TryParse(param[0], out Pearls)) return;
+
+                        if (Pearls + player.Info.PearlCount >= int.MaxValue)
+                            Pearls = (uint)(int.MaxValue - player.Info.PearlCount);
+
+                        player.IntelligentCreatureGainPearls((int)Pearls);
+                        break;
+
+                    case ActionType.TakePearls:
+                        if (!uint.TryParse(param[0], out Pearls)) return;
+
+                        if (Pearls >= player.Info.PearlCount) Pearls = (uint)player.Info.PearlCount;
+
+                        player.IntelligentCreatureLosePearls((int)Pearls);
                         break;
 
                     case ActionType.GiveItem:
@@ -2416,7 +2475,7 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.Goto:
-                        DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, player.NPCID, "[" + param[0] + "]");
+                        DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
                         player.ActionList.Add(action);
                         break;
 
@@ -2727,9 +2786,16 @@ namespace Server.MirObjects
 
                         for (i = 0; i < player.GroupMembers.Count(); i++)
                         {
-                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, player.NPCID, "[" + param[0] + "]");
+                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time, player.NPCID, "[" + param[0] + "]");
                             player.GroupMembers[i].ActionList.Add(action);
                         }
+                        break;
+
+                    case ActionType.EnterMap:
+                        if (player.NPCMoveMap == null || player.NPCMoveCoord.IsEmpty) return;
+                        player.Teleport(player.NPCMoveMap, player.NPCMoveCoord, false);
+                        player.NPCMoveMap = null;
+                        player.NPCMoveCoord = Point.Empty;
                         break;
                 }
             }
@@ -2854,7 +2920,10 @@ namespace Server.MirObjects
         AddMailItem,
         AddMailGold,
         SendMail,
-        GroupGoto
+        GroupGoto,
+        EnterMap,
+        GivePearls,
+        TakePearls
     }
     public enum CheckType
     {

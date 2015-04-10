@@ -35,6 +35,8 @@ namespace Server
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
 	    public static string AwakeningDropFilename = "00Awakening";
+        public static string StrongboxDropFilename = "00Strongbox";
+        public static string BlackstoneDropFilename = "00Blackstone";
 
         //Network
         public static string IPAddress = "127.0.0.1";
@@ -104,6 +106,13 @@ namespace Server
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
                              ParalysisRing = "Paralysis";
+
+        public static string PKTownMapName = "3";
+        public static int PKTownPositionX = 848,
+                          PKTownPositionY = 677;
+
+        public static uint MaxDropGold = 2000;
+        public static bool DropGold = true;
 
         //IntelligentCreature
         public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan" };
@@ -252,6 +261,14 @@ namespace Server
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
             FireRing = Reader.ReadString("Items", "FireRing", FireRing);
+
+            //PKTown
+            PKTownMapName = Reader.ReadString("PKTown", "PKTownMapName", PKTownMapName);
+            PKTownPositionX = Reader.ReadInt32("PKTown", "PKTownPositionX", PKTownPositionX);
+            PKTownPositionY = Reader.ReadInt32("PKTown", "PKTownPositionY", PKTownPositionY);
+
+            DropGold = Reader.ReadBoolean("DropGold", "DropGold", DropGold);
+            MaxDropGold = Reader.ReadUInt32("DropGold", "MaxDropGold", MaxDropGold);
 
             for (int i = 0; i < ClassBaseStats.Length; i++)
             {
@@ -413,6 +430,13 @@ namespace Server
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);
+
+            Reader.Write("PKTown", "PKTownMapName", PKTownMapName);
+            Reader.Write("PKTown", "PKTownPositionX", PKTownPositionX);
+            Reader.Write("PKTown", "PKTownPositionY", PKTownPositionY);
+
+            Reader.Write("DropGold", "DropGold", DropGold);
+            Reader.Write("DropGold", "MaxDropGold", MaxDropGold);
 
             for (int i = 0; i < ClassBaseStats.Length; i++)
             {

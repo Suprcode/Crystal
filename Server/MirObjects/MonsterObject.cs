@@ -656,19 +656,25 @@ namespace Server.MirObjects
 
         protected virtual bool DropGold(uint gold)
         {
-            if (EXPOwner != null && EXPOwner.CanGainGold(gold))
+            if (EXPOwner != null && EXPOwner.CanGainGold(gold) && !Settings.DropGold)
             {
                 EXPOwner.WinGold(gold);
                 return true;
             }
 
-            ItemObject ob = new ItemObject(this, gold)
+            uint count = gold / Settings.MaxDropGold == 0 ? gold / Settings.MaxDropGold : gold / Settings.MaxDropGold + 1;
+            for (int i = 0; i < count; i++)
             {
-                Owner = EXPOwner,
-                OwnerTime = Envir.Time + Settings.Minute,
-            };
+                ItemObject ob = new ItemObject(this, i != count - 1 ? Settings.MaxDropGold : gold % Settings.MaxDropGold)
+                {
+                    Owner = EXPOwner,
+                    OwnerTime = Envir.Time + Settings.Minute,
+                };
 
-            return ob.Drop(Settings.DropRange);
+                ob.Drop(Settings.DropRange);
+            }
+
+            return true;
         }
 
         public override void Process()
@@ -1148,10 +1154,8 @@ namespace Server.MirObjects
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
-
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
-
                         for (int i = 0; i < cell.Objects.Count; i++)
                         {
                             MapObject ob = cell.Objects[i];

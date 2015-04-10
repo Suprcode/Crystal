@@ -68,16 +68,17 @@ public enum QuestState : byte
 
 public enum DefaultNPCType : byte
 {
-    Login = 0,
-    LevelUp = 1,
-    UseItem = 2,
-    MapCoord = 3,
-    Die = 4,
-    Trigger = 5,
-    CustomCommand = 6,
-    OnAcceptQuest = 7,
-    OnFinishQuest = 8,
-    Daily = 9
+    Login,
+    LevelUp,
+    UseItem,
+    MapCoord,
+    MapEnter,
+    Die,
+    Trigger,
+    CustomCommand,
+    OnAcceptQuest,
+    OnFinishQuest,
+    Daily
 }
 
 public enum IntelligentCreatureType : byte//IntelligentCreature
@@ -796,7 +797,10 @@ public enum BuffType : byte
     VampireShot,
     PoisonShot,
     CounterAttack,
-    MentalState
+    MentalState,
+    WonderShield,
+    MagicWonderShield,
+    BagWeight
 }
 
 public enum DefenceType : byte
@@ -1003,7 +1007,8 @@ public enum ServerPacketIds : short
 	ResizeInventory,
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
-    IntelligentCreatureEnableRename
+    IntelligentCreatureEnableRename,
+    NPCPearlGoods
 }
 
 public enum ClientPacketIds : short
@@ -1086,6 +1091,7 @@ public enum ClientPacketIds : short
     ShareQuest,
 
     AcceptReincarnation,
+    CancelReincarnation,
     CombineItem,
 
     SetConcentration,
@@ -3317,6 +3323,8 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
     public bool PetPickupAccessories = false;
     public bool PetPickupOthers = false;
 
+    public ItemGrade PickupGrade = ItemGrade.None;
+
     public IntelligentCreatureItemFilter()
     {
     }
@@ -3399,6 +3407,7 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
         PetPickupBelts = reader.ReadBoolean();
         PetPickupAccessories = reader.ReadBoolean();
         PetPickupOthers = reader.ReadBoolean();
+        //PickupGrade = (ItemGrade)reader.ReadByte();
     }
 
     public void Save(BinaryWriter writer)
@@ -3412,6 +3421,7 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
         writer.Write(PetPickupBelts);
         writer.Write(PetPickupAccessories);
         writer.Write(PetPickupOthers);
+        //writer.Write((byte)PickupGrade);
     }
 }
 
@@ -3425,6 +3435,7 @@ public class ClientIntelligentCreature//IntelligentCreature
     public int SlotIndex;
     public long ExpireTime;//in days
     public long BlackstoneTime;
+    public long MaintainFoodTime;
 
     public IntelligentCreaturePickupMode petMode = IntelligentCreaturePickupMode.SemiAutomatic;
 
@@ -3451,6 +3462,8 @@ public class ClientIntelligentCreature//IntelligentCreature
 
         CreatureRules = new IntelligentCreatureRules(reader);
         Filter = new IntelligentCreatureItemFilter(reader);
+        Filter.PickupGrade = (ItemGrade)reader.ReadByte();
+        MaintainFoodTime = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -3468,6 +3481,8 @@ public class ClientIntelligentCreature//IntelligentCreature
 
         CreatureRules.Save(writer);
         Filter.Save(writer);
+        writer.Write((byte)Filter.PickupGrade);
+        writer.Write(MaintainFoodTime);
     }
 }
 
@@ -3699,6 +3714,8 @@ public abstract class Packet
                 return new C.ShareQuest();
             case (short)ClientPacketIds.AcceptReincarnation:
                 return new C.AcceptReincarnation();
+            case (short)ClientPacketIds.CancelReincarnation:
+                return new C.CancelReincarnation();
             case (short)ClientPacketIds.CombineItem:
                 return new C.CombineItem();
             case (short)ClientPacketIds.SetConcentration://ArcherSpells - Elemental system
@@ -4123,6 +4140,8 @@ public abstract class Packet
                 return new S.UpdateIntelligentCreatureList();
             case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
                 return new S.IntelligentCreatureEnableRename();
+            case (short)ServerPacketIds.NPCPearlGoods://pearl currency
+                return new S.NPCPearlGoods();
             default:
                 throw new NotImplementedException();
         }
