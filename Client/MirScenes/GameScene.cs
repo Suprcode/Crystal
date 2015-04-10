@@ -10178,7 +10178,7 @@ namespace Client.MirScenes
         public void Show()
         {
             Visible = true;
-            RefreshInventory();
+            //RefreshInventory();
         }
 
         private void WeightBar_BeforeDraw(object sender, EventArgs e)
