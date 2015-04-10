@@ -14,10 +14,7 @@ namespace Server.MirDatabase
 
     public class QuestProgressInfo
     {
-        public int Index
-        {
-            get { return Info.Index; }
-        }
+        public int Index;
 
         public QuestInfo Info;
 
@@ -47,9 +44,9 @@ namespace Server.MirDatabase
 
         public QuestProgressInfo(int index)
         {
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
+            Index = index;
 
-            if (Info == null) return;
+            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
 
             foreach (var kill in Info.KillTasks)
                 KillTaskCount.Add(0);

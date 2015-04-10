@@ -235,6 +235,7 @@ namespace Server.MirObjects
         public NPCPage NPCPage;
         public bool NPCSuccess;
         public bool NPCDelayed;
+        public List<string> NPCSpeech;
 
         public Map NPCMoveMap;
         public Point NPCMoveCoord;
@@ -1632,12 +1633,6 @@ namespace Server.MirObjects
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
                 QuestProgressInfo quest = CurrentQuests[i];
-
-                if (quest.Info == null) //fail safe incase the quest was deleted
-                {
-                    CurrentQuests.RemoveAt(i);
-                    continue;
-                }
 
                 quest.ResyncTasks();
                 SendUpdateQuest(quest, QuestState.Add);
