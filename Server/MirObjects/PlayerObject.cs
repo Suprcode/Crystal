@@ -1731,19 +1731,19 @@ namespace Server.MirObjects
         {
             if (!Dead) return;
 
-            Map temp = null;
-            Point bindLocation;
+            Map temp = Envir.GetMap(BindMapIndex);
+            Point bindLocation = BindLocation;
 
             if (Info.PKPoints >= 200)
             {
                 temp = Envir.GetMapByNameAndInstance(Settings.PKTownMapName, 1);
                 bindLocation = new Point(Settings.PKTownPositionX, Settings.PKTownPositionY);
-            }
 
-            if (temp == null)
-            {
-                temp = Envir.GetMap(BindMapIndex);
-                bindLocation = BindLocation;
+                if (temp == null)
+                {
+                    temp = Envir.GetMap(BindMapIndex);
+                    bindLocation = BindLocation;
+                }
             }
 
             if (temp == null || !temp.ValidPoint(BindLocation)) return;
@@ -1757,7 +1757,7 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
 
             CurrentMap = temp;
-            CurrentLocation = BindLocation;
+            CurrentLocation = bindLocation;
 
             CurrentMap.AddObject(this);
 
@@ -3553,6 +3553,29 @@ namespace Server.MirObjects
                             ReceiveChat("You haven't a mount...", ChatType.System);
 
                         break;
+                    case "SETFLAG":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 2) return;
+
+                        int tempInt = 0;
+
+                        if (!int.TryParse(parts[1], out tempInt)) return;
+
+                        if (tempInt > Info.Flags.Length - 1) return;
+
+                        Info.Flags[tempInt] = true;
+
+                        break;
+
+                    case "LISTFLAGS":
+                        for (int i = 0; i < Info.Flags.Length; i++)
+                        {
+                            if (Info.Flags[i] == false) continue;
+
+                            ReceiveChat("Flag " + i, ChatType.Hint);
+                        }
+                        break;
 
                     case "CLEARFLAGS":
                         if (!IsGM) return;
@@ -3634,8 +3657,6 @@ namespace Server.MirObjects
                     case "ADJUSTPKPOINT":
                         if (!IsGM) return;
                         if (parts.Length < 2) return;
-                        
-                        int tempInt;
 
                         if(parts.Length > 2)
                         {

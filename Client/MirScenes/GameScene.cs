@@ -1547,6 +1547,8 @@ namespace Client.MirScenes
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
+
+            InventoryDialog.RefreshInventory();
         }
         private void UserLocation(S.UserLocation p)
         {
@@ -2830,6 +2832,8 @@ namespace Client.MirScenes
             NPCGoodsDialog.usePearls = false;
             NPCGoodsDialog.NewGoods(p.List);
             NPCGoodsDialog.Show();
+
+
         }
         private void NPCSell()
         {
@@ -9923,7 +9927,7 @@ namespace Client.MirScenes
 
             ItemButton2 = new MirButton
             {
-                Index = 169,
+                Index = 738,
                 Library = Libraries.Title,
                 Location = new Point(78, 7),
                 Parent = this,
@@ -10055,6 +10059,7 @@ namespace Client.MirScenes
                     Visible = false,
                 };
             }
+
         }
 
         void Button_Click(object sender, EventArgs e)
@@ -10072,7 +10077,6 @@ namespace Client.MirScenes
             }
             else
             {
-                Reset();
                 if (sender == ItemButton)
                 {
                     RefreshInventory();
@@ -10083,6 +10087,8 @@ namespace Client.MirScenes
                 }
                 else if (sender == QuestButton)
                 {
+                    Reset();
+
                     ItemButton.Index = 737;
                     ItemButton2.Index = 738;
                     QuestButton.Index = 198;
@@ -10120,8 +10126,12 @@ namespace Client.MirScenes
             AddButton.Visible = false;
         }
 
+
+
         public void RefreshInventory()
         {
+            Reset();
+
             ItemButton.Index = 197;
             ItemButton2.Index = 738;
             QuestButton.Index = 739;
@@ -10142,6 +10152,8 @@ namespace Client.MirScenes
 
         public void RefreshInventory2()
         {
+            Reset();
+
             ItemButton.Index = 737;
             ItemButton2.Index = 168;
             QuestButton.Index = 739;
@@ -10178,6 +10190,7 @@ namespace Client.MirScenes
         public void Show()
         {
             Visible = true;
+
             //RefreshInventory();
         }
 
