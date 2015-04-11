@@ -1746,7 +1746,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (temp == null || !temp.ValidPoint(BindLocation)) return;
+            if (temp == null || !temp.ValidPoint(bindLocation)) return;
 
             Dead = false;
             SetHP(MaxHP);
