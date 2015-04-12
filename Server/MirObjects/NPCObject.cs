@@ -66,6 +66,7 @@ namespace Server.MirObjects
 
         public static List<string> Args = new List<string>();
 
+        #region Overrides
         public override string Name
         {
             get { return Info.Name; }
@@ -97,7 +98,7 @@ namespace Server.MirObjects
         {
             get { throw new NotSupportedException(); }
         }
-
+        #endregion
 
         public NPCObject(NPCInfo info)
         {
@@ -167,7 +168,7 @@ namespace Server.MirObjects
             Types = new List<ItemType>();
             NPCSections = new List<NPCPage>();
 
-            if(Info.IsDefault)
+            if (Info.IsDefault)
             {
                 SMain.Envir.CustomCommands.Clear();
             }
@@ -244,7 +245,6 @@ namespace Server.MirObjects
                 elseButtons = new List<string>(),
                 gotoButtons = new List<string>();
 
-            //Group<string> lines = scriptLines.ToList();
             List<string> currentSay = say, currentButtons = buttons;
 
             //Used to fake page name
@@ -306,27 +306,24 @@ namespace Server.MirObjects
                         var parts = lines[x].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (parts.Count() > 1)
-                        switch (parts[0].ToUpper())
-                        {
-                            case "GOTO":
-                            case "GROUPGOTO":
-                                gotoButtons.Add(string.Format("[{0}]", parts[1].ToUpper()));
-                                break;
-                            case "TIMERECALL":
-                                if (parts.Length > 2)
-                                gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
-                                break;
-                            case "TIMERECALLGROUP":
-                                if (parts.Length > 2)
-                                gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
-                                break;
-                            case "DELAYGOTO":
-                                gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
-                                break;
-                            case "LISTEN":
-                                gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
-                                break;
-                        }
+                            switch (parts[0].ToUpper())
+                            {
+                                case "GOTO":
+                                case "GROUPGOTO":
+                                    gotoButtons.Add(string.Format("[{0}]", parts[1].ToUpper()));
+                                    break;
+                                case "TIMERECALL":
+                                    if (parts.Length > 2)
+                                        gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
+                                    break;
+                                case "TIMERECALLGROUP":
+                                    if (parts.Length > 2)
+                                        gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
+                                    break;
+                                case "DELAYGOTO":
+                                    gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
+                                    break;
+                            }
                     }
 
                     currentSay.Add(lines[x].TrimEnd());
@@ -459,7 +456,7 @@ namespace Server.MirObjects
 
                     int index;
                     if (!int.TryParse(lines[i], out index)) return;
-                    Types.Add((ItemType) index);
+                    Types.Add((ItemType)index);
                 }
             }
         }
@@ -592,7 +589,7 @@ namespace Server.MirObjects
             if (Envir.Time < TurnTime) return;
 
             TurnTime = Envir.Time + TurnDelay;
-            Turn((MirDirection) Envir.Random.Next(3));
+            Turn((MirDirection)Envir.Random.Next(3));
 
             if (UsedGoodsTime < SMain.Envir.Time)
             {
@@ -697,7 +694,7 @@ namespace Server.MirObjects
         {
             Direction = dir;
 
-            Broadcast(new S.ObjectTurn {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
+            Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
         public override Packet GetInfo()
@@ -711,7 +708,7 @@ namespace Server.MirObjects
                     Location = CurrentLocation,
                     Direction = Direction,
                     QuestIDs = (from q in Quests
-                              select q.Index).ToList()
+                                select q.Index).ToList()
                 };
         }
 
@@ -729,7 +726,7 @@ namespace Server.MirObjects
         {
             key = key.ToUpper();
 
-            if(!player.NPCDelayed)
+            if (!player.NPCDelayed)
             {
                 if (key != MainKey) // && ObjectID != player.DefaultNPC.ObjectID
                 {
@@ -770,7 +767,7 @@ namespace Server.MirObjects
             }
 
             bool isUsed = false;
-            if(goods == null)
+            if (goods == null)
             {
                 for (int i = 0; i < UsedGoods.Count; i++)
                 {
@@ -797,7 +794,7 @@ namespace Server.MirObjects
             if (goods == null || goods.Count == 0 || goods.Count > goods.Info.StackSize) return;
 
             uint cost = goods.Price();
-            cost = (uint) (cost*Info.PriceRate);
+            cost = (uint)(cost * Info.PriceRate);
 
             if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
             {
@@ -821,7 +818,7 @@ namespace Server.MirObjects
             }
             player.GainItem(item);
 
-            if(isUsed)
+            if (isUsed)
             {
                 UsedGoods.Remove(goods);
 
@@ -1080,7 +1077,7 @@ namespace Server.MirObjects
 
         public void ParseCheck(string line)
         {
-            var parts = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             parts = ParseArguments(parts);
 
@@ -1147,7 +1144,7 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
 
                     var fileName = Path.Combine(Settings.NameListPath, parts[1] + ".txt");
-                    
+
                     CheckList.Add(new NPCChecks(CheckType.CheckNameList, fileName));
                     break;
 
@@ -1256,7 +1253,7 @@ namespace Server.MirObjects
         }
         public void ParseAct(List<NPCActions> acts, string line)
         {
-            var parts = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             parts = ParseArguments(parts);
 
@@ -1355,7 +1352,7 @@ namespace Server.MirObjects
                     if (!File.Exists(fileName))
                         File.Create(fileName);
 
-                        acts.Add(new NPCActions(ActionType.AddNameList, fileName));
+                    acts.Add(new NPCActions(ActionType.AddNameList, fileName));
                     break;
 
                 //cant use stored var
@@ -1447,7 +1444,7 @@ namespace Server.MirObjects
                     {
                         string flagIndex = match.Groups[1].Captures[0].Value;
                         acts.Add(new NPCActions(ActionType.Set, flagIndex, parts[2]));
-                    }   
+                    }
                     break;
 
                 case "PARAM1":
@@ -1647,9 +1644,9 @@ namespace Server.MirObjects
                     var match = regex.Match(part);
 
                     if (!match.Success) continue;
-                    
-                    string innerMatch = match.Groups[1].Captures[0].Value.ToUpper();  
- 
+
+                    string innerMatch = match.Groups[1].Captures[0].Value.ToUpper();
+
                     Match varMatch = varRegex.Match(innerMatch);
 
                     if (varRegex.Match(innerMatch).Success)
@@ -1661,7 +1658,7 @@ namespace Server.MirObjects
                             SayCommandCheck = FindVariable(player, "%" + varMatch.Groups[2].Captures[0].Value.ToUpper());
                             break;
                         case "NPCNAME":
-                            SayCommandCheck = NPCName.Replace("_"," ");
+                            SayCommandCheck = NPCName.Replace("_", " ");
                             break;
                         case "USERNAME":
                             SayCommandCheck = player.Name;
@@ -1775,7 +1772,7 @@ namespace Server.MirObjects
         {
             var failed = false;
 
-            for(int i = 0 ; i < CheckList.Count ; i++)
+            for (int i = 0; i < CheckList.Count; i++)
             {
                 NPCChecks check = CheckList[i];
                 List<string> param = check.Params.Select(t => FindVariable(player, t)).ToList();
@@ -1839,7 +1836,7 @@ namespace Server.MirObjects
 
                         foreach (var item in player.Info.Inventory.Where(item => item != null && item.Info == info))
                         {
-                            if(checkDura)
+                            if (checkDura)
                                 if (item.CurrentDura < dura * 1000) continue;
 
                             if (count > item.Count)
@@ -1940,7 +1937,7 @@ namespace Server.MirObjects
                             SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
-  
+
                         break;
 
                     case CheckType.CheckRange:
@@ -1951,7 +1948,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        var target = new Point {X = x, Y = y};
+                        var target = new Point { X = x, Y = y };
 
                         failed = !Functions.InRange(player.CurrentLocation, target, range);
                         break;
@@ -1977,7 +1974,7 @@ namespace Server.MirObjects
 
                         failed = flag != tempBool;
                         break;
-                        
+
                     case CheckType.CheckHum:
                         if (!int.TryParse(param[0], out tempInt) || !int.TryParse(param[2], out tempInt2))
                         {
@@ -2034,9 +2031,9 @@ namespace Server.MirObjects
                         }
 
                         failed = (!Compare(param[1], SMain.Envir.Objects.Count((
-                            d => d.CurrentMap == map && 
-                                d.Race == ObjectType.Monster && 
-                                string.Equals(d.Name.Replace(" ",""), param[0], StringComparison.OrdinalIgnoreCase) && 
+                            d => d.CurrentMap == map &&
+                                d.Race == ObjectType.Monster &&
+                                string.Equals(d.Name.Replace(" ", ""), param[0], StringComparison.OrdinalIgnoreCase) &&
                                 !d.Dead)), tempInt));
 
                         break;
@@ -2109,7 +2106,7 @@ namespace Server.MirObjects
                         }
                         break;
                     case CheckType.InGuild:
-                        if(param[0].Length > 0)
+                        if (param[0].Length > 0)
                         {
                             failed = player.MyGuild == null || player.MyGuild.Name != param[0];
                             break;
@@ -2126,8 +2123,8 @@ namespace Server.MirObjects
                         }
 
                         string tempString = param[1].ToUpper();
-                        
-                        if(tempString == "ACTIVE")
+
+                        if (tempString == "ACTIVE")
                         {
                             failed = !player.CurrentQuests.Any(e => e.Index == tempInt);
                         }
@@ -2288,7 +2285,7 @@ namespace Server.MirObjects
                             if (item == null) continue;
                             if (item.Info != info) continue;
 
-                            if(checkDura)
+                            if (checkDura)
                                 if (item.CurrentDura < dura) continue;
 
                             if (count > item.Count)
@@ -2355,12 +2352,12 @@ namespace Server.MirObjects
                     case ActionType.AddNameList:
                         tempString = param[0];
                         if (File.ReadAllLines(tempString).All(t => player.Name != t))
+                        {
+                            using (var line = File.AppendText(tempString))
                             {
-                                using (var line = File.AppendText(tempString))
-                                {
-                                    line.WriteLine(player.Name);
-                                }
+                                line.WriteLine(player.Name);
                             }
+                        }
                         break;
 
                     case ActionType.DelNameList:
@@ -2584,7 +2581,7 @@ namespace Server.MirObjects
                         {
                             if (cell == null || cell.Objects == null) continue;
 
-                            for (i = 0 ; i < cell.Objects.Count() ; i++)
+                            for (i = 0; i < cell.Objects.Count(); i++)
                             {
                                 MapObject ob = cell.Objects[i];
 
@@ -2665,7 +2662,7 @@ namespace Server.MirObjects
                         long.TryParse(param[1], out tempLong);
                         int.TryParse(param[2], out tempInt);
 
-                        if(param[3].Length > 0)
+                        if (param[3].Length > 0)
                             bool.TryParse(param[3], out tempBool);
 
                         if (param[4].Length > 0)

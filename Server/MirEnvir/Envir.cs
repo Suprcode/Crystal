@@ -1457,6 +1457,18 @@ namespace Server.MirEnvir
             return true;
         }
 
+        public bool BindQuest(QuestProgressInfo quest)
+        {
+            for (int i = 0; i < QuestInfoList.Count; i++)
+            {
+                QuestInfo info = QuestInfoList[i];
+                if (info.Index != quest.Index) continue;
+                quest.Info = info;
+                return true;
+            }
+            return false;
+        }
+
         public Map GetMap(int index)
         {
             return MapList.FirstOrDefault(t => t.Info.Index == index);

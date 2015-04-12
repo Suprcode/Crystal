@@ -215,8 +215,13 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion > 33)
             {
                 count = reader.ReadInt32();
+
                 for (int i = 0; i < count; i++)
-                    CurrentQuests.Add(new QuestProgressInfo(reader));
+                {
+                    QuestProgressInfo quest = new QuestProgressInfo(reader);
+                    if (SMain.Envir.BindQuest(quest))
+                        CurrentQuests.Add(quest);
+                }
             }
 
             if(Envir.LoadVersion > 42)

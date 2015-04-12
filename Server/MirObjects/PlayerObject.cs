@@ -235,6 +235,7 @@ namespace Server.MirObjects
         public NPCPage NPCPage;
         public bool NPCSuccess;
         public bool NPCDelayed;
+        public List<string> NPCSpeech;
 
         public Map NPCMoveMap;
         public Point NPCMoveCoord;
@@ -335,8 +336,21 @@ namespace Server.MirObjects
             {
                 SetHP(MaxHP);
                 SetMP(MaxMP);
+
                 CurrentLocation = BindLocation;
                 CurrentMapIndex = BindMapIndex;
+
+                if (Info.PKPoints >= 200)
+                {
+                    Map temp = Envir.GetMapByNameAndInstance(Settings.PKTownMapName, 1);
+                    Point tempLocation = new Point(Settings.PKTownPositionX, Settings.PKTownPositionY);
+
+                    if (temp != null && temp.ValidPoint(tempLocation))
+                    {
+                        CurrentMapIndex = temp.Info.Index;
+                        CurrentLocation = tempLocation;
+                    }
+                }
             }
         }
         public void StopGame(byte reason)
@@ -1632,12 +1646,6 @@ namespace Server.MirObjects
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
                 QuestProgressInfo quest = CurrentQuests[i];
-
-                if (quest.Info == null) //fail safe incase the quest was deleted
-                {
-                    CurrentQuests.RemoveAt(i);
-                    continue;
-                }
 
                 quest.ResyncTasks();
                 SendUpdateQuest(quest, QuestState.Add);
@@ -3558,6 +3566,29 @@ namespace Server.MirObjects
                             ReceiveChat("You haven't a mount...", ChatType.System);
 
                         break;
+                    case "SETFLAG":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 2) return;
+
+                        int tempInt = 0;
+
+                        if (!int.TryParse(parts[1], out tempInt)) return;
+
+                        if (tempInt > Info.Flags.Length - 1) return;
+
+                        Info.Flags[tempInt] = true;
+
+                        break;
+
+                    case "LISTFLAGS":
+                        for (int i = 0; i < Info.Flags.Length; i++)
+                        {
+                            if (Info.Flags[i] == false) continue;
+
+                            ReceiveChat("Flag " + i, ChatType.Hint);
+                        }
+                        break;
 
                     case "CLEARFLAGS":
                         if (!IsGM) return;
@@ -3574,6 +3605,36 @@ namespace Server.MirObjects
                         {
                             player.Info.Flags[i] = false;
                         }
+                        break;
+                    case "CLEARMOB":
+                        if (!IsGM) return;
+
+                        if(parts.Length > 1)
+                        {
+                            map = Envir.GetMapByNameAndInstance(parts[1]);
+
+                            if (map == null) return;
+
+                        }
+                        else
+                        {
+                            map = CurrentMap;
+                        }
+
+                        foreach (var cell in map.Cells)
+                        {
+                            if (cell == null || cell.Objects == null) continue;
+
+                            for (int m = 0; m < cell.Objects.Count(); m++)
+                            {
+                                MapObject ob = cell.Objects[m];
+
+                                if (ob.Race != ObjectType.Monster) continue;
+                                if (ob.Dead) continue;
+                                ob.Die();
+                            }
+                        }
+
                         break;
 
                     case "CHANGECLASS": //@changeclass [Player] [Class]
@@ -3639,8 +3700,6 @@ namespace Server.MirObjects
                     case "ADJUSTPKPOINT":
                         if (!IsGM) return;
                         if (parts.Length < 2) return;
-                        
-                        int tempInt;
 
                         if(parts.Length > 2)
                         {

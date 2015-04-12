@@ -1547,6 +1547,8 @@ namespace Client.MirScenes
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
+
+            InventoryDialog.RefreshInventory();
         }
         private void UserLocation(S.UserLocation p)
         {
@@ -2830,6 +2832,8 @@ namespace Client.MirScenes
             NPCGoodsDialog.usePearls = false;
             NPCGoodsDialog.NewGoods(p.List);
             NPCGoodsDialog.Show();
+
+
         }
         private void NPCSell()
         {
@@ -9923,7 +9927,7 @@ namespace Client.MirScenes
 
             ItemButton2 = new MirButton
             {
-                Index = 169,
+                Index = 738,
                 Library = Libraries.Title,
                 Location = new Point(78, 7),
                 Parent = this,
@@ -10055,6 +10059,7 @@ namespace Client.MirScenes
                     Visible = false,
                 };
             }
+
         }
 
         void Button_Click(object sender, EventArgs e)
@@ -10072,7 +10077,6 @@ namespace Client.MirScenes
             }
             else
             {
-                Reset();
                 if (sender == ItemButton)
                 {
                     RefreshInventory();
@@ -10083,6 +10087,8 @@ namespace Client.MirScenes
                 }
                 else if (sender == QuestButton)
                 {
+                    Reset();
+
                     ItemButton.Index = 737;
                     ItemButton2.Index = 738;
                     QuestButton.Index = 198;
@@ -10120,8 +10126,12 @@ namespace Client.MirScenes
             AddButton.Visible = false;
         }
 
+
+
         public void RefreshInventory()
         {
+            Reset();
+
             ItemButton.Index = 197;
             ItemButton2.Index = 738;
             QuestButton.Index = 739;
@@ -10142,6 +10152,8 @@ namespace Client.MirScenes
 
         public void RefreshInventory2()
         {
+            Reset();
+
             ItemButton.Index = 737;
             ItemButton2.Index = 168;
             QuestButton.Index = 739;
@@ -10178,6 +10190,7 @@ namespace Client.MirScenes
         public void Show()
         {
             Visible = true;
+
             //RefreshInventory();
         }
 
@@ -19359,6 +19372,7 @@ namespace Client.MirScenes
     {
         public MirImageControl TitleLabel;
         public MirButton CloseButton;
+        public MirButton AddButton, RemoveButton, MemoButton, EmailButton, WhisperButton;
 
         public FriendDialog()
         {
@@ -19388,6 +19402,75 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+
+            AddButton = new MirButton
+            {
+                Index = 554,
+                HoverIndex = 555,
+                PressedIndex = 556,
+                Library = Libraries.Prguse,
+                Location = new Point(60, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+            AddButton.Click += (o, e) =>
+            {
+                MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to add.");
+
+                inputBox.OKButton.Click += (o1, e1) =>
+                {
+                    //GameScene.Scene.MailComposeLetterDialog.ComposeMail(inputBox.InputTextBox.Text);
+
+                    inputBox.Dispose();
+                };
+
+                inputBox.Show();
+            };
+
+            RemoveButton = new MirButton
+            {
+                Index = 557,
+                HoverIndex = 558,
+                PressedIndex = 559,
+                Library = Libraries.Prguse,
+                Location = new Point(88, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+
+            MemoButton = new MirButton
+            {
+                Index = 560,
+                HoverIndex = 561,
+                PressedIndex = 562,
+                Library = Libraries.Prguse,
+                Location = new Point(116, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+
+            EmailButton = new MirButton
+            {
+                Index = 563,
+                HoverIndex = 564,
+                PressedIndex = 565,
+                Library = Libraries.Prguse,
+                Location = new Point(144, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+
+            WhisperButton = new MirButton
+            {
+                Index = 566,
+                HoverIndex = 567,
+                PressedIndex = 568,
+                Library = Libraries.Prguse,
+                Location = new Point(172, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
         }
 
 
