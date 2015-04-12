@@ -134,9 +134,9 @@ namespace Client.MirScenes.Dialogs
 
                     inputBox.OKButton.Click += (o1, e1) =>
                     {
+                        //open letter dialog, pass in name
                         GameScene.Scene.MailComposeLetterDialog.ComposeMail(inputBox.InputTextBox.Text);
                         
-                        //open letter dialog, pass in name
                         inputBox.Dispose();
                     };
 

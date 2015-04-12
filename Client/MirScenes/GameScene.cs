@@ -19372,6 +19372,7 @@ namespace Client.MirScenes
     {
         public MirImageControl TitleLabel;
         public MirButton CloseButton;
+        public MirButton AddButton, RemoveButton, MemoButton, EmailButton, WhisperButton;
 
         public FriendDialog()
         {
@@ -19401,6 +19402,75 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+
+            AddButton = new MirButton
+            {
+                Index = 554,
+                HoverIndex = 555,
+                PressedIndex = 556,
+                Library = Libraries.Prguse,
+                Location = new Point(60, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+            AddButton.Click += (o, e) =>
+            {
+                MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to add.");
+
+                inputBox.OKButton.Click += (o1, e1) =>
+                {
+                    //GameScene.Scene.MailComposeLetterDialog.ComposeMail(inputBox.InputTextBox.Text);
+
+                    inputBox.Dispose();
+                };
+
+                inputBox.Show();
+            };
+
+            RemoveButton = new MirButton
+            {
+                Index = 557,
+                HoverIndex = 558,
+                PressedIndex = 559,
+                Library = Libraries.Prguse,
+                Location = new Point(88, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+
+            MemoButton = new MirButton
+            {
+                Index = 560,
+                HoverIndex = 561,
+                PressedIndex = 562,
+                Library = Libraries.Prguse,
+                Location = new Point(116, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+
+            EmailButton = new MirButton
+            {
+                Index = 563,
+                HoverIndex = 564,
+                PressedIndex = 565,
+                Library = Libraries.Prguse,
+                Location = new Point(144, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
+
+            WhisperButton = new MirButton
+            {
+                Index = 566,
+                HoverIndex = 567,
+                PressedIndex = 568,
+                Library = Libraries.Prguse,
+                Location = new Point(172, 241),
+                Parent = this,
+                Sound = SoundList.ButtonA
+            };
         }
 
 

@@ -62,9 +62,8 @@ namespace Server.MirDatabase
 
         public QuestProgressInfo(BinaryReader reader)
         {
-            int index = reader.ReadInt32();
-
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
+            Index = reader.ReadInt32();
+            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == Index);
 
             StartDateTime = DateTime.FromBinary(reader.ReadInt64());
             EndDateTime = DateTime.FromBinary(reader.ReadInt64());

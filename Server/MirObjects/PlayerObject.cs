@@ -336,8 +336,21 @@ namespace Server.MirObjects
             {
                 SetHP(MaxHP);
                 SetMP(MaxMP);
+
                 CurrentLocation = BindLocation;
                 CurrentMapIndex = BindMapIndex;
+
+                if (Info.PKPoints >= 200)
+                {
+                    Map temp = Envir.GetMapByNameAndInstance(Settings.PKTownMapName, 1);
+                    Point tempLocation = new Point(Settings.PKTownPositionX, Settings.PKTownPositionY);
+
+                    if (temp != null && temp.ValidPoint(tempLocation))
+                    {
+                        CurrentMapIndex = temp.Info.Index;
+                        CurrentLocation = tempLocation;
+                    }
+                }
             }
         }
         public void StopGame(byte reason)
