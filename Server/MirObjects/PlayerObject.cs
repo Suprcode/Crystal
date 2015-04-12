@@ -3606,6 +3606,36 @@ namespace Server.MirObjects
                             player.Info.Flags[i] = false;
                         }
                         break;
+                    case "CLEARMOB":
+                        if (!IsGM) return;
+
+                        if(parts.Length > 1)
+                        {
+                            map = Envir.GetMapByNameAndInstance(parts[1]);
+
+                            if (map == null) return;
+
+                        }
+                        else
+                        {
+                            map = CurrentMap;
+                        }
+
+                        foreach (var cell in map.Cells)
+                        {
+                            if (cell == null || cell.Objects == null) continue;
+
+                            for (int m = 0; m < cell.Objects.Count(); m++)
+                            {
+                                MapObject ob = cell.Objects[m];
+
+                                if (ob.Race != ObjectType.Monster) continue;
+                                if (ob.Dead) continue;
+                                ob.Die();
+                            }
+                        }
+
+                        break;
 
                     case "CHANGECLASS": //@changeclass [Player] [Class]
                         if (!IsGM) return;
