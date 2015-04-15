@@ -495,7 +495,7 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
+            if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player && Functions.InRange(EXPOwner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
             {
                 EXPOwner.WinExp(Experience, Level);
 

@@ -239,7 +239,6 @@ public enum Monster : ushort
     BrownFrogSpider = 138,
     ArcherGuard = 139,
     KatanaGuard = 140,
-
     //Mob141 = 141, //duplicate brownfrogspider
     Pig = 142,
     Bull = 143,
@@ -249,6 +248,7 @@ public enum Monster : ushort
     DarkDustPile = 147,
     DarkBrownWolf = 148,
     Football = 149,
+
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -325,9 +325,9 @@ public enum Monster : ushort
     ManectricClub = 222,
     ManectricClaw = 223,
     ManectricStaff = 224,
-    Demon1 = 225,
-    Demon2 = 226,
-    Demon3 = 227,
+    NamelessGhost = 225,
+    DarkGhost = 226,
+    ChaosGhost = 227,
     ManectricBlest = 228,
     ManectricKing = 229,
     FrozenDoor = 230,

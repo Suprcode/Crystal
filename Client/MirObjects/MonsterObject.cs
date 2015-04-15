@@ -249,7 +249,6 @@ namespace Client.MirObjects
                 case Monster.ArmingWeaver:
                 case Monster.SpiderWarrior:
                 case Monster.SpiderBarbarian:
-                case Monster.ManectricClub:
                     Frames = FrameSet.Monsters[2];
                     break;
                 case Monster.CannibalPlant:
@@ -434,23 +433,14 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[58];
                     break;
                 case Monster.Behemoth: //(158.lib)
-                case Monster.FlameSpear: //(238.lib)
-                case Monster.FlameMage: //(239.lib)
-                case Monster.FlameScythe: //(240.lib)
-                case Monster.FlameAssassin: //(241.lib)
                     Frames = FrameSet.Monsters[59];
                     break;
                 case Monster.PoisonHugger: //(160.lib)
                 case Monster.Hugger: //(161.lib)
                 case Monster.ManectricSlave: //(233.lib)
-                case Monster.TrollHammer: //(234.lib)
-                case Monster.TrollBomber: //(235.lib)
-                case Monster.TrollStoner: //(236.lib)
-                case Monster.IceGuard: //(249.lib)
                     Frames = FrameSet.Monsters[60];
                     break;
                 case Monster.DreamDevourer: //(163.lib)
-                case Monster.WaterGuard: //(248.lib)
                     Frames = FrameSet.Monsters[61];
                     break;
                 case Monster.Snowman: //(166.lib)
@@ -475,38 +465,64 @@ namespace Client.MirObjects
                 case Monster.Bush:
                     Frames = FrameSet.Monsters[68];
                     break;
-                case Monster.HellSlasher: //(215.lib)
-                case Monster.HellPirate: //(216.lib)
-                case Monster.HellCannibal: //(217.lib)
-                case Monster.ManectricClaw: //(223.lib)
+                case Monster.HellSlasher:
+                case Monster.HellCannibal:
+                case Monster.ManectricClub:
+                case Monster.ManectricClaw:
                     Frames = FrameSet.Monsters[69];
                     break;
-                case Monster.HellKeeper: //(218.lib)
+                case Monster.HellPirate:
+                case Monster.FlameSpear:
                     Frames = FrameSet.Monsters[70];
                     break;
-                case Monster.HellBolt: //(219.lib)
+                case Monster.HellBolt:
+                case Monster.WitchDoctor:
                     Frames = FrameSet.Monsters[71];
                     break;
-                case Monster.WitchDoctor: //(220.lib)
+                case Monster.HellKeeper:
                     Frames = FrameSet.Monsters[72];
                     break;
-                case Monster.ManectricHammer: //(221.lib)
-                    Frames = FrameSet.Monsters[73];
-                    break;
-                case Monster.ManectricStaff: //(224.lib)
-                    Frames = FrameSet.Monsters[74];
-                    break;
-                case Monster.Demon1: //(225.lib)
-                case Monster.Demon2: //(226.lib)
-                case Monster.Demon3: //(227.lib)
-                case Monster.ManectricBlest: //(228.lib)
+                case Monster.NamelessGhost:
+                case Monster.DarkGhost:
+                case Monster.ChaosGhost:
+                case Monster.ManectricBlest:
+                case Monster.TrollHammer:
+                case Monster.TrollBomber:
+                case Monster.TrollStoner:
                     Frames = FrameSet.Monsters[75];
                     break;
-                case Monster.ManectricKing: //(229.lib)
+                case Monster.ManectricHammer:
+                    Frames = FrameSet.Monsters[73];
+                    break;
+                case Monster.ManectricStaff:
+                    Frames = FrameSet.Monsters[74];
+                    break;
+                case Monster.ManectricKing:
+                case Monster.TrollKing:
                     Frames = FrameSet.Monsters[76];
                     break;
-                case Monster.TrollKing: //(237.lib)
+                case Monster.FlameMage:
+                case Monster.FlameScythe:
+                case Monster.FlameAssassin:
                     Frames = FrameSet.Monsters[77];
+                    break;
+                case Monster.FlameQueen:
+                    Frames = FrameSet.Monsters[78];
+                    break;
+                case Monster.HellKnight1:
+                case Monster.HellKnight2:
+                case Monster.HellKnight3:
+                case Monster.HellKnight4:
+                    Frames = FrameSet.Monsters[79];
+                    break;
+                case Monster.HellLord:
+                    Frames = FrameSet.Monsters[80];
+                    break;
+                case Monster.WaterGuard:
+                    Frames = FrameSet.Monsters[81];
+                    break;
+                case Monster.IceGuard:
+                    Frames = FrameSet.Monsters[82];
                     break;
 
                 case Monster.BabyPig://IntelligentCreature

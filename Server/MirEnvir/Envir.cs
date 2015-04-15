@@ -1612,20 +1612,33 @@ namespace Server.MirEnvir
 
         private void ClearDailyQuests(CharacterInfo info)
         {
-            CharacterInfo c1 = info;
-            foreach (int flagId in
-                from q in QuestInfoList
-                let flagId = 1000 + q.Index
-                where c1.Flags[flagId] && q.Type == QuestType.Daily
-                select flagId)
+            //CharacterInfo c1 = info;
+            //foreach (int flagId in
+            //    from q in QuestInfoList
+            //   // let flagId = 1000 + q.Index
+            //    where c1.Flags[flagId] && q.Type == QuestType.Daily
+            //    select flagId)
+            //{
+            //    info.Flags[flagId] = false;
+            //}
+          
+
+            foreach (var quest in QuestInfoList)
             {
-                info.Flags[flagId] = false;
+                if (quest.Type != QuestType.Daily) continue;
+
+                for (int i = 0; i < info.CompletedQuests.Count; i++)
+                {
+                    if (info.CompletedQuests[i] != quest.Index) continue;
+
+                    info.CompletedQuests.RemoveAt(i);
+                } 
             }
 
             if (info.Player != null)
             {
                 info.Player.GetCompletedQuests();
-            }
+            }       
         }
     }
 }

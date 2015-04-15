@@ -542,8 +542,14 @@ namespace Server.MirObjects
 
             Cell cell = CurrentMap.GetCell(Target.CurrentLocation);
             if (!cell.Valid || cell.Objects == null) return;
-            for (int i = 0; i < cell.Objects.Count; i++)
+
+
+            int count = cell.Objects.Count;
+
+            for (int i = 0; i < count; i++)
+            {
                 PickUpItem(Target.CurrentLocation);
+            }
         }
 
         public void PickUpItem(Point location)
