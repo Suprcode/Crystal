@@ -11638,7 +11638,8 @@ namespace Client.MirScenes
             AmuletCell,
             BeltCell,
             BootsCell,
-            StoneCell;
+            StoneCell,
+            MountCell;
 
         public InspectDialog()
         {
@@ -11891,13 +11892,21 @@ namespace Client.MirScenes
                 Parent = CharacterPage,
                 Location = new Point(125, 241),
             };
+
+            MountCell = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.Mount,
+                GridType = MirGridType.Inspect,
+                Parent = CharacterPage,
+                Location = new Point(203, 62),
+            };
         }
 
         public void RefreshInferface()
         {
             int offSet = Gender == MirGender.Male ? 0 : 1;
 
-            CharacterPage.Index = 345 + offSet;
+            CharacterPage.Index = 340 + offSet;
 
             switch (Class)
             {
@@ -12878,6 +12887,8 @@ namespace Client.MirScenes
 
         public void CheckQuestButtonDisplay()
         {
+            NameLabel.Text = string.Empty;
+
             QuestButton.Visible = false;
 
             NPCObject npc = (NPCObject)MapControl.GetObject(GameScene.NPCID);
