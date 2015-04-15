@@ -448,22 +448,27 @@ namespace Client.MirScenes
                     break;
                 case Keys.NumPad2:
                 case Keys.D2:
+                    if (CMain.Shift) return;
                     BeltDialog.Grid[1].UseItem();
                     break;
                 case Keys.NumPad3:
                 case Keys.D3:
+                    if (CMain.Shift) return;
                     BeltDialog.Grid[2].UseItem();
                     break;
                 case Keys.NumPad4:
                 case Keys.D4:
+                    if (CMain.Shift) return;
                     BeltDialog.Grid[3].UseItem();
                     break;
                 case Keys.NumPad5:
                 case Keys.D5:
+                    if (CMain.Shift) return;
                     BeltDialog.Grid[4].UseItem();
                     break;
                 case Keys.NumPad6:
                 case Keys.D6:
+                    if (CMain.Shift) return;
                     BeltDialog.Grid[5].UseItem();
                     break;
                 case Keys.X:
