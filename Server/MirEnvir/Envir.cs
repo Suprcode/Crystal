@@ -420,7 +420,7 @@ namespace Server.MirEnvir
             if (!Directory.Exists(Settings.GuildPath)) Directory.CreateDirectory(Settings.GuildPath);
             for (int i = 0; i < GuildList.Count; i++)
             {
-                if (GuildList[i].NeedSave)
+                if (GuildList[i].NeedSave || forced)
                 {
                     GuildList[i].NeedSave = false;
                     MemoryStream mStream = new MemoryStream();

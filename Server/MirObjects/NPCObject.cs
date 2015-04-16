@@ -2717,7 +2717,6 @@ namespace Server.MirObjects
 
                         mailInfo = new MailInfo(player.Info.Index, false)
                         {
-                            MailID = ++SMain.Envir.NextMailID,
                             Sender = param[1],
                             Message = param[0]
                         };

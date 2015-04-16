@@ -10309,6 +10309,33 @@ namespace Server.MirObjects
             RefreshBagWeight();
 
         }
+        public void GainItemMail(UserItem item, int reason)
+        {
+            string sender = "[Bichon Administrator]";
+            string message = "You have been automatically sent an item \r\ndue to the following reason.\r\n";
+
+            switch (reason)
+            {
+                case 1:
+                    message = "Could not return item to bag after trade.";
+                    break;
+                default:
+                    message = "No reason provided.";
+                    break;
+            }
+
+            //sent from player
+            MailInfo mail = new MailInfo(Info.Index)
+            {
+                Sender = sender,
+                Message = message
+            };
+
+            mail.Items.Add(item);
+
+            mail.Send();
+        }
+
         private bool DropItem(UserItem item, int range = 1)
         {
             ItemObject ob = new ItemObject(this, item);
@@ -14278,7 +14305,6 @@ namespace Server.MirObjects
             //sent from player
             MailInfo mail = new MailInfo(player.Index, true)
             {
-                MailID = ++Envir.NextMailID,
                 Sender = Info.Name,
                 Message = message,
                 Gold = 0
