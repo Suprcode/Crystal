@@ -495,7 +495,7 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player && Functions.InRange(EXPOwner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
+            if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
             {
                 EXPOwner.WinExp(Experience, Level);
 
@@ -900,8 +900,10 @@ namespace Server.MirObjects
                         {
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
-
-                        ChangeHP(-poison.Value);
+                        
+                        if (Functions.InRange(EXPOwner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
+                            ChangeHP(-poison.Value);
+                            
                         RegenTime = Envir.Time + RegenDelay;
                     }
 
@@ -970,7 +972,7 @@ namespace Server.MirObjects
             if (ExplosionInflictedStage == 2)
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
-                if (poison.Owner != null)
+                if (poison.Owner != null && Functions.InRange(poison.Owner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
                 {
                     switch (poison.Owner.Race)
                     {
