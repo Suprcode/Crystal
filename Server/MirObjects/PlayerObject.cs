@@ -6515,35 +6515,40 @@ namespace Server.MirObjects
         {
             UserItem item = GetPoison(1);
             if (item == null) return false;
-
+            
+ 	    Point hitPoint;
+            Cell cell;
+            MirDirection dir = Functions.PreviousDir(Direction);
             int power = GetAttackPower(MinDC, MaxDC) + magic.GetPower();
 
-            Point hitPoint = Functions.PointMove(CurrentLocation, Direction, 1);
-
-            if (!CurrentMap.ValidPoint(hitPoint)) return false;
-
-            Cell cell = CurrentMap.GetCell(hitPoint);
-
-            if (cell.Objects == null) return false;
-
-            for (int o = 0; o < cell.Objects.Count; o++)
+            for (int i = 0; i < 5; i++)
             {
-                MapObject target = cell.Objects[o];
-                if (target.Race != ObjectType.Player && target.Race != ObjectType.Monster) continue;
+                hitPoint = Functions.PointMove(CurrentLocation, dir, 1);
+                dir = Functions.NextDir(dir);
 
-                if (target == null || !target.IsAttackTarget(this) || target.Node == null) continue;
+                if (!CurrentMap.ValidPoint(hitPoint)) continue;
+                cell = CurrentMap.GetCell(hitPoint);
 
-                target.ApplyPoison(new Poison
+                if (cell.Objects == null) continue;
+
+                for (int o = 0; o < cell.Objects.Count; o++)
                 {
-                    Duration = 3 + power / 10 + magic.Level * 3,
-                    Owner = this,
-                    PType = PoisonType.Green,
-                    TickSpeed = 1000,
-                    Value = power / 10 + magic.Level + 1 + Envir.Random.Next(PoisonAttack)
-                }, this);
+                    MapObject target = cell.Objects[o];
+                    if (target.Race != ObjectType.Player && target.Race != ObjectType.Monster) continue;
+                    if (target == null || !target.IsAttackTarget(this) || target.Node == null) continue;
 
-                target.OperateTime = 0;
-                break;
+                    target.ApplyPoison(new Poison
+                    {
+                        Duration = 3 + power / 10 + magic.Level * 3,
+                        Owner = this,
+                        PType = PoisonType.Green,
+                        TickSpeed = 1000,
+                        Value = power / 10 + magic.Level + 1 + Envir.Random.Next(PoisonAttack)
+                    }, this);
+
+                    target.OperateTime = 0;
+                    break;
+                }
             }
 
             LevelMagic(magic);
