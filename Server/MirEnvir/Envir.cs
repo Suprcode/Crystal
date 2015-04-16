@@ -696,6 +696,8 @@ namespace Server.MirEnvir
             {
                 int count = 0;
 
+                GuildList.Clear();
+
                 for (int i = 0; i < GuildCount; i++)
                 {
                     GuildObject newGuild;
@@ -705,6 +707,7 @@ namespace Server.MirEnvir
                         using (BinaryReader reader = new BinaryReader(stream))
                             newGuild = new GuildObject(reader);
 
+                        //if (GuildList.Any(e => e.Name == newGuild.Name)) continue;
                         GuildList.Add(newGuild);
 
                         count++;
@@ -957,7 +960,41 @@ namespace Server.MirEnvir
             _listener.Start();
             _listener.BeginAcceptTcpClient(Connection, null);
             SMain.Enqueue("Network Started.");
+
+            //FixGuilds();
         }
+
+        //private void FixGuilds()
+        //{
+        //    NextGuildID = 0;
+        //    int nullChars = 0;
+
+        //    for (int i = 0; i < GuildList.Count; i++)
+        //    {
+        //        GuildObject g = GuildList[i];
+
+        //        g.Guildindex = ++NextGuildID;
+
+        //        for (int j = 0; j < g.Ranks.Count; j++)
+        //        {
+        //            Rank r = g.Ranks[j];
+
+        //            for (int k = 0; k < r.Members.Count; k++)
+        //            {
+        //                GuildMember m = r.Members[k];
+
+        //                CharacterInfo inf = GetCharacterInfo(m.name);
+        //                if (inf == null)
+        //                {
+        //                    nullChars++;
+        //                        continue;
+        //                }
+
+        //                inf.GuildIndex = g.Guildindex;
+        //            }
+        //        }
+        //    }
+        //}
 
         private void StopEnvir()
         {
