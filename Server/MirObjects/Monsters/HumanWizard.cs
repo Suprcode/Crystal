@@ -28,13 +28,11 @@ namespace Server.MirObjects.Monsters
                 Target = null;
                 return;
             }
-
+            
             ShockTime = 0;
-
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.ThunderBolt, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
-
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -47,7 +45,6 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Dead)
                 FindTarget();
-
         }
 
         protected override void ProcessAI()
@@ -67,6 +64,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null || !CanAttack) return;
 
+            if (Master != null)
+                MoveTo(Master.CurrentLocation);
+
             if (InAttackRange() && (Master != null || Envir.Time < FearTime))
             {
                 Attack();
@@ -83,9 +83,7 @@ namespace Server.MirObjects.Monsters
 
             int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-            if (dist >= AttackRange)
-                MoveTo(Target.CurrentLocation);
-            else
+            if (dist < AttackRange)
             {
                 MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
 
@@ -112,14 +110,12 @@ namespace Server.MirObjects.Monsters
                         }
                         break;
                 }
-
             }
         }
 
         public override void Spawned()
         {
             base.Spawned();
-
             Summoned = false;
         }
 
@@ -130,7 +126,6 @@ namespace Server.MirObjects.Monsters
                 ((PlayerObject)Master).ChangeMP(amount);
                 return;
             }
-
             base.ChangeHP(amount);
         }
 
