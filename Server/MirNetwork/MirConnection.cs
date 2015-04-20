@@ -859,7 +859,7 @@ namespace Server.MirNetwork
             else
                 Player.Attack(p.Direction, p.Spell);
         }
-        private void RangeAttack(C.RangeAttack p) //ArcherTest
+        private void RangeAttack(C.RangeAttack p)
         {
             if (Stage != GameStage.Game) return;
 

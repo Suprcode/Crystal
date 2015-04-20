@@ -4430,8 +4430,10 @@ namespace Server.MirObjects
             return result;
         }
 
-        public void RangeAttack(MirDirection dir, Point location, uint targetID) //ArcherTest
+        public void RangeAttack(MirDirection dir, Point location, uint targetID)
         {
+            LogTime = Envir.Time + Globals.LogDelay;
+
             MapObject target = null;
 
             if (targetID == ObjectID)
@@ -4489,6 +4491,10 @@ namespace Server.MirObjects
 
             Enqueue(new S.RangeAttack { TargetID = targetID, Target = location, Spell = spell });
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = targetID, Target = location, Spell = spell });
+
+            AttackTime = Envir.Time + AttackSpeed;
+            ActionTime = Envir.Time + 550;
+            RegenTime = Envir.Time + RegenDelay;
 
             return;
         }
