@@ -901,9 +901,11 @@ namespace Server.MirObjects
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
                         
-                        if (Functions.InRange(EXPOwner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
-                            ChangeHP(-poison.Value);
-                            
+                        if (ExpOwner != null)
+                        {
+                            if (Functions.InRange(EXPOwner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
+                                ChangeHP(-poison.Value);
+                        }
                         RegenTime = Envir.Time + RegenDelay;
                     }
 
