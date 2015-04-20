@@ -7272,11 +7272,12 @@ namespace Server.MirObjects
                     target.ExplosionInflictedTime = 0;//ArcherSpells - DelayedExplosion
                     target.ExplosionInflictedStage = 0;//ArcherSpells - DelayedExplosion
 
-                    for (int i = 0; i < target.Buffs.Count(); i++)
+                    for (int i = 0; i < target.Buffs.Count; i++)
                     {
-                        if (Buffs[i].Type == BuffType.Curse)
+                        if (target.Buffs[i].Type == BuffType.Curse)
                         {
-                            Buffs.RemoveAt(i);
+                            target.Buffs.RemoveAt(i);
+                            break;
                         }
                     }
 
