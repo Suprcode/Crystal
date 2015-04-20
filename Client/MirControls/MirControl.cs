@@ -614,6 +614,15 @@ namespace Client.MirControls
 
         #endregion
 
+        #region Position
+
+        protected Point Center
+        {
+            get { return new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2); }
+        }
+
+        #endregion
+
 
         public void BringToFront()
         {

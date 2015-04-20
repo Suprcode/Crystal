@@ -14115,7 +14115,7 @@ namespace Client.MirScenes
             Modal = true;
             Index = 710;
             Library = Libraries.Prguse;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
             Parent = GameScene.Scene;
             Visible = true;
 
@@ -14939,7 +14939,7 @@ namespace Client.MirScenes
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
             BeforeDraw += FishingDialog_BeforeDraw;
 
             TitleLabel = new MirLabel
@@ -15100,7 +15100,7 @@ namespace Client.MirScenes
             Movable = true;
             Sort = true;
             Size = new Size(244, 128);
-            Location = new Point((800 - Size.Width) / 2, 300);
+            Location = new Point((Settings.ScreenWidth - Size.Width) / 2, 300);
             BeforeDraw += FishingStatusDialog_BeforeDraw;
 
             ChanceBar = new MirControl
@@ -15348,7 +15348,7 @@ namespace Client.MirScenes
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
 
             GroupMembers = new MirLabel[Globals.MaxGroup];
 
@@ -15612,7 +15612,7 @@ namespace Client.MirScenes
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
 
             #region tab buttons
             NoticeButton = new MirButton // Notice
@@ -18028,7 +18028,7 @@ namespace Client.MirScenes
             Library = Libraries.Title;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
             BeforeDraw += IntelligentCreatureDialog_BeforeDraw;
 
             #region CreatureButtons
@@ -19348,7 +19348,7 @@ namespace Client.MirScenes
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
 
 
             TitleLabel = new MirImageControl
@@ -19396,7 +19396,7 @@ namespace Client.MirScenes
             Library = Libraries.Title;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
 
 
             TitleLabel = new MirImageControl
@@ -19512,7 +19512,7 @@ namespace Client.MirScenes
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
 
             TitleLabel = new MirImageControl
             {
@@ -19558,7 +19558,7 @@ namespace Client.MirScenes
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = Center;
 
 
             TitleLabel = new MirImageControl
