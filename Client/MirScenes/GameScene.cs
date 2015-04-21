@@ -11457,8 +11457,7 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
 
-
-                if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell) continue;
+                if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || ob.Sneaking) continue;
                 float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + drawLocation.X;
                 float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + drawLocation.Y;
 
@@ -11468,7 +11467,9 @@ namespace Client.MirScenes
                     colour = Color.FromArgb(0, 0, 255);
                 else
                     if (ob is PlayerObject)
+                    {
                         colour = Color.FromArgb(255, 255, 255);
+                    }
                     else if (ob is NPCObject || ob.AI == 6)
                     {
                         colour = Color.FromArgb(0, 255, 50);

@@ -32,6 +32,7 @@ namespace Server.MirObjects
         public CharacterInfo Info;
         public AccountInfo Account;
         public MirConnection Connection;
+        public Reporting Report;
 
         public override string Name
         {
@@ -322,6 +323,8 @@ namespace Server.MirObjects
             Info = info;
             Account = Connection.Account;
 
+            Report = new Reporting(this);
+
             if (Level == 255 || Account.AdminAccount)
             {
                 IsGM = true;
@@ -422,6 +425,9 @@ namespace Server.MirObjects
 
             Info.LastIP = Connection.IPAddress;
             Info.LastDate = Envir.Now;
+
+            Report.Disconnected();
+            Report.ForceSave();
 
             CleanUp();
         }
@@ -1700,6 +1706,8 @@ namespace Server.MirObjects
 
             if (MyGuild != null)
                 MyGuild.PlayerLogged(this, true);
+
+            Report.Connected();
 
             SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
 
@@ -4538,6 +4546,12 @@ namespace Server.MirObjects
 
             byte level = 0;
             UserMagic magic;
+
+            if (!RidingMount)
+            {
+                spell = Spell.None;
+            }
+
             switch (spell)
             {
                 case Spell.Slaying:
@@ -5012,22 +5026,16 @@ namespace Server.MirObjects
                 return;
             }
 
-            UserMagic magic = GetMagic(spell);
-
-            long delay = magic.GetDelay();
-
-            if (magic != null && Envir.Time < (magic.CastTime + delay))
-            {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-                return;
-            }
-
             AttackTime = Envir.Time + MoveDelay;
             SpellTime = Envir.Time + 1800; //Spell Delay
             ActionTime = Envir.Time + MoveDelay;
             LogTime = Envir.Time + Globals.LogDelay;
 
-            if (magic == null)
+            UserMagic magic = GetMagic(spell);
+
+            long delay = magic.GetDelay();
+
+            if (magic == null || (magic != null && Envir.Time < (magic.CastTime + delay)))
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
@@ -8021,7 +8029,9 @@ namespace Server.MirObjects
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
-            bool mapChanged = temp != CurrentMap;
+            Map oldMap = CurrentMap;
+
+            bool mapChanged = temp != oldMap;
 
             if (!base.Teleport(temp, location, effects)) return false;
 
@@ -8063,6 +8073,8 @@ namespace Server.MirObjects
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
             }
+
+            Report.MapChange("Teleported", oldMap.Info, CurrentMap.Info);
 
             return true;            
         }
