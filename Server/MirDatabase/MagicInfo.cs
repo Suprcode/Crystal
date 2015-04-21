@@ -267,6 +267,7 @@ namespace Server.MirDatabase
         public byte Level, Key;
         public ushort Experience;
         public bool IsTempSpell;
+        public long CastTime;
 
         public UserMagic(Spell spell)
         {
@@ -320,7 +321,7 @@ namespace Server.MirDatabase
                     Level = Level,
                     Key = Key,
                     Experience = Experience,
-                    IsTempSpell = IsTempSpell,
+                    IsTempSpell = IsTempSpell
                 };
         }
 
@@ -482,6 +483,27 @@ namespace Server.MirDatabase
         public int GetPower(int power)
         {
             return (int)Math.Round(power / 4F * (Level + 1) + DefPower());
+        }
+
+        public long GetDelay()
+        {
+            switch (Info.Spell)
+            {
+                case Spell.PoisonCloud:
+                    return (18 - Level * 2) * 1000;
+                case Spell.SlashingBurst:
+                    return (14 - Level * 4) * 1000;
+                case Spell.Fury:
+                    return 600000 - Level * 120000;
+                case Spell.Trap:
+                    return 60000 - Level * 15000;
+                case Spell.SwiftFeet:
+                    return 210000 - Level * 40000;
+                case Spell.FlashDash:
+                    return 250;
+                default:
+                    return 1800;
+            }
         }
     }
 }

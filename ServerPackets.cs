@@ -2467,6 +2467,7 @@ namespace ServerPackets
             writer.Write(Experience);
         }
     }
+    
     public sealed class Magic : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.Magic; } }
@@ -2476,6 +2477,7 @@ namespace ServerPackets
         public Point Target;
         public bool Cast;
         public byte Level;
+        public long Delay;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -2484,6 +2486,7 @@ namespace ServerPackets
             Target = new Point(reader.ReadInt32(), reader.ReadInt32());
             Cast = reader.ReadBoolean();
             Level = reader.ReadByte();
+            Delay = reader.ReadInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2493,9 +2496,27 @@ namespace ServerPackets
             writer.Write(Target.Y);
             writer.Write(Cast);
             writer.Write(Level);
+            writer.Write(Delay);
         }
     }
+    public sealed class DelayMagic : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.DelayMagic; } }
 
+        public Spell Spell;
+        public long Delay;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Spell = (Spell)reader.ReadByte();
+            Delay = reader.ReadInt64();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Spell);
+            writer.Write(Delay);
+        }
+    }
     public sealed class ObjectMagic : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.ObjectMagic; } }

@@ -684,6 +684,7 @@ namespace Client.MirScenes
                     User.NextMagicDirection = MapControl.MouseDirection();
                     break;
             }
+
         }
 
         public void QuitGame()
@@ -1042,6 +1043,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.Magic:
                     Magic((S.Magic)p);
+                    break;
+                case (short)ServerPacketIds.DelayMagic:
+                    DelayMagic((S.DelayMagic)p);
                     break;
                 case (short)ServerPacketIds.ObjectMagic:
                     ObjectMagic((S.ObjectMagic)p);
@@ -3006,6 +3010,9 @@ namespace Client.MirScenes
 
             if (!p.Cast) return;
 
+            ClientMagic magic = User.GetMagic(p.Spell);
+            magic.Delay = p.Delay;
+
             switch (p.Spell)
             {
                 case Spell.PoisonCloud:
@@ -3024,6 +3031,12 @@ namespace Client.MirScenes
                     SwiftFeetTime = CMain.Time + 210000 - p.Level * 40000;
                     break;
             }
+        }
+
+        private void DelayMagic(S.DelayMagic p)
+        {
+            ClientMagic magic = User.GetMagic(p.Spell);
+            magic.Delay = p.Delay;
         }
 
         private void ObjectMagic(S.ObjectMagic p)
@@ -8144,6 +8157,18 @@ namespace Client.MirScenes
         {
             if (CMain.Time < GameScene.SpellTime || User.Poison == PoisonType.Stun)
             {
+                User.ClearMagic();
+                return;
+            }
+
+            if (CMain.Time < magic.LastCast + magic.Delay)
+            {
+                if (CMain.Time >= OutputDelay)
+                {
+                    OutputDelay = CMain.Time + 1000;
+                    GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.LastCast + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                }
+
                 User.ClearMagic();
                 return;
             }

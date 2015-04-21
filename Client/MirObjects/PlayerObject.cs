@@ -918,6 +918,7 @@ namespace Client.MirObjects
 
 
                 bool ArcherLayTrap = false;
+
                 switch (CurrentAction)
                 {
                     case MirAction.Pushed:
@@ -1146,6 +1147,15 @@ namespace Client.MirObjects
                                 Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                         }
+                        
+                        //ClientMagic mag = User.GetMagic(Spell);
+
+                        //if (mag != null)
+                        //{
+                        //    mag.LastCast = CMain.Time;
+                        //    mag = null;
+                        //}
+
                         break;
                     default:
                         Frames.Frames.TryGetValue(CurrentAction, out Frame);
@@ -1180,6 +1190,8 @@ namespace Client.MirObjects
                 Spell = Spell.None;
                 SpellLevel = 0;
                 //NextMagic = null;
+
+                ClientMagic magic;
 
                 if (Frame == null) return;
 
@@ -1231,7 +1243,7 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Attack1:
                         case MirAction.MountAttack:
-                            ClientMagic magic;
+                            //ClientMagic magic;
                             if (GameScene.Slaying && TargetObject != null)
                                 Spell = Spell.Slaying;
 
@@ -1326,6 +1338,10 @@ namespace Client.MirObjects
                             Spell = (Spell)action.Params[0];
                             targetID = (uint)action.Params[1];
                             location = (Point)action.Params[2];
+
+                            magic = User.GetMagic(Spell);
+                            magic.LastCast = CMain.Time;
+
                             Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
                             if (Spell == Spell.FlashDash)

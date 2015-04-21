@@ -1006,6 +1006,7 @@ public enum ServerPacketIds : short
     RemoveMagic,
     MagicLeveled,
     Magic,
+    DelayMagic,
     ObjectMagic,
     ObjectEffect,
     RangeAttack,
@@ -3010,6 +3011,7 @@ public class ClientMagic
     public ushort Experience;
 
     public bool IsTempSpell;
+    public long LastCast, Delay;
 
     public ClientMagic()
     {
@@ -4036,6 +4038,8 @@ public abstract class Packet
                 return new S.MagicLeveled();
             case (short)ServerPacketIds.Magic:
                 return new S.Magic();
+            case (short)ServerPacketIds.DelayMagic:
+                return new S.DelayMagic();
             case (short)ServerPacketIds.ObjectMagic:
                 return new S.ObjectMagic();
             case (short)ServerPacketIds.ObjectEffect:

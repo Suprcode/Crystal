@@ -5012,17 +5012,28 @@ namespace Server.MirObjects
                 return;
             }
 
+            UserMagic magic = GetMagic(spell);
+
+            long delay = magic.GetDelay();
+
+            if (magic != null && Envir.Time < (magic.CastTime + delay))
+            {
+                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                return;
+            }
+
             AttackTime = Envir.Time + MoveDelay;
             SpellTime = Envir.Time + 1800; //Spell Delay
             ActionTime = Envir.Time + MoveDelay;
             LogTime = Envir.Time + Globals.LogDelay;
 
-            UserMagic magic = GetMagic(spell);
             if (magic == null)
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
+
+            magic.CastTime = Envir.Time;
 
             int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
 
@@ -5288,7 +5299,7 @@ namespace Server.MirObjects
                     break;
             }
 
-            Enqueue(new S.Magic { Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
+            Enqueue(new S.Magic { Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level, Delay = delay });
             Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
         }
 
@@ -6383,6 +6394,10 @@ namespace Server.MirObjects
                 ReceiveChat("Not enough pushing Power.", ChatType.System);
             }
 
+            long delay = magic.GetDelay();
+
+            Enqueue(new S.DelayMagic { Spell = magic.Spell, Delay = delay });
+
             CellTime = Envir.Time + 500;
         }
         private void SlashingBurst(UserMagic magic, out bool cast)
@@ -6726,6 +6741,10 @@ namespace Server.MirObjects
             }
             if (success) //technicaly this makes flashdash lvl when it casts rather then when it hits (it wont lvl if it's not hitting!)
                 LevelMagic(magic);
+
+            long delay = magic.GetDelay();
+
+            Enqueue(new S.DelayMagic { Spell = magic.Spell, Delay = delay });
         }
         #endregion
 
