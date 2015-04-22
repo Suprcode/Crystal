@@ -2664,7 +2664,7 @@ namespace Server.MirObjects
                         MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
                         break;
                     case BuffType.BagWeight:
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + buff.Value);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Value);
                         break;
                 }
 
