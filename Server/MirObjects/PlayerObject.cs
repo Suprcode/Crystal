@@ -5307,7 +5307,7 @@ namespace Server.MirObjects
                     break;
             }
 
-            Enqueue(new S.Magic { Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level, Delay = delay });
+            Enqueue(new S.Magic { Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
             Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
         }
 
@@ -6153,7 +6153,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(MinSC, MaxSC) + (magic.Level + 1) * 5, location, 8 + ((magic.Level + 1) * 2));
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(MinSC, MaxSC) + (magic.Level + 1) * 5, location, 1 + ((magic.Level + 1) * 2));
             CurrentMap.ActionList.Add(action);
 
         }
@@ -6401,10 +6401,6 @@ namespace Server.MirObjects
                 Broadcast(new S.ObjectDashFail { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 ReceiveChat("Not enough pushing Power.", ChatType.System);
             }
-
-            long delay = magic.GetDelay();
-
-            Enqueue(new S.DelayMagic { Spell = magic.Spell, Delay = delay });
 
             CellTime = Envir.Time + 500;
         }
@@ -6749,10 +6745,6 @@ namespace Server.MirObjects
             }
             if (success) //technicaly this makes flashdash lvl when it casts rather then when it hits (it wont lvl if it's not hitting!)
                 LevelMagic(magic);
-
-            long delay = magic.GetDelay();
-
-            Enqueue(new S.DelayMagic { Spell = magic.Spell, Delay = delay });
         }
         #endregion
 
@@ -7883,6 +7875,8 @@ namespace Server.MirObjects
             if (HasSkillNecklace) exp *= 3;
             if (Level == 255) exp = byte.MaxValue;
 
+            int oldLevel = magic.Level;
+
             switch (magic.Level)
             {
                 case 0:
@@ -7923,6 +7917,12 @@ namespace Server.MirObjects
                     break;
                 default:
                     return;
+            }
+
+            if (oldLevel != magic.Level)
+            {
+                long delay = magic.GetDelay();
+                Enqueue(new S.DelayMagic { Spell = magic.Spell, Delay = delay });
             }
 
             Enqueue(new S.MagicLeveled { Spell = magic.Spell, Level = magic.Level, Experience = magic.Experience });

@@ -318,7 +318,8 @@ namespace Server.MirDatabase
                     Level = Level,
                     Key = Key,
                     Experience = Experience,
-                    IsTempSpell = IsTempSpell
+                    IsTempSpell = IsTempSpell,
+                    Delay = GetDelay()
                 };
         }
 

@@ -2477,7 +2477,6 @@ namespace ServerPackets
         public Point Target;
         public bool Cast;
         public byte Level;
-        public long Delay;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -2486,7 +2485,6 @@ namespace ServerPackets
             Target = new Point(reader.ReadInt32(), reader.ReadInt32());
             Cast = reader.ReadBoolean();
             Level = reader.ReadByte();
-            Delay = reader.ReadInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2496,7 +2494,6 @@ namespace ServerPackets
             writer.Write(Target.Y);
             writer.Write(Cast);
             writer.Write(Level);
-            writer.Write(Delay);
         }
     }
     public sealed class DelayMagic : Packet

@@ -587,7 +587,7 @@ namespace Client.MirScenes
             }
 
             if (magic == null) return;
-            
+
             int cost;
             switch (magic.Spell)
             {
@@ -3009,9 +3009,6 @@ namespace Client.MirScenes
             User.SpellLevel = p.Level;
 
             if (!p.Cast) return;
-
-            ClientMagic magic = User.GetMagic(p.Spell);
-            magic.Delay = p.Delay;
 
             switch (p.Spell)
             {
@@ -8161,7 +8158,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            if (CMain.Time < magic.LastCast + magic.Delay)
+            if (CMain.Time < magic.LastCast + magic.Delay && magic.LastCast > 0)
             {
                 if (CMain.Time >= OutputDelay)
                 {
@@ -11092,6 +11089,7 @@ namespace Client.MirScenes
             StateButton.Index = -1;
             SkillButton.Index = 503;
             StartIndex = 0;
+
         }
 
         private void RefreshInferface()
@@ -14016,6 +14014,7 @@ namespace Client.MirScenes
         public MirButton SkillButton;
         public MirLabel LevelLabel, NameLabel, ExpLabel, KeyLabel;
         public ClientMagic Magic;
+        public MirAnimatedControl CoolDown;
 
         public MagicButton()
         {
@@ -14082,7 +14081,23 @@ namespace Client.MirScenes
                 NotControl = true,
             };
 
+            CoolDown = new MirAnimatedControl
+            {
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Location = new Point(36, 0),
+                NotControl = true,
+                UseOffSet = true,
+                Loop = false,
+                Animated = false,
+                Opacity = 0.6F
+            };
+            CoolDown.AnimatedChanged += (o, e) =>
+            {
+                GameScene.User.Chat(string.Format("cooldown changed {0}", CoolDown.Animated.ToString()));
+            };
         }
+
         public void Update(ClientMagic magic)
         {
             Magic = magic;
@@ -14120,8 +14135,56 @@ namespace Client.MirScenes
 
             SkillButton.Index = Magic.Icon * 2;
             SkillButton.PressedIndex = Magic.Icon * 2 + 1;
+
+            SetDelay();
+        }
+
+        private bool _started = false;
+
+        public void SetDelay()
+        {
+            if (Magic == null) return;
+
+            int totalFrames = 34;
+
+            long timeLeft = Magic.LastCast + Magic.Delay - CMain.Time;
+
+            if (timeLeft < 100)
+            {
+                _started = false; 
+                return;
+            }
+
+            if (_started == true) return;
+
+            int delayPerFrame = (int)(Magic.Delay / totalFrames);
+            int startFrame = totalFrames - (int)(timeLeft / delayPerFrame);
+
+            if ((CMain.Time < Magic.LastCast + Magic.Delay) && Magic.LastCast > 0)
+            {
+                CoolDown.Dispose();
+
+                CoolDown = new MirAnimatedControl
+                {
+                    Index = 1290 + startFrame,
+                    AnimationCount = (totalFrames - startFrame),
+                    AnimationDelay = delayPerFrame,
+                    Library = Libraries.Prguse2,
+                    Parent = this,
+                    Location = new Point(36, 0),
+                    NotControl = true,
+                    UseOffSet = true,
+                    Loop = false,
+                    Animated = true,
+                    Opacity = 0.6F
+                };
+
+                _started = true;
+            }
         }
     }
+
+
     public sealed class AssignKeyPanel : MirImageControl
     {
         public MirButton SaveButton, NoneButton;

@@ -3034,6 +3034,8 @@ public class ClientMagic
         Level = reader.ReadByte();
         Key = reader.ReadByte();
         Experience = reader.ReadUInt16();
+
+        Delay = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -3053,6 +3055,8 @@ public class ClientMagic
         writer.Write(Level);
         writer.Write(Key);
         writer.Write(Experience);
+
+        writer.Write(Delay);
     }
    
 }
