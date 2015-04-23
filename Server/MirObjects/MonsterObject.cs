@@ -934,10 +934,12 @@ namespace Server.MirObjects
                         break;
                     case PoisonType.Slow:
                         MoveSpeed += 100;
+                        AttackSpeed += 100;
  
                         if (poison.Time >= poison.Duration)
                         {
                             MoveSpeed = Info.MoveSpeed;
+                            AttackSpeed = Info.AttackSpeed;
                         }
                         break;
                 }
@@ -1438,6 +1440,7 @@ namespace Server.MirObjects
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
                                     if (!ob.IsAttackTarget(this)) continue;
+                                    if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
                                     if (ob.Race == ObjectType.Player)
                                     {
                                         PlayerObject player = ((PlayerObject)ob);
