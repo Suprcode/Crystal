@@ -537,7 +537,7 @@ namespace Server.MirObjects
         public override int Pushed(MapObject pusher, MirDirection dir, int distance)
         {
             if (!Info.CanPush) return 0;
-            if (!CanMove) return 0; //stops mobs that can't move (like cannibalplants) from being pushed
+            //if (!CanMove) return 0; //stops mobs that can't move (like cannibalplants) from being pushed
 
             int result = 0;
             MirDirection reverse = Functions.ReverseDirection(dir);
@@ -1496,7 +1496,7 @@ namespace Server.MirObjects
 
             return false;
         }
-        protected List<MapObject> FindAllTargets(int dist, Point location)
+        protected List<MapObject> FindAllTargets(int dist, Point location, bool needSight = true)
         {
             List<MapObject> targets = new List<MapObject>();
             for (int d = 0; d <= dist; d++)
@@ -1522,7 +1522,7 @@ namespace Server.MirObjects
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
                                     if (!ob.IsAttackTarget(this)) continue;
-                                    if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
+                                    if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
                                     if (ob.Race == ObjectType.Player)
                                     {
                                         PlayerObject player = ((PlayerObject)ob);

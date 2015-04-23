@@ -499,6 +499,7 @@ namespace Server.MirDatabase
                     return 210000 - Level * 40000;
                 case Spell.FlashDash:
                     return 250;
+
                 default:
                     return 1800;
             }

@@ -901,7 +901,8 @@ public enum BuffType : byte
     MentalState,
     WonderShield,
     MagicWonderShield,
-    BagWeight
+    BagWeight,
+    GameMaster
 }
 
 public enum DefenceType : byte
@@ -3011,7 +3012,7 @@ public class ClientMagic
     public ushort Experience;
 
     public bool IsTempSpell;
-    public long LastCast, Delay;
+    public long CastTime, Delay;
 
     public ClientMagic()
     {

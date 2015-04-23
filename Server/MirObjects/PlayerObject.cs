@@ -708,6 +708,7 @@ namespace Server.MirObjects
         private void ProcessInfiniteBuffs()
         {
             bool hiding = false;
+            bool isGM = false;
             bool mentalState = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
@@ -726,6 +727,10 @@ namespace Server.MirObjects
                         break;
                     case BuffType.MentalState:
                         mentalState = true;
+                        break;
+                    case BuffType.GameMaster:
+                        isGM = true;
+                        if (!IsGM) removeBuff = true;
                         break;
                 }
 
@@ -751,6 +756,11 @@ namespace Server.MirObjects
             if (GetMagic(Spell.MentalState) != null && !mentalState)
             {
                 AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Value = Info.MentalState, Infinite = true });
+            }
+
+            if (IsGM && !isGM)
+            {
+                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
             }
         }
 
@@ -5011,6 +5021,9 @@ namespace Server.MirObjects
                         if ((Drop.BonusChance > 0) && (Envir.Random.Next(100) <= Drop.BonusChance))
                             item.CurrentDura = (ushort)Math.Min(ushort.MaxValue, item.CurrentDura + (Envir.Random.Next(Drop.MaxBonusDura) * 1000));
                     }
+
+                    if (CheckGroupQuestItem(item)) continue;
+
                     if (CanGainItem(item, false)) GainItem(item);
                     return;
                 }
@@ -14193,7 +14206,7 @@ namespace Server.MirObjects
             else
                 CheckNeedQuestKill(mInfo);
         }
-        public bool CheckGroupQuestItem(UserItem item)
+        public bool CheckGroupQuestItem(UserItem item, bool gainItem = true)
         {
             bool itemCollected = false;
 
@@ -14204,7 +14217,7 @@ namespace Server.MirObjects
                         Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
                         !player.Dead))
                 {
-                    if(player.CheckNeedQuestItem(item))
+                    if (player.CheckNeedQuestItem(item, gainItem))
                     {
                         itemCollected = true;
                     }
@@ -14212,7 +14225,7 @@ namespace Server.MirObjects
             }
             else
             {
-                if(CheckNeedQuestItem(item))
+                if (CheckNeedQuestItem(item, gainItem))
                 {
                     itemCollected = true;
                 }

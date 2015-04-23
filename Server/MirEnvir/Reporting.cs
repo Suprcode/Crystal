@@ -15,7 +15,7 @@ namespace Server.MirEnvir
         public PlayerObject Player;
         public List<Action> Actions = new List<Action>();
 
-        private int _traceDepth = 2;
+        //private int _traceDepth = 2;
         private int _saveCount = 200;
         private string _baseDir = "";
 

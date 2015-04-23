@@ -1332,8 +1332,8 @@ namespace Client.MirObjects
                             targetID = (uint)action.Params[1];
                             location = (Point)action.Params[2];
 
-                            magic = User.GetMagic(Spell);
-                            magic.LastCast = CMain.Time;
+                            //magic = User.GetMagic(Spell);
+                            //magic.LastCast = CMain.Time;
 
                             Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
