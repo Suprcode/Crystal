@@ -1007,7 +1007,8 @@ public enum ServerPacketIds : short
     RemoveMagic,
     MagicLeveled,
     Magic,
-    DelayMagic,
+    MagicDelay,
+    MagicCast,
     ObjectMagic,
     ObjectEffect,
     RangeAttack,
@@ -4043,8 +4044,10 @@ public abstract class Packet
                 return new S.MagicLeveled();
             case (short)ServerPacketIds.Magic:
                 return new S.Magic();
-            case (short)ServerPacketIds.DelayMagic:
-                return new S.DelayMagic();
+            case (short)ServerPacketIds.MagicDelay:
+                return new S.MagicDelay();
+            case (short)ServerPacketIds.MagicCast:
+                return new S.MagicCast();
             case (short)ServerPacketIds.ObjectMagic:
                 return new S.ObjectMagic();
             case (short)ServerPacketIds.ObjectEffect:

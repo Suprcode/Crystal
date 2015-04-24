@@ -497,8 +497,14 @@ namespace Server.MirDatabase
                     return 60000 - Level * 15000;
                 case Spell.SwiftFeet:
                     return 210000 - Level * 40000;
+                case Spell.CounterAttack:
+                    return 24000;
                 case Spell.FlashDash:
                     return 250;
+                case Spell.ShoulderDash:
+                    return 2500;
+                case Spell.BackStep:
+                    return 2500;
 
                 default:
                     return 1800;

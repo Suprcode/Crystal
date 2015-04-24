@@ -143,7 +143,9 @@ namespace Client.MirScenes
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
 
         public List<MirImageControl> BuffList = new List<MirImageControl>();
-        public static long PoisonCloudTime, SlashingBurstTime, FuryCoolTime, TrapCoolTime, SwiftFeetTime, CounterAttackTime;
+        //public static long PoisonCloudTime, SlashingBurstTime, FuryCoolTime, TrapCoolTime, SwiftFeetTime, CounterAttackTime;
+
+        public long OutputDelay;
 
         public GameScene()
         {
@@ -588,6 +590,23 @@ namespace Client.MirScenes
 
             if (magic == null) return;
 
+            switch (magic.Spell)
+            {
+                case Spell.CounterAttack:
+                    if ((CMain.Time < magic.CastTime + magic.Delay) && magic.CastTime != 0)
+                    {
+                        if (CMain.Time >= OutputDelay)
+                        {
+                            OutputDelay = CMain.Time + 1000;
+                            GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                        }
+
+                        return;
+                    }
+                    magic.CastTime = CMain.Time;
+                    break;
+            }
+
             int cost;
             switch (magic.Spell)
             {
@@ -598,7 +617,7 @@ namespace Client.MirScenes
                 case Spell.SpiritSword:
                 case Spell.Slaying:
                 case Spell.Focus:
-                case Spell.Meditation://ArcherSpells - Elemental system
+                case Spell.Meditation:
                     return;
                 case Spell.Thrusting:
                     if (CMain.Time < ToggleTime) return;
@@ -662,14 +681,7 @@ namespace Client.MirScenes
                         return;
                     }
 
-                    if (CMain.Time < CounterAttackTime)
-                    {
-                        Scene.OutputMessage(string.Format("You cannot cast counter attack for another {0} seconds.", (GameScene.CounterAttackTime - CMain.Time - 1) / 1000 + 1));
-                        return;
-                    }
-
                     SoundManager.PlaySound(20000 + (ushort)Spell.CounterAttack * 10);
-                    CounterAttackTime = CMain.Time + 24000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
                     break;
                 case Spell.MentalState:
@@ -1045,8 +1057,11 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.Magic:
                     Magic((S.Magic)p);
                     break;
-                case (short)ServerPacketIds.DelayMagic:
-                    DelayMagic((S.DelayMagic)p);
+                case (short)ServerPacketIds.MagicDelay:
+                    MagicDelay((S.MagicDelay)p);
+                    break;
+                case (short)ServerPacketIds.MagicCast:
+                    MagicCast((S.MagicCast)p);
                     break;
                 case (short)ServerPacketIds.ObjectMagic:
                     ObjectMagic((S.ObjectMagic)p);
@@ -1487,11 +1502,11 @@ namespace Client.MirScenes
                 case BuffType.LightBody:
                     return 22;//882;
                 case BuffType.SoulShield:
-                    return 9;//870;
+                    return 11;//870;
                 case BuffType.BlessedArmour:
                     return 10;//871;
                 case BuffType.ProtectionField:
-                    return 11;//861;
+                    return 9;//861;
                 case BuffType.Rage:
                     return 81;//905;
                 case BuffType.CounterAttack:
@@ -3018,30 +3033,36 @@ namespace Client.MirScenes
             ClientMagic magic = User.GetMagic(p.Spell);
             magic.CastTime = CMain.Time;
 
-            switch (p.Spell)
-            {
-                case Spell.PoisonCloud:
-                    PoisonCloudTime = CMain.Time + (18 - p.Level * 2) * 1000;
-                    break;
-                case Spell.SlashingBurst:
-                    SlashingBurstTime = CMain.Time + (14 - p.Level * 4) * 1000;
-                    break;
-                case Spell.Fury:
-                    FuryCoolTime = CMain.Time + 600000 - p.Level * 120000;
-                    break;
-                case Spell.Trap:
-                    TrapCoolTime = CMain.Time + 60000 - p.Level * 15000;
-                    break;
-                case Spell.SwiftFeet:
-                    SwiftFeetTime = CMain.Time + 210000 - p.Level * 40000;
-                    break;
-            }
+            //switch (p.Spell)
+            //{
+            //    case Spell.PoisonCloud:
+            //        PoisonCloudTime = CMain.Time + (18 - p.Level * 2) * 1000;
+            //        break;
+            //    case Spell.SlashingBurst:
+            //        SlashingBurstTime = CMain.Time + (14 - p.Level * 4) * 1000;
+            //        break;
+            //    case Spell.Fury:
+            //        FuryCoolTime = CMain.Time + 600000 - p.Level * 120000;
+            //        break;
+            //    case Spell.Trap:
+            //        TrapCoolTime = CMain.Time + 60000 - p.Level * 15000;
+            //        break;
+            //    case Spell.SwiftFeet:
+            //        SwiftFeetTime = CMain.Time + 210000 - p.Level * 40000;
+            //        break;
+            //}
         }
 
-        private void DelayMagic(S.DelayMagic p)
+        private void MagicDelay(S.MagicDelay p)
         {
             ClientMagic magic = User.GetMagic(p.Spell);
             magic.Delay = p.Delay;
+        }
+
+        private void MagicCast(S.MagicCast p)
+        {
+            ClientMagic magic = User.GetMagic(p.Spell);
+            magic.CastTime = CMain.Time;
         }
 
         private void ObjectMagic(S.ObjectMagic p)
@@ -8237,10 +8258,10 @@ namespace Client.MirScenes
                 case Spell.ElementalShot:
                 case Spell.DelayedExplosion:
                 case Spell.BindingShot:
-                case Spell.VampireShot://ArcherSpells - VampireShot
-                case Spell.PoisonShot://ArcherSpells - PoisonShot
-                case Spell.CrippleShot://ArcherSpells - CrippleShot
-                case Spell.NapalmShot://ArcherSpells - NapalmShot
+                case Spell.VampireShot:
+                case Spell.PoisonShot:
+                case Spell.CrippleShot:
+                case Spell.NapalmShot:
                 case Spell.SummonVampire:
                 case Spell.SummonToad:
                 case Spell.SummonSnakes:
@@ -8274,15 +8295,6 @@ namespace Client.MirScenes
                             break;
                     }
 
-                    //if (magic.Spell == Spell.ElementalShot && User.HasElements)
-                    //{
-                    //    if (target == null || !CanFly(target.CurrentLocation))
-                    //    {
-                    //        User.ClearMagic();
-                    //        return;
-                    //    }
-                    //}
-
                     break;
                 case Spell.Purification:
                 case Spell.Healing:
@@ -8311,43 +8323,6 @@ namespace Client.MirScenes
                         if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
                             target = User.NextMagicObject;
                     }
-                    if (CMain.Time < GameScene.PoisonCloudTime)
-                    {
-                        if (CMain.Time >= OutputDelay)
-                        {
-                            OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast Poison Cloud for another {0} seconds.", (GameScene.PoisonCloudTime - CMain.Time - 1) / 1000 + 1));
-                        }
-
-                        User.ClearMagic();
-                        return;
-                    }
-                    break;
-                case Spell.SlashingBurst:
-                    if (CMain.Time < GameScene.SlashingBurstTime)
-                    {
-                        if (CMain.Time >= OutputDelay)
-                        {
-                            OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast SlashingBurst for another {0} seconds.", (GameScene.SlashingBurstTime - CMain.Time - 1) / 1000 + 1));
-                        }
-
-                        User.ClearMagic();
-                        return;
-                    }
-                    break;
-                case Spell.Fury:
-                    if (CMain.Time < GameScene.FuryCoolTime)
-                    {
-                        if (CMain.Time >= OutputDelay)
-                        {
-                            OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast Fury for another {0} seconds.", (GameScene.FuryCoolTime - CMain.Time - 1) / 1000 + 1));
-                        }
-
-                        User.ClearMagic();
-                        return;
-                    }
                     break;
                 case Spell.Blizzard:
                 case Spell.MeteorStrike:
@@ -8365,37 +8340,10 @@ namespace Client.MirScenes
                     }
                     break;
                 case Spell.Trap:
-                    if (CMain.Time < GameScene.TrapCoolTime)
+                    if (User.NextMagicObject != null)
                     {
-                        if (CMain.Time >= OutputDelay)
-                        {
-                            OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast Trap for another {0} seconds.", (GameScene.TrapCoolTime - CMain.Time - 1) / 1000 + 1));
-                        }
-
-                        User.ClearMagic();
-                        return;
-                    }
-                    else
-                    {
-                        if (User.NextMagicObject != null)
-                        {
-                            if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                                target = User.NextMagicObject;
-                        }
-                    }
-                    break;
-                case Spell.SwiftFeet:
-                    if (CMain.Time < GameScene.SwiftFeetTime)
-                    {
-                        if (CMain.Time >= OutputDelay)
-                        {
-                            OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast SwiftFeet for another {0} seconds.", (GameScene.SwiftFeetTime - CMain.Time - 1) / 1000 + 1));
-                        }
-
-                        User.ClearMagic();
-                        return;
+                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
+                            target = User.NextMagicObject;
                     }
                     break;
                 case Spell.FlashDash:
@@ -8435,7 +8383,7 @@ namespace Client.MirScenes
             User.QueuedAction.Params.Add(magic.Spell);
             User.QueuedAction.Params.Add(target != null ? target.ObjectID : 0);
             User.QueuedAction.Params.Add(location);
-            User.QueuedAction.Params.Add(magic.Level);//ArcherSpells - Backstep
+            User.QueuedAction.Params.Add(magic.Level);
         }
 
         public static MirDirection MouseDirection(float ratio = 45F) //22.5 = 16
@@ -10568,7 +10516,7 @@ namespace Client.MirScenes
                     ClientMagic magic = MapObject.User.GetMagic(m.Spell);
                     if (magic == null) continue;
 
-                    string key = m.Key > 8 ? string.Format("CTRL F{0}", m.Key % 8) : string.Format("F{0}", m.Key);
+                    string key = m.Key > 8 ? string.Format("CTRL F{0}", i) : string.Format("F{0}", m.Key);
 
                     Cells[i - 1].Index = magic.Icon*2;
                     Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nKey: {2}", magic.Spell,
@@ -10601,7 +10549,13 @@ namespace Client.MirScenes
                     int totalFrames = 22;
                     long timeLeft = magic.CastTime + magic.Delay - CMain.Time;
 
-                    if (timeLeft < 100 || (CoolDowns[i] != null && CoolDowns[i].Animated)) continue;
+                    if (timeLeft < 100 || (CoolDowns[i] != null && CoolDowns[i].Animated))
+                    {
+                        if (timeLeft > 0) 
+                            CoolDowns[i].Dispose();
+                        else 
+                            continue;
+                    }
 
                     int delayPerFrame = (int)(magic.Delay / totalFrames);
                     int startFrame = totalFrames - (int)(timeLeft / delayPerFrame);
@@ -10668,7 +10622,7 @@ namespace Client.MirScenes
             Movable = true;
             Sort = true;
 
-            BeforeDraw += (o, e) => RefreshInferface();
+            BeforeDraw += (o, e) => RefreshInterface();
 
             CharacterPage = new MirImageControl
             {
@@ -11083,7 +11037,9 @@ namespace Client.MirScenes
                 if (StartIndex + 6 >= MapObject.User.Magics.Count) return;
 
                 StartIndex += 6;
-                RefreshInferface();
+                RefreshInterface();
+
+                ClearCoolDowns();
             };
 
             BackButton = new MirButton
@@ -11100,7 +11056,9 @@ namespace Client.MirScenes
                 if (StartIndex - 6 < 0) return;
 
                 StartIndex -= 6;
-                RefreshInferface();
+                RefreshInterface();
+
+                ClearCoolDowns();
             };
         }
 
@@ -11114,6 +11072,8 @@ namespace Client.MirScenes
         {
             if (Visible) return;
             Visible = true;
+
+            ClearCoolDowns();
         }
 
         public void ShowCharacterPage()
@@ -11164,9 +11124,18 @@ namespace Client.MirScenes
             SkillButton.Index = 503;
             StartIndex = 0;
 
+            ClearCoolDowns();
         }
 
-        private void RefreshInferface()
+        private void ClearCoolDowns()
+        {
+            for (int i = 0; i < Magics.Length; i++)
+            {
+                Magics[i].CoolDown.Dispose();
+            }
+        }
+
+        private void RefreshInterface()
         {
             int offSet = MapObject.User.Gender == MirGender.Male ? 0 : 1;
 

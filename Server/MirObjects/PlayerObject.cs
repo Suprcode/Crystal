@@ -253,7 +253,7 @@ namespace Server.MirObjects
 
         public bool FatalSword, Slaying, TwinDrakeBlade, FlamingSword, MPEater, Hemorrhage, bCounterAttack;
         public int MPEaterCount, HemorrhageAttackCount;
-        public long FlamingSwordTime, PoisonCloudTime, SlashingBurstTime, FuryTime, TrapTime, SwiftFeetTime, CounterAttackTime;
+        public long FlamingSwordTime, CounterAttackTime;//, PoisonCloudTime, SlashingBurstTime, FuryTime, TrapTime, SwiftFeetTime, CounterAttackTime;
         public bool ActiveBlizzard, ActiveReincarnation, ActiveSwiftFeet, ReincarnationReady;
         public PlayerObject ReincarnationTarget, ReincarnationHost;
         public long ReincarnationExpireTime;
@@ -3993,7 +3993,7 @@ namespace Server.MirObjects
                         player.GetCompletedQuests();
                         break;
 
-                    case "QUESTMIGRATE":
+                    case "QUESTMIGRATE": //TEMP COMMAND
                         if (!IsGM) return;
 
                         foreach (var character in Envir.CharacterList)
@@ -5048,7 +5048,7 @@ namespace Server.MirObjects
 
             long delay = magic.GetDelay();
 
-            if (magic == null || (magic != null && Envir.Time < (magic.CastTime + delay)))
+            if (magic == null || (magic != null && Envir.Time < (magic.CastTime + delay) && magic.CastTime > 0))
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
@@ -5954,8 +5954,6 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            if (Envir.Time < PoisonCloudTime) return;
-
             UserItem amulet = GetAmulet(5);
             if (amulet == null) return;
 
@@ -5969,8 +5967,6 @@ namespace Server.MirObjects
 
             ConsumeItem(amulet, 5);
             ConsumeItem(poison, 5);
-
-            PoisonCloudTime = Envir.Time + (18 - magic.Level * 2) * 1000;
 
             CurrentMap.ActionList.Add(action);
             cast = true;
@@ -6415,16 +6411,13 @@ namespace Server.MirObjects
                 ReceiveChat("Not enough pushing Power.", ChatType.System);
             }
 
+            magic.CastTime = Envir.Time;
+            Enqueue(new S.MagicCast { Spell = magic.Spell });
+
             CellTime = Envir.Time + 500;
         }
         private void SlashingBurst(UserMagic magic, out bool cast)
         {
-            cast = false;
-
-            // delayTime
-            if (Envir.Time < SlashingBurstTime) return;
-
-            SlashingBurstTime = Envir.Time + (14 - magic.Level * 4) * 1000;
             cast = true;
 
             // damage
@@ -6469,12 +6462,8 @@ namespace Server.MirObjects
         }
         private void FurySpell(UserMagic magic, out bool cast)
         {
-            cast = false;
-
-            // delayTime
-            if (Envir.Time < FuryTime) return;
             cast = true;
-            FuryTime = 600000 - magic.Level * 120000;
+
             ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic));
         }
         private void CounterAttack(UserMagic magic, MapObject target)
@@ -6496,7 +6485,6 @@ namespace Server.MirObjects
             ActionList.Add(action);
             LevelMagic(magic);
             bCounterAttack = false;
-            CounterAttackTime = 0;
         }
         #endregion
 
@@ -6511,12 +6499,7 @@ namespace Server.MirObjects
         }
         private void SwiftFeet(UserMagic magic, out bool cast)
         {
-            cast = false;
-
-            // delayTime
-            if (Envir.Time < SwiftFeetTime) return;
             cast = true;
-            SwiftFeetTime = 210000 - magic.Level * 40000;
 
             AddBuff(new Buff { Type = BuffType.SwiftFeet, Caster = this, ExpireTime = Envir.Time + 25000 + magic.Level * 5000, Value = 1, Visible = true });
             LevelMagic(magic);
@@ -6532,12 +6515,9 @@ namespace Server.MirObjects
         private void Trap(UserMagic magic, MapObject target, out bool cast)
         {
             cast = false;
-            // delayTime
-            if (Envir.Time < TrapTime) return;
+
             if (target == null || !target.IsAttackTarget(this) || !(target is MonsterObject)) return;
             if (target.Level >= Level + 2) return;
-
-            TrapTime = 60000 - magic.Level * 15000;
 
             Point location = target.CurrentLocation;
 
@@ -6758,6 +6738,9 @@ namespace Server.MirObjects
             }
             if (success) //technicaly this makes flashdash lvl when it casts rather then when it hits (it wont lvl if it's not hitting!)
                 LevelMagic(magic);
+
+            magic.CastTime = Envir.Time;
+            Enqueue(new S.MagicCast { Spell = magic.Spell });
         }
         #endregion
 
@@ -6867,6 +6850,9 @@ namespace Server.MirObjects
                 Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Distance = jumpDistance });
                 ReceiveChat("Not enough jumping power.", ChatType.System);
             }
+
+            magic.CastTime = Envir.Time;
+            Enqueue(new S.MagicCast { Spell = magic.Spell });
 
             CellTime = Envir.Time + 500;
         }
@@ -7935,7 +7921,7 @@ namespace Server.MirObjects
             if (oldLevel != magic.Level)
             {
                 long delay = magic.GetDelay();
-                Enqueue(new S.DelayMagic { Spell = magic.Spell, Delay = delay });
+                Enqueue(new S.MagicDelay { Spell = magic.Spell, Delay = delay });
             }
 
             Enqueue(new S.MagicLeveled { Spell = magic.Spell, Level = magic.Level, Experience = magic.Experience });
@@ -8293,7 +8279,7 @@ namespace Server.MirObjects
                 case AttackMode.RedBrown:
                     return PKPoints < 200 & Envir.Time > BrownTime;
                 case AttackMode.Guild:
-                    return false;
+                    return MyGuild != null && MyGuild == ally.MyGuild;
                 case AttackMode.EnemyGuild:
                     return true;
             }
@@ -12218,6 +12204,10 @@ namespace Server.MirObjects
         public void SpellToggle(Spell spell, bool use)
         {
             UserMagic magic;
+
+            magic = GetMagic(spell);
+            if (magic == null) return;
+
             int cost;
             switch (spell)
             {
