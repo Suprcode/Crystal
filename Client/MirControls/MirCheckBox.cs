@@ -40,17 +40,17 @@ namespace Client.MirControls
         #endregion
 
         #region CenterText
-        private bool Center;
+        private bool _center;
         public bool CenterLabelText
         {
             get
             {
-                return Center;
+                return _center;
             }
             set
             {
-                Center = value;
-                if (Center)
+                _center = value;
+                if (_center)
                 {
                     _label.Size = Size;
                     _label.DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;

@@ -101,6 +101,8 @@ namespace Client.MirObjects
                 case Monster.DragonStatue:
                     BodyLibrary = Libraries.Dragon;
                     break;
+                case Monster.EvilMirBody:
+                    break;
                 //IntelligentCreature
                 case Monster.BabyPig:
                 case Monster.Chick:

@@ -1182,10 +1182,10 @@ namespace Server.MirObjects
                     break;
 
                 case "CHECKHUM":
-                    if (parts.Length < 3) return;
+                    if (parts.Length < 4) return;
 
-                    tempString = parts.Length < 4 ? "1" : parts[3];
-                    CheckList.Add(new NPCChecks(CheckType.CheckHum, parts[1], parts[2], tempString));
+                    tempString = parts.Length < 5 ? "1" : parts[4];
+                    CheckList.Add(new NPCChecks(CheckType.CheckHum, parts[1], parts[2], parts[3], tempString));
                     break;
 
                 case "CHECKMON":
@@ -1976,20 +1976,21 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckHum:
-                        if (!int.TryParse(param[0], out tempInt) || !int.TryParse(param[2], out tempInt2))
+                        if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
                         {
                             failed = true;
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[1], tempInt2);
+                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
                         if (map == null)
                         {
                             failed = true;
                             break;
                         }
 
-                        failed = map.Players.Count() < tempInt;
+                        failed = !Compare(param[0], map.Players.Count(), tempInt);
+
                         break;
 
                     case CheckType.CheckMon:
