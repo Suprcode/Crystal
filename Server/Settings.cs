@@ -20,7 +20,8 @@ namespace Server
                             QuestPath = EnvirPath + @".\Quests\",
                             DropPath = EnvirPath + @".\Drops\",
                             RoutePath = EnvirPath + @".\Routes\",
-                            NameListPath = EnvirPath + @".\NameLists\";
+                            NameListPath = EnvirPath + @".\NameLists\",
+                            ReportPath = @".\Reports\";
 
 
 

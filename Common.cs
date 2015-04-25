@@ -901,7 +901,8 @@ public enum BuffType : byte
     MentalState,
     WonderShield,
     MagicWonderShield,
-    BagWeight
+    BagWeight,
+    GameMaster
 }
 
 public enum DefenceType : byte
@@ -1006,6 +1007,8 @@ public enum ServerPacketIds : short
     RemoveMagic,
     MagicLeveled,
     Magic,
+    MagicDelay,
+    MagicCast,
     ObjectMagic,
     ObjectEffect,
     RangeAttack,
@@ -3010,6 +3013,7 @@ public class ClientMagic
     public ushort Experience;
 
     public bool IsTempSpell;
+    public long CastTime, Delay;
 
     public ClientMagic()
     {
@@ -3032,6 +3036,8 @@ public class ClientMagic
         Level = reader.ReadByte();
         Key = reader.ReadByte();
         Experience = reader.ReadUInt16();
+
+        Delay = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -3051,6 +3057,8 @@ public class ClientMagic
         writer.Write(Level);
         writer.Write(Key);
         writer.Write(Experience);
+
+        writer.Write(Delay);
     }
    
 }
@@ -4036,6 +4044,10 @@ public abstract class Packet
                 return new S.MagicLeveled();
             case (short)ServerPacketIds.Magic:
                 return new S.Magic();
+            case (short)ServerPacketIds.MagicDelay:
+                return new S.MagicDelay();
+            case (short)ServerPacketIds.MagicCast:
+                return new S.MagicCast();
             case (short)ServerPacketIds.ObjectMagic:
                 return new S.ObjectMagic();
             case (short)ServerPacketIds.ObjectEffect:

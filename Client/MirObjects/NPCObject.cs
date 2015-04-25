@@ -337,6 +337,7 @@ namespace Client.MirObjects
             }
 
             Light = 10;
+            BaseIndex = 0;
 
             SetAction();
         }
@@ -483,7 +484,6 @@ namespace Client.MirObjects
         {
             if (ActionFeed.Count == 0)
             {
-
                 if (CMain.Random.Next(2) == 0 && Frames.Frames.Count > 1)
                     CurrentAction = MirAction.Harvest;  
                 else

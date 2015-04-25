@@ -32,6 +32,7 @@ namespace Server.MirObjects
         public CharacterInfo Info;
         public AccountInfo Account;
         public MirConnection Connection;
+        public Reporting Report;
 
         public override string Name
         {
@@ -252,7 +253,7 @@ namespace Server.MirObjects
 
         public bool FatalSword, Slaying, TwinDrakeBlade, FlamingSword, MPEater, Hemorrhage, bCounterAttack;
         public int MPEaterCount, HemorrhageAttackCount;
-        public long FlamingSwordTime, PoisonCloudTime, SlashingBurstTime, FuryTime, TrapTime, SwiftFeetTime, CounterAttackTime;
+        public long FlamingSwordTime, CounterAttackTime;//, PoisonCloudTime, SlashingBurstTime, FuryTime, TrapTime, SwiftFeetTime, CounterAttackTime;
         public bool ActiveBlizzard, ActiveReincarnation, ActiveSwiftFeet, ReincarnationReady;
         public PlayerObject ReincarnationTarget, ReincarnationHost;
         public long ReincarnationExpireTime;
@@ -321,6 +322,8 @@ namespace Server.MirObjects
             Connection = connection;
             Info = info;
             Account = Connection.Account;
+
+            Report = new Reporting(this);
 
             if (Level == 255 || Account.AdminAccount)
             {
@@ -422,6 +425,9 @@ namespace Server.MirObjects
 
             Info.LastIP = Connection.IPAddress;
             Info.LastDate = Envir.Now;
+
+            Report.Disconnected();
+            Report.ForceSave();
 
             CleanUp();
         }
@@ -702,6 +708,7 @@ namespace Server.MirObjects
         private void ProcessInfiniteBuffs()
         {
             bool hiding = false;
+            bool isGM = false;
             bool mentalState = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
@@ -720,6 +727,10 @@ namespace Server.MirObjects
                         break;
                     case BuffType.MentalState:
                         mentalState = true;
+                        break;
+                    case BuffType.GameMaster:
+                        isGM = true;
+                        if (!IsGM) removeBuff = true;
                         break;
                 }
 
@@ -745,6 +756,11 @@ namespace Server.MirObjects
             if (GetMagic(Spell.MentalState) != null && !mentalState)
             {
                 AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Value = Info.MentalState, Infinite = true });
+            }
+
+            if (IsGM && !isGM)
+            {
+                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
             }
         }
 
@@ -1701,6 +1717,8 @@ namespace Server.MirObjects
             if (MyGuild != null)
                 MyGuild.PlayerLogged(this, true);
 
+            Report.Connected();
+
             SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
 
         }
@@ -2656,7 +2674,7 @@ namespace Server.MirObjects
                         MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
                         break;
                     case BuffType.BagWeight:
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + buff.Value);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Value);
                         break;
                 }
 
@@ -3975,7 +3993,7 @@ namespace Server.MirObjects
                         player.GetCompletedQuests();
                         break;
 
-                    case "QUESTMIGRATE":
+                    case "QUESTMIGRATE": //TEMP COMMAND
                         if (!IsGM) return;
 
                         foreach (var character in Envir.CharacterList)
@@ -4538,6 +4556,12 @@ namespace Server.MirObjects
 
             byte level = 0;
             UserMagic magic;
+
+            if (RidingMount)
+            {
+                spell = Spell.None;
+            }
+
             switch (spell)
             {
                 case Spell.Slaying:
@@ -4997,6 +5021,9 @@ namespace Server.MirObjects
                         if ((Drop.BonusChance > 0) && (Envir.Random.Next(100) <= Drop.BonusChance))
                             item.CurrentDura = (ushort)Math.Min(ushort.MaxValue, item.CurrentDura + (Envir.Random.Next(Drop.MaxBonusDura) * 1000));
                     }
+
+                    if (CheckGroupQuestItem(item)) continue;
+
                     if (CanGainItem(item, false)) GainItem(item);
                     return;
                 }
@@ -5012,17 +5039,28 @@ namespace Server.MirObjects
                 return;
             }
 
-            AttackTime = Envir.Time + MoveDelay;
-            SpellTime = Envir.Time + 1800; //Spell Delay
-            ActionTime = Envir.Time + MoveDelay;
-            LogTime = Envir.Time + Globals.LogDelay;
-
             UserMagic magic = GetMagic(spell);
+
             if (magic == null)
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
+
+            AttackTime = Envir.Time + MoveDelay;
+            SpellTime = Envir.Time + 1800; //Spell Delay
+            ActionTime = Envir.Time + MoveDelay;
+            LogTime = Envir.Time + Globals.LogDelay;
+
+            long delay = magic.GetDelay();
+
+            if (magic != null && Envir.Time < (magic.CastTime + delay) && magic.CastTime > 0)
+            {
+                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                return;
+            }
+
+            magic.CastTime = Envir.Time;
 
             int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
 
@@ -5922,8 +5960,6 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            if (Envir.Time < PoisonCloudTime) return;
-
             UserItem amulet = GetAmulet(5);
             if (amulet == null) return;
 
@@ -5937,8 +5973,6 @@ namespace Server.MirObjects
 
             ConsumeItem(amulet, 5);
             ConsumeItem(poison, 5);
-
-            PoisonCloudTime = Envir.Time + (18 - magic.Level * 2) * 1000;
 
             CurrentMap.ActionList.Add(action);
             cast = true;
@@ -6134,7 +6168,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(MinSC, MaxSC) + (magic.Level + 1) * 5, location, 8 + ((magic.Level + 1) * 2));
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(MinSC, MaxSC) + (magic.Level + 1) * 5, location, 1 + ((magic.Level + 1) * 2));
             CurrentMap.ActionList.Add(action);
 
         }
@@ -6383,16 +6417,13 @@ namespace Server.MirObjects
                 ReceiveChat("Not enough pushing Power.", ChatType.System);
             }
 
+            magic.CastTime = Envir.Time;
+            Enqueue(new S.MagicCast { Spell = magic.Spell });
+
             CellTime = Envir.Time + 500;
         }
         private void SlashingBurst(UserMagic magic, out bool cast)
         {
-            cast = false;
-
-            // delayTime
-            if (Envir.Time < SlashingBurstTime) return;
-
-            SlashingBurstTime = Envir.Time + (14 - magic.Level * 4) * 1000;
             cast = true;
 
             // damage
@@ -6437,12 +6468,8 @@ namespace Server.MirObjects
         }
         private void FurySpell(UserMagic magic, out bool cast)
         {
-            cast = false;
-
-            // delayTime
-            if (Envir.Time < FuryTime) return;
             cast = true;
-            FuryTime = 600000 - magic.Level * 120000;
+
             ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic));
         }
         private void CounterAttack(UserMagic magic, MapObject target)
@@ -6464,7 +6491,6 @@ namespace Server.MirObjects
             ActionList.Add(action);
             LevelMagic(magic);
             bCounterAttack = false;
-            CounterAttackTime = 0;
         }
         #endregion
 
@@ -6479,12 +6505,7 @@ namespace Server.MirObjects
         }
         private void SwiftFeet(UserMagic magic, out bool cast)
         {
-            cast = false;
-
-            // delayTime
-            if (Envir.Time < SwiftFeetTime) return;
             cast = true;
-            SwiftFeetTime = 210000 - magic.Level * 40000;
 
             AddBuff(new Buff { Type = BuffType.SwiftFeet, Caster = this, ExpireTime = Envir.Time + 25000 + magic.Level * 5000, Value = 1, Visible = true });
             LevelMagic(magic);
@@ -6500,12 +6521,9 @@ namespace Server.MirObjects
         private void Trap(UserMagic magic, MapObject target, out bool cast)
         {
             cast = false;
-            // delayTime
-            if (Envir.Time < TrapTime) return;
+
             if (target == null || !target.IsAttackTarget(this) || !(target is MonsterObject)) return;
             if (target.Level >= Level + 2) return;
-
-            TrapTime = 60000 - magic.Level * 15000;
 
             Point location = target.CurrentLocation;
 
@@ -6726,6 +6744,9 @@ namespace Server.MirObjects
             }
             if (success) //technicaly this makes flashdash lvl when it casts rather then when it hits (it wont lvl if it's not hitting!)
                 LevelMagic(magic);
+
+            magic.CastTime = Envir.Time;
+            Enqueue(new S.MagicCast { Spell = magic.Spell });
         }
         #endregion
 
@@ -6835,6 +6856,9 @@ namespace Server.MirObjects
                 Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Distance = jumpDistance });
                 ReceiveChat("Not enough jumping power.", ChatType.System);
             }
+
+            magic.CastTime = Envir.Time;
+            Enqueue(new S.MagicCast { Spell = magic.Spell });
 
             CellTime = Envir.Time + 500;
         }
@@ -7856,6 +7880,8 @@ namespace Server.MirObjects
             if (HasSkillNecklace) exp *= 3;
             if (Level == 255) exp = byte.MaxValue;
 
+            int oldLevel = magic.Level;
+
             switch (magic.Level)
             {
                 case 0:
@@ -7896,6 +7922,12 @@ namespace Server.MirObjects
                     break;
                 default:
                     return;
+            }
+
+            if (oldLevel != magic.Level)
+            {
+                long delay = magic.GetDelay();
+                Enqueue(new S.MagicDelay { Spell = magic.Spell, Delay = delay });
             }
 
             Enqueue(new S.MagicLeveled { Spell = magic.Spell, Level = magic.Level, Experience = magic.Experience });
@@ -8002,7 +8034,9 @@ namespace Server.MirObjects
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
-            bool mapChanged = temp != CurrentMap;
+            Map oldMap = CurrentMap;
+
+            bool mapChanged = temp != oldMap;
 
             if (!base.Teleport(temp, location, effects)) return false;
 
@@ -8044,6 +8078,8 @@ namespace Server.MirObjects
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
             }
+
+            Report.MapChange("Teleported", oldMap.Info, CurrentMap.Info);
 
             return true;            
         }
@@ -8249,7 +8285,7 @@ namespace Server.MirObjects
                 case AttackMode.RedBrown:
                     return PKPoints < 200 & Envir.Time > BrownTime;
                 case AttackMode.Guild:
-                    return false;
+                    return MyGuild != null && MyGuild == ally.MyGuild;
                 case AttackMode.EnemyGuild:
                     return true;
             }
@@ -12174,6 +12210,10 @@ namespace Server.MirObjects
         public void SpellToggle(Spell spell, bool use)
         {
             UserMagic magic;
+
+            magic = GetMagic(spell);
+            if (magic == null) return;
+
             int cost;
             switch (spell)
             {
@@ -14162,7 +14202,7 @@ namespace Server.MirObjects
             else
                 CheckNeedQuestKill(mInfo);
         }
-        public bool CheckGroupQuestItem(UserItem item)
+        public bool CheckGroupQuestItem(UserItem item, bool gainItem = true)
         {
             bool itemCollected = false;
 
@@ -14173,7 +14213,7 @@ namespace Server.MirObjects
                         Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
                         !player.Dead))
                 {
-                    if(player.CheckNeedQuestItem(item))
+                    if (player.CheckNeedQuestItem(item, gainItem))
                     {
                         itemCollected = true;
                     }
@@ -14181,7 +14221,7 @@ namespace Server.MirObjects
             }
             else
             {
-                if(CheckNeedQuestItem(item))
+                if (CheckNeedQuestItem(item, gainItem))
                 {
                     itemCollected = true;
                 }
