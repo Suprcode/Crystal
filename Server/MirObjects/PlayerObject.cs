@@ -809,7 +809,7 @@ namespace Server.MirObjects
                 if (HealAmount > 5)
                 {
                     healthRegen += (5 + incHeal);
-                    HealAmount -= (ushort)(5 + incHeal);
+                    HealAmount -= (ushort)Math.Min(HealAmount, 5 + incHeal);
                 }
                 else
                 {
