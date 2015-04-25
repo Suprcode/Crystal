@@ -822,7 +822,7 @@ namespace Server.MirObjects
                 HealTime = Envir.Time + HealDelay;
 
                 int incHeal = (Level / 10) + (HealAmount / 10);
-                if (HealAmount > 5)
+                if (HealAmount > (5 + incHeal))
                 {
                     healthRegen += (5 + incHeal);
                     HealAmount -= (ushort)Math.Min(HealAmount, 5 + incHeal);
