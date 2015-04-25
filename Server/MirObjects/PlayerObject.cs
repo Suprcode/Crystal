@@ -4557,7 +4557,7 @@ namespace Server.MirObjects
             byte level = 0;
             UserMagic magic;
 
-            if (!RidingMount)
+            if (RidingMount)
             {
                 spell = Spell.None;
             }
@@ -5039,16 +5039,22 @@ namespace Server.MirObjects
                 return;
             }
 
+            UserMagic magic = GetMagic(spell);
+
+            if (magic == null)
+            {
+                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                return;
+            }
+
             AttackTime = Envir.Time + MoveDelay;
             SpellTime = Envir.Time + 1800; //Spell Delay
             ActionTime = Envir.Time + MoveDelay;
             LogTime = Envir.Time + Globals.LogDelay;
 
-            UserMagic magic = GetMagic(spell);
-
             long delay = magic.GetDelay();
 
-            if (magic == null || (magic != null && Envir.Time < (magic.CastTime + delay) && magic.CastTime > 0))
+            if (magic != null && Envir.Time < (magic.CastTime + delay) && magic.CastTime > 0)
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
