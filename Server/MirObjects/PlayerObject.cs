@@ -508,7 +508,7 @@ namespace Server.MirObjects
                 ElementalBarrier = false;
                 ElementalBarrierLv = 0;
                 ElementalBarrierTime = 0;
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementBarrierDown }, CurrentLocation);
+                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
             }
 
             for (int i = 0; i <= 3; i++)//ArcherSpells - Explosive Trap     Self destruct when out of range (in this case 15 squares)
@@ -760,7 +760,7 @@ namespace Server.MirObjects
 
             if (IsGM && !isGM)
             {
-                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
+                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Value = 0, Infinite = true });
             }
         }
 
@@ -794,6 +794,7 @@ namespace Server.MirObjects
                 //PotTime = Envir.Time + Math.Max(50,Math.Min(PotDelay, 600 - (Level * 10)));
                 PotTime = Envir.Time + PotDelay;
                 int PerTickRegen = 5 + (Level / 10);
+
                 if (PotHealthAmount > PerTickRegen)
                 {
                     healthRegen += PerTickRegen;
@@ -1107,6 +1108,17 @@ namespace Server.MirObjects
             for (int i = Pets.Count - 1; i >= 0; i--)
                 Pets[i].Die();
 
+            if (MagicShield)
+            {
+                MagicShield = false;
+                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, CurrentLocation);
+            } 
+            if (ElementalBarrier)
+            {
+                ElementalBarrier = false;
+                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
+            }
+
             if (PKPoints > 200)
                 RedDeathDrop(LastHitter);
             else if (!InSafeZone)
@@ -1122,6 +1134,8 @@ namespace Server.MirObjects
             InTrapRock = false;
 
             CallDefaultNPC(DefaultNPCType.Die);
+
+            Report.Died();
         }
 
         private void DeathDrop(MapObject killer)
@@ -1136,6 +1150,8 @@ namespace Server.MirObjects
                 {
                     Info.Equipment[(int)EquipmentSlot.Stone] = null;
                     Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                    Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
                 }
 
                 for (int i = 0; i < Info.Equipment.Length; i++)
@@ -1151,6 +1167,8 @@ namespace Server.MirObjects
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                            Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
                         }
                     }
 
@@ -1173,6 +1191,8 @@ namespace Server.MirObjects
 
                             Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = count });
                             temp.Count -= count;
+
+                            Report.ItemChanged("DeathDrop", temp, count, 1);
                         }
                     }
                     else if (Envir.Random.Next(30) == 0)
@@ -1181,6 +1201,8 @@ namespace Server.MirObjects
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                            Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
                         }
                     }
                 }
@@ -1214,6 +1236,8 @@ namespace Server.MirObjects
 
                         Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = count });
                         temp.Count -= count;
+
+                        Report.ItemChanged("DeathDrop", temp, count, 1);
                     }
                 }
                 else if (Envir.Random.Next(10) == 0)
@@ -1222,6 +1246,8 @@ namespace Server.MirObjects
                     {
                         Info.Inventory[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                        Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
                     }
                 }
             }
@@ -1237,6 +1263,8 @@ namespace Server.MirObjects
                 {
                     Info.Equipment[(int)EquipmentSlot.Stone] = null;
                     Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                    Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
                 }
 
 
@@ -1266,6 +1294,8 @@ namespace Server.MirObjects
 
                             Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = count });
                             temp.Count -= count;
+
+                            Report.ItemChanged("RedDeathDrop", temp, count, 1);
                         }
                     }
                     else if (Envir.Random.Next(10) == 0)
@@ -1274,6 +1304,8 @@ namespace Server.MirObjects
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                            Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
                         }
                     }
                 }
@@ -1291,6 +1323,8 @@ namespace Server.MirObjects
 
                 Info.Inventory[i] = null;
                 Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
             }
 
             RefreshStats();
@@ -1401,6 +1435,8 @@ namespace Server.MirObjects
 
             Enqueue(new S.LevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
             Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });
+
+            Report.Levelled(Level);
         }
 
 
@@ -1438,8 +1474,11 @@ namespace Server.MirObjects
             {
                 if (Info.QuestInventory[i] != null) continue;
                 Info.QuestInventory[i] = item;
+
                 return;
             }
+
+            
         }
 
         private void AddItem(UserItem item)
@@ -2392,6 +2431,41 @@ namespace Server.MirObjects
                         Holy = (byte)Math.Min(byte.MaxValue, Holy + 1);
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
                         break;
+                    case ItemSet.Whisker1: MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 25);
+                        break;
+                    case ItemSet.Whisker2:
+                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        break;
+                    case ItemSet.Whisker3:
+                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        break;
+                    case ItemSet.Whisker4:
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 20);
+                        break;
+                    case ItemSet.Whisker5:
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        break;
+                    case ItemSet.Hyeolryong:
+                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + 2);
+                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 15);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 20);
+                        Holy = (byte)Math.Min(byte.MaxValue, Holy + 1);
+                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
+                        break;
+                    case ItemSet.Monitor:
+                        MagicResist = (byte)Math.Min(byte.MaxValue, MagicResist + 1);
+                        PoisonResist = (byte)Math.Min(byte.MaxValue, PoisonResist + 1);
+                        break;
+                    case ItemSet.Oppressive:
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + 1);
+                        Agility = (byte)Math.Min(byte.MaxValue, Agility + 1);
+
+                        break;
                 }
             }
         }
@@ -3074,6 +3148,7 @@ namespace Server.MirObjects
 
                         hintstring = GMNeverDie ? "Invincible Mode." : "Normal Mode.";
                         ReceiveChat(hintstring, ChatType.Hint);
+                        UpdateGMBuff();
                         break;
 
                     case "GAMEMASTER":
@@ -3083,6 +3158,7 @@ namespace Server.MirObjects
 
                         hintstring = GMGameMaster ? "GameMaster Mode." : "Normal Mode.";
                         ReceiveChat(hintstring, ChatType.Hint);
+                        UpdateGMBuff();
                         break;
 
                     case "OBSERVER":
@@ -3091,6 +3167,7 @@ namespace Server.MirObjects
 
                         hintstring = Observer ? "Observer Mode." : "Normal Mode.";
                         ReceiveChat(hintstring, ChatType.Hint);
+                        UpdateGMBuff();
                         break;
                     case "ALLOWGUILD":
                         EnableGuildInvite = !EnableGuildInvite;
@@ -5024,7 +5101,11 @@ namespace Server.MirObjects
 
                     if (CheckGroupQuestItem(item)) continue;
 
-                    if (CanGainItem(item, false)) GainItem(item);
+                    if (CanGainItem(item, false))
+                    {
+                        GainItem(item);
+                        Report.ItemChanged("MinePayout", item, item.Count, 2);
+                    }
                     return;
                 }
             }
@@ -5284,25 +5365,25 @@ namespace Server.MirObjects
                 case Spell.FlashDash:
                     FlashDash(magic);
                     return;
-                case Spell.BackStep://ArcherSpells - Backstep
+                case Spell.BackStep:
                     BackStep(magic);
                     return;
-                case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
+                case Spell.ExplosiveTrap:
                     ExplosiveTrap(magic, Front);
                     break;
-                case Spell.DelayedExplosion://Archerspells - DelayedExplosion
+                case Spell.DelayedExplosion:
                     if (!DelayedExplosion(target, magic)) targetID = 0;
                     break;
-                case Spell.Concentration://ArcherSpells - Elemental system
+                case Spell.Concentration:
                     Concentration(magic);
                     break;
-                case Spell.ElementalShot://ArcherSpells - Elemental system
+                case Spell.ElementalShot:
                     if (!ElementalShot(target, magic)) targetID = 0;
                     break;
-                case Spell.ElementalBarrier://ArcherSpells - Elemental system
+                case Spell.ElementalBarrier:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(MinMC, MaxMC) + magic.GetPower())));
                     break;
-                case Spell.BindingShot://ArcherSpells - BindingShot
+                case Spell.BindingShot:
                     BindingShot(magic, target, out cast);
                     break;
                 case Spell.SummonVampire:
@@ -6617,7 +6698,8 @@ namespace Server.MirObjects
         private void CrescentSlash(UserMagic magic)
         {
             int criticalDamage = Envir.Random.Next(0, 100) <= Accuracy ? MaxDC * 2 : MinDC * 2;
-            int damage = (MinDC / 5 + 4 * (magic.Level + Level / 20)) * criticalDamage / 20 + MaxDC;
+            //int damage = (MinDC / 5 + 4 * (magic.Level + Level / 20)) * criticalDamage / 20 + MaxDC;
+            int damage = (MinDC / 5 + 4 * (magic.Level + Level / 20)) + criticalDamage / 20 + MaxDC;
 
             MirDirection backDir = Functions.ReverseDirection(Direction);
             MirDirection preBackDir = Functions.PreviousDir(backDir);
@@ -7417,7 +7499,7 @@ namespace Server.MirObjects
                     ElementalBarrier = true;
                     ElementalBarrierLv = (byte)((int)magic.Level);//compensate for lower mc then wizard
                     ElementalBarrierTime = Envir.Time + ((int)data[1]  + barrierPower) * 1000;
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementBarrierUp }, CurrentLocation);
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
                     break;
 
                 case Spell.ElementalShot://ArcherSpells - Elemental system
@@ -7839,8 +7921,13 @@ namespace Server.MirObjects
         {
             UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
             if (item == null || item.Info.Type != ItemType.Weapon || (item.Info.Shape != 49 && item.Info.Shape != 50)) return;
-            Enqueue(new S.DeleteItem { UniqueID = Info.Equipment[(int)EquipmentSlot.Weapon].Slots[(int)type].UniqueID, Count = 1 });
+
+            UserItem slotItem = Info.Equipment[(int)EquipmentSlot.Weapon].Slots[(int)type];
+
+            Enqueue(new S.DeleteItem { UniqueID = slotItem.UniqueID, Count = 1 });
             Info.Equipment[(int)EquipmentSlot.Weapon].Slots[(int)type] = null;
+
+            Report.ItemChanged("FishingConsumable", slotItem, 1, 1);
         }
 
         private void DamagedFishingItem(FishingSlot type, int lossDura)
@@ -8149,7 +8236,7 @@ namespace Server.MirObjects
                 Poison = CurrentPoison,
                 Dead = Dead,
                 Hidden = Hidden,
-                Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
+                Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
                 WingEffect = Looks_Wings,
                 MountType = MountType,
                 RidingMount = RidingMount,
@@ -8189,7 +8276,7 @@ namespace Server.MirObjects
                 Poison = CurrentPoison,
                 Dead = Dead,
                 Hidden = Hidden,
-                Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
+                Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
                 WingEffect = Looks_Wings,
                 MountType = MountType,
                 RidingMount = RidingMount,
@@ -8658,6 +8745,8 @@ namespace Server.MirObjects
                 RefreshBagWeight();
                 TradeItem();
 
+                Report.ItemMoved("DepositTradeItem", temp, MirGridType.Inventory, MirGridType.Trade, from, to);
+
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -8704,6 +8793,8 @@ namespace Server.MirObjects
                 p.Success = true;
                 RefreshBagWeight();
                 TradeItem();
+
+                Report.ItemMoved("RetrieveTradeItem", temp, MirGridType.Trade, MirGridType.Inventory, from, to);
 
                 Enqueue(p);
                 return;
@@ -8832,6 +8923,8 @@ namespace Server.MirObjects
                 Enqueue(p);
                 RefreshStats();
 
+                Report.ItemMoved("EquipSlotItem", temp, grid, gridTo, index, to);
+
                 return;
             }
 
@@ -8909,6 +9002,9 @@ namespace Server.MirObjects
                 Enqueue(p);
                 RefreshStats();
                 Broadcast(GetUpdateInfo());
+
+                Report.ItemMoved("RemoveItem", temp, MirGridType.Equipment, grid, index, to);
+
                 return;
             }
 
@@ -8957,7 +9053,12 @@ namespace Server.MirObjects
             {
                 UserItem i = array[to];
                 array[to] = array[from];
+
+                Report.ItemMoved("MoveItem", array[to], grid, grid, from, to);
+
                 array[from] = i;
+
+                Report.ItemMoved("MoveItem", array[from], grid, grid, to, from);
 
                 p.Success = true;
                 Enqueue(p);
@@ -9022,6 +9123,8 @@ namespace Server.MirObjects
                 Info.Inventory[from] = null;
                 RefreshBagWeight();
 
+                Report.ItemMoved("StoreItem", temp, MirGridType.Inventory, MirGridType.Storage, from, to);
+
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -9084,9 +9187,12 @@ namespace Server.MirObjects
                 Info.Inventory[to] = temp;
                 Account.Storage[from] = null;
 
+                Report.ItemMoved("TakeBackStoreItem", temp, MirGridType.Storage, MirGridType.Inventory, from, to);
+
                 p.Success = true;
                 RefreshBagWeight();
                 Enqueue(p);
+
                 return;
             }
             Enqueue(p);
@@ -9185,10 +9291,17 @@ namespace Server.MirObjects
                     UnlockCurse = false;
 
                 array[index] = Info.Equipment[to];
+
+                Report.ItemMoved("RemoveItem", temp, MirGridType.Equipment, grid, to, index);
+
                 Info.Equipment[to] = temp;
+
+                Report.ItemMoved("EquipItem", temp, grid, MirGridType.Equipment, index, to);
+
                 p.Success = true;
                 Enqueue(p);
                 RefreshStats();
+
                 //Broadcast(GetUpdateInfo());
                 return;
             }
@@ -9500,6 +9613,8 @@ namespace Server.MirObjects
             else Info.Inventory[index] = null;
             RefreshBagWeight();
 
+            Report.ItemChanged("UseItem", item, 1, 1);
+
             p.Success = true;
             Enqueue(p);
         }
@@ -9558,7 +9673,6 @@ namespace Server.MirObjects
 
             temp = Envir.CreateFreshItem(temp.Info);
             temp.Count = count;
-
 
             p.Success = true;
             Enqueue(p);
@@ -10072,6 +10186,8 @@ namespace Server.MirObjects
             if (tempFrom.Count > 1) tempFrom.Count--;
             else Info.Inventory[indexFrom] = null;
 
+            Report.ItemCombined("CombineItem", tempFrom, tempTo, indexFrom, indexTo, MirGridType.Inventory);
+
             //item merged ok
             p.Success = true;
             Enqueue(p);
@@ -10141,6 +10257,8 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
             RefreshBagWeight();
+
+            Report.ItemChanged("DropItem", temp, count, 1);
         }
         public void DropGold(uint gold)
         {
@@ -10187,6 +10305,8 @@ namespace Server.MirObjects
                                 ChatType.System);
 
                     GainItem(item.Item);
+
+                    Report.ItemChanged("PickUpItem", item.Item, item.Item.Count, 2);
 
                     CurrentMap.RemoveObject(ob);
                     ob.Despawn();                  
@@ -10843,6 +10963,8 @@ namespace Server.MirObjects
             Enqueue(new S.GainedQuestItem { Item = clonedItem });
 
             AddQuestItem(item);
+
+            
         }
         public void TakeQuestItem(ItemInfo uItem, uint count)
         {
@@ -11126,6 +11248,7 @@ namespace Server.MirObjects
                 Enqueue(p);
                 GainGold(temp.Price() / 2);
                 RefreshBagWeight();
+
                 return;
             }
 
@@ -11270,6 +11393,8 @@ namespace Server.MirObjects
 
                 p.Success = true;
                 Enqueue(p);
+
+                Report.ItemChanged("ConsignItem", temp, temp.Count, 1);
 
                 Info.Inventory[index] = null;
                 Account.Gold -= Globals.ConsignmentCost;
@@ -11445,6 +11570,9 @@ namespace Server.MirObjects
                     Account.Gold -= auction.Price;
                     Enqueue(new S.LoseGold { Gold = auction.Price });
                     GainItem(auction.Item);
+
+                    Report.ItemChanged("BuyMarketItem", auction.Item, auction.Item.Count, 2);
+
                     Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price), ChatType.Hint);
                     Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price) });
                     MarketSearch(MatchName);
@@ -11497,6 +11625,9 @@ namespace Server.MirObjects
                         Envir.Auctions.Remove(auction);
                         GainItem(auction.Item);
                         MarketSearch(MatchName);
+
+                        Report.ItemChanged("GetBackMarketItem", auction.Item, auction.Item.Count, 2);
+
                         return;
                     }
 
@@ -12276,6 +12407,26 @@ namespace Server.MirObjects
                         }
                     }
                     break;
+            }
+        }
+
+        private void UpdateGMBuff()
+        {
+            if (!IsGM) return;
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Type == BuffType.GameMaster)
+                {
+                    GMOptions options = GMOptions.None;
+
+                    if (GMGameMaster) options |= GMOptions.GameMaster;
+                    if (GMNeverDie) options |= GMOptions.Superman;
+                    if (Observer) options |= GMOptions.Observer;
+
+                    Buffs[i].Value = (byte)options;
+                    Enqueue(new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Value = Buffs[i].Value, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible });
+                    break;
+                }
             }
         }
 
@@ -14042,6 +14193,8 @@ namespace Server.MirObjects
                         }
 
                         GainQuestItem(item);
+
+                        Report.ItemChanged("AcceptQuest", item, item.Count, 2);
                     }
                 }
             }
@@ -14216,6 +14369,7 @@ namespace Server.MirObjects
                     if (player.CheckNeedQuestItem(item, gainItem))
                     {
                         itemCollected = true;
+                        player.Report.ItemChanged("WinQuestItem", item, item.Count, 2);
                     }
                 }
             }
@@ -14224,6 +14378,7 @@ namespace Server.MirObjects
                 if (CheckNeedQuestItem(item, gainItem))
                 {
                     itemCollected = true;
+                    Report.ItemChanged("WinQuestItem", item, item.Count, 2);
                 }
             }
 
@@ -14245,6 +14400,8 @@ namespace Server.MirObjects
                     Enqueue(new S.SendOutputMessage { Message = string.Format("You found {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
 
                     SendUpdateQuest(quest, QuestState.Update);
+
+                    Report.ItemChanged("WinQuestItem", item, item.Count, 2);
                 }
                 return true;
             }
@@ -15114,6 +15271,16 @@ namespace Server.MirObjects
                     case ItemSet.RedJadeH:
                     case ItemSet.Nephrite:
                     case ItemSet.NephriteH:
+                    case ItemSet.Whisker1:
+                    case ItemSet.Whisker2:
+                    case ItemSet.Whisker3:
+                    case ItemSet.Whisker4:
+                    case ItemSet.Whisker5:
+                    case ItemSet.Hyeolryong:
+                    case ItemSet.Monitor:
+                    case ItemSet.Oppressive:
+                    case ItemSet.Paeok:
+                    case ItemSet.Sulgwan:
                         return 5;
                     default:
                         return 0;

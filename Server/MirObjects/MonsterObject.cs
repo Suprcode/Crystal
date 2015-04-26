@@ -632,7 +632,10 @@ namespace Server.MirObjects
                     {
                         PlayerObject ob = (PlayerObject) EXPOwner;
 
-                        if (ob.CheckGroupQuestItem(item)) continue;
+                        if (ob.CheckGroupQuestItem(item))
+                        {
+                            continue;
+                        }
                     }
 
                     if (drop.QuestRequired) continue;

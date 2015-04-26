@@ -818,6 +818,8 @@ namespace Server.MirObjects
             }
             player.GainItem(item);
 
+            player.Report.ItemChanged("BuyItem", item, item.Count, 2);
+
             if (isUsed)
             {
                 UsedGoods.Remove(goods);
@@ -844,6 +846,8 @@ namespace Server.MirObjects
 
             if (BuyBack[player.Name].Count >= Settings.GoodsBuyBackMaxStored)
                 BuyBack[player.Name].RemoveAt(0);
+
+            player.Report.ItemChanged("SellItem", item, item.Count, 1);
 
             item.BuybackExpiryDate = Envir.Now;
             BuyBack[player.Name].Add(item);
@@ -1564,13 +1568,13 @@ namespace Server.MirObjects
                 case "GIVEBUFF":
                     if (parts.Length < 4) return;
 
-                    string infinite = "";
                     string visible = "";
+                    string infinite = "";
 
-                    if (parts.Length > 4) infinite = parts[4];
+                    if (parts.Length > 4) visible = parts[4];
                     if (parts.Length > 5) infinite = parts[5];
 
-                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], parts[3], infinite, visible));
+                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], parts[3], visible, infinite));
                     break;
 
                 case "ADDTOGUILD":

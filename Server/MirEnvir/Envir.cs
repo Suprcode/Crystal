@@ -914,6 +914,8 @@ namespace Server.MirEnvir
             StartItems.Clear();
             MapList.Clear();
 
+            CustomCommands.Clear();
+
             LoadDB();
 
             for (int i = 0; i < MapInfoList.Count; i++)

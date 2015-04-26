@@ -2374,7 +2374,7 @@ namespace Client.MirObjects
                     }
                     break;
 
-                case MirAction.AttackRange1://Archertest
+                case MirAction.AttackRange1:
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
@@ -3724,7 +3724,7 @@ namespace Client.MirObjects
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (CurrentEffect == SpellEffect.ElementBarrierUp && !ElementalBarrier)//ArcherSpells - Elemental system
+            if (CurrentEffect == SpellEffect.ElementalBarrierUp && !ElementalBarrier)//ArcherSpells - Elemental system
             {
                 ElementalBarrier = true;
                 Effects.Add(ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 16, 3200, this) { Repeat = true });

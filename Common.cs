@@ -7,7 +7,16 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 
-public enum AwakeType
+[Flags]
+public enum GMOptions : byte
+{
+    None = 0,
+    GameMaster = 0x0001,
+    Observer = 0x0002,
+    Superman = 0x0004
+}
+
+public enum AwakeType : byte
 {
     None = 0,
     DC,
@@ -24,7 +33,7 @@ public enum LevelEffects : byte
     None = 0,
     Mist = 0x0001,
     RedDragon = 0x0002,
-    BlueDragon = 0x0004,
+    BlueDragon = 0x0004
 }
 
 public enum OutputMessageType : byte
@@ -711,7 +720,17 @@ public enum ItemSet : byte
     RedJade = 17,
     RedJadeH = 18,
     Nephrite = 19,
-    NephriteH = 20
+    NephriteH = 20,
+    Whisker1 = 21,
+    Whisker2 = 22,
+    Whisker3 = 23,
+    Whisker4 = 24,
+    Whisker5 = 25,
+    Hyeolryong = 26,
+    Monitor = 27,
+    Oppressive = 28,
+    Paeok = 29,
+    Sulgwan = 30
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -853,8 +872,8 @@ public enum SpellEffect : byte
     Reflect,
     Critical,
     Mine,
-    ElementBarrierUp,
-    ElementBarrierDown,
+    ElementalBarrierUp,
+    ElementalBarrierDown,
     FuryUp,
     FuryDown,
     DelayedExplosion,

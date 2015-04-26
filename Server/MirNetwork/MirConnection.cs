@@ -629,7 +629,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Select) return;
 
-            if (!Settings.AllowStartGame)
+            if (!Settings.AllowStartGame && (Account == null || (Account != null && !Account.AdminAccount)))
             {
                 Enqueue(new S.StartGame { Result = 0 });
                 return;

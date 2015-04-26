@@ -21,7 +21,7 @@ namespace Server.MirEnvir
 
         #region Public Properties
 
-        private bool _enabled = false; //Get from individual player to enabled/disable logging ??
+        private bool _enabled = true; //Get from individual player to enabled/disable logging ??
 
         public bool DoLog
         {
@@ -50,14 +50,7 @@ namespace Server.MirEnvir
 
         #region Log Actions
 
-        public void GoldChange(string source, uint amount, bool lost = true, string info = "")
-        {
-            string task = string.Format("{0} x{1} Gold", lost ? "Lost" : "Gained", amount);
-
-            Action action = new Action { Source = source, Task = task, AddedInfo = info };
-
-            RecordAction(action);
-        }
+        #region Move Actions
 
         public void MapChange(string source, MapInfo oldMap, MapInfo newMap, string info = "")
         {
@@ -68,14 +61,87 @@ namespace Server.MirEnvir
             RecordAction(action);
         }
 
-        public void ItemChange(string source, UserItem item, uint amount = 1, bool lost = true, string info = "")
-        {
-            string task = string.Format("{0} x{1} Item {2}", lost ? "Lost" : "Gained", amount, item.Name);
+        #endregion
+        
+        #region Item Actions
 
-            Action action = new Action { Source = source, Task = task, UniqueID = item.UniqueID, AddedInfo = info };
+        //TOADD
+        //ItemSplit
+        //ItemMerge
+
+        public void ItemCombined(string source, UserItem fromItem, UserItem toItem, int slotFrom, int slotTo, MirGridType grid)
+        {
+            string task = string.Empty;
+            ulong uniqueID = 0;
+
+            if (fromItem != null && toItem != null)
+            {
+                task = string.Format("Item Combined - {0} with {1} from {2} to {3} in {4}", fromItem.Info.Name, toItem.Info.Name, slotFrom, slotTo, grid);
+
+                uniqueID = toItem.UniqueID;
+            }
+
+            Action action = new Action { Source = source, Task = task, UniqueID = uniqueID };
 
             RecordAction(action);
         }
+
+        public void ItemMoved(string source, UserItem item, MirGridType from, MirGridType to, int slotFrom, int slotTo)
+        {
+            string task = string.Empty;
+            ulong uniqueID = 0;
+
+            if (item != null)
+            {
+                task = string.Format("Item Moved - {0} from {1}:{2} to {3}:{4}", item.Info.Name, from, slotFrom, to, slotTo);
+
+                uniqueID = item.UniqueID;
+            }
+
+            Action action = new Action { Source = source, Task = task, UniqueID = uniqueID };
+
+            RecordAction(action);
+        }
+
+        public void ItemChanged(string source, UserItem item, uint amount, int state)
+        {
+            string type = string.Empty;
+            string task = string.Empty;
+            ulong uniqueID = 0;
+
+            switch (state)
+            {
+                case 1:
+                    type = "Lost";
+                    break;
+                case 2:
+                    type = "Gained";
+                    break;
+            }
+
+            if (item != null)
+            {
+                task = string.Format("Item {0} - {1} x{2}", type, item.Info.Name, amount);
+                uniqueID = item.UniqueID;
+            }
+
+            Action action = new Action { Source = source, Task = task, UniqueID = uniqueID };
+
+            RecordAction(action);
+        }
+
+        public void GoldChanged(string source, uint amount, bool lost = true, string info = "")
+        {
+            string task = string.Format("Gold{0} - x{1}", lost ? "Lost" : "Gained", amount);
+
+            Action action = new Action { Source = source, Task = task, AddedInfo = info };
+
+            RecordAction(action);
+        }
+
+        #endregion
+
+        #region Kill Actions
 
         public void KilledPlayer(string source, PlayerObject obj, string info = "")
         {
@@ -91,6 +157,19 @@ namespace Server.MirEnvir
             string task = string.Format("Killed Monster {0}", obj.Name);
 
             Action action = new Action { Source = source, Task = task, AddedInfo = info };
+
+            RecordAction(action);
+        }
+
+        #endregion
+
+        #region Other Actions
+
+        public void Levelled(int level)
+        {
+            string task = string.Format("Levelled to {0}", level);
+
+            Action action = new Action { Task = task };
 
             RecordAction(action);
         }
@@ -115,6 +194,8 @@ namespace Server.MirEnvir
 
             RecordAction(action);
         }
+
+        #endregion
 
         public void ForceSave()
         {
@@ -151,7 +232,7 @@ namespace Server.MirEnvir
             foreach (Action action in Actions)
             {
                 string output = string.Format("{0:hh\\:mm\\:ss}, {1}, {2}, {3}, {4}, {5}" + Environment.NewLine,
-                    action.Time, action.Player, action.Source, action.Task, action.UniqueID, action.AddedInfo);
+                    action.Time, action.Player, action.Task, action.Source, action.UniqueID, action.AddedInfo);
 
                 File.AppendAllText(fullPath, output);
             }
