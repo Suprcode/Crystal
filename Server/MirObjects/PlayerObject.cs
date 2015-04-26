@@ -236,7 +236,6 @@ namespace Server.MirObjects
         public NPCPage NPCPage;
         public bool NPCSuccess;
         public bool NPCDelayed;
-        public List<string> NPCSpeech;
 
         public Map NPCMoveMap;
         public Point NPCMoveCoord;
@@ -251,9 +250,9 @@ namespace Server.MirObjects
         public List<ItemSets> ItemSets = new List<ItemSets>();
         public List<EquipmentSlot> MirSet = new List<EquipmentSlot>();
 
-        public bool FatalSword, Slaying, TwinDrakeBlade, FlamingSword, MPEater, Hemorrhage, bCounterAttack;
+        public bool FatalSword, Slaying, TwinDrakeBlade, FlamingSword, MPEater, Hemorrhage, CounterAttack;
         public int MPEaterCount, HemorrhageAttackCount;
-        public long FlamingSwordTime, CounterAttackTime;//, PoisonCloudTime, SlashingBurstTime, FuryTime, TrapTime, SwiftFeetTime, CounterAttackTime;
+        public long FlamingSwordTime, CounterAttackTime;
         public bool ActiveBlizzard, ActiveReincarnation, ActiveSwiftFeet, ReincarnationReady;
         public PlayerObject ReincarnationTarget, ReincarnationHost;
         public long ReincarnationExpireTime;
@@ -291,7 +290,6 @@ namespace Server.MirObjects
         public bool GameStarted { get; set; }
 
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing;
-
         public bool HasMuscleRing, HasClearRing, HasParalysisRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss;
 
         public PlayerObject GroupInvitation;
@@ -531,9 +529,9 @@ namespace Server.MirObjects
                 Enqueue(new S.SpellToggle { Spell = Spell.FlamingSword, CanUse = false });
             }
 
-            if (bCounterAttack && Envir.Time >= CounterAttackTime)
+            if (CounterAttack && Envir.Time >= CounterAttackTime)
             {
-                bCounterAttack = false;
+                CounterAttack = false;
             }
 
             if (ReincarnationReady && Envir.Time >= ReincarnationExpireTime)
@@ -3306,12 +3304,12 @@ namespace Server.MirObjects
                         if (parts.Length <= 2 || !int.TryParse(parts[1], out x) || !int.TryParse(parts[2], out y))
                         {
                             if (!IsGM)
-                                LastTeleportTime = Envir.Time + 180000;
+                                LastTeleportTime = Envir.Time + 10000;
                             TeleportRandom(200, 0);
                             return;
                         }
                         if (!IsGM)
-                            LastTeleportTime = Envir.Time + 180000;
+                            LastTeleportTime = Envir.Time + 10000;
                         Teleport(CurrentMap, new Point(x, y));
                         break;
 
@@ -5141,8 +5139,6 @@ namespace Server.MirObjects
                 return;
             }
 
-            magic.CastTime = Envir.Time;
-
             int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
 
             if (spell == Spell.Teleport || spell == Spell.Blink)
@@ -5405,6 +5401,11 @@ namespace Server.MirObjects
                 default:
                     cast = false;
                     break;
+            }
+
+            if (cast)
+            {
+                magic.CastTime = Envir.Time;
             }
 
             Enqueue(new S.Magic { Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
@@ -6553,11 +6554,11 @@ namespace Server.MirObjects
 
             ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic));
         }
-        private void CounterAttack(UserMagic magic, MapObject target)
+        private void CounterAttackCast(UserMagic magic, MapObject target)
         {
             if (target == null || magic == null) return;
 
-            if (bCounterAttack == false) return;
+            if (CounterAttack == false) return;
 
             int criticalDamage = Envir.Random.Next(0, 100) <= Accuracy ? MaxDC * 2 : MinDC * 2;
             int damage = (MinDC / 5 + 4 * (magic.Level + Level / 20)) * criticalDamage / 20 + MaxDC;
@@ -6571,7 +6572,7 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, damage, DefenceType.AC, true);
             ActionList.Add(action);
             LevelMagic(magic);
-            bCounterAttack = false;
+            CounterAttack = false;
         }
         #endregion
 
@@ -8511,7 +8512,7 @@ namespace Server.MirObjects
             ActiveBlizzard = false;
             ActiveReincarnation = false;
 
-            CounterAttack(GetMagic(Spell.CounterAttack), LastHitter);
+            CounterAttackCast(GetMagic(Spell.CounterAttack), LastHitter);
 
             Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -8589,7 +8590,7 @@ namespace Server.MirObjects
             ActiveBlizzard = false;
             ActiveReincarnation = false;
 
-            CounterAttack(GetMagic(Spell.CounterAttack), LastHitter);
+            CounterAttackCast(GetMagic(Spell.CounterAttack), LastHitter);
 
             Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -12383,13 +12384,13 @@ namespace Server.MirObjects
                     ChangeMP(-cost);
                     break;
                 case Spell.CounterAttack:
-                    if (bCounterAttack || Envir.Time < CounterAttackTime) return;
+                    if (CounterAttack || Envir.Time < CounterAttackTime) return;
                     magic = GetMagic(spell);
                     if (magic == null) return;
                     cost = magic.Info.BaseCost + magic.Level * magic.Info.LevelCost;
                     if (cost >= MP) return;
 
-                    bCounterAttack = true;
+                    CounterAttack = true;
                     CounterAttackTime = Envir.Time + 7000;
                     AddBuff(new Buff { Type = BuffType.CounterAttack, Caster = this, ExpireTime = CounterAttackTime, Value = 11 + magic.Level * 3, Visible = true });
                     ChangeMP(-cost);
