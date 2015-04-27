@@ -1637,6 +1637,10 @@ namespace Server.MirObjects
                 case "ADDTONEWBIEGUILD":
                     acts.Add(new NPCActions(ActionType.AddToNewbieGuild));
                     break;
+
+                case "LEAVENEWBIEGUILD":
+                    acts.Add(new NPCActions(ActionType.LeaveNewbieGuild));
+                    break;
             }
 
         }
@@ -2827,6 +2831,15 @@ namespace Server.MirObjects
                             player.GuildInvite(true);
                         }
                         break;
+
+                    case ActionType.LeaveNewbieGuild:
+                        {
+                            if (player.MyGuild == null) return;
+                            if (player.MyGuildRank == null) return;
+                            if (player.MyGuild.Name != Settings.Guild_NewbieName) return;
+                            player.MyGuild.DeleteMember(player, player.Name);
+                        }
+                        break;
                 }
             }
         }
@@ -2955,6 +2968,7 @@ namespace Server.MirObjects
         GivePearls,
         TakePearls,
 		AddToNewbieGuild,
+        LeaveNewbieGuild,
     }
     public enum CheckType
     {
