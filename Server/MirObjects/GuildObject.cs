@@ -381,7 +381,7 @@ namespace Server.MirObjects
                 Kicker.ReceiveChat("Your rank is not adequate.", ChatType.System);
                 return false;
             }
-            if (MemberRank.Index == 0)
+            if (MemberRank.Index == 0 && Name != Settings.Guild_NewbieName)
             {
                 if (MemberRank.Members.Count < 2)
                 {

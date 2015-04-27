@@ -730,6 +730,10 @@ namespace Server.MirObjects
                         isGM = true;
                         if (!IsGM) removeBuff = true;
                         break;
+                    case BuffType.Newbie:
+                        if (MyGuild == null || (MyGuild != null && MyGuild.Name != Settings.Guild_NewbieName)) 
+                            removeBuff = true;
+                        break;
                 }
 
                 if (removeBuff)
@@ -759,6 +763,11 @@ namespace Server.MirObjects
             if (IsGM && !isGM)
             {
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Value = 0, Infinite = true });
+            }
+
+            if (MyGuild != null && MyGuild.Name == Settings.Guild_NewbieName)
+            {
+                AddBuff(new Buff { Type = BuffType.Newbie, Caster = this, ExpireTime = Envir.Time + 100, Value = Settings.Guild_NewbieExpRate, Infinite = true });
             }
         }
 
@@ -2747,6 +2756,9 @@ namespace Server.MirObjects
                         break;
                     case BuffType.BagWeight:
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Value);
+                        break;
+                    case BuffType.Newbie:
+                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Value);
                         break;
                 }
 
@@ -12969,6 +12981,15 @@ namespace Server.MirObjects
 
         #region Guilds
 
+        public void CreateNewbieGuild(string GuildName)
+        {
+            if (Envir.GetGuild(GuildName) != null) return;
+            //make the guild
+            GuildObject guild = new GuildObject(this, GuildName) { Guildindex = ++Envir.NextGuildID };
+            guild.Ranks[0].Members.Clear();
+            guild.Membercount--;
+            Envir.GuildList.Add(guild);
+        }
         public bool CreateGuild(string GuildName)
         {
             if ((MyGuild != null) || (Info.GuildIndex != -1)) return false;

@@ -1556,6 +1556,8 @@ namespace Client.MirScenes
                     return 12;//872;
                 case BuffType.GameMaster:
                     return 51;//903;
+                case BuffType.Newbie:
+                    return 503;
                 default:
                     return 0;
             }
@@ -19872,6 +19874,9 @@ namespace Client.MirScenes
                     if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
                     if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
                     if (options.HasFlag(GMOptions.Observer)) text += "-Observer\n";
+                    break;
+                case BuffType.Newbie:
+                    text = string.Format("Newbie Guild\nIncreased by {0}%\n", Value);
                     break;
             }
 

@@ -1629,6 +1629,10 @@ namespace Server.MirObjects
                 case "ENTERMAP":
                     acts.Add(new NPCActions(ActionType.EnterMap));
                     break;
+
+                case "ADDTONEWBIEGUILD":
+                    acts.Add(new NPCActions(ActionType.AddToNewbieGuild));
+                    break;
             }
 
         }
@@ -2687,14 +2691,16 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.AddToGuild:
-                        if (player.MyGuild != null) return;
+                        {
+                            if (player.MyGuild != null) return;
 
-                        GuildObject guild = SMain.Envir.GetGuild(param[0]);
+                            GuildObject guild = SMain.Envir.GetGuild(param[0]);
 
-                        if (guild == null) return;
+                            if (guild == null) return;
 
-                        player.PendingGuildInvite = guild;
-                        player.GuildInvite(true);
+                            player.PendingGuildInvite = guild;
+                            player.GuildInvite(true);
+                        }
                         break;
 
                     case ActionType.RemoveFromGuild:
@@ -2797,6 +2803,21 @@ namespace Server.MirObjects
                         player.Teleport(player.NPCMoveMap, player.NPCMoveCoord, false);
                         player.NPCMoveMap = null;
                         player.NPCMoveCoord = Point.Empty;
+                        break;
+
+                    case ActionType.AddToNewbieGuild:
+                        {
+                            if (player.MyGuild != null) return;
+
+                            GuildObject guild = SMain.Envir.GetGuild(Settings.Guild_NewbieName);
+
+                            if (guild == null)
+                                player.CreateNewbieGuild(Settings.Guild_NewbieName);
+
+                            guild = SMain.Envir.GetGuild(Settings.Guild_NewbieName);
+                            player.PendingGuildInvite = guild;
+                            player.GuildInvite(true);
+                        }
                         break;
                 }
             }
@@ -2924,7 +2945,8 @@ namespace Server.MirObjects
         GroupGoto,
         EnterMap,
         GivePearls,
-        TakePearls
+        TakePearls,
+		AddToNewbieGuild,
     }
     public enum CheckType
     {
