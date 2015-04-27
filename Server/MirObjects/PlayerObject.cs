@@ -676,11 +676,11 @@ namespace Server.MirObjects
                             }
                         }
                         break;
-                    case BuffType.Concentration://ArcherSpells - Elemental system
+                    case BuffType.Concentration:
                         ConcentrateInterrupted = false;
                         ConcentrateInterruptTime = 0;
                         Concentrating = false;
-                        UpdateConcentration();//Update & send to client
+                        UpdateConcentration();
                         break;
                     case BuffType.SwiftFeet:
                         ActiveSwiftFeet = false;
@@ -702,7 +702,6 @@ namespace Server.MirObjects
 
             if (refresh) RefreshStats();
         }
-
         private void ProcessInfiniteBuffs()
         {
             bool hiding = false;
@@ -761,8 +760,6 @@ namespace Server.MirObjects
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Value = 0, Infinite = true });
             }
         }
-
-        
         private void ProcessRegen()
         {
             if (Dead) return;
@@ -1002,7 +999,6 @@ namespace Server.MirObjects
                     break;
             }
         }
-
 
         private void SetHP(ushort amount)
         {
@@ -1328,7 +1324,6 @@ namespace Server.MirObjects
             RefreshStats();
         }
 
-
         public override void WinExp(uint amount, uint targetLevel = 0)
         {
             int expPoint;
@@ -1437,8 +1432,6 @@ namespace Server.MirObjects
             Report.Levelled(Level);
         }
 
-
-
         private static int FreeSpace(IList<UserItem> array)
         {
             int count = 0;
@@ -1478,7 +1471,6 @@ namespace Server.MirObjects
 
             
         }
-
         private void AddItem(UserItem item)
         {
             if (item.Info.StackSize > 1) //Stackable
@@ -1533,6 +1525,7 @@ namespace Server.MirObjects
                 return;
             }
         }
+
         private bool CorrectStartItem(ItemInfo info)
         {
             switch (Class)
@@ -1585,7 +1578,6 @@ namespace Server.MirObjects
             Enqueue(new S.NewItemInfo { Info = info });
             Connection.SentItemInfo.Add(info);
         }
-
         public void CheckItem(UserItem item)
         {
             CheckItemInfo(item.Info);
@@ -1597,7 +1589,6 @@ namespace Server.MirObjects
                 CheckItemInfo(item.Slots[i].Info);
             }
         }
-
         public void CheckQuestInfo(QuestInfo info)
         {
             if (Connection.SentQuestInfo.Contains(info)) return;
@@ -4104,7 +4095,6 @@ namespace Server.MirObjects
             }
         }
 
-
         public void Turn(MirDirection dir)
         {
             _stepCounter = 0;
@@ -5302,7 +5292,6 @@ namespace Server.MirObjects
                 case Spell.Rage:
                     Rage(magic);
                     break;
-
                 case Spell.Mirroring:
                     Mirroring(magic);
                     break;
@@ -5339,7 +5328,6 @@ namespace Server.MirObjects
                 case Spell.DoubleShot:
                     if (!DoubleShot(target, magic)) targetID = 0;
                     break;
-
                 case Spell.SwiftFeet:
                     SwiftFeet(magic, out cast);
                     break;
@@ -5387,15 +5375,15 @@ namespace Server.MirObjects
                 case Spell.SummonSnakes:
                     ArcherSummon(magic, target, location);
                     break;
-                case Spell.VampireShot://ArcherSpells - VampireShot
-                case Spell.PoisonShot://ArcherSpells - PoisonShot
-                case Spell.CrippleShot://ArcherSpells - CrippleShot
+                case Spell.VampireShot:
+                case Spell.PoisonShot:
+                case Spell.CrippleShot:
                     SpecialArrowShot(target, magic);
                     break;
-                case Spell.NapalmShot://ArcherSpells - NapalmShot
+                case Spell.NapalmShot:
                     NapalmShot(target, magic);
                     break;
-                case Spell.OneWithNature://ArcherSpells - OneWithNature
+                case Spell.OneWithNature:
                     OneWithNature(target, magic);
                     break;
                 default:
@@ -5574,7 +5562,7 @@ namespace Server.MirObjects
         }
         #endregion
 
-        #region Wizard/Archer* Skills
+        #region Wizard Skills
         private bool Fireball(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
@@ -6869,7 +6857,6 @@ namespace Server.MirObjects
 
             return true;
         }
-
         private bool DoubleShot(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this)) return false;
@@ -6890,7 +6877,7 @@ namespace Server.MirObjects
 
             return true;
         }
-        private void BackStep(UserMagic magic)//ArcherSpells - Backstep
+        private void BackStep(UserMagic magic)
         {
             ActionTime = Envir.Time;
             if (!CanWalk) return;
@@ -6945,7 +6932,7 @@ namespace Server.MirObjects
 
             CellTime = Envir.Time + 500;
         }
-        private bool DelayedExplosion(MapObject target, UserMagic magic)//ArcherSpells - DelayedExplosion
+        private bool DelayedExplosion(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
 
@@ -6956,7 +6943,7 @@ namespace Server.MirObjects
             ActionList.Add(action);
             return true;
         }
-        private void ExplosiveTrap(UserMagic magic, Point location)//ArcherSpells - Explosive Trap
+        private void ExplosiveTrap(UserMagic magic, Point location)
         {
             int trapCount = 0;
             for (int i = 0; i <= 3; i++)
@@ -6976,7 +6963,7 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location, freeTrapSpot);
             CurrentMap.ActionList.Add(action);
         }
-        public void ExplosiveTrapDetonated(int obIDX, int Trapnr)//ArcherSpells - Explosive Trap
+        public void ExplosiveTrapDetonated(int obIDX, int Trapnr)
         {
             SpellObject ArcherTrap;
             if (ArcherTrapObjectsArray[obIDX,Trapnr] == null) return;
@@ -7043,7 +7030,7 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
             ActionList.Add(action);
         }
-        public void NapalmShot(MapObject target, UserMagic magic)//ArcherSpells - NapalmShot
+        public void NapalmShot(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this)) return;
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return;
@@ -7057,7 +7044,7 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, damage, target.CurrentLocation);
             CurrentMap.ActionList.Add(action);
         }
-        public void ArcherSummon(UserMagic magic, MapObject target, Point location)//ArcherSpells - Summons
+        public void ArcherSummon(UserMagic magic, MapObject target, Point location)
         {
             if (target != null && target.IsAttackTarget(this))
                 location = target.CurrentLocation;
@@ -7071,7 +7058,7 @@ namespace Server.MirObjects
             ActionList.Add(action);
         }
 
-        public void OneWithNature(MapObject target, UserMagic magic)//ArcherSpells - OneWithNature
+        public void OneWithNature(MapObject target, UserMagic magic)
         {
             int damage = GetAttackPower(MinMC, MaxMC) + magic.GetPower();
 
@@ -7845,7 +7832,6 @@ namespace Server.MirObjects
             if (page.Length > 0)
                 CallNPC(npcid, page);
         }
-
         private void CompletePoison(IList<object> data)
         {
             MapObject target = (MapObject)data[0];
@@ -7859,7 +7845,6 @@ namespace Server.MirObjects
             target.ApplyPoison(new Poison { PType = pt, Duration = duration, TickSpeed = tickSpeed }, this);
             target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = sp });
         }
-
 
         private UserItem GetAmulet(int count, int shape = 0)
         {
@@ -8172,7 +8157,6 @@ namespace Server.MirObjects
             return true;            
         }
 
-
         public bool TeleportEscape(int attempts)
         {
             Map temp = Envir.GetMap(BindMapIndex);
@@ -8197,8 +8181,6 @@ namespace Server.MirObjects
                 MountType = MountType
             };
         }
-
-
         private Packet GetUpdateInfo()
         {
             UpdateConcentration();
@@ -8212,7 +8194,6 @@ namespace Server.MirObjects
                 WingEffect = Looks_Wings
             };
         }
-
         public override Packet GetInfo() 
         {
             //should never use this but i leave it in for safety
@@ -8293,7 +8274,6 @@ namespace Server.MirObjects
                 LevelEffects = LevelEffects
             };
         }
-
 
         public override bool IsAttackTarget(PlayerObject attacker)
         {
@@ -8598,7 +8578,6 @@ namespace Server.MirObjects
             ChangeHP(armour - damage);
             return damage - armour;
         }
-
 
         public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
         {
@@ -8931,7 +8910,6 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-
         public void RemoveItem(MirGridType grid, ulong id, int to)
         {
             S.RemoveItem p = new S.RemoveItem { Grid = grid, UniqueID = id, To = to, Success = false };
@@ -11327,7 +11305,6 @@ namespace Server.MirObjects
             Enqueue(new S.UserStorage { Storage = Account.Storage }); // Should be no alter before being sent.
         }
 
-
         public void ConsignItem(ulong uniqueID, uint price)
         {
             S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
@@ -13426,6 +13403,12 @@ namespace Server.MirObjects
                     }
                     if (MyGuild.StoredItems[from] == null)
                     {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (MaxBagWeight < CurrentBagWeight + MyGuild.StoredItems[from].Item.Weight)
+                    {
+                        ReceiveChat("Too overweight to retrieve item.", ChatType.System);
                         Enqueue(p);
                         return;
                     }

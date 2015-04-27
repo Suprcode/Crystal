@@ -24,7 +24,7 @@ namespace Client.MirObjects
         public string Name = string.Empty;
         public Point CurrentLocation, MapLocation;
         public MirDirection Direction;
-        public bool Dead, Hidden, SitDown, Sneaking, SneakingActive;
+        public bool Dead, Hidden, SitDown, Sneaking;
         public PoisonType Poison;
         public long DeadTime;
         public byte AI;

@@ -3594,8 +3594,6 @@ namespace Client.MirObjects
 
         public override void Draw()
         {
-            if (SneakingActive) return;
-
             float oldOpacity = DXManager.Opacity;
             if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
 

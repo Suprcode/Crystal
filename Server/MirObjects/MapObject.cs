@@ -124,7 +124,10 @@ namespace Server.MirObjects
             {
                 if (_sneakingActive == value) return;
                 _sneakingActive = value;
-                CurrentMap.Broadcast(new S.ObjectSneaking { ObjectID = ObjectID, SneakingActive = value }, CurrentLocation);
+
+                Observer = _sneakingActive;
+
+                //CurrentMap.Broadcast(new S.ObjectSneaking { ObjectID = ObjectID, SneakingActive = value }, CurrentLocation);
             }
         }
 

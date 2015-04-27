@@ -3029,28 +3029,8 @@ namespace Client.MirScenes
 
             if (!p.Cast) return;
 
-
             ClientMagic magic = User.GetMagic(p.Spell);
             magic.CastTime = CMain.Time;
-
-            //switch (p.Spell)
-            //{
-            //    case Spell.PoisonCloud:
-            //        PoisonCloudTime = CMain.Time + (18 - p.Level * 2) * 1000;
-            //        break;
-            //    case Spell.SlashingBurst:
-            //        SlashingBurstTime = CMain.Time + (14 - p.Level * 4) * 1000;
-            //        break;
-            //    case Spell.Fury:
-            //        FuryCoolTime = CMain.Time + 600000 - p.Level * 120000;
-            //        break;
-            //    case Spell.Trap:
-            //        TrapCoolTime = CMain.Time + 60000 - p.Level * 15000;
-            //        break;
-            //    case Spell.SwiftFeet:
-            //        SwiftFeetTime = CMain.Time + 210000 - p.Level * 40000;
-            //        break;
-            //}
         }
 
         private void MagicDelay(S.MagicDelay p)
@@ -3553,7 +3533,7 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
-                ob.SneakingActive = p.SneakingActive;
+               // ob.SneakingActive = p.SneakingActive;
                 return;
             }
         }
@@ -7599,7 +7579,7 @@ namespace Client.MirScenes
             {
                 for (int i = 0; i < Objects.Count; i++)
                 {
-                    if (Objects[i] is ItemObject || Objects[i].Dead || (Objects[i].SneakingActive && (Objects[i].ObjectID != User.ObjectID))) continue;
+                    if (Objects[i] is ItemObject || Objects[i].Dead || (Objects[i].ObjectID != User.ObjectID)) continue;
                     Objects[i].DrawName();
                 }
             }
@@ -17279,7 +17259,7 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
 
 
-                if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || (ob.SneakingActive && (ob.ObjectID != MapObject.User.ObjectID))) continue;
+                if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || (ob.ObjectID != MapObject.User.ObjectID)) continue;
                 float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + Location.X;
                 float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + Location.Y;
 
@@ -18414,6 +18394,7 @@ namespace Client.MirScenes
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Size = new Size(350, 21),
                 NotControl = true,
+                
             };
 
             CreaturePearls = new MirLabel
@@ -18461,6 +18442,7 @@ namespace Client.MirScenes
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Size = new Size(166, 21),
                 NotControl = true,
+                Visible = false //FAR made invisible as position was wierd - not sure where it's meant to be displayed
             };
 
             HoverLabel = new MirLabel
