@@ -1252,6 +1252,10 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.CheckQuest, parts[1], parts[2]));
                     break;
+
+                case "INNEWBIEGUILD":
+                    CheckList.Add(new NPCChecks(CheckType.InNewbieGuild));
+                    break;
             }
 
         }
@@ -2142,6 +2146,10 @@ namespace Server.MirObjects
                             failed = !player.CompletedQuests.Contains(tempInt);
                         }
                         break;
+
+                    case CheckType.InNewbieGuild:
+                        failed = player.MyGuild == null || player.MyGuild.Name != Settings.Guild_NewbieName;
+                        break;
                 }
 
                 if (!failed) continue;
@@ -2974,6 +2982,7 @@ namespace Server.MirObjects
         CheckCalc,
         InGuild,
         CheckMap,
-        CheckQuest
+        CheckQuest,
+        InNewbieGuild,
     }
 }

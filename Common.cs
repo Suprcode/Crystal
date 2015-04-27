@@ -922,7 +922,6 @@ public enum BuffType : byte
     MagicWonderShield,
     BagWeight,
     GameMaster,
-    Newbie,
 }
 
 public enum DefenceType : byte

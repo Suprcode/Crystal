@@ -82,8 +82,6 @@
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.NewbieNameBox = new System.Windows.Forms.TextBox();
             this.NewbieGuildName = new System.Windows.Forms.Label();
-            this.NewbieGuildExpRate = new System.Windows.Forms.Label();
-            this.NewbieExpBox = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox10.SuspendLayout();
@@ -602,8 +600,6 @@
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.NewbieExpBox);
-            this.tabPage6.Controls.Add(this.NewbieGuildExpRate);
             this.tabPage6.Controls.Add(this.NewbieNameBox);
             this.tabPage6.Controls.Add(this.NewbieGuildName);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
@@ -630,23 +626,6 @@
             this.NewbieGuildName.Size = new System.Drawing.Size(111, 12);
             this.NewbieGuildName.TabIndex = 0;
             this.NewbieGuildName.Text = "NewbieGuildName";
-            // 
-            // NewbieGuildExpRate
-            // 
-            this.NewbieGuildExpRate.AutoSize = true;
-            this.NewbieGuildExpRate.Location = new System.Drawing.Point(17, 50);
-            this.NewbieGuildExpRate.Name = "NewbieGuildExpRate";
-            this.NewbieGuildExpRate.Size = new System.Drawing.Size(124, 12);
-            this.NewbieGuildExpRate.TabIndex = 2;
-            this.NewbieGuildExpRate.Text = "NewbieGuildExpRate";
-            // 
-            // NewbieExpBox
-            // 
-            this.NewbieExpBox.Location = new System.Drawing.Point(167, 47);
-            this.NewbieExpBox.Name = "NewbieExpBox";
-            this.NewbieExpBox.Size = new System.Drawing.Size(222, 21);
-            this.NewbieExpBox.TabIndex = 3;
-            this.NewbieExpBox.TextChanged += new System.EventHandler(this.NewbieExpBox_TextChanged);
             // 
             // GuildInfoForm
             // 
@@ -739,8 +718,6 @@
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.TextBox NewbieNameBox;
         private System.Windows.Forms.Label NewbieGuildName;
-        private System.Windows.Forms.TextBox NewbieExpBox;
-        private System.Windows.Forms.Label NewbieGuildExpRate;
 
     }
 }

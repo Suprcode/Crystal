@@ -177,7 +177,6 @@ namespace Server
         public static long Guild_WarTime = 180;
 
         public static string Guild_NewbieName = "Newbie";
-        public static int Guild_NewbieExpRate = 25;
 
         public static List<ItemVolume> Guild_CreationCostList = new List<ItemVolume>();
         public static List<long> Guild_ExperienceList = new List<long>();
@@ -783,7 +782,6 @@ namespace Server
             Guild_WarCost = reader.ReadUInt32("Guilds", "WarCost", Guild_WarCost);
 
             Guild_NewbieName = reader.ReadString("Guilds", "NewbieName", Guild_NewbieName);
-            Guild_NewbieExpRate = reader.ReadInt32("Guilds", "NewbieExpRate", Guild_NewbieExpRate);
 
             int i = 0;
             while (reader.ReadUInt32("Required-" + i.ToString(),"Amount",0) != 0)
@@ -835,7 +833,6 @@ namespace Server
             reader.Write("Guilds", "WarCost", Guild_WarCost);
 
             reader.Write("Guilds", "NewbieName", Guild_NewbieName);
-            reader.Write("Guilds", "NewbieExpRate", Guild_NewbieExpRate);
 
             int i = 0;
             for (i = 0; i < Guild_ExperienceList.Count; i++)

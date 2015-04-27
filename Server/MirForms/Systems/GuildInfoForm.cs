@@ -38,7 +38,6 @@ namespace Server
             }
 
             NewbieNameBox.Text = Settings.Guild_NewbieName;
-            NewbieExpBox.Text = Settings.Guild_NewbieExpRate.ToString();
 
             UpdateGuildInterface();
         }
@@ -403,16 +402,13 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
+            if (SMain.Envir.GuildList.Any(a => a.Name == ActiveControl.Text))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            
             Settings.Guild_NewbieName = ActiveControl.Text;
-            ActiveControl.BackColor = SystemColors.Window;
-            GuildsChanged = true;
-        }
-
-        private void NewbieExpBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            Settings.Guild_NewbieExpRate = int.Parse(ActiveControl.Text);
             ActiveControl.BackColor = SystemColors.Window;
             GuildsChanged = true;
         }

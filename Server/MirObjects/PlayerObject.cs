@@ -730,10 +730,6 @@ namespace Server.MirObjects
                         isGM = true;
                         if (!IsGM) removeBuff = true;
                         break;
-                    case BuffType.Newbie:
-                        if (MyGuild == null || (MyGuild != null && MyGuild.Name != Settings.Guild_NewbieName)) 
-                            removeBuff = true;
-                        break;
                 }
 
                 if (removeBuff)
@@ -763,11 +759,6 @@ namespace Server.MirObjects
             if (IsGM && !isGM)
             {
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Value = 0, Infinite = true });
-            }
-
-            if (MyGuild != null && MyGuild.Name == Settings.Guild_NewbieName)
-            {
-                AddBuff(new Buff { Type = BuffType.Newbie, Caster = this, ExpireTime = Envir.Time + 100, Value = Settings.Guild_NewbieExpRate, Infinite = true });
             }
         }
 
@@ -2756,9 +2747,6 @@ namespace Server.MirObjects
                         break;
                     case BuffType.BagWeight:
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Value);
-                        break;
-                    case BuffType.Newbie:
-                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Value);
                         break;
                 }
 
@@ -12992,6 +12980,7 @@ namespace Server.MirObjects
         }
         public bool CreateGuild(string GuildName)
         {
+            if (GuildName == Settings.Guild_NewbieName) return false;
             if ((MyGuild != null) || (Info.GuildIndex != -1)) return false;
             if (Envir.GetGuild(GuildName) != null) return false;
             if (Info.Level < Settings.Guild_RequiredLevel)
@@ -13302,6 +13291,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (Name == Settings.Guild_NewbieName)
+            {
+                ReceiveChat(string.Format("Guild name not be used.", Name), ChatType.System);
+                CanCreateGuild = false;
+                return;
+            }
 
             CreateGuild(Name);
             CanCreateGuild = false;
