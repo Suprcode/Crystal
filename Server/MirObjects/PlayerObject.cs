@@ -12969,8 +12969,18 @@ namespace Server.MirObjects
 
         #region Guilds
 
+        public void CreateNewbieGuild(string GuildName)
+        {
+            if (Envir.GetGuild(GuildName) != null) return;
+            //make the guild
+            GuildObject guild = new GuildObject(this, GuildName) { Guildindex = ++Envir.NextGuildID };
+            guild.Ranks[0].Members.Clear();
+            guild.Membercount--;
+            Envir.GuildList.Add(guild);
+        }
         public bool CreateGuild(string GuildName)
         {
+            if (GuildName == Settings.Guild_NewbieName) return false;
             if ((MyGuild != null) || (Info.GuildIndex != -1)) return false;
             if (Envir.GetGuild(GuildName) != null) return false;
             if (Info.Level < Settings.Guild_RequiredLevel)
@@ -13281,6 +13291,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (Name == Settings.Guild_NewbieName)
+            {
+                ReceiveChat(string.Format("Guild name not be used.", Name), ChatType.System);
+                CanCreateGuild = false;
+                return;
+            }
 
             CreateGuild(Name);
             CanCreateGuild = false;
