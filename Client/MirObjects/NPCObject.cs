@@ -96,6 +96,7 @@ namespace Client.MirObjects
                 case 24:
                 case 25:
                 case 27:
+                case 32:
                 case 52:
                 case 61:
                 case 68:
@@ -117,12 +118,14 @@ namespace Client.MirObjects
                 case 116:
                 case 117:
                 case 118:
+                case 120:
                 case 141:
                 case 142:
                 case 151:
                 case 152:
                 case 163:
                 case 178:
+                case 186:
                 case 187:
                 case 188:
                 case 189:
@@ -147,7 +150,7 @@ namespace Client.MirObjects
                     break;
                 #endregion
 
-                #region 1 frame + animation(6 frames)
+                #region 2 frame + animation(6 frames)
                 case 85:
                 case 86:
                     Frames = FrameSet.NPCs[5];
@@ -262,9 +265,8 @@ namespace Client.MirObjects
                     break;
                 #endregion
 
-                #region 1 frame + animation(8 frames)
+                #region 2 frame + animation(8 frames)
                 case 155:
-                case 191:
                     Frames = FrameSet.NPCs[11];
                     CanChangeDir = false;
                     break;
@@ -331,7 +333,14 @@ namespace Client.MirObjects
 
                 #region 7 frames + direction + harvest(10 frames)
                 case 182:
-                    Frames = FrameSet.NPCs[0];
+                    Frames = FrameSet.NPCs[19];
+                    break;
+                #endregion
+
+                #region 1 frame + animation(9 frames)
+                case 191:
+                    Frames = FrameSet.NPCs[20];
+                    CanChangeDir = false;
                     break;
                 #endregion
             }

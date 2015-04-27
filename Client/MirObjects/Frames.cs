@@ -80,90 +80,93 @@ namespace Client.MirObjects
              */
 
             #region NPC Frames
-            //Default
+            //0 4 frames + direction + harvest(10 frames)
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 450));
             frame.Frames.Add(MirAction.Harvest, new Frame(12, 10, 0, 200));
 
-            //Washer
+            //1 4 frames + direction + harvest(20 frames)
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(4, 4, 0, 450));
             frame.Frames.Add(MirAction.Harvest, new Frame(12, 20, 0, 200));
 
-            //Default - No Harvest Animation
+            //2 4 frames, 4 frames + direction
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 450));
 
-            // Large Teleport Stones
+            //3 12 frames + animation(10 frames) (large tele)
             NPCs.Add(frame = new FrameSet());
-            frame.Frames.Add(MirAction.Standing, new Frame(0, 12, 0, 200, 12, 10, 0, 150));
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 12, 0, 250, 12, 10, 2, 250));
 
-            // Small Teleport Stones
+            //4 2 frames + animation(9 frames) (small tele)
             NPCs.Add(frame = new FrameSet());
-            frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 500, 2, 9, 0, 100));
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 1250, 2, 9, 1, 250));
 
-            // Pot With Flames
+            //5 2 frame + animation(6 frames)
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 300, 2, 6, 0, 100));
 
-            // Statues
+            //6 1 frame
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 1, 0, 1500));
 
-            // Flags (10 frames)
+            //7 10 frames
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 250));
 
-            //
+            //8 12 frames
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 12, 0, 250));
 
-            //
+            //9 8 frames
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 8, 0, 250));
 
-            //
+            //10 6 frames + direction
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 250));
 
-            //
+            //11 1 frame + animation(8 frames)
             NPCs.Add(frame = new FrameSet());
-            frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 300, 2, 8, 0, 100));
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 400, 2, 8, 0, 100));
 
-            //
+            //12 11 frames
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 11, 0, 250));
 
-            //
+            //13 20 frames + animation(20 frames)
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 20, 0, 450, 20, 20, 0, 450));
 
-            //
+            //14 4 frames + direction + animation(4 frames)
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 250, 12, 4, 0, 250));
 
-            //
+            //15 4 frames + harvest(6 frames)
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 250));
             frame.Frames.Add(MirAction.Harvest, new Frame(12, 6, 0, 200));
 
-            //
+            //16 6 frames + animation(12 frames)
             NPCs.Add(frame = new FrameSet());
-            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 450, 6, 12, 0, 250));
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 400, 6, 12, 0, 200));
 
-            //
+            //17 9 frames + direction
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 650));
 
-            //
+            //18 5 frames + direction
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 5, 0, 400));
 
-            //
+            //19 7 frames + direction + harvest(10 frames)
             NPCs.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, 0, 550));
             frame.Frames.Add(MirAction.Harvest, new Frame(21, 10, 0, 200));
 
+            //20 1 frame + animation(9 frames)
+            NPCs.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 1, 0, 900, 1, 9, 0, 100));
             #endregion
 
             /*
