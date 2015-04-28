@@ -1332,15 +1332,51 @@ namespace Server.MirEnvir
 
                 return null;
         }
-        public List<AccountInfo> MatchAccounts(string accountID)
+        public List<AccountInfo> MatchAccounts(string accountID, bool match = false)
         {
-                if (string.IsNullOrEmpty(accountID)) return new List<AccountInfo>(AccountList);
+            if (string.IsNullOrEmpty(accountID)) return new List<AccountInfo>(AccountList);
 
-                List<AccountInfo> list = new List<AccountInfo>();
+            List<AccountInfo> list = new List<AccountInfo>();
 
-                for (int i = 0; i < AccountList.Count; i++)
+            for (int i = 0; i < AccountList.Count; i++)
+            {
+                if (match)
+                {
+                    if (AccountList[i].AccountID.Equals(accountID, StringComparison.OrdinalIgnoreCase))
+                        list.Add(AccountList[i]);
+                }
+                else
+                {
                     if (AccountList[i].AccountID.IndexOf(accountID, StringComparison.OrdinalIgnoreCase) >= 0)
                         list.Add(AccountList[i]);
+                }
+            }
+
+            return list;
+        }
+
+        public List<AccountInfo> MatchAccountsByPlayer(string playerName, bool match = false)
+        {
+            if (string.IsNullOrEmpty(playerName)) return new List<AccountInfo>(AccountList);
+
+            List<AccountInfo> list = new List<AccountInfo>();
+
+            for (int i = 0; i < AccountList.Count; i++)
+            {
+                for (int j = 0; j < AccountList[i].Characters.Count; j++)
+                {
+                    if (match)
+                    {
+                        if (AccountList[i].Characters[j].Name.Equals(playerName, StringComparison.OrdinalIgnoreCase))
+                            list.Add(AccountList[i]);
+                    }
+                    else
+                    {
+                        if (AccountList[i].Characters[j].Name.IndexOf(playerName, StringComparison.OrdinalIgnoreCase) >= 0)
+                            list.Add(AccountList[i]);
+                    }
+                }
+            }
 
             return list;
         }

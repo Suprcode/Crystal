@@ -15,6 +15,20 @@ namespace Server
         {
             InitializeComponent();
 
+            Setup();
+        }
+
+        public AccountInfoForm(string accountId)
+        {
+            InitializeComponent();
+
+            FilterTextBox.Text = accountId;
+
+            Setup();
+        }
+
+        private void Setup()
+        {
             RefreshInterface();
             AutoResize();
 
@@ -26,7 +40,6 @@ namespace Server
             QuestionTextBox.MaxLength = 30;
             AnswerTextBox.MaxLength = 30;
             EMailTextBox.MaxLength = 50;
-
         }
 
         private void AutoResize()
@@ -48,7 +61,13 @@ namespace Server
                 return;
             }
 
-            List<AccountInfo> accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text);
+            List<AccountInfo> accounts = SMain.Envir.AccountList;
+
+            if(FilterTextBox.Text.Length > 0)
+                accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
+
+            else if(FilterPlayerTextBox.Text.Length > 0)
+                accounts = SMain.Envir.MatchAccountsByPlayer(FilterPlayerTextBox.Text, MatchFilterCheckBox.Checked);
 
             if (AccountInfoListView.Items.Count != accounts.Count)
             {
