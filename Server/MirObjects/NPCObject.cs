@@ -1581,6 +1581,12 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], parts[3], visible, infinite));
                     break;
 
+                case "REMOVEBUFF":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.RemoveBuff, parts[1]));
+                    break;
+
                 case "ADDTOGUILD":
                     if (parts.Length < 2) return;
                     acts.Add(new NPCActions(ActionType.AddToGuild, parts[1]));
@@ -2698,6 +2704,20 @@ namespace Server.MirObjects
                         player.AddBuff(buff);
                         break;
 
+                    case ActionType.RemoveBuff:
+                        if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
+
+                        BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
+
+                        for (int j = 0; j < player.Buffs.Count; j++)
+                        {
+                            if (player.Buffs[i].Type != bType) continue;
+
+                            player.Buffs[i].Infinite = false;
+                            player.Buffs[i].ExpireTime = SMain.Envir.Time;
+                        }
+                        break;
+
                     case ActionType.AddToGuild:
                         {
                             if (player.MyGuild != null) return;
@@ -2941,6 +2961,7 @@ namespace Server.MirObjects
         Mov,
         Calc,
         GiveBuff,
+        RemoveBuff,
         AddToGuild,
         RemoveFromGuild,
         RefreshEffects,

@@ -7192,19 +7192,19 @@ namespace Client.MirScenes
 
             for (int i = Effects.Count - 1; i >= 0; i--)
                 Effects[i].Process();
-            if (Lightning && CMain.Time > LightningTime)
-            {
-                LightningTime = CMain.Time + CMain.Random.Next(2000, 5000);
-                Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
-                MapControl.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 400, source));
-            }
-            if (Fire && CMain.Time > FireTime)
-            {
-                FireTime = CMain.Time + CMain.Random.Next(2000, 5000);
-                Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
-                MapControl.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, source) { Blend = false });
-                MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, source));
-            }
+            //if (Lightning && CMain.Time > LightningTime)
+            //{
+            //    LightningTime = CMain.Time + CMain.Random.Next(2000, 5000);
+            //    Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
+            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 400, source));
+            //}
+            //if (Fire && CMain.Time > FireTime)
+            //{
+            //    FireTime = CMain.Time + CMain.Random.Next(2000, 5000);
+            //    Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
+            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, source) { Blend = false });
+            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, source));
+            //}
 
             if (MapObject.TargetObject != null && MapObject.TargetObject is MonsterObject && MapObject.TargetObject.AI == 64)
                 MapObject.TargetObject = null;
