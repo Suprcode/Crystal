@@ -8986,9 +8986,6 @@ namespace Client.MirScenes
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
             CharacterName.Text = User.Name;
             WeightLabel.Text = User.Inventory.Count(t => t == null).ToString();
-
-
-
         }
 
         private void Label_SizeChanged(object sender, EventArgs e)
@@ -9012,6 +9009,7 @@ namespace Client.MirScenes
 
             if (height < 0) height = 0;
             if (height > 80) height = 80;
+
             Rectangle r = new Rectangle(0, 80 - height, 50, height);
             Libraries.Prguse.Draw(4, r, new Point(0, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
 

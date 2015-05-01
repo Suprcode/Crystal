@@ -2302,9 +2302,9 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        for (int o = 0; o < player.Info.Inventory.Length; o++)
+                        for (int j = 0; j < player.Info.Inventory.Length; j++)
                         {
-                            UserItem item = player.Info.Inventory[o];
+                            UserItem item = player.Info.Inventory[j];
                             if (item == null) continue;
                             if (item.Info != info) continue;
 
@@ -2314,7 +2314,7 @@ namespace Server.MirObjects
                             if (count > item.Count)
                             {
                                 player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                                player.Info.Inventory[o] = null;
+                                player.Info.Inventory[j] = null;
 
                                 count -= item.Count;
                                 continue;
@@ -2322,7 +2322,7 @@ namespace Server.MirObjects
 
                             player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
                             if (count == item.Count)
-                                player.Info.Inventory[o] = null;
+                                player.Info.Inventory[j] = null;
                             else
                                 item.Count -= count;
                             break;
@@ -2349,7 +2349,7 @@ namespace Server.MirObjects
                         if (param.Count > 2)
                             petlevel = byte.TryParse(param[2], out petlevel) ? Math.Min((byte)7, petlevel) : (byte)0;
 
-                        for (var c = 0; c < petcount; c++)
+                        for (int j = 0; j < petcount; j++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(monInfo);
                             if (monster == null) return;
@@ -2364,11 +2364,9 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.ClearPets:
-
-                        for (int c = 0; c < player.Pets.Count; c++)
+                        for (int c = player.Pets.Count - 1; c >= 0; c--)
                         {
-                            MonsterObject pet = player.Pets[c];
-                            pet.Die();
+                            player.Pets[c].Die();
                         }
                         break;
 
@@ -2543,7 +2541,7 @@ namespace Server.MirObjects
                         monInfo = SMain.Envir.GetMonsterInfo(param[0]);
                         if (monInfo == null) return;
 
-                        for (var c = 0; c < tempByte; c++)
+                        for (int j = 0; j < tempByte; j++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(monInfo);
                             if (monster == null) return;
@@ -2574,9 +2572,9 @@ namespace Server.MirObjects
                         tempMap = player.CurrentMap;
                         tempPoint = player.CurrentLocation;
 
-                        for (i = 0; i < player.GroupMembers.Count(); i++)
+                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            var groupMember = player.GroupMembers[i];
+                            var groupMember = player.GroupMembers[j];
 
                             action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + (tempLong * 1000), player.NPCID, tempString, tempMap, tempPoint);
                             groupMember.ActionList.Add(action);
@@ -2604,9 +2602,9 @@ namespace Server.MirObjects
                         {
                             if (cell == null || cell.Objects == null) continue;
 
-                            for (i = 0; i < cell.Objects.Count(); i++)
+                            for (int j = 0; j < cell.Objects.Count(); j++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = cell.Objects[j];
 
                                 if (ob.Race != ObjectType.Monster) continue;
                                 if (ob.Dead) continue;
@@ -2617,9 +2615,9 @@ namespace Server.MirObjects
                     case ActionType.GroupRecall:
                         if (player.GroupMembers == null) return;
 
-                        for (i = 0; i < player.GroupMembers.Count(); i++)
+                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            player.GroupMembers[i].Teleport(player.CurrentMap, player.CurrentLocation);
+                            player.GroupMembers[j].Teleport(player.CurrentMap, player.CurrentLocation);
                         }
                         break;
 
@@ -2632,15 +2630,15 @@ namespace Server.MirObjects
                         map = SMain.Envir.GetMapByNameAndInstance(param[0], tempInt);
                         if (map == null) return;
 
-                        for (i = 0; i < player.GroupMembers.Count(); i++)
+                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
                             if (x == 0 || y == 0)
                             {
-                                player.GroupMembers[i].TeleportRandom(200, 0, map);
+                                player.GroupMembers[j].TeleportRandom(200, 0, map);
                             }
                             else
                             {
-                                player.GroupMembers[i].Teleport(map, new Point(x, y));
+                                player.GroupMembers[j].Teleport(map, new Point(x, y));
                             }
                         }
                         break;
@@ -2711,10 +2709,10 @@ namespace Server.MirObjects
 
                         for (int j = 0; j < player.Buffs.Count; j++)
                         {
-                            if (player.Buffs[i].Type != bType) continue;
+                            if (player.Buffs[j].Type != bType) continue;
 
-                            player.Buffs[i].Infinite = false;
-                            player.Buffs[i].ExpireTime = SMain.Envir.Time;
+                            player.Buffs[j].Infinite = false;
+                            player.Buffs[j].ExpireTime = SMain.Envir.Time;
                         }
                         break;
 
@@ -2819,10 +2817,10 @@ namespace Server.MirObjects
                     case ActionType.GroupGoto:
                         if (player.GroupMembers == null) return;
 
-                        for (i = 0; i < player.GroupMembers.Count(); i++)
+                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
                             action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time, player.NPCID, "[" + param[0] + "]");
-                            player.GroupMembers[i].ActionList.Add(action);
+                            player.GroupMembers[j].ActionList.Add(action);
                         }
                         break;
 

@@ -10113,6 +10113,7 @@ namespace Server.MirObjects
                         {
                             //item destroyed
                             ReceiveChat("Item has been destroyed.", ChatType.Hint);
+                            Report.ItemChanged("CombineItem (Item Destroyed)", Info.Inventory[indexTo], 1, 1);
 
                             Info.Inventory[indexTo] = null;
                             p.Destroy = true;
