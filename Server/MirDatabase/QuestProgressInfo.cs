@@ -203,7 +203,8 @@ namespace Server.MirDatabase
 
         public bool NeedKill(MonsterInfo mInfo)
         {
-            return Info.KillTasks.Where((task, i) => KillTaskCount[i] < task.Count && task.Monster == mInfo).Any();
+            //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
+            return Info.KillTasks.Where((task, i) => KillTaskCount[i] < task.Count && mInfo.Name.StartsWith(task.Monster.Name, StringComparison.OrdinalIgnoreCase)).Any();
         }
 
         public bool NeedFlag(int flagNumber)
@@ -215,14 +216,14 @@ namespace Server.MirDatabase
 
         #region Process Quest Task
 
-        public void ProcessKill(int mobIndex)
+        public void ProcessKill(MonsterInfo mInfo)
         {
             if (Info.KillTasks.Count < 1) return;
 
             for (int i = 0; i < Info.KillTasks.Count; i++)
             {
-                if (Info.KillTasks[i].Monster.Index != mobIndex) continue;
-
+                //if (Info.KillTasks[i].Monster.Index != mobIndex) continue;
+                if (!mInfo.Name.StartsWith(Info.KillTasks[i].Monster.Name, StringComparison.OrdinalIgnoreCase)) continue;
                 KillTaskCount[i]++;
 
                 return;
@@ -350,7 +351,7 @@ namespace Server.MirDatabase
 
         public void UpdateGotoTask()
         {
-            if (Info.GotoMessage.Length <= 0 || TaskList.Count > 0) return;
+            if (Info.GotoMessage.Length <= 0 || !Completed) return;
 
             TaskList.Add(Info.GotoMessage);
         }

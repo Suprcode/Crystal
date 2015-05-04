@@ -707,7 +707,7 @@ namespace Server.MirEnvir
                         using (BinaryReader reader = new BinaryReader(stream))
                             newGuild = new GuildObject(reader);
     
-                        if (!newGuild.Ranks.Any(a => (byte)a.Options == 255)) continue;
+                        //if (!newGuild.Ranks.Any(a => (byte)a.Options == 255)) continue;
                         //if (GuildList.Any(e => e.Name == newGuild.Name)) continue;
                         GuildList.Add(newGuild);
 
@@ -1577,7 +1577,8 @@ namespace Server.MirEnvir
             for (int i = 0; i < MonsterInfoList.Count; i++)
             {
                 MonsterInfo info = MonsterInfoList[i];
-                if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
+                //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
+                if (String.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && String.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
                 return info;
             }
             return null;

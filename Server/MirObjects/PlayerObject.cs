@@ -417,54 +417,48 @@ namespace Server.MirObjects
 
             TradeCancel();
 
-            DisplayLogOutMsg(reason);
+            string logReason = LogOutReason(reason);
+
+            SMain.Enqueue(logReason);
 
             Fishing = false;
 
             Info.LastIP = Connection.IPAddress;
             Info.LastDate = Envir.Now;
 
-            Report.Disconnected();
+            Report.Disconnected(logReason);
             Report.ForceSave();
 
             CleanUp();
         }
 
-        private void DisplayLogOutMsg(byte reason)
+        private string LogOutReason(byte reason)
         {
             switch (reason)
             {
                 //0-10 are 'senddisconnect to client'
                 case 0:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Server closed", Name));
-                    return;
+                    return string.Format("{0} Has logged out. Reason: Server closed", Name);
                 case 1:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Double login", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: Double login", Name);
                 case 2:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Chat message too long", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: Chat message too long", Name);
                 case 3:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Server crashed", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: Server crashed", Name);
                 case 4:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Kicked by admin", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: Kicked by admin", Name);
                 case 10:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Wrong client version", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: Wrong client version", Name);
                 case 20:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User gone missing / disconnected", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: User gone missing / disconnected", Name);
                 case 21:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: Connection timed out", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: Connection timed out", Name);
                 case 22:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User closed game", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: User closed game", Name);
                 case 23:
-                    SMain.Enqueue(string.Format("{0} Has logged out. Reason: User returned to select char", Name));
-                    return;
+                     return string.Format("{0} Has logged out. Reason: User returned to select char", Name);
+                default:
+                     return string.Format("{0} Has logged out. Reason: Unknown", Name);
             }
         }
 
@@ -1745,8 +1739,8 @@ namespace Server.MirObjects
             if (MyGuild != null)
                 MyGuild.PlayerLogged(this, true);
 
-            Report.Connected();
-
+            Report.Connected(Connection.IPAddress);
+            
             SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
 
         }
@@ -9030,6 +9024,14 @@ namespace Server.MirObjects
 
             if (from >= 0 && to >= 0 && from < array.Length && to < array.Length)
             {
+                if (array[from] == null)
+                {
+                    Report.ItemError("MoveItem", grid, grid, from, to);
+                    ReceiveChat("Item Move Error - Please report the item you tried to move and the time", ChatType.System);
+                    Enqueue(p);
+                    return;
+                }
+
                 UserItem i = array[to];
                 array[to] = array[from];
 
@@ -14438,9 +14440,9 @@ namespace Server.MirObjects
                     Where(e => e.KillTaskCount.Count > 0).
                     Where(quest => quest.NeedKill(mInfo)))
             {
-                quest.ProcessKill(mInfo.Index);
+                quest.ProcessKill(mInfo);
 
-                Enqueue(new S.SendOutputMessage { Message = string.Format("You killed {0}.", mInfo.Name), Type = OutputMessageType.Quest });
+                Enqueue(new S.SendOutputMessage { Message = string.Format("You killed {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
 
                 SendUpdateQuest(quest, QuestState.Update);
             }
@@ -14790,7 +14792,7 @@ namespace Server.MirObjects
                 ((IntelligentCreatureObject)monster).blackstoneTime = Info.IntelligentCreatures[i].BlackstoneTime;
                 ((IntelligentCreatureObject)monster).maintainfoodTime = Info.IntelligentCreatures[i].MaintainFoodTime;
 
-
+                if (!CurrentMap.ValidPoint(Front)) return;
                 monster.Spawn(CurrentMap, Front);
                 Pets.Add(monster);//make a new creaturelist ? 
 

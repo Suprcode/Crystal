@@ -998,10 +998,10 @@ namespace Client.MirObjects
                             case Monster.BlackFoxman:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackFoxman], 224, 10, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.VampireSpider://SummonVampire
+                            case Monster.VampireSpider:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.VampireSpider], 296, 5, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.CharmedSnake://SummonSnakes
+                            case Monster.CharmedSnake:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CharmedSnake], 40, 8, Frame.Count * Frame.Interval, this));
                                 break;
                         }
@@ -1207,6 +1207,7 @@ namespace Client.MirObjects
                                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.EvilCentipede], 42, 10, 600, this));
                                        break;
                                    case Monster.ToxicGhoul:
+                                       SoundManager.PlaySound(BaseSound + 4);
                                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ToxicGhoul], 224 + (int)Direction * 6, 6, 600, this));
                                        break;
                                }
