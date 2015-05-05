@@ -629,7 +629,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Select) return;
 
-            if (!Settings.AllowStartGame)
+            if (!Settings.AllowStartGame && (Account == null || (Account != null && !Account.AdminAccount)))
             {
                 Enqueue(new S.StartGame { Result = 0 });
                 return;
@@ -859,7 +859,7 @@ namespace Server.MirNetwork
             else
                 Player.Attack(p.Direction, p.Spell);
         }
-        private void RangeAttack(C.RangeAttack p) //ArcherTest
+        private void RangeAttack(C.RangeAttack p)
         {
             if (Stage != GameStage.Game) return;
 

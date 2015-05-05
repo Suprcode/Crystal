@@ -420,7 +420,7 @@ namespace Server.MirEnvir
             if (!Directory.Exists(Settings.GuildPath)) Directory.CreateDirectory(Settings.GuildPath);
             for (int i = 0; i < GuildList.Count; i++)
             {
-                if (GuildList[i].NeedSave)
+                if (GuildList[i].NeedSave || forced)
                 {
                     GuildList[i].NeedSave = false;
                     MemoryStream mStream = new MemoryStream();
@@ -696,6 +696,8 @@ namespace Server.MirEnvir
             {
                 int count = 0;
 
+                GuildList.Clear();
+
                 for (int i = 0; i < GuildCount; i++)
                 {
                     GuildObject newGuild;
@@ -704,7 +706,9 @@ namespace Server.MirEnvir
                         using (FileStream stream = File.OpenRead(Settings.GuildPath + i.ToString() + ".mgd"))
                         using (BinaryReader reader = new BinaryReader(stream))
                             newGuild = new GuildObject(reader);
-
+    
+                        //if (!newGuild.Ranks.Any(a => (byte)a.Options == 255)) continue;
+                        //if (GuildList.Any(e => e.Name == newGuild.Name)) continue;
                         GuildList.Add(newGuild);
 
                         count++;
@@ -911,6 +915,8 @@ namespace Server.MirEnvir
             StartItems.Clear();
             MapList.Clear();
 
+            CustomCommands.Clear();
+
             LoadDB();
 
             for (int i = 0; i < MapInfoList.Count; i++)
@@ -957,7 +963,41 @@ namespace Server.MirEnvir
             _listener.Start();
             _listener.BeginAcceptTcpClient(Connection, null);
             SMain.Enqueue("Network Started.");
+
+            //FixGuilds();
         }
+
+        //private void FixGuilds()
+        //{
+        //    NextGuildID = 0;
+        //    int nullChars = 0;
+
+        //    for (int i = 0; i < GuildList.Count; i++)
+        //    {
+        //        GuildObject g = GuildList[i];
+
+        //        g.Guildindex = ++NextGuildID;
+
+        //        for (int j = 0; j < g.Ranks.Count; j++)
+        //        {
+        //            Rank r = g.Ranks[j];
+
+        //            for (int k = 0; k < r.Members.Count; k++)
+        //            {
+        //                GuildMember m = r.Members[k];
+
+        //                CharacterInfo inf = GetCharacterInfo(m.name);
+        //                if (inf == null)
+        //                {
+        //                    nullChars++;
+        //                        continue;
+        //                }
+
+        //                inf.GuildIndex = g.Guildindex;
+        //            }
+        //        }
+        //    }
+        //}
 
         private void StopEnvir()
         {
@@ -1292,15 +1332,51 @@ namespace Server.MirEnvir
 
                 return null;
         }
-        public List<AccountInfo> MatchAccounts(string accountID)
+        public List<AccountInfo> MatchAccounts(string accountID, bool match = false)
         {
-                if (string.IsNullOrEmpty(accountID)) return new List<AccountInfo>(AccountList);
+            if (string.IsNullOrEmpty(accountID)) return new List<AccountInfo>(AccountList);
 
-                List<AccountInfo> list = new List<AccountInfo>();
+            List<AccountInfo> list = new List<AccountInfo>();
 
-                for (int i = 0; i < AccountList.Count; i++)
+            for (int i = 0; i < AccountList.Count; i++)
+            {
+                if (match)
+                {
+                    if (AccountList[i].AccountID.Equals(accountID, StringComparison.OrdinalIgnoreCase))
+                        list.Add(AccountList[i]);
+                }
+                else
+                {
                     if (AccountList[i].AccountID.IndexOf(accountID, StringComparison.OrdinalIgnoreCase) >= 0)
                         list.Add(AccountList[i]);
+                }
+            }
+
+            return list;
+        }
+
+        public List<AccountInfo> MatchAccountsByPlayer(string playerName, bool match = false)
+        {
+            if (string.IsNullOrEmpty(playerName)) return new List<AccountInfo>(AccountList);
+
+            List<AccountInfo> list = new List<AccountInfo>();
+
+            for (int i = 0; i < AccountList.Count; i++)
+            {
+                for (int j = 0; j < AccountList[i].Characters.Count; j++)
+                {
+                    if (match)
+                    {
+                        if (AccountList[i].Characters[j].Name.Equals(playerName, StringComparison.OrdinalIgnoreCase))
+                            list.Add(AccountList[i]);
+                    }
+                    else
+                    {
+                        if (AccountList[i].Characters[j].Name.IndexOf(playerName, StringComparison.OrdinalIgnoreCase) >= 0)
+                            list.Add(AccountList[i]);
+                    }
+                }
+            }
 
             return list;
         }
@@ -1457,6 +1533,18 @@ namespace Server.MirEnvir
             return true;
         }
 
+        public bool BindQuest(QuestProgressInfo quest)
+        {
+            for (int i = 0; i < QuestInfoList.Count; i++)
+            {
+                QuestInfo info = QuestInfoList[i];
+                if (info.Index != quest.Index) continue;
+                quest.Info = info;
+                return true;
+            }
+            return false;
+        }
+
         public Map GetMap(int index)
         {
             return MapList.FirstOrDefault(t => t.Info.Index == index);
@@ -1489,7 +1577,8 @@ namespace Server.MirEnvir
             for (int i = 0; i < MonsterInfoList.Count; i++)
             {
                 MonsterInfo info = MonsterInfoList[i];
-                if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
+                //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
+                if (String.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && String.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
                 return info;
             }
             return null;
@@ -1600,20 +1689,33 @@ namespace Server.MirEnvir
 
         private void ClearDailyQuests(CharacterInfo info)
         {
-            CharacterInfo c1 = info;
-            foreach (int flagId in
-                from q in QuestInfoList
-                let flagId = 1000 + q.Index
-                where c1.Flags[flagId] && q.Type == QuestType.Daily
-                select flagId)
+            //CharacterInfo c1 = info;
+            //foreach (int flagId in
+            //    from q in QuestInfoList
+            //   // let flagId = 1000 + q.Index
+            //    where c1.Flags[flagId] && q.Type == QuestType.Daily
+            //    select flagId)
+            //{
+            //    info.Flags[flagId] = false;
+            //}
+          
+
+            foreach (var quest in QuestInfoList)
             {
-                info.Flags[flagId] = false;
+                if (quest.Type != QuestType.Daily) continue;
+
+                for (int i = 0; i < info.CompletedQuests.Count; i++)
+                {
+                    if (info.CompletedQuests[i] != quest.Index) continue;
+
+                    info.CompletedQuests.RemoveAt(i);
+                } 
             }
 
             if (info.Player != null)
             {
                 info.Player.GetCompletedQuests();
-            }
+            }       
         }
     }
 }

@@ -14,10 +14,7 @@ namespace Server.MirDatabase
 
     public class QuestProgressInfo
     {
-        public int Index
-        {
-            get { return Info.Index; }
-        }
+        public int Index;
 
         public QuestInfo Info;
 
@@ -47,9 +44,9 @@ namespace Server.MirDatabase
 
         public QuestProgressInfo(int index)
         {
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
+            Index = index;
 
-            if (Info == null) return;
+            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
 
             foreach (var kill in Info.KillTasks)
                 KillTaskCount.Add(0);
@@ -65,9 +62,8 @@ namespace Server.MirDatabase
 
         public QuestProgressInfo(BinaryReader reader)
         {
-            int index = reader.ReadInt32();
-
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
+            Index = reader.ReadInt32();
+            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == Index);
 
             StartDateTime = DateTime.FromBinary(reader.ReadInt64());
             EndDateTime = DateTime.FromBinary(reader.ReadInt64());
@@ -207,7 +203,8 @@ namespace Server.MirDatabase
 
         public bool NeedKill(MonsterInfo mInfo)
         {
-            return Info.KillTasks.Where((task, i) => KillTaskCount[i] < task.Count && task.Monster == mInfo).Any();
+            //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
+            return Info.KillTasks.Where((task, i) => KillTaskCount[i] < task.Count && mInfo.Name.StartsWith(task.Monster.Name, StringComparison.OrdinalIgnoreCase)).Any();
         }
 
         public bool NeedFlag(int flagNumber)
@@ -219,14 +216,14 @@ namespace Server.MirDatabase
 
         #region Process Quest Task
 
-        public void ProcessKill(int mobIndex)
+        public void ProcessKill(MonsterInfo mInfo)
         {
             if (Info.KillTasks.Count < 1) return;
 
             for (int i = 0; i < Info.KillTasks.Count; i++)
             {
-                if (Info.KillTasks[i].Monster.Index != mobIndex) continue;
-
+                //if (Info.KillTasks[i].Monster.Index != mobIndex) continue;
+                if (!mInfo.Name.StartsWith(Info.KillTasks[i].Monster.Name, StringComparison.OrdinalIgnoreCase)) continue;
                 KillTaskCount[i]++;
 
                 return;
@@ -354,7 +351,7 @@ namespace Server.MirDatabase
 
         public void UpdateGotoTask()
         {
-            if (Info.GotoMessage.Length <= 0 || TaskList.Count > 0) return;
+            if (Info.GotoMessage.Length <= 0 || !Completed) return;
 
             TaskList.Add(Info.GotoMessage);
         }

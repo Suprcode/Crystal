@@ -17,6 +17,7 @@ namespace Client.MirGraphics
             ChrSel = new MLibrary(Settings.DataPath + "ChrSel"),
             Prguse = new MLibrary(Settings.DataPath + "Prguse"),
             Prguse2 = new MLibrary(Settings.DataPath + "Prguse2"),
+            BuffIcon = new MLibrary(Settings.DataPath + "BuffIcon"),
             Help = new MLibrary(Settings.DataPath + "Help"),
             MiniMap = new MLibrary(Settings.DataPath + "MMap"),
             Title = new MLibrary(Settings.DataPath + "Title"),
@@ -205,7 +206,7 @@ namespace Client.MirGraphics
             Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
-                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length + 19;
+                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length + 20;
 
             Dragon.Initialize();
             Progress++;
@@ -217,6 +218,9 @@ namespace Client.MirGraphics
             Progress++;
 
             Prguse2.Initialize();
+            Progress++;
+
+            BuffIcon.Initialize();
             Progress++;
 
             Help.Initialize();

@@ -55,7 +55,7 @@ namespace Server.MirEnvir
             //wemades 2010 map format i guess title starts with: Map 2010 Ver 1.0
             if ((input[0] == 0x10) && (input[2] == 0x61) && (input[7] == 0x31) && (input[14] == 0x31))
                 return 1;
-            
+
             //shanda's 2012 format and one of shandas(wemades) older formats share same header info, only difference is the filesize
             if ((input[4] == 0x0F) && (input[18] == 0x0D) && (input[19] == 0x0A))
             {

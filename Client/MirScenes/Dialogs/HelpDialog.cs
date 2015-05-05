@@ -32,8 +32,8 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+
+            Location = Center;
 
             MirImageControl TitleLabel = new MirImageControl
             {

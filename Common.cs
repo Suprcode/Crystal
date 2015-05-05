@@ -7,7 +7,16 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 
-public enum AwakeType
+[Flags]
+public enum GMOptions : byte
+{
+    None = 0,
+    GameMaster = 0x0001,
+    Observer = 0x0002,
+    Superman = 0x0004
+}
+
+public enum AwakeType : byte
 {
     None = 0,
     DC,
@@ -24,7 +33,7 @@ public enum LevelEffects : byte
     None = 0,
     Mist = 0x0001,
     RedDragon = 0x0002,
-    BlueDragon = 0x0004,
+    BlueDragon = 0x0004
 }
 
 public enum OutputMessageType : byte
@@ -239,23 +248,124 @@ public enum Monster : ushort
     BrownFrogSpider = 138,
     ArcherGuard = 139,
     KatanaGuard = 140,
-    //BLANK01 = 141,
+    //Mob141 = 141, //duplicate brownfrogspider
     Pig = 142,
     Bull = 143,
-    //Bush = 144,
-    //ChristmasTree = 145,
-    //HighAssassin = 146,
-    //DarkDustPile = 147,
-    //DarkBrownWolf = 148,
-    //Football = 149,
-    //GingerBreadman = 150,
-    //HalloweenScythe = 151,
+    Bush = 144,
+    ChristmasTree = 145,
+    HighAssassin = 146,
+    DarkDustPile = 147,
+    DarkBrownWolf = 148,
+    Football = 149,
 
+    GingerBreadman = 150,
+    HalloweenScythe = 151,
+    GhastlyLeecher = 152,
+    CyanoGhast = 153,
+    MutatedManworm = 154,
+    CrazyManworm = 155,
+    MudPile = 156,
+    TailedLion = 157,
+    Behemoth = 158,
+    DarkDevourer = 159,
+    PoisonHugger = 160,
+    Hugger = 161,
+    MutatedHugger = 162,
+    DreamDevourer = 163,
+    Treasurebox = 164,
+    SnowPile = 165,
+    Snowman = 166,
+    SnowTree = 167,
+    GiantEgg = 168,
+    RedTurtle = 169,
+    GreenTurtle = 170,
+    BlueTurtle = 171,
+    //Catapult = 172,
+    //SabukWallSection = 173,
+    //NammandWallSection = 174,
+    //OgreBlacksmith = 175,
+    BlueSanta = 176,
+    BattleStandard = 177,
+    //ArcherGuard2 = 178,
+    RedYimoogi = 179,
+    //Mob180 = 180, //duplicate whiteviper
+    //Mob181 = 181, //duplicate yellowviper
+    //Mob182 = 182, //duplicate blueviper
+    FlameTiger = 183,
+    WingedTigerLord = 184,
+    TowerTurtle = 185,
+    FinialTurtle = 186,
+    TurtleKing = 187,
+    DarkTurtle = 188,
+    LightTurtle = 189,
+    DarkSwordoma = 190,
+    DarkAxeoma = 191,
+    DarkCrossBowOma = 192,
+    DarkWingedOma = 193,
+    Bonewhoo = 194,
+    DarkSpider = 195,
+    ViscusWorm = 196,
+    ViscusCrawler = 197,
+    CrawlerLave = 198,
+    DarkYob = 199,
+
+    FlamingMutant = 200,
+    StoningStatue = 201,
+    FlyingStatue = 202,
+    ValeBat = 203,
+    Weaver = 204,
+    VenomWeaver = 205,
+    CrackingWeaver = 206,
+    ArmingWeaver = 207,
+    CrystalWeaver = 208,
+    FrozenZumaStatue = 209,
+    FrozenZumaGuardian = 210,
+    FrozenRedZuma = 211,
+    GreaterWeaver = 212,
+    SpiderWarrior = 213,
+    SpiderBarbarian = 214,
+    HellSlasher = 215,
+    HellPirate = 216,
+    HellCannibal = 217,
+    HellKeeper = 218,
+    HellBolt = 219,
+    WitchDoctor = 220,
+    ManectricHammer = 221,
+    ManectricClub = 222,
+    ManectricClaw = 223,
+    ManectricStaff = 224,
+    NamelessGhost = 225,
+    DarkGhost = 226,
+    ChaosGhost = 227,
+    ManectricBlest = 228,
+    ManectricKing = 229,
+    FrozenDoor = 230,
+    IcePillar = 231,
+    FrostYeti = 232,
+    ManectricSlave = 233,
+    TrollHammer = 234,
+    TrollBomber = 235,
+    TrollStoner = 236,
+    TrollKing = 237,
+    FlameSpear = 238,
+    FlameMage = 239,
+    FlameScythe = 240,
+    FlameAssassin = 241,
+    FlameQueen = 242,
+    HellKnight1 = 243,
+    HellKnight2 = 244,
+    HellKnight3 = 245,
+    HellKnight4 = 246,
+    HellLord = 247,
+    WaterGuard = 248,
+    IceGuard = 249,
+    
     VampireSpider = 359,
     SpittingToad = 360,
     SnakeTotem = 361,
+    
     CharmedSnake = 368,
-
+    
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
@@ -610,7 +720,17 @@ public enum ItemSet : byte
     RedJade = 17,
     RedJadeH = 18,
     Nephrite = 19,
-    NephriteH = 20
+    NephriteH = 20,
+    Whisker1 = 21,
+    Whisker2 = 22,
+    Whisker3 = 23,
+    Whisker4 = 24,
+    Whisker5 = 25,
+    Hyeolryong = 26,
+    Monitor = 27,
+    Oppressive = 28,
+    Paeok = 29,
+    Sulgwan = 30
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -752,8 +872,8 @@ public enum SpellEffect : byte
     Reflect,
     Critical,
     Mine,
-    ElementBarrierUp,
-    ElementBarrierDown,
+    ElementalBarrierUp,
+    ElementalBarrierDown,
     FuryUp,
     FuryDown,
     DelayedExplosion,
@@ -800,7 +920,8 @@ public enum BuffType : byte
     MentalState,
     WonderShield,
     MagicWonderShield,
-    BagWeight
+    BagWeight,
+    GameMaster,
 }
 
 public enum DefenceType : byte
@@ -905,6 +1026,8 @@ public enum ServerPacketIds : short
     RemoveMagic,
     MagicLeveled,
     Magic,
+    MagicDelay,
+    MagicCast,
     ObjectMagic,
     ObjectEffect,
     RangeAttack,
@@ -2909,6 +3032,7 @@ public class ClientMagic
     public ushort Experience;
 
     public bool IsTempSpell;
+    public long CastTime, Delay;
 
     public ClientMagic()
     {
@@ -2931,6 +3055,8 @@ public class ClientMagic
         Level = reader.ReadByte();
         Key = reader.ReadByte();
         Experience = reader.ReadUInt16();
+
+        Delay = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -2950,6 +3076,8 @@ public class ClientMagic
         writer.Write(Level);
         writer.Write(Key);
         writer.Write(Experience);
+
+        writer.Write(Delay);
     }
    
 }
@@ -3935,6 +4063,10 @@ public abstract class Packet
                 return new S.MagicLeveled();
             case (short)ServerPacketIds.Magic:
                 return new S.Magic();
+            case (short)ServerPacketIds.MagicDelay:
+                return new S.MagicDelay();
+            case (short)ServerPacketIds.MagicCast:
+                return new S.MagicCast();
             case (short)ServerPacketIds.ObjectMagic:
                 return new S.ObjectMagic();
             case (short)ServerPacketIds.ObjectEffect:

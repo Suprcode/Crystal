@@ -480,6 +480,41 @@ namespace Client.MirObjects
                         Holy = (byte)Math.Min(byte.MaxValue, Holy + 1);
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
                         break;
+                    case ItemSet.Whisker1:
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 25);
+                        break;
+                    case ItemSet.Whisker2:
+                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        break;
+                    case ItemSet.Whisker3:
+                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        break;
+                    case ItemSet.Whisker4:
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 20);
+                        break;
+                    case ItemSet.Whisker5:
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
+                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        break;
+                    case ItemSet.Hyeolryong:
+                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + 2);
+                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 15);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 20);
+                        Holy = (byte)Math.Min(byte.MaxValue, Holy + 1);
+                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
+                        break;
+                    case ItemSet.Monitor:
+                        MagicResist = (byte)Math.Min(byte.MaxValue, MagicResist + 1);
+                        PoisonResist = (byte)Math.Min(byte.MaxValue, PoisonResist + 1);
+                        break;
+                    case ItemSet.Oppressive:
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + 1);
+                        Agility = (byte)Math.Min(byte.MaxValue, Agility + 1);
+                        break;
                 }
             }
         }
@@ -648,7 +683,7 @@ namespace Client.MirObjects
                         MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
                         break;
                     case BuffType.BagWeight:
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + buff.Value);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Value);
                         break;
                 }
 

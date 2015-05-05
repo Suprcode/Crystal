@@ -918,6 +918,7 @@ namespace Client.MirObjects
 
 
                 bool ArcherLayTrap = false;
+
                 switch (CurrentAction)
                 {
                     case MirAction.Pushed:
@@ -1146,6 +1147,7 @@ namespace Client.MirObjects
                                 Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                         }
+                        
                         break;
                     default:
                         Frames.Frames.TryGetValue(CurrentAction, out Frame);
@@ -1180,6 +1182,8 @@ namespace Client.MirObjects
                 Spell = Spell.None;
                 SpellLevel = 0;
                 //NextMagic = null;
+
+                ClientMagic magic;
 
                 if (Frame == null) return;
 
@@ -1231,55 +1235,58 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Attack1:
                         case MirAction.MountAttack:
-                            ClientMagic magic;
-                            if (GameScene.Slaying && TargetObject != null)
-                                Spell = Spell.Slaying;
 
-                            if (GameScene.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
-                                Spell = Spell.Thrusting;
-
-                            if (GameScene.HalfMoon)
+                            if (!RidingMount)
                             {
-                                if (TargetObject != null || GameScene.Scene.MapControl.CanHalfMoon(CurrentLocation, Direction))
+                                if (GameScene.Slaying && TargetObject != null)
+                                    Spell = Spell.Slaying;
+
+                                if (GameScene.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
+                                    Spell = Spell.Thrusting;
+
+                                if (GameScene.HalfMoon)
                                 {
-                                    magic = User.GetMagic(Spell.HalfMoon);
-                                    if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                        Spell = Spell.HalfMoon;
+                                    if (TargetObject != null || GameScene.Scene.MapControl.CanHalfMoon(CurrentLocation, Direction))
+                                    {
+                                        magic = User.GetMagic(Spell.HalfMoon);
+                                        if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                            Spell = Spell.HalfMoon;
+                                    }
                                 }
-                            }
 
-                            if (GameScene.CrossHalfMoon)
-                            {
-                                if (TargetObject != null || GameScene.Scene.MapControl.CanCrossHalfMoon(CurrentLocation))
+                                if (GameScene.CrossHalfMoon)
                                 {
-                                    magic = User.GetMagic(Spell.CrossHalfMoon);
-                                    if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                        Spell = Spell.CrossHalfMoon;
+                                    if (TargetObject != null || GameScene.Scene.MapControl.CanCrossHalfMoon(CurrentLocation))
+                                    {
+                                        magic = User.GetMagic(Spell.CrossHalfMoon);
+                                        if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                            Spell = Spell.CrossHalfMoon;
+                                    }
                                 }
-                            }
 
-                            if (GameScene.DoubleSlash)
-                            {
-                                magic = User.GetMagic(Spell.DoubleSlash);
-                                if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                    Spell = Spell.DoubleSlash;
-                            }
-
-
-                            if (GameScene.TwinDrakeBlade)
-                            {
-                                magic = User.GetMagic(Spell.TwinDrakeBlade);
-                                if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                    Spell = Spell.TwinDrakeBlade;
-                            }
-
-                            if (GameScene.FlamingSword)
-                            {
-                                if (TargetObject != null)
+                                if (GameScene.DoubleSlash)
                                 {
-                                    magic = User.GetMagic(Spell.FlamingSword);
-                                    if (magic != null)
-                                        Spell = Spell.FlamingSword;
+                                    magic = User.GetMagic(Spell.DoubleSlash);
+                                    if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                        Spell = Spell.DoubleSlash;
+                                }
+
+
+                                if (GameScene.TwinDrakeBlade)
+                                {
+                                    magic = User.GetMagic(Spell.TwinDrakeBlade);
+                                    if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                        Spell = Spell.TwinDrakeBlade;
+                                }
+
+                                if (GameScene.FlamingSword)
+                                {
+                                    if (TargetObject != null)
+                                    {
+                                        magic = User.GetMagic(Spell.FlamingSword);
+                                        if (magic != null)
+                                            Spell = Spell.FlamingSword;
+                                    }
                                 }
                             }
 
@@ -1287,8 +1294,6 @@ namespace Client.MirObjects
 
                             if (Spell == Spell.Slaying)
                                 GameScene.Slaying = false;
-
-
                             if (Spell == Spell.TwinDrakeBlade)
                                 GameScene.TwinDrakeBlade = false;
                             if (Spell == Spell.FlamingSword)
@@ -1326,6 +1331,10 @@ namespace Client.MirObjects
                             Spell = (Spell)action.Params[0];
                             targetID = (uint)action.Params[1];
                             location = (Point)action.Params[2];
+
+                            //magic = User.GetMagic(Spell);
+                            //magic.LastCast = CMain.Time;
+
                             Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
                             if (Spell == Spell.FlashDash)
@@ -2365,7 +2374,7 @@ namespace Client.MirObjects
                     }
                     break;
 
-                case MirAction.AttackRange1://Archertest
+                case MirAction.AttackRange1:
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
@@ -3585,8 +3594,6 @@ namespace Client.MirObjects
 
         public override void Draw()
         {
-            if (SneakingActive) return;
-
             float oldOpacity = DXManager.Opacity;
             if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
 
@@ -3715,7 +3722,7 @@ namespace Client.MirObjects
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (CurrentEffect == SpellEffect.ElementBarrierUp && !ElementalBarrier)//ArcherSpells - Elemental system
+            if (CurrentEffect == SpellEffect.ElementalBarrierUp && !ElementalBarrier)//ArcherSpells - Elemental system
             {
                 ElementalBarrier = true;
                 Effects.Add(ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 16, 3200, this) { Repeat = true });

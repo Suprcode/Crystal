@@ -37,6 +37,8 @@ namespace Server
                 GuildItemNamecomboBox.Items.Add(Envir.ItemInfoList[i]);
             }
 
+            NewbieNameBox.Text = Settings.Guild_NewbieName;
+
             UpdateGuildInterface();
         }
 
@@ -396,5 +398,19 @@ namespace Server
             GuildsChanged = true;
         }
 
+        private void NewbieNameBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            if (SMain.Envir.GuildList.Any(a => a.Name == ActiveControl.Text))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            
+            Settings.Guild_NewbieName = ActiveControl.Text;
+            ActiveControl.BackColor = SystemColors.Window;
+            GuildsChanged = true;
+        }
     }
 }

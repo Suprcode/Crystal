@@ -537,7 +537,7 @@ namespace Server.MirObjects
         public override int Pushed(MapObject pusher, MirDirection dir, int distance)
         {
             if (!Info.CanPush) return 0;
-            if (!CanMove) return 0; //stops mobs that can't move (like cannibalplants) from being pushed
+            //if (!CanMove) return 0; //stops mobs that can't move (like cannibalplants) from being pushed
 
             int result = 0;
             MirDirection reverse = Functions.ReverseDirection(dir);
@@ -632,7 +632,10 @@ namespace Server.MirObjects
                     {
                         PlayerObject ob = (PlayerObject) EXPOwner;
 
-                        if (ob.CheckGroupQuestItem(item)) continue;
+                        if (ob.CheckGroupQuestItem(item))
+                        {
+                            continue;
+                        }
                     }
 
                     if (drop.QuestRequired) continue;
@@ -662,7 +665,7 @@ namespace Server.MirObjects
                 return true;
             }
 
-            uint count = gold / Settings.MaxDropGold == 0 ? gold / Settings.MaxDropGold : gold / Settings.MaxDropGold + 1;
+            uint count = gold / Settings.MaxDropGold == 0 ? 1 : gold / Settings.MaxDropGold + 1;
             for (int i = 0; i < count; i++)
             {
                 ItemObject ob = new ItemObject(this, i != count - 1 ? Settings.MaxDropGold : gold % Settings.MaxDropGold)
@@ -901,7 +904,9 @@ namespace Server.MirObjects
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
-                        ChangeHP(-poison.Value);
+                        if (EXPOwner != null && Functions.InRange(EXPOwner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
+                            ChangeHP(-poison.Value);
+                            
                         RegenTime = Envir.Time + RegenDelay;
                     }
 
@@ -932,10 +937,12 @@ namespace Server.MirObjects
                         break;
                     case PoisonType.Slow:
                         MoveSpeed += 100;
+                        AttackSpeed += 100;
  
                         if (poison.Time >= poison.Duration)
                         {
                             MoveSpeed = Info.MoveSpeed;
+                            AttackSpeed = Info.AttackSpeed;
                         }
                         break;
                 }
@@ -970,7 +977,7 @@ namespace Server.MirObjects
             if (ExplosionInflictedStage == 2)
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
-                if (poison.Owner != null)
+                if (poison.Owner != null && Functions.InRange(poison.Owner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
                 {
                     switch (poison.Owner.Race)
                     {
@@ -1436,6 +1443,7 @@ namespace Server.MirObjects
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
                                     if (!ob.IsAttackTarget(this)) continue;
+                                    if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
                                     if (ob.Race == ObjectType.Player)
                                     {
                                         PlayerObject player = ((PlayerObject)ob);
@@ -1494,7 +1502,7 @@ namespace Server.MirObjects
 
             return false;
         }
-        protected List<MapObject> FindAllTargets(int dist, Point location)
+        protected List<MapObject> FindAllTargets(int dist, Point location, bool needSight = true)
         {
             List<MapObject> targets = new List<MapObject>();
             for (int d = 0; d <= dist; d++)
@@ -1520,7 +1528,7 @@ namespace Server.MirObjects
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
                                     if (!ob.IsAttackTarget(this)) continue;
-                                    if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
+                                    if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
                                     if (ob.Race == ObjectType.Player)
                                     {
                                         PlayerObject player = ((PlayerObject)ob);
