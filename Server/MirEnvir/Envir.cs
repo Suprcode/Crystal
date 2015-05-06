@@ -19,7 +19,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 50;
+        public const int Version = 51;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
@@ -1557,6 +1557,11 @@ namespace Server.MirEnvir
 
             var instanceMapList = MapList.Where(t => String.Equals(t.Info.FileName, name, StringComparison.CurrentCultureIgnoreCase)).ToList();
             return instanceValue < instanceMapList.Count() ? instanceMapList[instanceValue] : null;
+        }
+
+        public MapObject GetObject(uint objectID)
+        {
+            return Objects.FirstOrDefault(e => e.ObjectID == objectID);
         }
 
         public MonsterInfo GetMonsterInfo(int index)

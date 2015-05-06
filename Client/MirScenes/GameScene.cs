@@ -1514,7 +1514,7 @@ namespace Client.MirScenes
                 case BuffType.UltimateEnhancer:
                     return 2;//862;
                 case BuffType.Curse:
-                    return 892;
+                    return 32;
                 case BuffType.MoonLight:
                     return 24;//884;
                 case BuffType.DarkBody:
@@ -11737,12 +11737,19 @@ namespace Client.MirScenes
             {
                 if (Libraries.StateItems == null) return;
 
-                ItemInfo RealItem;
+                ItemInfo RealItem = null;
+
                 if (ArmorCell.Item != null)
                 {
                     RealItem = Functions.GetRealItem(ArmorCell.Item.Info, Level, Class, GameScene.ItemInfoList);
                     Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
                 }
+
+                int wingOffset = RealItem.Effect == 1 ? 2 : 4;
+
+                int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
+
+                Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
 
                 if (WeaponCell.Item != null)
                 {
@@ -11753,7 +11760,14 @@ namespace Client.MirScenes
                 if (HelmetCell.Item != null)
                     Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, DisplayLocation, Color.White, true, 1F);
                 else
-                    Libraries.Prguse.Draw(440 + Hair + (Gender == MirGender.Male ? 0 : 40), DisplayLocation, Color.White, true, 1F);
+                {
+                    int hair = 441 + Hair + (Class == MirClass.Assassin ? 20 : 0) + (Gender == MirGender.Male ? 0 : 40);
+
+                    int offSetX = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 6 : 4) : 0;
+                    int offSetY = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 25 : 18) : 0;
+
+                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X + offSetX, DisplayLocation.Y + offSetY), Color.White, true, 1F);
+                }
             };
 
 

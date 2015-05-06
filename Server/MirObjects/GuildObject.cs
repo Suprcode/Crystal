@@ -51,9 +51,6 @@ namespace Server.MirObjects
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
-
-            if (Name == Settings.Guild_NewbieName)
-                MemberCap = 0;
         }
         public GuildObject(BinaryReader reader) 
         {
@@ -99,9 +96,6 @@ namespace Server.MirObjects
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
-
-            if (Name == Settings.Guild_NewbieName)
-                MemberCap = 0;
         }
         public void Save(BinaryWriter writer)
         {
@@ -387,7 +381,7 @@ namespace Server.MirObjects
                 Kicker.ReceiveChat("Your rank is not adequate.", ChatType.System);
                 return false;
             }
-            if (MemberRank.Index == 0 && Name != Settings.Guild_NewbieName)
+            if (MemberRank.Index == 0)
             {
                 if (MemberRank.Members.Count < 2)
                 {
@@ -483,9 +477,6 @@ namespace Server.MirObjects
 
         public bool HasRoom()
         {
-            if (Name == Settings.Guild_NewbieName)
-                return true;
-
             if (Level < Settings.Guild_MembercapList.Count)
                 if ((Settings.Guild_MembercapList[Level] != 0) && (Membercount >= Settings.Guild_MembercapList[Level]))
                     return false;
