@@ -2751,10 +2751,10 @@ namespace Server.MirObjects
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
                         break;
                     case BuffType.HealthAid:
-                        HP = (ushort)Math.Min(ushort.MaxValue, HP + buff.Value);
+                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Value);
                         break;
                     case BuffType.ManaAid:
-                        MP = (ushort)Math.Min(ushort.MaxValue, MP + buff.Value);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Value);
                         break;
                     case BuffType.WonderShield:
                         MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Value);
