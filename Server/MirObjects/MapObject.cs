@@ -661,17 +661,6 @@ namespace Server.MirObjects
 
         public Poison() { }
 
-        public Poison(Poison poison)
-        {
-            Owner = null;
-            PType = poison.PType;
-            Value = poison.Value;
-            Duration = poison.Duration;
-            Time = poison.Time;
-            TickTime = poison.TickTime;
-            TickSpeed = poison.TickSpeed;
-        }
-
         public Poison(BinaryReader reader)
         {
             Owner = null;
@@ -705,17 +694,6 @@ namespace Server.MirObjects
         public bool Infinite;
 
         public Buff() { }
-
-        public Buff(Buff buff)
-        {
-            Type = buff.Type;
-            Caster = buff.Caster;
-            Visible = buff.Visible;
-            ObjectID = buff.ObjectID;
-            ExpireTime = buff.ExpireTime;
-            Value = buff.Value;
-            Infinite = buff.Infinite;
-        }
 
         public Buff(BinaryReader reader)
         {

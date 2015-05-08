@@ -1044,8 +1044,10 @@ namespace Server.MirObjects
         {
             if (Envir.Time < SearchTime) return;
             if (Master != null && (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)) return;
-
+            
             SearchTime = Envir.Time + SearchDelay;
+
+            //if (CurrentMap.Players.Count < 1) return;
 
             //Stacking or Infront of master - Move
             bool stacking = false;
@@ -1149,6 +1151,8 @@ namespace Server.MirObjects
         }
         protected virtual void FindTarget()
         {
+            //if (CurrentMap.Players.Count < 1) return;
+
             for (int d = 0; d <= Info.ViewRange; d++)
             {
                 for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)

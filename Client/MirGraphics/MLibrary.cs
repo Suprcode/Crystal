@@ -501,7 +501,6 @@ namespace Client.MirGraphics
             if (_images == null || index < 0 || index >= _images.Length)
                 return Size.Empty;
 
-
             if (_images[index] == null)
             {
                 _fStream.Position = _indexList[index];

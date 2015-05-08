@@ -234,7 +234,7 @@ namespace Server.MirDatabase
 
                     if (Envir.LoadVersion > 50)
                     {
-                       // buff.Caster = SMain.Envir.GetObject(reader.ReadUInt32());
+                        buff.Caster = SMain.Envir.GetObject(reader.ReadUInt32());
                     }
 
                     Buffs.Add(buff);
@@ -284,7 +284,7 @@ namespace Server.MirDatabase
 
                     if (Envir.LoadVersion > 50)
                     {
-                       // poison.Owner = SMain.Envir.GetObject(reader.ReadUInt32());
+                        poison.Owner = SMain.Envir.GetObject(reader.ReadUInt32());
                     }
 
                     Poisons.Add(poison);
@@ -388,7 +388,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < Buffs.Count; i++)
             {
                 Buffs[i].Save(writer);
-              //  writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
+                writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
             }
 
             writer.Write(Mail.Count);
@@ -409,7 +409,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < Poisons.Count; i++)
             {
                 Poisons[i].Save(writer);
-               // writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
+                writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
             }
         }
 

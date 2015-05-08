@@ -2518,6 +2518,8 @@ namespace Client.MirScenes
         {
             User.HP = p.HP;
             User.MP = p.MP;
+
+            User.PercentHealth = (byte)(User.HP / (float)User.MaxHP * 100);
         }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
@@ -3180,7 +3182,9 @@ namespace Client.MirScenes
                     case SpellEffect.DelayedExplosion://ArcherSpells - DelayedExplosion
                         int effectid = DelayedExplosionEffect.GetOwnerEffectID(ob.ObjectID);
                         if (effectid < 0)
+                        {
                             ob.Effects.Add(new DelayedExplosionEffect(Libraries.Magic3, 1590, 8, 1200, ob, true, 0, 0));
+                        }
                         else if (effectid >= 0)
                         {
                             if (DelayedExplosionEffect.effectlist[effectid].stage < p.EffectType)
@@ -3189,6 +3193,7 @@ namespace Client.MirScenes
                                 ob.Effects.Add(new DelayedExplosionEffect(Libraries.Magic3, 1590 + ((int)p.EffectType * 10), 8, 1200, ob, true, (int)p.EffectType, 0));
                             }
                         }
+
                         //else
                         //    ob.Effects.Add(new DelayedExplosionEffect(Libraries.Magic3, 1590 + ((int)p.EffectType * 10), 8, 1200, ob, true, (int)p.EffectType, 0));
                         break;
@@ -3827,7 +3832,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void RemoveDelayedExplosion(S.RemoveDelayedExplosion p)//ArcherSpells - DelaydeExplosion
+        private void RemoveDelayedExplosion(S.RemoveDelayedExplosion p)
         {
             //if (p.ObjectID == User.ObjectID) return;
 
@@ -19869,10 +19874,9 @@ namespace Client.MirScenes
                     break;
             }
 
-            if (Infinite)
-                text += string.Format("Expire: Never\nCaster: {0}", Caster);
-            else
-                text += string.Format("Expire: {0}\nCaster: {1}", PrintTimeSpan(Math.Round((Expire - CMain.Time) / 1000D)), Caster);
+            text += string.Format("Expire: {0}", Infinite ? "Never" : PrintTimeSpan(Math.Round((Expire - CMain.Time) / 1000D)));
+
+            if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
 
             return text;
         }

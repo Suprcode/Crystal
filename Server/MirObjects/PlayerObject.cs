@@ -387,7 +387,7 @@ namespace Server.MirObjects
 
                 buff.ExpireTime -= Envir.Time;
 
-                Info.Buffs.Add(new Buff(buff));
+                Info.Buffs.Add(buff);
             }
             Buffs.Clear();
 
@@ -397,7 +397,7 @@ namespace Server.MirObjects
 
                 poison.TickTime -= Envir.Time;
 
-                Info.Poisons.Add(new Poison(poison));
+                Info.Poisons.Add(poison);
             }
             PoisonList.Clear();
 
@@ -921,10 +921,10 @@ namespace Server.MirObjects
                 switch (poison.PType)
                 {
                     case PoisonType.Red:
-                        PoisonRate += 0.10F;
+                        PoisonRate -= 0.10F;
                         break;
                     case PoisonType.Stun:
-                        PoisonRate += 0.2F;
+                        PoisonRate -= 0.20F;
                         break;
                 }
 
@@ -1032,7 +1032,7 @@ namespace Server.MirObjects
 
         public void ChangeHP(int amount)
         {
-            if (amount < 0) amount = (int)(amount * PoisonRate);
+            //if (amount < 0) amount = (int)(amount * PoisonRate);
 
             if (HasProtectionRing && MP > 0 && amount < 0)
             {
@@ -1752,7 +1752,7 @@ namespace Server.MirObjects
             {
                 Buff buff = Info.Buffs[i];
                 buff.ExpireTime += Envir.Time;
-                buff.Caster = this;
+                //buff.Caster = this;
 
                 AddBuff(buff);
             }
@@ -7232,7 +7232,7 @@ namespace Server.MirObjects
                         case 1:
                             target.ApplyPoison(new Poison
                             {
-                                Duration = (value * 2) + ((magic.Level + 1) * 2),
+                                Duration = (value * 2) + ((magic.Level + 1) * 7),
                                 Owner = this,
                                 PType = PoisonType.Green,
                                 TickSpeed = 2000,
@@ -7391,10 +7391,10 @@ namespace Server.MirObjects
 
                     target.PoisonList.Clear();
                     target.OperateTime = 0;
-
+                  
                     if(target.ObjectID == ObjectID)
-                        Enqueue(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });//ArcherSpells - DelayedExplosion
-                    target.Broadcast(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });//ArcherSpells - DelayedExplosion
+                        Enqueue(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
+                    target.Broadcast(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
 
                     LevelMagic(magic);
                     break;
@@ -8251,43 +8251,55 @@ namespace Server.MirObjects
 
         public Packet GetInfoEx(PlayerObject player)
         {
-            if (Observer) return null;
+            var p = (S.ObjectPlayer)GetInfo();
 
-            return new S.ObjectPlayer
+            if (p != null)
             {
-                ObjectID = ObjectID,
-                Name = CurrentMap.Info.NoNames ? "?????" : Name,
-                NameColour = GetNameColour(player),
-                GuildName = CurrentMap.Info.NoNames ? "?????" : MyGuild != null ? MyGuild.Name : "",
-                GuildRankName = CurrentMap.Info.NoNames ? "?????" : MyGuildRank != null ? MyGuildRank.Name : "",
-                Class = Class,
-                Gender = Gender,
-                Level = Level,
-                Location = CurrentLocation,
-                Direction = Direction,
-                Hair = Hair,
-                Weapon = Looks_Weapon,
-                Armour = Looks_Armour,
-                Light = Light,
-                Poison = CurrentPoison,
-                Dead = Dead,
-                Hidden = Hidden,
-                Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
-                WingEffect = Looks_Wings,
-                MountType = MountType,
-                RidingMount = RidingMount,
-                Fishing = Fishing,
-                
-                //ArcherSpells - Elemental system
-                ElementOrbEffect = (uint)GetElementalOrbCount(),
-                ElementOrbLvl = (uint)ElementsLevel,
-                ElementOrbMax = (uint)Settings.OrbsExpList[Settings.OrbsExpList.Count - 1],
+                p.NameColour = GetNameColour(player);
+            }
 
-                Buffs = Buffs.Where(d => d.Visible).Select(e => e.Type).ToList(),
-
-                LevelEffects = LevelEffects
-            };
+            return p;
         }
+
+        //public Packet GetInfoEx(PlayerObject player)
+        //{
+        //    if (Observer) return null;
+
+        //    return new S.ObjectPlayer
+        //    {
+        //        ObjectID = ObjectID,
+        //        Name = CurrentMap.Info.NoNames ? "?????" : Name,
+        //        NameColour = GetNameColour(player),
+        //        GuildName = CurrentMap.Info.NoNames ? "?????" : MyGuild != null ? MyGuild.Name : "",
+        //        GuildRankName = CurrentMap.Info.NoNames ? "?????" : MyGuildRank != null ? MyGuildRank.Name : "",
+        //        Class = Class,
+        //        Gender = Gender,
+        //        Level = Level,
+        //        Location = CurrentLocation,
+        //        Direction = Direction,
+        //        Hair = Hair,
+        //        Weapon = Looks_Weapon,
+        //        Armour = Looks_Armour,
+        //        Light = Light,
+        //        Poison = CurrentPoison,
+        //        Dead = Dead,
+        //        Hidden = Hidden,
+        //        Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
+        //        WingEffect = Looks_Wings,
+        //        MountType = MountType,
+        //        RidingMount = RidingMount,
+        //        Fishing = Fishing,
+                
+        //        //ArcherSpells - Elemental system
+        //        ElementOrbEffect = (uint)GetElementalOrbCount(),
+        //        ElementOrbLvl = (uint)ElementsLevel,
+        //        ElementOrbMax = (uint)Settings.OrbsExpList[Settings.OrbsExpList.Count - 1],
+
+        //        Buffs = Buffs.Where(d => d.Visible).Select(e => e.Type).ToList(),
+
+        //        LevelEffects = LevelEffects
+        //    };
+        //}
 
         public override bool IsAttackTarget(PlayerObject attacker)
         {
@@ -8431,6 +8443,8 @@ namespace Server.MirObjects
                     break;
             }
 
+            armour = (int)(armour * PoisonRate);
+
             if (damageWeapon)
                 attacker.DamageWeapon();
 
@@ -8562,6 +8576,8 @@ namespace Server.MirObjects
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
                 return 0;
             }
+
+            armour = (int)(armour * PoisonRate);
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
@@ -8695,7 +8711,7 @@ namespace Server.MirObjects
 
             base.AddBuff(b);
 
-            string caster = b.Caster.Name;
+            string caster = b.Caster != null ? b.Caster.Name : string.Empty;
 
             S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = caster, Expire = b.ExpireTime - Envir.Time, Value = b.Value, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
             Enqueue(addBuff);
