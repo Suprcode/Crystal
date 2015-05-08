@@ -215,7 +215,7 @@ namespace Server.MirObjects
         public const int RegenDelay = 10000, EXPOwnerDelay = 5000, DeadDelay = 180000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
-        public bool BindingShotCenter;//ArcherSpells - BindingShot
+        public bool BindingShotCenter;
 
         public byte PetLevel;
         public uint PetExperience;
@@ -909,7 +909,7 @@ namespace Server.MirObjects
                         RegenTime = Envir.Time + RegenDelay;
                     }
 
-                    if (poison.PType == PoisonType.DelayedExplosion)//ArcherSpells - DelayedExplosion
+                    if (poison.PType == PoisonType.DelayedExplosion)
                     {
                         if (Envir.Time > ExplosionInflictedTime) ExplosionInflictedStage++;
 
@@ -957,7 +957,7 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectPoisoned { ObjectID = ObjectID, Poison = type });
         }
 
-        private bool ProcessDelayedExplosion(Poison poison)//ArcherSpells - DelayedExplosion
+        private bool ProcessDelayedExplosion(Poison poison)
         {
             if (Dead) return false;
 
@@ -1382,7 +1382,7 @@ namespace Server.MirObjects
             Target.Attacked(this, damage);
         }
 
-        public void ReleaseBindingShot()//ArcherSpells - BindingShot
+        public void ReleaseBindingShot()
         {
             if (!BindingShotCenter) return;
 
@@ -1778,7 +1778,7 @@ namespace Server.MirObjects
                 }
             }
 
-            attacker.GatherElement();//ArcherSpells - Elemental system
+            attacker.GatherElement();
 
             ChangeHP(armour - damage);
 
@@ -1900,7 +1900,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (p.PType == PoisonType.DelayedExplosion)//ArcherSpells - DelayedExplosion
+            if (p.PType == PoisonType.DelayedExplosion)
             {
                 ExplosionInflictedTime = Envir.Time + 4000;
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });

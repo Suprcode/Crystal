@@ -1269,10 +1269,10 @@ namespace Client.MirScenes
                     if (!User.Dead) return;
                     RequestReincarnation();
                     break;
-                case (short)ServerPacketIds.UserBackStep://ArcherSpells - Backstep
+                case (short)ServerPacketIds.UserBackStep:
                     UserBackStep((S.UserBackStep)p);
                     break;
-                case (short)ServerPacketIds.ObjectBackStep://ArcherSpells - Backstep
+                case (short)ServerPacketIds.ObjectBackStep:
                     ObjectBackStep((S.ObjectBackStep)p);
                     break;
                 case (short)ServerPacketIds.UserDashAttack:
@@ -1290,19 +1290,19 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ItemUpgraded:
                     ItemUpgraded((S.ItemUpgraded)p);
                     break;
-                case (short)ServerPacketIds.SetConcentration://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetConcentration:
                     SetConcentration((S.SetConcentration)p);
                     break;
-                case (short)ServerPacketIds.SetObjectConcentration://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetObjectConcentration:
                     SetObjectConcentration((S.SetObjectConcentration)p);
                     break;
-                case (short)ServerPacketIds.SetElemental://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetElemental:
                     SetElemental((S.SetElemental)p);
                     break;
-                case (short)ServerPacketIds.SetObjectElemental://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetObjectElemental:
                     SetObjectElemental((S.SetObjectElemental)p);
                     break;
-                case (short)ServerPacketIds.RemoveDelayedExplosion://ArcherSpells - DelayedExplosion
+                case (short)ServerPacketIds.RemoveDelayedExplosion:
                     RemoveDelayedExplosion((S.RemoveDelayedExplosion)p);
                     break;
                 case (short)ServerPacketIds.ObjectDeco:
@@ -1314,10 +1314,10 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectLevelEffects:
                     ObjectLevelEffects((S.ObjectLevelEffects)p);
                     break;
-                case (short)ServerPacketIds.SetBindingShot://ArcherSpells - BindingShot
+                case (short)ServerPacketIds.SetBindingShot:
                     SetBindingShot((S.SetBindingShot)p);
                     break;
-                case (short)ServerPacketIds.SendOutputMessage://ArcherSpells - BindingShot
+                case (short)ServerPacketIds.SendOutputMessage:
                     SendOutputMessage((S.SendOutputMessage)p);
                     break;
                 case (short)ServerPacketIds.NPCAwakening:
@@ -1387,7 +1387,6 @@ namespace Client.MirScenes
 
             MLibrary buffLibrary = Libraries.BuffIcon;
 
-            //ArcherSpells - VampireShot,PoisonShot
             if (buffImage >= 20000)
             {
                 buffImage -= 20000;
@@ -3154,7 +3153,7 @@ namespace Client.MirScenes
                     case SpellEffect.Reflect:
                         ob.Effects.Add(new Effect(Libraries.Effect, 580, 10, 70, ob));
                         break;
-                    case SpellEffect.ElementalBarrierUp://ArcherSpells - Elemental system
+                    case SpellEffect.ElementalBarrierUp:
                         if (ob.Race != ObjectType.Player) return;
                         player = (PlayerObject)ob;
                         if (player.ElementalBarrierEffect != null)
@@ -3166,7 +3165,7 @@ namespace Client.MirScenes
                         player.ElementalBarrier = true;
                         player.Effects.Add(player.ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 10, 2000, ob) { Repeat = true });
                         break;
-                    case SpellEffect.ElementalBarrierDown://ArcherSpells - Elemental system
+                    case SpellEffect.ElementalBarrierDown:
                         if (ob.Race != ObjectType.Player) return;
                         player = (PlayerObject)ob;
                         if (player.ElementalBarrierEffect != null)
@@ -3179,7 +3178,7 @@ namespace Client.MirScenes
                         player.Effects.Add(player.ElementalBarrierEffect = new Effect(Libraries.Magic3, 1910, 7, 1400, ob));
                         SoundManager.PlaySound(20000 + 131 * 10 + 5);
                         break;
-                    case SpellEffect.DelayedExplosion://ArcherSpells - DelayedExplosion
+                    case SpellEffect.DelayedExplosion:
                         int effectid = DelayedExplosionEffect.GetOwnerEffectID(ob.ObjectID);
                         if (effectid < 0)
                         {
@@ -3664,7 +3663,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void UserBackStep(S.UserBackStep p)//ArcherSpells - Backstep
+        private void UserBackStep(S.UserBackStep p)
         {
             if (User.Direction == p.Direction && User.CurrentLocation == p.Location)
             {
@@ -3673,7 +3672,7 @@ namespace Client.MirScenes
             }
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Jump, Direction = p.Direction, Location = p.Location });
         }
-        private void ObjectBackStep(S.ObjectBackStep p)//ArcherSpells - Backstep
+        private void ObjectBackStep(S.ObjectBackStep p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3751,7 +3750,7 @@ namespace Client.MirScenes
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Standing, Direction = p.Direction, Location = p.Location });
         }
 
-        private void SetConcentration(S.SetConcentration p)//ArcherSpells - Elemental system
+        private void SetConcentration(S.SetConcentration p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3773,7 +3772,7 @@ namespace Client.MirScenes
                 break;
             }
         }
-        private void SetObjectConcentration(S.SetObjectConcentration p)//ArcherSpells - Elemental system
+        private void SetObjectConcentration(S.SetObjectConcentration p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3800,7 +3799,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void SetElemental(S.SetElemental p)//ArcherSpells - Elemental system
+        private void SetElemental(S.SetElemental p)
         {
             if (User.ObjectID != p.ObjectID) return;
 
@@ -3812,7 +3811,7 @@ namespace Client.MirScenes
             if (p.Enabled && p.ElementType > 0)
                 User.Effects.Add(new ElementsEffect(Libraries.Magic3, 1630 + ((elementType - 1) * 10), 10, 10 * 100, User, true, 1 + (elementType - 1), maxExp, (elementType == 4 || elementType == 3) ? true : false));
         }
-        private void SetObjectElemental(S.SetObjectElemental p)//ArcherSpells - Elemental system
+        private void SetObjectElemental(S.SetObjectElemental p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -8206,7 +8205,6 @@ namespace Client.MirScenes
                 return;
             }
 
-            //ArcherSpells - Elemental system
             bool isTargetSpell = true;
 
             MapObject target = null;

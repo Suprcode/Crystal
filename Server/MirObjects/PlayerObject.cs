@@ -505,7 +505,7 @@ namespace Server.MirObjects
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, CurrentLocation);
             }
 
-            if (ElementalBarrier && Envir.Time > ElementalBarrierTime)//ArcherSpells - Elemental system
+            if (ElementalBarrier && Envir.Time > ElementalBarrierTime)
             {
                 ElementalBarrier = false;
                 ElementalBarrierLv = 0;
@@ -513,7 +513,7 @@ namespace Server.MirObjects
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
             }
 
-            for (int i = 0; i <= 3; i++)//ArcherSpells - Explosive Trap     Self destruct when out of range (in this case 15 squares)
+            for (int i = 0; i <= 3; i++)//Self destruct when out of range (in this case 15 squares)
             {
                 if (ArcherTrapObjectsArray[i,0] == null) continue;
                 if (FindObject(ArcherTrapObjectsArray[i,0].ObjectID, 15) != null) continue;
@@ -694,7 +694,7 @@ namespace Server.MirObjects
                 refresh = true;
             }
 
-            if (Concentrating && !ConcentrateInterrupted && (ConcentrateInterruptTime != 0))//ArcherSpells - Elemental system
+            if (Concentrating && !ConcentrateInterrupted && (ConcentrateInterruptTime != 0))
             {
                 //check for reenable
                 if (ConcentrateInterruptTime <= SMain.Envir.Time)
@@ -901,7 +901,7 @@ namespace Server.MirObjects
                         RegenTime = Envir.Time + RegenDelay;
                     }
 
-                    if (poison.PType == PoisonType.DelayedExplosion)//ArcherSpells - DelayedExplosion
+                    if (poison.PType == PoisonType.DelayedExplosion)
                     {
                         if (Envir.Time > ExplosionInflictedTime) ExplosionInflictedStage++;
 
@@ -4230,7 +4230,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-            if (Concentrating)//ArcherSpells - Elemental system
+            if (Concentrating)
             {
                 if (ConcentrateInterrupted)
                     ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
@@ -4377,7 +4377,7 @@ namespace Server.MirObjects
                 DecreaseMountLoyalty(2);
             }
 
-            if (Concentrating)//ArcherSpells - Elemental system
+            if (Concentrating)
             {
                 if (ConcentrateInterrupted)
                     ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
@@ -4499,7 +4499,7 @@ namespace Server.MirObjects
 
             if (result > 0)
             {
-                if (Concentrating)//ArcherSpells - Elemental system
+                if (Concentrating)
                 {
                     if (ConcentrateInterrupted)
                         ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
@@ -5163,7 +5163,7 @@ namespace Server.MirObjects
             ChangeMP(-cost);
 
             Direction = dir;
-            if (spell != Spell.ShoulderDash && spell != Spell.BackStep && spell != Spell.FlashDash)//ArcherSpells - Backstep
+            if (spell != Spell.ShoulderDash && spell != Spell.BackStep && spell != Spell.FlashDash)
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
 
             MapObject target = null;
@@ -7010,7 +7010,7 @@ namespace Server.MirObjects
 
             target.Pushed(this, dir, distance);
         }
-        public void BindingShot(UserMagic magic, MapObject target, out bool cast)//ArcherSpells - BindingShot
+        public void BindingShot(UserMagic magic, MapObject target, out bool cast)
         {
             cast = false;
 
@@ -7029,7 +7029,7 @@ namespace Server.MirObjects
 
             cast = true;
         }
-        public void SpecialArrowShot(MapObject target, UserMagic magic)//ArcherSpells - VampireShot,PoisonShot,CrippleShot
+        public void SpecialArrowShot(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this)) return;
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return;
@@ -7377,8 +7377,8 @@ namespace Server.MirObjects
                     if (target == null || !target.IsFriendlyTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
                     if (Envir.Random.Next(4) > magic.Level || target.PoisonList.Count == 0) return;
 
-                    target.ExplosionInflictedTime = 0;//ArcherSpells - DelayedExplosion
-                    target.ExplosionInflictedStage = 0;//ArcherSpells - DelayedExplosion
+                    target.ExplosionInflictedTime = 0;
+                    target.ExplosionInflictedStage = 0;
 
                     for (int i = 0; i < target.Buffs.Count; i++)
                     {
@@ -7504,9 +7504,7 @@ namespace Server.MirObjects
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
                     break;
 
-                case Spell.ElementalShot://ArcherSpells - Elemental system
-                    
-                   
+                case Spell.ElementalShot:
                     value = (int)data[1];
                     target = (MapObject)data[2];
 
@@ -8232,7 +8230,7 @@ namespace Server.MirObjects
                 Poison = CurrentPoison,
                 Dead = Dead,
                 Hidden = Hidden,
-                Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
+                Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None),
                 WingEffect = Looks_Wings,
                 MountType = MountType,
                 RidingMount = RidingMount,
@@ -8466,14 +8464,14 @@ namespace Server.MirObjects
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
 
-            if (ElementalBarrier)//ArcherSpells - Elemental system
+            if (ElementalBarrier)
                 damage -= damage * (ElementalBarrierLv + 1) / 10;
 
             if (armour >= damage) return 0;
 
             MagicShieldTime -= (damage - armour) * 60;
 
-            ElementalBarrierTime -= (damage - armour) * 60;//ArcherSpells - Elemental system
+            ElementalBarrierTime -= (damage - armour) * 60;
 
             if (attacker.LifeOnHit > 0)
                 attacker.ChangeHP(attacker.LifeOnHit);
@@ -8514,7 +8512,7 @@ namespace Server.MirObjects
                     ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.PoisonAttack)) }, attacker);
             }
 
-            attacker.GatherElement();//ArcherSpells - Elemental system
+            attacker.GatherElement();
 
             DamageDura();
             ActiveBlizzard = false;
@@ -8582,14 +8580,14 @@ namespace Server.MirObjects
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
 
-            if (ElementalBarrier)//ArcherSpells - Elemental system
+            if (ElementalBarrier)
                 damage -= damage * (ElementalBarrierLv +1 ) / 10;
 
             if (armour >= damage) return 0;
 
             MagicShieldTime -= (damage - armour) * 60;
 
-            ElementalBarrierTime -= (damage - armour) * 60;//ArcherSpells - Elemental system
+            ElementalBarrierTime -= (damage - armour) * 60;
 
             LastHitter = attacker.Master ?? attacker;
             LastHitTime = Envir.Time + 10000;
@@ -8649,14 +8647,14 @@ namespace Server.MirObjects
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
 
-            if (ElementalBarrier)//ArcherSpells - Elemental system
+            if (ElementalBarrier)
                 damage -= damage * (ElementalBarrierLv + 1) / 10;
 
             if (armour >= damage) return 0;
 
             MagicShieldTime -= (damage - armour) * 60;
 
-            ElementalBarrierTime -= (damage - armour) * 60;//ArcherSpells - Elemental system
+            ElementalBarrierTime -= (damage - armour) * 60;
             RegenTime = Envir.Time + RegenDelay;
             LogTime = Envir.Time + Globals.LogDelay;
 
@@ -8693,7 +8691,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (p.PType == PoisonType.DelayedExplosion)//ArcherSpells - DelayedExplosion
+            if (p.PType == PoisonType.DelayedExplosion)
             {
                 ExplosionInflictedTime = Envir.Time + 4000;
                 Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });

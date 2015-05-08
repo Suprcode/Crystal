@@ -621,7 +621,7 @@ namespace Client.MirObjects
                 case MirAction.DashL:
                 case MirAction.DashR:
                 case MirAction.Sneek:
-                case MirAction.Jump://ArcherSpells - Backstep
+                case MirAction.Jump:
                 case MirAction.DashAttack:
                     if (Frame == null)
                     {
@@ -636,7 +636,7 @@ namespace Client.MirObjects
                         i = (Sprint && !Sneaking ? 3 : 2);
                     else i = 1;
 
-                    if (CurrentAction == MirAction.Jump) i = -JumpDistance;//ArcherSpells - Backstep
+                    if (CurrentAction == MirAction.Jump) i = -JumpDistance;
                     if (CurrentAction == MirAction.DashAttack) i = JumpDistance;
 
                     Movement = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -i);
@@ -736,7 +736,7 @@ namespace Client.MirObjects
                 case PoisonType.Paralysis:
                     DrawColour = Color.Gray;
                     break;
-                case PoisonType.DelayedExplosion://ArcherSpells - DelayedExplosion
+                case PoisonType.DelayedExplosion:
                     DrawColour = Color.Orange;
                     break;
             }
@@ -758,7 +758,7 @@ namespace Client.MirObjects
                     case MirAction.DashL:
                     case MirAction.DashR:
                     case MirAction.Sneek:
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                     case MirAction.DashAttack:
                         return;
                 }
@@ -821,7 +821,7 @@ namespace Client.MirObjects
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
 
-                    if (Concentrating && ConcentrateInterrupted)//ArcherSpells - Elemental system
+                    if (Concentrating && ConcentrateInterrupted)
                         Network.Enqueue(new C.SetConcentration { ObjectID = User.ObjectID, Enabled = Concentrating, Interrupted = false });
                 }
 
@@ -898,7 +898,7 @@ namespace Client.MirObjects
                         temp = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -steps);
 
                         break;
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                     case MirAction.DashAttack:
                         temp = Functions.PointMove(CurrentLocation, Direction, JumpDistance);
                         break;
@@ -938,7 +938,7 @@ namespace Client.MirObjects
                         //Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
                         //CanSetAction = false;
                         break;
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                         Frames.Frames.TryGetValue(MirAction.Jump, out Frame);
                         break;
                     case MirAction.Attack1:
@@ -1076,7 +1076,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 500; //Spell Delay
                                 }
                                 break;
-                            case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
+                            case Spell.ExplosiveTrap:
                                 Frames.Frames.TryGetValue(MirAction.Harvest, out Frame);
                                 CurrentAction = MirAction.Harvest;
                                 ArcherLayTrap = true;
@@ -1089,7 +1089,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
                                 break;
-                            case Spell.DelayedExplosion://ArcherSpells - DelayedExplosion
+                            case Spell.DelayedExplosion:
                                 Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
@@ -1098,7 +1098,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
                                 break;
-                            case Spell.BackStep://ArcherSpells - Backstep
+                            case Spell.BackStep:
                                 {
                                     int sLevel = (byte)action.Params[3];
                                     GetBackStepDistance(sLevel);
@@ -1113,7 +1113,7 @@ namespace Client.MirObjects
                                     }
                                     break;
                                 }
-                            case Spell.ElementalShot://ArcherSpells - Elemental system
+                            case Spell.ElementalShot:
                                 if (HasElements && !ElementCasted)
                                 {
                                     Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
@@ -1127,11 +1127,11 @@ namespace Client.MirObjects
                                 else Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 if (ElementCasted) ElementCasted = false;
                                 break;
-                            case Spell.BindingShot://ArcherSpells - BindingShot
-                            case Spell.VampireShot://ArcherSpells - VampireShot
-                            case Spell.PoisonShot://ArcherSpells - PoisonShot
-                            case Spell.CrippleShot://ArcherSpells - CrippleShot
-                            case Spell.NapalmShot://ArcherSpells - NapalmShot
+                            case Spell.BindingShot:
+                            case Spell.VampireShot:
+                            case Spell.PoisonShot:
+                            case Spell.CrippleShot:
+                            case Spell.NapalmShot:
                             case Spell.SummonVampire:
                             case Spell.SummonToad:
                             case Spell.SummonSnakes:
@@ -1223,7 +1223,7 @@ namespace Client.MirObjects
                             break;
                         case MirAction.DashL:
                         case MirAction.DashR:
-                        case MirAction.Jump://ArcherSpells - Backstep
+                        case MirAction.Jump:
                         case MirAction.DashAttack:
                             GameScene.Scene.MapControl.FloorValid = false;
                             //CanSetAction = false;
@@ -1349,7 +1349,7 @@ namespace Client.MirObjects
                             }
                             break;
                         case MirAction.Harvest:
-                            if (ArcherLayTrap)//ArcherSpells - Explosive Trap
+                            if (ArcherLayTrap)
                             {
                                 ArcherLayTrap = false;
                                 SoundManager.PlaySound(20000 + 124 * 10);
@@ -1373,7 +1373,7 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.DashL:
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                         FrameIndex = 0;
                         EffectFrameIndex = 0;
                         GameScene.Scene.Redraw();
@@ -2038,7 +2038,6 @@ namespace Client.MirObjects
             NextMotion = CMain.Time + FrameInterval;
             NextMotion2 = CMain.Time + EffectFrameInterval;
 
-            //ArcherSpells - Elemental system
             if (ElementalBarrier)
             {
                 switch (CurrentAction)
@@ -2154,7 +2153,7 @@ namespace Client.MirObjects
                             NextMotion2 += EffectFrameInterval;
                     }
                     break;
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                     if (!GameScene.CanMove) return;
                     GameScene.Scene.MapControl.TextureValid = false;
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
@@ -2479,7 +2478,7 @@ namespace Client.MirObjects
                             NextMotion += FrameInterval;
 
                             Missile missile;
-                            //ArcherSpells - Doubleshot
+
                             switch(Spell)
                             {
                                 case Spell.DoubleShot:
@@ -2500,7 +2499,7 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.ElementalShot://ArcherSpells - Elemental system
+                                case Spell.ElementalShot:
                                     if (HasElements && !ElementCasted)
                                         switch (FrameIndex)
                                         {
@@ -2521,7 +2520,7 @@ namespace Client.MirObjects
                                                 break;
                                         }
                                     break;
-                                case Spell.BindingShot://ArcherSpells - BindingShot
+                                case Spell.BindingShot:
                                 case Spell.SummonVampire:
                                 case Spell.SummonToad:
                                 case Spell.SummonSnakes:
@@ -2541,7 +2540,7 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.DelayedExplosion://ArcherSpells - DelayedExplosion
+                                case Spell.DelayedExplosion:
                                     switch (FrameIndex)
                                     {
                                         case 5:
@@ -2558,9 +2557,9 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.VampireShot://ArcherSpells - VampireShot
-                                case Spell.PoisonShot://ArcherSpells - PoisonShot
-                                case Spell.CrippleShot://ArcherSpells - CrippleShot
+                                case Spell.VampireShot:
+                                case Spell.PoisonShot:
+                                case Spell.CrippleShot:
                                     MapObject ob = MapControl.GetObject(TargetID);
                                     Effect eff;
                                     int exFrameStart = 0;
@@ -3722,14 +3721,14 @@ namespace Client.MirObjects
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (CurrentEffect == SpellEffect.ElementalBarrierUp && !ElementalBarrier)//ArcherSpells - Elemental system
+            if (CurrentEffect == SpellEffect.ElementalBarrierUp && !ElementalBarrier)
             {
                 ElementalBarrier = true;
                 Effects.Add(ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 16, 3200, this) { Repeat = true });
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (ElementEffect > 0 && !HasElements)//ArcherSpells - Elemental system
+            if (ElementEffect > 0 && !HasElements)
             {
                 HasElements = true;
                 if (ElementEffect == 4)
@@ -3796,7 +3795,7 @@ namespace Client.MirObjects
             MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
         }
 
-        public void GetBackStepDistance(int magicLevel)//ArcherSpells - Backstep
+        public void GetBackStepDistance(int magicLevel)
         {
             JumpDistance = 0;
             if (InTrapRock) return;

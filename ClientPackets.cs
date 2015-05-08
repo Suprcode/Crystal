@@ -1325,7 +1325,7 @@ namespace ClientPackets
         }
     }
 
-    public sealed class SetConcentration : Packet//ArcherSpells - Elemental system
+    public sealed class SetConcentration : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.SetConcentration; } }
 

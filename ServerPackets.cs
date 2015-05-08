@@ -1648,8 +1648,8 @@ namespace ServerPackets
         public PoisonType Poison;
         public bool Hidden, Extra;
         public byte ExtraByte;
-        public long ShockTime;//ArcherSpells - BindingShot
-        public bool BindingShotCenter;////ArcherSpells - BindingShot
+        public long ShockTime;
+        public bool BindingShotCenter;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1666,8 +1666,8 @@ namespace ServerPackets
             Skeleton = reader.ReadBoolean();
             Poison = (PoisonType)reader.ReadByte();
             Hidden = reader.ReadBoolean();
-            ShockTime = reader.ReadInt64();//ArcherSpells - BindingShot
-            BindingShotCenter = reader.ReadBoolean();//ArcherSpells - BindingShot
+            ShockTime = reader.ReadInt64();
+            BindingShotCenter = reader.ReadBoolean();
             Extra = reader.ReadBoolean();
             ExtraByte = reader.ReadByte();
         }
@@ -1688,8 +1688,8 @@ namespace ServerPackets
             writer.Write(Skeleton);
             writer.Write((byte)Poison);
             writer.Write(Hidden);
-            writer.Write(ShockTime);//ArcherSpells - BindingShot
-            writer.Write(BindingShotCenter);//ArcherSpells - BindingShot
+            writer.Write(ShockTime);
+            writer.Write(BindingShotCenter);
             writer.Write(Extra);
             writer.Write((byte)ExtraByte);
         }
@@ -3131,7 +3131,7 @@ namespace ServerPackets
             writer.Write((byte)Direction);
         }
     }
-    public sealed class RemoveDelayedExplosion : Packet//ArcherSpells - DelayedExplosion
+    public sealed class RemoveDelayedExplosion : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.RemoveDelayedExplosion; } }
 
@@ -3920,7 +3920,7 @@ namespace ServerPackets
 
     }
 
-    public sealed class UserBackStep : Packet//ArcherSpells - Backstep
+    public sealed class UserBackStep : Packet
     {
         public override short Index
         {
@@ -3945,7 +3945,7 @@ namespace ServerPackets
         }
     }
 
-    public sealed class ObjectBackStep : Packet//ArcherSpells - Backstep
+    public sealed class ObjectBackStep : Packet
     {
         public override short Index
         {
@@ -4105,7 +4105,7 @@ namespace ServerPackets
         }
     }
 
-    public sealed class SetConcentration : Packet//ArcherSpells - Elemental system
+    public sealed class SetConcentration : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SetConcentration; } }
 
@@ -4126,7 +4126,7 @@ namespace ServerPackets
             writer.Write(Interrupted);
         }
     }
-    public sealed class SetObjectConcentration : Packet//ArcherSpells - Elemental system
+    public sealed class SetObjectConcentration : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SetObjectConcentration; } }
 
@@ -4147,7 +4147,7 @@ namespace ServerPackets
             writer.Write(Interrupted);
         }
     }
-    public sealed class SetElemental : Packet//ArcherSpells - Elemental system
+    public sealed class SetElemental : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SetElemental; } }
 
@@ -4174,7 +4174,7 @@ namespace ServerPackets
             writer.Write(ExpLast);
         }
     }
-    public sealed class SetObjectElemental : Packet//ArcherSpells - Elemental system
+    public sealed class SetObjectElemental : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SetObjectElemental; } }
 
@@ -4268,7 +4268,7 @@ namespace ServerPackets
         }
     }
 
-    public sealed class SetBindingShot : Packet//ArcherSpells - BindingShot
+    public sealed class SetBindingShot : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SetBindingShot; } }
 
@@ -4290,7 +4290,7 @@ namespace ServerPackets
         }
     }
 
-    public sealed class SendOutputMessage : Packet//ArcherSpells - BindingShot
+    public sealed class SendOutputMessage : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SendOutputMessage; } }
 

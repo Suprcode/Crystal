@@ -23,8 +23,8 @@ namespace Server.MirObjects
 
         public abstract string Name { get; set; }
 
-        public long ExplosionInflictedTime;//ArcherSpells - DelayedExplosion
-        public int ExplosionInflictedStage;//ArcherSpells - DelayedExplosion
+        public long ExplosionInflictedTime;
+        public int ExplosionInflictedStage;
 
         //Position
         private Map _currentMap;

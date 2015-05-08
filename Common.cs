@@ -3849,7 +3849,7 @@ public abstract class Packet
                 return new C.CancelReincarnation();
             case (short)ClientPacketIds.CombineItem:
                 return new C.CombineItem();
-            case (short)ClientPacketIds.SetConcentration://ArcherSpells - Elemental system
+            case (short)ClientPacketIds.SetConcentration:
                 return new C.SetConcentration();
 			case (short)ClientPacketIds.AwakeningNeedMaterials:
                 return new C.AwakeningNeedMaterials();
@@ -4208,9 +4208,9 @@ public abstract class Packet
                 return new S.CancelReincarnation();
             case (short)ServerPacketIds.RequestReincarnation:
                 return new S.RequestReincarnation();
-            case (short)ServerPacketIds.UserBackStep://ArcherSpells - Backstep
+            case (short)ServerPacketIds.UserBackStep:
                 return new S.UserBackStep();
-            case (short)ServerPacketIds.ObjectBackStep://ArcherSpells - Backstep
+            case (short)ServerPacketIds.ObjectBackStep:
                 return new S.ObjectBackStep();
             case (short)ServerPacketIds.UserDashAttack:
                 return new S.UserDashAttack();
@@ -4222,15 +4222,15 @@ public abstract class Packet
                 return new S.CombineItem();
             case (short)ServerPacketIds.ItemUpgraded:
                 return new S.ItemUpgraded();
-            case (short)ServerPacketIds.SetConcentration://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetConcentration:
                 return new S.SetConcentration();
-            case (short)ServerPacketIds.SetObjectConcentration://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetObjectConcentration:
                 return new S.SetObjectConcentration();
-            case (short)ServerPacketIds.SetElemental://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetElemental:
                 return new S.SetElemental();
-            case (short)ServerPacketIds.SetObjectElemental://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetObjectElemental:
                 return new S.SetObjectElemental();
-            case (short)ServerPacketIds.RemoveDelayedExplosion://ArcherSpells - DelayedExplosion
+            case (short)ServerPacketIds.RemoveDelayedExplosion:
                 return new S.RemoveDelayedExplosion();
             case (short)ServerPacketIds.ObjectDeco:
                 return new S.ObjectDeco();
@@ -4238,7 +4238,7 @@ public abstract class Packet
                 return new S.ObjectSneaking();
             case (short)ServerPacketIds.ObjectLevelEffects:
                 return new S.ObjectLevelEffects();
-            case (short)ServerPacketIds.SetBindingShot://ArcherSpells - BindingShot
+            case (short)ServerPacketIds.SetBindingShot:
                 return new S.SetBindingShot();
             case (short)ServerPacketIds.SendOutputMessage:
                 return new S.SendOutputMessage();
@@ -4269,13 +4269,14 @@ public abstract class Packet
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
 			case (short)ServerPacketIds.ResizeInventory:
-                return new S.ResizeInventory();            case (short)ServerPacketIds.NewIntelligentCreature://IntelligentCreature
+                return new S.ResizeInventory();            
+            case (short)ServerPacketIds.NewIntelligentCreature:
                 return new S.NewIntelligentCreature();
-            case (short)ServerPacketIds.UpdateIntelligentCreatureList://IntelligentCreature
+            case (short)ServerPacketIds.UpdateIntelligentCreatureList:
                 return new S.UpdateIntelligentCreatureList();
-            case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
+            case (short)ServerPacketIds.IntelligentCreatureEnableRename:
                 return new S.IntelligentCreatureEnableRename();
-            case (short)ServerPacketIds.NPCPearlGoods://pearl currency
+            case (short)ServerPacketIds.NPCPearlGoods:
                 return new S.NPCPearlGoods();
             default:
                 throw new NotImplementedException();

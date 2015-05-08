@@ -429,7 +429,7 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CombineItem:
                     CombineItem((C.CombineItem)p);
                     break;
-                case (short)ClientPacketIds.SetConcentration://ArcherSpells - Elemental system
+                case (short)ClientPacketIds.SetConcentration:
                     SetConcentration((C.SetConcentration)p);
                     break;
                 case (short)ClientPacketIds.AwakeningNeedMaterials:
@@ -1179,7 +1179,7 @@ namespace Server.MirNetwork
             Player.CombineItem(p.IDFrom, p.IDTo);
         }
 
-        private void SetConcentration(C.SetConcentration p)//ArcherSpells - Elemental system
+        private void SetConcentration(C.SetConcentration p)
         {
             if (Stage != GameStage.Game) return;
 

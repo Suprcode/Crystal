@@ -1045,7 +1045,7 @@ namespace Server.MirEnvir
 
                 case Spell.ThunderStorm:
                 case Spell.FlameField:
-                case Spell.NapalmShot://ArcherSpells - NapalmShot
+                case Spell.NapalmShot:
                     value = (int)data[2];
                     location = (Point)data[3];
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)
@@ -1673,7 +1673,7 @@ namespace Server.MirEnvir
                                             if (poison == PoisonType.Green)
                                                 tempValue = value / 15 + magic.Level + 1;
                                             if (poison != PoisonType.None)
-                                                target.ApplyPoison(new Poison { PType = poison, Duration = value + (magic.Level + 1) * 5, TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                                target.ApplyPoison(new Poison { PType = poison, Duration = value + ((magic.Level + 1) * 2), TickSpeed = 1000, Value = tempValue, Owner = player }, player);
                                             if (target.Race == ObjectType.Player)
                                             {
                                                 PlayerObject tempOb = (PlayerObject)target;

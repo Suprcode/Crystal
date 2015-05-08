@@ -679,7 +679,7 @@ namespace Client.MirObjects
                 case PoisonType.Paralysis:
                     DrawColour = Color.Gray;
                     break;
-                case PoisonType.DelayedExplosion://ArcherSpells - DelayedExplosion
+                case PoisonType.DelayedExplosion:
                     DrawColour = Color.Orange;
                     break;
             }
@@ -1026,7 +1026,7 @@ namespace Client.MirObjects
             return true;
         }
 
-        public void SetCurrentEffects()//ArcherSpells - BindingShot
+        public void SetCurrentEffects()
         {
             //BindingShot
             if (BindingShotCenter && ShockTime > CMain.Time)
