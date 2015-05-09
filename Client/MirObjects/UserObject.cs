@@ -151,6 +151,9 @@ namespace Client.MirObjects
             if (this == User && Light < 3) Light = 3;
             AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
             if (AttackSpeed < 550) AttackSpeed = 550;
+
+            PercentHealth = (byte)(HP / (float)MaxHP * 100);
+
             GameScene.Scene.Redraw();
         }
         private void RefreshLevelStats()
@@ -669,10 +672,10 @@ namespace Client.MirObjects
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
                         break;
                     case BuffType.HealthAid:
-                        HP = (ushort)Math.Min(ushort.MaxValue, HP + buff.Value);
+                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Value);
                         break;
                     case BuffType.ManaAid:
-                        MP = (ushort)Math.Min(ushort.MaxValue, MP + buff.Value);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Value);
                         break;
                     case BuffType.WonderShield:
                         MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Value);

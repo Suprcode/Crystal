@@ -230,12 +230,12 @@ namespace Server.MirObjects
 
             if (Luck > 0)
             {
-                if (Luck > Envir.Random.Next(10))
+                if (Luck > Envir.Random.Next(Settings.MaxLuck))
                     return max;
             }
             else if (Luck < 0)
             {
-                if (Luck < -Envir.Random.Next(10))
+                if (Luck < -Envir.Random.Next(Settings.MaxLuck))
                     return min;
             }
 
@@ -658,6 +658,29 @@ namespace Server.MirObjects
         public PoisonType PType;
         public int Value;
         public long Duration, Time, TickTime, TickSpeed;
+
+        public Poison() { }
+
+        public Poison(BinaryReader reader)
+        {
+            Owner = null;
+            PType = (PoisonType)reader.ReadByte();
+            Value = reader.ReadInt32();
+            Duration = reader.ReadInt64();
+            Time = reader.ReadInt64();
+            TickTime = reader.ReadInt64();
+            TickSpeed = reader.ReadInt64();
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write((byte)PType);
+            writer.Write(Value);
+            writer.Write(Duration);
+            writer.Write(Time);
+            writer.Write(TickTime);
+            writer.Write(TickSpeed);
+        }
     }
 
     public class Buff
@@ -671,17 +694,6 @@ namespace Server.MirObjects
         public bool Infinite;
 
         public Buff() { }
-
-        public Buff(Buff buff)
-        {
-            Type = buff.Type;
-            Caster = buff.Caster;
-            Visible = buff.Visible;
-            ObjectID = buff.ObjectID;
-            ExpireTime = buff.ExpireTime;
-            Value = buff.Value;
-            Infinite = buff.Infinite;
-        }
 
         public Buff(BinaryReader reader)
         {

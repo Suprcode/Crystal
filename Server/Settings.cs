@@ -164,7 +164,8 @@ namespace Server
                     HealthRegenWeight = 10,
                     MaxManaRegen = 8,
                     ManaRegenWeight = 10,
-                    MaxPoisonRecovery = 6;
+                    MaxPoisonRecovery = 6,
+                    MaxLuck = 10;
 
         public static Boolean PvpCanResistMagic = false,
                               PvpCanResistPoison = false,
@@ -175,8 +176,6 @@ namespace Server
         public static float Guild_ExpRate = 0.01f;
         public static uint Guild_WarCost = 3000;
         public static long Guild_WarTime = 180;
-
-        public static string Guild_NewbieName = "Newbie";
 
         public static List<ItemVolume> Guild_CreationCostList = new List<ItemVolume>();
         public static List<long> Guild_ExperienceList = new List<long>();
@@ -316,6 +315,7 @@ namespace Server
             MaxManaRegen = Reader.ReadByte("Items", "MaxManaRegen", MaxManaRegen);
             ManaRegenWeight = Reader.ReadByte("Items", "ManaRegenWeight", ManaRegenWeight);
             MaxPoisonRecovery = Reader.ReadByte("Items", "MaxPoisonRecovery", MaxPoisonRecovery);
+            MaxLuck = Reader.ReadByte("Items", "MaxLuck", MaxLuck);
 
             PvpCanResistMagic = Reader.ReadBoolean("Items","PvpCanResistMagic",PvpCanResistMagic);
             PvpCanResistPoison = Reader.ReadBoolean("Items", "PvpCanResistPoison", PvpCanResistPoison);
@@ -484,6 +484,8 @@ namespace Server
             Reader.Write("Items", "MaxManaRegen", MaxManaRegen);
             Reader.Write("Items", "ManaRegenWeight", ManaRegenWeight);
             Reader.Write("Items", "MaxPoisonRecovery", MaxPoisonRecovery);
+            Reader.Write("Items", "MaxLuck", MaxLuck);
+
             Reader.Write("Items", "PvpCanResistMagic", PvpCanResistMagic);
             Reader.Write("Items", "PvpCanResistPoison", PvpCanResistPoison);
             Reader.Write("Items", "PvpCanFreeze", PvpCanFreeze);
@@ -781,8 +783,6 @@ namespace Server
             Guild_WarTime = reader.ReadInt64("Guilds", "WarTime", Guild_WarTime);
             Guild_WarCost = reader.ReadUInt32("Guilds", "WarCost", Guild_WarCost);
 
-            Guild_NewbieName = reader.ReadString("Guilds", "NewbieName", Guild_NewbieName);
-
             int i = 0;
             while (reader.ReadUInt32("Required-" + i.ToString(),"Amount",0) != 0)
             {
@@ -831,8 +831,6 @@ namespace Server
             reader.Write("Guilds", "TotalBuffs", Guild_BuffList.Count);
             reader.Write("Guilds", "WarTime", Guild_WarTime);
             reader.Write("Guilds", "WarCost", Guild_WarCost);
-
-            reader.Write("Guilds", "NewbieName", Guild_NewbieName);
 
             int i = 0;
             for (i = 0; i < Guild_ExperienceList.Count; i++)

@@ -875,11 +875,11 @@ namespace Server.MirObjects
                 if (Dead) return;
 
                 Poison poison = PoisonList[i];
-                if (poison.Owner != null && poison.Owner.Node == null)
-                {
-                    PoisonList.RemoveAt(i);
-                    continue;
-                }
+                //if (poison.Owner != null && poison.Owner.Node == null)
+                //{
+                //    PoisonList.RemoveAt(i);
+                //    continue;
+                //}
 
                 if (Envir.Time > poison.TickTime)
                 {
@@ -904,8 +904,7 @@ namespace Server.MirObjects
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
-                        if (EXPOwner != null && Functions.InRange(EXPOwner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
-                            ChangeHP(-poison.Value);
+                        ChangeHP(-poison.Value);
                             
                         RegenTime = Envir.Time + RegenDelay;
                     }
@@ -977,7 +976,7 @@ namespace Server.MirObjects
             if (ExplosionInflictedStage == 2)
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
-                if (poison.Owner != null && Functions.InRange(poison.Owner.CurrentLocation, CurrentLocation, Globals.DataRange * 2))
+                if (poison.Owner != null)
                 {
                     switch (poison.Owner.Race)
                     {
@@ -1045,8 +1044,10 @@ namespace Server.MirObjects
         {
             if (Envir.Time < SearchTime) return;
             if (Master != null && (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)) return;
-
+            
             SearchTime = Envir.Time + SearchDelay;
+
+            //if (CurrentMap.Players.Count < 1) return;
 
             //Stacking or Infront of master - Move
             bool stacking = false;
@@ -1150,6 +1151,8 @@ namespace Server.MirObjects
         }
         protected virtual void FindTarget()
         {
+            //if (CurrentMap.Players.Count < 1) return;
+
             for (int d = 0; d <= Info.ViewRange; d++)
             {
                 for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)

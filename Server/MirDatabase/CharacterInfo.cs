@@ -65,6 +65,7 @@ namespace Server.MirDatabase
         public List<UserMagic> Magics = new List<UserMagic>();
         public List<PetInfo> Pets = new List<PetInfo>();
         public List<Buff> Buffs = new List<Buff>();
+        public List<Poison> Poisons = new List<Poison>();
         public List<MailInfo> Mail = new List<MailInfo>();
         public List<FriendInfo> Friends = new List<FriendInfo>();
 
@@ -228,7 +229,16 @@ namespace Server.MirDatabase
             {
                 count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
-                    Buffs.Add(new Buff(reader));
+                {
+                    Buff buff = new Buff(reader);
+
+                    if (Envir.LoadVersion > 50)
+                    {
+                        buff.Caster = SMain.Envir.GetObject(reader.ReadUInt32());
+                    }
+
+                    Buffs.Add(buff);
+                }
             }
 
             if(Envir.LoadVersion > 43)
@@ -263,6 +273,22 @@ namespace Server.MirDatabase
                 count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
                     CompletedQuests.Add(reader.ReadInt32());
+            }
+
+            if (Envir.LoadVersion > 50)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                {
+                    Poison poison = new Poison(reader);
+
+                    if (Envir.LoadVersion > 50)
+                    {
+                        poison.Owner = SMain.Envir.GetObject(reader.ReadUInt32());
+                    }
+
+                    Poisons.Add(poison);
+                }
             }
         }
 
@@ -362,6 +388,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < Buffs.Count; i++)
             {
                 Buffs[i].Save(writer);
+                writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
             }
 
             writer.Write(Mail.Count);
@@ -377,6 +404,13 @@ namespace Server.MirDatabase
             writer.Write(CompletedQuests.Count);
             for (int i = 0; i < CompletedQuests.Count; i++)
                 writer.Write(CompletedQuests[i]);
+
+            writer.Write(Poisons.Count);
+            for (int i = 0; i < Poisons.Count; i++)
+            {
+                Poisons[i].Save(writer);
+                writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
+            }
         }
 
         public ListViewItem CreateListView()

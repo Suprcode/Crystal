@@ -889,6 +889,7 @@ public enum SpellEffect : byte
 public enum BuffType : byte
 {
     None,
+
     Teleport,
     Hiding,
     Haste,
@@ -903,25 +904,27 @@ public enum BuffType : byte
     Curse,
     MoonLight,
     DarkBody,
+    Concentration,
+    VampireShot,
+    PoisonShot,
+    CounterAttack,
+    MentalState,
+
     General,
     Exp,
     Drop,
     Gold,
-    Concentration,
+    BagWeight,
+    GameMaster,
+
     Impact,
     Magic,
     Taoist,
     Storm,
     HealthAid,
     ManaAid,
-    VampireShot,
-    PoisonShot,
-    CounterAttack,
-    MentalState,
     WonderShield,
     MagicWonderShield,
-    BagWeight,
-    GameMaster,
 }
 
 public enum DefenceType : byte
