@@ -134,15 +134,21 @@ namespace Server.MirObjects
                 case 59:
                     return new HumanAssassin(info);
                 case 60:
-                    return new VampireSpider(info);//SummonVampire
+                    return new VampireSpider(info);
                 case 61:
-                    return new SpittingToad(info);//SummonToad
+                    return new SpittingToad(info);
                 case 62:
-                    return new SnakeTotem(info);//SummonSnakes Totem
+                    return new SnakeTotem(info);
                 case 63:
-                    return new CharmedSnake(info);//SummonSnakes
+                    return new CharmedSnake(info);
                 case 64:
-                    return new IntelligentCreatureObject(info);//IntelligentCreature
+                    return new IntelligentCreatureObject(info);
+                case 65:
+                    return new MutatedManworm(info);
+                case 66:
+                    return new CrazyManworm(info);
+                case 67:
+                    return new DarkDevourer(info);
                 default:
                     return new MonsterObject(info);
             }
@@ -868,7 +874,8 @@ namespace Server.MirObjects
         protected virtual void ProcessPoison()
         {
             PoisonType type = PoisonType.None;
-            PoisonRate = 1F;
+            ArmourRate = 1F;
+            DamageRate = 1F;
 
             for (int i = PoisonList.Count - 1; i >= 0; i--)
             {
@@ -929,10 +936,10 @@ namespace Server.MirObjects
                 switch (poison.PType)
                 {
                     case PoisonType.Red:
-                        PoisonRate -= 0.5F;
+                        ArmourRate -= 0.5F;
                         break;
                     case PoisonType.Stun:
-                        PoisonRate -= 0.5F;
+                        DamageRate += 0.5F;
                         break;
                     case PoisonType.Slow:
                         MoveSpeed += 100;
@@ -1377,6 +1384,7 @@ namespace Server.MirObjects
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(MinDC, MaxDC);
+
             if (damage == 0) return;
 
             Target.Attacked(this, damage);
@@ -1708,7 +1716,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int) (armour*PoisonRate);
+            armour = (int) (armour * ArmourRate);
+            damage = (int) (damage * DamageRate);
 
             if (damageWeapon)
                 attacker.DamageWeapon();
@@ -1812,7 +1821,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * PoisonRate);
+            armour = (int)(armour * ArmourRate);
+            damage = (int)(damage * DamageRate);
 
             if (armour >= damage) return 0;
 
@@ -1869,7 +1879,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * PoisonRate);
+            armour = (int)(armour * ArmourRate);
+            damage = (int)(damage * DamageRate);
 
             if (armour >= damage) return 0;
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });

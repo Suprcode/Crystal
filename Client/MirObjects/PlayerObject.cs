@@ -3324,65 +3324,73 @@ namespace Client.MirObjects
         {
             int x = CurrentLocation.X - CurrentLocation.X % 2;
             int y = CurrentLocation.Y - CurrentLocation.Y % 2;
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
-            int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex > 199) return; //prevents any move sounds on non mir2 maps atm
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex > 199) return; //prevents any move sounds on non mir2 maps atm
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 199) return; //prevents any move sounds on non mir2 maps atm
+
             int moveSound;
 
-            if ((index >= 330 && index <= 349) || (index >= 450 && index <= 454) || (index >= 550 && index <= 554) ||
-                (index >= 750 &&
-                index <= 754) || (index >= 950 && index <= 954) || (index >= 1250 && index <= 1254) ||
-                (index >= 1400 && index <= 1424) || (index >= 1455 && index <= 1474) || (index >= 1500 && index <= 1524) ||
-                (index >= 1550 && index <= 1574))
-                moveSound = SoundList.WalkLawnL;
-            else if ((index >= 250 && index <= 254) || (index >= 1005 && index <= 1009) || (index >= 1050 && index <= 1054) ||
-                (index >= 1060 && index <= 1064) || (index >= 1450 && index <= 1454) || (index >= 1650 && index <= 1654))
-                moveSound = SoundList.WalkRoughL;
-            else if ((index >= 605 && index <= 609) || (index >= 650 && index <= 654) || (index >= 660 && index <= 664) ||
-                (index >= 2000 && index <= 2049) || (index >= 3025 && index <= 3049) || (index >= 2400 && index <= 2424) ||
-                (index >= 4625 && index <= 4649) || (index >= 4675 && index <= 4678))
-                moveSound = SoundList.WalkStoneL;
-            else if ((index >= 1825 && index <= 1924) || (index >= 2150 && index <= 2174) || (index >= 3075 && index <= 3099) ||
-                (index >= 3325 && index <= 3349) || (index >= 3375 && index <= 3399))
-                moveSound = SoundList.WalkCaveL;
-            else if (index == 3230 || index == 3231 || index == 3246 || index == 3277 || (index >= 3780 && index <= 3799))
-                moveSound = SoundList.WalkWoodL;
-            else if (index >= 3825 && index <= 4434)
-                switch (index % 25)
-                {
-                    case 0:
-                        moveSound = SoundList.WalkWoodL;
-                        break;
-                    default:
-                        moveSound = SoundList.WalkGroundL;
-                        break;
-                }
-            else if ((index >= 2075 && index <= 2099) || (index >= 2125 && index <= 2149))
-                moveSound = SoundList.WalkRoomL;
-            else if (index >= 1800 && index <= 1824)
-                moveSound = SoundList.WalkWaterL;
-            else moveSound = SoundList.WalkGroundL;
-
-            if ((index >= 825 && index <= 1349) && (index - 825) / 25 % 2 == 0) moveSound = SoundList.WalkStoneL;
-            if ((index >= 1375 && index <= 1799) && (index - 1375) / 25 % 2 == 0) moveSound = SoundList.WalkCaveL;
-            if (index == 1385 || index == 1386 || index == 1391 || index == 1392) moveSound = SoundList.WalkWoodL;
-
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x7FFF) - 1;
-            if (index >= 0 && index <= 115)
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99 && GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex < 199) //shanda tiles
+            {
                 moveSound = SoundList.WalkGroundL;
-            else if (index >= 120 && index <= 124)
-                moveSound = SoundList.WalkLawnL;
+            }
+            else //wemade tiles
+            {
+                int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
+                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
 
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
-            if ((index >= 221 && index <= 289) || (index >= 583 && index <= 658) || (index >= 1183 && index <= 1206) ||
-                (index >= 7163 && index <= 7295) || (index >= 7404 && index <= 7414))
-                moveSound = SoundList.WalkStoneL;
-            else if ((index >= 3125 && index <= 3267) || (index >= 3757 && index <= 3948) || (index >= 6030 && index <= 6999))
-                moveSound = SoundList.WalkWoodL;
-            if (index >= 3316 && index <= 3589)
-                moveSound = SoundList.WalkRoomL;
+                if ((index >= 330 && index <= 349) || (index >= 450 && index <= 454) || (index >= 550 && index <= 554) ||
+                    (index >= 750 && index <= 754) || (index >= 950 && index <= 954) || (index >= 1250 && index <= 1254) ||
+                    (index >= 1400 && index <= 1424) || (index >= 1455 && index <= 1474) || (index >= 1500 && index <= 1524) ||
+                    (index >= 1550 && index <= 1574))
+                    moveSound = SoundList.WalkLawnL;
+                else if ((index >= 250 && index <= 254) || (index >= 1005 && index <= 1009) || (index >= 1050 && index <= 1054) ||
+                    (index >= 1060 && index <= 1064) || (index >= 1450 && index <= 1454) || (index >= 1650 && index <= 1654))
+                    moveSound = SoundList.WalkRoughL;
+                else if ((index >= 605 && index <= 609) || (index >= 650 && index <= 654) || (index >= 660 && index <= 664) ||
+                    (index >= 2000 && index <= 2049) || (index >= 3025 && index <= 3049) || (index >= 2400 && index <= 2424) ||
+                    (index >= 4625 && index <= 4649) || (index >= 4675 && index <= 4678))
+                    moveSound = SoundList.WalkStoneL;
+                else if ((index >= 1825 && index <= 1924) || (index >= 2150 && index <= 2174) || (index >= 3075 && index <= 3099) ||
+                    (index >= 3325 && index <= 3349) || (index >= 3375 && index <= 3399))
+                    moveSound = SoundList.WalkCaveL;
+                else if (index == 3230 || index == 3231 || index == 3246 || index == 3277 || (index >= 3780 && index <= 3799))
+                    moveSound = SoundList.WalkWoodL;
+                else if (index >= 3825 && index <= 4434)
+                    switch (index % 25)
+                    {
+                        case 0:
+                            moveSound = SoundList.WalkWoodL;
+                            break;
+                        default:
+                            moveSound = SoundList.WalkGroundL;
+                            break;
+                    }
+                else if ((index >= 2075 && index <= 2099) || (index >= 2125 && index <= 2149))
+                    moveSound = SoundList.WalkRoomL;
+                else if (index >= 1800 && index <= 1824)
+                    moveSound = SoundList.WalkWaterL;
+                else moveSound = SoundList.WalkGroundL;
+
+                if ((index >= 825 && index <= 1349) && (index - 825) / 25 % 2 == 0) moveSound = SoundList.WalkStoneL;
+                if ((index >= 1375 && index <= 1799) && (index - 1375) / 25 % 2 == 0) moveSound = SoundList.WalkCaveL;
+                if (index == 1385 || index == 1386 || index == 1391 || index == 1392) moveSound = SoundList.WalkWoodL;
+
+                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x7FFF) - 1;
+                if (index >= 0 && index <= 115)
+                    moveSound = SoundList.WalkGroundL;
+                else if (index >= 120 && index <= 124)
+                    moveSound = SoundList.WalkLawnL;
+
+                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
+                if ((index >= 221 && index <= 289) || (index >= 583 && index <= 658) || (index >= 1183 && index <= 1206) ||
+                    (index >= 7163 && index <= 7295) || (index >= 7404 && index <= 7414))
+                    moveSound = SoundList.WalkStoneL;
+                else if ((index >= 3125 && index <= 3267) || (index >= 3757 && index <= 3948) || (index >= 6030 && index <= 6999))
+                    moveSound = SoundList.WalkWoodL;
+                if (index >= 3316 && index <= 3589)
+                    moveSound = SoundList.WalkRoomL;
+            }
 
             if (RidingMount) moveSound = SoundList.MountWalkL;
 

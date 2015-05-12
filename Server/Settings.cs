@@ -365,6 +365,7 @@ namespace Server
 			LoadAwakeAttribute();
             LoadFishing();
             LoadMail();
+            LoadGoods();
         }
         public static void Save()
         {

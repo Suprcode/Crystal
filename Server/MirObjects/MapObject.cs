@@ -165,7 +165,8 @@ namespace Server.MirObjects
         public virtual PetMode PMode { get; set; }
         public bool InSafeZone;
 
-        public float PoisonRate;
+        public float ArmourRate, DamageRate; //recieved not given
+
         public List<Poison> PoisonList = new List<Poison>();
         public PoisonType CurrentPoison = PoisonType.None;
         public List<DelayedAction> ActionList = new List<DelayedAction>();

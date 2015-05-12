@@ -389,7 +389,7 @@ namespace ServerPackets
 
         public string FileName = string.Empty;
         public string Title = string.Empty;
-        public ushort MiniMap, BigMap;
+        public ushort MiniMap, BigMap, Music;
         public LightSetting Lights;
         public bool Lightning, Fire;
         public byte MapDarkLight;
@@ -405,6 +405,7 @@ namespace ServerPackets
             if ((bools & 0x01) == 0x01) Lightning = true;
             if ((bools & 0x02) == 0x02) Fire = true;
             MapDarkLight = reader.ReadByte();
+            Music = reader.ReadUInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -419,6 +420,7 @@ namespace ServerPackets
             bools |= (byte)(Fire ? 0x02 : 0);
             writer.Write(bools);
             writer.Write(MapDarkLight);
+            writer.Write(Music);
         }
     }
     public sealed class UserInformation : Packet
@@ -2192,7 +2194,7 @@ namespace ServerPackets
 
         public string FileName = string.Empty;
         public string Title = string.Empty;
-        public ushort MiniMap, BigMap;
+        public ushort MiniMap, BigMap, Music;
         public LightSetting Lights;
         public Point Location;
         public MirDirection Direction;
@@ -2209,6 +2211,7 @@ namespace ServerPackets
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Direction = (MirDirection)reader.ReadByte();
             MapDarkLight = reader.ReadByte();
+            Music = reader.ReadUInt16();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2221,6 +2224,7 @@ namespace ServerPackets
             writer.Write(Location.Y);
             writer.Write((byte)Direction);
             writer.Write(MapDarkLight);
+            writer.Write(Music);
         }
     }
     public sealed class ObjectTeleportOut : Packet

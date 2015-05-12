@@ -46,7 +46,8 @@ namespace Server.MirObjects
             DisassembleKey = "[@DISASSEMBLE]",
             DowngradeKey = "[@DOWNGRADE]",
             ResetKey = "[@RESET]",
-            PearlBuyKey = "[@PEARLBUY]";//pearl currency
+            PearlBuyKey = "[@PEARLBUY]",
+            BuyUsedKey = "[@BUYUSED]";
 
 
         //public static Regex Regex = new Regex(@"[^\{\}]<.*?/(.*?)>");
@@ -824,13 +825,9 @@ namespace Server.MirObjects
             {
                 UsedGoods.Remove(goods);
 
-                List<UserItem> newGoodsList = new List<UserItem>();
-                newGoodsList.AddRange(Goods);
-                newGoodsList.AddRange(UsedGoods);
-
                 NeedSave = true;
 
-                player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = Info.PriceRate });
+                player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = Info.PriceRate });
             }
 
             if (isBuyBack)
@@ -859,21 +856,13 @@ namespace Server.MirObjects
             player.NPCSuccess = page.Check(player);
             player.NPCPage = page;
 
-            List<UserItem> allGoods = new List<UserItem>();
-
             switch (page.Key.ToUpper())
             {
                 case BuyKey:
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    for (int i = 0; i < UsedGoods.Count; i++)
-                        player.CheckItem(UsedGoods[i]);
-
-                    allGoods.AddRange(Goods);
-                    allGoods.AddRange(UsedGoods);
-
-                    player.Enqueue(new S.NPCGoods { List = allGoods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = Info.PriceRate });
                     break;
                 case SellKey:
                     player.Enqueue(new S.NPCSell());
@@ -882,13 +871,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    for (int i = 0; i < UsedGoods.Count; i++)
-                        player.CheckItem(UsedGoods[i]);
-
-                    allGoods.AddRange(Goods);
-                    allGoods.AddRange(UsedGoods);
-
-                    player.Enqueue(new S.NPCGoods { List = allGoods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = Info.PriceRate });
                     player.Enqueue(new S.NPCSell());
                     break;
                 case RepairKey:
@@ -910,6 +893,12 @@ namespace Server.MirObjects
                     }
 
                     player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = Info.PriceRate });
+                    break;
+                case BuyUsedKey:
+                    for (int i = 0; i < UsedGoods.Count; i++)
+                        player.CheckItem(UsedGoods[i]);
+
+                    player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = Info.PriceRate });
                     break;
                 case ConsignKey:
                     player.Enqueue(new S.NPCConsign());
@@ -986,8 +975,8 @@ namespace Server.MirObjects
                 case PearlBuyKey://pearl currency
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
-                    allGoods.AddRange(Goods);
-                    player.Enqueue(new S.NPCPearlGoods { List = allGoods, Rate = Info.PriceRate });
+
+                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = Info.PriceRate });
                     break;
             }
 

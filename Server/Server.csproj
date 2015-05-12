@@ -221,6 +221,8 @@
     <Compile Include="MirObjects\Monsters\BombSpider.cs" />
     <Compile Include="MirObjects\Monsters\BlackFoxman.cs" />
     <Compile Include="MirObjects\Monsters\CharmedSnake.cs" />
+    <Compile Include="MirObjects\Monsters\CrazyManworm.cs" />
+    <Compile Include="MirObjects\Monsters\DarkDevourer.cs" />
     <Compile Include="MirObjects\Monsters\HumanAssassin.cs" />
     <Compile Include="MirObjects\Monsters\HumanWizard.cs" />
     <Compile Include="MirObjects\Monsters\DragonStatue.cs" />
@@ -228,6 +230,7 @@
     <Compile Include="MirObjects\Monsters\EvilMir.cs" />
     <Compile Include="MirObjects\Monsters\HedgeKekTal.cs" />
     <Compile Include="MirObjects\Monsters\GreatFoxSpirit.cs" />
+    <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
     <Compile Include="MirObjects\Monsters\ThunderElement.cs" />

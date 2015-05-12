@@ -68,6 +68,23 @@ namespace Client
             }
         }
 
+        private static byte _musicVolume = 100;
+        public static byte MusicVolume
+        {
+            get { return _musicVolume; }
+            set
+            {
+                if (_musicVolume == value) return;
+
+                _musicVolume = (byte)(value > 100 ? 100 : value);
+
+                if (_volume == 0)
+                    SoundManager.MusicVol = -10000;
+                else
+                    SoundManager.MusicVol = (int)(-3000 + (3000 * (_musicVolume / 100M)));
+            }
+        }
+
         //Game
         public static string AccountID = "",
                              Password = "";
@@ -132,6 +149,7 @@ namespace Client
             //Sound
             Volume = Reader.ReadByte("Sound", "Volume", Volume);
             SoundOverLap = Reader.ReadInt32("Sound", "SoundOverLap", SoundOverLap);
+            MusicVolume = Reader.ReadByte("Sound", "Music", MusicVolume);
 
             //Game
             AccountID = Reader.ReadString("Game", "AccountID", AccountID);
@@ -179,6 +197,7 @@ namespace Client
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);
+            Reader.Write("Sound", "Music", MusicVolume);
 
             //Game
             Reader.Write("Game", "SkillMode", SkillMode);

@@ -23,6 +23,17 @@ namespace Client.MirSounds
             }
         }
 
+        private static int _musicVol;
+        public static int MusicVol
+        {
+            get { return _musicVol; }
+            set
+            {
+                if (_musicVol == value) return;
+                _musicVol = value;
+            }
+        }
+
         public static void Create()
         {
             if (Program.Form == null || Program.Form.IsDisposed) return;
@@ -99,6 +110,19 @@ namespace Client.MirSounds
             }
         }
 
+        public static void PlayMusic(int index, bool loop = false)
+        {
+            if (Device == null) return;
+
+
+            if (_musicVol <= -3000) return;
+
+
+            SoundLibrary Music = new SoundLibrary(index, index + ".wav", true);
+            Music.SetVolume(MusicVol);
+            Music.Play();
+        }
+
         static void AdjustAllVolumes()
         {
             for (int i = 0; i < Sounds.Count; i++)
@@ -111,6 +135,8 @@ namespace Client.MirSounds
     {
         public static int
             None = 0,
+            Music = 0,
+
             IntroMusic = 10146,
             SelectMusic = 10147,
             LoginEffect = 10100,

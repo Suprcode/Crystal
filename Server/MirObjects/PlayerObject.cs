@@ -863,7 +863,8 @@ namespace Server.MirObjects
         private void ProcessPoison()
         {
             PoisonType type = PoisonType.None;
-            PoisonRate = 1F;
+            ArmourRate = 1F;
+            DamageRate = 1F;
 
             for (int i = PoisonList.Count - 1; i >= 0; i--)
             {
@@ -921,10 +922,10 @@ namespace Server.MirObjects
                 switch (poison.PType)
                 {
                     case PoisonType.Red:
-                        PoisonRate -= 0.10F;
+                        ArmourRate -= 0.10F;
                         break;
                     case PoisonType.Stun:
-                        PoisonRate -= 0.20F;
+                        DamageRate += 0.20F;
                         break;
                 }
 
@@ -1857,7 +1858,8 @@ namespace Server.MirObjects
                 Lights = CurrentMap.Info.Light,
                 Location = CurrentLocation,
                 Direction = Direction,
-                MapDarkLight = CurrentMap.Info.MapDarkLight
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music
             });
 
             GetObjects();
@@ -1957,7 +1959,8 @@ namespace Server.MirObjects
                 BigMap = CurrentMap.Info.BigMap,
                 Lightning = CurrentMap.Info.Lightning,
                 Fire = CurrentMap.Info.Fire,
-                MapDarkLight = CurrentMap.Info.MapDarkLight
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music,
             });
         }
 
@@ -8093,7 +8096,8 @@ namespace Server.MirObjects
                 Lights = CurrentMap.Info.Light,
                 Location = CurrentLocation,
                 Direction = Direction,
-                MapDarkLight = CurrentMap.Info.MapDarkLight
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music
             });
 
             if (RidingMount) RefreshMount();
@@ -8134,7 +8138,8 @@ namespace Server.MirObjects
                 Lights = CurrentMap.Info.Light,
                 Location = CurrentLocation,
                 Direction = Direction,
-                MapDarkLight = CurrentMap.Info.MapDarkLight
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music
             });
 
             if (effects) Enqueue(new S.TeleportIn());
@@ -8441,7 +8446,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * PoisonRate);
+            armour = (int)(armour * ArmourRate);
+            damage = (int)(damage * DamageRate);
 
             if (damageWeapon)
                 attacker.DamageWeapon();
@@ -8575,7 +8581,8 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            armour = (int)(armour * PoisonRate);
+            armour = (int)(armour * ArmourRate);
+            damage = (int)(damage * DamageRate);
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
@@ -8643,7 +8650,9 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * PoisonRate);
+            armour = (int)(armour * ArmourRate);
+            damage = (int)(damage * DamageRate);
+
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
 
@@ -11194,7 +11203,12 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
-            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.BuyBackKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.PearlBuyKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (NPCPage == null || 
+                !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || 
+                String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) || 
+                String.Equals(NPCPage.Key, NPCObject.BuyBackKey, StringComparison.CurrentCultureIgnoreCase) || 
+                String.Equals(NPCPage.Key, NPCObject.BuyUsedKey, StringComparison.CurrentCultureIgnoreCase) || 
+                String.Equals(NPCPage.Key, NPCObject.PearlBuyKey, StringComparison.CurrentCultureIgnoreCase))) return;
 
             for (int i = 0; i < CurrentMap.NPCs.Count; i++)
             {
