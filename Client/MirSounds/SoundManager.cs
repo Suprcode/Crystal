@@ -11,6 +11,8 @@ namespace Client.MirSounds
         private static readonly List<SoundLibrary> Sounds = new List<SoundLibrary>();
         private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
 
+        public static SoundLibrary Music;
+
         private static int _vol;
         public static int Vol
         {
@@ -118,7 +120,7 @@ namespace Client.MirSounds
             if (_musicVol <= -3000) return;
 
 
-            SoundLibrary Music = new SoundLibrary(index, index + ".wav", true);
+            Music = new SoundLibrary(index, index + ".wav", true);
             Music.SetVolume(MusicVol);
             Music.Play();
         }

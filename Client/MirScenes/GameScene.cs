@@ -12450,9 +12450,12 @@ namespace Client.MirScenes
             if (SoundManager.MusicVol >= -100)
                 SoundManager.MusicVol = 0;
 
-            SoundManager.Device.Dispose();
-            SoundManager.Create();
-            SoundManager.PlayMusic(SoundList.Music, true);
+
+            //SoundManager.Device.Dispose();
+            //SoundManager.Create();
+            //SoundManager.PlayMusic(SoundList.Music, true);
+
+            SoundManager.Music.SetVolume(SoundManager.MusicVol);
         }
 
         private void MusicSoundBar_MouseMove(object sender, MouseEventArgs e)
