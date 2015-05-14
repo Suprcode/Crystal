@@ -1099,7 +1099,7 @@ namespace Server.MirObjects
                     if (weapon != null && weapon.Luck > (Settings.MaxLuck * -1) && Envir.Random.Next(4) == 0)
                     {
                         hitter.Info.Equipment[(byte)EquipmentSlot.Weapon].Luck -= 1;
-                        hitter.ReceiveChat(string.Format("Your weapon has been cursed.", Name), ChatType.System);
+                        hitter.ReceiveChat("Your weapon has been cursed.", ChatType.System);
                     }
 
                     LastHitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
