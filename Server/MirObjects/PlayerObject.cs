@@ -385,6 +385,7 @@ namespace Server.MirObjects
                 Buff buff = Buffs[i];
                 if (buff.Infinite) continue;
 
+                buff.Caster = null;
                 buff.ExpireTime -= Envir.Time;
 
                 Info.Buffs.Add(buff);
@@ -12985,8 +12986,6 @@ namespace Server.MirObjects
             GroupMembers = GroupInvitation.GroupMembers;
             GroupInvitation = null;
 
-            byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-
             for (int i = 0; i < GroupMembers.Count; i++)
             {
                 PlayerObject member = GroupMembers[i];
@@ -12995,6 +12994,8 @@ namespace Server.MirObjects
                 Enqueue(new S.AddMember { Name = member.Name });
 
                 if (CurrentMap != member.CurrentMap || !Functions.InRange(CurrentLocation, member.CurrentLocation, Globals.DataRange)) continue;
+
+                byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
 
                 member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
                 Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
