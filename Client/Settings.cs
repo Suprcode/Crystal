@@ -78,7 +78,7 @@ namespace Client
 
                 _musicVolume = (byte)(value > 100 ? 100 : value);
 
-                if (_volume == 0)
+                if (_musicVolume == 0)
                     SoundManager.MusicVol = -10000;
                 else
                     SoundManager.MusicVol = (int)(-3000 + (3000 * (_musicVolume / 100M)));
