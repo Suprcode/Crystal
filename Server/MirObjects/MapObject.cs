@@ -528,7 +528,7 @@ namespace Server.MirObjects
 
             if (Race == ObjectType.Player)
             {
-                if (GroupMembers != null) //Send pet HP to group
+                if (GroupMembers != null) //Send HP to group
                 {
                     for (int i = 0; i < GroupMembers.Count; i++)
                     {
@@ -556,6 +556,7 @@ namespace Server.MirObjects
                         PlayerObject member = player.GroupMembers[i];
 
                         if (player == member) continue;
+
                         if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
                         member.Enqueue(p);
                     }

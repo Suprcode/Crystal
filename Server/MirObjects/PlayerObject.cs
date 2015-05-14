@@ -12985,21 +12985,32 @@ namespace Server.MirObjects
             GroupMembers = GroupInvitation.GroupMembers;
             GroupInvitation = null;
 
+            byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
 
             for (int i = 0; i < GroupMembers.Count; i++)
             {
                 PlayerObject member = GroupMembers[i];
+
                 member.Enqueue(p);
                 Enqueue(new S.AddMember { Name = member.Name });
 
                 if (CurrentMap != member.CurrentMap || !Functions.InRange(CurrentLocation, member.CurrentLocation, Globals.DataRange)) continue;
 
-                byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-                member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = member.PercentHealth, Expire = time });
+                member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
                 Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
+
+                for (int j = 0; j < member.Pets.Count; j++)
+                {
+                    MonsterObject pet = member.Pets[j];
+
+                    Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
+                }
             }
 
             GroupMembers.Add(this);
+
+            for (int j = 0; j < Pets.Count; j++)
+                Pets[j].BroadcastHealthChange();
 
             Enqueue(p);
         }
