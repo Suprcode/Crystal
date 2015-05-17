@@ -1716,8 +1716,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int) (armour * ArmourRate);
-            damage = (int) (damage * DamageRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (damageWeapon)
                 attacker.DamageWeapon();
@@ -1821,8 +1821,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * ArmourRate);
-            damage = (int)(damage * DamageRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (armour >= damage) return 0;
 
@@ -1879,8 +1879,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * ArmourRate);
-            damage = (int)(damage * DamageRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (armour >= damage) return 0;
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });

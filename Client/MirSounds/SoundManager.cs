@@ -116,10 +116,6 @@ namespace Client.MirSounds
         {
             if (Device == null) return;
 
-
-            if (_musicVol <= -3000) return;
-
-
             Music = new SoundLibrary(index, index + ".wav", true);
             Music.SetVolume(MusicVol);
             Music.Play();

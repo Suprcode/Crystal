@@ -8447,8 +8447,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * ArmourRate);
-            damage = (int)(damage * DamageRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (damageWeapon)
                 attacker.DamageWeapon();
@@ -8582,8 +8582,8 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            armour = (int)(armour * ArmourRate);
-            damage = (int)(damage * DamageRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
@@ -8651,8 +8651,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * ArmourRate);
-            damage = (int)(damage * DamageRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
