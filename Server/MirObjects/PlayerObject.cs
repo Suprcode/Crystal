@@ -13942,8 +13942,8 @@ namespace Server.MirObjects
 
             byte flexibilityStat = 0;
             sbyte successStat = 0;
-            int nibbleMin = 0, nibbleMax = 0;
-            int failedAddSuccessMin = 0, failedAddSuccessMax = 0;
+            byte nibbleMin = 0, nibbleMax = 0;
+            byte failedAddSuccessMin = 0, failedAddSuccessMax = 0;
             FishingProgressMax = Settings.FishingAttempts;//30;
 
             if (rod == null || (rod.Info.Shape != 49 && rod.Info.Shape != 50) || rod.CurrentDura <= 0)
@@ -13992,8 +13992,8 @@ namespace Server.MirObjects
                         break;
                     case ItemType.Float:
                         {
-                            nibbleMin = (int)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, nibbleMin + realItem.MinAC)));
-                            nibbleMax = (int)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, nibbleMax + realItem.MaxAC)));
+                            nibbleMin = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, nibbleMin + realItem.MinAC)));
+                            nibbleMax = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, nibbleMax + realItem.MaxAC)));
                         }
                         break;
                     case ItemType.Bait:
@@ -14003,8 +14003,8 @@ namespace Server.MirObjects
                         break;
                     case ItemType.Finder:
                         {
-                            failedAddSuccessMin = (int)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, failedAddSuccessMin + realItem.MinAC)));
-                            failedAddSuccessMax = (int)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, failedAddSuccessMax + realItem.MaxAC)));
+                            failedAddSuccessMin = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, failedAddSuccessMin + realItem.MinAC)));
+                            failedAddSuccessMax = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, failedAddSuccessMax + realItem.MaxAC)));
                         }
                         break;
                     case ItemType.Reel:
@@ -14237,7 +14237,7 @@ namespace Server.MirObjects
                 {
                     uint count = carryItem.Count;
 
-                    while (count > 1)
+                    while (count > 0)
                     {
                         UserItem item = SMain.Envir.CreateFreshItem(carryItem.Item);
 

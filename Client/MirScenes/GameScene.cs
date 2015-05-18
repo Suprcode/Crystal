@@ -7580,7 +7580,8 @@ namespace Client.MirScenes
                     byte animation;
                     bool blend;
                     Size s;
-                    #region draw shanda's tile animation layer
+
+                    #region Draw shanda's tile animation layer
                     index = M2CellInfo[x, y].TileAnimationImage;
                     animation = M2CellInfo[x, y].TileAnimationFrames;
                     if ((index > 0) & (animation > 0))
@@ -7592,10 +7593,10 @@ namespace Client.MirScenes
                     }
 
                     #endregion
-                    #region draw mir3 middle layer
+
+                    #region Draw mir3 middle layer
                     if ((M2CellInfo[x, y].MiddleIndex > 199) && (M2CellInfo[x, y].MiddleIndex != -1))
                     {
-
                         index = M2CellInfo[x, y].MiddleImage - 1;
                         if (index > 0)
                         {
@@ -7623,7 +7624,7 @@ namespace Client.MirScenes
                     }
                     #endregion
 
-                    #region draw front layer
+                    #region Draw front layer
                     index = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
 
                     if (index < 0) continue;
@@ -7673,6 +7674,7 @@ namespace Client.MirScenes
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(0.4F);
 
+            //MapObject.User.DrawMount();
             MapObject.User.DrawBody();
             MapObject.User.DrawHead();
             MapObject.User.DrawWings();
@@ -7685,19 +7687,15 @@ namespace Client.MirScenes
             if (MapObject.TargetObject != null)
                 MapObject.TargetObject.DrawBlend();
 
-            if (Settings.NameView)
-            {
-                for (int i = 0; i < Objects.Count; i++)
-                {
-                    if (Objects[i] is ItemObject || Objects[i].Dead) continue; // || (Objects[i].ObjectID != User.ObjectID)
-                    Objects[i].DrawName();
-                }
-            }
-
             for (int i = 0; i < Objects.Count; i++)
             {
+                if (Settings.Effect)
+                    Objects[i].DrawEffects();
+
+                if(Settings.NameView && !(Objects[i] is ItemObject) && !Objects[i].Dead)
+                    Objects[i].DrawName();
+
                 Objects[i].DrawChat();
-                if (Settings.Effect) Objects[i].DrawEffects();
                 Objects[i].DrawHealth();
             }
 
@@ -7705,7 +7703,6 @@ namespace Client.MirScenes
 
             for (int i = Effects.Count - 1; i >= 0; i--)
                 Effects[i].Draw();
-
         }
 
         private void DrawLights(LightSetting setting)
@@ -7718,7 +7715,6 @@ namespace Client.MirScenes
                 _lightTexture.Disposing += FloorTexture_Disposing;
                 _lightSurface = _lightTexture.GetSurfaceLevel(0);
             }
-
 
             Surface oldSurface = DXManager.CurrentSurface;
             DXManager.SetSurface(_lightSurface);
@@ -7748,7 +7744,6 @@ namespace Client.MirScenes
             Point p;
             DXManager.SetBlend(true);
             DXManager.Device.RenderState.SourceBlend = Blend.SourceAlpha;
-
 
             for (int i = 0; i < Objects.Count; i++)
             {
@@ -7806,10 +7801,8 @@ namespace Client.MirScenes
 
                     p = effect.DrawLocation;
 
-
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
-                        //   p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - 68);
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
                         DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
                     }
@@ -7848,7 +7841,7 @@ namespace Client.MirScenes
                     int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
                     if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
                     Color lightIntensity = Color.FromArgb(255, 255, 255, 255);  //Color lightIntensity = Color.FromArgb(255, 97, 200, 200); -- this colour matches mir3
-                    //this code would look great on chronicles shanda mir2 maps (give a blue glow to blue town lights), but it'll also give blue glow to mir3 maps
+                    //this code would look great on shanda mir2 maps (give a blue glow to blue town lights), but it'll also give blue glow to mir3 maps
                     //if (M2CellInfo[x, y].Light == 4) 
                     //    lightIntensity = Color.FromArgb(255, 100,100,200);
                     light = M2CellInfo[x, y].Light * 3;
@@ -7872,6 +7865,7 @@ namespace Client.MirScenes
                     }
                 }
             }
+
             DXManager.SetBlend(false);
             DXManager.SetSurface(oldSurface);
 
@@ -7881,9 +7875,6 @@ namespace Client.MirScenes
             DXManager.Sprite.Draw2D(_lightTexture, PointF.Empty, 0, PointF.Empty, Color.White);
             DXManager.Sprite.End();
             DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
-
-
-
         }
 
         private static void OnMouseClick(object sender, EventArgs e)

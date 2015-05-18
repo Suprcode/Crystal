@@ -3604,16 +3604,16 @@ namespace Client.MirObjects
             float oldOpacity = DXManager.Opacity;
             if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
 
-            if (Settings.Effect) DrawBehindEffects();
-
-            if (RidingMount)
+            if (Settings.Effect)
             {
-                DrawMount();
+                DrawBehindEffects();
             }
+
+            DrawMount();
 
             if (!RidingMount)
             {
-                if ((Direction == MirDirection.Left || Direction == MirDirection.Up || Direction == MirDirection.UpLeft || Direction == MirDirection.DownLeft))
+                if (Direction == MirDirection.Left || Direction == MirDirection.Up || Direction == MirDirection.UpLeft || Direction == MirDirection.DownLeft)
                     DrawWeapon();
                 else
                     DrawWeapon2();
@@ -3623,22 +3623,22 @@ namespace Client.MirObjects
 
             DrawHead();
 
-            if (this != User) DrawWings();
-
-            if (this != User) DrawCurrentEffects();
+            if (this != User)
+            {
+                DrawWings();
+                DrawCurrentEffects();
+            }
 
             if (!RidingMount)
             {
-                if ((Direction == MirDirection.UpRight || Direction == MirDirection.Right || Direction == MirDirection.DownRight || Direction == MirDirection.Down))
+                if (Direction == MirDirection.UpRight || Direction == MirDirection.Right || Direction == MirDirection.DownRight || Direction == MirDirection.Down)
                     DrawWeapon();
                 else
                     DrawWeapon2();
 
-                if ((Class == MirClass.Archer && HasClassWeapon))
+                if (Class == MirClass.Archer && HasClassWeapon)
                     DrawWeapon2();
             }
-
-           // if (this != User && Settings.Effect) DrawEffects();
 
             DXManager.SetOpacity(oldOpacity);
         }
@@ -3647,12 +3647,8 @@ namespace Client.MirObjects
         {
             for (int i = 0; i < Effects.Count; i++)
             {
-                if (!Effects[i].DrawBehind) continue;
-
-                if (Effects[i] is SpecialEffect)
-                {
-                    if(((SpecialEffect)Effects[i]).EffectType == 1 && !Settings.LevelEffect) continue;
-                }
+                if (Hidden || !Effects[i].DrawBehind) continue;
+                if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
 
                 Effects[i].Draw();
             }
@@ -3662,12 +3658,8 @@ namespace Client.MirObjects
         {
             for (int i = 0; i < Effects.Count; i++)
             {
-                if (Effects[i].DrawBehind) continue;
-
-                if (Effects[i] is SpecialEffect)
-                {
-                    if (((SpecialEffect)Effects[i]).EffectType == 1 && !Settings.LevelEffect) continue;
-                }
+                if (Hidden || Effects[i].DrawBehind) continue;
+                if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
 
                 Effects[i].Draw();
             }
@@ -3763,10 +3755,9 @@ namespace Client.MirObjects
         public void DrawBody()
         {
             if (BodyLibrary != null)
-            {
                 BodyLibrary.Draw(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, true);
-                //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
-            }
+
+            //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
         }
         public void DrawHead()
         {
@@ -3800,7 +3791,8 @@ namespace Client.MirObjects
         {
             if (MountType < 0 || !RidingMount) return;
 
-            MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
+            if (MountLibrary != null)
+                MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
         }
 
         public void GetBackStepDistance(int magicLevel)
