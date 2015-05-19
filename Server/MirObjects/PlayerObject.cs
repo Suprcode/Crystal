@@ -9706,18 +9706,31 @@ namespace Server.MirObjects
             Enqueue(p);
             Enqueue(new S.SplitItem { Item = temp, Grid = grid });
 
-            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll))
+            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || temp.Info.Type == ItemType.Amulet))
             {
-                for (int i = 40; i < array.Length; i++)
+                if (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll)
                 {
-                    if (array[i] != null) continue;
-                    array[i] = temp;
-                    RefreshBagWeight();
-                    return;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (array[i] != null) continue;
+                        array[i] = temp;
+                        RefreshBagWeight();
+                        return;
+                    }
+                }
+                else if (temp.Info.Type == ItemType.Amulet)
+                {
+                    for (int i = 4; i < 6; i++)
+                    {
+                        if (array[i] != null) continue;
+                        array[i] = temp;
+                        RefreshBagWeight();
+                        return;
+                    }
                 }
             }
 
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 6; i < array.Length; i++)
             {
                 if (array[i] != null) continue;
                 array[i] = temp;
@@ -9725,6 +9738,7 @@ namespace Server.MirObjects
                 return;
             }
         }
+
         public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
         {
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };

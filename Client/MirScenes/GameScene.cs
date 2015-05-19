@@ -2018,18 +2018,31 @@ namespace Client.MirScenes
                     return;
             }
 
-            if (p.Grid == MirGridType.Inventory && (p.Item.Info.Type == ItemType.Potion || p.Item.Info.Type == ItemType.Scroll))
+            if (p.Grid == MirGridType.Inventory && (p.Item.Info.Type == ItemType.Potion || p.Item.Info.Type == ItemType.Scroll || p.Item.Info.Type == ItemType.Amulet))
             {
-                for (int i = 0; i < GameScene.User.BeltIdx; i++)
+                if (p.Item.Info.Type == ItemType.Potion || p.Item.Info.Type == ItemType.Scroll)
                 {
-                    if (array[i] != null) continue;
-                    array[i] = p.Item;
-                    User.RefreshStats();
-                    return;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (array[i] != null) continue;
+                        array[i] = p.Item;
+                        User.RefreshStats();
+                        return;
+                    }
+                }
+                else if (p.Item.Info.Type == ItemType.Amulet)
+                {
+                    for (int i = 4; i < GameScene.User.BeltIdx; i++)
+                    {
+                        if (array[i] != null) continue;
+                        array[i] = p.Item;
+                        User.RefreshStats();
+                        return;
+                    }
                 }
             }
 
-            for (int i = 0; i < array.Length; i++)
+            for (int i = GameScene.User.BeltIdx; i < array.Length; i++)
             {
                 if (array[i] != null) continue;
                 array[i] = p.Item;
@@ -7692,7 +7705,7 @@ namespace Client.MirScenes
                 if (Settings.Effect)
                     Objects[i].DrawEffects();
 
-                if(Settings.NameView && !(Objects[i] is ItemObject) && !Objects[i].Dead)
+                if (Settings.NameView && !(Objects[i] is ItemObject) && !Objects[i].Dead)
                     Objects[i].DrawName();
 
                 Objects[i].DrawChat();
