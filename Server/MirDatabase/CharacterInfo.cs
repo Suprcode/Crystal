@@ -466,6 +466,8 @@ namespace Server.MirDatabase
         public uint HP, Experience;
         public byte Level, MaxPetLevel;
 
+        public long Time;
+
         public PetInfo(MonsterObject ob)
         {
             MonsterIndex = ob.Info.Index;
@@ -569,7 +571,6 @@ namespace Server.MirDatabase
         }
     }
 
-    //IntelligentCreature
     public class IntelligentCreatureInfo
     {
         public static List<IntelligentCreatureInfo> Creatures = new List<IntelligentCreatureInfo>();

@@ -373,7 +373,7 @@ namespace Server.MirObjects
 
                 if (!pet.Dead)
                 {
-                    Info.Pets.Add(new PetInfo(pet));
+                    Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
                     pet.CurrentMap.RemoveObject(pet);
                     pet.Despawn();
                 }
@@ -1732,6 +1732,7 @@ namespace Server.MirObjects
             for (int i = 0; i < Info.Pets.Count; i++)
             {
                 PetInfo info = Info.Pets[i];
+
                 MonsterObject monster = MonsterObject.GetMonster(Envir.GetMonsterInfo(info.MonsterIndex));
 
                 monster.PetLevel = info.Level;
@@ -1746,6 +1747,11 @@ namespace Server.MirObjects
                     monster.Spawn(CurrentMap, CurrentLocation);
 
                 monster.SetHP(info.HP);
+
+                if (!Settings.PetSave)
+                {
+                    if (info.Time < 1 || (Envir.Time > info.Time + (Settings.PetTimeOut * Settings.Minute))) monster.Die();
+                }
             }
 
             Info.Pets.Clear();
