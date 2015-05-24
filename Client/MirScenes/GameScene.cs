@@ -115,7 +115,7 @@ namespace Client.MirScenes
         public static MirItemCell SelectedCell;
 
         public static bool PickedUpGold;
-        public MirControl ItemLabel;
+        public MirControl ItemLabel, MailLabel;
         public static long UseItemTime, PickUpTime;
         public static uint Gold;
         public static long InspectTime;
@@ -797,6 +797,19 @@ namespace Client.MirScenes
                 ItemLabel.Location = new Point(x, y);
             }
 
+            if (MailLabel != null && !MailLabel.IsDisposed)
+            {
+                MailLabel.BringToFront();
+
+                int x = CMain.MPoint.X + 15, y = CMain.MPoint.Y;
+                if (x + MailLabel.Size.Width > Settings.ScreenWidth)
+                    x = Settings.ScreenWidth - MailLabel.Size.Width;
+
+                if (y + MailLabel.Size.Height > Settings.ScreenHeight)
+                    y = Settings.ScreenHeight - MailLabel.Size.Height;
+                MailLabel.Location = new Point(x, y);
+            }
+
             if (!User.Dead) ShowReviveMessage = false;
 
             if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
@@ -1271,10 +1284,10 @@ namespace Client.MirScenes
                     if (!User.Dead) return;
                     RequestReincarnation();
                     break;
-                case (short)ServerPacketIds.UserBackStep://ArcherSpells - Backstep
+                case (short)ServerPacketIds.UserBackStep:
                     UserBackStep((S.UserBackStep)p);
                     break;
-                case (short)ServerPacketIds.ObjectBackStep://ArcherSpells - Backstep
+                case (short)ServerPacketIds.ObjectBackStep:
                     ObjectBackStep((S.ObjectBackStep)p);
                     break;
                 case (short)ServerPacketIds.UserDashAttack:
@@ -1292,19 +1305,19 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ItemUpgraded:
                     ItemUpgraded((S.ItemUpgraded)p);
                     break;
-                case (short)ServerPacketIds.SetConcentration://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetConcentration:
                     SetConcentration((S.SetConcentration)p);
                     break;
-                case (short)ServerPacketIds.SetObjectConcentration://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetObjectConcentration:
                     SetObjectConcentration((S.SetObjectConcentration)p);
                     break;
-                case (short)ServerPacketIds.SetElemental://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetElemental:
                     SetElemental((S.SetElemental)p);
                     break;
-                case (short)ServerPacketIds.SetObjectElemental://ArcherSpells - Elemental system
+                case (short)ServerPacketIds.SetObjectElemental:
                     SetObjectElemental((S.SetObjectElemental)p);
                     break;
-                case (short)ServerPacketIds.RemoveDelayedExplosion://ArcherSpells - DelayedExplosion
+                case (short)ServerPacketIds.RemoveDelayedExplosion:
                     RemoveDelayedExplosion((S.RemoveDelayedExplosion)p);
                     break;
                 case (short)ServerPacketIds.ObjectDeco:
@@ -1316,10 +1329,10 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectLevelEffects:
                     ObjectLevelEffects((S.ObjectLevelEffects)p);
                     break;
-                case (short)ServerPacketIds.SetBindingShot://ArcherSpells - BindingShot
+                case (short)ServerPacketIds.SetBindingShot:
                     SetBindingShot((S.SetBindingShot)p);
                     break;
-                case (short)ServerPacketIds.SendOutputMessage://ArcherSpells - BindingShot
+                case (short)ServerPacketIds.SendOutputMessage:
                     SendOutputMessage((S.SendOutputMessage)p);
                     break;
                 case (short)ServerPacketIds.NPCAwakening:
@@ -1389,7 +1402,6 @@ namespace Client.MirScenes
 
             MLibrary buffLibrary = Libraries.BuffIcon;
 
-            //ArcherSpells - VampireShot,PoisonShot
             if (buffImage >= 20000)
             {
                 buffImage -= 20000;
@@ -1567,7 +1579,7 @@ namespace Client.MirScenes
         {
             if (MapControl != null && !MapControl.IsDisposed)
                 MapControl.Dispose();
-            MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight };
+            MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight, Music = p.Music };
             MapControl.LoadMap();
             InsertControl(0, MapControl);
         }
@@ -2008,18 +2020,31 @@ namespace Client.MirScenes
                     return;
             }
 
-            if (p.Grid == MirGridType.Inventory && (p.Item.Info.Type == ItemType.Potion || p.Item.Info.Type == ItemType.Scroll))
+            if (p.Grid == MirGridType.Inventory && (p.Item.Info.Type == ItemType.Potion || p.Item.Info.Type == ItemType.Scroll || p.Item.Info.Type == ItemType.Amulet))
             {
-                for (int i = 0; i < GameScene.User.BeltIdx; i++)
+                if (p.Item.Info.Type == ItemType.Potion || p.Item.Info.Type == ItemType.Scroll)
                 {
-                    if (array[i] != null) continue;
-                    array[i] = p.Item;
-                    User.RefreshStats();
-                    return;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (array[i] != null) continue;
+                        array[i] = p.Item;
+                        User.RefreshStats();
+                        return;
+                    }
+                }
+                else if (p.Item.Info.Type == ItemType.Amulet)
+                {
+                    for (int i = 4; i < GameScene.User.BeltIdx; i++)
+                    {
+                        if (array[i] != null) continue;
+                        array[i] = p.Item;
+                        User.RefreshStats();
+                        return;
+                    }
                 }
             }
 
-            for (int i = 0; i < array.Length; i++)
+            for (int i = GameScene.User.BeltIdx; i < array.Length; i++)
             {
                 if (array[i] != null) continue;
                 array[i] = p.Item;
@@ -2775,6 +2800,7 @@ namespace Client.MirScenes
             MapControl.BigMap = p.BigMap;
             MapControl.Lights = p.Lights;
             MapControl.MapDarkLight = p.MapDarkLight;
+            MapControl.Music = p.Music;
             MapControl.LoadMap();
             MapControl.NextAction = 0;
 
@@ -3167,7 +3193,7 @@ namespace Client.MirScenes
                     case SpellEffect.Reflect:
                         ob.Effects.Add(new Effect(Libraries.Effect, 580, 10, 70, ob));
                         break;
-                    case SpellEffect.ElementalBarrierUp://ArcherSpells - Elemental system
+                    case SpellEffect.ElementalBarrierUp:
                         if (ob.Race != ObjectType.Player) return;
                         player = (PlayerObject)ob;
                         if (player.ElementalBarrierEffect != null)
@@ -3179,7 +3205,7 @@ namespace Client.MirScenes
                         player.ElementalBarrier = true;
                         player.Effects.Add(player.ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 10, 2000, ob) { Repeat = true });
                         break;
-                    case SpellEffect.ElementalBarrierDown://ArcherSpells - Elemental system
+                    case SpellEffect.ElementalBarrierDown:
                         if (ob.Race != ObjectType.Player) return;
                         player = (PlayerObject)ob;
                         if (player.ElementalBarrierEffect != null)
@@ -3192,7 +3218,7 @@ namespace Client.MirScenes
                         player.Effects.Add(player.ElementalBarrierEffect = new Effect(Libraries.Magic3, 1910, 7, 1400, ob));
                         SoundManager.PlaySound(20000 + 131 * 10 + 5);
                         break;
-                    case SpellEffect.DelayedExplosion://ArcherSpells - DelayedExplosion
+                    case SpellEffect.DelayedExplosion:
                         int effectid = DelayedExplosionEffect.GetOwnerEffectID(ob.ObjectID);
                         if (effectid < 0)
                         {
@@ -3677,7 +3703,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void UserBackStep(S.UserBackStep p)//ArcherSpells - Backstep
+        private void UserBackStep(S.UserBackStep p)
         {
             if (User.Direction == p.Direction && User.CurrentLocation == p.Location)
             {
@@ -3686,7 +3712,7 @@ namespace Client.MirScenes
             }
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Jump, Direction = p.Direction, Location = p.Location });
         }
-        private void ObjectBackStep(S.ObjectBackStep p)//ArcherSpells - Backstep
+        private void ObjectBackStep(S.ObjectBackStep p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3764,7 +3790,7 @@ namespace Client.MirScenes
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Standing, Direction = p.Direction, Location = p.Location });
         }
 
-        private void SetConcentration(S.SetConcentration p)//ArcherSpells - Elemental system
+        private void SetConcentration(S.SetConcentration p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3786,7 +3812,7 @@ namespace Client.MirScenes
                 break;
             }
         }
-        private void SetObjectConcentration(S.SetObjectConcentration p)//ArcherSpells - Elemental system
+        private void SetObjectConcentration(S.SetObjectConcentration p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3813,7 +3839,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void SetElemental(S.SetElemental p)//ArcherSpells - Elemental system
+        private void SetElemental(S.SetElemental p)
         {
             if (User.ObjectID != p.ObjectID) return;
 
@@ -3825,7 +3851,7 @@ namespace Client.MirScenes
             if (p.Enabled && p.ElementType > 0)
                 User.Effects.Add(new ElementsEffect(Libraries.Magic3, 1630 + ((elementType - 1) * 10), 10, 10 * 100, User, true, 1 + (elementType - 1), maxExp, (elementType == 4 || elementType == 3) ? true : false));
         }
-        private void SetObjectElemental(S.SetObjectElemental p)//ArcherSpells - Elemental system
+        private void SetObjectElemental(S.SetObjectElemental p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -4682,11 +4708,34 @@ namespace Client.MirScenes
             }
         }
 
+        private Color GradeNameColor(ItemGrade grade)
+        {
+            switch (grade)
+            {
+                case ItemGrade.Common:
+                    return Color.Yellow;
+                case ItemGrade.Rare:
+                    return Color.DeepSkyBlue;
+                case ItemGrade.Legendary:
+                    return Color.DarkOrange;
+                case ItemGrade.Mythical:
+                    return Color.Plum;
+                default:
+                    return Color.Yellow;
+            }
+        }
+
         public void DisposeItemLabel()
         {
             if (ItemLabel != null && !ItemLabel.IsDisposed)
                 ItemLabel.Dispose();
             ItemLabel = null;
+        }
+        public void DisposeMailLabel()
+        {
+            if (MailLabel != null && !MailLabel.IsDisposed)
+                MailLabel.Dispose();
+            MailLabel = null;
         }
 
         public MirControl NameInfoLabel(UserItem item, bool Inspect = false)
@@ -4784,7 +4833,6 @@ namespace Client.MirScenes
 
             return outLine;
         }
-
         public MirControl AttackInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -5244,7 +5292,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public MirControl DefenseInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -5736,7 +5783,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public MirControl WeightInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -5903,7 +5949,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public MirControl AwakeInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -6004,7 +6049,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public MirControl NeedInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -6147,7 +6191,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public MirControl BindInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -6687,7 +6730,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public MirControl OverlapInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -6783,7 +6825,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public MirControl StoryInfoLabel(UserItem item, bool Inspect = false)
         {
             byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -6877,7 +6918,6 @@ namespace Client.MirScenes
             }
             return null;
         }
-
         public void CreateItemLabel(UserItem item, bool Inspect = false)
         {
             if (item == null)
@@ -6936,21 +6976,81 @@ namespace Client.MirScenes
             //ItemLabel.Visible = true;
         }
 
-        private Color GradeNameColor(ItemGrade grade)
+        public void CreateMailLabel(ClientMail mail)
         {
-            switch (grade)
+            if (mail == null)
             {
-                case ItemGrade.Common:
-                    return Color.Yellow;
-                case ItemGrade.Rare:
-                    return Color.DeepSkyBlue;
-                case ItemGrade.Legendary:
-                    return Color.DarkOrange;
-                case ItemGrade.Mythical:
-                    return Color.Plum;
-                default:
-                    return Color.Yellow;
+                DisposeMailLabel();
+                return;
             }
+
+            if (MailLabel != null && !MailLabel.IsDisposed) return;
+
+            MailLabel = new MirControl
+            {
+                BackColour = Color.FromArgb(255, 50, 50, 50),
+                Border = true,
+                BorderColour = Color.Gray,
+                DrawControlTexture = true,
+                NotControl = true,
+                Parent = this,
+                Opacity = 0.7F
+            };
+
+            MirLabel nameLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.Yellow,
+                Location = new Point(4, 4),
+                OutLine = true,
+                Parent = MailLabel,
+                Text = mail.SenderName
+            };
+
+            MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
+                Math.Max(MailLabel.Size.Height, nameLabel.DisplayRectangle.Bottom));
+
+            MirLabel dateLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.White,
+                Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
+                OutLine = true,
+                Parent = MailLabel,
+                Text = "Date Sent : " + mail.DateSent.ToString("dd/MM/yy H:mm:ss")
+            };
+
+            MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, dateLabel.DisplayRectangle.Right + 4),
+                Math.Max(MailLabel.Size.Height, dateLabel.DisplayRectangle.Bottom));
+
+            if (mail.Gold > 0)
+            {
+                MirLabel goldLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.White,
+                    Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = MailLabel,
+                    Text = "Gold: " + mail.Gold
+                };
+
+                MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, goldLabel.DisplayRectangle.Right + 4),
+                Math.Max(MailLabel.Size.Height, goldLabel.DisplayRectangle.Bottom));
+            }
+
+            MirLabel openedLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.Red,
+                Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
+                OutLine = true,
+                Parent = MailLabel,
+                Text = mail.Opened ? "[Old]" : "[New]"
+            };
+
+            MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, openedLabel.DisplayRectangle.Right + 4),
+            Math.Max(MailLabel.Size.Height, openedLabel.DisplayRectangle.Bottom));
         }
 
         public class OutPutMessage
@@ -7115,7 +7215,7 @@ namespace Client.MirScenes
 
         public string FileName = String.Empty;
         public string Title = String.Empty;
-        public ushort MiniMap, BigMap;
+        public ushort MiniMap, BigMap, Music, SetMusic;
         public LightSetting Lights;
         public bool Lightning, Fire;
         public byte MapDarkLight;
@@ -7194,6 +7294,24 @@ namespace Client.MirScenes
             M2CellInfo = Map.MapCells;
             Width = Map.Width;
             Height = Map.Height;
+
+            try
+            {
+                if (SetMusic != Music)
+                {
+                    SoundManager.Device.Dispose();
+                    SoundManager.Create();
+                    SoundManager.PlayMusic(Music, true);
+                }
+            }
+            catch (Exception)
+            {
+                // Do nothing. index was not valid.
+            }
+
+
+            SetMusic = Music;
+            SoundList.Music = Music;
         }
 
         public void Process()
@@ -7488,7 +7606,8 @@ namespace Client.MirScenes
                     byte animation;
                     bool blend;
                     Size s;
-                    #region draw shanda's tile animation layer
+
+                    #region Draw shanda's tile animation layer
                     index = M2CellInfo[x, y].TileAnimationImage;
                     animation = M2CellInfo[x, y].TileAnimationFrames;
                     if ((index > 0) & (animation > 0))
@@ -7500,10 +7619,10 @@ namespace Client.MirScenes
                     }
 
                     #endregion
-                    #region draw mir3 middle layer
+
+                    #region Draw mir3 middle layer
                     if ((M2CellInfo[x, y].MiddleIndex > 199) && (M2CellInfo[x, y].MiddleIndex != -1))
                     {
-
                         index = M2CellInfo[x, y].MiddleImage - 1;
                         if (index > 0)
                         {
@@ -7531,7 +7650,7 @@ namespace Client.MirScenes
                     }
                     #endregion
 
-                    #region draw front layer
+                    #region Draw front layer
                     index = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
 
                     if (index < 0) continue;
@@ -7581,6 +7700,7 @@ namespace Client.MirScenes
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(0.4F);
 
+            //MapObject.User.DrawMount();
             MapObject.User.DrawBody();
             MapObject.User.DrawHead();
             MapObject.User.DrawWings();
@@ -7593,19 +7713,15 @@ namespace Client.MirScenes
             if (MapObject.TargetObject != null)
                 MapObject.TargetObject.DrawBlend();
 
-            if (Settings.NameView)
-            {
-                for (int i = 0; i < Objects.Count; i++)
-                {
-                    if (Objects[i] is ItemObject || Objects[i].Dead) continue; // || (Objects[i].ObjectID != User.ObjectID)
-                    Objects[i].DrawName();
-                }
-            }
-
             for (int i = 0; i < Objects.Count; i++)
             {
+                if (Settings.Effect)
+                    Objects[i].DrawEffects();
+
+                if (Settings.NameView && !(Objects[i] is ItemObject) && !Objects[i].Dead)
+                    Objects[i].DrawName();
+
                 Objects[i].DrawChat();
-                if (Settings.Effect) Objects[i].DrawEffects();
                 Objects[i].DrawHealth();
             }
 
@@ -7613,7 +7729,6 @@ namespace Client.MirScenes
 
             for (int i = Effects.Count - 1; i >= 0; i--)
                 Effects[i].Draw();
-
         }
 
         private void DrawLights(LightSetting setting)
@@ -7626,7 +7741,6 @@ namespace Client.MirScenes
                 _lightTexture.Disposing += FloorTexture_Disposing;
                 _lightSurface = _lightTexture.GetSurfaceLevel(0);
             }
-
 
             Surface oldSurface = DXManager.CurrentSurface;
             DXManager.SetSurface(_lightSurface);
@@ -7656,7 +7770,6 @@ namespace Client.MirScenes
             Point p;
             DXManager.SetBlend(true);
             DXManager.Device.RenderState.SourceBlend = Blend.SourceAlpha;
-
 
             for (int i = 0; i < Objects.Count; i++)
             {
@@ -7714,10 +7827,8 @@ namespace Client.MirScenes
 
                     p = effect.DrawLocation;
 
-
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
-                        //   p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - 68);
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
                         DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
                     }
@@ -7756,7 +7867,7 @@ namespace Client.MirScenes
                     int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
                     if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
                     Color lightIntensity = Color.FromArgb(255, 255, 255, 255);  //Color lightIntensity = Color.FromArgb(255, 97, 200, 200); -- this colour matches mir3
-                    //this code would look great on chronicles shanda mir2 maps (give a blue glow to blue town lights), but it'll also give blue glow to mir3 maps
+                    //this code would look great on shanda mir2 maps (give a blue glow to blue town lights), but it'll also give blue glow to mir3 maps
                     //if (M2CellInfo[x, y].Light == 4) 
                     //    lightIntensity = Color.FromArgb(255, 100,100,200);
                     light = M2CellInfo[x, y].Light * 3;
@@ -7780,6 +7891,7 @@ namespace Client.MirScenes
                     }
                 }
             }
+
             DXManager.SetBlend(false);
             DXManager.SetSurface(oldSurface);
 
@@ -7789,9 +7901,6 @@ namespace Client.MirScenes
             DXManager.Sprite.Draw2D(_lightTexture, PointF.Empty, 0, PointF.Empty, Color.White);
             DXManager.Sprite.End();
             DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
-
-
-
         }
 
         private static void OnMouseClick(object sender, EventArgs e)
@@ -8219,7 +8328,6 @@ namespace Client.MirScenes
                 return;
             }
 
-            //ArcherSpells - Elemental system
             bool isTargetSpell = true;
 
             MapObject target = null;
@@ -8593,6 +8701,7 @@ namespace Client.MirScenes
                 FloorValid = false;
                 LightsValid = false;
                 MapDarkLight = 0;
+                Music = 0;
 
                 if (_floorSurface != null && !_floorSurface.Disposed)
                     _floorSurface.Dispose();
@@ -11761,13 +11870,16 @@ namespace Client.MirScenes
                 {
                     RealItem = Functions.GetRealItem(ArmorCell.Item.Info, Level, Class, GameScene.ItemInfoList);
                     Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
+
+                    if (RealItem.Effect > 0)
+                    {
+                        int wingOffset = RealItem.Effect == 1 ? 2 : 4;
+
+                        int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
+
+                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
+                    }
                 }
-
-                int wingOffset = RealItem.Effect == 1 ? 2 : 4;
-
-                int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
-
-                Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
 
                 if (WeaponCell.Item != null)
                 {
@@ -12067,15 +12179,15 @@ namespace Client.MirScenes
         public MirButton DropViewOn, DropViewOff;
         public MirButton NameViewOn, NameViewOff;
         public MirButton HPViewOn, HPViewOff;
-        public MirImageControl SoundBar;
-        public MirImageControl VolumeBar;
+        public MirImageControl SoundBar, MusicSoundBar;
+        public MirImageControl VolumeBar, MusicVolumeBar;
 
         public MirButton CloseButton;
 
 
         public OptionDialog()
         {
-            Index = 410;
+            Index = 411;
             Library = Libraries.Title;
             Movable = true;
             Sort = true;
@@ -12173,7 +12285,7 @@ namespace Client.MirScenes
             DropViewOn = new MirButton
             {
                 Library = Libraries.Prguse2,
-                Location = new Point(159, 168),
+                Location = new Point(159, 143),
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Size = new Size(36, 17),
@@ -12184,7 +12296,7 @@ namespace Client.MirScenes
             DropViewOff = new MirButton
             {
                 Library = Libraries.Prguse2,
-                Location = new Point(201, 168),
+                Location = new Point(201, 143),
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Size = new Size(36, 17),
@@ -12195,7 +12307,7 @@ namespace Client.MirScenes
             NameViewOn = new MirButton
             {
                 Library = Libraries.Prguse2,
-                Location = new Point(159, 193),
+                Location = new Point(159, 168),
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Size = new Size(36, 17),
@@ -12206,7 +12318,7 @@ namespace Client.MirScenes
             NameViewOff = new MirButton
             {
                 Library = Libraries.Prguse2,
-                Location = new Point(201, 193),
+                Location = new Point(201, 168),
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Size = new Size(36, 17),
@@ -12217,7 +12329,7 @@ namespace Client.MirScenes
             HPViewOn = new MirButton
             {
                 Library = Libraries.Prguse2,
-                Location = new Point(159, 218),
+                Location = new Point(159, 193),
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Size = new Size(36, 17),
@@ -12232,7 +12344,7 @@ namespace Client.MirScenes
             HPViewOff = new MirButton
             {
                 Library = Libraries.Prguse2,
-                Location = new Point(201, 218),
+                Location = new Point(201, 193),
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Size = new Size(36, 17),
@@ -12248,7 +12360,7 @@ namespace Client.MirScenes
             {
                 Index = 468,
                 Library = Libraries.Prguse2,
-                Location = new Point(159, 142),
+                Location = new Point(159, 222),
                 Parent = this,
                 DrawImage = false,
             };
@@ -12260,12 +12372,36 @@ namespace Client.MirScenes
             {
                 Index = 20,
                 Library = Libraries.Prguse,
-                Location = new Point(155, 141),
+                Location = new Point(155, 221),
+                Parent = this,
+                NotControl = true,
+            };
+
+            MusicSoundBar = new MirImageControl
+            {
+                Index = 468,
+                Library = Libraries.Prguse2,
+                Location = new Point(159, 248),
+                Parent = this,
+                DrawImage = false,
+            };
+            MusicSoundBar.MouseDown += MusicSoundBar_MouseMove;
+            MusicSoundBar.MouseMove += MusicSoundBar_MouseMove;
+            MusicSoundBar.MouseUp += MusicSoundBar_MouseUp;
+            MusicSoundBar.BeforeDraw += MusicSoundBar_BeforeDraw;
+
+            MusicVolumeBar = new MirImageControl
+            {
+                Index = 20,
+                Library = Libraries.Prguse,
+                Location = new Point(155, 247),
                 Parent = this,
                 NotControl = true,
             };
 
         }
+
+
 
 
         private void SoundBar_MouseMove(object sender, MouseEventArgs e)
@@ -12281,9 +12417,8 @@ namespace Client.MirScenes
             double percent = Settings.Volume / 100D;
             if (percent > 1) percent = 1;
 
-            VolumeBar.Location = percent > 0 ? new Point(159 + (int)((SoundBar.Size.Width - 2) * percent), 142) : new Point(159, 142);
+            VolumeBar.Location = percent > 0 ? new Point(159 + (int)((SoundBar.Size.Width - 2) * percent), 222) : new Point(159, 222);
         }
-
 
         private void SoundBar_BeforeDraw(object sender, EventArgs e)
         {
@@ -12299,10 +12434,61 @@ namespace Client.MirScenes
                 };
 
                 SoundBar.Library.Draw(SoundBar.Index, section, SoundBar.DisplayLocation, Color.White, false);
-                VolumeBar.Location = new Point(159 + section.Size.Width, 142);
+                VolumeBar.Location = new Point(159 + section.Size.Width, 222);
             }
             else
-                VolumeBar.Location = new Point(159, 142);
+                VolumeBar.Location = new Point(159, 222);
+        }
+
+        private void MusicSoundBar_BeforeDraw(object sender, EventArgs e)
+        {
+            if (MusicSoundBar.Library == null) return;
+
+            double percent = Settings.MusicVolume / 100D;
+            if (percent > 1) percent = 1;
+            if (percent > 0)
+            {
+                Rectangle section = new Rectangle
+                {
+                    Size = new Size((int)((MusicSoundBar.Size.Width - 2) * percent), MusicSoundBar.Size.Height)
+                };
+
+                MusicSoundBar.Library.Draw(MusicSoundBar.Index, section, MusicSoundBar.DisplayLocation, Color.White, false);
+                MusicVolumeBar.Location = new Point(159 + section.Size.Width, 247);
+            }
+            else
+                MusicVolumeBar.Location = new Point(159, 247);
+        }
+
+        public void MusicSoundBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (SoundManager.MusicVol <= -2900)
+                SoundManager.MusicVol = -3000;
+            if (SoundManager.MusicVol >= -100)
+                SoundManager.MusicVol = 0;
+
+
+            //SoundManager.Device.Dispose();
+            //SoundManager.Create();
+            //SoundManager.PlayMusic(SoundList.Music, true);
+
+            SoundManager.Music.SetVolume(SoundManager.MusicVol);
+        }
+
+        private void MusicSoundBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || MusicSoundBar != ActiveControl) return;
+
+            Point p = e.Location.Subtract(MusicSoundBar.DisplayLocation);
+
+            byte volume = (byte)(p.X / (double)MusicSoundBar.Size.Width * 100);
+            Settings.MusicVolume = volume;
+
+
+            double percent = Settings.MusicVolume / 100D;
+            if (percent > 1) percent = 1;
+
+            MusicVolumeBar.Location = percent > 0 ? new Point(159 + (int)((MusicSoundBar.Size.Width - 2) * percent), 247) : new Point(159, 247);
         }
 
         private void OptionPanel_BeforeDraw(object sender, EventArgs e)
@@ -14088,6 +14274,8 @@ namespace Client.MirScenes
             Visible = true;
         }
     }
+
+
     public sealed class MagicButton : MirControl
     {
         public MirImageControl LevelImage, ExpImage;

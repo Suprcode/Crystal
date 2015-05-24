@@ -394,7 +394,7 @@ namespace Client.MirObjects
                 if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
                     MaxWearWeight = (byte)Math.Min(byte.MaxValue, MaxWearWeight + 5);
-                    MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 20);
+                    MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
                 }
 
                 if (!s.SetComplete) continue;
@@ -485,23 +485,23 @@ namespace Client.MirObjects
                         break;
                     case ItemSet.Whisker1:
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 25);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 25);
                         break;
                     case ItemSet.Whisker2:
                         MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + 1);
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 17);
                         break;
                     case ItemSet.Whisker3:
                         MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + 1);
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 17);
                         break;
                     case ItemSet.Whisker4:
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 20);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
                         break;
                     case ItemSet.Whisker5:
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
-                        MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 17);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 17);
                         break;
                     case ItemSet.Hyeolryong:
                         MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + 2);
@@ -528,7 +528,7 @@ namespace Client.MirObjects
             {
                 MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + 1);
                 MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + 1);
-                MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 70);
+                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 70);
                 Luck = (sbyte)Math.Min(sbyte.MaxValue, Luck + 2);
                 ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
                 MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 70);
@@ -551,14 +551,14 @@ namespace Client.MirObjects
             {
                 MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + 1);
                 MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + 1);
-                MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 30);
+                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 30);
                 MaxWearWeight = (byte)Math.Min(byte.MaxValue, MaxWearWeight + 17);
             }
             if (MirSet.Contains(EquipmentSlot.RingL) && MirSet.Contains(EquipmentSlot.RingR) && MirSet.Contains(EquipmentSlot.BraceletL) && MirSet.Contains(EquipmentSlot.BraceletR) && MirSet.Contains(EquipmentSlot.Necklace))
             {
                 MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + 1);
                 MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + 1);
-                MaxBagWeight = (byte)Math.Min(byte.MaxValue, MaxBagWeight + 20);
+                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
                 MaxWearWeight = (byte)Math.Min(byte.MaxValue, MaxWearWeight + 10);
             }
             if (MirSet.Contains(EquipmentSlot.Armour) && MirSet.Contains(EquipmentSlot.Helmet) && MirSet.Contains(EquipmentSlot.Weapon))

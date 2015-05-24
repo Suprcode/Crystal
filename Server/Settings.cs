@@ -80,6 +80,9 @@ namespace Server
                           DropStackSize = 5,
                           PKDelay = 12;
 
+        public static long PetTimeOut = 5;
+        public static bool PetSave = false;
+
         public static string SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
                              BugBatName = "BugBat",
@@ -114,6 +117,7 @@ namespace Server
 
         public static uint MaxDropGold = 2000;
         public static bool DropGold = true;
+
 
         //IntelligentCreature
         public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan" };
@@ -234,7 +238,9 @@ namespace Server
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
             ExpRate = Reader.ReadSingle("Game", "ExpRate", ExpRate);
             ItemTimeOut = Reader.ReadInt32("Game", "ItemTimeOut", ItemTimeOut);
-            ItemTimeOut = Reader.ReadInt32("Game", "PKDelay", PKDelay);
+            PetTimeOut = Reader.ReadInt64("Game", "PetTimeOut", PetTimeOut);
+            PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
+            PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
             SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName);
             BugBatName = Reader.ReadString("Game", "BugBatName", BugBatName);
             ShinsuName = Reader.ReadString("Game", "ShinsuName", ShinsuName);
@@ -255,10 +261,10 @@ namespace Server
             CloneName = Reader.ReadString("Game", "CloneName", CloneName);
             FishingMonster = Reader.ReadString("Game", "FishMonster", FishingMonster);
             AssassinCloneName = Reader.ReadString("Game", "AssassinCloneName", AssassinCloneName);
-            VampireName = Reader.ReadString("Game", "VampireName", VampireName);//SummonVampire
-            ToadName = Reader.ReadString("Game", "ToadName", ToadName);//SummonToad
-            SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);//SummonSnakes Totem
-            SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);//SummonSnakes
+            VampireName = Reader.ReadString("Game", "VampireName", VampireName);
+            ToadName = Reader.ReadString("Game", "ToadName", ToadName);
+            SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);
+            SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);
 
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
@@ -365,6 +371,7 @@ namespace Server
 			LoadAwakeAttribute();
             LoadFishing();
             LoadMail();
+            LoadGoods();
         }
         public static void Save()
         {
@@ -402,6 +409,8 @@ namespace Server
             Reader.Write("Game", "DropRate", DropRate);
             Reader.Write("Game", "ExpRate", ExpRate);
             Reader.Write("Game", "ItemTimeOut", ItemTimeOut);
+            Reader.Write("Game", "PetTimeOut", PetTimeOut);
+            Reader.Write("Game", "PetSave", PetSave);
             Reader.Write("Game", "PKDelay", PKDelay);
             Reader.Write("Game", "SkeletonName", SkeletonName);
             Reader.Write("Game", "BugBatName", BugBatName);

@@ -111,7 +111,7 @@ namespace Client.MirObjects
                     Blend = true;
                     Repeat = true;
                     break;
-                case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
+                case Spell.ExplosiveTrap:
                     BodyLibrary = Libraries.Magic3;
                     if (info.Param)
                     {

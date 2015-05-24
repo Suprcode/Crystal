@@ -428,7 +428,6 @@ namespace Client.MirObjects
                     break;
                 case Monster.MutatedManworm: //(154.lib)
                 case Monster.CrazyManworm: //(155.lib)
-                case Monster.DarkDevourer: //(159.lib)
                     Frames = FrameSet.Monsters[57];
                     break;
                 case Monster.TailedLion: //(157.lib)
@@ -526,6 +525,9 @@ namespace Client.MirObjects
                 case Monster.IceGuard:
                     Frames = FrameSet.Monsters[82];
                     break;
+                case Monster.DarkDevourer: //(159.lib)
+                    Frames = FrameSet.Monsters[83];
+                    break;
 
                 case Monster.BabyPig://IntelligentCreature
                 case Monster.Chick:
@@ -539,6 +541,7 @@ namespace Client.MirObjects
                 case Monster.BabySnowMan:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
+          
                 default:
                     Frames = FrameSet.Monsters[0];
                     break;
@@ -679,7 +682,7 @@ namespace Client.MirObjects
                 case PoisonType.Paralysis:
                     DrawColour = Color.Gray;
                     break;
-                case PoisonType.DelayedExplosion://ArcherSpells - DelayedExplosion
+                case PoisonType.DelayedExplosion:
                     DrawColour = Color.Orange;
                     break;
             }
@@ -1026,7 +1029,7 @@ namespace Client.MirObjects
             return true;
         }
 
-        public void SetCurrentEffects()//ArcherSpells - BindingShot
+        public void SetCurrentEffects()
         {
             //BindingShot
             if (BindingShotCenter && ShockTime > CMain.Time)
@@ -1510,9 +1513,17 @@ namespace Client.MirObjects
                                                 if (MapControl.GetObject(TargetID) != null)
                                                     CreateProjectile(38, Libraries.Monsters[(ushort)Monster.ArcherGuard], false, 3, 30, 6);
                                                 break;
-                                            case Monster.SpittingToad://SummonToad
+                                            case Monster.SpittingToad:
                                                 if (MapControl.GetObject(TargetID) != null)
                                                     CreateProjectile(280, Libraries.Monsters[(ushort)Monster.SpittingToad], true, 6, 30, 0);
+                                                break;
+                                            case Monster.DarkDevourer:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevourer], 480, 7, 300, ob));
+                                                    //SoundManager.PlaySound(BaseSound + 6); //is this the correct sound for this mob attack?
+                                                }
                                                 break;
                                             }
                                         break;
@@ -2150,6 +2161,71 @@ namespace Client.MirObjects
                         case MirAction.Attack1:
                             if (FrameIndex >= 1)
                                 Libraries.Monsters[(ushort)Monster.Shinsu1].DrawBlend(224 + ((int)Direction * 6) + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.CyanoGhast: //mob glow effect
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(224 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(256 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(304 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(352 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                        case MirAction.Revive:
+                            Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(368 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.MutatedManworm:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(285 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(333 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.CrazyManworm:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.CrazyManworm].DrawBlend(272 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+
+                case Monster.DarkDevourer:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.DarkDevourer].DrawBlend(272 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.DarkDevourer].DrawBlend(304 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.DarkDevourer].DrawBlend(352 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.DarkDevourer].DrawBlend(540 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.DarkDevourer].DrawBlend(400 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                        case MirAction.Revive:
+                            Libraries.Monsters[(ushort)Monster.DarkDevourer].DrawBlend(416 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                             break;
                     }
                     break;

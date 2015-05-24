@@ -135,7 +135,7 @@ namespace Server
         {
             string accountId = Character.AccountInfo.AccountID;
 
-            AccountInfoForm form = new AccountInfoForm(accountId);
+            AccountInfoForm form = new AccountInfoForm(accountId, true);
 
             form.ShowDialog();
         }

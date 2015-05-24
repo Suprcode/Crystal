@@ -232,7 +232,7 @@ namespace Server.MirDatabase
                 {
                     Buff buff = new Buff(reader);
 
-                    if (Envir.LoadVersion > 50)
+                    if (Envir.LoadVersion == 51)
                     {
                         buff.Caster = SMain.Envir.GetObject(reader.ReadUInt32());
                     }
@@ -282,7 +282,7 @@ namespace Server.MirDatabase
                 {
                     Poison poison = new Poison(reader);
 
-                    if (Envir.LoadVersion > 50)
+                    if (Envir.LoadVersion == 51)
                     {
                         poison.Owner = SMain.Envir.GetObject(reader.ReadUInt32());
                     }
@@ -388,7 +388,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < Buffs.Count; i++)
             {
                 Buffs[i].Save(writer);
-                writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
+                //writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
             }
 
             writer.Write(Mail.Count);
@@ -409,7 +409,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < Poisons.Count; i++)
             {
                 Poisons[i].Save(writer);
-                writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
+                //writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
             }
         }
 
@@ -465,6 +465,8 @@ namespace Server.MirDatabase
         public int MonsterIndex;
         public uint HP, Experience;
         public byte Level, MaxPetLevel;
+
+        public long Time;
 
         public PetInfo(MonsterObject ob)
         {
@@ -569,7 +571,6 @@ namespace Server.MirDatabase
         }
     }
 
-    //IntelligentCreature
     public class IntelligentCreatureInfo
     {
         public static List<IntelligentCreatureInfo> Creatures = new List<IntelligentCreatureInfo>();

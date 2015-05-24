@@ -278,7 +278,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     Mail = GameScene.User.Mail[i + StartIndex],
                     Location = new Point(10, 55 + i * 33),
-                    Parent = this,
+                    Parent = this
                 };
 
                 Rows[i].Click += (o, e) =>
@@ -394,7 +394,7 @@ namespace Client.MirScenes.Dialogs
         public MailItemRow()
         {
             Sound = SoundList.ButtonA;
-            Size = new Size(290, 31);
+            Size = new Size(290, 33);
 
             BeforeDraw += QuestRow_BeforeDraw;
 
@@ -456,7 +456,7 @@ namespace Client.MirScenes.Dialogs
             MessageLabel = new MirLabel
             {
                 Location = new Point(170, 0),
-                Size = new Size(120, 31),
+                Size = new Size(115, 31),
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
@@ -527,8 +527,6 @@ namespace Client.MirScenes.Dialogs
             SenderLabel.Text = Mail.SenderName;
             MessageLabel.Text = Mail.Locked ? "[*] " + Mail.Message.Replace("\r\n", " ") : Mail.Message.Replace("\r\n", " ");
 
-            Hint = string.Format("Sender: {0}\nSent: {1}{2}\n{3}", Mail.SenderName, Mail.DateSent.ToString("dd/MM/yy H:mm:ss"), Mail.Gold > 0 ? "\nGold: " + Mail.Gold : "", Mail.Opened ? "[Old]" : "[New]");
-
             SelectedImage.Visible = Selected;
         }
 
@@ -543,6 +541,17 @@ namespace Client.MirScenes.Dialogs
             IconImage = null;
 
             Selected = false;
+        }
+
+        protected override void OnMouseEnter()
+        {
+            base.OnMouseEnter();
+            GameScene.Scene.CreateMailLabel(Mail);          
+        }
+        protected override void OnMouseLeave()
+        {
+            base.OnMouseLeave();
+            GameScene.Scene.DisposeMailLabel();
         }
     }
 

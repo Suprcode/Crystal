@@ -18,11 +18,12 @@ namespace Server
             Setup();
         }
 
-        public AccountInfoForm(string accountId)
+        public AccountInfoForm(string accountId, bool match = false)
         {
             InitializeComponent();
 
             FilterTextBox.Text = accountId;
+            MatchFilterCheckBox.Checked = match;
 
             Setup();
         }

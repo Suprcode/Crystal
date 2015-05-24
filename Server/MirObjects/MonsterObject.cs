@@ -134,15 +134,21 @@ namespace Server.MirObjects
                 case 59:
                     return new HumanAssassin(info);
                 case 60:
-                    return new VampireSpider(info);//SummonVampire
+                    return new VampireSpider(info);
                 case 61:
-                    return new SpittingToad(info);//SummonToad
+                    return new SpittingToad(info);
                 case 62:
-                    return new SnakeTotem(info);//SummonSnakes Totem
+                    return new SnakeTotem(info);
                 case 63:
-                    return new CharmedSnake(info);//SummonSnakes
+                    return new CharmedSnake(info);
                 case 64:
-                    return new IntelligentCreatureObject(info);//IntelligentCreature
+                    return new IntelligentCreatureObject(info);
+                case 65:
+                    return new MutatedManworm(info);
+                case 66:
+                    return new CrazyManworm(info);
+                case 67:
+                    return new DarkDevourer(info);
                 default:
                     return new MonsterObject(info);
             }
@@ -215,7 +221,7 @@ namespace Server.MirObjects
         public const int RegenDelay = 10000, EXPOwnerDelay = 5000, DeadDelay = 180000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
-        public bool BindingShotCenter;//ArcherSpells - BindingShot
+        public bool BindingShotCenter;
 
         public byte PetLevel;
         public uint PetExperience;
@@ -868,7 +874,8 @@ namespace Server.MirObjects
         protected virtual void ProcessPoison()
         {
             PoisonType type = PoisonType.None;
-            PoisonRate = 1F;
+            ArmourRate = 1F;
+            DamageRate = 1F;
 
             for (int i = PoisonList.Count - 1; i >= 0; i--)
             {
@@ -909,7 +916,7 @@ namespace Server.MirObjects
                         RegenTime = Envir.Time + RegenDelay;
                     }
 
-                    if (poison.PType == PoisonType.DelayedExplosion)//ArcherSpells - DelayedExplosion
+                    if (poison.PType == PoisonType.DelayedExplosion)
                     {
                         if (Envir.Time > ExplosionInflictedTime) ExplosionInflictedStage++;
 
@@ -929,10 +936,10 @@ namespace Server.MirObjects
                 switch (poison.PType)
                 {
                     case PoisonType.Red:
-                        PoisonRate -= 0.5F;
+                        ArmourRate -= 0.5F;
                         break;
                     case PoisonType.Stun:
-                        PoisonRate -= 0.5F;
+                        DamageRate += 0.5F;
                         break;
                     case PoisonType.Slow:
                         MoveSpeed += 100;
@@ -957,7 +964,7 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectPoisoned { ObjectID = ObjectID, Poison = type });
         }
 
-        private bool ProcessDelayedExplosion(Poison poison)//ArcherSpells - DelayedExplosion
+        private bool ProcessDelayedExplosion(Poison poison)
         {
             if (Dead) return false;
 
@@ -1377,12 +1384,13 @@ namespace Server.MirObjects
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(MinDC, MaxDC);
+
             if (damage == 0) return;
 
             Target.Attacked(this, damage);
         }
 
-        public void ReleaseBindingShot()//ArcherSpells - BindingShot
+        public void ReleaseBindingShot()
         {
             if (!BindingShotCenter) return;
 
@@ -1708,7 +1716,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int) (armour*PoisonRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (damageWeapon)
                 attacker.DamageWeapon();
@@ -1778,7 +1787,7 @@ namespace Server.MirObjects
                 }
             }
 
-            attacker.GatherElement();//ArcherSpells - Elemental system
+            attacker.GatherElement();
 
             ChangeHP(armour - damage);
 
@@ -1812,7 +1821,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * PoisonRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (armour >= damage) return 0;
 
@@ -1869,7 +1879,8 @@ namespace Server.MirObjects
                     break;
             }
 
-            armour = (int)(armour * PoisonRate);
+            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
+            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (armour >= damage) return 0;
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
@@ -1900,7 +1911,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (p.PType == PoisonType.DelayedExplosion)//ArcherSpells - DelayedExplosion
+            if (p.PType == PoisonType.DelayedExplosion)
             {
                 ExplosionInflictedTime = Envir.Time + 4000;
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });

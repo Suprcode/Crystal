@@ -23,8 +23,8 @@ namespace Server.MirObjects
 
         public abstract string Name { get; set; }
 
-        public long ExplosionInflictedTime;//ArcherSpells - DelayedExplosion
-        public int ExplosionInflictedStage;//ArcherSpells - DelayedExplosion
+        public long ExplosionInflictedTime;
+        public int ExplosionInflictedStage;
 
         //Position
         private Map _currentMap;
@@ -165,7 +165,8 @@ namespace Server.MirObjects
         public virtual PetMode PMode { get; set; }
         public bool InSafeZone;
 
-        public float PoisonRate;
+        public float ArmourRate, DamageRate; //recieved not given
+
         public List<Poison> PoisonList = new List<Poison>();
         public PoisonType CurrentPoison = PoisonType.None;
         public List<DelayedAction> ActionList = new List<DelayedAction>();
@@ -527,7 +528,7 @@ namespace Server.MirObjects
 
             if (Race == ObjectType.Player)
             {
-                if (GroupMembers != null) //Send pet HP to group
+                if (GroupMembers != null) //Send HP to group
                 {
                     for (int i = 0; i < GroupMembers.Count; i++)
                     {
@@ -555,6 +556,7 @@ namespace Server.MirObjects
                         PlayerObject member = player.GroupMembers[i];
 
                         if (player == member) continue;
+
                         if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
                         member.Enqueue(p);
                     }

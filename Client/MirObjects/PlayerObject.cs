@@ -621,7 +621,7 @@ namespace Client.MirObjects
                 case MirAction.DashL:
                 case MirAction.DashR:
                 case MirAction.Sneek:
-                case MirAction.Jump://ArcherSpells - Backstep
+                case MirAction.Jump:
                 case MirAction.DashAttack:
                     if (Frame == null)
                     {
@@ -636,7 +636,7 @@ namespace Client.MirObjects
                         i = (Sprint && !Sneaking ? 3 : 2);
                     else i = 1;
 
-                    if (CurrentAction == MirAction.Jump) i = -JumpDistance;//ArcherSpells - Backstep
+                    if (CurrentAction == MirAction.Jump) i = -JumpDistance;
                     if (CurrentAction == MirAction.DashAttack) i = JumpDistance;
 
                     Movement = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -i);
@@ -736,7 +736,7 @@ namespace Client.MirObjects
                 case PoisonType.Paralysis:
                     DrawColour = Color.Gray;
                     break;
-                case PoisonType.DelayedExplosion://ArcherSpells - DelayedExplosion
+                case PoisonType.DelayedExplosion:
                     DrawColour = Color.Orange;
                     break;
             }
@@ -758,7 +758,7 @@ namespace Client.MirObjects
                     case MirAction.DashL:
                     case MirAction.DashR:
                     case MirAction.Sneek:
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                     case MirAction.DashAttack:
                         return;
                 }
@@ -821,7 +821,7 @@ namespace Client.MirObjects
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
 
-                    if (Concentrating && ConcentrateInterrupted)//ArcherSpells - Elemental system
+                    if (Concentrating && ConcentrateInterrupted)
                         Network.Enqueue(new C.SetConcentration { ObjectID = User.ObjectID, Enabled = Concentrating, Interrupted = false });
                 }
 
@@ -898,7 +898,7 @@ namespace Client.MirObjects
                         temp = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -steps);
 
                         break;
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                     case MirAction.DashAttack:
                         temp = Functions.PointMove(CurrentLocation, Direction, JumpDistance);
                         break;
@@ -938,7 +938,7 @@ namespace Client.MirObjects
                         //Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
                         //CanSetAction = false;
                         break;
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                         Frames.Frames.TryGetValue(MirAction.Jump, out Frame);
                         break;
                     case MirAction.Attack1:
@@ -1076,7 +1076,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 500; //Spell Delay
                                 }
                                 break;
-                            case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
+                            case Spell.ExplosiveTrap:
                                 Frames.Frames.TryGetValue(MirAction.Harvest, out Frame);
                                 CurrentAction = MirAction.Harvest;
                                 ArcherLayTrap = true;
@@ -1089,7 +1089,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
                                 break;
-                            case Spell.DelayedExplosion://ArcherSpells - DelayedExplosion
+                            case Spell.DelayedExplosion:
                                 Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
@@ -1098,7 +1098,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
                                 break;
-                            case Spell.BackStep://ArcherSpells - Backstep
+                            case Spell.BackStep:
                                 {
                                     int sLevel = (byte)action.Params[3];
                                     GetBackStepDistance(sLevel);
@@ -1113,7 +1113,7 @@ namespace Client.MirObjects
                                     }
                                     break;
                                 }
-                            case Spell.ElementalShot://ArcherSpells - Elemental system
+                            case Spell.ElementalShot:
                                 if (HasElements && !ElementCasted)
                                 {
                                     Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
@@ -1127,11 +1127,11 @@ namespace Client.MirObjects
                                 else Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 if (ElementCasted) ElementCasted = false;
                                 break;
-                            case Spell.BindingShot://ArcherSpells - BindingShot
-                            case Spell.VampireShot://ArcherSpells - VampireShot
-                            case Spell.PoisonShot://ArcherSpells - PoisonShot
-                            case Spell.CrippleShot://ArcherSpells - CrippleShot
-                            case Spell.NapalmShot://ArcherSpells - NapalmShot
+                            case Spell.BindingShot:
+                            case Spell.VampireShot:
+                            case Spell.PoisonShot:
+                            case Spell.CrippleShot:
+                            case Spell.NapalmShot:
                             case Spell.SummonVampire:
                             case Spell.SummonToad:
                             case Spell.SummonSnakes:
@@ -1223,7 +1223,7 @@ namespace Client.MirObjects
                             break;
                         case MirAction.DashL:
                         case MirAction.DashR:
-                        case MirAction.Jump://ArcherSpells - Backstep
+                        case MirAction.Jump:
                         case MirAction.DashAttack:
                             GameScene.Scene.MapControl.FloorValid = false;
                             //CanSetAction = false;
@@ -1349,7 +1349,7 @@ namespace Client.MirObjects
                             }
                             break;
                         case MirAction.Harvest:
-                            if (ArcherLayTrap)//ArcherSpells - Explosive Trap
+                            if (ArcherLayTrap)
                             {
                                 ArcherLayTrap = false;
                                 SoundManager.PlaySound(20000 + 124 * 10);
@@ -1373,7 +1373,7 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.DashL:
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                         FrameIndex = 0;
                         EffectFrameIndex = 0;
                         GameScene.Scene.Redraw();
@@ -2038,7 +2038,6 @@ namespace Client.MirObjects
             NextMotion = CMain.Time + FrameInterval;
             NextMotion2 = CMain.Time + EffectFrameInterval;
 
-            //ArcherSpells - Elemental system
             if (ElementalBarrier)
             {
                 switch (CurrentAction)
@@ -2154,7 +2153,7 @@ namespace Client.MirObjects
                             NextMotion2 += EffectFrameInterval;
                     }
                     break;
-                    case MirAction.Jump://ArcherSpells - Backstep
+                    case MirAction.Jump:
                     if (!GameScene.CanMove) return;
                     GameScene.Scene.MapControl.TextureValid = false;
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
@@ -2479,7 +2478,7 @@ namespace Client.MirObjects
                             NextMotion += FrameInterval;
 
                             Missile missile;
-                            //ArcherSpells - Doubleshot
+
                             switch(Spell)
                             {
                                 case Spell.DoubleShot:
@@ -2500,7 +2499,7 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.ElementalShot://ArcherSpells - Elemental system
+                                case Spell.ElementalShot:
                                     if (HasElements && !ElementCasted)
                                         switch (FrameIndex)
                                         {
@@ -2521,7 +2520,7 @@ namespace Client.MirObjects
                                                 break;
                                         }
                                     break;
-                                case Spell.BindingShot://ArcherSpells - BindingShot
+                                case Spell.BindingShot:
                                 case Spell.SummonVampire:
                                 case Spell.SummonToad:
                                 case Spell.SummonSnakes:
@@ -2541,7 +2540,7 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.DelayedExplosion://ArcherSpells - DelayedExplosion
+                                case Spell.DelayedExplosion:
                                     switch (FrameIndex)
                                     {
                                         case 5:
@@ -2558,9 +2557,9 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.VampireShot://ArcherSpells - VampireShot
-                                case Spell.PoisonShot://ArcherSpells - PoisonShot
-                                case Spell.CrippleShot://ArcherSpells - CrippleShot
+                                case Spell.VampireShot:
+                                case Spell.PoisonShot:
+                                case Spell.CrippleShot:
                                     MapObject ob = MapControl.GetObject(TargetID);
                                     Effect eff;
                                     int exFrameStart = 0;
@@ -3325,65 +3324,73 @@ namespace Client.MirObjects
         {
             int x = CurrentLocation.X - CurrentLocation.X % 2;
             int y = CurrentLocation.Y - CurrentLocation.Y % 2;
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
-            int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex > 199) return; //prevents any move sounds on non mir2 maps atm
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex > 199) return; //prevents any move sounds on non mir2 maps atm
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 199) return; //prevents any move sounds on non mir2 maps atm
+
             int moveSound;
 
-            if ((index >= 330 && index <= 349) || (index >= 450 && index <= 454) || (index >= 550 && index <= 554) ||
-                (index >= 750 &&
-                index <= 754) || (index >= 950 && index <= 954) || (index >= 1250 && index <= 1254) ||
-                (index >= 1400 && index <= 1424) || (index >= 1455 && index <= 1474) || (index >= 1500 && index <= 1524) ||
-                (index >= 1550 && index <= 1574))
-                moveSound = SoundList.WalkLawnL;
-            else if ((index >= 250 && index <= 254) || (index >= 1005 && index <= 1009) || (index >= 1050 && index <= 1054) ||
-                (index >= 1060 && index <= 1064) || (index >= 1450 && index <= 1454) || (index >= 1650 && index <= 1654))
-                moveSound = SoundList.WalkRoughL;
-            else if ((index >= 605 && index <= 609) || (index >= 650 && index <= 654) || (index >= 660 && index <= 664) ||
-                (index >= 2000 && index <= 2049) || (index >= 3025 && index <= 3049) || (index >= 2400 && index <= 2424) ||
-                (index >= 4625 && index <= 4649) || (index >= 4675 && index <= 4678))
-                moveSound = SoundList.WalkStoneL;
-            else if ((index >= 1825 && index <= 1924) || (index >= 2150 && index <= 2174) || (index >= 3075 && index <= 3099) ||
-                (index >= 3325 && index <= 3349) || (index >= 3375 && index <= 3399))
-                moveSound = SoundList.WalkCaveL;
-            else if (index == 3230 || index == 3231 || index == 3246 || index == 3277 || (index >= 3780 && index <= 3799))
-                moveSound = SoundList.WalkWoodL;
-            else if (index >= 3825 && index <= 4434)
-                switch (index % 25)
-                {
-                    case 0:
-                        moveSound = SoundList.WalkWoodL;
-                        break;
-                    default:
-                        moveSound = SoundList.WalkGroundL;
-                        break;
-                }
-            else if ((index >= 2075 && index <= 2099) || (index >= 2125 && index <= 2149))
-                moveSound = SoundList.WalkRoomL;
-            else if (index >= 1800 && index <= 1824)
-                moveSound = SoundList.WalkWaterL;
-            else moveSound = SoundList.WalkGroundL;
-
-            if ((index >= 825 && index <= 1349) && (index - 825) / 25 % 2 == 0) moveSound = SoundList.WalkStoneL;
-            if ((index >= 1375 && index <= 1799) && (index - 1375) / 25 % 2 == 0) moveSound = SoundList.WalkCaveL;
-            if (index == 1385 || index == 1386 || index == 1391 || index == 1392) moveSound = SoundList.WalkWoodL;
-
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x7FFF) - 1;
-            if (index >= 0 && index <= 115)
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99 && GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex < 199) //shanda tiles
+            {
                 moveSound = SoundList.WalkGroundL;
-            else if (index >= 120 && index <= 124)
-                moveSound = SoundList.WalkLawnL;
+            }
+            else //wemade tiles
+            {
+                int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
+                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
 
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
-            if ((index >= 221 && index <= 289) || (index >= 583 && index <= 658) || (index >= 1183 && index <= 1206) ||
-                (index >= 7163 && index <= 7295) || (index >= 7404 && index <= 7414))
-                moveSound = SoundList.WalkStoneL;
-            else if ((index >= 3125 && index <= 3267) || (index >= 3757 && index <= 3948) || (index >= 6030 && index <= 6999))
-                moveSound = SoundList.WalkWoodL;
-            if (index >= 3316 && index <= 3589)
-                moveSound = SoundList.WalkRoomL;
+                if ((index >= 330 && index <= 349) || (index >= 450 && index <= 454) || (index >= 550 && index <= 554) ||
+                    (index >= 750 && index <= 754) || (index >= 950 && index <= 954) || (index >= 1250 && index <= 1254) ||
+                    (index >= 1400 && index <= 1424) || (index >= 1455 && index <= 1474) || (index >= 1500 && index <= 1524) ||
+                    (index >= 1550 && index <= 1574))
+                    moveSound = SoundList.WalkLawnL;
+                else if ((index >= 250 && index <= 254) || (index >= 1005 && index <= 1009) || (index >= 1050 && index <= 1054) ||
+                    (index >= 1060 && index <= 1064) || (index >= 1450 && index <= 1454) || (index >= 1650 && index <= 1654))
+                    moveSound = SoundList.WalkRoughL;
+                else if ((index >= 605 && index <= 609) || (index >= 650 && index <= 654) || (index >= 660 && index <= 664) ||
+                    (index >= 2000 && index <= 2049) || (index >= 3025 && index <= 3049) || (index >= 2400 && index <= 2424) ||
+                    (index >= 4625 && index <= 4649) || (index >= 4675 && index <= 4678))
+                    moveSound = SoundList.WalkStoneL;
+                else if ((index >= 1825 && index <= 1924) || (index >= 2150 && index <= 2174) || (index >= 3075 && index <= 3099) ||
+                    (index >= 3325 && index <= 3349) || (index >= 3375 && index <= 3399))
+                    moveSound = SoundList.WalkCaveL;
+                else if (index == 3230 || index == 3231 || index == 3246 || index == 3277 || (index >= 3780 && index <= 3799))
+                    moveSound = SoundList.WalkWoodL;
+                else if (index >= 3825 && index <= 4434)
+                    switch (index % 25)
+                    {
+                        case 0:
+                            moveSound = SoundList.WalkWoodL;
+                            break;
+                        default:
+                            moveSound = SoundList.WalkGroundL;
+                            break;
+                    }
+                else if ((index >= 2075 && index <= 2099) || (index >= 2125 && index <= 2149))
+                    moveSound = SoundList.WalkRoomL;
+                else if (index >= 1800 && index <= 1824)
+                    moveSound = SoundList.WalkWaterL;
+                else moveSound = SoundList.WalkGroundL;
+
+                if ((index >= 825 && index <= 1349) && (index - 825) / 25 % 2 == 0) moveSound = SoundList.WalkStoneL;
+                if ((index >= 1375 && index <= 1799) && (index - 1375) / 25 % 2 == 0) moveSound = SoundList.WalkCaveL;
+                if (index == 1385 || index == 1386 || index == 1391 || index == 1392) moveSound = SoundList.WalkWoodL;
+
+                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x7FFF) - 1;
+                if (index >= 0 && index <= 115)
+                    moveSound = SoundList.WalkGroundL;
+                else if (index >= 120 && index <= 124)
+                    moveSound = SoundList.WalkLawnL;
+
+                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
+                if ((index >= 221 && index <= 289) || (index >= 583 && index <= 658) || (index >= 1183 && index <= 1206) ||
+                    (index >= 7163 && index <= 7295) || (index >= 7404 && index <= 7414))
+                    moveSound = SoundList.WalkStoneL;
+                else if ((index >= 3125 && index <= 3267) || (index >= 3757 && index <= 3948) || (index >= 6030 && index <= 6999))
+                    moveSound = SoundList.WalkWoodL;
+                if (index >= 3316 && index <= 3589)
+                    moveSound = SoundList.WalkRoomL;
+            }
 
             if (RidingMount) moveSound = SoundList.MountWalkL;
 
@@ -3597,16 +3604,16 @@ namespace Client.MirObjects
             float oldOpacity = DXManager.Opacity;
             if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
 
-            if (Settings.Effect) DrawBehindEffects();
-
-            if (RidingMount)
+            if (Settings.Effect)
             {
-                DrawMount();
+                DrawBehindEffects();
             }
+
+            DrawMount();
 
             if (!RidingMount)
             {
-                if ((Direction == MirDirection.Left || Direction == MirDirection.Up || Direction == MirDirection.UpLeft || Direction == MirDirection.DownLeft))
+                if (Direction == MirDirection.Left || Direction == MirDirection.Up || Direction == MirDirection.UpLeft || Direction == MirDirection.DownLeft)
                     DrawWeapon();
                 else
                     DrawWeapon2();
@@ -3616,22 +3623,22 @@ namespace Client.MirObjects
 
             DrawHead();
 
-            if (this != User) DrawWings();
-
-            if (this != User) DrawCurrentEffects();
+            if (this != User)
+            {
+                DrawWings();
+                DrawCurrentEffects();
+            }
 
             if (!RidingMount)
             {
-                if ((Direction == MirDirection.UpRight || Direction == MirDirection.Right || Direction == MirDirection.DownRight || Direction == MirDirection.Down))
+                if (Direction == MirDirection.UpRight || Direction == MirDirection.Right || Direction == MirDirection.DownRight || Direction == MirDirection.Down)
                     DrawWeapon();
                 else
                     DrawWeapon2();
 
-                if ((Class == MirClass.Archer && HasClassWeapon))
+                if (Class == MirClass.Archer && HasClassWeapon)
                     DrawWeapon2();
             }
-
-           // if (this != User && Settings.Effect) DrawEffects();
 
             DXManager.SetOpacity(oldOpacity);
         }
@@ -3640,12 +3647,8 @@ namespace Client.MirObjects
         {
             for (int i = 0; i < Effects.Count; i++)
             {
-                if (!Effects[i].DrawBehind) continue;
-
-                if (Effects[i] is SpecialEffect)
-                {
-                    if(((SpecialEffect)Effects[i]).EffectType == 1 && !Settings.LevelEffect) continue;
-                }
+                if (Hidden || !Effects[i].DrawBehind) continue;
+                if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
 
                 Effects[i].Draw();
             }
@@ -3655,12 +3658,8 @@ namespace Client.MirObjects
         {
             for (int i = 0; i < Effects.Count; i++)
             {
-                if (Effects[i].DrawBehind) continue;
-
-                if (Effects[i] is SpecialEffect)
-                {
-                    if (((SpecialEffect)Effects[i]).EffectType == 1 && !Settings.LevelEffect) continue;
-                }
+                if (Hidden || Effects[i].DrawBehind) continue;
+                if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
 
                 Effects[i].Draw();
             }
@@ -3722,14 +3721,14 @@ namespace Client.MirObjects
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (CurrentEffect == SpellEffect.ElementalBarrierUp && !ElementalBarrier)//ArcherSpells - Elemental system
+            if (CurrentEffect == SpellEffect.ElementalBarrierUp && !ElementalBarrier)
             {
                 ElementalBarrier = true;
                 Effects.Add(ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 16, 3200, this) { Repeat = true });
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (ElementEffect > 0 && !HasElements)//ArcherSpells - Elemental system
+            if (ElementEffect > 0 && !HasElements)
             {
                 HasElements = true;
                 if (ElementEffect == 4)
@@ -3756,10 +3755,9 @@ namespace Client.MirObjects
         public void DrawBody()
         {
             if (BodyLibrary != null)
-            {
                 BodyLibrary.Draw(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, true);
-                //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
-            }
+
+            //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
         }
         public void DrawHead()
         {
@@ -3793,10 +3791,11 @@ namespace Client.MirObjects
         {
             if (MountType < 0 || !RidingMount) return;
 
-            MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
+            if (MountLibrary != null)
+                MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
         }
 
-        public void GetBackStepDistance(int magicLevel)//ArcherSpells - Backstep
+        public void GetBackStepDistance(int magicLevel)
         {
             JumpDistance = 0;
             if (InTrapRock) return;

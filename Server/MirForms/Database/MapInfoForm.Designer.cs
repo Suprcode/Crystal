@@ -147,6 +147,8 @@ namespace Server
             this.ImportMongenButton = new System.Windows.Forms.Button();
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
+            this.MusicTextBox = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -179,6 +181,8 @@ namespace Server
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.MusicTextBox);
             this.tabPage1.Controls.Add(this.label33);
             this.tabPage1.Controls.Add(this.MineComboBox);
             this.tabPage1.Controls.Add(this.label15);
@@ -1375,6 +1379,23 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
+            // MusicTextBox
+            // 
+            this.MusicTextBox.Location = new System.Drawing.Point(82, 178);
+            this.MusicTextBox.Name = "MusicTextBox";
+            this.MusicTextBox.Size = new System.Drawing.Size(92, 20);
+            this.MusicTextBox.TabIndex = 17;
+            this.MusicTextBox.TextChanged += new System.EventHandler(this.MusicTextBox_TextChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(38, 181);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(38, 13);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "Music:";
+            // 
             // MapInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1531,6 +1552,8 @@ namespace Server
         private TextBox RoutePathTextBox;
         private CheckBox NoFightCheckbox;
         private CheckBox NeedMoveMCheckBox;
+        private Label label11;
+        private TextBox MusicTextBox;
 
     }
 }
