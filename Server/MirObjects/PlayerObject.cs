@@ -1094,18 +1094,18 @@ namespace Server.MirObjects
                 if (Envir.Time > BrownTime && PKPoints < 200)
                 {
                     PlayerObject hitter = (PlayerObject)LastHitter;
-
                     UserItem weapon = hitter.Info.Equipment[(byte)EquipmentSlot.Weapon];
-
+                    
+                    hitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
+                    hitter.ReceiveChat(string.Format("You have murdered {0}", Name), ChatType.System);
+                    ReceiveChat(string.Format("You have been murdered by {0}", LastHitter.Name), ChatType.System);
+                    
                     if (weapon != null && weapon.Luck > (Settings.MaxLuck * -1) && Envir.Random.Next(4) == 0)
                     {
-                        hitter.Info.Equipment[(byte)EquipmentSlot.Weapon].Luck -= 1;
+                        weapon.Luck--;
                         hitter.ReceiveChat("Your weapon has been cursed.", ChatType.System);
+                        Broadcast(new S.RefreshItem { Item = weapon });
                     }
-
-                    LastHitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
-                    LastHitter.ReceiveChat(string.Format("You have murdered {0}", Name), ChatType.System);
-                    ReceiveChat(string.Format("You have been murdered by {0}", LastHitter.Name), ChatType.System);
                 }
             }
 
