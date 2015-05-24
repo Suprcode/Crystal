@@ -370,7 +370,7 @@ public enum Monster : ushort
     EvilMirBody = 901,
     DragonStatue = 902,
 
-    //IntelligentCreature System
+
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
     Kitten = 10002,//Permanent

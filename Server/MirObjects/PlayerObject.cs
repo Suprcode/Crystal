@@ -1104,7 +1104,7 @@ namespace Server.MirObjects
                     {
                         weapon.Luck--;
                         hitter.ReceiveChat("Your weapon has been cursed.", ChatType.System);
-                        Broadcast(new S.RefreshItem { Item = weapon });
+                        Enqueue(new S.RefreshItem { Item = weapon });
                     }
                 }
             }

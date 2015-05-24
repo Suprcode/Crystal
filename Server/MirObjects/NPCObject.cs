@@ -1836,7 +1836,7 @@ namespace Server.MirObjects
                         foreach (var item in player.Info.Inventory.Where(item => item != null && item.Info == info))
                         {
                             if (checkDura)
-                                if (item.CurrentDura < dura * 1000) continue;
+                                if (item.CurrentDura < (dura * 1000)) continue;
 
                             if (count > item.Count)
                             {
