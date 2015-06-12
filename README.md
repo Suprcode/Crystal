@@ -4,4 +4,4 @@ Visit our forum at [LOMCN](http://www.lomcn.org/forum/forumdisplay.php?633) for 
 
 # Wiki
 
-For in depth guides and tutorials about the files please visit our [Mir2Wiki](http://mir2wiki.com)
+For in depth guides and tutorials about the files visit our [Wiki](http://mir2wiki.com)
