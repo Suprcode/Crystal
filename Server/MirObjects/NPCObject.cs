@@ -1936,7 +1936,6 @@ namespace Server.MirObjects
                             SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
-
                         break;
 
                     case CheckType.CheckRange:

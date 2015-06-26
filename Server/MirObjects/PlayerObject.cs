@@ -10659,26 +10659,27 @@ namespace Server.MirObjects
                     break;
             }
 
-            switch (item.Info.Shape)
-            {
-                case 0:
-                    if (CurrentMap.Info.NoEscape)
-                    {
-                        ReceiveChat("You cannot use Dungeon Escapes here", ChatType.System);
-                        return false;
-                    }
-                    break;
-                case 2:
-                    if (CurrentMap.Info.NoRandom)
-                    {
-                        ReceiveChat("You cannot use Random Teleports here", ChatType.System);
-                        return false;
-                    }
-                    break;
-            }
-
             switch (item.Info.Type)
             {
+                case ItemType.Scroll:
+                    switch (item.Info.Shape)
+                    {
+                        case 0:
+                            if (CurrentMap.Info.NoEscape)
+                            {
+                                ReceiveChat("You cannot use Dungeon Escapes here", ChatType.System);
+                                return false;
+                            }
+                            break;
+                        case 2:
+                            if (CurrentMap.Info.NoRandom)
+                            {
+                                ReceiveChat("You cannot use Random Teleports here", ChatType.System);
+                                return false;
+                            }
+                            break;
+                    }
+                    break;
                 case ItemType.Potion:
                     if (CurrentMap.Info.NoDrug)
                     {
