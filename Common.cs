@@ -455,13 +455,18 @@ public enum MirGender : byte
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum MirClass : byte
+public enum MirClass : byte//stupple
 {
     Warrior = 0,
     Wizard = 1,
     Taoist = 2,
     Assassin = 3,
-    Archer = 4
+    Archer = 4,
+    HighWarrior = 5,
+    HighWizard = 6,
+    HighTaoist = 7,
+    HighAssassin = 8,
+    HighArcher = 9,
 }
 
 public enum MirDirection : byte
@@ -561,7 +566,10 @@ public enum MirGridType : byte
     Fishing = 12,
     QuestInventory = 13,
     AwakenItem = 14,
-    Mail = 15
+    Mail = 15,
+    Transform = 16,//stupple
+    TransformBack = 17,//stupple
+    HumupTransform = 18,//stupple
 }
 
 public enum EquipmentSlot : byte
@@ -667,16 +675,39 @@ public enum SpecialItemMode : short
 }
 
 [Flags]
-[Obfuscation(Feature = "renaming", Exclude = true)]
+[Obfuscation(Feature = "renaming", Exclude = true)]//stupple may need to redit
 public enum RequiredClass : byte
 {
-    Warrior = 1,
-    Wizard = 2,
-    Taoist = 4,
-    Assassin = 8,
-    Archer = 16,
-    WarWizTao = Warrior | Wizard | Taoist,
-    None = WarWizTao | Assassin | Archer
+  //  Warrior = 1,
+ //   Wizard = 2,
+  //  Taoist = 4,
+  //  Assassin = 8,
+   // Archer = 16,
+   // WarWizTao = Warrior | Wizard | Taoist,
+  //  None = WarWizTao | Assassin | Archer
+     Warrior = 0,
+    Wizard = 1,
+    Taoist = 2,
+    Assassin = 3,
+    Archer = 4,
+    HighWarrior = 5,
+    HighWizard = 6,
+    HighTaoist = 7,
+    HighAssassin = 8,
+    HighArcher = 9,
+
+    WarWizTao = 10,
+
+    WarHighWar = 11,
+    WizHighWiz = 12,
+    TaoHighTao = 13,
+    AssHighAss = 14,
+    ArcHighArc = 15,
+
+    WarWizTaoAssArc = 16,
+    All = 17,
+    None = 18,
+    High = 19,
 }
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -884,6 +915,7 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
+    HumUpEffect,//stupple
 }
 
 public enum BuffType : byte
@@ -909,6 +941,7 @@ public enum BuffType : byte
     PoisonShot,
     CounterAttack,
     MentalState,
+    HumUp, //stupple
 
     General,
     Exp,
@@ -1130,7 +1163,9 @@ public enum ServerPacketIds : short
     MailSent,
     ParcelCollected,
     MailCost,
-	ResizeInventory,
+    HumUpPlayer,//stupple
+    NPCTransform,//stupple
+    ResizeInventory,
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
@@ -1234,7 +1269,8 @@ public enum ClientPacketIds : short
     DeleteMail,
     LockMail,
     MailLockedItem,
-    MailCost,
+    MailCost,    Transform,//stupple
+    HumupTransform,//stupple
 
     UpdateIntelligentCreature,
     IntelligentCreaturePickup
@@ -2014,18 +2050,71 @@ public static class Functions
         return Origin;
     }
 
-    public static ItemInfo GetClassAndLevelBasedItem(ItemInfo Origin, MirClass job, byte level, List<ItemInfo> ItemList)
+   
+    public static ItemInfo GetClassAndLevelBasedItem(ItemInfo Origin, MirClass job, byte level, List<ItemInfo> ItemList)//stupple
     {
         ItemInfo output = Origin;
         for (int i = 0; i < ItemList.Count; i++)
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if ((byte)info.RequiredClass == (1 << (byte)job))
+                if (EqualClass(info.RequiredClass, job))
                     if ((info.RequiredType == RequiredType.Level) && (info.RequiredAmount <= level) && (output.RequiredAmount <= info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
                         output = info;
         }
         return output;
+    }
+}
+
+ public static bool EqualClass(RequiredClass requiredClass, MirClass job) ///stupple
+    {
+        bool isEqual = false;
+        byte byteJob = (byte)job;
+        switch (requiredClass)
+        {
+            case RequiredClass.Warrior:
+            case RequiredClass.Wizard:
+            case RequiredClass.Taoist:
+            case RequiredClass.Assassin:
+            case RequiredClass.Archer:
+            case RequiredClass.HighWarrior:
+            case RequiredClass.HighWizard:
+            case RequiredClass.HighTaoist:
+            case RequiredClass.HighAssassin:
+            case RequiredClass.HighArcher:
+                isEqual = ((byte)requiredClass == byteJob);
+                break;
+            case RequiredClass.WarWizTao:
+                isEqual = (byteJob < 3);
+                break;
+            case RequiredClass.WarHighWar:
+                isEqual = (byteJob == 0 || byteJob == 5);
+                break;
+            case RequiredClass.WizHighWiz:
+                isEqual = (byteJob == 1 || byteJob == 6);
+                break;
+            case RequiredClass.TaoHighTao:
+                isEqual = (byteJob == 2 || byteJob == 7);
+                break;
+            case RequiredClass.AssHighAss:
+                isEqual = (byteJob == 3 || byteJob == 8);
+                break;
+            case RequiredClass.ArcHighArc:
+                isEqual = (byteJob == 4 || byteJob == 9);
+                break;
+            case RequiredClass.WarWizTaoAssArc:
+                isEqual = (byteJob <= 4);
+                break;
+            case RequiredClass.High:
+                isEqual = (byteJob > 4 && byteJob < 10);
+                break;
+            case RequiredClass.All:
+            case RequiredClass.None:
+                isEqual = true;
+                break;
+        }
+
+        return isEqual;
     }
 }
 
@@ -2126,7 +2215,8 @@ public class ItemInfo
         if (version >= 40) Grade = (ItemGrade)reader.ReadByte();
         RequiredType = (RequiredType) reader.ReadByte();
         RequiredClass = (RequiredClass) reader.ReadByte();
-        RequiredGender = (RequiredGender) reader.ReadByte();
+        RequiredClass = (RequiredClass)(version <= 54 ? ConvertRequiredClass(reader.ReadByte()) : reader.ReadByte());//stupple
+
         if(version >= 17) Set = (ItemSet)reader.ReadByte();
 
         Shape = version >= 30 ? reader.ReadInt16() : reader.ReadSByte();
@@ -2315,6 +2405,28 @@ public class ItemInfo
         if (ToolTip != null)
             writer.Write(ToolTip);
     }
+ public byte ConvertRequiredClass(byte data)//stupple
+    {
+        switch (data)
+        {
+            case 1:
+                return 0;
+            case 2:
+                return 1;
+            case 4:
+                return 2;
+            case 8:
+                return 3;
+            case 16:
+                return 4;
+            case 7:
+                return 10;
+            case 31:
+                return 16;
+            default:
+                return data;
+        }
+    }
 
     public static ItemInfo FromText(string text)
     {
@@ -2438,7 +2550,37 @@ public class ItemInfo
     {
         return string.Format("{0}: {1}", Index, Name);
     }
+public class TransformData //stupple
+{
+    public ushort Image;
+    public short Shape;
+    public RequiredClass RequiredClass;
+    public bool IsHumup;
 
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Image);
+        writer.Write(Shape);
+        writer.Write((byte)RequiredClass);
+        writer.Write(IsHumup);
+    }
+
+    public TransformData(BinaryReader reader, int version = int.MaxValue)
+    {
+        Image = reader.ReadUInt16();
+        Shape = reader.ReadInt16();
+        RequiredClass = (RequiredClass)reader.ReadByte();
+        IsHumup = reader.ReadBoolean();
+    }
+
+    public TransformData()
+    {
+        Image = 0;
+        Shape = 0;
+        RequiredClass = RequiredClass.None;
+        IsHumup = false;
+    }
+}
 }
 public class UserItem
 {
@@ -2456,6 +2598,9 @@ public class UserItem
     public int SoulBoundId = -1;
     public bool Identified = false;
     public bool Cursed = false;
+
+    public bool IsTransform = false;//stupple
+    public TransformData Transform = new TransformData();//stupple
 
     public UserItem[] Slots = new UserItem[5];
 
@@ -2552,6 +2697,11 @@ public class UserItem
 
         Awake = new Awake(reader);
         
+       if (version <= 54) return;//stupple
+
+        IsTransform = reader.ReadBoolean();
+        Transform = new TransformData(reader, version);
+        
     }
 
     public void Save(BinaryWriter writer)
@@ -2604,6 +2754,10 @@ public class UserItem
 
         writer.Write(GemCount);
         Awake.Save(writer);
+        
+        writer.Write(IsTransform);//stupple
+        Transform.Save(writer);
+
     }
 
 
@@ -2756,10 +2910,36 @@ public class UserItem
                 }
 
             #endregion
-            
+                  if (IsTransform)//stupple
+                  return Transform.Image;
+
+           
 			return Info.Image;
 			}
 		}
+		
+  public short Shape//stupple
+    {
+        get
+        {
+            if (IsTransform)
+                return Transform.Shape;
+
+            return Info.Shape;
+        }
+    }
+
+    public RequiredClass RequiredClass//stupple
+    {
+        get
+        {
+            if (IsTransform)
+                return Transform.RequiredClass;
+
+            return Info.RequiredClass;
+        }
+    }
+
 
     public UserItem Clone()
     {
@@ -2799,7 +2979,10 @@ public class UserItem
                 PoisonAttack = PoisonAttack,
 
                 Slots = Slots,
-				Awake = Awake,
+		Awake = Awake,
+		
+		IsTransform = IsTransform,//stupple
+                Transform = Transform,
             };
 
         return item;
@@ -3028,13 +3211,14 @@ public class ClientMagic
 {
     public Spell Spell;
     public byte BaseCost, LevelCost, Icon;
-    public byte Level1, Level2, Level3;
-    public ushort Need1, Need2, Need3;
+     public byte Level1, Level2, Level3, Level4;//stupple
+    public ushort Need1, Need2, Need3, Need4;//stupple
 
     public byte Level, Key;
     public ushort Experience;
 
     public bool IsTempSpell;
+    public bool IsHumUpTrain;//stupple
     public long CastTime, Delay;
 
     public ClientMagic()
@@ -3051,13 +3235,17 @@ public class ClientMagic
         Level1 = reader.ReadByte();
         Level2 = reader.ReadByte();
         Level3 = reader.ReadByte();
+        Level4 = reader.ReadByte();//stupple
         Need1 = reader.ReadUInt16();
         Need2 = reader.ReadUInt16();
         Need3 = reader.ReadUInt16();
+        Need4 = reader.ReadUInt16();//stupple
+        
 
         Level = reader.ReadByte();
         Key = reader.ReadByte();
         Experience = reader.ReadUInt16();
+        IsHumUpTrain = reader.ReadBoolean();//stupple
 
         Delay = reader.ReadInt64();
     }
@@ -3072,13 +3260,16 @@ public class ClientMagic
         writer.Write(Level1);
         writer.Write(Level2);
         writer.Write(Level3);
+         writer.Write(Level4);//stuppple
         writer.Write(Need1);
         writer.Write(Need2);
         writer.Write(Need3);
+        writer.Write(Need4);//stupple
 
         writer.Write(Level);
         writer.Write(Key);
         writer.Write(Experience);
+        writer.Write(IsHumUpTrain);//Stupple
 
         writer.Write(Delay);
     }
@@ -3877,6 +4068,10 @@ public abstract class Packet
                 return new C.MailLockedItem();
             case (short)ClientPacketIds.MailCost:
                 return new C.MailCost();
+            case (short)ClientPacketIds.Transform://stupple
+                return new C.Transform();
+            case (short)ClientPacketIds.HumupTransform://stupple
+                return new C.HumupTransform();
             case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
                 return new C.UpdateIntelligentCreature();
             case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
@@ -4268,7 +4463,12 @@ public abstract class Packet
                 return new S.ParcelCollected();
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
-			case (short)ServerPacketIds.ResizeInventory:
+                
+            case (short)ServerPacketIds.HumUpPlayer://stupple
+                return new S.HumUpPlayer();
+            case (short)ServerPacketIds.NPCTransform://stupple
+                return new S.NPCTransform();
+	    case (short)ServerPacketIds.ResizeInventory:
                 return new S.ResizeInventory();            
             case (short)ServerPacketIds.NewIntelligentCreature:
                 return new S.NewIntelligentCreature();
@@ -4293,7 +4493,10 @@ public class BaseStats
     {
         switch (Job)
         {
+            witch (Job)//stupple
+        {
             case MirClass.Warrior:
+            case MirClass.HighWarrior:
                 HpGain = 4F;
                 HpGainRate = 4.5F;
                 MpGainRate = 0;
@@ -4318,6 +4521,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Wizard:
+            case MirClass.HighWizard:
                 HpGain = 15F;
                 HpGainRate = 1.8F;
                 MpGainRate = 0;
@@ -4342,6 +4546,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Taoist:
+            case MirClass.HighTaoist:
                 HpGain = 6F;
                 HpGainRate = 2.5F;
                 MpGainRate = 0;
@@ -4366,6 +4571,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Assassin:
+            case MirClass.HighAssassin:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;
@@ -4390,6 +4596,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Archer:
+            case MirClass.HighArcher:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;
