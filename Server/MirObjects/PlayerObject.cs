@@ -328,6 +328,10 @@ namespace Server.MirObjects
                 IsGM = true;
                 SMain.Enqueue(string.Format("{0} is now a GM", Name));
             }
+            
+             if (Class > MirClass.Archer)//stupple
+                AddBuff(new Buff { Type = BuffType.HumUp, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true, Value = 0 });
+ 
 
             if (Level == 0) NewCharacter();
 
@@ -1564,6 +1568,7 @@ namespace Server.MirObjects
                 case MirClass.Archer:
                     if (!info.RequiredClass.HasFlag(RequiredClass.Archer)) return false;
                     break;
+                  
                 default:
                     return false;
             }
@@ -2158,6 +2163,22 @@ namespace Server.MirObjects
                 case MirClass.Archer:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
+                 case MirClass.HighWarrior://stupple
+                    MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate + Level / 20F) * Level);
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + (Level * 3.5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.HighWizard:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.HighTaoist:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.HighAssassin:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.HighArcher:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
             }
 
         }
@@ -2738,6 +2759,49 @@ namespace Server.MirObjects
                     case BuffType.General:
                         ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Value);
                         ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Value);
+                        break;
+                case BuffType.HumUp://stupple
+                        switch (Class)
+                        {
+                            case MirClass.HighWarrior:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 220));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 130));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.HighWizard:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 140));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 210));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.HighTaoist:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 170));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 180));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.HighAssassin:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 195));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 155));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.HighArcher:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 165));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 185));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            default:
+                                break;
+                        }
+
                         break;
                     case BuffType.Exp:
                         ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Value);
@@ -8015,6 +8079,18 @@ namespace Server.MirObjects
                         RefreshStats();
                     }
                     break;
+                 case 3:///stupple
+                    if (Level < magic.Info.Level4 || magic.Info.HumUpTrain == false || (byte)Class <= 4)
+                        return;
+
+                    magic.Experience += exp;
+                    if (magic.Experience >= magic.Info.Need4)
+                    {
+                        magic.Level++;
+                        magic.Experience = 0;
+                        RefreshStats();
+                    }
+                    break;
                 default:
                     return;
             }
@@ -10580,6 +10656,11 @@ namespace Server.MirObjects
                     }
                     break;
             }
+             if (!Functions.EqualClass(item.RequiredClass, Class)) //stupple
+            {
+                ReceiveChat("Cannot use this item.", ChatType.System);
+                return false;
+            }
 
             switch (Class)
             {
@@ -10871,6 +10952,8 @@ namespace Server.MirObjects
                         return false;
                     break;
             }
+             if (!Functions.EqualClass(item.RequiredClass, Class))//stupple
+                return false;
 
 
             switch (Class)
@@ -14826,6 +14909,271 @@ namespace Server.MirObjects
             return count;
         }
 
+        #endregion
+         #region Humup & Transform //stupple
+        public void Humup()
+        {
+            if (Level < 60)
+            {
+                ReceiveChat("This level is still not enough for the Transform.", ChatType.System);
+                return;
+            }
+
+            foreach (UserItem eqItem in Info.Equipment)
+            {
+                if (eqItem != null)
+                {
+                    ReceiveChat("Plase Take Off all you items.", ChatType.System);
+                    return;
+                }
+            }
+
+            switch (Class)
+            {
+                case MirClass.Warrior:
+                    Info.Class = MirClass.HighWarrior;
+                    break;
+                case MirClass.Wizard:
+                    Info.Class = MirClass.HighWizard;
+                    break;
+                case MirClass.Taoist:
+                    Info.Class = MirClass.HighTaoist;
+                    break;
+                case MirClass.Assassin:
+                    Info.Class = MirClass.HighAssassin;
+                    break;
+                case MirClass.Archer:
+                    Info.Class = MirClass.HighArcher;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach (var ob in Envir.Players)//// allow user to see whta going off
+            {
+                ob.ReceiveChat(string.Format("This hero {0} is now can {1} Hero.", Name, (Info.Class)), ChatType.Announcement);
+            }
+
+            Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.HumUpEffect });
+            Enqueue(new S.HumUpPlayer { ObjectID = ObjectID, Class = Class, Location = CurrentLocation });
+            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.HumUpEffect });
+            Broadcast(new S.HumUpPlayer { ObjectID = ObjectID, Class = Class, Location = CurrentLocation });
+            ReceiveChat("Please reconnect to the normal use.", ChatType.System);
+
+            AddBuff(new Buff { Type = BuffType.HumUp, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true, Value = 0 });
+        }
+
+        public void Transform(ulong toUnqueId, ulong fromUnqueId)
+        {
+            if (fromUnqueId != ulong.MaxValue)
+            {
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    UserItem item = Info.Inventory[i];
+                    if (item == null || item.UniqueID != fromUnqueId) continue;
+
+                    for (int j = 0; j < Info.Inventory.Length; j++)
+                    {
+                        UserItem toItem = Info.Inventory[j];
+                        if (toItem == null || toItem.UniqueID != toUnqueId) continue;
+
+                        ushort toImage = toItem.Transform.IsHumup ? toItem.Transform.Image : toItem.Info.Image;
+                        ushort fromImage = item.Transform.IsHumup ? item.Transform.Image : item.Info.Image;
+                        short toShape = toItem.Transform.IsHumup ? toItem.Transform.Shape : toItem.Info.Shape;
+                        short fromShape = item.Transform.IsHumup ? item.Transform.Shape : item.Info.Shape;
+                        RequiredClass toClass = toItem.Transform.IsHumup ? toItem.Transform.RequiredClass : toItem.Info.RequiredClass;
+                        RequiredClass fromClass = item.Transform.IsHumup ? item.Transform.RequiredClass : item.Info.RequiredClass;
+
+                        if (toImage == fromImage &&
+                            toShape == fromShape)
+                        {
+                            Info.Inventory[j].IsTransform = false;
+                            Info.Inventory[j].Transform.Image = toImage;
+                            Info.Inventory[j].Transform.Shape = toShape;
+                            Info.Inventory[j].Transform.RequiredClass = toClass;
+                        }
+                        else
+                        {
+                            Info.Inventory[j].IsTransform = true;
+                            Info.Inventory[j].Transform.Image = fromImage;
+                            Info.Inventory[j].Transform.Shape = fromShape;
+                            Info.Inventory[j].Transform.RequiredClass = toClass;
+                        }
+
+                        Enqueue(new S.RefreshItem { Item = Info.Inventory[j] });
+
+                        Enqueue(new S.DeleteItem { UniqueID = fromUnqueId, Count = 1 });
+                        Info.Inventory[i] = null;
+                        break;
+                    }
+                    break;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    UserItem toItem = Info.Inventory[i];
+                    if (toItem == null || toItem.UniqueID != toUnqueId) continue;
+
+                    Info.Inventory[i].IsTransform = false;
+                    Info.Inventory[i].Transform.IsHumup = false;
+                    Info.Inventory[i].Transform.Image = Info.Inventory[i].Info.Image;
+                    Info.Inventory[i].Transform.Shape = Info.Inventory[i].Info.Shape;
+                    Info.Inventory[i].Transform.RequiredClass = Info.Inventory[i].Info.RequiredClass;
+
+                    Enqueue(new S.RefreshItem { Item = Info.Inventory[i] });
+                    break;
+                }
+            }
+        }
+
+        public void HumupTransform(ulong[] TransUnqueId)
+        {
+            for (int idx = 0; idx < TransUnqueId.Length; idx++)
+            {
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    UserItem item = Info.Inventory[i];
+                    if (item == null || item.UniqueID != TransUnqueId[idx]) continue;
+
+                    Info.Inventory[i].IsTransform = true;
+                    Info.Inventory[i].Transform.IsHumup = true;
+                    Info.Inventory[i].Transform.Image = TransformImage(item);
+                    Info.Inventory[i].Transform.Shape = TransformShape(item);
+                    Info.Inventory[i].Transform.RequiredClass = TransformRequiredClass(item);
+
+                    Enqueue(new S.RefreshItem { Item = Info.Inventory[i] });
+                }
+            }
+        }
+
+        public MirClass GetBeforeHumupClass()
+        {
+            switch (Class)
+            {
+                case MirClass.HighWarrior:
+                    return MirClass.Warrior;
+                case MirClass.HighWizard:
+                    return MirClass.Wizard;
+                case MirClass.HighTaoist:
+                    return MirClass.Taoist;
+                case MirClass.HighAssassin:
+                    return MirClass.Assassin;
+                case MirClass.HighArcher:
+                    return MirClass.Archer;
+                default:
+                    return Class;
+            }
+        }
+
+        public ushort TransformImage(UserItem item)
+        {
+            if (Functions.EqualClass(item.Info.RequiredClass, GetBeforeHumupClass()))
+            {
+                switch (item.Info.Type)
+                {
+                    case ItemType.Weapon:
+                        switch (Class)
+                        {
+                            case MirClass.HighWarrior:
+                                return 2431;
+                            case MirClass.HighWizard:
+                                return 2342;
+                            case MirClass.HighTaoist:
+                                return 2435;
+                            case MirClass.HighAssassin:
+                                return 2437;
+                            case MirClass.HighArcher:
+                                return 3402;
+                            default:
+                                return item.Info.Image;
+                        }
+                    case ItemType.Armour:
+                        switch (Class)
+                        {
+                            case MirClass.HighWarrior:
+                                return (ushort)(item.Info.RequiredGender == RequiredGender.Male ? 2450 : 2460);
+                            case MirClass.HighWizard:
+                                return (ushort)(item.Info.RequiredGender == RequiredGender.Male ? 2451 : 2461);
+                            case MirClass.HighTaoist:
+                                return (ushort)(item.Info.RequiredGender == RequiredGender.Male ? 2452 : 2462);
+                            case MirClass.HighAssassin:
+                                return (ushort)(item.Info.RequiredGender == RequiredGender.Male ? 2453 : 2463);
+                            case MirClass.HighArcher:
+                                return (ushort)(item.Info.RequiredGender == RequiredGender.Male ? 3440 : 3450);
+                            default:
+                                return item.Info.Image;
+                        }
+                }
+            }
+
+            return item.Info.Image;
+        }
+
+        public short TransformShape(UserItem item)
+        {
+            if (Functions.EqualClass(item.Info.RequiredClass, GetBeforeHumupClass()))
+            {
+                switch (item.Info.Type)
+                {
+                    case ItemType.Weapon:
+                        switch (Class)
+                        {
+                            case MirClass.HighWarrior:
+                                return 302;
+                            case MirClass.HighWizard:
+                                return 400;
+                            case MirClass.HighTaoist:
+                                return 501;
+                            case MirClass.HighAssassin:
+                                return 601;
+                            case MirClass.HighArcher:
+                                return 701;
+                            default:
+                                return item.Info.Shape;
+                        }
+                    case ItemType.Armour:
+                        switch (Class)
+                        {
+                            case MirClass.HighWarrior:
+                            case MirClass.HighWizard:
+                            case MirClass.HighTaoist:
+                            case MirClass.HighAssassin:
+                            case MirClass.HighArcher:
+                                return 1;
+                            default:
+                                return item.Info.Shape;
+                        }
+                }
+            }
+
+            return item.Info.Shape;
+        }
+
+        public RequiredClass TransformRequiredClass(UserItem item)
+        {
+            if (Functions.EqualClass(item.Info.RequiredClass, GetBeforeHumupClass()))
+            {
+                switch (Class)
+                {
+                    case MirClass.HighWarrior:
+                        return RequiredClass.HighWarrior;
+                    case MirClass.HighWizard:
+                        return RequiredClass.HighWizard;
+                    case MirClass.HighTaoist:
+                        return RequiredClass.HighTaoist;
+                    case MirClass.HighAssassin:
+                        return RequiredClass.HighAssassin;
+                    case MirClass.HighArcher:
+                        return RequiredClass.HighArcher;
+                    default:
+                        return item.Info.RequiredClass;
+                }
+            }
+
+            return item.Info.RequiredClass;
+        }
         #endregion
 
         #region IntelligentCreatures
