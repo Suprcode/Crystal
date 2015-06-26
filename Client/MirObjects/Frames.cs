@@ -8,6 +8,7 @@ namespace Client.MirObjects
     public class FrameSet
     {
         public static FrameSet Players;
+        public static List<FrameSet> HighPlayers; //stupple
         public static List<FrameSet> NPCs; //Make Array
         public static List<FrameSet> Monsters;
         public static List<FrameSet> HelperPets; //IntelligentCreature
@@ -19,6 +20,8 @@ namespace Client.MirObjects
         {
             FrameSet frame;
             NPCs = new List<FrameSet>();
+            
+            HighPlayers = new List<FrameSet>();//stupple
 
             Monsters = new List<FrameSet>();
 
@@ -1167,6 +1170,18 @@ namespace Client.MirObjects
             EffectCount = effectcount;
             EffectSkip = effectskip;
             EffectInterval = effectinterval;
+        }
+        
+        public Frame(int start, int count, int skip, int interval, bool isEqual)//stupple 
+        {
+            Start = start;
+            Count = count;
+            Skip = skip;
+            Interval = interval;
+            EffectStart = isEqual ? start : 0;
+            EffectCount = isEqual ? count : 0;
+            EffectSkip = isEqual ? skip : 0;
+            EffectInterval = isEqual ? interval : 0;
         }
     }
 
