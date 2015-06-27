@@ -77,7 +77,7 @@ namespace Client.MirObjects
             Players.Frames.Add(MirAction.FishingWait, new Frame(696, 6, 0, 120));
             Players.Frames.Add(MirAction.FishingReel, new Frame(744, 8, 0, 100));
 
-            #endregion
+            
               #endregion  //stupple
             #region HighPlayer Frames
             HighPlayers.Add(frame = new FrameSet());
