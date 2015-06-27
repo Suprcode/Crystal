@@ -3843,6 +3843,10 @@ namespace Server.MirObjects
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
                         break;
+                  case "HUMUP"://stupple
+                        if (!IsGM) return;
+                        Humup();
+                        break;
 
                     case "DIE":
                         LastHitter = null;
