@@ -1348,7 +1348,7 @@ namespace Client.MirObjects
 
                 if (CurrentAction == MirAction.Standing)
                 {
-                    if (Class == MirClass.Archer && HasClassWeapon)
+                    if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
                         CurrentAction = MirAction.Standing;
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
@@ -1476,10 +1476,12 @@ namespace Client.MirObjects
                     case MirAction.Attack1:
                         switch (Class)
                         {
-                            case MirClass.Archer:
+                           case MirClass.Archer:
+                            case MirClass.HighArcher:
                                 Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                             case MirClass.Assassin:
+                            case MirClass.HighAssassin:
                                 if(GameScene.DoubleSlash)
                                     Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 else if (CMain.Shift)
@@ -1488,7 +1490,7 @@ namespace Client.MirObjects
                                     Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 40 ? MirAction.Attack1 : MirAction.Attack4, out Frame);
                                 break;
                             default:
-                                if (CMain.Shift)
+                                if (CMain.Shift && GameScene.Thrusting != true)
                                     Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? MirAction.Attack1 : MirAction.Attack3, out Frame);
                                 else
                                     Frames.Frames.TryGetValue(CurrentAction, out Frame);
@@ -3944,7 +3946,8 @@ namespace Client.MirObjects
             }
 
             int add = 0;
-            if (Class != MirClass.Assassin) //Archer to add?
+            if (Class != MirClass.Assassin || Class != MirClass.HighAssassin)//stupple //Archer to add?
+
                 switch (Armour)
                 {
                     case 3:
