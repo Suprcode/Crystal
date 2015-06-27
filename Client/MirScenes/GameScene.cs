@@ -78,6 +78,10 @@ namespace Client.MirScenes
         public SkillBarDialog SkillBarDialog;
         public ChatOptionDialog ChatOptionDialog;
         public ChatNoticeDialog ChatNoticeDialog;
+        
+        public TransformImageDialog TransformImageDialog; //stupple
+        public TransformBackDialog TransformBackDialog;  //stupple
+        public HumupTransformDialog HumupTransformDialog; //stupple
 
         public QuestListDialog QuestListDialog;
         public QuestDetailDialog QuestDetailDialog;
@@ -201,6 +205,11 @@ namespace Client.MirScenes
             SkillBarDialog = new SkillBarDialog { Parent = this, Visible = false };
             ChatOptionDialog = new ChatOptionDialog { Parent = this, Visible = false };
             ChatNoticeDialog = new ChatNoticeDialog { Parent = this, Visible = false };
+            
+            
+            TransformImageDialog = new TransformImageDialog { Parent = this, Visible = false }; //stupple
+            TransformBackDialog = new TransformBackDialog { Parent = this, Visible = false };//stupple
+            HumupTransformDialog = new HumupTransformDialog { Parent = this, Visible = true };//stupple
 
             QuestListDialog = new QuestListDialog { Parent = this, Visible = false };
             QuestDetailDialog = new QuestDetailDialog {Parent = this, Visible = false};
@@ -418,6 +427,9 @@ namespace Client.MirScenes
                     NPCAwakeDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+                    TransformImageDialog.Hide(); //stupple
+                    TransformBackDialog.Hide(); //stupple
+                    HumupTransformDialog.Hide();//stupple
                     break;
                 case Keys.O:
                 case Keys.F12:
@@ -571,7 +583,7 @@ namespace Client.MirScenes
         {
             if (User.RidingMount || User.Fishing) return;
 
-            if(!User.HasClassWeapon && User.Weapon >= 0)
+            if (!Functions.EqualClass(User.Equipment[(int)EquipmentSlot.Weapon].RequiredClass, User.Class) && User.Weapon >= 0)//stupple
             {
                 ChatDialog.ReceiveChat("You must be wearing a suitable weapon to perform this skill", ChatType.System);
                 return;
@@ -1372,6 +1384,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.MailCost:
                     MailCost((S.MailCost)p);
                     break;
+                 case (short)ServerPacketIds.HumUpPlayer://stupple
+                    HumUpPlayer((S.HumUpPlayer)p);
+                    break;
+                case (short)ServerPacketIds.NPCTransform://stupple
+                    NPCTransform((S.NPCTransform)p);
+                    break;   
                 case (short)ServerPacketIds.ResizeInventory:
                     ResizeInventory((S.ResizeInventory)p);
                     break;
@@ -1533,6 +1551,8 @@ namespace Client.MirScenes
                     return 24;//884;
                 case BuffType.General:
                     return 503;//903;
+                 case BuffType.HumUp://stupple
+                    return 508;//508
                 case BuffType.Exp:
                     return 334;//903;
                 case BuffType.Drop:
@@ -1583,7 +1603,7 @@ namespace Client.MirScenes
         }
         private void UserInformation(S.UserInformation p)
         {
-            User = new UserObject(p.ObjectID);
+            User = new UserObject(p.ObjectID, p.Class);//stupple
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
@@ -1625,7 +1645,7 @@ namespace Client.MirScenes
         }
         private void ObjectPlayer(S.ObjectPlayer p)
         {
-            PlayerObject player = new PlayerObject(p.ObjectID);
+             PlayerObject player = new PlayerObject(p.ObjectID, p.Class);//stupple
             player.Load(p);
         }
         private void ObjectRemove(S.ObjectRemove p)
@@ -2726,6 +2746,9 @@ namespace Client.MirScenes
             // BuyBackDialog.Hide();
             NPCDropDialog.Hide();
             StorageDialog.Hide();
+            TransformImageDialog.Hide(); //stupple
+            TransformBackDialog.Hide();//stupple
+            HumupTransformDialog.Hide();//stupple
         }
         private void NPCUpdate(S.NPCUpdate p)
         {
@@ -3255,6 +3278,11 @@ namespace Client.MirScenes
                             ef.Played += (o, e) => SoundManager.PlaySound(50000);
                             ob.Effects.Add(ef);
                             ob.Effects.Add(new Effect(Libraries.Magic3, 830, 5, 500, ob, CMain.Time + p.DelayTime) { Blend = false });
+                        }
+                        break;
+                     case SpellEffect.HumUpEffect://stupple
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Effect, 760, 94, 9400, ob));
                         }
                         break;
                 }
@@ -4484,6 +4512,27 @@ namespace Client.MirScenes
                     break;
                 case 1:
                     GameScene.Scene.MailReadParcelDialog.Hide();
+                    break;
+            }
+        }
+         private void HumUpPlayer(S.HumUpPlayer p)//stupple
+        {
+            PlayerObject player = (PlayerObject)GameScene.Scene.MapControl.FindObject(p.ObjectID, p.Location.X, p.Location.Y);
+            player.Class = p.Class;
+        }
+
+        private void NPCTransform(S.NPCTransform p)//stupple
+        {
+            switch (p.Type)
+            {
+                case 0:
+                    TransformImageDialog.Show();
+                    break;
+                case 1:
+                    TransformBackDialog.Show();
+                    break;
+                case 2:
+                    HumupTransformDialog.Show();
                     break;
             }
         }
@@ -6151,7 +6200,34 @@ namespace Client.MirScenes
             }
 
             #endregion
+   #region CLASS //stupple all
+            if (item.RequiredClass != RequiredClass.None)
+            {
+                count++;
+                Color colour = Color.White;
 
+                if (!Functions.EqualClass(item.RequiredClass, MapObject.User.Class))
+                {
+                    colour = Color.Red;
+                }
+
+                MirLabel CLASSLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = colour,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    OutLineColour = Color.FromArgb(255, 70, 70, 70),
+                    Parent = ItemLabel,
+                    Text = string.Format("Class Required : {0}", realItem.RequiredClass)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CLASSLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, CLASSLabel.DisplayRectangle.Bottom));
+            }
+
+
+            #endregion
             if (count > 0)
             {
                 ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
@@ -8047,7 +8123,8 @@ namespace Client.MirScenes
 
                     GameScene.LogTime = CMain.Time + Globals.LogDelay;
 
-                    if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
+                                        if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)//stupple
+
                     {
                         if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 9))
                         {
@@ -8133,7 +8210,8 @@ namespace Client.MirScenes
                                 MapObject target = null;
                                 if (MapObject.MouseObject is MonsterObject || MapObject.MouseObject is PlayerObject) target = MapObject.MouseObject;
 
-                                if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount)
+                                if (User.Class == MirClass.Archer|| User.Class == MirClass.HighArcher && User.HasClassWeapon && !User.RidingMount) //stupple
+
                                 {
                                     if (target != null)
                                     {
@@ -8162,7 +8240,8 @@ namespace Client.MirScenes
                             return;
                         }
 
-                        if (MapObject.MouseObject is MonsterObject && User.Class == MirClass.Archer && MapObject.TargetObject != null && !MapObject.TargetObject.Dead && User.HasClassWeapon && !User.RidingMount) //ArcherTest - range attack
+                        if (MapObject.MouseObject is MonsterObject && User.Class == MirClass.Archer || User.Class == MirClass.HighArcher && MapObject.TargetObject != null && !MapObject.TargetObject.Dead && User.HasClassWeapon && !User.RidingMount) //ArcherTest - range attack //stupple
+
                         {
                             if (Functions.InRange(MapObject.MouseObject.CurrentLocation, User.CurrentLocation, 9))
                             {
@@ -8265,7 +8344,8 @@ namespace Client.MirScenes
             if (((!MapObject.TargetObject.Name.EndsWith(")") && !(MapObject.TargetObject is PlayerObject)) || !CMain.Shift) &&
                 (MapObject.TargetObject.Name.EndsWith(")") || !(MapObject.TargetObject is MonsterObject))) return;
             if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 1)) return;
-            if (User.Class == MirClass.Archer && User.HasClassWeapon && (MapObject.TargetObject is MonsterObject || MapObject.TargetObject is PlayerObject)) return; //ArcherTest - stop walking
+            if (User.Class == MirClass.Archer || User.Class == MirClass.HighArcher && User.HasClassWeapon && (MapObject.TargetObject is MonsterObject || MapObject.TargetObject is PlayerObject)) return; //ArcherTest - stop walking //stupple
+
             direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation);
 
             if (!CanWalk(direction)) return;
@@ -10750,41 +10830,120 @@ namespace Client.MirScenes
             };
             CharacterPage.AfterDraw += (o, e) =>
             {
-                if (Libraries.StateItems == null) return;
+               MLibrary JobStaetItems = null; //stupple humup start
+
+                if (GameScene.User.HasClassWeapon)
+                {
+                    switch (GameScene.User.Class)
+                    {
+                        case MirClass.HighWarrior:
+                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
+                            Libraries.Prguse.Draw(330 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighWizard:
+                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
+                            Libraries.Prguse.Draw(332 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighTaoist:
+                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
+                            Libraries.Prguse.Draw(334 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighAssassin:
+                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
+                            Libraries.Prguse.Draw(336 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighArcher:
+                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
+                            Libraries.Prguse.Draw(320 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        default:
+                            JobStaetItems = Libraries.StateItems;
+                            break;
+                    }
+                }
+                else
+                {
+                    if ((byte)GameScene.User.Class < 5)
+                    {
+                        JobStaetItems = Libraries.StateItems;
+                    }
+                    else
+                    {
+                        JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsComM : Libraries.StateItemsComW;
+                        Libraries.Prguse.Draw(320 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                    }
+                }
+
+                if (JobStaetItems == null) return;
+
                 ItemInfo RealItem = null;
                 if (Grid[(int)EquipmentSlot.Armour].Item != null)
                 {
                     if (GameScene.User.WingEffect == 1 || GameScene.User.WingEffect == 2)
                     {
-                        int wingOffset = GameScene.User.WingEffect == 1 ? 2 : 4;
+                        int wingOffset = 0;
 
+                        if (GameScene.User.HasClassWeapon)
+                        {
+                            switch (GameScene.User.Class)
+                            {
+                                case MirClass.HighWarrior:
+                                    wingOffset = GameScene.User.WingEffect == 1 ? 10 : 20;
+                                    break;
+                                case MirClass.HighWizard:
+                                    wingOffset = GameScene.User.WingEffect == 1 ? 12 : 22;
+                                    break;
+                                case MirClass.HighTaoist:
+                                    wingOffset = GameScene.User.WingEffect == 1 ? 14 : 24;
+                                    break;
+                                case MirClass.HighAssassin:
+                                    wingOffset = GameScene.User.WingEffect == 1 ? 16 : 26;
+                                    break;
+                                case MirClass.HighArcher:
+                                    wingOffset = GameScene.User.WingEffect == 1 ? 18 : 28;
+                                    break;
+                                default:
+                                    wingOffset = GameScene.User.WingEffect == 1 ? 2 : 4;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            if ((byte)GameScene.User.Class < 5)
+                            {
+                                wingOffset = GameScene.User.WingEffect == 1 ? 2 : 4;
+                            }
+                            else
+                            {
+                                wingOffset = GameScene.User.WingEffect == 1 ? 18 : 28;
+                            }
+                        }
+
+                        //stupple hum stop
                         int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
 
                         Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
                     }
 
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Armour].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStaetItems.Draw(Grid[(int)EquipmentSlot.Armour].Item.Image, DisplayLocation, Color.White, true, 1F);
 
                 }
                 if (Grid[(int)EquipmentSlot.Weapon].Item != null)
                 {
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Weapon].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStaetItems.Draw(Grid[(int)EquipmentSlot.Weapon].Item.Image, DisplayLocation, Color.White, true, 1F);
                 }
 
                 if (Grid[(int)EquipmentSlot.Helmet].Item != null)
-                    Libraries.StateItems.Draw(Grid[(int)EquipmentSlot.Helmet].Item.Info.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStaetItems.Draw(Grid[(int)EquipmentSlot.Helmet].Item.Info.Image, DisplayLocation, Color.White, true, 1F);
                 else
                 {
-                    int hair = 441 + MapObject.User.Hair + (MapObject.User.Class == MirClass.Assassin ? 20 : 0) + (MapObject.User.Gender == MirGender.Male ? 0 : 40);
+                    int hair = ((byte)GameScene.User.Class < 5) ? 441 : 461 + MapObject.User.Hair + (MapObject.User.Gender == MirGender.Male ? 0 : 40);
 
-                    int offSetX = MapObject.User.Class == MirClass.Assassin ? (MapObject.User.Gender == MirGender.Male ? 6 : 4) : 0;
-                    int offSetY = MapObject.User.Class == MirClass.Assassin ? (MapObject.User.Gender == MirGender.Male ? 25 : 18) : 0;
-
-                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X + offSetX, DisplayLocation.Y + offSetY), Color.White, true, 1F);
+                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                 }
-            };
+            };//stupple end
 
             StatusPage = new MirImageControl
             {
@@ -11275,6 +11434,26 @@ namespace Client.MirScenes
                     break;
                 case MirClass.Archer:
                     ClassImage.Index = 104;// + offSet * 5;
+                    break;
+                 case MirClass.HighWarrior://stupple
+                    ClassImage.Index = 100;
+                    CharacterPage.Index = 379;
+                    break;
+                case MirClass.HighWizard:
+                    ClassImage.Index = 101;
+                    CharacterPage.Index = 379;
+                    break;
+                case MirClass.HighTaoist:
+                    ClassImage.Index = 102;
+                    CharacterPage.Index = 379;
+                    break;
+                case MirClass.HighAssassin:
+                    ClassImage.Index = 103;
+                    CharacterPage.Index = 379;
+                    break;
+                case MirClass.HighArcher:
+                    ClassImage.Index = 104;
+                    CharacterPage.Index = 379;
                     break;
             }
 
@@ -11814,7 +11993,34 @@ namespace Client.MirScenes
         public MirLabel NameLabel;
         public MirLabel GuildLabel, LoverLabel;
 
+public bool HasClassWeapon //stupple
+        {
+            get
+            {
+                if (WeaponCell == null || WeaponCell.Item == null)
+                    return true;
 
+                switch (WeaponCell.Item.Shape / 100)
+                {
+                    default:
+                        return Class == MirClass.Wizard || Class == MirClass.Warrior || Class == MirClass.Taoist;
+                    case 1:
+                        return Class == MirClass.Assassin;
+                    case 2:
+                        return Class == MirClass.Archer;
+                    case 3:
+                        return Class == MirClass.HighWarrior;
+                    case 4:
+                        return Class == MirClass.HighWizard;
+                    case 5:
+                        return Class == MirClass.HighTaoist;
+                    case 6:
+                        return Class == MirClass.HighAssassin;
+                    case 7:
+                        return Class == MirClass.HighArcher;
+                }
+            }
+        }//stupple hum up end
 
         public MirItemCell
             WeaponCell,
@@ -11849,21 +12055,103 @@ namespace Client.MirScenes
             };
             CharacterPage.AfterDraw += (o, e) =>
             {
-                if (Libraries.StateItems == null) return;
+                MLibrary JobStaetItems = null; //stupple
+                CharacterPage.Index = 379;
+
+                if (HasClassWeapon)
+                {
+                    switch (Class)
+                    {
+                        case MirClass.HighWarrior:
+                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
+                            Libraries.Prguse.Draw(330 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighWizard:
+                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
+                            Libraries.Prguse.Draw(332 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighTaoist:
+                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
+                            Libraries.Prguse.Draw(334 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighAssassin:
+                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
+                            Libraries.Prguse.Draw(336 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        case MirClass.HighArcher:
+                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
+                            Libraries.Prguse.Draw(320 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                            break;
+                        default:
+                            JobStaetItems = Libraries.StateItems;
+                            CharacterPage.Index = Gender == MirGender.Male ? 345 : 346;
+                            break;
+                    }
+                }
+                else
+                {
+                    if ((byte)Class < 5)
+                    {
+                        JobStaetItems = Libraries.StateItems;
+                        CharacterPage.Index = Gender == MirGender.Male ? 345 : 346;
+                    }
+                    else
+                    {
+                        JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsComM : Libraries.StateItemsComW;
+                        Libraries.Prguse.Draw(320 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
+                    }
+                }
+
+                if (JobStaetItems == null) return;
 
                 ItemInfo RealItem = null;
-
                 if (ArmorCell.Item != null)
                 {
-                    RealItem = Functions.GetRealItem(ArmorCell.Item.Info, Level, Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
+                    int WingEffect = ArmorCell.Item.Info.Effect;
 
-                    if (RealItem.Effect > 0)
+                    if (ArmorCell.Item.Info.Effect == 1 || WingEffect == 2)
                     {
-                        int wingOffset = RealItem.Effect == 1 ? 2 : 4;
+                        int wingOffset = 0;
 
-                        int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
+                        if (HasClassWeapon)
+                        {
+                            switch (Class)
+                            {
+                                case MirClass.HighWarrior:
+                                    wingOffset = WingEffect == 1 ? 10 : 20;
+                                    break;
+                                case MirClass.HighWizard:
+                                    wingOffset = WingEffect == 1 ? 12 : 22;
+                                    break;
+                                case MirClass.HighTaoist:
+                                    wingOffset = WingEffect == 1 ? 14 : 24;
+                                    break;
+                                case MirClass.HighAssassin:
+                                    wingOffset = WingEffect == 1 ? 16 : 26;
+                                    break;
+                                case MirClass.HighArcher:
+                                    wingOffset = WingEffect == 1 ? 18 : 28;
+                                    break;
+                                default:
+                                    wingOffset = WingEffect == 1 ? 2 : 4;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            if ((byte)Class < 5)
+                            {
+                                wingOffset = WingEffect == 1 ? 2 : 4;
+                            }
+                            else
+                            {
+                                wingOffset = WingEffect == 1 ? 18 : 28;
+                            }
+                        }
 
+                        int genderOffset = Gender == MirGender.Male ? 0 : 1;
+
+                        
                         Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
                     }
                 }
@@ -11873,20 +12161,21 @@ namespace Client.MirScenes
                     RealItem = Functions.GetRealItem(WeaponCell.Item.Info, Level, Class, GameScene.ItemInfoList);
                     Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
                 }
+                if (WeaponCell.Item != null)
+                {
+                    RealItem = Functions.GetRealItem(WeaponCell.Item.Info, Level, Class, GameScene.ItemInfoList);
+                    JobStaetItems.Draw(WeaponCell.Item.Image, DisplayLocation, Color.White, true, 1F);
+                }
 
                 if (HelmetCell.Item != null)
-                    Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStaetItems.Draw(HelmetCell.Item.Info.Image, DisplayLocation, Color.White, true, 1F);
                 else
                 {
-                    int hair = 441 + Hair + (Class == MirClass.Assassin ? 20 : 0) + (Gender == MirGender.Male ? 0 : 40);
+                    int hair = ((byte)Class < 5) ? 441 : 461 + Hair + (Gender == MirGender.Male ? 0 : 40);
 
-                    int offSetX = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 6 : 4) : 0;
-                    int offSetY = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 25 : 18) : 0;
-
-                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X + offSetX, DisplayLocation.Y + offSetY), Color.White, true, 1F);
+                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                 }
-            };
-
+            };//stupple hum up end
 
             CloseButton = new MirButton
             {
@@ -12116,21 +12405,26 @@ namespace Client.MirScenes
 
             CharacterPage.Index = 340 + offSet;
 
-            switch (Class)
+            switch (Class)//stupple
             {
-                case MirClass.Warrior:
+                 case MirClass.Warrior:
+                case MirClass.HighWarrior:
                     ClassImage.Index = 100;// + offSet * 5;
                     break;
                 case MirClass.Wizard:
+                case MirClass.HighWizard:
                     ClassImage.Index = 101;// + offSet * 5;
                     break;
                 case MirClass.Taoist:
+                case MirClass.HighTaoist:
                     ClassImage.Index = 102;// + offSet * 5;
                     break;
                 case MirClass.Assassin:
+                case MirClass.HighAssassin:
                     ClassImage.Index = 103;// + offSet * 5;
                     break;
                 case MirClass.Archer:
+                case MirClass.HighArcher:
                     ClassImage.Index = 104;// + offSet * 5;
                     break;
             }
@@ -13190,6 +13484,9 @@ namespace Client.MirScenes
             GameScene.Scene.NPCGoodsDialog.Hide();
             GameScene.Scene.NPCDropDialog.Hide();
             GameScene.Scene.NPCAwakeDialog.Hide();
+            GameScene.Scene.TransformImageDialog.Hide();//stupple
+            GameScene.Scene.TransformBackDialog.Hide();//stupple
+            GameScene.Scene.HumupTransformDialog.Hide();//stupple
 
             /*
             GameScene.Scene.BuyBackDialog.Hide();*/
@@ -14367,7 +14664,13 @@ namespace Client.MirScenes
                 case 2:
                     ExpLabel.Text = string.Format("{0}/{1}", Magic.Experience, Magic.Need3);
                     break;
-                case 3:
+               case 3://stupple
+                    if (magic.IsHumUpTrain && (byte)GameScene.User.Class >= 5 && magic.Level4 <= GameScene.User.Level)
+                        ExpLabel.Text = string.Format("{0}/{1}", Magic.Experience, Magic.Need4);
+                    else
+                        ExpLabel.Text = "-";
+                    break;
+                case 4:
                     ExpLabel.Text = "-";
                     break;
             }
@@ -19990,6 +20293,9 @@ namespace Client.MirScenes
                     break;
                 case BuffType.General:
                     text = string.Format("Mirian Advantage\nExpRate increased by {0}%\nDropRate increased by {0}%\n", Value);
+                    break;
+                 case BuffType.HumUp://stupple
+                    text = string.Format("Humup\n");
                     break;
                 case BuffType.Exp:
                     text = string.Format("ExpRate\nIncreased by {0}%\n", Value);

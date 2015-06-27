@@ -72,6 +72,12 @@ namespace Client.MirControls
                         return NPCAwakeDialog.Items;
                     case MirGridType.Mail:
                         return MailComposeParcelDialog.Items;
+                    case MirGridType.Transform://stupple
+                        return TransformImageDialog.Items;
+                    case MirGridType.TransformBack:
+                        return TransformBackDialog.Items;
+                    case MirGridType.HumupTransform:
+                        return HumupTransformDialog.Items;
                     default:
                         throw new NotImplementedException();
                 }
@@ -870,6 +876,30 @@ namespace Client.MirControls
                                 GameScene.SelectedCell = null;
                                 break;
                             #endregion
+                            #region From Transform//stupple
+                            case MirGridType.Transform: //From Transform
+                                GameScene.Scene.InventoryDialog.Grid[TransformImageDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot]].Locked = false;
+                                GameScene.SelectedCell.Locked = false;
+                                GameScene.SelectedCell.Item = null;
+                                GameScene.SelectedCell = null;
+                                break;
+                            #endregion 
+                            #region From TransformBack//stupple
+                            case MirGridType.TransformBack: //From Transform
+                                GameScene.Scene.InventoryDialog.Grid[TransformBackDialog.ItemsIdx[0]].Locked = false;
+                                GameScene.SelectedCell.Locked = false;
+                                GameScene.SelectedCell.Item = null;
+                                GameScene.SelectedCell = null;
+                                break;
+                            #endregion
+                            #region From HumupTransform //stupple
+                            case MirGridType.HumupTransform: //From Transform
+                                GameScene.Scene.InventoryDialog.Grid[HumupTransformDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot]].Locked = false;
+                                GameScene.SelectedCell.Locked = false;
+                                GameScene.SelectedCell.Item = null;
+                                GameScene.SelectedCell = null;
+                                break;
+                            #endregion 
                         }
                         break;
                     #endregion
@@ -1268,6 +1298,207 @@ namespace Client.MirControls
                             }
                         }
                         break;
+                    #endregion
+                     #region To Transform //stupple
+                    case MirGridType.Transform:
+                        {
+                            int errorCode = 0;
+
+                            if (GameScene.SelectedCell.GridType != MirGridType.Inventory && _itemSlot < 1) return;
+
+                            switch (_itemSlot)
+                            {
+                                //baseitem
+                                case 0:
+                                    {
+                                        if (GameScene.SelectedCell.Item.Transform.IsHumup)
+                                        {
+                                            errorCode = -5;
+                                            break;
+                                        }
+
+                                        if ((GameScene.SelectedCell.Item.Info.Type == ItemType.Weapon ||
+                                            GameScene.SelectedCell.Item.Info.Type == ItemType.Armour) &&
+                                            _itemSlot == 0)
+                                        {
+                                            if (Item == null)
+                                            {
+                                                Item = GameScene.SelectedCell.Item;
+                                                GameScene.SelectedCell.Locked = true;
+                                                TransformImageDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                            }
+                                            else
+                                            {
+                                                Network.Enqueue(new C.AwakeningLockedItem { UniqueID = Item.UniqueID, Locked = false });
+
+                                                Item = GameScene.SelectedCell.Item;
+                                                GameScene.SelectedCell.Locked = true;
+                                                TransformImageDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorCode = -1;
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        if (GameScene.Scene.TransformImageDialog.ItemCells[0].Item.Info.Type == GameScene.SelectedCell.Item.Info.Type &&
+                                            GameScene.Scene.TransformImageDialog.ItemCells[0].Item.UniqueID != GameScene.SelectedCell.Item.UniqueID &&
+                                            _itemSlot == 1)
+                                        {
+
+                                            if (GameScene.Scene.TransformImageDialog.ItemCells[0].Item.Info.RequiredGender != GameScene.SelectedCell.Item.Info.RequiredGender)
+                                            {
+                                                errorCode = -3;
+                                                break;
+                                            }
+
+                                            if (GameScene.SelectedCell.Item.IsTransform)
+                                            {
+                                                errorCode = -4;
+                                                break;
+                                            }
+
+                                            if (Item == null)
+                                            {
+                                                Item = GameScene.SelectedCell.Item;
+                                                GameScene.SelectedCell.Locked = true;
+                                                TransformImageDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                            }
+                                            else
+                                            {
+                                                Network.Enqueue(new C.AwakeningLockedItem { UniqueID = Item.UniqueID, Locked = false });
+
+                                                Item = GameScene.SelectedCell.Item;
+                                                GameScene.SelectedCell.Locked = true;
+                                                TransformImageDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorCode = -2;
+                                        }
+                                    }
+                                    break;
+                            }
+
+                            GameScene.SelectedCell = null;
+                            MirMessageBox messageBox;
+
+                            switch (errorCode)
+                            {
+                                case -1:
+                                    messageBox = new MirMessageBox("The only weapons and armor.", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
+                                    break;
+                                case -2:
+                                    messageBox = new MirMessageBox("This must be the same type as the conversion target.", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
+                                    break;
+                                case -3:
+                                    messageBox = new MirMessageBox("This must be the same gender and converted..", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
+                                    break;
+                                case -4:
+                                    messageBox = new MirMessageBox("Item appearance can not be changed.", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
+                                    break;
+                                case -5:
+                                    messageBox = new MirMessageBox("items can not be used.", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
+                                    break;
+                            }
+                        }
+                        return;
+                    #endregion
+                    #region To TransformBack //stupple
+                    case MirGridType.TransformBack:
+                        {
+                            int errorCode = 0;
+
+                            if (GameScene.SelectedCell.GridType != MirGridType.Inventory && _itemSlot < 0) return;
+
+                            if ((GameScene.SelectedCell.Item.Info.Type == ItemType.Weapon ||
+                                            GameScene.SelectedCell.Item.Info.Type == ItemType.Armour) &&
+                                            _itemSlot == 0)
+                            {
+                                if (Item == null)
+                                {
+                                    Item = GameScene.SelectedCell.Item;
+                                    GameScene.SelectedCell.Locked = true;
+                                    TransformBackDialog.ItemsIdx[0] = GameScene.SelectedCell._itemSlot;
+                                }
+                                else
+                                {
+                                    Network.Enqueue(new C.AwakeningLockedItem { UniqueID = Item.UniqueID, Locked = false });
+
+                                    Item = GameScene.SelectedCell.Item;
+                                    GameScene.SelectedCell.Locked = true;
+                                    TransformBackDialog.ItemsIdx[0] = GameScene.SelectedCell._itemSlot;
+                                }
+                            }
+                            else
+                            {
+                                errorCode = -1;
+                            }
+
+                            GameScene.SelectedCell = null;
+                            MirMessageBox messageBox;
+
+                            switch (errorCode)
+                            {
+                                case -1:
+                                    messageBox = new MirMessageBox("The only weapons and armor.", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
+                                    break;
+                            }
+                        }
+                        return;
+                    #endregion
+                    #region To HumupTransform //stupple
+                    case MirGridType.HumupTransform:
+                        {
+                            int errorCode = 0;
+
+                            if (GameScene.SelectedCell.GridType != MirGridType.Inventory && _itemSlot < 0) return;
+
+                            if (GameScene.SelectedCell.Item.Info.Type == ItemType.Weapon ||
+                                            GameScene.SelectedCell.Item.Info.Type == ItemType.Armour)
+                            {
+                                if (Item == null)
+                                {
+                                    Item = GameScene.SelectedCell.Item;
+                                    GameScene.SelectedCell.Locked = true;
+                                    HumupTransformDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                }
+                                else
+                                {
+                                    Network.Enqueue(new C.AwakeningLockedItem { UniqueID = Item.UniqueID, Locked = false });
+
+                                    Item = GameScene.SelectedCell.Item;
+                                    GameScene.SelectedCell.Locked = true;
+                                    HumupTransformDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                }
+                            }
+                            else
+                            {
+                                errorCode = -1;
+                            }
+
+                            GameScene.SelectedCell = null;
+                            MirMessageBox messageBox;
+
+                            switch (errorCode)
+                            {
+                                case -1:
+                                    messageBox = new MirMessageBox("The only weapons and armor.", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
+                                    break;
+                            }
+                        }
+                        return;
                     #endregion
                 }
 
