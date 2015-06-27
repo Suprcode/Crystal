@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -9,9 +9,11 @@ using Client.MirNetwork;
 using Client.MirSounds;
 using C = ClientPackets;
 using S = ServerPackets;
+
+
 namespace Client.MirScenes
 {
-    public class SelectScene : MirScene
+    public class SelectScene : MirScene //stupple copy all
     {
         public MirImageControl Background, Title;
         private NewCharacterDialog _character;
@@ -33,7 +35,8 @@ namespace Client.MirScenes
             Characters = characters;
             SortList();
 
-            KeyPress +=SelectScene_KeyPress;
+            KeyPress += SelectScene_KeyPress;
+            KeyDown += SelectScene_KeyDown;
 
             Background = new MirImageControl
             {
@@ -51,14 +54,14 @@ namespace Client.MirScenes
             };
 
             ServerLabel = new MirLabel
-                {
-                    Location = new Point(322, 44),
-                    Parent = Background,
-                    Size = new Size(155, 17),
-                    Text = "Legend of Mir 2",
-                    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
-                };
-            
+            {
+                Location = new Point(322, 44),
+                Parent = Background,
+                Size = new Size(155, 17),
+                Text = "Legend of Mir 2",
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
+            };
+
             StartGameButton = new MirButton
             {
                 Enabled = false,
@@ -72,14 +75,14 @@ namespace Client.MirScenes
             StartGameButton.Click += (o, e) => StartGame();
 
             NewCharacterButton = new MirButton
-                {
-                    HoverIndex = 344,
-                    Index = 343,
-                    Library = Libraries.Title,
-                    Location = new Point(230, 568),
-                    Parent = Background,
-                    PressedIndex = 345
-                };
+            {
+                HoverIndex = 344,
+                Index = 343,
+                Library = Libraries.Title,
+                Location = new Point(230, 568),
+                Parent = Background,
+                PressedIndex = 345
+            };
             NewCharacterButton.Click += (o, e) => _character = new NewCharacterDialog { Parent = this };
 
             DeleteCharacterButton = new MirButton
@@ -102,6 +105,11 @@ namespace Client.MirScenes
                 Location = new Point(470, 568),
                 Parent = Background,
                 PressedIndex = 351
+            };
+            CreditsButton.Click += (o, e) =>
+            {
+                SoundManager.StopSound(SoundList.SelectMusic);
+                ActiveScene = new LoginScene();
             };
 
             ExitGame = new MirButton
@@ -133,10 +141,10 @@ namespace Client.MirScenes
             };
             CharacterDisplay.AfterDraw += (o, e) =>
             {
-               // if (_selected >= 0 && _selected < Characters.Count && characters[_selected].Class == MirClass.Wizard)
-                    Libraries.ChrSel.DrawBlend(CharacterDisplay.Index + 560, CharacterDisplay.DisplayLocationWithoutOffSet, Color.White, true);
+                // if (_selected >= 0 && _selected < Characters.Count && characters[_selected].Class == MirClass.Wizard)
+                Libraries.ChrSel.DrawBlend(CharacterDisplay.Index + 560, CharacterDisplay.DisplayLocationWithoutOffSet, Color.White, true);
             };
-            
+
             CharacterButtons = new CharacterButton[4];
 
             CharacterButtons[0] = new CharacterButton
@@ -145,7 +153,7 @@ namespace Client.MirScenes
                 Parent = Background,
                 Sound = SoundList.ButtonA,
             };
-            CharacterButtons[0].Click += (o,e) =>
+            CharacterButtons[0].Click += (o, e) =>
             {
                 if (characters.Count <= 0) return;
 
@@ -203,15 +211,36 @@ namespace Client.MirScenes
                 Border = true,
             };
             LastAccessLabelLabel = new MirLabel
-                {
-                    Location = new Point(-80, 0),
-                    Parent = LastAccessLabel,
-                    Text = "Last Online:",
-                    Size = new Size(100, 21),
-                    DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
-                    Border = true,
-                };
+            {
+                Location = new Point(-80, 0),
+                Parent = LastAccessLabel,
+                Text = "Last Online:",
+                Size = new Size(100, 21),
+                DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
+                Border = true,
+            };
             UpdateInterface();
+        }
+
+        private void SelectScene_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Down)
+            {
+                if (_selected < Characters.Count - 1)
+                    _selected++;
+                else
+                    _selected = Characters.Count - 1;
+                UpdateInterface();
+            }
+
+            if (e.KeyCode == Keys.Up)
+            {
+                if (_selected > 0)
+                    _selected--;
+                else
+                    _selected = 0;
+                UpdateInterface();
+            }
         }
 
         private void SelectScene_KeyPress(object sender, KeyPressEventArgs e)
@@ -252,15 +281,15 @@ namespace Client.MirScenes
             StartGameButton.Enabled = false;
 
             Network.Enqueue(new C.StartGame
-                {
-                    CharacterIndex = Characters[_selected].Index
-                });
+            {
+                CharacterIndex = Characters[_selected].Index
+            });
 
         }
 
         public override void Process()
         {
-            
+
 
         }
         public override void ProcessPacket(Packet p)
@@ -286,7 +315,7 @@ namespace Client.MirScenes
                     StartGame((S.StartGameBanned)p);
                     break;
                 case (short)ServerPacketIds.StartGameDelay:
-                    StartGame((S.StartGameDelay) p);
+                    StartGame((S.StartGameDelay)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -297,7 +326,7 @@ namespace Client.MirScenes
         private void NewCharacter(S.NewCharacter p)
         {
             _character.OKButton.Enabled = true;
-            
+
             switch (p.Result)
             {
                 case 0:
@@ -330,7 +359,7 @@ namespace Client.MirScenes
         {
             _character.Dispose();
             MirMessageBox.Show("Your character was created successfully.");
-            
+
             Characters.Insert(0, p.CharInfo);
             _selected = 0;
             UpdateInterface();
@@ -386,10 +415,10 @@ namespace Client.MirScenes
 
             long time = CMain.Time + p.Milliseconds;
 
-            MirMessageBox message = new MirMessageBox(string.Format("You cannot log onto this character for another {0} seconds.", Math.Ceiling(p.Milliseconds/1000M)));
+            MirMessageBox message = new MirMessageBox(string.Format("You cannot log onto this character for another {0} seconds.", Math.Ceiling(p.Milliseconds / 1000M)));
 
-            message.BeforeDraw += (o, e) => message.Label.Text = string.Format("You cannot log onto this character for another {0} seconds.", Math.Ceiling((time - CMain.Time)/1000M));
-                
+            message.BeforeDraw += (o, e) => message.Label.Text = string.Format("You cannot log onto this character for another {0} seconds.", Math.Ceiling((time - CMain.Time) / 1000M));
+
 
             message.AfterDraw += (o, e) =>
             {
@@ -405,7 +434,7 @@ namespace Client.MirScenes
             StartGameButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
+            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiaryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         public void StartGame(S.StartGame p)
@@ -428,7 +457,7 @@ namespace Client.MirScenes
                     break;
                 case 4:
                     if (Settings.HighResolution)
-                        CMain.SetResolution(1024, 768); 
+                        CMain.SetResolution(1024, 768);
                     ActiveScene = new GameScene();
                     Dispose();
                     break;
@@ -464,6 +493,21 @@ namespace Client.MirScenes
                     case MirClass.Archer:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 100 : 140; //160 : 180;
                         break;
+                    case MirClass.HighWarrior:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 220 : 500; //220 : 500;
+                        break;
+                    case MirClass.HighWizard:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 240 : 520; //240 : 520;
+                        break;
+                    case MirClass.HighTaoist:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 260 : 540; //260 : 540;
+                        break;
+                    case MirClass.HighAssassin:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 280 : 560; //280 : 560;
+                        break;
+                    case MirClass.HighArcher:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 160 : 180; //160 : 180;
+                        break;
                 }
 
                 LastAccessLabel.Text = Characters[_selected].LastAccess == DateTime.MinValue ? "Never" : Characters[_selected].LastAccess.ToString();
@@ -493,12 +537,12 @@ namespace Client.MirScenes
                 CharacterDisplay = null;
                 StartGameButton = null;
                 NewCharacterButton = null;
-                DeleteCharacterButton = null; 
+                DeleteCharacterButton = null;
                 CreditsButton = null;
                 ExitGame = null;
                 CharacterButtons = null;
-                LastAccessLabel = null;LastAccessLabelLabel = null;
-                Characters  = null;
+                LastAccessLabel = null; LastAccessLabelLabel = null;
+                Characters = null;
                 _selected = 0;
             }
 
@@ -507,7 +551,7 @@ namespace Client.MirScenes
         #endregion
         public sealed class NewCharacterDialog : MirImageControl
         {
-            private static readonly Regex Reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+            private static readonly Regex Reg = new Regex(@"^[A-Za-z0-9ㄱ-힣]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
 
             public MirImageControl TitleLabel;
             public MirAnimatedControl CharacterDisplay;
@@ -550,7 +594,7 @@ namespace Client.MirScenes
                 " while being unseen by others, which naturally makes them excellent at making fast kills. It is necessary for them to avoid being in battles with" +
                 " multiple enemies due to their weak vitality and strength.";
 
-            public const string ArcherDescription = 
+            public const string ArcherDescription =
                 "Archers are a class of great accuracy and strength, using their powerful skills with bows to deal extraordinary damage from range. Much like" +
                 " wizards, they rely on their keen instincts to dodge oncoming attacks as they tend to leave themselves open to frontal attacks. However, their" +
                 " physical prowess and deadly aim allows them to instil fear into anyone they hit.";
@@ -561,135 +605,135 @@ namespace Client.MirScenes
             {
                 Index = 73;
                 Library = Libraries.Prguse;
-                Location = new Point((Settings.ScreenWidth - Size.Width)/2, (Settings.ScreenHeight - Size.Height)/2);
+                Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);
                 Modal = true;
 
                 TitleLabel = new MirImageControl
-                    {
-                        Index = 20,
-                        Library = Libraries.Title,
-                        Location = new Point(193, 7),
-                        Parent = this,
-                    };
+                {
+                    Index = 20,
+                    Library = Libraries.Title,
+                    Location = new Point(193, 7),
+                    Parent = this,
+                };
 
                 CancelButton = new MirButton
-                    {
-                        HoverIndex = 364,
-                        Index = 363,
-                        Library = Libraries.Title,
-                        Location = new Point(425, 425),
-                        Parent = this,
-                        PressedIndex = 365
-                    };
+                {
+                    HoverIndex = 364,
+                    Index = 363,
+                    Library = Libraries.Title,
+                    Location = new Point(425, 425),
+                    Parent = this,
+                    PressedIndex = 365
+                };
                 CancelButton.Click += (o, e) => Dispose();
 
 
                 OKButton = new MirButton
-                    {
-                        Enabled = false,
-                        HoverIndex = 361,
-                        Index = 360,
-                        Library = Libraries.Title,
-                        Location = new Point(160, 425),
-                        Parent = this,
-                        PressedIndex = 362,
-                    };
+                {
+                    Enabled = false,
+                    HoverIndex = 361,
+                    Index = 360,
+                    Library = Libraries.Title,
+                    Location = new Point(160, 425),
+                    Parent = this,
+                    PressedIndex = 362,
+                };
                 OKButton.Click += (o, e) => CreateCharacter();
 
                 NameTextBox = new MirTextBox
-                    {
-                        Location = new Point(325, 267),
-                        Parent = this,
-                        Size = new Size(241, 20),
-                        MaxLength = Globals.MaxCharacterNameLength
-                    };
+                {
+                    Location = new Point(325, 267),
+                    Parent = this,
+                    Size = new Size(241, 20),
+                    MaxLength = Globals.MaxCharacterNameLength
+                };
                 NameTextBox.TextBox.KeyPress += TextBox_KeyPress;
                 NameTextBox.TextBox.TextChanged += CharacterNameTextBox_TextChanged;
                 NameTextBox.SetFocus();
 
                 CharacterDisplay = new MirAnimatedControl
-                    {
-                        Animated = true,
-                        AnimationCount = 16,
-                        AnimationDelay = 250,
-                        Index = 20,
-                        Library = Libraries.ChrSel,
-                        Location = new Point(120, 250),
-                        Parent = this,
-                        UseOffSet = true,
-                    };
+                {
+                    Animated = true,
+                    AnimationCount = 16,
+                    AnimationDelay = 250,
+                    Index = 20,
+                    Library = Libraries.ChrSel,
+                    Location = new Point(120, 250),
+                    Parent = this,
+                    UseOffSet = true,
+                };
                 CharacterDisplay.AfterDraw += (o, e) =>
-                    {
-                        if (_class == MirClass.Wizard)
-                            Libraries.ChrSel.DrawBlend(CharacterDisplay.Index + 560, CharacterDisplay.DisplayLocationWithoutOffSet, Color.White, true);
-                    };
+                {
+                    if (_class == MirClass.Wizard)
+                        Libraries.ChrSel.DrawBlend(CharacterDisplay.Index + 560, CharacterDisplay.DisplayLocationWithoutOffSet, Color.White, true);
+                };
 
 
                 WarriorButton = new MirButton
-                    {
-                        HoverIndex = 2427,
-                        Index = 2427,
-                        Library = Libraries.Prguse,
-                        Location = new Point(323, 296),
-                        Parent = this,
-                        PressedIndex = 2428,
-                        Sound = SoundList.ButtonA,
-                    };
+                {
+                    HoverIndex = 2427,
+                    Index = 2427,
+                    Library = Libraries.Prguse,
+                    Location = new Point(323, 296),
+                    Parent = this,
+                    PressedIndex = 2428,
+                    Sound = SoundList.ButtonA,
+                };
                 WarriorButton.Click += (o, e) =>
-                    {
-                        _class = MirClass.Warrior;
-                        UpdateInterface();
-                    };
+                {
+                    _class = MirClass.Warrior;
+                    UpdateInterface();
+                };
 
 
                 WizardButton = new MirButton
-                    {
-                        HoverIndex = 2430,
-                        Index = 2429,
-                        Library = Libraries.Prguse,
-                        Location = new Point(373, 296),
-                        Parent = this,
-                        PressedIndex = 2431,
-                        Sound = SoundList.ButtonA,
-                    };
+                {
+                    HoverIndex = 2430,
+                    Index = 2429,
+                    Library = Libraries.Prguse,
+                    Location = new Point(373, 296),
+                    Parent = this,
+                    PressedIndex = 2431,
+                    Sound = SoundList.ButtonA,
+                };
                 WizardButton.Click += (o, e) =>
-                    {
-                        _class = MirClass.Wizard;
-                        UpdateInterface();
-                    };
+                {
+                    _class = MirClass.Wizard;
+                    UpdateInterface();
+                };
 
 
                 TaoistButton = new MirButton
-                    {
-                        HoverIndex = 2433,
-                        Index = 2432,
-                        Library = Libraries.Prguse,
-                        Location = new Point(423, 296),
-                        Parent = this,
-                        PressedIndex = 2434,
-                        Sound = SoundList.ButtonA,
-                    };
+                {
+                    HoverIndex = 2433,
+                    Index = 2432,
+                    Library = Libraries.Prguse,
+                    Location = new Point(423, 296),
+                    Parent = this,
+                    PressedIndex = 2434,
+                    Sound = SoundList.ButtonA,
+                };
                 TaoistButton.Click += (o, e) =>
-                    {
-                        _class = MirClass.Taoist;
-                        UpdateInterface();
-                    };
+                {
+                    _class = MirClass.Taoist;
+                    UpdateInterface();
+                };
 
                 AssassinButton = new MirButton
-                    {
-                        HoverIndex = 2436,
-                        Index = 2435,
-                        Library = Libraries.Prguse,
-                        Location = new Point(473, 296),
-                        Parent = this,
-                        PressedIndex = 2437,
-                        Sound = SoundList.ButtonA,
-                    };
+                {
+                    HoverIndex = 2436,
+                    Index = 2435,
+                    Library = Libraries.Prguse,
+                    Location = new Point(473, 296),
+                    Parent = this,
+                    PressedIndex = 2437,
+                    Sound = SoundList.ButtonA,
+                };
                 AssassinButton.Click += (o, e) =>
-                    {
-                        _class = MirClass.Assassin;
-                        UpdateInterface();
-                    };
+                {
+                    _class = MirClass.Assassin;
+                    UpdateInterface();
+                };
 
                 ArcherButton = new MirButton
                 {
@@ -709,45 +753,45 @@ namespace Client.MirScenes
 
 
                 MaleButton = new MirButton
-                    {
-                        HoverIndex = 2421,
-                        Index = 2421,
-                        Library = Libraries.Prguse,
-                        Location = new Point(323, 343),
-                        Parent = this,
-                        PressedIndex = 2422,
-                        Sound = SoundList.ButtonA,
-                    };
+                {
+                    HoverIndex = 2421,
+                    Index = 2421,
+                    Library = Libraries.Prguse,
+                    Location = new Point(323, 343),
+                    Parent = this,
+                    PressedIndex = 2422,
+                    Sound = SoundList.ButtonA,
+                };
                 MaleButton.Click += (o, e) =>
-                    {
-                        _gender = MirGender.Male;
-                        UpdateInterface();
-                    };
+                {
+                    _gender = MirGender.Male;
+                    UpdateInterface();
+                };
 
                 FemaleButton = new MirButton
-                    {
-                        HoverIndex = 2424,
-                        Index = 2423,
-                        Library = Libraries.Prguse,
-                        Location = new Point(373, 343),
-                        Parent = this,
-                        PressedIndex = 2425,
-                        Sound = SoundList.ButtonA,
-                    };
+                {
+                    HoverIndex = 2424,
+                    Index = 2423,
+                    Library = Libraries.Prguse,
+                    Location = new Point(373, 343),
+                    Parent = this,
+                    PressedIndex = 2425,
+                    Sound = SoundList.ButtonA,
+                };
                 FemaleButton.Click += (o, e) =>
-                    {
-                        _gender = MirGender.Female;
-                        UpdateInterface();
-                    };
+                {
+                    _gender = MirGender.Female;
+                    UpdateInterface();
+                };
 
                 Description = new MirLabel
-                    {
-                        Border = true,
-                        Location = new Point(279, 70),
-                        Parent = this,
-                        Size = new Size(278, 170),
-                        Text = WarriorDescription,
-                    };
+                {
+                    Border = true,
+                    Location = new Point(279, 70),
+                    Parent = this,
+                    Size = new Size(278, 170),
+                    Text = WarriorDescription,
+                };
             }
 
             private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -785,11 +829,11 @@ namespace Client.MirScenes
                 OKButton.Enabled = false;
 
                 Network.Enqueue(new C.NewCharacter
-                    {
-                        Name = NameTextBox.Text,
-                        Class = _class,
-                        Gender = _gender
-                    });
+                {
+                    Name = NameTextBox.Text,
+                    Class = _class,
+                    Gender = _gender
+                });
             }
 
             private void UpdateInterface()
@@ -840,6 +884,31 @@ namespace Client.MirScenes
                         Description.Text = ArcherDescription;
                         CharacterDisplay.Index = (byte)_gender == 0 ? 100 : 140; //160 : 180;
                         break;
+                    case MirClass.HighWarrior:
+                        WarriorButton.Index = 2427;
+                        Description.Text = WarriorDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 220 : 500; //220 : 500;
+                        break;
+                    case MirClass.HighWizard:
+                        WizardButton.Index = 2430;
+                        Description.Text = WizardDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 240 : 520; //240 : 520;
+                        break;
+                    case MirClass.HighTaoist:
+                        TaoistButton.Index = 2433;
+                        Description.Text = TaoistDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 260 : 540; //260 : 540;
+                        break;
+                    case MirClass.HighAssassin:
+                        AssassinButton.Index = 2436;
+                        Description.Text = AssassinDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 280 : 560; //280 : 560;
+                        break;
+                    case MirClass.HighArcher:
+                        ArcherButton.Index = 2439;
+                        Description.Text = ArcherDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 160 : 180; //160 : 180;
+                        break;
                 }
 
                 //CharacterDisplay.Index = ((byte)_class + 1) * 20 + (byte)_gender * 280;
@@ -849,7 +918,7 @@ namespace Client.MirScenes
         {
             public MirLabel NameLabel, LevelLabel, ClassLabel;
             public bool Selected;
-            
+
             public CharacterButton()
             {
                 Index = 44; //45 locked
@@ -900,7 +969,7 @@ namespace Client.MirScenes
 
                 Library = Libraries.Title;
 
-                Index = 660 + (byte) info.Class;
+                Index = 660 + (byte)info.Class - (info.Class > MirClass.Archer ? 5 : 0);
 
                 if (Selected) Index += 5;
 
@@ -908,7 +977,7 @@ namespace Client.MirScenes
                 NameLabel.Text = info.Name;
                 LevelLabel.Text = info.Level.ToString();
                 ClassLabel.Text = info.Class.ToString();
-                
+
                 NameLabel.Visible = true;
                 LevelLabel.Visible = true;
                 ClassLabel.Visible = true;
