@@ -1704,7 +1704,8 @@ namespace Client.MirObjects
                 }
 
                 //Assassin sneekyness
-                if (Class == MirClass.Assassin && Sneaking && (CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
+                if ((Class == MirClass.Assassin || Class == MirClass.HighAssassin) && Sneaking && (CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
+
                 {
                     Frames.Frames.TryGetValue(MirAction.Sneek, out Frame);
                 }
@@ -2016,7 +2017,7 @@ namespace Client.MirObjects
                             if (ob.Race != ObjectType.Player) break;
                             PlayerObject player = ((PlayerObject)ob);
                             StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break;
+                            if (player.Class != MirClass.Assassin || player.Class != MirClass.HighAssassin || StruckWeapon == -1) break;
                             StruckWeapon = 1;
                             break;
                         }
@@ -4034,7 +4035,7 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (Weapon >= 0 && Class == MirClass.Assassin)
+           if (Weapon >= 0 && (Class == MirClass.Assassin || Class == MirClass.HighAssassin))
             {
                 SoundManager.PlaySound(SoundList.SwingShort);
                 return;
