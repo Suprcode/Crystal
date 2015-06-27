@@ -10830,34 +10830,34 @@ namespace Client.MirScenes
             };
             CharacterPage.AfterDraw += (o, e) =>
             {
-               MLibrary JobStaetItems = null; //stupple humup start
+               MLibrary JobStateItems = null; //stupple humup start
 
                 if (GameScene.User.HasClassWeapon)
                 {
                     switch (GameScene.User.Class)
                     {
                         case MirClass.HighWarrior:
-                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
+                            JobStateItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
                             Libraries.Prguse.Draw(330 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighWizard:
-                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
+                            JobStateItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
                             Libraries.Prguse.Draw(332 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighTaoist:
-                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
+                            JobStateItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
                             Libraries.Prguse.Draw(334 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighAssassin:
-                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
+                            JobStateItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
                             Libraries.Prguse.Draw(336 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighArcher:
-                            JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
+                            JobStateItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
                             Libraries.Prguse.Draw(320 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         default:
-                            JobStaetItems = Libraries.StateItems;
+                            JobStateItems = Libraries.StateItems;
                             break;
                     }
                 }
@@ -10865,16 +10865,16 @@ namespace Client.MirScenes
                 {
                     if ((byte)GameScene.User.Class < 5)
                     {
-                        JobStaetItems = Libraries.StateItems;
+                        JobStateItems = Libraries.StateItems;
                     }
                     else
                     {
-                        JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsComM : Libraries.StateItemsComW;
+                        JobStateItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsComM : Libraries.StateItemsComW;
                         Libraries.Prguse.Draw(320 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                     }
                 }
 
-                if (JobStaetItems == null) return;
+                if (JobStateItems == null) return;
 
                 ItemInfo RealItem = null;
                 if (Grid[(int)EquipmentSlot.Armour].Item != null)
@@ -10926,17 +10926,17 @@ namespace Client.MirScenes
                     }
 
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Armour].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
-                    JobStaetItems.Draw(Grid[(int)EquipmentSlot.Armour].Item.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStateItems.Draw(Grid[(int)EquipmentSlot.Armour].Item.Image, DisplayLocation, Color.White, true, 1F);
 
                 }
                 if (Grid[(int)EquipmentSlot.Weapon].Item != null)
                 {
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Weapon].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
-                    JobStaetItems.Draw(Grid[(int)EquipmentSlot.Weapon].Item.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStateItems.Draw(Grid[(int)EquipmentSlot.Weapon].Item.Image, DisplayLocation, Color.White, true, 1F);
                 }
 
                 if (Grid[(int)EquipmentSlot.Helmet].Item != null)
-                    JobStaetItems.Draw(Grid[(int)EquipmentSlot.Helmet].Item.Info.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStateItems.Draw(Grid[(int)EquipmentSlot.Helmet].Item.Info.Image, DisplayLocation, Color.White, true, 1F);
                 else
                 {
                     int hair = ((byte)GameScene.User.Class < 5) ? 441 : 461 + MapObject.User.Hair + (MapObject.User.Gender == MirGender.Male ? 0 : 40);
@@ -12055,7 +12055,7 @@ public bool HasClassWeapon //stupple
             };
             CharacterPage.AfterDraw += (o, e) =>
             {
-                MLibrary JobStaetItems = null; //stupple
+                MLibrary JobStateItems = null; //stupple
                 CharacterPage.Index = 379;
 
                 if (HasClassWeapon)
@@ -12063,27 +12063,27 @@ public bool HasClassWeapon //stupple
                     switch (Class)
                     {
                         case MirClass.HighWarrior:
-                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
+                            JobStateItems = Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
                             Libraries.Prguse.Draw(330 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighWizard:
-                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
+                            JobStateItems = Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
                             Libraries.Prguse.Draw(332 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighTaoist:
-                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
+                            JobStateItems = Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
                             Libraries.Prguse.Draw(334 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighAssassin:
-                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
+                            JobStateItems = Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
                             Libraries.Prguse.Draw(336 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         case MirClass.HighArcher:
-                            JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
+                            JobStateItems = Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
                             Libraries.Prguse.Draw(320 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
                         default:
-                            JobStaetItems = Libraries.StateItems;
+                            JobStateItems = Libraries.StateItems;
                             CharacterPage.Index = Gender == MirGender.Male ? 345 : 346;
                             break;
                     }
@@ -12092,17 +12092,17 @@ public bool HasClassWeapon //stupple
                 {
                     if ((byte)Class < 5)
                     {
-                        JobStaetItems = Libraries.StateItems;
+                        JobStateItems = Libraries.StateItems;
                         CharacterPage.Index = Gender == MirGender.Male ? 345 : 346;
                     }
                     else
                     {
-                        JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsComM : Libraries.StateItemsComW;
+                        JobStateItems = Gender == MirGender.Male ? Libraries.StateItemsComM : Libraries.StateItemsComW;
                         Libraries.Prguse.Draw(320 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                     }
                 }
 
-                if (JobStaetItems == null) return;
+                if (JobStateItems == null) return;
 
                 ItemInfo RealItem = null;
                 if (ArmorCell.Item != null)
@@ -12164,11 +12164,11 @@ public bool HasClassWeapon //stupple
                 if (WeaponCell.Item != null)
                 {
                     RealItem = Functions.GetRealItem(WeaponCell.Item.Info, Level, Class, GameScene.ItemInfoList);
-                    JobStaetItems.Draw(WeaponCell.Item.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStateItems.Draw(WeaponCell.Item.Image, DisplayLocation, Color.White, true, 1F);
                 }
 
                 if (HelmetCell.Item != null)
-                    JobStaetItems.Draw(HelmetCell.Item.Info.Image, DisplayLocation, Color.White, true, 1F);
+                    JobStateItems.Draw(HelmetCell.Item.Info.Image, DisplayLocation, Color.White, true, 1F);
                 else
                 {
                     int hair = ((byte)Class < 5) ? 441 : 461 + Hair + (Gender == MirGender.Male ? 0 : 40);
