@@ -20294,6 +20294,9 @@ public bool HasClassWeapon //stupple
                 case BuffType.General:
                     text = string.Format("Mirian Advantage\nExpRate increased by {0}%\nDropRate increased by {0}%\n", Value);
                     break;
+                 case BuffType.HumUp://stupple
+                    text = string.Format("Humup\n");
+                    break;
                 case BuffType.Exp:
                     text = string.Format("ExpRate\nIncreased by {0}%\n", Value);
                     break;
