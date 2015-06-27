@@ -4051,11 +4051,11 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (Class == MirClass.Archer && HasClassWeapon)
+           
+            if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
             {
                 return;
             }
-
             switch (Weapon)
             {
                 case 0:
@@ -4163,6 +4163,8 @@ namespace Client.MirObjects
                     DrawWeapon();
                 else
                     DrawWeapon2();
+                   if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
+
             }
 
             DrawBody();
