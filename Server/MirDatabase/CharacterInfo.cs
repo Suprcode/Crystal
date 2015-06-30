@@ -275,7 +275,7 @@ namespace Server.MirDatabase
                     CompletedQuests.Add(reader.ReadInt32());
             }
 
-            if (Envir.LoadVersion > 50)
+            if (Envir.LoadVersion > 50 && Envir.LoadVersion < 54)
             {
                 count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
@@ -387,6 +387,8 @@ namespace Server.MirDatabase
             writer.Write(Buffs.Count);
             for (int i = 0; i < Buffs.Count; i++)
             {
+                if (Buffs[i].Type == BuffType.Curse) continue; //don't save curse on logout as it comes with a negative poison which can't save
+
                 Buffs[i].Save(writer);
                 //writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
             }
@@ -405,12 +407,12 @@ namespace Server.MirDatabase
             for (int i = 0; i < CompletedQuests.Count; i++)
                 writer.Write(CompletedQuests[i]);
 
-            writer.Write(Poisons.Count);
-            for (int i = 0; i < Poisons.Count; i++)
-            {
-                Poisons[i].Save(writer);
-                //writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
-            }
+            //writer.Write(Poisons.Count);
+            //for (int i = 0; i < Poisons.Count; i++)
+            //{
+            //    Poisons[i].Save(writer);
+            //    //writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
+            //}
         }
 
         public ListViewItem CreateListView()

@@ -873,11 +873,11 @@ namespace Server.MirObjects
 
                 Poison poison = PoisonList[i];
 
-                //if (poison.Owner != null && poison.Owner.Node == null)
-                //{
-                //    PoisonList.RemoveAt(i);
-                //    continue;
-                //}
+                if (poison.Owner != null && poison.Owner.Node == null)
+                {
+                    PoisonList.RemoveAt(i);
+                    continue;
+                }
 
                 if (Envir.Time > poison.TickTime)
                 {
@@ -4873,7 +4873,7 @@ namespace Server.MirObjects
                             TickSpeed = 1000,
                             Value = MaxDC + 1
                         }, this);
-
+                        
                         ob.OperateTime = 0;
                         HemorrhageAttackCount = 0;
                         Hemorrhage = false;
