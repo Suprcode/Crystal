@@ -882,11 +882,11 @@ namespace Server.MirObjects
                 if (Dead) return;
 
                 Poison poison = PoisonList[i];
-                //if (poison.Owner != null && poison.Owner.Node == null)
-                //{
-                //    PoisonList.RemoveAt(i);
-                //    continue;
-                //}
+                if (poison.Owner != null && poison.Owner.Node == null)
+                {
+                    PoisonList.RemoveAt(i);
+                    continue;
+                }
 
                 if (Envir.Time > poison.TickTime)
                 {
