@@ -17627,8 +17627,8 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.Name, Selected.Listing.Price));
-                    box.OKButton.Click += (o1, e2) =>
+                    MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.Name, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
+                    box.YesButton.Click += (o1, e2) =>
                     {
                         MarketTime = CMain.Time + 3000;
                         Network.Enqueue(new C.MarketBuy { AuctionID = Selected.Listing.AuctionID });
