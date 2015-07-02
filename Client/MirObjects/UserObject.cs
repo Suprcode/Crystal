@@ -645,7 +645,18 @@ namespace Client.MirObjects
                         MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
                         break;
                     case BuffType.UltimateEnhancer:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        if (Class == MirClass.Wizard || Class == MirClass.Archer)
+                        {
+                            MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Value);
+                        }
+                        else if (Class == MirClass.Taoist)
+                        {
+                            MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Value);
+                        }
+                        else
+                        {
+                            MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        }
                         break;
                     case BuffType.ProtectionField:
                         MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);

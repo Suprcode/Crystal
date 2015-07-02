@@ -1434,7 +1434,18 @@ namespace Client.MirScenes
             switch (buff.Type)
             {
                 case BuffType.UltimateEnhancer:
-                    text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
+                    {
+                        text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    }
+                    else if (GameScene.User.Class == MirClass.Taoist)
+                    {
+                        text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    }
+                    else
+                    {
+                        text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    }
                     break;
                 case BuffType.Impact:
                     text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
@@ -19977,7 +19988,18 @@ namespace Client.MirScenes
                     text = string.Format("CounterAttack\nIncreases AC/MAC by: {0}-{1}.\n", Value, Value);
                     break;
                 case BuffType.UltimateEnhancer:
-                    text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Value);
+                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
+                    {
+                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Value);
+                    }
+                    else if (GameScene.User.Class == MirClass.Taoist)
+                    {
+                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Value);
+                    }
+                    else
+                    {
+                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Value);
+                    }
                     break;
                 case BuffType.Curse:
                     text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Value);
