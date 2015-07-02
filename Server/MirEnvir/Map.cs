@@ -1668,12 +1668,22 @@ namespace Server.MirEnvir
                                                     break;
                                             }
 
-                                            int tempValue = value + (magic.Level + 1) * 2;
+                                            int tempValue = 0;
 
                                             if (poison == PoisonType.Green)
+                                            {
                                                 tempValue = value / 15 + magic.Level + 1;
+                                            }
+                                            else
+                                            {
+                                                tempValue = value + (magic.Level + 1) * 2;
+                                            }
+
                                             if (poison != PoisonType.None)
-                                                target.ApplyPoison(new Poison { PType = poison, Duration = value + ((magic.Level + 1) * 2), TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                            {
+                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                            }
+                                            
                                             if (target.Race == ObjectType.Player)
                                             {
                                                 PlayerObject tempOb = (PlayerObject)target;
