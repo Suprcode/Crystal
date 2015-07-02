@@ -5329,7 +5329,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "AC + {0}~{1} (+{2})" : "AC + {0}~{1}", minValue, maxValue + addValue, addValue);
                 else
-                    text = "Adds AC";
+                    text = string.Format("Adds {0} AC", minValue + maxValue + addValue);
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5375,7 +5375,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "MAC + {0}~{1} (+{2})" : "MAC + {0}~{1}", minValue, maxValue + addValue, addValue);
                 else
-                    text = "Adds MAC";
+                    text = string.Format("Adds {0} MAC", minValue + maxValue + addValue);
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5696,7 +5696,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Poison Resist + {0} (+{1})" : "Poison Resist + {0}", minValue + addValue, addValue);
                 else
-                    text = "Adds Poison Resist";
+                    text = string.Format("Adds {0} Poison Resist", minValue + maxValue + addValue);
                 MirLabel POISON_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5726,7 +5726,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Magic Resist + {0} (+{1})" : "Magic Resist + {0}", minValue + addValue, addValue);
                 else
-                    text = "Adds Magic Resist";
+                    text = string.Format("Adds {0} Magic Resist", minValue + maxValue + addValue);
                 MirLabel MAGIC_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
