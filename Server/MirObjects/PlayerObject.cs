@@ -8447,7 +8447,7 @@ namespace Server.MirObjects
                     break;
                 case DefenceType.MAC:
                     if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)) return 0;
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
