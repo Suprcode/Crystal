@@ -1130,6 +1130,9 @@ namespace Server.MirObjects
 
             HP = 0;
             Dead = true;
+            
+            LogTime = Envir.Time;
+            BrownTime = Envir.Time;
 
             Enqueue(new S.Death { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
