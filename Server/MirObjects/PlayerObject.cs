@@ -2311,17 +2311,29 @@ namespace Server.MirObjects
 
                 if (RealItem.Set == ItemSet.None) continue;
 
-                //Normal Sets
-                bool sameSetFound = false;
-                foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
+                ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
+
+                if (itemSet != null)
                 {
-                    set.Type.Add(RealItem.Type);
-                    set.Count++;
-                    sameSetFound = true;
+                    itemSet.Type.Add(RealItem.Type);
+                    itemSet.Count++;
+                }
+                else
+                {
+                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
                 }
 
-                if (!ItemSets.Any() || !sameSetFound)
-                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
+                ////Normal Sets
+                //bool sameSetFound = false;
+                //foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
+                //{
+                //    set.Type.Add(RealItem.Type);
+                //    set.Count++;
+                //    sameSetFound = true;
+                //}
+
+                //if (!ItemSets.Any() || !sameSetFound)
+                //    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
 
                 //Mir Set
                 if (RealItem.Set == ItemSet.Mir)
@@ -2461,7 +2473,8 @@ namespace Server.MirObjects
                         Holy = (byte)Math.Min(byte.MaxValue, Holy + 1);
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
                         break;
-                    case ItemSet.Whisker1: MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
+                    case ItemSet.Whisker1: 
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + 1);
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 25);
                         break;
                     case ItemSet.Whisker2:
@@ -2494,7 +2507,6 @@ namespace Server.MirObjects
                     case ItemSet.Oppressive:
                         MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + 1);
                         Agility = (byte)Math.Min(byte.MaxValue, Agility + 1);
-
                         break;
                 }
             }
@@ -15334,64 +15346,5 @@ namespace Server.MirObjects
 
         #endregion
     }
-
-    public class ItemSets
-    {
-        public ItemSet Set;
-        public List<ItemType> Type;
-        private byte Amount
-        {
-            get
-            {
-                switch (Set)
-                {
-                    case ItemSet.Mundane:
-                    case ItemSet.NokChi:
-                    case ItemSet.TaoProtect:
-                        return 2;
-                    case ItemSet.RedOrchid:
-                    case ItemSet.RedFlower:
-                    case ItemSet.Smash:
-                    case ItemSet.HwanDevil:
-                    case ItemSet.Purity:
-                    case ItemSet.FiveString:
-                    case ItemSet.Bone:
-                    case ItemSet.Bug:
-                        return 3;
-                    case ItemSet.Recall:
-                        return 4;
-                    case ItemSet.Spirit:
-                    case ItemSet.WhiteGold:
-                    case ItemSet.WhiteGoldH:
-                    case ItemSet.RedJade:
-                    case ItemSet.RedJadeH:
-                    case ItemSet.Nephrite:
-                    case ItemSet.NephriteH:
-                    case ItemSet.Whisker1:
-                    case ItemSet.Whisker2:
-                    case ItemSet.Whisker3:
-                    case ItemSet.Whisker4:
-                    case ItemSet.Whisker5:
-                    case ItemSet.Hyeolryong:
-                    case ItemSet.Monitor:
-                    case ItemSet.Oppressive:
-                    case ItemSet.Paeok:
-                    case ItemSet.Sulgwan:
-                        return 5;
-                    default:
-                        return 0;
-                }
-            }
-        }
-        public byte Count;
-        public bool SetComplete
-        {
-            get
-            {
-                return Count == Amount;
-            }
-        }
-    }
-
 }
 

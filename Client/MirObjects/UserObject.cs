@@ -350,16 +350,28 @@ namespace Client.MirObjects
 
                 if (RealItem.Set == ItemSet.None) continue;
 
-                bool sameSetFound = false;
-                foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
+                ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
+
+                if (itemSet != null)
                 {
-                    set.Type.Add(RealItem.Type);
-                    set.Count++;
-                    sameSetFound = true;
+                    itemSet.Type.Add(RealItem.Type);
+                    itemSet.Count++;
+                }
+                else
+                {
+                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
                 }
 
-                if (!ItemSets.Any() || !sameSetFound)
-                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
+                //bool sameSetFound = false;
+                //foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
+                //{
+                //    set.Type.Add(RealItem.Type);
+                //    set.Count++;
+                //    sameSetFound = true;
+                //}
+
+                //if (!ItemSets.Any() || !sameSetFound)
+                //    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
 
                 //Mir Set
                 if (RealItem.Set == ItemSet.Mir)
@@ -904,46 +916,6 @@ namespace Client.MirObjects
             NextMagicLocation = Point.Empty;
             NextMagicObject = null;
         } 
-    }
-}
-
-public class ItemSets
-{
-    public ItemSet Set;
-    public List<ItemType> Type;
-    private byte Amount
-    {
-        get
-        {
-            switch (Set)
-            {
-                case ItemSet.Mundane:
-                case ItemSet.NokChi:
-                case ItemSet.TaoProtect:
-                    return 2;
-                case ItemSet.RedOrchid:
-                case ItemSet.RedFlower:
-                case ItemSet.Smash:
-                case ItemSet.HwanDevil:
-                case ItemSet.Purity:
-                case ItemSet.FiveString:
-                    return 3;
-                case ItemSet.Recall:
-                    return 4;
-                case ItemSet.Spirit:
-                    return 5;
-                default:
-                    return 0;
-            }
-        }
-    }
-    public byte Count;
-    public bool SetComplete
-    {
-        get
-        {
-            return Count == Amount;
-        }
     }
 }
 

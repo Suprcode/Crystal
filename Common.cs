@@ -4722,6 +4722,68 @@ public class UserId
     public string UserName = "";
 }
 
+#region ItemSets
+
+public class ItemSets
+{
+    public ItemSet Set;
+    public List<ItemType> Type;
+    private byte Amount
+    {
+        get
+        {
+            switch (Set)
+            {
+                case ItemSet.Mundane:
+                case ItemSet.NokChi:
+                case ItemSet.TaoProtect:
+                    return 2;
+                case ItemSet.RedOrchid:
+                case ItemSet.RedFlower:
+                case ItemSet.Smash:
+                case ItemSet.HwanDevil:
+                case ItemSet.Purity:
+                case ItemSet.FiveString:
+                case ItemSet.Bone:
+                case ItemSet.Bug:
+                    return 3;
+                case ItemSet.Recall:
+                    return 4;
+                case ItemSet.Spirit:
+                case ItemSet.WhiteGold:
+                case ItemSet.WhiteGoldH:
+                case ItemSet.RedJade:
+                case ItemSet.RedJadeH:
+                case ItemSet.Nephrite:
+                case ItemSet.NephriteH:
+                case ItemSet.Whisker1:
+                case ItemSet.Whisker2:
+                case ItemSet.Whisker3:
+                case ItemSet.Whisker4:
+                case ItemSet.Whisker5:
+                case ItemSet.Hyeolryong:
+                case ItemSet.Monitor:
+                case ItemSet.Oppressive:
+                case ItemSet.Paeok:
+                case ItemSet.Sulgwan:
+                    return 5;
+                default:
+                    return 0;
+            }
+        }
+    }
+    public byte Count;
+    public bool SetComplete
+    {
+        get
+        {
+            return Count == Amount;
+        }
+    }
+}
+
+#endregion
+
 #region "Mine Related"
 public class MineSet
 {
