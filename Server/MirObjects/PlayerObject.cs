@@ -3167,6 +3167,7 @@ namespace Server.MirObjects
                             player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                             player.Info.Inventory[i] = null;
                         }
+                        player.RefreshStats();
                         break;
 
                     case "SUPERMAN":
