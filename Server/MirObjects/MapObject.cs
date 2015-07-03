@@ -687,16 +687,6 @@ namespace Server.MirObjects
             TickTime = reader.ReadInt64();
             TickSpeed = reader.ReadInt64();
         }
-
-        public void Save(BinaryWriter writer)
-        {
-            writer.Write((byte)PType);
-            writer.Write(Value);
-            writer.Write(Duration);
-            writer.Write(Time);
-            writer.Write(TickTime);
-            writer.Write(TickSpeed);
-        }
     }
 
     public class Buff

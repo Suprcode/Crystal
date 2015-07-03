@@ -387,8 +387,6 @@ namespace Server.MirDatabase
             writer.Write(Buffs.Count);
             for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Buffs[i].Type == BuffType.Curse) continue; //don't save curse on logout as it comes with a negative poison which can't save
-
                 Buffs[i].Save(writer);
                 //writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
             }
@@ -406,13 +404,6 @@ namespace Server.MirDatabase
             writer.Write(CompletedQuests.Count);
             for (int i = 0; i < CompletedQuests.Count; i++)
                 writer.Write(CompletedQuests[i]);
-
-            //writer.Write(Poisons.Count);
-            //for (int i = 0; i < Poisons.Count; i++)
-            //{
-            //    Poisons[i].Save(writer);
-            //    //writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
-            //}
         }
 
         public ListViewItem CreateListView()

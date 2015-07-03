@@ -161,7 +161,7 @@ namespace Server.MirObjects
         }
         public bool CanRun
         {
-            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && CurrentPoison != PoisonType.Slow && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= MaxBagWeight; }
+            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= MaxBagWeight; }
         }
         public bool CanAttack
         {
@@ -386,6 +386,7 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
                 if (buff.Infinite) continue;
+                if (buff.Type == BuffType.Curse) continue;
 
                 buff.Caster = null;
                 buff.ExpireTime -= Envir.Time;
@@ -393,16 +394,6 @@ namespace Server.MirObjects
                 Info.Buffs.Add(buff);
             }
             Buffs.Clear();
-
-            for (int i = 0; i < PoisonList.Count; i++)
-            {
-                Poison poison = PoisonList[i];
-
-                poison.TickTime -= Envir.Time;
-
-                Info.Poisons.Add(poison);
-            }
-            PoisonList.Clear();
 
             if (MyGuild != null) MyGuild.PlayerLogged(this, false);
             Envir.Players.Remove(this);

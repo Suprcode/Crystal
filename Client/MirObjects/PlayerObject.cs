@@ -1272,7 +1272,7 @@ namespace Client.MirObjects
                                 }
 
 
-                                if (GameScene.TwinDrakeBlade)
+                                if (GameScene.TwinDrakeBlade && TargetObject != null)
                                 {
                                     magic = User.GetMagic(Spell.TwinDrakeBlade);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
@@ -2095,6 +2095,27 @@ namespace Client.MirObjects
         {
             if (Frame == null) return;
 
+            //slow frame speed
+            //if (Poison == PoisonType.Slow)
+            //{
+            //    if (CurrentAction != MirAction.Standing)
+            //    {
+            //        if (SlowFrameIndex >= 3)
+            //        {
+            //            SlowFrameIndex = 0;
+            //        }
+            //        else
+            //        {
+            //            SlowFrameIndex++;
+            //            return;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    SlowFrameIndex = 0;
+            //}
+
             switch (CurrentAction)
             {
                 case MirAction.Walking:
@@ -2105,27 +2126,6 @@ namespace Client.MirObjects
                 case MirAction.DashAttack:
                     if (!GameScene.CanMove) return;
 
-                    //slow frame speed
-                    if (Poison == PoisonType.Slow)
-                    {
-                        if ((CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
-                        {
-                            if (SlowFrameIndex >= 3)
-                            {
-                                SlowFrameIndex = 0;
-                            }
-                            else
-                            {
-                                SlowFrameIndex++;
-                                return;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        SlowFrameIndex = 0;
-                    }
-                    
                     GameScene.Scene.MapControl.TextureValid = false;
 
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
