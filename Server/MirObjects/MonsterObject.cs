@@ -512,7 +512,7 @@ namespace Server.MirObjects
             if (Respawn != null)
                 Respawn.Count--;
 
-            if (Master == null)
+            if (Master == null && EXPOwner != null)
                  Drop();
 
             Master = null;
