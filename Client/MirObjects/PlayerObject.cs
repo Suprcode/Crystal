@@ -1889,6 +1889,15 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region TwinDrakeBlade
+
+                            case Spell.TwinDrakeBlade:
+                                Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region Entrapment
 
                             case Spell.Entrapment:

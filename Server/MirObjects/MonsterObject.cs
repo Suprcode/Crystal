@@ -1057,18 +1057,7 @@ namespace Server.MirObjects
             //if (CurrentMap.Players.Count < 1) return;
 
             //Stacking or Infront of master - Move
-            bool stacking = false;
-
-            Cell cell = CurrentMap.GetCell(CurrentLocation);
-
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
-                    MapObject ob = cell.Objects[i];
-                    if (ob == this || !ob.Blocking) continue;
-                    stacking = true;
-                    break;
-                }
+            bool stacking = CheckStacked();
 
             if (CanMove && ((Master != null && Master.Front == CurrentLocation) || stacking))
             {

@@ -185,11 +185,13 @@ namespace Server.MirObjects
         }
 
         public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime;
 
         public bool MagicShield;
         public byte MagicShieldLv;
         public long MagicShieldTime;
+
+        public bool Stacking;
 
         #region Elemental System
         public bool HasElemental;
@@ -557,6 +559,16 @@ namespace Server.MirObjects
             {
                 RunTime = Envir.Time + 1500;
                 _runCounter--;
+            }
+
+            if (Stacking && Envir.Time > StackingTime)
+            {
+                Stacking = false;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    if (Pushed(this, (MirDirection)i, 1) == 1) break;
+                }
             }
 
             if(NewMail)
@@ -8203,6 +8215,12 @@ namespace Server.MirObjects
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
             }
 
+            if (CheckStacked())
+            {
+                StackingTime = Envir.Time + 1000;
+                Stacking = true;
+            }
+
             Report.MapChange("Teleported", oldMap.Info, CurrentMap.Info);
 
             return true;            
@@ -12463,6 +12481,8 @@ namespace Server.MirObjects
 
                     TwinDrakeBlade = true;
                     ChangeMP(-cost);
+
+                    Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell });
                     break;
                 case Spell.FlamingSword:
                     if (FlamingSword || Envir.Time < FlamingSwordTime) return;

@@ -442,6 +442,20 @@ namespace Server.MirObjects
             Buffs.Add(b);
         }
 
+        public bool CheckStacked()
+        {
+            Cell cell = CurrentMap.GetCell(CurrentLocation);
+
+            if (cell.Objects != null)
+                for (int i = 0; i < cell.Objects.Count; i++)
+                {
+                    MapObject ob = cell.Objects[i];
+                    if (ob == this || !ob.Blocking) continue;
+                    return true;
+                }
+
+            return false;
+        }
 
         public virtual bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
