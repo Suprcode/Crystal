@@ -93,7 +93,7 @@ namespace Client.MirObjects
 
         public SpellEffect CurrentEffect; //Stephenking effect sync test
 
-        public long StanceTime, BlizzardFreezeTime, ReincarnationStopTime;
+        public long StanceTime, BlizzardStopTime, ReincarnationStopTime;
 
         public string GuildName;
         public string GuildRankName;
@@ -790,7 +790,7 @@ namespace Client.MirObjects
 
             if (ActionFeed.Count == 0)
             {
-                CurrentAction = CMain.Time > BlizzardFreezeTime ? MirAction.Standing : MirAction.Stance2; //ArcherTest
+                CurrentAction = CMain.Time > BlizzardStopTime ? MirAction.Standing : MirAction.Stance2; //ArcherTest
 
                 if (RidingMount)
                 {
@@ -1972,6 +1972,7 @@ namespace Client.MirObjects
                             case Spell.Blizzard:
                                 Effects.Add(new Effect(Libraries.Magic2, 1540, 8, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                BlizzardStopTime = CMain.Time + 3000;
                                 break;
 
                             #endregion
@@ -1981,6 +1982,7 @@ namespace Client.MirObjects
                             case Spell.MeteorStrike:
                                 Effects.Add(new Effect(Libraries.Magic2, 1590, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                BlizzardStopTime = CMain.Time + 3000;
                                 break;
 
                             #endregion
@@ -3097,7 +3099,7 @@ namespace Client.MirObjects
 
                                     case Spell.Blizzard:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
-                                        BlizzardFreezeTime = CMain.Time + 3000;
+                                        //BlizzardFreezeTime = CMain.Time + 3000;
                                         break;
 
                                     #endregion
@@ -3107,7 +3109,7 @@ namespace Client.MirObjects
                                     case Spell.MeteorStrike:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 2);
-                                        BlizzardFreezeTime = CMain.Time + 3000;
+                                        //BlizzardFreezeTime = CMain.Time + 3000;
                                         break;
 
                                     #endregion

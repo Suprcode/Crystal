@@ -577,7 +577,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            if (CMain.Time < User.ReincarnationStopTime) return;
+            if (CMain.Time < User.BlizzardStopTime || CMain.Time < User.ReincarnationStopTime) return;
 
             ClientMagic magic = null;
 
@@ -2444,7 +2444,7 @@ namespace Client.MirScenes
             LogTime = CMain.Time + Globals.LogDelay;
 
             NextRunTime = CMain.Time + 2500;
-            User.BlizzardFreezeTime = 0;
+            User.BlizzardStopTime = 0;
             User.ClearMagic();
             if (User.ReincarnationStopTime > CMain.Time)
                 Network.Enqueue(new C.CancelReincarnation {});
@@ -2482,7 +2482,7 @@ namespace Client.MirScenes
                 if (ob.ActionFeed.Count > 0 && ob.ActionFeed[ob.ActionFeed.Count - 1].Action == MirAction.Struck) return;
 
                 if (ob.Race == ObjectType.Player)
-                    ((PlayerObject)ob).BlizzardFreezeTime = 0;
+                    ((PlayerObject)ob).BlizzardStopTime = 0;
                 QueuedAction action = new QueuedAction { Action = MirAction.Struck, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                 action.Params.Add(p.AttackerID);
                 ob.ActionFeed.Add(action);
@@ -8040,7 +8040,7 @@ namespace Client.MirScenes
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
             if (!CanRideAttack()) AutoHit = false;
             
-            if (CMain.Time < InputDelay || CMain.Time < User.BlizzardFreezeTime || User.Poison == PoisonType.Paralysis || User.Poison == PoisonType.Frozen || User.Fishing) return;
+            if (CMain.Time < InputDelay || User.Poison == PoisonType.Paralysis || User.Poison == PoisonType.Frozen || User.Fishing) return;
             
             if (User.NextMagic != null && !User.RidingMount)
             {
@@ -8048,7 +8048,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            if (CMain.Time < User.ReincarnationStopTime) return; 
+            if (CMain.Time < User.BlizzardStopTime || CMain.Time < User.ReincarnationStopTime) return; 
 
             if (MapObject.TargetObject != null && !MapObject.TargetObject.Dead)
             {
