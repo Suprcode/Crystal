@@ -14133,7 +14133,9 @@ namespace Server.MirObjects
                     UserItem dropItem = null;
                     foreach (DropInfo drop in Envir.FishingDrops)
                     {
-                        int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate); if (rate < 1) rate = 1;
+                        int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate); 
+                        
+                        if (rate < 1) rate = 1;
 
                         if (highRate > rate)
                         {
