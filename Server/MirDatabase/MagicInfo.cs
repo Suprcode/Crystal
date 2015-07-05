@@ -500,7 +500,7 @@ namespace Server.MirDatabase
                 case Spell.CounterAttack:
                     return 24000;
                 case Spell.FlashDash:
-                    return 250;
+                    return 200;
                 case Spell.ShoulderDash:
                     return 2500;
                 case Spell.BackStep:
