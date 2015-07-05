@@ -3181,6 +3181,29 @@ namespace Client.MirScenes
                         player.ShieldEffect = null;
                         player.MagicShield = false;
                         break;
+                    case SpellEffect.EnergyShieldUp:
+                        if (ob.Race != ObjectType.Player) return;
+                        player = (PlayerObject)ob;
+                        if (player.EnergyShieldEffect != null)
+                        {
+                            player.EnergyShieldEffect.Clear();
+                            player.EnergyShieldEffect.Remove();
+                        }
+
+                        player.EnergyShield = true;
+                        player.Effects.Add(player.EnergyShieldEffect = new Effect(Libraries.Magic2, 1886, 3, 600, ob) { Repeat = true });
+                        break;
+                    case SpellEffect.EnergyShieldDown:
+                        if (ob.Race != ObjectType.Player) return;
+                        player = (PlayerObject)ob;
+                        if (player.EnergyShieldEffect != null)
+                        {
+                            player.EnergyShieldEffect.Clear();
+                            player.EnergyShieldEffect.Remove();
+                        }
+                        player.EnergyShieldEffect = null;
+                        player.EnergyShield = false;
+                        break;
                     case SpellEffect.GreatFoxSpirit:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, ob));
                         break;
@@ -8404,6 +8427,7 @@ namespace Client.MirScenes
                 case Spell.Purification:
                 case Spell.Healing:
                 case Spell.UltimateEnhancer:
+                case Spell.EnergyShield:
                     if (User.NextMagicObject != null)
                     {
                         if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)

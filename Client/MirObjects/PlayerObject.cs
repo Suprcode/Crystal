@@ -74,6 +74,12 @@ namespace Client.MirObjects
         public bool MagicShield;
         public Effect ShieldEffect;
 
+        public bool EnergyShield;
+        public Effect EnergyShieldEffect;
+
+        public bool ElementalBarrier;
+        public Effect ElementalBarrierEffect;
+
         public byte WingEffect;
         private short StanceDelay = 2500;
 
@@ -87,8 +93,6 @@ namespace Client.MirObjects
         public int ElementEffect;//hold orb count for player(object) load
         public int ElementsLevel;
         public int ElementOrbMax;
-        public bool ElementalBarrier;
-        public Effect ElementalBarrierEffect;
         //Elemental system END
 
         public SpellEffect CurrentEffect; //Stephenking effect sync test
@@ -1729,6 +1733,15 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region EnergyShield
+
+                            case Spell.EnergyShield:
+                                Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 9);
+                                break;
+
+                            #endregion
+
                             #region Purification
 
                             case Spell.Purification:
@@ -2076,25 +2089,48 @@ namespace Client.MirObjects
                 }
             }
 
-            if (!MagicShield) return;
-
-            switch (CurrentAction)
+            if (MagicShield)
             {
-                case MirAction.Struck:
-                case MirAction.MountStruck:
-                    if (ShieldEffect != null)
-                    {
-                        ShieldEffect.Clear();
-                        ShieldEffect.Remove();
-                    }
+                switch (CurrentAction)
+                {
+                    case MirAction.Struck:
+                    case MirAction.MountStruck:
+                        if (ShieldEffect != null)
+                        {
+                            ShieldEffect.Clear();
+                            ShieldEffect.Remove();
+                        }
 
-                    Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3900, 3, 600, this));
-                    ShieldEffect.Complete += (o, e) => Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
-                    break;
-                default:
-                    if (ShieldEffect == null)
-                        Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
-                    break;
+                        Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3900, 3, 600, this));
+                        ShieldEffect.Complete += (o, e) => Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
+                        break;
+                    default:
+                        if (ShieldEffect == null)
+                            Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
+                        break;
+                }
+            }
+
+            if (EnergyShield)
+            {
+                switch (CurrentAction)
+                {
+                    case MirAction.Struck:
+                    case MirAction.MountStruck:
+                        if (EnergyShieldEffect != null)
+                        {
+                            EnergyShieldEffect.Clear();
+                            EnergyShieldEffect.Remove();
+                        }
+
+                        Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1900, 2, 600, this));
+                        EnergyShieldEffect.Complete += (o, e) => Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1890, 3, 600, this) { Repeat = true });
+                        break;
+                    default:
+                        if (EnergyShieldEffect == null)
+                            Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1900, 2, 600, this) { Repeat = true });
+                        break;
+                }
             }
         }
 
@@ -2866,6 +2902,16 @@ namespace Client.MirObjects
                                                 SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10 + 2);
                                             };
                                         }
+                                        break;
+
+                                    #endregion
+
+                                    #region EnergyShield
+
+                                    case Spell.EnergyShield:
+
+                                        Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 9);
                                         break;
 
                                     #endregion
@@ -3745,6 +3791,13 @@ namespace Client.MirObjects
             {
                 ElementalBarrier = true;
                 Effects.Add(ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 16, 3200, this) { Repeat = true });
+                CurrentEffect = SpellEffect.None;
+            }
+
+            if (CurrentEffect == SpellEffect.EnergyShieldUp && !EnergyShield)
+            {
+                EnergyShield = true;
+                Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1890, 3, 600, this) { Repeat = true });
                 CurrentEffect = SpellEffect.None;
             }
 
