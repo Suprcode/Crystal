@@ -417,6 +417,7 @@ public enum MirAction : byte
     Mine,
     Sneek,
     DashAttack,
+    Lunge,
 
     WalkingBow,
     RunningBow,

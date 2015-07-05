@@ -6579,16 +6579,18 @@ namespace Server.MirObjects
             // blocked telpo cancel
             if (blocked) return;
 
-            // move character
-            CurrentMap.GetCell(CurrentLocation).Remove(this);
-            RemoveObjects(Direction, 1);
+            Teleport(CurrentMap, location, false);
 
-            CurrentLocation = location;
+            //// move character
+            //CurrentMap.GetCell(CurrentLocation).Remove(this);
+            //RemoveObjects(Direction, 1);
 
-            CurrentMap.GetCell(CurrentLocation).Add(this);
-            AddObjects(Direction, 1);
+            //CurrentLocation = location;
 
-            Enqueue(new S.UserAttackMove { Direction = Direction, Location = location });
+            //CurrentMap.GetCell(CurrentLocation).Add(this);
+            //AddObjects(Direction, 1);
+
+            //Enqueue(new S.UserAttackMove { Direction = Direction, Location = location });
         }
         private void FurySpell(UserMagic magic, out bool cast)
         {

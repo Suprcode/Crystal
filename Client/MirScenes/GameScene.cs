@@ -2878,9 +2878,12 @@ namespace Client.MirScenes
                             break;
                         }
                 }
+
                 SoundManager.PlaySound(SoundList.Teleport);
                 return;
             }
+
+            
         }
         private void TeleportIn()
         {

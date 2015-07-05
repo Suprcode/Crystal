@@ -93,7 +93,7 @@ namespace Client.MirObjects
 
         public SpellEffect CurrentEffect; //Stephenking effect sync test
 
-        public long StanceTime, BlizzardStopTime, ReincarnationStopTime;
+        public long StanceTime, BlizzardStopTime, ReincarnationStopTime, SlashingBurstTime;
 
         public string GuildName;
         public string GuildRankName;
@@ -790,7 +790,10 @@ namespace Client.MirObjects
 
             if (ActionFeed.Count == 0)
             {
-                CurrentAction = CMain.Time > BlizzardStopTime ? MirAction.Standing : MirAction.Stance2; //ArcherTest
+                CurrentAction = MirAction.Standing;
+
+                CurrentAction = CMain.Time > BlizzardStopTime ? CurrentAction : MirAction.Stance2;
+                //CurrentAction = CMain.Time > SlashingBurstTime ? CurrentAction : MirAction.Lunge;
 
                 if (RidingMount)
                 {
@@ -1919,8 +1922,10 @@ namespace Client.MirObjects
                             #region SlashingBurst
 
                             case Spell.SlashingBurst:
+                                //MapControl.Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, CurrentLocation));
                                 Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                SlashingBurstTime = CMain.Time + 2000;
                                 break;
 
                             #endregion
@@ -3612,13 +3617,13 @@ namespace Client.MirObjects
 
         public override void Draw()
         {
-            float oldOpacity = DXManager.Opacity;
-            if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
-
             if (Settings.Effect)
             {
                 DrawBehindEffects();
             }
+
+            float oldOpacity = DXManager.Opacity;
+            if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
 
             DrawMount();
 
@@ -3637,7 +3642,6 @@ namespace Client.MirObjects
             if (this != User)
             {
                 DrawWings();
-                DrawCurrentEffects();
             }
 
             if (!RidingMount)
@@ -3652,13 +3656,18 @@ namespace Client.MirObjects
             }
 
             DXManager.SetOpacity(oldOpacity);
+
+            if (Settings.Effect && this != User)
+            {
+                DrawEffects();  
+            }
         }
 
         public override void DrawBehindEffects()
         {
             for (int i = 0; i < Effects.Count; i++)
             {
-                if (Hidden || !Effects[i].DrawBehind) continue;
+                if (!Effects[i].DrawBehind) continue;
                 if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
 
                 Effects[i].Draw();
@@ -3669,7 +3678,7 @@ namespace Client.MirObjects
         {
             for (int i = 0; i < Effects.Count; i++)
             {
-                if (Hidden || Effects[i].DrawBehind) continue;
+                if (Effects[i].DrawBehind) continue;
                 if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
 
                 Effects[i].Draw();
