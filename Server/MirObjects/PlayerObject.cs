@@ -1400,6 +1400,8 @@ namespace Server.MirObjects
                         nearCount++;
                     }
                 }
+                
+                if (nearCount > partyExpRate.Length) nearCount = partyExpRate.Length;
 
                 for (int i = 0; i < GroupMembers.Count; i++)
                 {
