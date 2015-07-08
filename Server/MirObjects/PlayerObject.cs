@@ -399,6 +399,15 @@ namespace Server.MirObjects
             }
             Buffs.Clear();
 
+            //reset cast times to zero - in the future this should be saved and passed back to the client
+            //cast time should remove the server time on logout, then add it back on login - this should make it only count down when in game
+            //ignore if less than zero already
+            //client should then add the existing client time to its value - this should keep the count down in sync with the new time
+            for (int i = 0; i < Info.Magics.Count; i++)
+            {
+                Info.Magics[i].CastTime = 0;
+            }
+
             if (MyGuild != null) MyGuild.PlayerLogged(this, false);
             Envir.Players.Remove(this);
             CurrentMap.RemoveObject(this);

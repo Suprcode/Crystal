@@ -244,7 +244,7 @@ namespace Client.MirObjects
 
         public virtual void SetLibraries()
         {
-            TransformType = 26;
+            TransformType = 18;
 
             //default - 807
             //6 - 6 legged axe - 631
@@ -272,10 +272,12 @@ namespace Client.MirObjects
                     case 5:
                         showMount = false;
                         break;
-                    case 25:
+                    case 27:
                         showFishing = false;
+                        showWeapon = false;
                         break;
                     default:
+                        showMount = false;
                         showWeapon = false;
                         break;
                 }
