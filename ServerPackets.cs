@@ -2929,7 +2929,7 @@ namespace ServerPackets
         public uint ObjectID;
         public bool Visible;
         public long Expire;
-        public int Value;
+        public int[] Values;
         public bool Infinite;
 
         protected override void ReadPacket(BinaryReader reader)
@@ -2939,7 +2939,13 @@ namespace ServerPackets
             Visible = reader.ReadBoolean();
             ObjectID = reader.ReadUInt32();
             Expire = reader.ReadInt64();
-            Value = reader.ReadInt32();
+
+            Values = new int[reader.ReadInt32()];
+            for (int i = 0; i < Values.Length; i++)
+            {
+                Values[i] = reader.ReadInt32();
+            }
+
             Infinite = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
@@ -2949,7 +2955,13 @@ namespace ServerPackets
             writer.Write(Visible);
             writer.Write(ObjectID);
             writer.Write(Expire);
-            writer.Write(Value);
+
+            writer.Write(Values.Length);
+            for (int i = 0; i < Values.Length; i++)
+            {
+                writer.Write(Values[i]);
+            }
+
             writer.Write(Infinite);
         }
     }

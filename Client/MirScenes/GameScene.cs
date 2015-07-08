@@ -1436,34 +1436,34 @@ namespace Client.MirScenes
                 case BuffType.UltimateEnhancer:
                     if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
                     {
-                        text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                        text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
                     else if (GameScene.User.Class == MirClass.Taoist)
                     {
-                        text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                        text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
                     else
                     {
-                        text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                        text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
                     break;
                 case BuffType.Impact:
-                    text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
                 case BuffType.Magic:
-                    text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
                 case BuffType.Taoist:
-                    text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
                 case BuffType.Storm:
-                    text = string.Format("A.Speed increased by {0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    text = string.Format("A.Speed increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
                 case BuffType.HealthAid:
-                    text = string.Format("HP increased by {0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    text = string.Format("HP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
                 case BuffType.ManaAid:
-                    text = string.Format("MP increased by {0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    text = string.Format("MP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
             }
 
@@ -3501,7 +3501,7 @@ namespace Client.MirScenes
         {
             if (buff.Type == BuffType.MentalState)
             {
-                switch (buff.Value)
+                switch (buff.Values[0])
                 {
                     case 0:
                         ChatDialog.ReceiveChat("Mentalstate: Agressive.", ChatType.Hint);
@@ -3518,7 +3518,7 @@ namespace Client.MirScenes
         }
         private void AddBuff(S.AddBuff p)
         {
-            Buff buff = new Buff { Type = p.Type, Caster = p.Caster, Expire = CMain.Time + p.Expire, Value = p.Value, Infinite = p.Infinite, ObjectID = p.ObjectID, Visible = p.Visible };
+            Buff buff = new Buff { Type = p.Type, Caster = p.Caster, Expire = CMain.Time + p.Expire, Values = p.Values, Infinite = p.Infinite, ObjectID = p.ObjectID, Visible = p.Visible };
 
             if (buff.ObjectID == User.ObjectID)
             {
@@ -19970,7 +19970,8 @@ namespace Client.MirScenes
         public bool Visible;
         public uint ObjectID;
         public long Expire;
-        public int Value;
+        //public int Value;
+        public int[] Values;
         public bool Infinite;
 
         public override string ToString()
@@ -19986,48 +19987,48 @@ namespace Client.MirScenes
                     text = "Hiding\nInvisible to many monsters.\n";
                     break;
                 case BuffType.Haste:
-                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.\n", Value);
+                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.\n", Values[0]);
                     break;
                 case BuffType.SwiftFeet:
-                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.\n", Value);
+                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.\n", Values[0]);
                     break;
                 case BuffType.Fury:
-                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.\n", Value);
+                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.\n", Values[0]);
                     break;
                 case BuffType.LightBody:
-                    text = string.Format("Light Body\nIncreases Agility by: {0}.\n", Value);
+                    text = string.Format("Light Body\nIncreases Agility by: {0}.\n", Values[0]);
                     break;
                 case BuffType.SoulShield:
-                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.\n", Value);
+                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.BlessedArmour:
-                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.\n", Value);
+                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.ProtectionField:
-                    text = string.Format("Protection Field\nIncreases AC by: 0-{0}.\n", Value);
+                    text = string.Format("Protection Field\nIncreases AC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Rage:
-                    text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Value);
+                    text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.CounterAttack:
-                    text = string.Format("CounterAttack\nIncreases AC/MAC by: {0}-{1}.\n", Value, Value);
+                    text = string.Format("CounterAttack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
                     break;
                 case BuffType.UltimateEnhancer:
                     if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Value);
+                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Values[0]);
                     }
                     else if (GameScene.User.Class == MirClass.Taoist)
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Value);
+                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Values[0]);
                     }
                     else
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Value);
+                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Values[0]);
                     }
                     break;
                 case BuffType.Curse:
-                    text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Value);
+                    text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Values[0]);
                     break;
                 case BuffType.MoonLight:
                     text = "Moon Light\nInvisible to players and many\nmonsters when at a distance.\n";
@@ -20036,71 +20037,76 @@ namespace Client.MirScenes
                     text = "Dark Body\nInvisible to many monsters and able to move.\n";
                     break;
                 case BuffType.General:
-                    text = string.Format("Mirian Advantage\nExpRate increased by {0}%\nDropRate increased by {0}%\n", Value);
+                    text = string.Format("Mirian Advantage\nExpRate increased by {0}%\n", Values[0]);
+
+                    if (Values.Length > 1)
+                        text += string.Format("DropRate increased by {0}%\n", Values[1]);
+                    if (Values.Length > 2)
+                        text += string.Format("GoldRate increased by {0}%\n", Values[2]);
                     break;
                 case BuffType.Exp:
-                    text = string.Format("ExpRate\nIncreased by {0}%\n", Value);
+                    text = string.Format("ExpRate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.Gold:
-                    text = string.Format("GoldRate\nIncreased by {0}%\n", Value);
+                    text = string.Format("GoldRate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.Drop:
-                    text = string.Format("DropRate\nIncreased by {0}%\n", Value);
+                    text = string.Format("DropRate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.Concentration:
                     text = "Concentrating\nIncreases chance on element extraction.\n";
                     break;
 
                 case BuffType.Impact:
-                    text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Value);
+                    text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Magic:
-                    text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Value);
+                    text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Taoist:
-                    text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Value);
+                    text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Storm:
-                    text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Value);
+                    text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
                     break;
                 case BuffType.HealthAid:
-                    text = string.Format("HealthAid\nIncreases HP by: {0}.\n", Value);
+                    text = string.Format("HealthAid\nIncreases HP by: {0}.\n", Values[0]);
                     break;
                 case BuffType.ManaAid:
-                    text = string.Format("ManaAid\nIncreases MP by: {0}.\n", Value);
+                    text = string.Format("ManaAid\nIncreases MP by: {0}.\n", Values[0]);
                     break;
                 case BuffType.VampireShot:
-                    text = string.Format("VampireShot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Value);
+                    text = string.Format("VampireShot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
                     break;
                 case BuffType.PoisonShot:
-                    text = string.Format("PoisonShot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Value);
+                    text = string.Format("PoisonShot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
                     break;
                 case BuffType.MentalState:
-                    switch (Value)
+                    switch (Values[0])
                     {
                         case 0:
-                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Value);
+                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Values[0]);
                             break;
                         case 1:
-                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Value);
+                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Values[0]);
                             break;
                         case 2:
-                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Value);
+                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Values[0]);
                             break;
                     }
                     break;
                 case BuffType.WonderShield:
-                    text = string.Format("WonderShield\nIncreases AC by: {0}-{0}.\n", Value);
+                    text = string.Format("WonderShield\nIncreases AC by: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.MagicWonderShield:
-                    text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Value);
+                    text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.BagWeight:
-                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Value);
+                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Values[0]);
                     break;
 
                 case BuffType.GameMaster:
-                    GMOptions options = (GMOptions)Value;
+                    GMOptions options = (GMOptions)Values[0];
                     text = "GameMaster\n";
 
                     if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";

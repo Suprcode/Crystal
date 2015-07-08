@@ -772,12 +772,12 @@ namespace Server.MirObjects
 
             if (GetMagic(Spell.MentalState) != null && !mentalState)
             {
-                AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Value = Info.MentalState, Infinite = true });
+                AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[]{ Info.MentalState }, Infinite = true });
             }
 
             if (IsGM && !isGM)
             {
-                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Value = 0, Infinite = true });
+                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[]{ 0 }, Infinite = true });
             }
         }
         private void ProcessRegen()
@@ -2727,56 +2727,58 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
+                if (buff.Values == null || buff.Values.Length < 1) continue;
+
                 switch (buff.Type)
                 {
                     case BuffType.Haste:
                     case BuffType.Fury:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
                     case BuffType.SwiftFeet:
                         ActiveSwiftFeet = true;
                         break;
                     case BuffType.LightBody:
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Value);
+                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Values[0]);
                         break;
                     case BuffType.SoulShield:
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.BlessedArmour:
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
                         if (Class == MirClass.Wizard || Class == MirClass.Archer)
                         {
-                            MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Value);
+                            MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Values[0]);
                         }
                         else if (Class == MirClass.Taoist)
                         {
-                            MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Value);
+                            MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Values[0]);
                         }
                         else
                         {
-                            MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                            MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         }
                         break;
                     case BuffType.ProtectionField:
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.Rage:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         break;
                     case BuffType.CounterAttack:
-                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Value);
-                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Value);
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Values[0]);
+                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Values[0]);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.Curse:
 
-                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Value);
-                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Value);
-                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Value);
-                        byte rASpeed = (byte)(((int)ASpeed / 100) * buff.Value);
+                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Values[0]);
+                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Values[0]);
+                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Values[0]);
+                        byte rASpeed = (byte)(((int)ASpeed / 100) * buff.Values[0]);
 
                         MaxDC = (byte)Math.Max(byte.MinValue, MaxDC - rMaxDC);
                         MaxMC = (byte)Math.Max(byte.MinValue, MaxMC - rMaxMC);
@@ -2784,46 +2786,50 @@ namespace Server.MirObjects
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         break;
                     case BuffType.General:
-                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Value);
-                        ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Value);
+                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[0]);
+
+                        if(buff.Values.Length > 1)
+                            ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Values[1]);
+                        if (buff.Values.Length > 2)
+                            GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[2]);
                         break;
                     case BuffType.Exp:
-                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Value);
+                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[0]);
                         break;
                     case BuffType.Drop:
-                        ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Value);
+                        ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Values[0]);
                         break;
                     case BuffType.Gold:
-                        GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Value);
+                        GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[0]);
                         break;
                     case BuffType.Impact:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         break;
                     case BuffType.Magic:
-                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Value);
+                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Values[0]);
                         break;
                     case BuffType.Taoist:
-                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Value);
+                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Values[0]);
                         break;
                     case BuffType.Storm:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
                     case BuffType.HealthAid:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Value);
+                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
                         break;
                     case BuffType.ManaAid:
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Value);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[0]);
                         break;
                     case BuffType.WonderShield:
-                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Value);
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Values[0]);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.MagicWonderShield:
-                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Value);
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Values[0]);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.BagWeight:
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Value);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
                 }
 
@@ -5498,7 +5504,7 @@ namespace Server.MirObjects
             int count = Buffs.Where(x => x.Type == BuffType.Concentration).ToList().Count();
             if (count > 0) return;
 
-            AddBuff(new Buff { Type = BuffType.Concentration, Caster = this, ExpireTime = Envir.Time + duration * 1000, Value = magic.Level });
+            AddBuff(new Buff { Type = BuffType.Concentration, Caster = this, ExpireTime = Envir.Time + duration * 1000, Values = new int[]{ magic.Level } });
 
             LevelMagic(magic);
 
@@ -6289,7 +6295,7 @@ namespace Server.MirObjects
                     //Only targets
                     if (target.IsFriendlyTarget(this))
                     {
-                        target.AddBuff(new Buff { Type = BuffType.UltimateEnhancer, Caster = this, ExpireTime = Envir.Time + expiretime * 1000, Value = value });
+                        target.AddBuff(new Buff { Type = BuffType.UltimateEnhancer, Caster = this, ExpireTime = Envir.Time + expiretime * 1000, Values = new int[]{ value } });
                         target.OperateTime = 0;
                         LevelMagic(magic);
                         ConsumeItem(item, 1);
@@ -6412,7 +6418,7 @@ namespace Server.MirObjects
             int duration = 45 + (15 * magic.Level);
             int value = (int)Math.Round(MaxAC * (0.2 + (0.03 * magic.Level)));
 
-            AddBuff(new Buff { Type = BuffType.ProtectionField, Caster = this, ExpireTime = Envir.Time + duration * 1000, Value = value });
+            AddBuff(new Buff { Type = BuffType.ProtectionField, Caster = this, ExpireTime = Envir.Time + duration * 1000, Values = new int[]{ value } });
             OperateTime = 0;
             LevelMagic(magic);
         }
@@ -6424,7 +6430,7 @@ namespace Server.MirObjects
             int duration = 48 + (6 * magic.Level);
             int value = (int)Math.Round(MaxDC * (0.12 + (0.03 * magic.Level)));
 
-            AddBuff(new Buff { Type = BuffType.Rage, Caster = this, ExpireTime = Envir.Time + duration * 1000, Value = value });
+            AddBuff(new Buff { Type = BuffType.Rage, Caster = this, ExpireTime = Envir.Time + duration * 1000, Values = new int[]{ value } });
             OperateTime = 0;
             LevelMagic(magic);
         }
@@ -6682,7 +6688,7 @@ namespace Server.MirObjects
         {
             cast = true;
 
-            AddBuff(new Buff { Type = BuffType.SwiftFeet, Caster = this, ExpireTime = Envir.Time + 25000 + magic.Level * 5000, Value = 1, Visible = true });
+            AddBuff(new Buff { Type = BuffType.SwiftFeet, Caster = this, ExpireTime = Envir.Time + 25000 + magic.Level * 5000, Values = new int[]{ 1 }, Visible = true });
             LevelMagic(magic);
         }
         private void MoonLight(UserMagic magic)
@@ -7408,7 +7414,7 @@ namespace Server.MirObjects
                 #region Haste
 
                 case Spell.Haste:
-                    AddBuff(new Buff { Type = BuffType.Haste, Caster = this, ExpireTime = Envir.Time + (magic.Level + 1) * 30000, Value = (magic.Level + 1) * 2 });
+                    AddBuff(new Buff { Type = BuffType.Haste, Caster = this, ExpireTime = Envir.Time + (magic.Level + 1) * 30000, Values = new int[] { (magic.Level + 1) * 2 } });
                     LevelMagic(magic);
                     break;
 
@@ -7417,7 +7423,7 @@ namespace Server.MirObjects
                 #region Fury
 
                 case Spell.Fury:
-                    AddBuff(new Buff { Type = BuffType.Fury, Caster = this, ExpireTime = Envir.Time + 60000 + magic.Level * 10000, Value = 4, Visible = true });
+                    AddBuff(new Buff { Type = BuffType.Fury, Caster = this, ExpireTime = Envir.Time + 60000 + magic.Level * 10000, Values = new int[]{ 4 }, Visible = true });
                     LevelMagic(magic);
                     break;
 
@@ -7426,7 +7432,7 @@ namespace Server.MirObjects
                 #region LightBody
 
                 case Spell.LightBody:
-                    AddBuff(new Buff { Type = BuffType.LightBody, Caster = this, ExpireTime = Envir.Time + (magic.Level + 1) * 30000, Value = (magic.Level + 1) * 2 });
+                    AddBuff(new Buff { Type = BuffType.LightBody, Caster = this, ExpireTime = Envir.Time + (magic.Level + 1) * 30000, Values = new int[] { (magic.Level + 1) * 2 } });
                     LevelMagic(magic);
                     break;
 
@@ -7739,7 +7745,7 @@ namespace Server.MirObjects
                         doVamp = true;
                         if (!hasVampBuff && !hasPoisonBuff && (Envir.Random.Next(20) >= 8))//40% chance
                         {
-                            AddBuff(new Buff { Type = BuffType.VampireShot, Caster = this, ExpireTime = Envir.Time + (buffTime * 1000), Value = value, Visible = true, ObjectID = this.ObjectID });
+                            AddBuff(new Buff { Type = BuffType.VampireShot, Caster = this, ExpireTime = Envir.Time + (buffTime * 1000), Values = new int[]{ value }, Visible = true, ObjectID = this.ObjectID });
                             BroadcastInfo();
                         }
                     }
@@ -7748,7 +7754,7 @@ namespace Server.MirObjects
                         doPoison = true;
                         if (!hasPoisonBuff && !hasVampBuff && (Envir.Random.Next(20) >= 8))//40% chance
                         {
-                            AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = this, ExpireTime = Envir.Time + (buffTime * 1000), Value = value, Visible = true, ObjectID = this.ObjectID });
+                            AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = this, ExpireTime = Envir.Time + (buffTime * 1000), Values = new int[]{ value }, Visible = true, ObjectID = this.ObjectID });
                             BroadcastInfo();
                         }
                     }
@@ -7777,7 +7783,7 @@ namespace Server.MirObjects
                                         if (hasVampBuff)//Vampire Effect
                                         {
                                             //cancel out buff
-                                            AddBuff(new Buff { Type = BuffType.VampireShot, Caster = this, ExpireTime = Envir.Time + 1000, Value = value, Visible = true, ObjectID = this.ObjectID });
+                                            AddBuff(new Buff { Type = BuffType.VampireShot, Caster = this, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = this.ObjectID });
 
                                             target.Attacked(this, value, DefenceType.MAC, false);
                                             if (VampAmount == 0) VampTime = Envir.Time + 1000;
@@ -7786,7 +7792,7 @@ namespace Server.MirObjects
                                         if (hasPoisonBuff)//Poison Effect
                                         {
                                             //cancel out buff
-                                            AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = this, ExpireTime = Envir.Time + 1000, Value = value, Visible = true, ObjectID = this.ObjectID });
+                                            AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = this, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = this.ObjectID });
 
                                             targetob.ApplyPoison(new Poison
                                             {
@@ -8859,7 +8865,7 @@ namespace Server.MirObjects
 
             string caster = b.Caster != null ? b.Caster.Name : string.Empty;
 
-            S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = caster, Expire = b.ExpireTime - Envir.Time, Value = b.Value, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
+            S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = caster, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
             Enqueue(addBuff);
 
             if (b.Visible) Broadcast(addBuff);
@@ -9526,22 +9532,22 @@ namespace Server.MirObjects
                             int time = item.Info.Durability;
 
                             if ((item.Info.MaxDC + item.DC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MaxDC + item.DC });
+                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.MaxDC + item.DC } });
 
                             if ((item.Info.MaxMC + item.MC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MaxMC + item.MC });
+                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxMC + item.MC } });
 
                             if ((item.Info.MaxSC + item.SC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MaxSC + item.SC });
+                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxSC + item.SC } });
 
                             if ((item.Info.AttackSpeed + item.AttackSpeed) > 0)
-                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.AttackSpeed + item.AttackSpeed });
+                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
 
                             if ((item.Info.HP + item.HP) > 0)
-                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.HP + item.HP });
+                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.HP + item.HP } });
 
                             if ((item.Info.MP + item.MP) > 0)
-                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MP + item.MP });
+                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MP + item.MP } });
 
                             break;
                     }
@@ -9720,28 +9726,28 @@ namespace Server.MirObjects
                                 switch (item.Info.Effect)
                                 {
                                     case 0://exp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.Luck + item.Luck });
+                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.Luck + item.Luck } });
                                         break;
                                     case 1://drop low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.Luck + item.Luck });
+                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.Luck + item.Luck } });
                                         break;
                                     case 2://hp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.HP + item.HP });
+                                        AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.HP + item.HP } });
                                         break;
                                     case 3://mp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MP + item.MP });
+                                        AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.MP + item.MP } });
                                         break;
                                     case 4://ac-ac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.WonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MaxAC + item.AC });
+                                        AddBuff(new Buff { Type = BuffType.WonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.MaxAC + item.AC } });
                                         break;
                                     case 5://mac-mac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MagicWonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.MaxMAC + item.MAC });
+                                        AddBuff(new Buff { Type = BuffType.MagicWonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.MaxMAC + item.MAC } });
                                         break;
                                     case 6://speed low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.AttackSpeed + item.AttackSpeed });
+                                        AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.AttackSpeed + item.AttackSpeed } });
                                         break;
                                     case 7://knapsack low/med/high
-                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * 1000, Value = item.Info.Luck + item.Luck });
+                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[]{ item.Info.Luck + item.Luck } });
                                         break;
                                 }
                                 break;
@@ -12587,7 +12593,7 @@ namespace Server.MirObjects
 
                     CounterAttack = true;
                     CounterAttackTime = Envir.Time + 7000;
-                    AddBuff(new Buff { Type = BuffType.CounterAttack, Caster = this, ExpireTime = CounterAttackTime, Value = 11 + magic.Level * 3, Visible = true });
+                    AddBuff(new Buff { Type = BuffType.CounterAttack, Caster = this, ExpireTime = CounterAttackTime, Values = new int[]{ 11 + magic.Level * 3 }, Visible = true });
                     ChangeMP(-cost);
                     break;
                 case Spell.MentalState:
@@ -12596,8 +12602,8 @@ namespace Server.MirObjects
                     {
                         if (Buffs[i].Type == BuffType.MentalState)
                         {
-                            Buffs[i].Value = Info.MentalState;
-                            S.AddBuff addBuff = new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Value = Buffs[i].Value, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible };
+                            Buffs[i].Values[0] = Info.MentalState;
+                            S.AddBuff addBuff = new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Values = Buffs[i].Values, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible };
                             Enqueue(addBuff);
                             break;
                         }
@@ -12619,8 +12625,8 @@ namespace Server.MirObjects
                     if (GMNeverDie) options |= GMOptions.Superman;
                     if (Observer) options |= GMOptions.Observer;
 
-                    Buffs[i].Value = (byte)options;
-                    Enqueue(new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Value = Buffs[i].Value, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible });
+                    Buffs[i].Values[0] = (byte)options;
+                    Enqueue(new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Values = Buffs[i].Values, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible });
                     break;
                 }
             }

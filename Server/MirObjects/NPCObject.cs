@@ -2658,7 +2658,19 @@ namespace Server.MirObjects
                         bool tempBool2 = false;
 
                         long.TryParse(param[1], out tempLong);
-                        int.TryParse(param[2], out tempInt);
+
+                        string[] stringValues = param[2].Split(',');
+
+                        if (stringValues.Length < 1) return;
+
+                        int[] intValues = new int[stringValues.Length];
+
+                        for (int j = 0; j < intValues.Length; j++)
+                        {
+                            int.TryParse(stringValues[j], out intValues[j]);
+                        }
+
+                        if (intValues.Length < 1) return;
 
                         if (param[3].Length > 0)
                             bool.TryParse(param[3], out tempBool);
@@ -2671,7 +2683,7 @@ namespace Server.MirObjects
                             Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]),
                             Caster = player,
                             ExpireTime = SMain.Envir.Time + tempLong * 1000,
-                            Value = tempInt,
+                            Values = intValues,
                             Infinite = tempBool,
                             Visible = tempBool2
                         };

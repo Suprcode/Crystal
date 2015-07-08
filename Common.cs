@@ -90,7 +90,7 @@ public enum DefaultNPCType : byte
     Daily
 }
 
-public enum IntelligentCreatureType : byte//IntelligentCreature
+public enum IntelligentCreatureType : byte
 {
     None = 99,
     BabyPig = 0,
@@ -860,14 +860,12 @@ public enum SpellEffect : byte
 {
     None,
     FatalSword,
-    SummonSkeleton,
     Teleport,
     Healing,
     RedMoonEvil,
     TwinDrakeBlade,
     MagicShieldUp,
     MagicShieldDown,
-    FlameSwordCharge,
     GreatFoxSpirit,
     Entrapment,
     Reflect,
@@ -875,8 +873,6 @@ public enum SpellEffect : byte
     Mine,
     ElementalBarrierUp,
     ElementalBarrierDown,
-    FuryUp,
-    FuryDown,
     DelayedExplosion,
     MPEater,
     Hemorrhage,
@@ -887,6 +883,10 @@ public enum SpellEffect : byte
     AwakeningHit,
     EnergyShieldUp,
     EnergyShieldDown,
+    //SummonSkeleton,
+    //FlameSwordCharge,
+    //FuryUp,
+    //FuryDown,
 }
 
 public enum BuffType : byte

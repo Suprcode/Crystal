@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
+using Client.MirSounds;
 
 namespace Client.MirObjects
 {

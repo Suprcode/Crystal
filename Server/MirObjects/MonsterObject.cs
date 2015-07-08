@@ -383,32 +383,34 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
+                if (buff.Values == null || buff.Values.Length < 1) continue;
+
                 switch (buff.Type)
                 {
                     case BuffType.Haste:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
                     case BuffType.SwiftFeet:
-                        MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed + 100 * buff.Value);
+                        MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed + 100 * buff.Values[0]);
                         break;
                     case BuffType.LightBody:
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Value);
+                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Values[0]);
                         break;
                     case BuffType.SoulShield:
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.BlessedArmour:
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         break;
                     case BuffType.Curse:
-                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Value);
-                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Value);
-                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Value);
-                        sbyte rASpeed = (sbyte)(((int)ASpeed / 100) * buff.Value);
-                        ushort rMSpeed = (ushort)((MoveSpeed / 100) * buff.Value);
+                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Values[0]);
+                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Values[0]);
+                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Values[0]);
+                        sbyte rASpeed = (sbyte)(((int)ASpeed / 100) * buff.Values[0]);
+                        ushort rMSpeed = (ushort)((MoveSpeed / 100) * buff.Values[0]);
 
                         MaxDC = (byte)Math.Max(byte.MinValue, MaxDC - rMaxDC);
                         MaxMC = (byte)Math.Max(byte.MinValue, MaxMC - rMaxMC);

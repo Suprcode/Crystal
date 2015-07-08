@@ -630,51 +630,51 @@ namespace Client.MirObjects
                 {
                     case BuffType.Haste:
                     case BuffType.Fury:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
                     case BuffType.SwiftFeet:
                         Sprint = true;
                         break;
                     case BuffType.LightBody:
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Value);
+                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Values[0]);
                         break;
                     case BuffType.SoulShield:
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.BlessedArmour:
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
                         if (Class == MirClass.Wizard || Class == MirClass.Archer)
                         {
-                            MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Value);
+                            MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Values[0]);
                         }
                         else if (Class == MirClass.Taoist)
                         {
-                            MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Value);
+                            MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Values[0]);
                         }
                         else
                         {
-                            MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                            MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         }
                         break;
                     case BuffType.ProtectionField:
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.Rage:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         break;
                     case BuffType.CounterAttack:
-                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Value);
-                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Value);
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Values[0]);
+                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Values[0]);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.Curse:
-                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Value);
-                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Value);
-                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Value);
-                        byte rASpeed = (byte)(((int)ASpeed / 100) * buff.Value);
+                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Values[0]);
+                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Values[0]);
+                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Values[0]);
+                        byte rASpeed = (byte)(((int)ASpeed / 100) * buff.Values[0]);
 
                         MaxDC = (byte)Math.Max(byte.MinValue, MaxDC - rMaxDC);
                         MaxMC = (byte)Math.Max(byte.MinValue, MaxMC - rMaxMC);
@@ -683,33 +683,33 @@ namespace Client.MirObjects
                         break;
 
                     case BuffType.Impact:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         break;
                     case BuffType.Magic:
-                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Value);
+                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Values[0]);
                         break;
                     case BuffType.Taoist:
-                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Value);
+                        MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Values[0]);
                         break;
                     case BuffType.Storm:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
                     case BuffType.HealthAid:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Value);
+                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
                         break;
                     case BuffType.ManaAid:
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Value);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[0]);
                         break;
                     case BuffType.WonderShield:
-                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Value);
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Values[0]);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.MagicWonderShield:
-                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Value);
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Values[0]);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.BagWeight:
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Value);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
                 }
 

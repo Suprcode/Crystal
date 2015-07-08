@@ -831,7 +831,7 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Value = target.Level / 7 + 4 });
+                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ target.Level / 7 + 4 } });
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1550,7 +1550,7 @@ namespace Server.MirEnvir
                                         if (target.IsAttackTarget(player))
                                         {
                                             target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = value, TickSpeed = 1000, Value = value2 }, player);
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Value = value2 });
+                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ value2 } });
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1566,7 +1566,7 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region ExplosiveTrap           ArcherSpells - Explosive Trap
+                #region ExplosiveTrap
 
                 case Spell.ExplosiveTrap:
                     value = (int)data[2];
@@ -1756,7 +1756,7 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region OneWithNature           ArcherSpells - OneWithNature
+                #region OneWithNature
 
                 case Spell.OneWithNature:
                     value = (int)data[2];
@@ -1825,12 +1825,12 @@ namespace Server.MirEnvir
                     if (hasVampBuff)//Vampire Effect
                     {
                         //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Value = value, Visible = true, ObjectID = player.ObjectID });
+                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
                     }
                     if (hasPoisonBuff)//Poison Effect
                     {
                         //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Value = value, Visible = true, ObjectID = player.ObjectID });
+                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
                     }
                     break;
 
