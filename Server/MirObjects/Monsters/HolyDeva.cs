@@ -53,6 +53,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null || !CanAttack) return;
 
+            if (Master != null)
+                MoveTo(Master.CurrentLocation);
+
             if (InAttackRange() && (Master != null || Envir.Time < FearTime))
             {
                 Attack();
@@ -69,9 +72,7 @@ namespace Server.MirObjects.Monsters
 
             int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-            if (dist >= AttackRange)
-                MoveTo(Target.CurrentLocation);
-            else
+            if (dist < AttackRange)
             {
                 MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
 
@@ -98,7 +99,6 @@ namespace Server.MirObjects.Monsters
                         }
                         break;
                 }
-
             }
         }
 
