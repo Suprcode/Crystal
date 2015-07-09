@@ -1056,7 +1056,11 @@ namespace Server.MirObjects
             
             SearchTime = Envir.Time + SearchDelay;
 
-            //if (CurrentMap.Players.Count < 1) return;
+            //temporary test for server speed. Stop attempting to roam if no players. Wait 5 minutes to get suitable random spread
+            if (CurrentMap.Players.Count < 1 && SMain.Envir.Time > 5 * Settings.Minute)
+            {
+                return;
+            }
 
             //Stacking or Infront of master - Move
             bool stacking = CheckStacked();

@@ -45,6 +45,7 @@ namespace Client.MirObjects
         }
 
         public List<Effect> Effects = new List<Effect>();
+        public List<BuffType> Buffs = new List<BuffType>();
 
         public MLibrary BodyLibrary;
         public Color DrawColour = Color.White, NameColour = Color.White;
@@ -130,6 +131,17 @@ namespace Client.MirObjects
                     break;
                 case BuffType.PoisonShot:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 2310, 7, 1400, this, true, type) { Repeat = false });
+                    break;
+                case BuffType.EnergyShield:
+                    BuffEffect effect;
+                    SoundManager.PlaySound(20000 + (ushort)Spell.EnergyShield * 9);
+                    //SoundManager.PlaySound(20000 + (ushort)Spell.EnergyShield * 10 + 2);
+                    Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1880, 9, 900, this, true, type) { Repeat = false });
+
+                    effect.Complete += (o, e) =>
+                    {
+                        Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, this, true, type) { Repeat = true });
+                    };
                     break;
             }
         }

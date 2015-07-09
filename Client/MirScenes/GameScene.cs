@@ -2463,6 +2463,34 @@ namespace Client.MirScenes
                 location = User.ActionFeed[User.ActionFeed.Count - 1].Location;
             }
 
+            if (Buffs.Any(a => a.Type == BuffType.EnergyShield))
+            {
+                BuffEffect effect = null;
+                for (int i = 0; i < User.Effects.Count; i++)
+                {
+                    if (!(User.Effects[i] is BuffEffect)) continue;
+                    if (((BuffEffect)(User.Effects[i])).BuffType != BuffType.EnergyShield) return;
+
+                    effect = (BuffEffect)User.Effects[i];
+                    break;
+                }
+
+                if (effect != null)
+                {
+                    effect.Clear();
+                    effect.Remove();
+                }
+
+                User.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, User, true, BuffType.EnergyShield) { Repeat = false });
+
+                effect.Complete += (o, e) =>
+                {
+                    User.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, User, true, BuffType.EnergyShield) { Repeat = true });
+                };
+
+                SoundManager.PlaySound(20000 + 84 * 10 + 6);
+            }
+
             QueuedAction action = new QueuedAction { Action = MirAction.Struck, Direction = dir, Location = location, Params = new List<object>() };
             action.Params.Add(p.AttackerID);
             User.ActionFeed.Add(action);
@@ -2486,6 +2514,35 @@ namespace Client.MirScenes
                 QueuedAction action = new QueuedAction { Action = MirAction.Struck, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                 action.Params.Add(p.AttackerID);
                 ob.ActionFeed.Add(action);
+
+                if (ob is PlayerObject && ((PlayerObject)ob).Buffs.Any(a => a == BuffType.EnergyShield))
+                {
+                    BuffEffect effect = null;
+                    for (int j = 0; j < ob.Effects.Count; j++)
+                    {
+                        if (!(ob.Effects[j] is BuffEffect)) continue;
+                        if (((BuffEffect)(ob.Effects[j])).BuffType != BuffType.EnergyShield) return;
+
+                        effect = (BuffEffect)ob.Effects[j];
+                        break;
+                    }
+
+                    if (effect != null)
+                    {
+                        effect.Clear();
+                        effect.Remove();
+                    }
+
+                    ob.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, ob, true, BuffType.EnergyShield) { Repeat = false });
+
+                    effect.Complete += (o, e) =>
+                    {
+                        ob.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, ob, true, BuffType.EnergyShield) { Repeat = true });
+                    };
+
+                    SoundManager.PlaySound(20000 + 84 * 10 + 6);
+                }
+
                 return;
             }
         }
@@ -3181,29 +3238,6 @@ namespace Client.MirScenes
                         player.ShieldEffect = null;
                         player.MagicShield = false;
                         break;
-                    case SpellEffect.EnergyShieldUp:
-                        if (ob.Race != ObjectType.Player) return;
-                        player = (PlayerObject)ob;
-                        if (player.EnergyShieldEffect != null)
-                        {
-                            player.EnergyShieldEffect.Clear();
-                            player.EnergyShieldEffect.Remove();
-                        }
-
-                        player.EnergyShield = true;
-                        player.Effects.Add(player.EnergyShieldEffect = new Effect(Libraries.Magic2, 1886, 3, 600, ob) { Repeat = true });
-                        break;
-                    case SpellEffect.EnergyShieldDown:
-                        if (ob.Race != ObjectType.Player) return;
-                        player = (PlayerObject)ob;
-                        if (player.EnergyShieldEffect != null)
-                        {
-                            player.EnergyShieldEffect.Clear();
-                            player.EnergyShieldEffect.Remove();
-                        }
-                        player.EnergyShieldEffect = null;
-                        player.EnergyShield = false;
-                        break;
                     case SpellEffect.GreatFoxSpirit:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, ob));
                         break;
@@ -3535,8 +3569,7 @@ namespace Client.MirScenes
                 Buffs.Add(buff);
                 CreateBuff(buff);
                 User.RefreshStats();
-                ShowMentalState(buff);
-                
+                ShowMentalState(buff);               
             }
 
             if (!buff.Visible || buff.ObjectID <= 0) return;
@@ -3545,10 +3578,16 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != buff.ObjectID) continue;
-                if (!(ob is PlayerObject) && !(ob is MonsterObject)) continue;
+                if ((ob is PlayerObject) || (ob is MonsterObject))
+                {
+                    if (!ob.Buffs.Contains(buff.Type))
+                    {
+                        ob.Buffs.Add(buff.Type);
+                    }
 
-                ob.AddBuffEffect(buff.Type);
-                return;
+                    ob.AddBuffEffect(buff.Type);
+                    return;
+                }
             }
         }
         private void RemoveBuff(S.RemoveBuff p)
@@ -3580,6 +3619,7 @@ namespace Client.MirScenes
 
                 if (ob.ObjectID != p.ObjectID) continue;
 
+                ob.Buffs.Remove(p.Type);
                 ob.RemoveBuffEffect(p.Type);
                 return;
             }

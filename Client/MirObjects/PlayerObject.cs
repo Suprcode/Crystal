@@ -74,9 +74,6 @@ namespace Client.MirObjects
         public bool MagicShield;
         public Effect ShieldEffect;
 
-        public bool EnergyShield;
-        public Effect EnergyShieldEffect;
-
         public bool ElementalBarrier;
         public Effect ElementalBarrierEffect;
 
@@ -109,8 +106,6 @@ namespace Client.MirObjects
         public Point FishingPoint;
 
         public LevelEffects LevelEffects;
-
-        public List<BuffType> Buffs = new List<BuffType>();
 
         public PlayerObject(uint objectID)
             : base(objectID)
@@ -244,7 +239,7 @@ namespace Client.MirObjects
 
         public virtual void SetLibraries()
         {
-            TransformType = 18;
+            TransformType = 5;
 
             //default - 807
             //6 - 6 legged axe - 631
@@ -259,7 +254,6 @@ namespace Client.MirObjects
 
             bool altAnim = false;
 
-            bool showWeapon = true;
             bool showMount = true;
             bool showFishing = true;
 
@@ -269,16 +263,10 @@ namespace Client.MirObjects
 
                 switch (TransformType)
                 {
-                    case 5:
-                        showMount = false;
-                        break;
                     case 27:
                         showFishing = false;
-                        showWeapon = false;
                         break;
                     default:
-                        showMount = false;
-                        showWeapon = false;
                         break;
                 }
 
@@ -563,7 +551,7 @@ namespace Client.MirObjects
 
             #region Common
             //Harvest
-            if (CurrentAction == MirAction.Harvest && showWeapon)
+            if (CurrentAction == MirAction.Harvest && TransformType < 0)
             {
                 WeaponLibrary1 = 1 < Libraries.CWeapons.Length ? Libraries.CWeapons[1] : null;
             }
@@ -1780,8 +1768,8 @@ namespace Client.MirObjects
                             #region EnergyShield
 
                             case Spell.EnergyShield:
-                                Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 9);
+                                //Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
+                                //SoundManager.PlaySound(20000 + (ushort)Spell * 9);
                                 break;
 
                             #endregion
@@ -2155,27 +2143,6 @@ namespace Client.MirObjects
                 }
             }
 
-            if (EnergyShield)
-            {
-                switch (CurrentAction)
-                {
-                    case MirAction.Struck:
-                    case MirAction.MountStruck:
-                        if (EnergyShieldEffect != null)
-                        {
-                            EnergyShieldEffect.Clear();
-                            EnergyShieldEffect.Remove();
-                        }
-
-                        Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1900, 2, 600, this));
-                        EnergyShieldEffect.Complete += (o, e) => Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1890, 3, 600, this) { Repeat = true });
-                        break;
-                    default:
-                        if (EnergyShieldEffect == null)
-                            Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1900, 2, 600, this) { Repeat = true });
-                        break;
-                }
-            }
         }
 
         public virtual void ProcessFrames()
@@ -2954,8 +2921,8 @@ namespace Client.MirObjects
 
                                     case Spell.EnergyShield:
 
-                                        Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
-                                        SoundManager.PlaySound(20000 + (ushort)Spell * 9);
+                                        //Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
+                                        //SoundManager.PlaySound(20000 + (ushort)Spell * 9);
                                         break;
 
                                     #endregion
@@ -3747,10 +3714,10 @@ namespace Client.MirObjects
 
             DXManager.SetOpacity(oldOpacity);
 
-            if (Settings.Effect && this != User)
-            {
-                DrawEffects();  
-            }
+            //if (Settings.Effect && this != User)
+            //{
+            //    DrawEffects();  
+            //}
         }
 
         public override void DrawBehindEffects()
@@ -3835,13 +3802,6 @@ namespace Client.MirObjects
             {
                 ElementalBarrier = true;
                 Effects.Add(ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 16, 3200, this) { Repeat = true });
-                CurrentEffect = SpellEffect.None;
-            }
-
-            if (CurrentEffect == SpellEffect.EnergyShieldUp && !EnergyShield)
-            {
-                EnergyShield = true;
-                Effects.Add(EnergyShieldEffect = new Effect(Libraries.Magic2, 1890, 3, 600, this) { Repeat = true });
                 CurrentEffect = SpellEffect.None;
             }
 

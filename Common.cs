@@ -881,12 +881,8 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
-    EnergyShieldUp,
-    EnergyShieldDown,
-    //SummonSkeleton,
-    //FlameSwordCharge,
-    //FuryUp,
-    //FuryDown,
+    //EnergyShieldUp,
+    //EnergyShieldDown,
 }
 
 public enum BuffType : byte

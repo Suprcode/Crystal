@@ -191,10 +191,6 @@ namespace Server.MirObjects
         public byte MagicShieldLv;
         public long MagicShieldTime;
 
-        public bool EnergyShield;
-        public byte EnergyShieldLv;
-        public long EnergyShieldTime;
-
         public bool ElementalBarrier;
         public byte ElementalBarrierLv;
         public long ElementalBarrierTime;
@@ -518,14 +514,6 @@ namespace Server.MirObjects
                 ElementalBarrierLv = 0;
                 ElementalBarrierTime = 0;
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
-            }
-
-            if (EnergyShield && Envir.Time > EnergyShieldTime)
-            {
-                EnergyShield = false;
-                EnergyShieldLv = 0;
-                EnergyShieldTime = 0;
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.EnergyShieldDown }, CurrentLocation);
             }
 
             for (int i = 0; i <= 3; i++)//Self destruct when out of range (in this case 15 squares)
@@ -1145,11 +1133,6 @@ namespace Server.MirObjects
             {
                 ElementalBarrier = false;
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
-            }
-            if (EnergyShield)
-            {
-                EnergyShield = false;
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.EnergyShieldDown }, CurrentLocation);
             }
 
             if (PKPoints > 200)
@@ -5418,8 +5401,8 @@ namespace Server.MirObjects
                 case Spell.Hallucination:
                     Hallucination(target, magic);
                     break;
-                case Spell.EnergyShield://stupple
-                    EnergyShields(target, magic, out cast);
+                case Spell.EnergyShield:
+                    EnergyShield(target, magic, out cast);
                     break;
                 case Spell.UltimateEnhancer:
                     UltimateEnhancer(target, magic, out cast);
@@ -6272,18 +6255,22 @@ namespace Server.MirObjects
 
             ActionList.Add(action);
         }
-        private void EnergyShields(MapObject target, UserMagic magic, out bool cast)
+        private void EnergyShield(MapObject target, UserMagic magic, out bool cast)
         {
             cast = false;
 
-            if (target == null || !target.IsFriendlyTarget(this)) return;
-            UserItem item = GetAmulet(1);
-            if (item == null) return;
+            if (target.Race != ObjectType.Player) return;
 
-            int expireTime = GetAttackPower(MinSC, MaxSC) * 2 + (magic.Level + 1) * 10;
-            //int value = MaxSC >= 5 ? Math.Min(8, MaxSC / 5) : 1;
+            if (!target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
-            ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, expireTime));
+            int duration = 30 + 50 * magic.Level;
+            int power = GetAttackPower(magic.GetPower(MinSC), magic.GetPower(MaxSC) + 1);
+
+            int[] values = { Luck / 3 + magic.Level, power };
+            target.AddBuff(new Buff { Type = BuffType.EnergyShield, Caster = this, ExpireTime = Envir.Time + duration * 1000, Visible = true, Values = values });
+
+            LevelMagic(magic);
+            cast = true;
         }
         private void UltimateEnhancer(MapObject target, UserMagic magic, out bool cast)
         {
@@ -6308,7 +6295,7 @@ namespace Server.MirObjects
                         target.OperateTime = 0;
                         LevelMagic(magic);
                         ConsumeItem(item, 1);
-                        if (target != this) cast = true;
+                        cast = true;
                     }
                     break;
             }
@@ -7461,19 +7448,6 @@ namespace Server.MirObjects
 
                 #endregion
 
-                #region EnergyShield
-
-                case Spell.EnergyShield:
-                    if (EnergyShield) return;
-                    EnergyShield = true;
-                    EnergyShieldLv = magic.Level;
-                    EnergyShieldTime = Envir.Time + (int)data[1] * 1000;
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.EnergyShieldUp }, CurrentLocation);
-                    LevelMagic(magic);
-                    break;
-
-                #endregion
-
                 #region TurnUndead
 
                 case Spell.TurnUndead:
@@ -8358,7 +8332,7 @@ namespace Server.MirObjects
                 Poison = CurrentPoison,
                 Dead = Dead,
                 Hidden = Hidden,
-                Effect = MagicShield ? SpellEffect.MagicShieldUp : EnergyShield ? SpellEffect.EnergyShieldUp : ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None,
+                Effect = MagicShield ? SpellEffect.MagicShieldUp : ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None,
                 WingEffect = Looks_Wings,
                 MountType = MountType,
                 RidingMount = RidingMount,
@@ -8542,6 +8516,17 @@ namespace Server.MirObjects
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
                             break;
+                        case BuffType.EnergyShield:
+                            int rate = Buffs[i].Values[0];
+
+                            if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
+                            {
+                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                    SetHP(MaxHP);
+                                else
+                                    ChangeHP(Buffs[i].Values[1]);
+                            }
+                            break;
                     }
                 }
             }
@@ -8599,24 +8584,11 @@ namespace Server.MirObjects
             if (ElementalBarrier)
                 damage -= damage * (ElementalBarrierLv + 1) / 10;
 
-            if (EnergyShield)
-            {
-                int shieldDamage = damage * (EnergyShieldLv + 1) / 10;
-                damage -= shieldDamage;
-
-                if (attacker.IsAttackTarget(this))
-                {
-                    attacker.Attacked(this, shieldDamage, type, false);
-                }
-            }
-
             if (armour >= damage) return 0;
 
             MagicShieldTime -= (damage - armour) * 60;
 
             ElementalBarrierTime -= (damage - armour) * 60;
-
-            EnergyShieldTime -= (damage - armour) * 60;
 
             if (attacker.LifeOnHit > 0)
                 attacker.ChangeHP(attacker.LifeOnHit);
@@ -8688,6 +8660,17 @@ namespace Server.MirObjects
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
                             break;
+                        case BuffType.EnergyShield:
+                            int rate = Buffs[i].Values[0];
+
+                            if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
+                            {
+                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                    SetHP(MaxHP);
+                                else
+                                    ChangeHP(Buffs[i].Values[1]);
+                            }
+                            break;
                     }
                 }
             }
@@ -8731,24 +8714,11 @@ namespace Server.MirObjects
             if (ElementalBarrier)
                 damage -= damage * (ElementalBarrierLv +1 ) / 10;
 
-            if (EnergyShield)
-            {
-                int shieldDamage = damage * (EnergyShieldLv + 1) / 10;
-                damage -= shieldDamage;
-
-                if (attacker.IsAttackTarget(this))
-                {
-                    attacker.Attacked(this, shieldDamage, type, false);
-                }
-            }
-
             if (armour >= damage) return 0;
 
             MagicShieldTime -= (damage - armour) * 60;
 
             ElementalBarrierTime -= (damage - armour) * 60;
-
-            EnergyShieldTime -= (damage - armour) * 60;
 
             LastHitter = attacker.Master ?? attacker;
             LastHitTime = Envir.Time + 10000;
@@ -8873,6 +8843,8 @@ namespace Server.MirObjects
             base.AddBuff(b);
 
             string caster = b.Caster != null ? b.Caster.Name : string.Empty;
+
+            if(b.Values == null) b.Values = new int[1];
 
             S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = caster, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
             Enqueue(addBuff);

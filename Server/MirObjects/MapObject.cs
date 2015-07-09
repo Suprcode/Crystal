@@ -441,6 +441,16 @@ namespace Server.MirObjects
 
             Buffs.Add(b);
         }
+        public void RemoveBuff(BuffType b)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Type != b) continue;
+
+                Buffs[i].Infinite = false;
+                Buffs[i].ExpireTime = Envir.Time;
+            }
+        }
 
         public bool CheckStacked()
         {
