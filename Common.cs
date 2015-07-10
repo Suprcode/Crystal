@@ -542,7 +542,8 @@ public enum ItemType : byte
     Fish = 33,
     Quest = 34,
 	Awakening = 35,
-    Pets = 36,//IntelligentCreature
+    Pets = 36,
+    Transform = 37,
 }
 
 public enum MirGridType : byte
@@ -910,12 +911,13 @@ public enum BuffType : byte
     MentalState,
     EnergyShield,
 
+    GameMaster,
     General,
     Exp,
     Drop,
     Gold,
     BagWeight,
-    GameMaster,
+    Transform,
 
     Impact,
     Magic,

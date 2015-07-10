@@ -148,6 +148,8 @@ namespace Server.MirObjects
             set { Mount.MountType = value; }
         }
 
+        public short TransformType;
+
         public int FishingChance, FishingChanceCounter, FishingProgressMax, FishingProgress, FishingAutoReelChance = 0, FishingNibbleChance = 0;
         public bool Fishing, FishingAutocast, FishFound, FishFirstFound;
 
@@ -724,6 +726,7 @@ namespace Server.MirObjects
             bool hiding = false;
             bool isGM = false;
             bool mentalState = false;
+            bool transform = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -745,6 +748,10 @@ namespace Server.MirObjects
                     case BuffType.GameMaster:
                         isGM = true;
                         if (!IsGM) removeBuff = true;
+                        break;
+                    case BuffType.Transform:
+                        transform = true;
+                        if (TransformType < 0) removeBuff = true;
                         break;
                 }
 
@@ -775,6 +782,11 @@ namespace Server.MirObjects
             if (IsGM && !isGM)
             {
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[]{ 0 }, Infinite = true });
+            }
+
+            if (TransformType > -1 && !transform)
+            {
+                AddBuff(new Buff { Type = BuffType.Transform, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
             }
         }
         private void ProcessRegen()
@@ -2206,6 +2218,7 @@ namespace Server.MirObjects
             CurrentWearWeight = 0;
             CurrentHandWeight = 0;
             MountType = -1;
+            TransformType = -1;
 
             HasTeleportRing = false;
             HasProtectionRing = false;
@@ -2321,6 +2334,11 @@ namespace Server.MirObjects
                 {
                     MountType = RealItem.Shape;
                     //RealItem.Effect;
+                }
+
+                if (RealItem.Type == ItemType.Transform)
+                {
+                    TransformType = RealItem.Shape;
                 }
 
                 if (RealItem.Set == ItemSet.None) continue;
@@ -5386,6 +5404,9 @@ namespace Server.MirObjects
                 case Spell.MeteorStrike:
                     MeteorStrike(magic, target == null ? location : target.CurrentLocation, out cast);
                     break;
+                case Spell.IceThrust:
+                    IceThrust(magic);
+                    break;
                 case Spell.TrapHexagon:
                     TrapHexagon(magic, target, out cast);
                     break;
@@ -5932,6 +5953,18 @@ namespace Server.MirObjects
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
+
+        private void IceThrust(UserMagic magic)
+        {
+            int criticalDamage = Envir.Random.Next(0, 100) <= (1 + Luck) ? MaxMC * 3 : MinMC * 3;
+            int nearDamage = (12 + 3 * (magic.Level + Level / 20)) * criticalDamage / 30 + MinMC;
+            int farDamage = (8 + 2 * (magic.Level + Level / 20)) * criticalDamage / 30 + MinMC;
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 1500, this, magic, CurrentLocation, Direction, criticalDamage, nearDamage, farDamage);
+
+            CurrentMap.ActionList.Add(action);
+        }
+
         #endregion
 
         #region Taoist Skills
@@ -6259,24 +6292,32 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            if (target.Race != ObjectType.Player) return;
-
             if (!target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
             int duration = 30 + 50 * magic.Level;
             int power = GetAttackPower(magic.GetPower(MinSC), magic.GetPower(MaxSC) + 1);
+            int chance = 9 - (Luck / 3 + magic.Level);
 
-            int[] values = { Luck / 3 + magic.Level, power };
-            target.AddBuff(new Buff { Type = BuffType.EnergyShield, Caster = this, ExpireTime = Envir.Time + duration * 1000, Visible = true, Values = values });
+            int[] values = { chance < 2 ? 2 : chance, power };      
 
-            LevelMagic(magic);
-            cast = true;
+            switch (target.Race)
+            {
+                case ObjectType.Player:
+                    //Only targets
+                    if (target.IsFriendlyTarget(this))
+                    {
+                        target.AddBuff(new Buff { Type = BuffType.EnergyShield, Caster = this, ExpireTime = Envir.Time + duration * 1000, Visible = true, Values = values });
+                        target.OperateTime = 0;
+                        LevelMagic(magic);
+                        cast = true;
+                    }
+                    break;
+            }
         }
         private void UltimateEnhancer(MapObject target, UserMagic magic, out bool cast)
         {
             cast = false;
-            //int count = Buffs.Where(x => x.Type == BuffType.UltimateEnhancer).ToList().Count();
-            //if (count > 0) return;
+
             if (target == null || !target.IsFriendlyTarget(this)) return;
             UserItem item = GetAmulet(1);
             if (item == null) return;
@@ -8519,7 +8560,7 @@ namespace Server.MirObjects
                         case BuffType.EnergyShield:
                             int rate = Buffs[i].Values[0];
 
-                            if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
+                            if (Envir.Random.Next(rate) == 0)
                             {
                                 if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
                                     SetHP(MaxHP);
@@ -10167,6 +10208,7 @@ namespace Server.MirObjects
                             break;
                         case ItemType.Armour:
                         case ItemType.Helmet:
+                        case ItemType.Transform:
                         case ItemType.Boots:
                         case ItemType.Belt:
                             if (tempFrom.Info.Shape == 2 || tempFrom.Info.Shape == 6)
@@ -10931,7 +10973,7 @@ namespace Server.MirObjects
                         return false;
                     break;
                 case EquipmentSlot.Helmet:
-                    if (item.Info.Type != ItemType.Helmet)
+                    if (item.Info.Type != ItemType.Helmet && item.Info.Type != ItemType.Transform)
                         return false;
                     break;
                 case EquipmentSlot.Torch:

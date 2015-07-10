@@ -1512,73 +1512,81 @@ namespace Client.MirScenes
         {
             switch (type)
             {
+                //Skills
                 case BuffType.Teleport:
-                    return 25;//885;
+                    return 25;
                 case BuffType.Hiding:
-                    return 24;//884;
+                    return 24;
                 case BuffType.Haste:
-                    return 0;//880;
+                    return 0;
                 case BuffType.SwiftFeet:
-                    return 21;//881;
+                    return 21;
                 case BuffType.Fury:
-                    return 8;//868;
+                    return 8;
                 case BuffType.LightBody:
-                    return 22;//882;
+                    return 22;
                 case BuffType.SoulShield:
-                    return 11;//870;
+                    return 11;
                 case BuffType.BlessedArmour:
-                    return 10;//871;
+                    return 10;
                 case BuffType.ProtectionField:
-                    return 9;//861;
+                    return 9;
                 case BuffType.Rage:
-                    return 81;//905;
+                    return 81;
                 case BuffType.CounterAttack:
-                    return 46;//144 + 20000;
+                    return 46;
                 case BuffType.UltimateEnhancer:
-                    return 2;//862;
+                    return 99;
+                case BuffType.EnergyShield:
+                    return 4;
                 case BuffType.Curse:
                     return 32;
                 case BuffType.MoonLight:
-                    return 24;//884;
+                    return 24;
                 case BuffType.DarkBody:
-                    return 24;//884;
-                case BuffType.General:
-                    return 503;//903;
-                case BuffType.Exp:
-                    return 334;//903;
-                case BuffType.Drop:
-                    return 12;//872;
-                case BuffType.Gold:
-                    return 316;//907;
-                case BuffType.Impact:
-                    return 321;//893;
-                case BuffType.Magic:
-                    return 305;//901;
-                case BuffType.Taoist:
-                    return 327;//889;
-                case BuffType.Storm:
-                    return 317;//908;
-                case BuffType.HealthAid:
-                    return 13;//873;
-                case BuffType.ManaAid:
-                    return 15;//904;
-
+                    return 24;
                 case BuffType.Concentration:
-                    return 66;// 11162; //Prguse2
+                    return 66;
                 case BuffType.VampireShot:
-                    return 74;// 200 + 20000; //MagIcon
+                    return 74;
                 case BuffType.PoisonShot:
-                    return 68;// 204 + 20000; //MagIcon
+                    return 68;
                 case BuffType.MentalState:
                     return 59;
-                case BuffType.WonderShield:
-                    return 4;//864;
-                case BuffType.MagicWonderShield:
-                    return 4;//864;
-                case BuffType.BagWeight:
-                    return 12;//872;
+
+                //Random
                 case BuffType.GameMaster:
-                    return 51;//903;
+                    return 51;
+                case BuffType.General:
+                    return 503;
+                case BuffType.Exp:
+                    return 334;
+                case BuffType.Drop:
+                    return 12;
+                case BuffType.Gold:
+                    return 316;
+                case BuffType.BagWeight:
+                    return 12;
+                case BuffType.Transform:
+                    return 19;
+
+                //Consumables
+                case BuffType.Impact:
+                    return 321;
+                case BuffType.Magic:
+                    return 305;
+                case BuffType.Taoist:
+                    return 327;
+                case BuffType.Storm:
+                    return 317;
+                case BuffType.HealthAid:
+                    return 13;
+                case BuffType.ManaAid:
+                    return 15;
+                case BuffType.WonderShield:
+                    return 4;
+                case BuffType.MagicWonderShield:
+                    return 4;
                 default:
                     return 0;
             }
@@ -2463,32 +2471,29 @@ namespace Client.MirScenes
                 location = User.ActionFeed[User.ActionFeed.Count - 1].Location;
             }
 
-            if (Buffs.Any(a => a.Type == BuffType.EnergyShield))
+            if (User.Buffs.Any(a => a == BuffType.EnergyShield))
             {
-                BuffEffect effect = null;
-                for (int i = 0; i < User.Effects.Count; i++)
+                for (int j = 0; j < User.Effects.Count; j++)
                 {
-                    if (!(User.Effects[i] is BuffEffect)) continue;
-                    if (((BuffEffect)(User.Effects[i])).BuffType != BuffType.EnergyShield) return;
+                    BuffEffect effect = null;
+                    effect = User.Effects[j] as BuffEffect;
 
-                    effect = (BuffEffect)User.Effects[i];
-                    break;
+                    if (effect != null && effect.BuffType == BuffType.EnergyShield)
+                    {
+                        effect.Clear();
+                        effect.Remove();
+
+                        User.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, User, true, BuffType.EnergyShield) { Repeat = false });
+
+                        effect.Complete += (o, e) =>
+                        {
+                            User.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, User, true, BuffType.EnergyShield) { Repeat = true });
+                        };
+
+                        SoundManager.PlaySound(20000 + 84 * 10 + 6);
+                        break;
+                    }
                 }
-
-                if (effect != null)
-                {
-                    effect.Clear();
-                    effect.Remove();
-                }
-
-                User.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, User, true, BuffType.EnergyShield) { Repeat = false });
-
-                effect.Complete += (o, e) =>
-                {
-                    User.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, User, true, BuffType.EnergyShield) { Repeat = true });
-                };
-
-                SoundManager.PlaySound(20000 + 84 * 10 + 6);
             }
 
             QueuedAction action = new QueuedAction { Action = MirAction.Struck, Direction = dir, Location = location, Params = new List<object>() };
@@ -2515,32 +2520,29 @@ namespace Client.MirScenes
                 action.Params.Add(p.AttackerID);
                 ob.ActionFeed.Add(action);
 
-                if (ob is PlayerObject && ((PlayerObject)ob).Buffs.Any(a => a == BuffType.EnergyShield))
+                if (ob.Buffs.Any(a => a == BuffType.EnergyShield))
                 {
-                    BuffEffect effect = null;
                     for (int j = 0; j < ob.Effects.Count; j++)
                     {
-                        if (!(ob.Effects[j] is BuffEffect)) continue;
-                        if (((BuffEffect)(ob.Effects[j])).BuffType != BuffType.EnergyShield) return;
+                        BuffEffect effect = null;
+                        effect = ob.Effects[j] as BuffEffect;
 
-                        effect = (BuffEffect)ob.Effects[j];
-                        break;
+                        if (effect != null && effect.BuffType == BuffType.EnergyShield)
+                        {
+                            effect.Clear();
+                            effect.Remove();
+
+                            ob.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, ob, true, BuffType.EnergyShield) { Repeat = false });
+
+                            effect.Complete += (o, e) =>
+                            {
+                                ob.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, ob, true, BuffType.EnergyShield) { Repeat = true });
+                            };
+
+                            SoundManager.PlaySound(20000 + 84 * 10 + 6);
+                            break;
+                        }
                     }
-
-                    if (effect != null)
-                    {
-                        effect.Clear();
-                        effect.Remove();
-                    }
-
-                    ob.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, ob, true, BuffType.EnergyShield) { Repeat = false });
-
-                    effect.Complete += (o, e) =>
-                    {
-                        ob.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, ob, true, BuffType.EnergyShield) { Repeat = true });
-                    };
-
-                    SoundManager.PlaySound(20000 + 84 * 10 + 6);
                 }
 
                 return;
@@ -18314,6 +18316,7 @@ namespace Client.MirScenes
                     }
                     break;
                 case ItemType.Helmet:
+                case ItemType.Transform:
                     if (item.CurrentDura > Warning)
                         Helmet.Index = 2155;
                     if (item.CurrentDura <= Warning)
@@ -20067,6 +20070,9 @@ namespace Client.MirScenes
                         text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Values[0]);
                     }
                     break;
+                case BuffType.EnergyShield:
+                    text = string.Format("Energy Shield\n{0}% chance to gain {1} HP when attacked\n", Math.Round((1 / (decimal)Values[0]) * 100), Values[1]);
+                    break;
                 case BuffType.Curse:
                     text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Values[0]);
                     break;
@@ -20075,6 +20081,38 @@ namespace Client.MirScenes
                     break;
                 case BuffType.DarkBody:
                     text = "Dark Body\nInvisible to many monsters and able to move.\n";
+                    break;
+                case BuffType.VampireShot:
+                    text = string.Format("VampireShot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    break;
+                case BuffType.PoisonShot:
+                    text = string.Format("PoisonShot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    break;
+                case BuffType.Concentration:
+                    text = "Concentrating\nIncreases chance on element extraction.\n";
+                    break;
+                case BuffType.MentalState:
+                    switch (Values[0])
+                    {
+                        case 0:
+                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Values[0]);
+                            break;
+                        case 1:
+                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Values[0]);
+                            break;
+                        case 2:
+                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Values[0]);
+                            break;
+                    }
+                    break;
+
+                case BuffType.GameMaster:
+                    GMOptions options = (GMOptions)Values[0];
+                    text = "GameMaster\n";
+
+                    if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
+                    if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
+                    if (options.HasFlag(GMOptions.Observer)) text += "-Observer\n";
                     break;
                 case BuffType.General:
                     text = string.Format("Mirian Advantage\nExpRate increased by {0}%\n", Values[0]);
@@ -20093,8 +20131,11 @@ namespace Client.MirScenes
                 case BuffType.Drop:
                     text = string.Format("DropRate\nIncreased by {0}%\n", Values[0]);
                     break;
-                case BuffType.Concentration:
-                    text = "Concentrating\nIncreases chance on element extraction.\n";
+                case BuffType.BagWeight:
+                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    break;
+                case BuffType.Transform:
+                    text = string.Format("Transform\nDisguises your appearance.\n");
                     break;
 
                 case BuffType.Impact:
@@ -20115,43 +20156,11 @@ namespace Client.MirScenes
                 case BuffType.ManaAid:
                     text = string.Format("ManaAid\nIncreases MP by: {0}.\n", Values[0]);
                     break;
-                case BuffType.VampireShot:
-                    text = string.Format("VampireShot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
-                    break;
-                case BuffType.PoisonShot:
-                    text = string.Format("PoisonShot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
-                    break;
-                case BuffType.MentalState:
-                    switch (Values[0])
-                    {
-                        case 0:
-                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Values[0]);
-                            break;
-                        case 1:
-                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Values[0]);
-                            break;
-                        case 2:
-                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Values[0]);
-                            break;
-                    }
-                    break;
                 case BuffType.WonderShield:
                     text = string.Format("WonderShield\nIncreases AC by: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.MagicWonderShield:
                     text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
-                    break;
-                case BuffType.BagWeight:
-                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Values[0]);
-                    break;
-
-                case BuffType.GameMaster:
-                    GMOptions options = (GMOptions)Values[0];
-                    text = "GameMaster\n";
-
-                    if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
-                    if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
-                    if (options.HasFlag(GMOptions.Observer)) text += "-Observer\n";
                     break;
             }
 

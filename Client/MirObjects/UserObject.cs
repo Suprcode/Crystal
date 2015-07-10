@@ -245,6 +245,8 @@ namespace Client.MirObjects
             Armour = 0;
             WingEffect = 0;
             MountType = -1;
+            TransformType = -1;
+
             CurrentWearWeight = 0;
             CurrentHandWeight = 0;
 
@@ -347,6 +349,9 @@ namespace Client.MirObjects
 
                 if (RealItem.Type == ItemType.Mount)
                     MountType = RealItem.Shape;
+
+                if (RealItem.Type == ItemType.Transform)
+                    TransformType = RealItem.Shape;
 
                 if (RealItem.Set == ItemSet.None) continue;
 

@@ -98,7 +98,7 @@ namespace Client.MirObjects
         public long StanceTime, MountTime, FishingTime;
         public long BlizzardStopTime, ReincarnationStopTime, SlashingBurstTime;
 
-        public short MountType, TransformType;
+        public short MountType = -1, TransformType = -1;
 
         public string GuildName;
         public string GuildRankName;
@@ -144,6 +144,8 @@ namespace Client.MirObjects
 
             MountType = info.MountType;
             RidingMount = info.RidingMount;
+
+            //TransformType = info.TransformType;
 
             Fishing = info.Fishing;
 
@@ -239,8 +241,6 @@ namespace Client.MirObjects
 
         public virtual void SetLibraries()
         {
-            TransformType = 5;
-
             //default - 807
             //6 - 6 legged axe - 631
             //7 - iceman - 633
@@ -3022,6 +3022,16 @@ namespace Client.MirObjects
                                         else
                                             ob.Effects.Add(new Effect(Libraries.Magic, 3930, 15, 1000, ob));
                                         break;
+                                    #endregion
+
+                                    #region IceThrust
+
+                                    case Spell.IceThrust:
+
+                                        MapControl.Effects.Add(new Effect(Libraries.Magic2, 1790 + (int)Direction * 10, 10, 10 * FrameInterval, CurrentLocation));
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                        break;
+
                                     #endregion
 
                                     #region Revelation

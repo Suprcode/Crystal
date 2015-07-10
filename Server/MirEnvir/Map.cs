@@ -626,7 +626,7 @@ namespace Server.MirEnvir
                 case DelayedType.Magic:
                     CompleteMagic(action.Params);
                     break;
-                    case DelayedType.Spawn:
+                case DelayedType.Spawn:
                     MonsterObject mob = (MonsterObject) action.Params[0];
                     mob.Spawn(this, (Point) action.Params[1]);
                     if (action.Params.Length > 2) ((MonsterObject) action.Params[2]).SlaveList.Add(mob);
@@ -1198,47 +1198,87 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region BladeAvalanche
 
-                case Spell.BladeAvalanche:
-                    value = (int)data[2];
-                    dir = (MirDirection)data[4];
-                    location = Functions.PointMove((Point)data[3], dir, 1);
-                    count = (int)data[5] - 1;
+                #region IceThrust
 
-                    if (!ValidPoint(location)) return;
-
-                    if (count > 0)
+                case Spell.IceThrust:
                     {
-                        DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 100, player, magic, value, location, dir, count);
-                        ActionList.Add(action);
-                    }
+                        location = (Point)data[2];
+                        MirDirection direction = (MirDirection)data[3];
 
-                    cell = GetCell(location);
+                        int criticalDamage = (int)data[4];
+                        int nearDamage = (int)data[5];
+                        int farDamage = (int)data[6];
 
-                    if (cell.Objects == null) return;
+                        int col = 3;
+                        int row = 3;
 
+                        Point[] loc = new Point[col]; //0 = left 1 = center 2 = right
+                        loc[0] = Functions.PointMove(location, Functions.PreviousDir(direction), 1);
+                        loc[1] = Functions.PointMove(location, direction, 1);
+                        loc[2] = Functions.PointMove(location, Functions.NextDir(direction), 1);
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
-                        MapObject target = cell.Objects[i];
-                        switch (target.Race)
+                        for (int i = 0; i < col; i++)
                         {
-                            case ObjectType.Monster:
-                            case ObjectType.Player:
-                                //Only targets
-                                if (target.IsAttackTarget(player))
+                            Point startPoint = loc[i];
+                            for (int j = 0; j < row; j++)
+                            {
+                                Point hitPoint = Functions.PointMove(startPoint, direction, j);
+
+                                if (!ValidPoint(hitPoint)) continue;
+
+                                cell = GetCell(hitPoint);
+
+                                if (cell.Objects == null) continue;
+
+                                for (int k = 0; k < cell.Objects.Count; k++)
                                 {
-                                    if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
-                                        player.LevelMagic(magic);
-                                    return;
+                                    MapObject target = cell.Objects[k];
+                                    switch (target.Race)
+                                    {
+                                        case ObjectType.Monster:
+                                        case ObjectType.Player:
+
+                                            //Only targets
+                                            if (target.Attacked(player, j <= 1 ? nearDamage : farDamage, DefenceType.MAC, false) > 0)
+                                            {
+                                                if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 20) <= magic.Level)
+                                                {
+                                                    target.ApplyPoison(new Poison
+                                                    {
+                                                        Owner = player,
+                                                        Duration = target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
+                                                        PType = PoisonType.Slow,
+                                                        TickSpeed = 1000,
+                                                    }, player);
+                                                    target.OperateTime = 0;
+                                                }
+
+                                                if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 40) <= magic.Level)
+                                                {
+                                                    target.ApplyPoison(new Poison
+                                                    {
+                                                        Owner = player,
+                                                        Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(player.Freezing),
+                                                        PType = PoisonType.Frozen,
+                                                        TickSpeed = 1000,
+                                                    }, player);
+                                                    target.OperateTime = 0;
+                                                }
+
+                                                train = true;
+                                            }
+                                            break;
+                                    }
                                 }
-                                break;
+                            }
                         }
                     }
+
                     break;
 
                 #endregion
+
 
                 #region SlashingBurst
 
