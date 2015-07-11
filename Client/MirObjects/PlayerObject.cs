@@ -254,6 +254,8 @@ namespace Client.MirObjects
             //23 - green footballer - 791
             //24 - red2 footballer - 791
 
+            TransformType = 18;
+
             bool altAnim = false;
 
             bool showMount = true;
@@ -265,18 +267,38 @@ namespace Client.MirObjects
 
                 switch (TransformType)
                 {
-                    case 27:
+                    case 26:
                         showFishing = false;
                         break;
                     default:
                         break;
                 }
 
-                BodyLibrary = TransformType < Libraries.Transform.Length ? Libraries.Transform[TransformType] : Libraries.Transform[0];
+                if (MountType > 6 && RidingMount && TransformType != 26)
+                {
+                    ArmourOffSet = -416;
+                    BodyLibrary = TransformType < Libraries.TransformMounts.Length ? Libraries.TransformMounts[TransformType] : Libraries.TransformMounts[0];
+                }
+                else
+                {
+                    ArmourOffSet = 0;
+                    BodyLibrary = TransformType < Libraries.Transform.Length ? Libraries.Transform[TransformType] : Libraries.Transform[0];
+                }
+
                 HairLibrary = null;
                 WeaponLibrary1 = null;
                 WeaponLibrary2 = null;
-                WingLibrary = null;
+
+                if (TransformType == 18 || TransformType == 19)
+                {
+                    WingEffect = (byte)(TransformType == 18 ? 1 : 2);
+
+                    WingLibrary = WingEffect - 1 < Libraries.TransformEffect.Length ? Libraries.TransformEffect[WingEffect - 1] : null;
+                }
+                else
+                {
+                    WingLibrary = null;
+                }
 
                 #endregion
             }

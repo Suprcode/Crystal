@@ -29,7 +29,10 @@ namespace Client
                             MountPath = @".\Data\Mount\",
                             FishingPath = @".\Data\Fishing\",
                             PetsPath = @".\Data\Pet\",
-                            TransformPath = @".\Data\Transform\";
+                            TransformPath = @".\Data\Transform\",
+                            TransformMountsPath = @".\Data\TransformRide2\",
+                            TransformEffectPath = @".\Data\TransformEffect\",
+                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\";
 
         //Logs
         public static bool LogErrors = true;
