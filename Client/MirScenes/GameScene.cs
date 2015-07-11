@@ -1553,6 +1553,8 @@ namespace Client.MirScenes
                     return 68;
                 case BuffType.MentalState:
                     return 59;
+                case BuffType.MagicBooster:
+                    return 37;
 
                 //Random
                 case BuffType.GameMaster:
@@ -2484,13 +2486,14 @@ namespace Client.MirScenes
                         effect.Remove();
 
                         User.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, User, true, BuffType.EnergyShield) { Repeat = false });
-
+                        SoundManager.PlaySound(20000 + (ushort)Spell.EnergyShield * 10 + 1);
+                        
                         effect.Complete += (o, e) =>
                         {
                             User.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, User, true, BuffType.EnergyShield) { Repeat = true });
                         };
 
-                        SoundManager.PlaySound(20000 + 84 * 10 + 6);
+
                         break;
                     }
                 }
@@ -2533,13 +2536,13 @@ namespace Client.MirScenes
                             effect.Remove();
 
                             ob.Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1890, 6, 600, ob, true, BuffType.EnergyShield) { Repeat = false });
+                            SoundManager.PlaySound(20000 + (ushort)Spell.EnergyShield * 10 + 1);
 
                             effect.Complete += (o, e) =>
                             {
                                 ob.Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, ob, true, BuffType.EnergyShield) { Repeat = true });
                             };
 
-                            SoundManager.PlaySound(20000 + 84 * 10 + 6);
                             break;
                         }
                     }
@@ -20104,6 +20107,9 @@ namespace Client.MirScenes
                             text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Values[0]);
                             break;
                     }
+                    break;
+                case BuffType.MagicBooster:
+                    text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
                     break;
 
                 case BuffType.GameMaster:

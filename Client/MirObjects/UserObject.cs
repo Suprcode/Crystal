@@ -686,6 +686,14 @@ namespace Client.MirObjects
                         MaxSC = (byte)Math.Max(byte.MinValue, MaxSC - rMaxSC);
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         break;
+                    case BuffType.MagicBooster:
+                        MinMC = (byte)Math.Min(byte.MaxValue, MinMC + buff.Values[0]);
+                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Values[0]);
+                        break;
+
+                    case BuffType.BagWeight:
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
+                        break;
 
                     case BuffType.Impact:
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
@@ -712,9 +720,6 @@ namespace Client.MirObjects
                     case BuffType.MagicWonderShield:
                         MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Values[0]);
                         MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
-                        break;
-                    case BuffType.BagWeight:
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
                 }
 

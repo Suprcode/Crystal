@@ -174,6 +174,8 @@ namespace Client.MirObjects
             Armour = info.Armour;
             Light = info.Light;
             WingEffect = info.WingEffect;
+            //TransformType = info.TransformType;
+
             SetLibraries();
             SetEffects();
         }
@@ -1680,7 +1682,7 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Magic3, 200, 8, 8 * FrameInterval, this));
                                 Effects.Add(new Effect(Libraries.Magic3, 187, 10, 10 * FrameInterval, this));
                                 //i don't know sound
-                                //SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
                             #endregion
@@ -1761,15 +1763,6 @@ namespace Client.MirObjects
                             case Spell.FrostCrunch:
                                 Effects.Add(new Effect(Libraries.Magic2, 400, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                break;
-
-                            #endregion
-
-                            #region EnergyShield
-
-                            case Spell.EnergyShield:
-                                //Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
-                                //SoundManager.PlaySound(20000 + (ushort)Spell * 9);
                                 break;
 
                             #endregion
@@ -1887,6 +1880,15 @@ namespace Client.MirObjects
 
                             case Spell.TurnUndead:
                                 Effects.Add(new Effect(Libraries.Magic, 3920, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
+                            #region MagicBooster
+
+                            case Spell.MagicBooster:
+                                Effects.Add(new Effect(Libraries.Magic3, 80, 9, 9 * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
@@ -2046,13 +2048,15 @@ namespace Client.MirObjects
                             #endregion
 
                             #region HeavenlySword
+
                             case Spell.HeavenlySword:
                                 Effects.Add(new Effect(Libraries.Magic2, 2230 + ((int)Direction * 10), 8, 800, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
+
                             #endregion
 
-                            #region ElementalBarrier ArcherSpells - Elemental system
+                            #region ElementalBarrier
 
                             case Spell.ElementalBarrier:
                                 if (HasElements && !ElementalBarrier)
@@ -2064,13 +2068,13 @@ namespace Client.MirObjects
 
                             #endregion
 
-                            #region PoisonShot      ArcherSpells - PoisonShot
+                            #region PoisonShot
                             case Spell.PoisonShot:
                                 Effects.Add(new Effect(Libraries.Magic3, 2300, 8, 1000, this));
                                 break;
                             #endregion
 
-                            #region OneWithNature       ArcherSpells - OneWithNature
+                            #region OneWithNature
                             case Spell.OneWithNature:
                                 MapControl.Effects.Add(new Effect(Libraries.Magic3, 2710, 8, 1200, CurrentLocation));
                                 SoundManager.PlaySound(20000 + 139 * 10);

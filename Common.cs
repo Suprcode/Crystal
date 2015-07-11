@@ -882,8 +882,6 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
-    //EnergyShieldUp,
-    //EnergyShieldDown,
 }
 
 public enum BuffType : byte
@@ -910,6 +908,7 @@ public enum BuffType : byte
     CounterAttack,
     MentalState,
     EnergyShield,
+    MagicBooster,
 
     GameMaster,
     General,

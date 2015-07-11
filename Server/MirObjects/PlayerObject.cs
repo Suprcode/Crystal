@@ -2795,6 +2795,11 @@ namespace Server.MirObjects
                         MaxSC = (byte)Math.Max(byte.MinValue, MaxSC - rMaxSC);
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         break;
+                    case BuffType.MagicBooster:
+                        MinMC = (byte)Math.Min(byte.MaxValue, MinMC + buff.Values[0]);
+                        MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Values[0]);
+                        break;
+
                     case BuffType.General:
                         ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[0]);
 
@@ -2812,6 +2817,10 @@ namespace Server.MirObjects
                     case BuffType.Gold:
                         GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[0]);
                         break;
+                    case BuffType.BagWeight:
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
+                        break;
+
                     case BuffType.Impact:
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         break;
@@ -2837,9 +2846,6 @@ namespace Server.MirObjects
                     case BuffType.MagicWonderShield:
                         MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + buff.Values[0]);
                         MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
-                        break;
-                    case BuffType.BagWeight:
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
                 }
 
@@ -5242,6 +5248,17 @@ namespace Server.MirObjects
                     break;
                 }
 
+            if (Buffs.Any(e => e.Type == BuffType.MagicBooster))
+            {
+                UserMagic booster = GetMagic(Spell.MagicBooster);
+
+                if (booster != null)
+                {
+                    int penalty = (int)Math.Round((decimal)(cost / 100) * (6 + booster.Level));
+                    cost += penalty;
+                }
+            }
+
             if (cost > MP)
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -5356,6 +5373,9 @@ namespace Server.MirObjects
                     break;
                 case Spell.TurnUndead:
                     TurnUndead(target, magic);
+                    break;
+                case Spell.MagicBooster:
+                    MagicBooster(magic);
                     break;
                 case Spell.Vampirism:
                     Vampirism(target, magic);
@@ -5963,6 +5983,13 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 1500, this, magic, CurrentLocation, Direction, criticalDamage, nearDamage, farDamage);
 
             CurrentMap.ActionList.Add(action);
+        }
+
+        private void MagicBooster(UserMagic magic)
+        {
+            int bonus = 6 + magic.Level * 6;
+
+            ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, bonus));
         }
 
         #endregion
@@ -7499,6 +7526,17 @@ namespace Server.MirObjects
                     monster.EXPOwner = this;
                     monster.EXPOwnerTime = Envir.Time + 5000;
                     monster.Die();
+                    LevelMagic(magic);
+                    break;
+
+                #endregion
+
+                #region MagicBooster
+
+                case Spell.MagicBooster:
+                    value = (int)data[1];
+
+                    AddBuff(new Buff { Type = BuffType.MagicBooster, Caster = this, ExpireTime = Envir.Time + 60000, Values = new int[] { value, 6 + magic.Level }, Visible = true });
                     LevelMagic(magic);
                     break;
 

@@ -1198,7 +1198,6 @@ namespace Server.MirEnvir
 
                 #endregion
 
-
                 #region IceThrust
 
                 case Spell.IceThrust:
@@ -1238,35 +1237,37 @@ namespace Server.MirEnvir
                                     {
                                         case ObjectType.Monster:
                                         case ObjectType.Player:
-
-                                            //Only targets
-                                            if (target.Attacked(player, j <= 1 ? nearDamage : farDamage, DefenceType.MAC, false) > 0)
+                                            if (target.IsAttackTarget(player))
                                             {
-                                                if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 20) <= magic.Level)
+                                                //Only targets
+                                                if (target.Attacked(player, j <= 1 ? nearDamage : farDamage, DefenceType.MAC, false) > 0)
                                                 {
-                                                    target.ApplyPoison(new Poison
+                                                    if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 20) <= magic.Level)
                                                     {
-                                                        Owner = player,
-                                                        Duration = target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
-                                                        PType = PoisonType.Slow,
-                                                        TickSpeed = 1000,
-                                                    }, player);
-                                                    target.OperateTime = 0;
-                                                }
+                                                        target.ApplyPoison(new Poison
+                                                        {
+                                                            Owner = player,
+                                                            Duration = target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
+                                                            PType = PoisonType.Slow,
+                                                            TickSpeed = 1000,
+                                                        }, player);
+                                                        target.OperateTime = 0;
+                                                    }
 
-                                                if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 40) <= magic.Level)
-                                                {
-                                                    target.ApplyPoison(new Poison
+                                                    if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 40) <= magic.Level)
                                                     {
-                                                        Owner = player,
-                                                        Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(player.Freezing),
-                                                        PType = PoisonType.Frozen,
-                                                        TickSpeed = 1000,
-                                                    }, player);
-                                                    target.OperateTime = 0;
-                                                }
+                                                        target.ApplyPoison(new Poison
+                                                        {
+                                                            Owner = player,
+                                                            Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(player.Freezing),
+                                                            PType = PoisonType.Frozen,
+                                                            TickSpeed = 1000,
+                                                        }, player);
+                                                        target.OperateTime = 0;
+                                                    }
 
-                                                train = true;
+                                                    train = true;
+                                                }
                                             }
                                             break;
                                     }
@@ -1278,7 +1279,6 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
-
 
                 #region SlashingBurst
 
