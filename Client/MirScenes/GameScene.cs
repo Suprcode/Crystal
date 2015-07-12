@@ -8473,6 +8473,7 @@ namespace Client.MirScenes
                 case Spell.Healing:
                 case Spell.UltimateEnhancer:
                 case Spell.EnergyShield:
+                case Spell.PetEnhancer:
                     if (User.NextMagicObject != null)
                     {
                         if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)

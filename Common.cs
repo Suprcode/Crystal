@@ -808,7 +808,8 @@ public enum Spell : byte
     Plague = 82,
     PoisonCloud = 83,
     EnergyShield = 84,
-    
+    PetEnhancer = 85,
+
     //Assassin
     FatalSword = 91,
     DoubleSlash = 92,
@@ -909,6 +910,7 @@ public enum BuffType : byte
     MentalState,
     EnergyShield,
     MagicBooster,
+    PetEnhancer,
 
     GameMaster,
     General,

@@ -244,17 +244,21 @@ namespace Client.MirObjects
         public virtual void SetLibraries()
         {
             //default - 807
+
+            //no fishing
             //6 - 6 legged axe - 631
-            //7 - iceman - 633
+            //7 - iceman - 631
             //8 - iceogre - 631
             //9 - 6 legged shield - 631
+
+
             //20 - black footballer - 791
             //21 - red footballer - 791
             //22 - blue footballer - 791
             //23 - green footballer - 791
             //24 - red2 footballer - 791
 
-            TransformType = 18;
+            //TransformType = 20;
 
             bool altAnim = false;
 
@@ -1911,6 +1915,15 @@ namespace Client.MirObjects
 
                             case Spell.MagicBooster:
                                 Effects.Add(new Effect(Libraries.Magic3, 80, 9, 9 * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
+                            #region PetEnhancer
+
+                            case Spell.PetEnhancer:
+                                Effects.Add(new Effect(Libraries.Magic3, 200, 8, 8 * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 

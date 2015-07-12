@@ -418,6 +418,13 @@ namespace Server.MirObjects
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed - rMSpeed);
                         break;
+
+                    case BuffType.PetEnhancer:
+                        MinDC = (byte)Math.Min(byte.MaxValue, MinDC + buff.Values[0]);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
+                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Values[1]);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[1]);
+                        break;
                 }
 
             }
@@ -1919,6 +1926,16 @@ namespace Server.MirObjects
         }
         public override void AddBuff(Buff b)
         {
+            if (Buffs.Any(d => d.Infinite && d.Type == b.Type)) return; //cant overwrite infinite buff with regular buff
+
+            string caster = b.Caster != null ? b.Caster.Name : string.Empty;
+
+            if (b.Values == null) b.Values = new int[1];
+
+            S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = caster, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
+
+            if (b.Visible) Broadcast(addBuff);
+
             base.AddBuff(b);
             RefreshAll();
         }

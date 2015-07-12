@@ -5412,6 +5412,9 @@ namespace Server.MirObjects
                 case Spell.ProtectionField:
                     ProtectionField(magic);
                     break;
+                case Spell.PetEnhancer:
+                    PetEnhancer(target, magic, out cast);
+                    break;
                 case Spell.Rage:
                     Rage(magic);
                     break;
@@ -6414,6 +6417,22 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(MinSC, MaxSC) + (magic.Level + 1) * 5, location, 1 + ((magic.Level + 1) * 2));
             CurrentMap.ActionList.Add(action);
 
+        }
+
+
+        private void PetEnhancer(MapObject target, UserMagic magic, out bool cast)
+        {
+            cast = false;
+
+            if (target == null || target.Race != ObjectType.Monster || !target.IsFriendlyTarget(this)) return;
+
+            int duration = GetAttackPower(MinSC, MaxSC) + magic.GetPower();
+
+            cast = true;
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, duration, target);
+
+            ActionList.Add(action);
         }
         #endregion
 
@@ -7649,6 +7668,21 @@ namespace Server.MirObjects
 
                     ConsumeItem(item, 1);
 
+                    LevelMagic(magic);
+                    break;
+
+                #endregion
+
+                #region PetEnhancer
+
+                case Spell.PetEnhancer:
+                    value = (int)data[1];
+                    target = (MonsterObject)data[2];
+
+                    int dcInc = 2 + target.Level * 2;
+                    int acInc = 4 + target.Level;
+
+                    target.AddBuff(new Buff { Type = BuffType.PetEnhancer, Caster = this, ExpireTime = Envir.Time + value * 1000, Values = new int[] { dcInc, acInc }, Visible = true });
                     LevelMagic(magic);
                     break;
 
@@ -9713,6 +9747,8 @@ namespace Server.MirObjects
                         case 0:
                             temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - Math.Min(1000, temp.MaxDura - (temp.CurrentDura / 30)));
                             break;
+                        case 1:
+                            break;
                     }
 
                     temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + item.CurrentDura);
@@ -9723,7 +9759,7 @@ namespace Server.MirObjects
 
                     RefreshStats();
                     break;
-                case ItemType.Pets://IntelligentCreature
+                case ItemType.Pets:
                     if (item.Info.Shape >= 20)
                     {
                         switch (item.Info.Shape)
@@ -10916,7 +10952,7 @@ namespace Server.MirObjects
                         return false;
                     }
                     break;
-                case ItemType.Pets://IntelligentCreature
+                case ItemType.Pets:
                     switch (item.Info.Shape)
                     {
                         case 20://mirror rename creature
