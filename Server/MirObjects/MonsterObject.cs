@@ -263,7 +263,6 @@ namespace Server.MirObjects
             }
         }
 
-
         protected internal MonsterObject(MonsterInfo info)
         {
             Info = info;
@@ -1063,11 +1062,7 @@ namespace Server.MirObjects
             
             SearchTime = Envir.Time + SearchDelay;
 
-            //temporary test for server speed. Stop attempting to roam if no players. Wait 5 minutes to get suitable random spread
-            if (CurrentMap.Players.Count < 1 && SMain.Envir.Time > 5 * Settings.Minute)
-            {
-                return;
-            }
+            if (CurrentMap.Inactive()) return;
 
             //Stacking or Infront of master - Move
             bool stacking = CheckStacked();
@@ -1111,6 +1106,8 @@ namespace Server.MirObjects
             if (Target != null || Envir.Time < RoamTime) return;
 
             if (ProcessRoute()) return;
+
+            if (CurrentMap.Inactive()) return;
 
             if (Master != null)
             {
@@ -2569,6 +2566,12 @@ namespace Server.MirObjects
             }
         }
 
+        public override void Add(PlayerObject player)
+        {
+            player.Enqueue(GetInfo());
+            SendHealth(player);
+        }
+
         public override void SendHealth(PlayerObject player)
         {
             if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
@@ -2599,9 +2602,5 @@ namespace Server.MirObjects
             base.Despawn();
         }
 
-        public void AddNeedHole()
-        {
-            
-        }
     }
 }

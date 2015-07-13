@@ -1563,11 +1563,15 @@ namespace Server
                 {
                     for (int j = 0; j < _selectedMapInfos[i].Respawns.Count; j++)
                     {
+                        MonsterInfo mob = SMain.Envir.GetMonsterInfo(_selectedMapInfos[i].Respawns[j].MonsterIndex);
+
+                        if (mob == null) continue;
+
                         string Output = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}",
                             _selectedMapInfos[i].FileName,
                             _selectedMapInfos[i].Respawns[j].Location.X,
                             _selectedMapInfos[i].Respawns[j].Location.Y,
-                            Envir.MonsterInfoList[_selectedMapInfos[i].Respawns[j].MonsterIndex - 1].Name.Replace(' ', '*'),
+                            mob.Name.Replace(' ', '*'),
                            _selectedMapInfos[i].Respawns[j].Spread,
                            _selectedMapInfos[i].Respawns[j].Count,
                            _selectedMapInfos[i].Respawns[j].Delay,

@@ -21,8 +21,8 @@ namespace Server.MirEnvir
         public int Width, Height;
         public Cell[,] Cells;
         public MineSpot[,] Mine;
-        public long LightningTime, FireTime;
-        public int MonsterCount;
+        public long LightningTime, FireTime, InactiveTime;
+        public int MonsterCount, InactiveCount;
 
         public List<NPCObject> NPCs = new List<NPCObject>();
         public List<PlayerObject> Players = new List<PlayerObject>();
@@ -574,6 +574,19 @@ namespace Server.MirEnvir
                 if (Envir.Time < ActionList[i].Time) continue;
                 Process(ActionList[i]);
                 ActionList.RemoveAt(i);
+            }
+
+            if (InactiveTime < Envir.Time)
+            {
+                if (!Players.Any())
+                {
+                    InactiveTime = Envir.Time + Settings.Minute;
+                    InactiveCount++;
+                }
+                else
+                {
+                    InactiveCount = 0;
+                }
             }
 
         }
@@ -1939,6 +1952,13 @@ namespace Server.MirEnvir
             }
         }
 
+        public bool Inactive(int count = 5)
+        {
+            //temporary test for server speed. Stop certain processes if no players.
+            if (InactiveCount > count) return true;
+
+            return false;
+        }
     }
     public class Cell
     {
@@ -2011,7 +2031,5 @@ namespace Server.MirEnvir
                 Route.Add(info);
             }
         }
-
-
     }
 }

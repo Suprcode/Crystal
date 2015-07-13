@@ -249,13 +249,17 @@ namespace Server.MirObjects
         }
         public virtual void Add(PlayerObject player)
         {
-            if (Race == ObjectType.Player)
-            {
-                PlayerObject me = (PlayerObject)this;
-                player.Enqueue(me.GetInfoEx(player));
-            }
-            else
-                player.Enqueue(GetInfo());
+            player.Enqueue(GetInfo());
+
+            //if (Race == ObjectType.Player)
+            //{
+            //    PlayerObject me = (PlayerObject)this;
+            //    player.Enqueue(me.GetInfoEx(player));
+            //}
+            //else
+            //{
+            //    player.Enqueue(GetInfo());
+            //}
         }
         public virtual void Remove(MonsterObject monster)
         {

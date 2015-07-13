@@ -2076,7 +2076,9 @@ namespace Server.MirObjects
                                 Enqueue(ob.GetInfo());
                         }
                         else
+                        {
                             Enqueue(ob.GetInfo());
+                        }
 
                         if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
                             ob.SendHealth(this);
@@ -12591,8 +12593,9 @@ namespace Server.MirObjects
         {
             if (player == this) return;
 
-            base.Add(player);
+            //base.Add(player);
             Enqueue(player.GetInfoEx(this));
+            player.Enqueue(GetInfoEx(player));
 
             player.SendHealth(this);
             SendHealth(player);
