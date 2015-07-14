@@ -392,7 +392,6 @@ namespace Server
 
                 if (NeedIdentifycheckbox.Checked != info.NeedIdentify) NeedIdentifycheckbox.CheckState = CheckState.Indeterminate;
                 if (ShowGroupPickupcheckbox.Checked != info.ShowGroupPickup) ShowGroupPickupcheckbox.CheckState = CheckState.Indeterminate;
-                if (BindOnEquipcheckbox.Checked != info.BindOnEquip) BindOnEquipcheckbox.CheckState = CheckState.Indeterminate;
 
                 if (ParalysischeckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Paralize)) ParalysischeckBox.CheckState = CheckState.Indeterminate;
                 if (TeleportcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Teleport)) TeleportcheckBox.CheckState = CheckState.Indeterminate;
@@ -1710,6 +1709,11 @@ namespace Server
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Bind = (BreakOnDeathcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.BreakOnDeath : _selectedItemInfos[i].Bind ^= BindMode.BreakOnDeath);
+        }
+
+        private void ItemInfoForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

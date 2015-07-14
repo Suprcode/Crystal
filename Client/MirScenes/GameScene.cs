@@ -6415,27 +6415,6 @@ namespace Client.MirScenes
 
             #endregion
 
-            #region DONT_SUERREPAIR
-
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.BindNoSRepair)
-            {
-                count++;
-                MirLabel DONT_SUERREPAIRLabel = new MirLabel
-                {
-                    AutoSize = true,
-                    ForeColour = Color.Yellow,
-                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
-                    OutLine = true,
-                    Parent = ItemLabel,
-                    Text = string.Format("Can't special repair")
-                };
-
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_SUERREPAIRLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, DONT_SUERREPAIRLabel.DisplayRectangle.Bottom));
-            }
-
-            #endregion
-
             #region DONT_DESTROY_ON_DROP
 
             if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DestroyOnDrop))

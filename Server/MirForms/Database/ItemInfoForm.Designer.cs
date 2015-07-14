@@ -153,6 +153,7 @@
             this.label32 = new System.Windows.Forms.Label();
             this.WWeightTextBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.BreakOnDeathcheckbox = new System.Windows.Forms.CheckBox();
             this.Bind_DontSpecialRepaircheckBox = new System.Windows.Forms.CheckBox();
             this.Bind_dontdropcheckbox = new System.Windows.Forms.CheckBox();
             this.BindOnEquipcheckbox = new System.Windows.Forms.CheckBox();
@@ -185,7 +186,6 @@
             this.ExportAllButton = new System.Windows.Forms.Button();
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
-            this.BreakOnDeathcheckbox = new System.Windows.Forms.CheckBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -1476,6 +1476,17 @@
             this.tabPage3.Text = "Binding";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // BreakOnDeathcheckbox
+            // 
+            this.BreakOnDeathcheckbox.AutoSize = true;
+            this.BreakOnDeathcheckbox.Location = new System.Drawing.Point(21, 251);
+            this.BreakOnDeathcheckbox.Name = "BreakOnDeathcheckbox";
+            this.BreakOnDeathcheckbox.Size = new System.Drawing.Size(101, 17);
+            this.BreakOnDeathcheckbox.TabIndex = 114;
+            this.BreakOnDeathcheckbox.Text = "Break on Death";
+            this.BreakOnDeathcheckbox.UseVisualStyleBackColor = true;
+            this.BreakOnDeathcheckbox.CheckedChanged += new System.EventHandler(this.BreakOnDeathcheckbox_CheckedChanged);
+            // 
             // Bind_DontSpecialRepaircheckBox
             // 
             this.Bind_DontSpecialRepaircheckBox.AutoSize = true;
@@ -1831,17 +1842,6 @@
             this.ImportButton.UseVisualStyleBackColor = true;
             this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
             // 
-            // BreakOnDeathcheckbox
-            // 
-            this.BreakOnDeathcheckbox.AutoSize = true;
-            this.BreakOnDeathcheckbox.Location = new System.Drawing.Point(21, 251);
-            this.BreakOnDeathcheckbox.Name = "BreakOnDeathcheckbox";
-            this.BreakOnDeathcheckbox.Size = new System.Drawing.Size(101, 17);
-            this.BreakOnDeathcheckbox.TabIndex = 114;
-            this.BreakOnDeathcheckbox.Text = "Break on Death";
-            this.BreakOnDeathcheckbox.UseVisualStyleBackColor = true;
-            this.BreakOnDeathcheckbox.CheckedChanged += new System.EventHandler(this.BreakOnDeathcheckbox_CheckedChanged);
-            // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1860,6 +1860,7 @@
             this.Name = "ItemInfoForm";
             this.Text = "ItemInfoForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ItemInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.ItemInfoForm_Load);
             this.ItemInfoPanel.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
