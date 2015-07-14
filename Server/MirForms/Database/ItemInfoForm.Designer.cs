@@ -153,6 +153,7 @@
             this.label32 = new System.Windows.Forms.Label();
             this.WWeightTextBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.BreakOnDeathcheckbox = new System.Windows.Forms.CheckBox();
             this.Bind_DontSpecialRepaircheckBox = new System.Windows.Forms.CheckBox();
             this.Bind_dontdropcheckbox = new System.Windows.Forms.CheckBox();
             this.BindOnEquipcheckbox = new System.Windows.Forms.CheckBox();
@@ -1457,6 +1458,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.BreakOnDeathcheckbox);
             this.tabPage3.Controls.Add(this.Bind_DontSpecialRepaircheckBox);
             this.tabPage3.Controls.Add(this.Bind_dontdropcheckbox);
             this.tabPage3.Controls.Add(this.BindOnEquipcheckbox);
@@ -1473,6 +1475,17 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Binding";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // BreakOnDeathcheckbox
+            // 
+            this.BreakOnDeathcheckbox.AutoSize = true;
+            this.BreakOnDeathcheckbox.Location = new System.Drawing.Point(21, 251);
+            this.BreakOnDeathcheckbox.Name = "BreakOnDeathcheckbox";
+            this.BreakOnDeathcheckbox.Size = new System.Drawing.Size(101, 17);
+            this.BreakOnDeathcheckbox.TabIndex = 114;
+            this.BreakOnDeathcheckbox.Text = "Break on Death";
+            this.BreakOnDeathcheckbox.UseVisualStyleBackColor = true;
+            this.BreakOnDeathcheckbox.CheckedChanged += new System.EventHandler(this.BreakOnDeathcheckbox_CheckedChanged);
             // 
             // Bind_DontSpecialRepaircheckBox
             // 
@@ -1847,6 +1860,7 @@
             this.Name = "ItemInfoForm";
             this.Text = "ItemInfoForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ItemInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.ItemInfoForm_Load);
             this.ItemInfoPanel.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -2022,6 +2036,7 @@
         private System.Windows.Forms.Label label56;
         private System.Windows.Forms.TextBox TooltipTextBox;
         private System.Windows.Forms.CheckBox CanAwaken;
+        private System.Windows.Forms.CheckBox BreakOnDeathcheckbox;
 
     }
 }

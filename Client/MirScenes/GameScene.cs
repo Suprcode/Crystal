@@ -6418,12 +6418,12 @@ namespace Client.MirScenes
 
             #endregion
 
-            #region DONT_SUERREPAIR
+            #region DONT_SPECIALREPAIR
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.BindNoSRepair)
+            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.NoSRepair))
             {
                 count++;
-                MirLabel DONT_SUERREPAIRLabel = new MirLabel
+                MirLabel DONT_REPAIRLabel = new MirLabel
                 {
                     AutoSize = true,
                     ForeColour = Color.Yellow,
@@ -6433,8 +6433,29 @@ namespace Client.MirScenes
                     Text = string.Format("Can't special repair")
                 };
 
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_SUERREPAIRLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, DONT_SUERREPAIRLabel.DisplayRectangle.Bottom));
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_REPAIRLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DONT_REPAIRLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
+            #region BREAK_ON_DEATH
+
+            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.BreakOnDeath))
+            {
+                count++;
+                MirLabel DONT_REPAIRLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Yellow,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("Breaks on death")
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_REPAIRLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DONT_REPAIRLabel.DisplayRectangle.Bottom));
             }
 
             #endregion
@@ -6462,7 +6483,7 @@ namespace Client.MirScenes
 
             #region BIND_ON_EQUIP
 
-            if ((HoverItem.Info.BindOnEquip) & HoverItem.SoulBoundId == -1)
+            if ((HoverItem.Info.Bind.HasFlag(BindMode.BindOnEquip)) & HoverItem.SoulBoundId == -1)
             {
                 count++;
                 MirLabel BOELabel = new MirLabel
@@ -13716,7 +13737,7 @@ namespace Client.MirScenes
                     GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
                     break;
                 case PanelType.SpecialRepair:
-                    if (TargetItem.Info.Bind.HasFlag(BindMode.DontRepair))
+                    if ((TargetItem.Info.Bind.HasFlag(BindMode.DontRepair)) || (TargetItem.Info.Bind.HasFlag(BindMode.NoSRepair)))
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("Cannot repair this item.", ChatType.System);
                         return;

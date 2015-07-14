@@ -1566,7 +1566,7 @@ namespace Server
                         MonsterInfo mob = SMain.Envir.GetMonsterInfo(_selectedMapInfos[i].Respawns[j].MonsterIndex);
 
                         if (mob == null) continue;
-
+                        
                         string Output = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}",
                             _selectedMapInfos[i].FileName,
                             _selectedMapInfos[i].Respawns[j].Location.X,
