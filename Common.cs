@@ -636,7 +636,7 @@ public enum PoisonType : byte
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum BindMode : byte
+public enum BindMode : short
 {
     none = 0,
     DontDeathdrop = 1,
@@ -646,7 +646,10 @@ public enum BindMode : byte
     DontTrade = 16,
     DontRepair = 32,
     DontUpgrade = 64,
-    DestroyOnDrop = 128
+    DestroyOnDrop = 128,
+    BreakOnDeath = 256,
+    BindOnEquip = 512,
+    NoSRepair = 1024,
 }
 
 [Flags]
@@ -2202,7 +2205,14 @@ public class ItemInfo
             Holy = reader.ReadByte();
             Freezing = reader.ReadByte();
             PoisonAttack = reader.ReadByte();
-            Bind = (BindMode)reader.ReadByte();
+            if (version < 55)
+            {
+                Bind = (BindMode)reader.ReadByte();
+            }
+            else
+            {
+                Bind = (BindMode)reader.ReadInt16();
+            }
             
         }
         if (version >= 21)
@@ -2308,7 +2318,7 @@ public class ItemInfo
         writer.Write(Holy);
         writer.Write(Freezing);
         writer.Write(PoisonAttack);
-        writer.Write((byte)Bind);
+        writer.Write((short)Bind);
         writer.Write(Reflect);
         writer.Write(HpDrainRate);
         writer.Write((short)Unique);
