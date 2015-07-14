@@ -2095,7 +2095,7 @@ public class ItemInfo
     public byte Strong;
     public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
     public byte CriticalRate, CriticalDamage;
-    public bool NeedIdentify, ShowGroupPickup, BindOnEquip, BindNoSRepair;
+    public bool NeedIdentify, ShowGroupPickup, BindOnEquip, BindNoSRepair; //remove these 2
     public bool ClassBased;
     public bool LevelBased;
     public bool CanMine;
@@ -2103,7 +2103,7 @@ public class ItemInfo
     public bool CanAwakening;
     public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
     
-    public BindMode Bind = BindMode.none;//due to lack of space in bindmodes > bindonequip and srepair are seperate bools for now, if anyone adds 2/3 more bindmodes then it'd be more suitable to upgrade bindmode to short!
+    public BindMode Bind = BindMode.none;
     public byte Reflect;
     public SpecialItemMode Unique = SpecialItemMode.None;
     public byte RandomStatsId;
@@ -2204,7 +2204,7 @@ public class ItemInfo
             Holy = reader.ReadByte();
             Freezing = reader.ReadByte();
             PoisonAttack = reader.ReadByte();
-            if (version < 55)
+            if (version < 56)
             {
                 Bind = (BindMode)reader.ReadByte();
             }

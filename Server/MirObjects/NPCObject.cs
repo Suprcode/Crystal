@@ -1010,64 +1010,8 @@ namespace Server.MirObjects
             GotoButtons = gotoButtons;
         }
 
-        private bool _sayCommandFound;
-        private string _sayCommandValue;
-        public string SayCommandCheck
-        {
-            get { return _sayCommandValue; }
-            set { _sayCommandValue = value; _sayCommandFound = true; }
-        }
 
-        public string[] ParseArguments(string[] words)
-        {
-            Regex r = new Regex(@"\%ARG\((\d+)\)$");
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                Match match = r.Match(words[i].ToUpper());
-
-                if (!match.Success) continue;
-
-                int sequence = Convert.ToInt32(match.Groups[1].Value);
-
-                if (NPCObject.Args.Count >= (sequence + 1)) words[i] = NPCObject.Args[sequence];
-            }
-
-            return words;
-        }
-
-        public void AddVariable(PlayerObject player, string key, string value)
-        {
-            Regex regex = new Regex(@"[A-Za-z][0-9]");
-
-            if (!regex.Match(key).Success) return;
-
-            for (int i = 0; i < player.NPCVar.Count; i++)
-            {
-                if (!String.Equals(player.NPCVar[i].Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
-                player.NPCVar[i] = new KeyValuePair<string, string>(player.NPCVar[i].Key, value);
-                return;
-            }
-
-            player.NPCVar.Add(new KeyValuePair<string, string>(key, value));
-        }
-
-        public string FindVariable(PlayerObject player, string key)
-        {
-            Regex regex = new Regex(@"\%[A-Za-z][0-9]");
-
-            if (!regex.Match(key).Success) return key;
-
-            string tempKey = key.Substring(1);
-
-            foreach (KeyValuePair<string, string> t in player.NPCVar)
-            {
-                if (String.Equals(t.Key, tempKey, StringComparison.CurrentCultureIgnoreCase)) return t.Value;
-            }
-
-            return key;
-        }
-
+        //On server load
         public void ParseCheck(string line)
         {
             var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1627,146 +1571,27 @@ namespace Server.MirObjects
             }
 
         }
-        public List<string> ParseSay(PlayerObject player, List<string> speech)
+
+        public string[] ParseArguments(string[] words)
         {
-            for (var i = 0; i < speech.Count; i++)
+            Regex r = new Regex(@"\%ARG\((\d+)\)$");
+
+            for (int i = 0; i < words.Length; i++)
             {
-                var parts = speech[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                Match match = r.Match(words[i].ToUpper());
 
-                if (parts.Length == 0) continue;
+                if (!match.Success) continue;
 
-                var regex = new Regex(@"\<\$(.*?)\>");
-                var varRegex = new Regex(@"(.*?)\(([A-Z][0-9])\)");
+                int sequence = Convert.ToInt32(match.Groups[1].Value);
 
-                foreach (var part in parts)
-                {
-                    var match = regex.Match(part);
-
-                    if (!match.Success) continue;
-
-                    string innerMatch = match.Groups[1].Captures[0].Value.ToUpper();
-
-                    Match varMatch = varRegex.Match(innerMatch);
-
-                    if (varRegex.Match(innerMatch).Success)
-                        innerMatch = innerMatch.Replace(varMatch.Groups[2].Captures[0].Value.ToUpper(), "");
-
-                    switch (innerMatch)
-                    {
-                        case "OUTPUT()":
-                            SayCommandCheck = FindVariable(player, "%" + varMatch.Groups[2].Captures[0].Value.ToUpper());
-                            break;
-                        case "NPCNAME":
-                            SayCommandCheck = NPCName.Replace("_", " ");
-                            break;
-                        case "USERNAME":
-                            SayCommandCheck = player.Name;
-                            break;
-                        case "LEVEL":
-                            SayCommandCheck = player.Level.ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case "HP":
-                            SayCommandCheck = player.HP.ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case "MAXHP":
-                            SayCommandCheck = player.MaxHP.ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case "MP":
-                            SayCommandCheck = player.MP.ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case "MAXMP":
-                            SayCommandCheck = player.MaxMP.ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case "GAMEGOLD":
-                            SayCommandCheck = player.Account.Gold.ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case "ARMOUR":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Armour] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Armour].Info.Name : "No Armour";
-                            break;
-                        case "WEAPON":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Weapon] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Weapon].Info.Name : "No Weapon";
-                            break;
-                        case "RING_L":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.RingL] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.RingL].Info.Name : "No Ring";
-                            break;
-                        case "RING_R":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.RingR] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.RingR].Info.Name : "No Ring";
-                            break;
-                        case "BRACELET_L":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.BraceletL] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.BraceletL].Info.Name : "No Bracelet";
-                            break;
-                        case "BRACELET_R":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.BraceletR] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.BraceletR].Info.Name : "No Bracelet";
-                            break;
-                        case "NECKLACE":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Necklace] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Necklace].Info.Name : "No Necklace";
-                            break;
-                        case "BELT":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Belt] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Belt].Info.Name : "No Belt";
-                            break;
-                        case "BOOTS":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Boots] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Boots].Info.Name : "No Boots";
-                            break;
-                        case "HELMET":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Helmet] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Helmet].Info.Name : "No Helmet";
-                            break;
-                        case "AMULET":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Amulet] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Amulet].Info.Name : "No Amulet";
-                            break;
-                        case "STONE":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Stone] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Stone].Info.Name : "No Stone";
-                            break;
-                        case "TORCH":
-                            SayCommandCheck = player.Info.Equipment[(int)EquipmentSlot.Torch] != null ?
-                                player.Info.Equipment[(int)EquipmentSlot.Torch].Info.Name : "No Torch";
-                            break;
-
-                        case "DATE":
-                            SayCommandCheck = DateTime.Now.ToShortDateString();
-                            break;
-                        case "USERCOUNT":
-                            SayCommandCheck = SMain.Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case "PKPOINT":
-                            SayCommandCheck = player.PKPoints.ToString();
-                            break;
-                        case "GUILDWARTIME":
-                            SayCommandCheck = Settings.Guild_WarTime.ToString();
-                            break;
-                        case "GUILDWARFEE":
-                            SayCommandCheck = Settings.Guild_WarCost.ToString();
-                            break;
-
-                        case "PARCELAMOUNT":
-                            SayCommandCheck = player.GetMailAwaitingCollectionAmount().ToString();
-                            break;
-
-                        default:
-                            SayCommandCheck = string.Empty;
-                            break;
-                    }
-
-                    if (!_sayCommandFound) continue;
-
-                    _sayCommandFound = false;
-                    speech[i] = speech[i].Replace(match.ToString(), _sayCommandValue);
-                }
+                if (NPCObject.Args.Count >= (sequence + 1)) words[i] = NPCObject.Args[sequence];
             }
-            return speech;
+
+            return words;
         }
 
+
+        //On Demand
         public bool Check(PlayerObject player)
         {
             var failed = false;
@@ -1775,6 +1600,18 @@ namespace Server.MirObjects
             {
                 NPCChecks check = CheckList[i];
                 List<string> param = check.Params.Select(t => FindVariable(player, t)).ToList();
+
+                for (int j = 0; j < param.Count; j++)
+                {
+                    var parts = param[j].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length == 0) continue;
+
+                    foreach (var part in parts)
+                    {
+                        param[j] = param[j].Replace(part, ReplaceValue(player, part));
+                    }
+                }
 
                 byte tempByte;
                 uint tempUint;
@@ -2145,7 +1982,6 @@ namespace Server.MirObjects
             return true;
 
         }
-
         private void Act(IList<NPCActions> acts, PlayerObject player)
         {
             MailInfo mailInfo = null;
@@ -2167,6 +2003,18 @@ namespace Server.MirObjects
 
                 NPCActions act = acts[i];
                 List<string> param = act.Params.Select(t => FindVariable(player, t)).ToList();
+
+                for (int j = 0; j < param.Count; j++)
+                {
+                    var parts = param[j].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length == 0) continue;
+
+                    foreach (var part in parts)
+                    {
+                        param[j] = param[j].Replace(part, ReplaceValue(player, part));
+                    }
+                }
 
                 switch (act.Type)
                 {
@@ -2822,6 +2670,21 @@ namespace Server.MirObjects
                 }
             }
         }
+        public List<string> ParseSay(PlayerObject player, List<string> speech)
+        {
+            for (var i = 0; i < speech.Count; i++)
+            {
+                var parts = speech[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length == 0) continue;
+
+                foreach (var part in parts)
+                {
+                    speech[i] = speech[i].Replace(part, ReplaceValue(player, part));
+                }
+            }
+            return speech;
+        }
 
         private void Success(PlayerObject player)
         {
@@ -2842,6 +2705,168 @@ namespace Server.MirObjects
             player.Enqueue(new S.NPCResponse { Page = parseElseSay });
         }
 
+        public void AddVariable(PlayerObject player, string key, string value)
+        {
+            Regex regex = new Regex(@"[A-Za-z][0-9]");
+
+            if (!regex.Match(key).Success) return;
+
+            for (int i = 0; i < player.NPCVar.Count; i++)
+            {
+                if (!String.Equals(player.NPCVar[i].Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
+                player.NPCVar[i] = new KeyValuePair<string, string>(player.NPCVar[i].Key, value);
+                return;
+            }
+
+            player.NPCVar.Add(new KeyValuePair<string, string>(key, value));
+        }
+        public string FindVariable(PlayerObject player, string key)
+        {
+            Regex regex = new Regex(@"\%[A-Za-z][0-9]");
+
+            if (!regex.Match(key).Success) return key;
+
+            string tempKey = key.Substring(1);
+
+            foreach (KeyValuePair<string, string> t in player.NPCVar)
+            {
+                if (String.Equals(t.Key, tempKey, StringComparison.CurrentCultureIgnoreCase)) return t.Value;
+            }
+
+            return key;
+        }
+        public string ReplaceValue(PlayerObject player, string param)
+        {
+            var regex = new Regex(@"\<\$(.*?)\>");
+            var varRegex = new Regex(@"(.*?)\(([A-Z][0-9])\)");
+
+            var match = regex.Match(param);
+
+            if (!match.Success) return param;
+
+            string innerMatch = match.Groups[1].Captures[0].Value.ToUpper();
+
+            Match varMatch = varRegex.Match(innerMatch);
+
+            if (varRegex.Match(innerMatch).Success)
+                innerMatch = innerMatch.Replace(varMatch.Groups[2].Captures[0].Value.ToUpper(), "");
+
+            string newValue = string.Empty;
+
+            switch (innerMatch)
+            {
+                case "OUTPUT()":
+                    newValue = FindVariable(player, "%" + varMatch.Groups[2].Captures[0].Value.ToUpper());
+                    break;
+                case "NPCNAME":
+                    newValue = NPCName.Replace("_", " ");
+                    break;
+                case "USERNAME":
+                    newValue = player.Name;
+                    break;
+                case "LEVEL":
+                    newValue = player.Level.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "HP":
+                    newValue = player.HP.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "MAXHP":
+                    newValue = player.MaxHP.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "MP":
+                    newValue = player.MP.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "MAXMP":
+                    newValue = player.MaxMP.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "GAMEGOLD":
+                    newValue = player.Account.Gold.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "ARMOUR":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Armour] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Armour].Info.Name : "No Armour";
+                    break;
+                case "WEAPON":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Weapon] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Weapon].Info.Name : "No Weapon";
+                    break;
+                case "RING_L":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.RingL] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.RingL].Info.Name : "No Ring";
+                    break;
+                case "RING_R":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.RingR] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.RingR].Info.Name : "No Ring";
+                    break;
+                case "BRACELET_L":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.BraceletL] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.BraceletL].Info.Name : "No Bracelet";
+                    break;
+                case "BRACELET_R":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.BraceletR] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.BraceletR].Info.Name : "No Bracelet";
+                    break;
+                case "NECKLACE":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Necklace] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Necklace].Info.Name : "No Necklace";
+                    break;
+                case "BELT":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Belt] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Belt].Info.Name : "No Belt";
+                    break;
+                case "BOOTS":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Boots] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Boots].Info.Name : "No Boots";
+                    break;
+                case "HELMET":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Helmet] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Helmet].Info.Name : "No Helmet";
+                    break;
+                case "AMULET":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Amulet] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Amulet].Info.Name : "No Amulet";
+                    break;
+                case "STONE":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Stone] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Stone].Info.Name : "No Stone";
+                    break;
+                case "TORCH":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.Torch] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.Torch].Info.Name : "No Torch";
+                    break;
+
+                case "DATE":
+                    newValue = DateTime.Now.ToShortDateString();
+                    break;
+                case "USERCOUNT":
+                    newValue = SMain.Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "PKPOINT":
+                    newValue = player.PKPoints.ToString();
+                    break;
+                case "GUILDWARTIME":
+                    newValue = Settings.Guild_WarTime.ToString();
+                    break;
+                case "GUILDWARFEE":
+                    newValue = Settings.Guild_WarCost.ToString();
+                    break;
+
+                case "PARCELAMOUNT":
+                    newValue = player.GetMailAwaitingCollectionAmount().ToString();
+                    break;
+
+                default:
+                    newValue = string.Empty;
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(newValue)) return param;
+
+            return param.Replace(match.Value, newValue);
+        }
+
+
+        //Functions
         public static bool Compare<T>(string op, T left, T right) where T : IComparable<T>
         {
             switch (op)
@@ -2855,7 +2880,6 @@ namespace Server.MirObjects
                 default: throw new ArgumentException("Invalid comparison operator: {0}", op);
             }
         }
-
         public static int Calculate(string op, int left, int right)
         {
             switch (op)
