@@ -207,6 +207,7 @@ namespace Server
                 FastRunCheckBox.Checked = false;
                 CanAwaken.Checked = false;
                 TooltipTextBox.Text = string.Empty;
+                BreakOnDeathcheckbox.Checked = false;
                 return;
             }
 
@@ -309,6 +310,7 @@ namespace Server
             FastRunCheckBox.Checked = info.CanFastRun;
             CanAwaken.Checked = info.CanAwakening;
             TooltipTextBox.Text = info.ToolTip;
+            BreakOnDeathcheckbox.Checked = info.BreakOnDeath;
 
             for (int i = 1; i < _selectedItemInfos.Count; i++)
             {
@@ -405,6 +407,7 @@ namespace Server
                 if (FastRunCheckBox.Checked != info.CanFastRun) FastRunCheckBox.CheckState = CheckState.Indeterminate;
                 if (CanAwaken.Checked != info.CanAwakening) CanAwaken.CheckState = CheckState.Indeterminate;
                 if (TooltipTextBox.Text != info.ToolTip) TooltipTextBox.Text = string.Empty;
+                if (BreakOnDeathcheckbox.Checked != info.BreakOnDeath) BreakOnDeathcheckbox.CheckState = CheckState.Indeterminate;
             }
             RefreshUniqueTab();
         }
@@ -1697,6 +1700,14 @@ namespace Server
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].CanAwakening = CanAwaken.Checked;
+        }
+
+        private void BreakOnDeathcheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].BreakOnDeath = BreakOnDeathcheckbox.Checked;
         }
     }
 }
