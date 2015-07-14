@@ -1913,7 +1913,11 @@ namespace Server.MirEnvir
 
         public void AddObject(MapObject ob)
         {
-            if (ob.Race == ObjectType.Player) Players.Add((PlayerObject)ob);
+            if (ob.Race == ObjectType.Player)
+            {
+                Players.Add((PlayerObject)ob);
+                InactiveTime = Envir.Time;
+            }
             if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
