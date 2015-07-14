@@ -1181,21 +1181,25 @@ namespace Server.MirObjects
 
             if ((killer == null) || ((pkbodydrop) || (killer.Race != ObjectType.Player)))
             {
-                UserItem temp = Info.Equipment[(int)EquipmentSlot.Stone];
-                if ((temp != null) && ((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
-                {
-                    Info.Equipment[(int)EquipmentSlot.Stone] = null;
-                    Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
-
-                    Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
-                }
+                UserItem temp;
 
                 for (int i = 0; i < Info.Equipment.Length; i++)
                 {
                     temp = Info.Equipment[i];
-                    
+
                     if (temp == null) continue;
                     if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
+
+                    if ((temp != null) && ((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
+                    {
+                        if (temp.Info.BreakOnDeath)
+                        {
+                            Info.Equipment[i] = null;
+                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            ReceiveChat(string.Format("Your {0} shattered upon death.", temp.FriendlyName), ChatType.System2);
+                            Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
+                        }
+                    }
 
                     if (ItemSets.Any(set => set.Set == ItemSet.Spirit && !set.SetComplete))
                     {
@@ -1294,15 +1298,7 @@ namespace Server.MirObjects
         {
             if (killer == null || killer.Race != ObjectType.Player)
             {
-                UserItem temp = Info.Equipment[(int)EquipmentSlot.Stone];
-                if (temp != null)
-                {
-                    Info.Equipment[(int)EquipmentSlot.Stone] = null;
-                    Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
-
-                    Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
-                }
-
+                UserItem temp;
 
                 for (int i = 0; i < Info.Equipment.Length; i++)
                 {
@@ -1310,6 +1306,14 @@ namespace Server.MirObjects
 
                     if (temp == null) continue;
                     if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
+
+                    if (temp.Info.BreakOnDeath)
+                    {
+                        Info.Equipment[i] = null;
+                        Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                        ReceiveChat(string.Format("Your {0} shattered upon death.", temp.FriendlyName), ChatType.System2);
+                        Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
+                    }
 
                     if (temp.Count > 1)
                     {

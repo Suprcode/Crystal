@@ -2086,6 +2086,7 @@ public class ItemInfo
     public ushort HP, MP;
     public sbyte AttackSpeed, Luck;
     public byte BagWeight, HandWeight, WearWeight;
+    public bool BreakOnDeath;
 
     public bool StartItem;
     public byte Effect;
@@ -2233,6 +2234,9 @@ public class ItemInfo
             if (isTooltip)
                 ToolTip = reader.ReadString();
         }
+
+        if (version < 55) return;
+        BreakOnDeath = reader.ReadBoolean();
     }
 
 
@@ -2318,6 +2322,8 @@ public class ItemInfo
         writer.Write(ToolTip != null);
         if (ToolTip != null)
             writer.Write(ToolTip);
+
+        writer.Write(BreakOnDeath);
     }
 
     public static ItemInfo FromText(string text)
