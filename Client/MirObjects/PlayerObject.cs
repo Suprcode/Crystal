@@ -3067,7 +3067,9 @@ namespace Client.MirObjects
 
                                     case Spell.IceThrust:
 
-                                        MapControl.Effects.Add(new Effect(Libraries.Magic2, 1790 + (int)Direction * 10, 10, 10 * FrameInterval, CurrentLocation));
+                                        Point location = Functions.PointMove(CurrentLocation, Direction, 1);
+
+                                        MapControl.Effects.Add(new Effect(Libraries.Magic2, 1790 + (int)Direction * 10, 10, 10 * FrameInterval, location));
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                         break;
 

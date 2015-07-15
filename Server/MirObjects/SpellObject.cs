@@ -8,7 +8,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    class SpellObject : MapObject
+    public class SpellObject : MapObject
     {
         public override ObjectType Race
         {
@@ -167,6 +167,27 @@ namespace Server.MirObjects
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
                     ob.Struck(Value, DefenceType.MAC);
+                    break;
+
+                case Spell.Portal:
+                    if (ob.Race != ObjectType.Player) return;
+                    if (Caster != ob && (Caster == null || Caster.GroupMembers.Count < 1 || !Caster.GroupMembers.Contains((PlayerObject)ob))) return;
+
+                    PortalObject portal = this as PortalObject;
+
+                    if (portal == null || portal.ExitMap == null) return;
+
+                    MirDirection dir = ob.Direction;
+
+                    Point newExit = Functions.PointMove(portal.ExitCoord, dir, 1);
+
+                    if (!portal.ExitMap.ValidPoint(newExit)) return;
+
+                    if (portal != null)
+                    {
+                        ob.Teleport(portal.ExitMap, newExit, false);
+                    }
+
                     break;
             }
         }
@@ -354,6 +375,29 @@ namespace Server.MirObjects
                         if (p != null)
                             player.Enqueue(p);
                     }
+                }
+            }
+        }
+    }
+
+    public class PortalObject : SpellObject
+    {
+        public Map ExitMap;
+        public Point ExitCoord;
+
+        public override void Despawn()
+        {
+            base.Despawn();
+
+            if (Spell == Spell.Portal && Caster != null)
+            {
+                if (Caster.PortalObjectsArray[0] == this)
+                {
+                    Caster.PortalObjectsArray[0] = null;
+                }
+                else
+                {
+                    Caster.PortalObjectsArray[1] = null;
                 }
             }
         }

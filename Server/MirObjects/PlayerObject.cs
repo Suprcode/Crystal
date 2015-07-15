@@ -227,6 +227,7 @@ namespace Server.MirObjects
         private int _stepCounter, _runCounter, _fishCounter;
 
         public MapObject[,] ArcherTrapObjectsArray = new MapObject[4,3];
+        public PortalObject[] PortalObjectsArray = new PortalObject[2];
 
         public NPCObject DefaultNPC
         {
@@ -5415,12 +5416,6 @@ namespace Server.MirObjects
                 case Spell.SlashingBurst:
                     SlashingBurst(magic, out cast);
                     break;
-                case Spell.ProtectionField:
-                    ProtectionField(magic);
-                    break;
-                case Spell.PetEnhancer:
-                    PetEnhancer(target, magic, out cast);
-                    break;
                 case Spell.Rage:
                     Rage(magic);
                     break;
@@ -5435,6 +5430,13 @@ namespace Server.MirObjects
                     break;
                 case Spell.IceThrust:
                     IceThrust(magic);
+                    break;
+
+                case Spell.ProtectionField:
+                    ProtectionField(magic);
+                    break;
+                case Spell.PetEnhancer:
+                    PetEnhancer(target, magic, out cast);
                     break;
                 case Spell.TrapHexagon:
                     TrapHexagon(magic, target, out cast);
@@ -5460,12 +5462,6 @@ namespace Server.MirObjects
                 case Spell.Plague:
                     Plague(magic, target == null ? location : target.CurrentLocation, out cast);
                     break;
-                case Spell.StraightShot:
-                    if (!StraightShot(target, magic)) targetID = 0;
-                    break;
-                case Spell.DoubleShot:
-                    if (!DoubleShot(target, magic)) targetID = 0;
-                    break;
                 case Spell.SwiftFeet:
                     SwiftFeet(magic, out cast);
                     break;
@@ -5481,12 +5477,18 @@ namespace Server.MirObjects
                 case Spell.DarkBody:
                     DarkBody(target, magic);
                     break;
-                case Spell.CrescentSlash:
-                    CrescentSlash(magic);
-                    break;
                 case Spell.FlashDash:
                     FlashDash(magic);
                     return;
+                case Spell.CrescentSlash:
+                    CrescentSlash(magic);
+                    break;
+                case Spell.StraightShot:
+                    if (!StraightShot(target, magic)) targetID = 0;
+                    break;
+                case Spell.DoubleShot:
+                    if (!DoubleShot(target, magic)) targetID = 0;
+                    break;
                 case Spell.BackStep:
                     BackStep(magic);
                     return;
@@ -5524,6 +5526,12 @@ namespace Server.MirObjects
                 case Spell.OneWithNature:
                     OneWithNature(target, magic);
                     break;
+
+                //Custom Spells
+                case Spell.Portal:
+                    Portal(magic, location, out cast);
+                    break;
+
                 default:
                     cast = false;
                     break;
@@ -5989,7 +5997,9 @@ namespace Server.MirObjects
             int nearDamage = (12 + 3 * (magic.Level + Level / 20)) * criticalDamage / 30 + MinMC;
             int farDamage = (8 + 2 * (magic.Level + Level / 20)) * criticalDamage / 30 + MinMC;
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 1500, this, magic, CurrentLocation, Direction, criticalDamage, nearDamage, farDamage);
+            Point location = Functions.PointMove(CurrentLocation, Direction, 1);
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 1500, this, magic, location, Direction, criticalDamage, nearDamage, farDamage);
 
             CurrentMap.ActionList.Add(action);
         }
@@ -7265,6 +7275,57 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation);
             CurrentMap.ActionList.Add(action);
         }
+        #endregion
+
+        #region Custom
+
+        private void Portal(UserMagic magic, Point location, out bool cast)
+        {
+            cast = false;
+
+            if (!CurrentMap.ValidPoint(location)) return;
+
+            if (PortalObjectsArray[1] != null && PortalObjectsArray[1].Node != null)
+            {
+                PortalObjectsArray[0].ExpireTime = 0;
+                PortalObjectsArray[1].ExpireTime = 0;
+
+                PortalObjectsArray[0].Process();
+                PortalObjectsArray[1].Process();
+            }
+
+            cast = true;
+
+            int expire = 60 * 60;
+            PortalObject ob = new PortalObject
+            {
+                Spell = Spell.Portal,
+                Value = 0,
+                ExpireTime = Envir.Time + (10 + expire / 2) * 1000,
+                TickSpeed = 2000,
+                Caster = this,
+                CurrentLocation = location,
+                CurrentMap = CurrentMap,
+            };
+
+            if (PortalObjectsArray[0] == null)
+            {
+                PortalObjectsArray[0] = ob;
+            }
+            else
+            {
+                PortalObjectsArray[1] = ob;
+                PortalObjectsArray[1].ExitMap = PortalObjectsArray[0].CurrentMap;
+                PortalObjectsArray[1].ExitCoord = PortalObjectsArray[0].CurrentLocation;
+
+                PortalObjectsArray[0].ExitMap = PortalObjectsArray[1].CurrentMap;
+                PortalObjectsArray[0].ExitCoord = PortalObjectsArray[1].CurrentLocation;
+            }
+
+            CurrentMap.AddObject(ob);
+            ob.Spawned();
+        }
+
         #endregion
 
         private void CheckSneakRadius()
