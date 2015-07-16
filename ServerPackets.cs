@@ -652,6 +652,7 @@ namespace ServerPackets
         public bool Extra;
 
         public short MountType;
+        public short TransformType;
         public bool RidingMount;
         public bool Fishing;
 
@@ -687,6 +688,7 @@ namespace ServerPackets
             WingEffect = reader.ReadByte();
             Extra = reader.ReadBoolean();
             MountType = reader.ReadInt16();
+            TransformType = reader.ReadInt16();
             RidingMount = reader.ReadBoolean();
             Fishing = reader.ReadBoolean();
 
@@ -728,6 +730,7 @@ namespace ServerPackets
             writer.Write(WingEffect);
             writer.Write(Extra);
             writer.Write(MountType);
+            writer.Write(TransformType);
             writer.Write(RidingMount);
             writer.Write(Fishing);
 
@@ -1229,6 +1232,7 @@ namespace ServerPackets
         public byte Light;
         public short Weapon, Armour;
         public byte WingEffect;
+        public short TransformType;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1238,6 +1242,7 @@ namespace ServerPackets
             Weapon = reader.ReadInt16();
             Armour = reader.ReadInt16();
             WingEffect = reader.ReadByte();
+            TransformType = reader.ReadInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1248,6 +1253,7 @@ namespace ServerPackets
             writer.Write(Weapon);
             writer.Write(Armour);
             writer.Write(WingEffect);
+            writer.Write(TransformType);
         }
     }
     public sealed class PlayerInspect : Packet
@@ -3673,6 +3679,28 @@ namespace ServerPackets
             writer.Write(ObjectID);
             writer.Write(MountType);
             writer.Write(RidingMount);
+        }
+    }
+
+    public sealed class TransformUpdate : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.TransformUpdate; } }
+
+        public long ObjectID;
+        public short TransformType;
+        public bool ShowTransform;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadInt64();
+            TransformType = reader.ReadInt16();
+            ShowTransform = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(TransformType);
+            writer.Write(ShowTransform);
         }
     }
 

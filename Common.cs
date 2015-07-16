@@ -1097,6 +1097,7 @@ public enum ServerPacketIds : short
     TradeConfirm,
     TradeCancel,
     MountUpdate,
+    TransformUpdate,
     EquipSlotItem,
     FishingUpdate,
     ChangeQuest,
@@ -2116,7 +2117,7 @@ public class ItemInfo
 
     public bool IsConsumable
     {
-        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food; }
+        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform; }
     }
 
     public string FriendlyName
@@ -2205,7 +2206,7 @@ public class ItemInfo
             Holy = reader.ReadByte();
             Freezing = reader.ReadByte();
             PoisonAttack = reader.ReadByte();
-            if (version < 56)
+            if (version < 55)
             {
                 Bind = (BindMode)reader.ReadByte();
             }
@@ -4198,12 +4199,12 @@ public abstract class Packet
                 return new S.TradeCancel();
             case (short)ServerPacketIds.MountUpdate:
                 return new S.MountUpdate();
+            case (short)ServerPacketIds.TransformUpdate:
+                return new S.TransformUpdate();
             case (short)ServerPacketIds.EquipSlotItem:
                 return new S.EquipSlotItem();
             case (short)ServerPacketIds.FishingUpdate:
                 return new S.FishingUpdate();
-            //case (short)ServerPacketIds.UpdateQuests:
-            //    return new S.UpdateQuests();
             case (short)ServerPacketIds.ChangeQuest:
                 return new S.ChangeQuest();
             case (short)ServerPacketIds.CompleteQuest:

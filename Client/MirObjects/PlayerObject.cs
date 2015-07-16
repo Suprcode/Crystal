@@ -145,7 +145,7 @@ namespace Client.MirObjects
             MountType = info.MountType;
             RidingMount = info.RidingMount;
 
-            //TransformType = info.TransformType;
+            TransformType = info.TransformType;
 
             Fishing = info.Fishing;
 
@@ -174,7 +174,7 @@ namespace Client.MirObjects
             Armour = info.Armour;
             Light = info.Light;
             WingEffect = info.WingEffect;
-            //TransformType = info.TransformType;
+            TransformType = info.TransformType;
 
             SetLibraries();
             SetEffects();
@@ -243,22 +243,18 @@ namespace Client.MirObjects
 
         public virtual void SetLibraries()
         {
-            //default - 807
+            //fishing broken
+            //10
+            //11
+            //12
+            //13
 
-            //no fishing
-            //6 - 6 legged axe - 631
-            //7 - iceman - 631
-            //8 - iceogre - 631
-            //9 - 6 legged shield - 631
-
-
+            //almost all broken
             //20 - black footballer - 791
             //21 - red footballer - 791
             //22 - blue footballer - 791
             //23 - green footballer - 791
             //24 - red2 footballer - 791
-
-            //TransformType = 20;
 
             bool altAnim = false;
 
@@ -271,7 +267,16 @@ namespace Client.MirObjects
 
                 switch (TransformType)
                 {
+                    case 4:
+                    case 5:
+                    case 7:
+                    case 8:                
                     case 26:
+                        showFishing = false;
+                        break;
+                    case 6:
+                    case 9:
+                        showMount = false;
                         showFishing = false;
                         break;
                     default:
@@ -293,9 +298,9 @@ namespace Client.MirObjects
                 WeaponLibrary1 = null;
                 WeaponLibrary2 = null;
 
-                if (TransformType == 18 || TransformType == 19)
+                if (TransformType == 19)
                 {
-                    WingEffect = (byte)(TransformType == 18 ? 1 : 2);
+                    WingEffect = 2;
 
                     WingLibrary = WingEffect - 1 < Libraries.TransformEffect.Length ? Libraries.TransformEffect[WingEffect - 1] : null;
                 }

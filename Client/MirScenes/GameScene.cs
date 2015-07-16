@@ -1251,6 +1251,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.MountUpdate:
                     MountUpdate((S.MountUpdate)p);
                     break;
+                case (short)ServerPacketIds.TransformUpdate:
+                    TransformUpdate((S.TransformUpdate)p);
+                    break;
                 case (short)ServerPacketIds.EquipSlotItem:
                     EquipSlotItem((S.EquipSlotItem)p);
                     break;
@@ -2149,6 +2152,21 @@ namespace Client.MirScenes
 
             GameScene.Scene.MountDialog.RefreshDialog();
             GameScene.Scene.Redraw();
+        }
+
+        private void TransformUpdate(S.TransformUpdate p)
+        {
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                if (MapControl.Objects[i].ObjectID != p.ObjectID) continue;
+
+                PlayerObject player = MapControl.Objects[i] as PlayerObject;
+                if (player != null)
+                {
+                    player.TransformType = p.TransformType;
+                }
+                break;
+            }
         }
 
         private void FishingUpdate(S.FishingUpdate p)
@@ -3605,6 +3623,9 @@ namespace Client.MirScenes
                 {
                     case BuffType.SwiftFeet:
                         User.Sprint = false;
+                        break;
+                    case BuffType.Transform:
+                        User.TransformType = -1;
                         break;
                 }
 
@@ -8695,6 +8716,7 @@ namespace Client.MirScenes
             if (!GameScene.User.HasFishingRod || GameScene.User.FishingTime + 1000 > CMain.Time) return false;
             if (GameScene.User.CurrentAction != MirAction.Standing) return false;
             if (GameScene.User.Direction != dir) return false;
+            if (GameScene.User.TransformType >= 6 && GameScene.User.TransformType <= 9) return false;
 
             Point point = Functions.PointMove(User.CurrentLocation, dir, 3);
 
@@ -18341,7 +18363,6 @@ namespace Client.MirScenes
                     }
                     break;
                 case ItemType.Helmet:
-                case ItemType.Transform:
                     if (item.CurrentDura > Warning)
                         Helmet.Index = 2155;
                     if (item.CurrentDura <= Warning)

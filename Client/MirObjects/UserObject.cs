@@ -245,7 +245,6 @@ namespace Client.MirObjects
             Armour = 0;
             WingEffect = 0;
             MountType = -1;
-            TransformType = -1;
 
             CurrentWearWeight = 0;
             CurrentHandWeight = 0;
@@ -350,9 +349,6 @@ namespace Client.MirObjects
                 if (RealItem.Type == ItemType.Mount)
                     MountType = RealItem.Shape;
 
-                if (RealItem.Type == ItemType.Transform)
-                    TransformType = RealItem.Shape;
-
                 if (RealItem.Set == ItemSet.None) continue;
 
                 ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
@@ -366,17 +362,6 @@ namespace Client.MirObjects
                 {
                     ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
                 }
-
-                //bool sameSetFound = false;
-                //foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
-                //{
-                //    set.Type.Add(RealItem.Type);
-                //    set.Count++;
-                //    sameSetFound = true;
-                //}
-
-                //if (!ItemSets.Any() || !sameSetFound)
-                //    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
 
                 //Mir Set
                 if (RealItem.Set == ItemSet.Mir)
@@ -627,6 +612,8 @@ namespace Client.MirObjects
         }
         private void RefreshBuffs()
         {
+            TransformType = -1;
+
             for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
             {
                 Buff buff = GameScene.Scene.Buffs[i];
@@ -693,6 +680,9 @@ namespace Client.MirObjects
 
                     case BuffType.BagWeight:
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
+                        break;
+                    case BuffType.Transform:
+                        TransformType = (short)buff.Values[0];
                         break;
 
                     case BuffType.Impact:

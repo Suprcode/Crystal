@@ -310,7 +310,6 @@ namespace Client.MirControls
                     }
                     break;
                 case ItemType.Helmet:
-                case ItemType.Transform:
                     if (dialog.Grid[(int)EquipmentSlot.Helmet].CanWearItem(Item))
                     {
                         Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Helmet });
@@ -413,6 +412,7 @@ namespace Client.MirControls
                 case ItemType.Food:
                 case ItemType.Script:
                 case ItemType.Pets:
+                case ItemType.Transform:
                     if (CanUseItem() && GridType == MirGridType.Inventory)
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;
@@ -1293,7 +1293,6 @@ namespace Client.MirControls
                     SoundManager.PlaySound(SoundList.ClickArmour);
                     break;
                 case ItemType.Helmet:
-                case ItemType.Transform:
                     SoundManager.PlaySound(SoundList.ClickHelmet);
                     break;
                 case ItemType.Necklace:
@@ -1349,7 +1348,7 @@ namespace Client.MirControls
                 case EquipmentSlot.Armour:
                     return type == ItemType.Armour;
                 case EquipmentSlot.Helmet:
-                    return i.Info.Type == ItemType.Helmet || i.Info.Type == ItemType.Transform;
+                    return i.Info.Type == ItemType.Helmet;
                 case EquipmentSlot.Torch:
                     return type == ItemType.Torch;
                 case EquipmentSlot.Necklace:

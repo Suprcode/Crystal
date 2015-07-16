@@ -258,6 +258,7 @@ namespace Client.MirGraphics
             Progress++;
             MagicC.Initialize();
             Progress++;
+
             Effect.Initialize();
             Progress++;
             CustomEffects.Initialize();

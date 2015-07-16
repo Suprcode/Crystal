@@ -723,7 +723,7 @@ namespace Server.MirObjects
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
-            if (Envir.LoadVersion < 55)
+            if (Envir.LoadVersion < 56)
             {
                 Values = new int[] { reader.ReadInt32() };
             }

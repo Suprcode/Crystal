@@ -662,9 +662,9 @@ namespace Server.MirObjects
         private void ProcessBuffs()
         {
             bool refresh = false;
+
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
-
                 Buff buff = Buffs[i];
 
                 if (Envir.Time <= buff.ExpireTime) continue;
@@ -727,7 +727,6 @@ namespace Server.MirObjects
             bool hiding = false;
             bool isGM = false;
             bool mentalState = false;
-            bool transform = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -749,10 +748,6 @@ namespace Server.MirObjects
                     case BuffType.GameMaster:
                         isGM = true;
                         if (!IsGM) removeBuff = true;
-                        break;
-                    case BuffType.Transform:
-                        transform = true;
-                        if (TransformType < 0) removeBuff = true;
                         break;
                 }
 
@@ -783,11 +778,6 @@ namespace Server.MirObjects
             if (IsGM && !isGM)
             {
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[]{ 0 }, Infinite = true });
-            }
-
-            if (TransformType > -1 && !transform)
-            {
-                AddBuff(new Buff { Type = BuffType.Transform, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
             }
         }
         private void ProcessRegen()
@@ -2118,8 +2108,6 @@ namespace Server.MirObjects
 
             AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
 
-
-
             if (AttackSpeed < 550) AttackSpeed = 550;
         }
 
@@ -2225,7 +2213,6 @@ namespace Server.MirObjects
             CurrentWearWeight = 0;
             CurrentHandWeight = 0;
             MountType = -1;
-            TransformType = -1;
 
             HasTeleportRing = false;
             HasProtectionRing = false;
@@ -2343,11 +2330,6 @@ namespace Server.MirObjects
                     //RealItem.Effect;
                 }
 
-                if (RealItem.Type == ItemType.Transform)
-                {
-                    TransformType = RealItem.Shape;
-                }
-
                 if (RealItem.Set == ItemSet.None) continue;
 
                 ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
@@ -2361,18 +2343,6 @@ namespace Server.MirObjects
                 {
                     ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
                 }
-
-                ////Normal Sets
-                //bool sameSetFound = false;
-                //foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
-                //{
-                //    set.Type.Add(RealItem.Type);
-                //    set.Count++;
-                //    sameSetFound = true;
-                //}
-
-                //if (!ItemSets.Any() || !sameSetFound)
-                //    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
 
                 //Mir Set
                 if (RealItem.Set == ItemSet.Mir)
@@ -2726,20 +2696,15 @@ namespace Server.MirObjects
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level);
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + MaxSC * (magic.Level + 1) * 0.1F);
                         break;
-                    case Spell.MentalState:
-                        //Info.MentalStateLvl = magic.Level;
-                        //for (int j = 0; j < Buffs.Count; j ++)
-                        //{
-                        //    if (Buffs[j].Type == BuffType.MentalState)
-                        //        return;
-                        //}
-                        //AddBuff(new Buff { Type = BuffType.MentalState, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true, Value = Info.MentalState});
-                        break;
                 }
             }
         }
         private void RefreshBuffs()
         {
+            short Old_TransformType = TransformType;
+
+            TransformType = -1;
+
             for (int i = 0; i < Buffs.Count; i++)
             {
                 Buff buff = Buffs[i];
@@ -2827,6 +2792,9 @@ namespace Server.MirObjects
                     case BuffType.BagWeight:
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
+                    case BuffType.Transform:
+                        TransformType = (short)buff.Values[0];
+                        break;
 
                     case BuffType.Impact:
                         MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
@@ -2855,7 +2823,11 @@ namespace Server.MirObjects
                         MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                 }
+            }
 
+            if (Old_TransformType != TransformType)
+            {
+                Broadcast(new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType, ShowTransform = true });
             }
         }
 
@@ -8485,9 +8457,11 @@ namespace Server.MirObjects
                 Weapon = Looks_Weapon,
                 Armour = Looks_Armour,
                 Light = Light,
-                WingEffect = Looks_Wings
+                WingEffect = Looks_Wings,
+                TransformType = TransformType
             };
         }
+
         public override Packet GetInfo() 
         {
             //should never use this but i leave it in for safety
@@ -8513,8 +8487,9 @@ namespace Server.MirObjects
                 Dead = Dead,
                 Hidden = Hidden,
                 Effect = MagicShield ? SpellEffect.MagicShieldUp : ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None,
-                WingEffect = Looks_Wings,
+                WingEffect = Looks_Wings,   
                 MountType = MountType,
+                TransformType = TransformType,
                 RidingMount = RidingMount,
                 Fishing = Fishing,
 
@@ -9940,6 +9915,12 @@ namespace Server.MirObjects
                         Enqueue(petInfo.GetInfo());
                     }
                     break;
+                case ItemType.Transform: //Transforms
+                    int tTime = item.Info.Durability;
+                    int tType = item.Info.Shape;
+
+                    AddBuff(new Buff { Type = BuffType.Transform, Caster = this, ExpireTime = Envir.Time + tTime * 1000, Values = new int[] { tType } });
+                    break;
                 default:
                     return;
             }
@@ -10349,7 +10330,6 @@ namespace Server.MirObjects
                             break;
                         case ItemType.Armour:
                         case ItemType.Helmet:
-                        case ItemType.Transform:
                         case ItemType.Boots:
                         case ItemType.Belt:
                             if (tempFrom.Info.Shape == 2 || tempFrom.Info.Shape == 6)
@@ -11114,7 +11094,7 @@ namespace Server.MirObjects
                         return false;
                     break;
                 case EquipmentSlot.Helmet:
-                    if (item.Info.Type != ItemType.Helmet && item.Info.Type != ItemType.Transform)
+                    if (item.Info.Type != ItemType.Helmet)
                         return false;
                     break;
                 case EquipmentSlot.Torch:
