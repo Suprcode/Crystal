@@ -1690,7 +1690,7 @@ namespace Client.MirObjects
                 }
 
                 //ArcherTest - Need to check for bow weapon only
-                if (Class == MirClass.Archer || Class == MirClass.HighArcher && HasClassWeapon) //stupple
+                 if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon) //stupple
                 {
                     switch (CurrentAction)
                     {
