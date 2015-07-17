@@ -525,9 +525,460 @@ namespace Client.MirObjects
                 case Monster.IceGuard:
                     Frames = FrameSet.Monsters[82];
                     break;
-                case Monster.DarkDevourer: //(159.lib)
+                 case Monster.ElementGuard:
+                    Frames = FrameSet.Monsters[82];
+                    break;
+                case Monster.DemonGuard:
                     Frames = FrameSet.Monsters[83];
                     break;
+                case Monster.KingGuard:
+                    Frames = FrameSet.Monsters[84];
+                    break;
+                case Monster.Sanke10:
+                case Monster.Sanke11:
+                case Monster.Sanke12:
+                case Monster.Sanke13:
+                case Monster.Sanke14:
+                case Monster.Sanke15:
+                case Monster.Sanke16:
+                case Monster.Sanke17:
+                    Frames = FrameSet.Monsters[32];
+                    break;
+
+
+
+
+                case Monster.DeathCrawler:
+                    Frames = FrameSet.Monsters[187];
+                    break;
+                case Monster.BurningZombie:
+                    Frames = FrameSet.Monsters[189];
+                    break;
+                case Monster.MubZommbie:
+                    Frames = FrameSet.Monsters[190];
+                    break;
+                case Monster.FrozenZombie:
+                    Frames = FrameSet.Monsters[189];
+                    break;
+                case Monster.UndeadWolf:
+                    Frames = FrameSet.Monsters[188];
+                    break;
+                case Monster.Demonwolf:
+                    Frames = FrameSet.Monsters[188];
+                    break;
+                case Monster.WhiteMammoth:
+                    Frames = FrameSet.Monsters[87];
+                    break;
+                case Monster.DarkBeast:
+                    Frames = FrameSet.Monsters[86];
+                    break;
+                case Monster.LightBeast:
+                    Frames = FrameSet.Monsters[86];
+                    break;
+                case Monster.Bloodbaboon:
+                    Frames = FrameSet.Monsters[191];
+                    break;
+                case Monster.HaedenRhino:
+                    Frames = FrameSet.Monsters[87];
+                    break;
+                case Monster.AncBeinger:
+                    Frames = FrameSet.Monsters[88];
+                    break;
+
+
+
+                case Monster.FightingCat:
+                    Frames = FrameSet.Monsters[192];
+                    break;
+                case Monster.FireCat:
+                    Frames = FrameSet.Monsters[193];
+                    break;
+                case Monster.CatWidow:
+                    Frames = FrameSet.Monsters[194];
+                    break;
+                case Monster.StainHammerCat:
+                    Frames = FrameSet.Monsters[195];
+                    break;
+                case Monster.BlackHammerCat:
+                    Frames = FrameSet.Monsters[196];
+                    break;
+                case Monster.Straycat:
+                    Frames = FrameSet.Monsters[197];
+                    break;
+                case Monster.CatShaman:
+                    Frames = FrameSet.Monsters[198];
+                    break;
+                case Monster.Jar1:
+                    Frames = FrameSet.Monsters[89];
+                    break;
+                case Monster.Jar2:
+                    Frames = FrameSet.Monsters[199];
+                    break;
+                case Monster.SeedingsGeneral:
+                    Frames = FrameSet.Monsters[90];
+                    break;
+                case Monster.Restlessjar:
+                    Frames = FrameSet.Monsters[200];
+                    break;
+                case Monster.Bunny:
+                    Frames = FrameSet.Monsters[85];
+                    break;
+
+
+                case Monster.Tucson:
+                    Frames = FrameSet.Monsters[91];
+                    break;
+                case Monster.TucsonFighter:
+                    Frames = FrameSet.Monsters[92];// need rev 
+                    break;
+                case Monster.TucsonMage:
+                    Frames = FrameSet.Monsters[93];
+                    break;
+                case Monster.TucsonWarrior:
+                    Frames = FrameSet.Monsters[94];
+                    break;
+                case Monster.Armadillo:
+                    Frames = FrameSet.Monsters[95];
+                    break;
+                case Monster.ArmadilloElder:
+                    Frames = FrameSet.Monsters[96];
+                    break;
+                case Monster.TucsonEgg:
+                    Frames = FrameSet.Monsters[97];
+                    break;
+                case Monster.PlaguedTucson:
+                    Frames = FrameSet.Monsters[98];
+                    break;
+                case Monster.SandSnail:
+                    Frames = FrameSet.Monsters[99];
+                    break;
+                case Monster.CannibalTentacles: //need lib refix
+                    Frames = FrameSet.Monsters[100];
+                    break;
+                case Monster.TucsonGeneral:
+                    Frames = FrameSet.Monsters[101];
+                    break;
+                case Monster.GasToad:
+                    Frames = FrameSet.Monsters[102];
+                    break;
+                case Monster.Mantis:
+                    Frames = FrameSet.Monsters[103];
+                    break;
+                case Monster.SwampWarrior:
+                    Frames = FrameSet.Monsters[104];
+                    break;
+
+
+
+                case Monster.Mob300:
+                    Frames = FrameSet.Monsters[105];
+                    break;
+                case Monster.Mob301:
+                    Frames = FrameSet.Monsters[106];
+                    break;
+                case Monster.Mob302:
+                    Frames = FrameSet.Monsters[107];
+                    break;
+                case Monster.Mob303:
+                    Frames = FrameSet.Monsters[108];
+                    break;
+                case Monster.Mob304:
+                    Frames = FrameSet.Monsters[109];
+                    break;
+                case Monster.Mob305:
+                    Frames = FrameSet.Monsters[110];
+                    break;
+                case Monster.Mob306:
+                    Frames = FrameSet.Monsters[111];
+                    break;
+                case Monster.Mob307:
+                    Frames = FrameSet.Monsters[112];
+                    break;
+                case Monster.Mob308:
+                    Frames = FrameSet.Monsters[113];
+                    break;
+                case Monster.Mob309:
+                    Frames = FrameSet.Monsters[114];
+                    break;
+                case Monster.Mob310:
+                    Frames = FrameSet.Monsters[115];
+                    break;
+                case Monster.Mob311:
+                    Frames = FrameSet.Monsters[116];
+                    break;
+
+
+
+                case Monster.Mob312:
+                    Frames = FrameSet.Monsters[121];
+                    break;
+                case Monster.Mob313:
+                    Frames = FrameSet.Monsters[117];
+                    break;
+                case Monster.Mob314:
+                    Frames = FrameSet.Monsters[118];
+                    break;
+                case Monster.Mob315:
+                    Frames = FrameSet.Monsters[119];
+                    break;
+                case Monster.Mob316:
+                    Frames = FrameSet.Monsters[120];
+                    break;
+
+
+
+                case Monster.Mob317:
+                    Frames = FrameSet.Monsters[122];
+                    break;
+                case Monster.Mob318:
+                    Frames = FrameSet.Monsters[122];
+                    break;
+                case Monster.Mob319:
+                    Frames = FrameSet.Monsters[122];
+                    break;
+                case Monster.Mob320:
+                    Frames = FrameSet.Monsters[123];
+                    break;
+                case Monster.Mob321:
+                    Frames = FrameSet.Monsters[124];
+                    break;
+                case Monster.Mob322:
+                    Frames = FrameSet.Monsters[125];
+                    break;
+                case Monster.Mob323:
+                    Frames = FrameSet.Monsters[126];
+                    break;
+
+
+                case Monster.Mob324:
+                    Frames = FrameSet.Monsters[127];
+                    break;
+
+
+
+                case Monster.Mob325:
+                    Frames = FrameSet.Monsters[131];
+                    break;
+                case Monster.Mob326:
+                    Frames = FrameSet.Monsters[132];
+                    break;
+                case Monster.Mob327:
+                    Frames = FrameSet.Monsters[133];
+                    break;
+                case Monster.Mob328:
+                    Frames = FrameSet.Monsters[134];
+                    break;
+                case Monster.Mob329:
+                    Frames = FrameSet.Monsters[134];
+                    break;
+                case Monster.Mob330:
+                    Frames = FrameSet.Monsters[135];
+                    break;
+                case Monster.Mob331:
+                    Frames = FrameSet.Monsters[136];
+                    break;
+                case Monster.WOODbox:
+                    Frames = FrameSet.Monsters[137];
+                    break;
+                case Monster.Mob333:
+                    Frames = FrameSet.Monsters[136];
+                    break;
+                case Monster.Mob334:
+                    Frames = FrameSet.Monsters[138];
+                    break;
+
+
+                case Monster.Mob335:
+                    Frames = FrameSet.Monsters[128];
+                    break;
+                case Monster.Mob336:
+                    Frames = FrameSet.Monsters[129];
+                    break;
+                case Monster.Mob337:
+                    Frames = FrameSet.Monsters[130];
+                    break;
+
+
+
+
+
+                case Monster.Mob338:
+                    Frames = FrameSet.Monsters[139];
+                    break;
+                case Monster.Mob339:
+                    Frames = FrameSet.Monsters[141];
+                    break;
+                case Monster.Mob340:
+                    Frames = FrameSet.Monsters[140];
+                    break;
+                case Monster.Mob341:
+                    Frames = FrameSet.Monsters[142];
+                    break;
+                case Monster.Mob342:
+                    Frames = FrameSet.Monsters[142];
+                    break;
+                case Monster.Mob343:
+                    Frames = FrameSet.Monsters[143];
+                    break;
+                case Monster.Mob344:
+                    Frames = FrameSet.Monsters[144];
+                    break;
+                case Monster.Mob345:
+                    Frames = FrameSet.Monsters[145];
+                    break;
+                case Monster.Mob346:
+                    Frames = FrameSet.Monsters[146];
+                    break;
+                case Monster.Mob347:
+                    Frames = FrameSet.Monsters[147];
+                    break;
+                case Monster.Mob348:
+                    Frames = FrameSet.Monsters[148];
+                    break;
+
+                case Monster.MoonStone:
+                    Frames = FrameSet.Monsters[149];
+                    break;
+
+
+                case Monster.SunStone:
+                    Frames = FrameSet.Monsters[149];
+                    break;
+                case Monster.LigthinStone:
+                    Frames = FrameSet.Monsters[149];
+                    break;
+                case Monster.Turtlegrass:
+                    Frames = FrameSet.Monsters[150];
+                    break;
+                case Monster.Mantree:
+                    Frames = FrameSet.Monsters[151];
+                    break;
+                case Monster.Bear:
+                    Frames = FrameSet.Monsters[152];
+                    break;
+                case Monster.Leopard:
+                    Frames = FrameSet.Monsters[153];
+                    break;
+                case Monster.ChieftainArcher:
+                    Frames = FrameSet.Monsters[154];
+                    break;
+                case Monster.ChieftainSword:
+                    Frames = FrameSet.Monsters[155];
+                    break;
+                case Monster.Mob358:
+                    Frames = FrameSet.Monsters[156];
+                    break;
+
+
+                case Monster.Frozensolder1:
+                    Frames = FrameSet.Monsters[157];
+                    break;
+                case Monster.FrozenSpear:
+                    Frames = FrameSet.Monsters[158];
+                    break;
+                case Monster.FrozenSolder:
+                    Frames = FrameSet.Monsters[159];
+                    break;
+                case Monster.FrozenGuard:
+                    Frames = FrameSet.Monsters[160];
+                    break;
+                case Monster.FrozenYob:
+                    Frames = FrameSet.Monsters[161];
+                    break;
+                case Monster.DarkSoul:
+                    Frames = FrameSet.Monsters[162];
+                    break;
+
+
+                case Monster.SnowWofl:
+                    Frames = FrameSet.Monsters[163];
+                    break;
+                case Monster.SnowWoflKing:
+                    Frames = FrameSet.Monsters[164];
+                    break;
+                case Monster.Dragon:
+                    Frames = FrameSet.Monsters[165];
+                    break;
+                case Monster.FrozenScopier:
+                    Frames = FrameSet.Monsters[166];
+                    break;
+                case Monster.Masteryoungdragon:
+                    Frames = FrameSet.Monsters[167];
+                    break;
+
+                case Monster.Mob374:
+                    Frames = FrameSet.Monsters[168];
+                    break;
+                case Monster.Mob375:
+                    Frames = FrameSet.Monsters[169];
+                    break;
+                case Monster.REDRainDeer:
+                    Frames = FrameSet.Monsters[170];
+                    break;
+                case Monster.Guard3:
+                    Frames = FrameSet.Monsters[171];
+                    break;
+                case Monster.ArcherGuard2:
+                    Frames = FrameSet.Monsters[172];
+                    break;
+
+                case Monster.Mob379://pet maybe
+                    Frames = FrameSet.Monsters[173];
+                    break;
+                case Monster.Mob380:
+                    Frames = FrameSet.Monsters[174];
+                    break;
+                case Monster.Mob381:
+                    Frames = FrameSet.Monsters[175];
+                    break;
+                case Monster.Mob382:
+                    Frames = FrameSet.Monsters[176];
+                    break;
+                case Monster.Mob383:
+                    Frames = FrameSet.Monsters[177];
+                    break;
+
+                case Monster.FrozenMob07:
+                    Frames = FrameSet.Monsters[178];
+                    break;
+                case Monster.FrozenMob08:
+                    Frames = FrameSet.Monsters[179];
+                    break;
+                case Monster.FrozenMob09:
+                    Frames = FrameSet.Monsters[157];
+                    break;
+                case Monster.FrozenMob10:
+                    Frames = FrameSet.Monsters[180];
+                    break;
+
+
+                case Monster.RedOrb:
+                case Monster.BlueOrb:
+                case Monster.YellowOrb:
+                case Monster.GreenOrb:
+                case Monster.WhiteOrb:
+                    Frames = FrameSet.Monsters[181];
+                    break;
+                case Monster.Mob393:
+                    Frames = FrameSet.Monsters[182];
+                    break;
+                case Monster.Mob394:
+                    Frames = FrameSet.Monsters[183];
+                    break;
+                case Monster.CargoBoxwithlogo:
+                    Frames = FrameSet.Monsters[184];
+                    break;
+                case Monster.deer2:
+                    Frames = FrameSet.Monsters[185];
+                    break;
+
+                case Monster.RainDeer:
+                    Frames = FrameSet.Monsters[186];
+                    break;
+                case Monster.CargoBox:
+                    Frames = FrameSet.Monsters[184];
+                    break;
+               
 
                 case Monster.BabyPig://IntelligentCreature
                 case Monster.Chick:
