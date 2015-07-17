@@ -348,6 +348,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[24];
                     if (!info.Extra) ActionFeed.Add(new QueuedAction { Action = MirAction.Appear, Direction = Direction, Location = CurrentLocation });
                     break;
+                 case Monster.GreaterWeaver//stupple
                 case Monster.RootSpider:
                     Frames = FrameSet.Monsters[25];
                     break;
@@ -1316,6 +1317,63 @@ namespace Client.MirObjects
                             case Monster.MinotaurKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MinotaurKing], 272 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
                                 break;
+                                case Monster.FlamingMutant:///////////////////////////stupple 
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.Demonwolf:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Demonwolf], 312 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DarkBeast:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkBeast], 296 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HaedenRhino:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HaedenRhino], 379 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.AncBeinger:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncBeinger], 512 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellSlasher:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellSlasher], 304 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellPirate:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellPirate], 280 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DemonGuard:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonGuard], 288 + (int)Direction * 2, 2, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.Bear:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 321 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.Masteryoungdragon:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Masteryoungdragon], 505 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DreamDevourer:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DreamDevourer], 272 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DarkDevourer:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevourer], 320 + (int)Direction * 5, 5, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.StainHammerCat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StainHammerCat], 240 + (int)Direction * 5, 5, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.BlackHammerCat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackHammerCat], 648 + (int)Direction * 11, 11, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.SeedingsGeneral:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SeedingsGeneral], 536 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.TucsonMage:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonMage], 272 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.WingedTigerLord:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 560 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.FlameMage:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlameMage], 272 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellKnight4:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellKnight4], 244 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;//stupple end
                             case Monster.YinDevilNode:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.YinDevilNode], 26, 26, Frame.Count * Frame.Interval, this));
                                 break;
@@ -1419,6 +1477,9 @@ namespace Client.MirObjects
                     case MirAction.Die:
                         switch (BaseImage)
                         {
+                            case Monster.ManectricKing://stupple 08/04
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 504, 6, Frame.Count * Frame.Interval, this));
+                                break;
                             case Monster.DarkDevil:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevil], 336, 6, Frame.Count * Frame.Interval, this));
                                 break;
@@ -2530,6 +2591,164 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
+                    //stupple
+                    case Monster.ManectricKing: //stupple 04/08
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(392 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(440 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(360 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Pushed:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(352 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(488 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(576 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.ManectricClaw:// stupple 08/04
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.ManectricClaw].DrawBlend(304 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.ManectricStaff://stupple 08/04
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.ManectricStaff].DrawBlend(296 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.HellBolt:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.HellBolt].DrawBlend(304 + FrameIndex + 5, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.Bear:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.Bear].DrawBlend(312 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.WOODbox:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.WOODbox].DrawBlend(103 + FrameIndex + (int)Direction * 20, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.KingGuard: 
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(392 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(424 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(472 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(616 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Dead:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(545 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Pushed:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(352 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(520 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(534 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(664 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange2:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(728 + FrameIndex + (int)Direction * 7, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.SeedingsGeneral:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(536 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(568 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(704 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(776 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Dead:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(1015 + FrameIndex + (int)Direction * 1, DrawLocation, Color.White, true);
+                            break;
+                       case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(984 + FrameIndex + (int)Direction * 3, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(1008 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(848 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange2:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(912 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.GasToad:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.GasToad].DrawBlend((360 + FrameIndex - 2 + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.HellKeeper:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.HellKeeper].DrawBlend(32 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.HellKeeper].DrawBlend(40 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.Masteryoungdragon:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.Masteryoungdragon].DrawBlend((536 + FrameIndex + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;///stupple end 
                 case Monster.GuardianRock:
                     switch (CurrentAction)
                     {
@@ -2558,6 +2777,18 @@ namespace Client.MirObjects
                             Libraries.Monsters[(ushort)Monster.ThunderElement].DrawBlend(78 + FrameIndex, DrawLocation, Color.White, true);
                             break;
                     }
+                    break;
+                    //stupple may need to take out ???
+                     case Monster.Weaver:
+                case Monster.VenomWeaver:
+                case Monster.ArmingWeaver:
+                case Monster.ValeBat:
+                case Monster.CrackingWeaver:
+                case Monster.GreaterWeaver:
+                case Monster.CrystalWeaver:// stupple 08/04
+                    Libraries.Effect.DrawBlend(680 + FrameIndex, DrawLocation, Color.White, true);
+                    //Effects.Add(new Effect(Libraries.Effect, 680, 20, 20 * Frame.Interval, this));
+                    
                     break;
                 case Monster.CloudElement:
                     switch (CurrentAction)
