@@ -621,6 +621,7 @@ namespace Client.MirObjects
                 case Monster.Restlessjar:
                     Frames = FrameSet.Monsters[200];
                     break;
+                case Monster.Bunny2:
                 case Monster.Bunny:
                     Frames = FrameSet.Monsters[85];
                     break;
