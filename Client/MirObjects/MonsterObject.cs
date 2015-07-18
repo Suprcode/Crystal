@@ -699,46 +699,46 @@ namespace Client.MirObjects
                 case Monster.Mob308:
                     Frames = FrameSet.Monsters[113];
                     break;
-                case Monster.Mob309:
+                case Monster.Darkbaboon:
                     Frames = FrameSet.Monsters[114];
                     break;
-                case Monster.Mob310:
+                case Monster.TwinHeadBeast:
                     Frames = FrameSet.Monsters[115];
                     break;
-                case Monster.Mob311:
+                case Monster.OmaCannibal:
                     Frames = FrameSet.Monsters[116];
                     break;
 
 
 
-                case Monster.Mob312:
+                case Monster.OmaBlest:
                     Frames = FrameSet.Monsters[121];
                     break;
-                case Monster.Mob313:
+                case Monster.OmaSlasher:
                     Frames = FrameSet.Monsters[117];
                     break;
-                case Monster.Mob314:
+                case Monster.OmaAssassin:
                     Frames = FrameSet.Monsters[118];
                     break;
-                case Monster.Mob315:
+                case Monster.OmaMage:
                     Frames = FrameSet.Monsters[119];
                     break;
-                case Monster.Mob316:
+                case Monster.OmaWitchDoctor:
                     Frames = FrameSet.Monsters[120];
                     break;
 
 
 
-                case Monster.Mob317:
+                case Monster.LightningBead:
                     Frames = FrameSet.Monsters[122];
                     break;
-                case Monster.Mob318:
+                case Monster.HealingBead:
                     Frames = FrameSet.Monsters[122];
                     break;
-                case Monster.Mob319:
+                case Monster.PowerUpBead:
                     Frames = FrameSet.Monsters[122];
                     break;
-                case Monster.Mob320:
+                case Monster.DarkOmaKing:
                     Frames = FrameSet.Monsters[123];
                     break;
                 case Monster.Mob321:
@@ -898,23 +898,23 @@ namespace Client.MirObjects
                 case Monster.SnowWoflKing:
                     Frames = FrameSet.Monsters[164];
                     break;
-                case Monster.Dragon:
+                case Monster.WaterDragon:
                     Frames = FrameSet.Monsters[165];
                     break;
-                case Monster.FrozenScopier:
+                case Monster.BlackTortoise:
                     Frames = FrameSet.Monsters[166];
                     break;
-                case Monster.Masteryoungdragon:
+                case Monster.Manticore:
                     Frames = FrameSet.Monsters[167];
                     break;
 
-                case Monster.Mob374:
+                case Monster.DragonWarrior:
                     Frames = FrameSet.Monsters[168];
                     break;
-                case Monster.Mob375:
+                case Monster.DragonArcher:
                     Frames = FrameSet.Monsters[169];
                     break;
-                case Monster.REDRainDeer:
+                case Monster.Kirin:
                     Frames = FrameSet.Monsters[170];
                     break;
                 case Monster.Guard3:
@@ -1345,8 +1345,8 @@ namespace Client.MirObjects
                             case Monster.Bear:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 321 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.Masteryoungdragon:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Masteryoungdragon], 505 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                            case Monster.Manticore:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Manticore], 505 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.DreamDevourer:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DreamDevourer], 272 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
@@ -2742,11 +2742,11 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
-                case Monster.Masteryoungdragon:
+                case Monster.Manticore:
                     switch (CurrentAction)
                     {
                         case MirAction.Attack2:
-                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.Masteryoungdragon].DrawBlend((536 + FrameIndex + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.Manticore].DrawBlend((536 + FrameIndex + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
                             break;
                     }
                     break;///stupple end 
