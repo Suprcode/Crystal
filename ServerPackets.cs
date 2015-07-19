@@ -652,11 +652,11 @@ namespace ServerPackets
         public bool Extra;
 
         public short MountType;
-        public short TransformType;
         public bool RidingMount;
         public bool Fishing;
 
-        //ArcherSpells - Elemental system
+        public short TransformType;
+
         public uint ElementOrbEffect;
         public uint ElementOrbLvl;
         public uint ElementOrbMax;
@@ -688,11 +688,11 @@ namespace ServerPackets
             WingEffect = reader.ReadByte();
             Extra = reader.ReadBoolean();
             MountType = reader.ReadInt16();
-            TransformType = reader.ReadInt16();
             RidingMount = reader.ReadBoolean();
             Fishing = reader.ReadBoolean();
 
-            //ArcherSpells - Elemental system
+            TransformType = reader.ReadInt16();
+
             ElementOrbEffect = reader.ReadUInt32();
             ElementOrbLvl = reader.ReadUInt32();
             ElementOrbMax = reader.ReadUInt32();
@@ -730,11 +730,11 @@ namespace ServerPackets
             writer.Write(WingEffect);
             writer.Write(Extra);
             writer.Write(MountType);
-            writer.Write(TransformType);
             writer.Write(RidingMount);
             writer.Write(Fishing);
 
-            //ArcherSpells - Elemental system
+            writer.Write(TransformType);
+
             writer.Write(ElementOrbEffect);
             writer.Write(ElementOrbLvl);
             writer.Write(ElementOrbMax);
@@ -1232,7 +1232,6 @@ namespace ServerPackets
         public byte Light;
         public short Weapon, Armour;
         public byte WingEffect;
-        public short TransformType;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1242,7 +1241,6 @@ namespace ServerPackets
             Weapon = reader.ReadInt16();
             Armour = reader.ReadInt16();
             WingEffect = reader.ReadByte();
-            TransformType = reader.ReadInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1253,7 +1251,6 @@ namespace ServerPackets
             writer.Write(Weapon);
             writer.Write(Armour);
             writer.Write(WingEffect);
-            writer.Write(TransformType);
         }
     }
     public sealed class PlayerInspect : Packet
@@ -3688,23 +3685,18 @@ namespace ServerPackets
 
         public long ObjectID;
         public short TransformType;
-        public bool ShowTransform;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadInt64();
             TransformType = reader.ReadInt16();
-            ShowTransform = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(ObjectID);
             writer.Write(TransformType);
-            writer.Write(ShowTransform);
         }
     }
-
-    
 
     public sealed class EquipSlotItem : Packet
     {

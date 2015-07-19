@@ -440,6 +440,7 @@ namespace Server.MirObjects
                 if (Buffs[i].Type != b.Type) continue;
 
                 Buffs[i] = b;
+                Buffs[i].Paused = false;
                 return;
             }
 
@@ -712,6 +713,8 @@ namespace Server.MirObjects
         public long ExpireTime;
         public int[] Values;
         public bool Infinite;
+
+        public bool Paused;
 
         public Buff() { }
 

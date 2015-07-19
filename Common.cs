@@ -1097,7 +1097,6 @@ public enum ServerPacketIds : short
     TradeConfirm,
     TradeCancel,
     MountUpdate,
-    TransformUpdate,
     EquipSlotItem,
     FishingUpdate,
     ChangeQuest,
@@ -1144,7 +1143,9 @@ public enum ServerPacketIds : short
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
-    NPCPearlGoods
+    NPCPearlGoods,
+
+    TransformUpdate,
 }
 
 public enum ClientPacketIds : short

@@ -1260,9 +1260,6 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.FishingUpdate:
                     FishingUpdate((S.FishingUpdate)p);
                     break;
-                //case (short)ServerPacketIds.UpdateQuests:
-                //    UpdateQuests((S.UpdateQuests)p);
-                //    break;
                 case (short)ServerPacketIds.ChangeQuest:
                     ChangeQuest((S.ChangeQuest)p);
                     break;

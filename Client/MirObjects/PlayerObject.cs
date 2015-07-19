@@ -145,9 +145,9 @@ namespace Client.MirObjects
             MountType = info.MountType;
             RidingMount = info.RidingMount;
 
-            TransformType = info.TransformType;
-
             Fishing = info.Fishing;
+
+            TransformType = info.TransformType;
 
             SetLibraries();
 
@@ -174,7 +174,6 @@ namespace Client.MirObjects
             Armour = info.Armour;
             Light = info.Light;
             WingEffect = info.WingEffect;
-            TransformType = info.TransformType;
 
             SetLibraries();
             SetEffects();

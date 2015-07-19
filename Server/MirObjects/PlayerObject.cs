@@ -15,7 +15,7 @@ namespace Server.MirObjects
     public sealed class PlayerObject : MapObject
     {
         public string GMPassword = Settings.GMPassword;
-        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite;
+        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, ShowTransform = true;
 
         public bool HasUpdatedBaseStats = true;
 
@@ -392,7 +392,7 @@ namespace Server.MirObjects
                 if (buff.Type == BuffType.Curse) continue;
 
                 buff.Caster = null;
-                buff.ExpireTime -= Envir.Time;
+                if(!buff.Paused) buff.ExpireTime -= Envir.Time;
 
                 Info.Buffs.Add(buff);
             }
@@ -667,8 +667,7 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (Envir.Time <= buff.ExpireTime) continue;
-                if (buff.Infinite) continue;
+                if (Envir.Time <= buff.ExpireTime || buff.Infinite || buff.Paused) continue;
 
                 Buffs.RemoveAt(i);
                 Enqueue(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
@@ -1784,7 +1783,7 @@ namespace Server.MirObjects
             {
                 Buff buff = Info.Buffs[i];
                 buff.ExpireTime += Envir.Time;
-                //buff.Caster = this;
+                buff.Paused = false;
 
                 AddBuff(buff);
             }
@@ -2709,7 +2708,7 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (buff.Values == null || buff.Values.Length < 1) continue;
+                if (buff.Values == null || buff.Values.Length < 1 || buff.Paused) continue;
 
                 switch (buff.Type)
                 {
@@ -2827,7 +2826,7 @@ namespace Server.MirObjects
 
             if (Old_TransformType != TransformType)
             {
-                Broadcast(new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType, ShowTransform = true });
+                Broadcast(new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType });
             }
         }
 
@@ -4146,6 +4145,30 @@ namespace Server.MirObjects
                         }
 
                         player.GetCompletedQuests();
+                        break;
+
+                    case "TOGGLETRANSFORM":
+                        ShowTransform = !ShowTransform;
+                        hintstring = ShowTransform ? "Transform Enabled." : "Transform Disabled.";
+                        ReceiveChat(hintstring, ChatType.Hint);
+
+                        Buff b = Buffs.FirstOrDefault(e => e.Type == BuffType.Transform);
+                        if (b == null) return;
+
+                        if (!ShowTransform)
+                        {
+                            PauseBuff(b);
+                        }
+                        else
+                        {
+                            UnpauseBuff(b);
+                        }
+
+                        RefreshStats();
+                        
+                        //p = new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType };
+                        //Enqueue(p);
+
                         break;
 
                     default:
@@ -8450,15 +8473,13 @@ namespace Server.MirObjects
         private Packet GetUpdateInfo()
         {
             UpdateConcentration();
-
             return new S.PlayerUpdate
             {
                 ObjectID = ObjectID,
                 Weapon = Looks_Weapon,
                 Armour = Looks_Armour,
                 Light = Light,
-                WingEffect = Looks_Wings,
-                TransformType = TransformType
+                WingEffect = Looks_Wings
             };
         }
 
@@ -8489,11 +8510,11 @@ namespace Server.MirObjects
                 Effect = MagicShield ? SpellEffect.MagicShieldUp : ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None,
                 WingEffect = Looks_Wings,   
                 MountType = MountType,
-                TransformType = TransformType,
                 RidingMount = RidingMount,
                 Fishing = Fishing,
 
-                //ArcherSpells - Elemental system
+                TransformType = TransformType,
+
                 ElementOrbEffect = (uint)GetElementalOrbCount(),
                 ElementOrbLvl = (uint)ElementsLevel,
                 ElementOrbMax = (uint)Settings.OrbsExpList[Settings.OrbsExpList.Count - 1],
@@ -8515,46 +8536,6 @@ namespace Server.MirObjects
 
             return p;
         }
-
-        //public Packet GetInfoEx(PlayerObject player)
-        //{
-        //    if (Observer) return null;
-
-        //    return new S.ObjectPlayer
-        //    {
-        //        ObjectID = ObjectID,
-        //        Name = CurrentMap.Info.NoNames ? "?????" : Name,
-        //        NameColour = GetNameColour(player),
-        //        GuildName = CurrentMap.Info.NoNames ? "?????" : MyGuild != null ? MyGuild.Name : "",
-        //        GuildRankName = CurrentMap.Info.NoNames ? "?????" : MyGuildRank != null ? MyGuildRank.Name : "",
-        //        Class = Class,
-        //        Gender = Gender,
-        //        Level = Level,
-        //        Location = CurrentLocation,
-        //        Direction = Direction,
-        //        Hair = Hair,
-        //        Weapon = Looks_Weapon,
-        //        Armour = Looks_Armour,
-        //        Light = Light,
-        //        Poison = CurrentPoison,
-        //        Dead = Dead,
-        //        Hidden = Hidden,
-        //        Effect = MagicShield ? SpellEffect.MagicShieldUp : (ElementalBarrier ? SpellEffect.ElementalBarrierUp : SpellEffect.None),//ArcherSpells - Elemental system
-        //        WingEffect = Looks_Wings,
-        //        MountType = MountType,
-        //        RidingMount = RidingMount,
-        //        Fishing = Fishing,
-                
-        //        //ArcherSpells - Elemental system
-        //        ElementOrbEffect = (uint)GetElementalOrbCount(),
-        //        ElementOrbLvl = (uint)ElementsLevel,
-        //        ElementOrbMax = (uint)Settings.OrbsExpList[Settings.OrbsExpList.Count - 1],
-
-        //        Buffs = Buffs.Where(d => d.Visible).Select(e => e.Type).ToList(),
-
-        //        LevelEffects = LevelEffects
-        //    };
-        //}
 
         public override bool IsAttackTarget(PlayerObject attacker)
         {
@@ -8991,6 +8972,7 @@ namespace Server.MirObjects
 
             PoisonList.Add(p);
         }
+
         public override void AddBuff(Buff b)
         {
             if (Buffs.Any(d => d.Infinite && d.Type == b.Type)) return; //cant overwrite infinite buff with regular buff
@@ -9007,6 +8989,22 @@ namespace Server.MirObjects
             if (b.Visible) Broadcast(addBuff);
 
             RefreshStats();
+        }
+        public void PauseBuff(Buff b)
+        {
+            if (b.Paused) return;
+
+            b.ExpireTime = b.ExpireTime - Envir.Time;
+            b.Paused = true;
+            Enqueue(new S.RemoveBuff { Type = b.Type, ObjectID = ObjectID });
+        }
+        public void UnpauseBuff(Buff b)
+        {
+            if (!b.Paused) return;
+
+            b.ExpireTime = b.ExpireTime + Envir.Time;
+            b.Paused = false;
+            Enqueue(new S.AddBuff { Type = b.Type, Caster = Name, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible });
         }
 
         public void DepositTradeItem(int from, int to)
