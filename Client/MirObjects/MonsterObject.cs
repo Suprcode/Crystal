@@ -348,6 +348,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[24];
                     if (!info.Extra) ActionFeed.Add(new QueuedAction { Action = MirAction.Appear, Direction = Direction, Location = CurrentLocation });
                     break;
+                 case Monster.GreaterWeaver//stupple
                 case Monster.RootSpider:
                     Frames = FrameSet.Monsters[25];
                     break;
@@ -525,9 +526,461 @@ namespace Client.MirObjects
                 case Monster.IceGuard:
                     Frames = FrameSet.Monsters[82];
                     break;
-                case Monster.DarkDevourer: //(159.lib)
+                 case Monster.ElementGuard:
+                    Frames = FrameSet.Monsters[82];
+                    break;
+                case Monster.DemonGuard:
                     Frames = FrameSet.Monsters[83];
                     break;
+                case Monster.KingGuard:
+                    Frames = FrameSet.Monsters[84];
+                    break;
+                case Monster.Sanke10:
+                case Monster.Sanke11:
+                case Monster.Sanke12:
+                case Monster.Sanke13:
+                case Monster.Sanke14:
+                case Monster.Sanke15:
+                case Monster.Sanke16:
+                case Monster.Sanke17:
+                    Frames = FrameSet.Monsters[32];
+                    break;
+
+
+
+
+                case Monster.DeathCrawler:
+                    Frames = FrameSet.Monsters[187];
+                    break;
+                case Monster.BurningZombie:
+                    Frames = FrameSet.Monsters[189];
+                    break;
+                case Monster.MubZommbie:
+                    Frames = FrameSet.Monsters[190];
+                    break;
+                case Monster.FrozenZombie:
+                    Frames = FrameSet.Monsters[189];
+                    break;
+                case Monster.UndeadWolf:
+                    Frames = FrameSet.Monsters[188];
+                    break;
+                case Monster.Demonwolf:
+                    Frames = FrameSet.Monsters[188];
+                    break;
+                case Monster.WhiteMammoth:
+                    Frames = FrameSet.Monsters[87];
+                    break;
+                case Monster.DarkBeast:
+                    Frames = FrameSet.Monsters[86];
+                    break;
+                case Monster.LightBeast:
+                    Frames = FrameSet.Monsters[86];
+                    break;
+                case Monster.Bloodbaboon:
+                    Frames = FrameSet.Monsters[191];
+                    break;
+                case Monster.HaedenRhino:
+                    Frames = FrameSet.Monsters[87];
+                    break;
+                case Monster.AncBeinger:
+                    Frames = FrameSet.Monsters[88];
+                    break;
+
+
+
+                case Monster.FightingCat:
+                    Frames = FrameSet.Monsters[192];
+                    break;
+                case Monster.FireCat:
+                    Frames = FrameSet.Monsters[193];
+                    break;
+                case Monster.CatWidow:
+                    Frames = FrameSet.Monsters[194];
+                    break;
+                case Monster.StainHammerCat:
+                    Frames = FrameSet.Monsters[195];
+                    break;
+                case Monster.BlackHammerCat:
+                    Frames = FrameSet.Monsters[196];
+                    break;
+                case Monster.Straycat:
+                    Frames = FrameSet.Monsters[197];
+                    break;
+                case Monster.CatShaman:
+                    Frames = FrameSet.Monsters[198];
+                    break;
+                case Monster.Jar1:
+                    Frames = FrameSet.Monsters[89];
+                    break;
+                case Monster.Jar2:
+                    Frames = FrameSet.Monsters[199];
+                    break;
+                case Monster.SeedingsGeneral:
+                    Frames = FrameSet.Monsters[90];
+                    break;
+                case Monster.Restlessjar:
+                    Frames = FrameSet.Monsters[200];
+                    break;
+                case Monster.Bunny2:
+                case Monster.Bunny:
+                    Frames = FrameSet.Monsters[85];
+                    break;
+
+
+                case Monster.Tucson:
+                    Frames = FrameSet.Monsters[91];
+                    break;
+                case Monster.TucsonFighter:
+                    Frames = FrameSet.Monsters[92];// need rev 
+                    break;
+                case Monster.TucsonMage:
+                    Frames = FrameSet.Monsters[93];
+                    break;
+                case Monster.TucsonWarrior:
+                    Frames = FrameSet.Monsters[94];
+                    break;
+                case Monster.Armadillo:
+                    Frames = FrameSet.Monsters[95];
+                    break;
+                case Monster.ArmadilloElder:
+                    Frames = FrameSet.Monsters[96];
+                    break;
+                case Monster.TucsonEgg:
+                    Frames = FrameSet.Monsters[97];
+                    break;
+                case Monster.PlaguedTucson:
+                    Frames = FrameSet.Monsters[98];
+                    break;
+                case Monster.SandSnail:
+                    Frames = FrameSet.Monsters[99];
+                    break;
+                case Monster.CannibalTentacles: //need lib refix
+                    Frames = FrameSet.Monsters[100];
+                    break;
+                case Monster.TucsonGeneral:
+                    Frames = FrameSet.Monsters[101];
+                    break;
+                case Monster.GasToad:
+                    Frames = FrameSet.Monsters[102];
+                    break;
+                case Monster.Mantis:
+                    Frames = FrameSet.Monsters[103];
+                    break;
+                case Monster.SwampWarrior:
+                    Frames = FrameSet.Monsters[104];
+                    break;
+
+
+
+                case Monster.Mob300:
+                    Frames = FrameSet.Monsters[105];
+                    break;
+                case Monster.Mob301:
+                    Frames = FrameSet.Monsters[106];
+                    break;
+                case Monster.Mob302:
+                    Frames = FrameSet.Monsters[107];
+                    break;
+                case Monster.Mob303:
+                    Frames = FrameSet.Monsters[108];
+                    break;
+                case Monster.Mob304:
+                    Frames = FrameSet.Monsters[109];
+                    break;
+                case Monster.Mob305:
+                    Frames = FrameSet.Monsters[110];
+                    break;
+                case Monster.Mob306:
+                    Frames = FrameSet.Monsters[111];
+                    break;
+                case Monster.Mob307:
+                    Frames = FrameSet.Monsters[112];
+                    break;
+                case Monster.Mob308:
+                    Frames = FrameSet.Monsters[113];
+                    break;
+                case Monster.Darkbaboon:
+                    Frames = FrameSet.Monsters[114];
+                    break;
+                case Monster.TwinHeadBeast:
+                    Frames = FrameSet.Monsters[115];
+                    break;
+                case Monster.OmaCannibal:
+                    Frames = FrameSet.Monsters[116];
+                    break;
+
+
+
+                case Monster.OmaBlest:
+                    Frames = FrameSet.Monsters[121];
+                    break;
+                case Monster.OmaSlasher:
+                    Frames = FrameSet.Monsters[117];
+                    break;
+                case Monster.OmaAssassin:
+                    Frames = FrameSet.Monsters[118];
+                    break;
+                case Monster.OmaMage:
+                    Frames = FrameSet.Monsters[119];
+                    break;
+                case Monster.OmaWitchDoctor:
+                    Frames = FrameSet.Monsters[120];
+                    break;
+
+
+
+                case Monster.LightningBead:
+                    Frames = FrameSet.Monsters[122];
+                    break;
+                case Monster.HealingBead:
+                    Frames = FrameSet.Monsters[122];
+                    break;
+                case Monster.PowerUpBead:
+                    Frames = FrameSet.Monsters[122];
+                    break;
+                case Monster.DarkOmaKing:
+                    Frames = FrameSet.Monsters[123];
+                    break;
+                case Monster.Mob321:
+                    Frames = FrameSet.Monsters[124];
+                    break;
+                case Monster.Mob322:
+                    Frames = FrameSet.Monsters[125];
+                    break;
+                case Monster.Mob323:
+                    Frames = FrameSet.Monsters[126];
+                    break;
+
+
+                case Monster.Mob324:
+                    Frames = FrameSet.Monsters[127];
+                    break;
+
+
+
+                case Monster.Mob325:
+                    Frames = FrameSet.Monsters[131];
+                    break;
+                case Monster.Mob326:
+                    Frames = FrameSet.Monsters[132];
+                    break;
+                case Monster.Mob327:
+                    Frames = FrameSet.Monsters[133];
+                    break;
+                case Monster.Mob328:
+                    Frames = FrameSet.Monsters[134];
+                    break;
+                case Monster.Mob329:
+                    Frames = FrameSet.Monsters[134];
+                    break;
+                case Monster.Mob330:
+                    Frames = FrameSet.Monsters[135];
+                    break;
+                case Monster.Mob331:
+                    Frames = FrameSet.Monsters[136];
+                    break;
+                case Monster.WOODbox:
+                    Frames = FrameSet.Monsters[137];
+                    break;
+                case Monster.Mob333:
+                    Frames = FrameSet.Monsters[136];
+                    break;
+                case Monster.Mob334:
+                    Frames = FrameSet.Monsters[138];
+                    break;
+
+
+                case Monster.Mob335:
+                    Frames = FrameSet.Monsters[128];
+                    break;
+                case Monster.Mob336:
+                    Frames = FrameSet.Monsters[129];
+                    break;
+                case Monster.Mob337:
+                    Frames = FrameSet.Monsters[130];
+                    break;
+
+
+
+
+
+                case Monster.Mob338:
+                    Frames = FrameSet.Monsters[139];
+                    break;
+                case Monster.Mob339:
+                    Frames = FrameSet.Monsters[141];
+                    break;
+                case Monster.Mob340:
+                    Frames = FrameSet.Monsters[140];
+                    break;
+                case Monster.Mob341:
+                    Frames = FrameSet.Monsters[142];
+                    break;
+                case Monster.Mob342:
+                    Frames = FrameSet.Monsters[142];
+                    break;
+                case Monster.Mob343:
+                    Frames = FrameSet.Monsters[143];
+                    break;
+                case Monster.Mob344:
+                    Frames = FrameSet.Monsters[144];
+                    break;
+                case Monster.Mob345:
+                    Frames = FrameSet.Monsters[145];
+                    break;
+                case Monster.Mob346:
+                    Frames = FrameSet.Monsters[146];
+                    break;
+                case Monster.Mob347:
+                    Frames = FrameSet.Monsters[147];
+                    break;
+                case Monster.Mob348:
+                    Frames = FrameSet.Monsters[148];
+                    break;
+
+                case Monster.MoonStone:
+                    Frames = FrameSet.Monsters[149];
+                    break;
+
+
+                case Monster.SunStone:
+                    Frames = FrameSet.Monsters[149];
+                    break;
+                case Monster.LigthinStone:
+                    Frames = FrameSet.Monsters[149];
+                    break;
+                case Monster.Turtlegrass:
+                    Frames = FrameSet.Monsters[150];
+                    break;
+                case Monster.Mantree:
+                    Frames = FrameSet.Monsters[151];
+                    break;
+                case Monster.Bear:
+                    Frames = FrameSet.Monsters[152];
+                    break;
+                case Monster.Leopard:
+                    Frames = FrameSet.Monsters[153];
+                    break;
+                case Monster.ChieftainArcher:
+                    Frames = FrameSet.Monsters[154];
+                    break;
+                case Monster.ChieftainSword:
+                    Frames = FrameSet.Monsters[155];
+                    break;
+                case Monster.Mob358:
+                    Frames = FrameSet.Monsters[156];
+                    break;
+
+
+                case Monster.Frozensolder1:
+                    Frames = FrameSet.Monsters[157];
+                    break;
+                case Monster.FrozenSpear:
+                    Frames = FrameSet.Monsters[158];
+                    break;
+                case Monster.FrozenSolder:
+                    Frames = FrameSet.Monsters[159];
+                    break;
+                case Monster.FrozenGuard:
+                    Frames = FrameSet.Monsters[160];
+                    break;
+                case Monster.FrozenYob:
+                    Frames = FrameSet.Monsters[161];
+                    break;
+                case Monster.DarkSoul:
+                    Frames = FrameSet.Monsters[162];
+                    break;
+
+
+                case Monster.SnowWofl:
+                    Frames = FrameSet.Monsters[163];
+                    break;
+                case Monster.SnowWoflKing:
+                    Frames = FrameSet.Monsters[164];
+                    break;
+                case Monster.WaterDragon:
+                    Frames = FrameSet.Monsters[165];
+                    break;
+                case Monster.BlackTortoise:
+                    Frames = FrameSet.Monsters[166];
+                    break;
+                case Monster.Manticore:
+                    Frames = FrameSet.Monsters[167];
+                    break;
+
+                case Monster.DragonWarrior:
+                    Frames = FrameSet.Monsters[168];
+                    break;
+                case Monster.DragonArcher:
+                    Frames = FrameSet.Monsters[169];
+                    break;
+                case Monster.Kirin:
+                    Frames = FrameSet.Monsters[170];
+                    break;
+                case Monster.Guard3:
+                    Frames = FrameSet.Monsters[171];
+                    break;
+                case Monster.ArcherGuard2:
+                    Frames = FrameSet.Monsters[172];
+                    break;
+
+                case Monster.Mob379://pet maybe
+                    Frames = FrameSet.Monsters[173];
+                    break;
+                case Monster.Mob380:
+                    Frames = FrameSet.Monsters[174];
+                    break;
+                case Monster.Mob381:
+                    Frames = FrameSet.Monsters[175];
+                    break;
+                case Monster.Mob382:
+                    Frames = FrameSet.Monsters[176];
+                    break;
+                case Monster.Mob383:
+                    Frames = FrameSet.Monsters[177];
+                    break;
+
+                case Monster.FrozenMob07:
+                    Frames = FrameSet.Monsters[178];
+                    break;
+                case Monster.FrozenMob08:
+                    Frames = FrameSet.Monsters[179];
+                    break;
+                case Monster.FrozenMob09:
+                    Frames = FrameSet.Monsters[157];
+                    break;
+                case Monster.FrozenMob10:
+                    Frames = FrameSet.Monsters[180];
+                    break;
+
+
+                case Monster.RedOrb:
+                case Monster.BlueOrb:
+                case Monster.YellowOrb:
+                case Monster.GreenOrb:
+                case Monster.WhiteOrb:
+                    Frames = FrameSet.Monsters[181];
+                    break;
+                case Monster.Mob393:
+                    Frames = FrameSet.Monsters[182];
+                    break;
+                case Monster.Mob394:
+                    Frames = FrameSet.Monsters[183];
+                    break;
+                case Monster.CargoBoxwithlogo:
+                    Frames = FrameSet.Monsters[184];
+                    break;
+                case Monster.deer2:
+                    Frames = FrameSet.Monsters[185];
+                    break;
+
+                case Monster.RainDeer:
+                    Frames = FrameSet.Monsters[186];
+                    break;
+                case Monster.CargoBox:
+                    Frames = FrameSet.Monsters[184];
+                    break;
+               
 
                 case Monster.BabyPig://IntelligentCreature
                 case Monster.Chick:
@@ -865,6 +1318,63 @@ namespace Client.MirObjects
                             case Monster.MinotaurKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MinotaurKing], 272 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
                                 break;
+                                case Monster.FlamingMutant:///////////////////////////stupple 
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.Demonwolf:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Demonwolf], 312 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DarkBeast:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkBeast], 296 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HaedenRhino:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HaedenRhino], 379 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.AncBeinger:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncBeinger], 512 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellSlasher:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellSlasher], 304 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellPirate:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellPirate], 280 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DemonGuard:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonGuard], 288 + (int)Direction * 2, 2, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.Bear:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 321 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.Manticore:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Manticore], 505 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DreamDevourer:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DreamDevourer], 272 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DarkDevourer:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevourer], 320 + (int)Direction * 5, 5, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.StainHammerCat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StainHammerCat], 240 + (int)Direction * 5, 5, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.BlackHammerCat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackHammerCat], 648 + (int)Direction * 11, 11, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.SeedingsGeneral:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SeedingsGeneral], 536 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.TucsonMage:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonMage], 272 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.WingedTigerLord:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 560 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.FlameMage:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlameMage], 272 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellKnight4:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellKnight4], 244 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                break;//stupple end
                             case Monster.YinDevilNode:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.YinDevilNode], 26, 26, Frame.Count * Frame.Interval, this));
                                 break;
@@ -968,6 +1478,9 @@ namespace Client.MirObjects
                     case MirAction.Die:
                         switch (BaseImage)
                         {
+                            case Monster.ManectricKing://stupple 08/04
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 504, 6, Frame.Count * Frame.Interval, this));
+                                break;
                             case Monster.DarkDevil:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevil], 336, 6, Frame.Count * Frame.Interval, this));
                                 break;
@@ -2079,6 +2592,164 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
+                    //stupple
+                    case Monster.ManectricKing: //stupple 04/08
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(392 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(440 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(360 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Pushed:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(352 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(488 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(576 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.ManectricClaw:// stupple 08/04
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.ManectricClaw].DrawBlend(304 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.ManectricStaff://stupple 08/04
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.ManectricStaff].DrawBlend(296 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.HellBolt:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.HellBolt].DrawBlend(304 + FrameIndex + 5, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.Bear:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.Bear].DrawBlend(312 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.WOODbox:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.WOODbox].DrawBlend(103 + FrameIndex + (int)Direction * 20, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.KingGuard: 
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(392 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(424 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(472 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(616 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Dead:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(545 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Pushed:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(352 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(520 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(534 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(664 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange2:
+                            Libraries.Monsters[(ushort)Monster.KingGuard].DrawBlend(728 + FrameIndex + (int)Direction * 7, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.SeedingsGeneral:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(536 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(568 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(704 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(776 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Dead:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(1015 + FrameIndex + (int)Direction * 1, DrawLocation, Color.White, true);
+                            break;
+                       case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(984 + FrameIndex + (int)Direction * 3, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(1008 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(848 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange2:
+                            Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(912 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.GasToad:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.GasToad].DrawBlend((360 + FrameIndex - 2 + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.HellKeeper:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.HellKeeper].DrawBlend(32 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.HellKeeper].DrawBlend(40 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.Manticore:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.Manticore].DrawBlend((536 + FrameIndex + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;///stupple end 
                 case Monster.GuardianRock:
                     switch (CurrentAction)
                     {
@@ -2107,6 +2778,18 @@ namespace Client.MirObjects
                             Libraries.Monsters[(ushort)Monster.ThunderElement].DrawBlend(78 + FrameIndex, DrawLocation, Color.White, true);
                             break;
                     }
+                    break;
+                    //stupple may need to take out ???
+                     case Monster.Weaver:
+                case Monster.VenomWeaver:
+                case Monster.ArmingWeaver:
+                case Monster.ValeBat:
+                case Monster.CrackingWeaver:
+                case Monster.GreaterWeaver:
+                case Monster.CrystalWeaver:// stupple 08/04
+                    Libraries.Effect.DrawBlend(680 + FrameIndex, DrawLocation, Color.White, true);
+                    //Effects.Add(new Effect(Libraries.Effect, 680, 20, 20 * Frame.Interval, this));
+                    
                     break;
                 case Monster.CloudElement:
                     switch (CurrentAction)
