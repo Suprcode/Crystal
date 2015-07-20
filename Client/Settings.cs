@@ -28,7 +28,11 @@ namespace Client
                             ARHumEffectPath = @".\Data\ARHumEffect\",
                             MountPath = @".\Data\Mount\",
                             FishingPath = @".\Data\Fishing\",
-                            PetsPath = @".\Data\Pet\";
+                            PetsPath = @".\Data\Pet\",
+                            TransformPath = @".\Data\Transform\",
+                            TransformMountsPath = @".\Data\TransformRide2\",
+                            TransformEffectPath = @".\Data\TransformEffect\",
+                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\";
 
         //Logs
         public static bool LogErrors = true;

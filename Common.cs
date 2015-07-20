@@ -90,7 +90,7 @@ public enum DefaultNPCType : byte
     Daily
 }
 
-public enum IntelligentCreatureType : byte//IntelligentCreature
+public enum IntelligentCreatureType : byte
 {
     None = 99,
     BabyPig = 0,
@@ -542,7 +542,8 @@ public enum ItemType : byte
     Fish = 33,
     Quest = 34,
 	Awakening = 35,
-    Pets = 36,//IntelligentCreature
+    Pets = 36,
+    Transform = 37,
 }
 
 public enum MirGridType : byte
@@ -810,7 +811,8 @@ public enum Spell : byte
     Plague = 82,
     PoisonCloud = 83,
     EnergyShield = 84,
-    
+    PetEnhancer = 85,
+
     //Assassin
     FatalSword = 91,
     DoubleSlash = 92,
@@ -850,6 +852,9 @@ public enum Spell : byte
     OneWithNature = 139,
     BindingShot = 140,
     MentalState = 141,
+
+    //Custom
+    Portal = 150,
     
 
     //Map Events
@@ -863,14 +868,12 @@ public enum SpellEffect : byte
 {
     None,
     FatalSword,
-    SummonSkeleton,
     Teleport,
     Healing,
     RedMoonEvil,
     TwinDrakeBlade,
     MagicShieldUp,
     MagicShieldDown,
-    FlameSwordCharge,
     GreatFoxSpirit,
     Entrapment,
     Reflect,
@@ -878,8 +881,6 @@ public enum SpellEffect : byte
     Mine,
     ElementalBarrierUp,
     ElementalBarrierDown,
-    FuryUp,
-    FuryDown,
     DelayedExplosion,
     MPEater,
     Hemorrhage,
@@ -888,8 +889,6 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
-    EnergyShieldUp,
-    EnergyShieldDown,
 }
 
 public enum BuffType : byte
@@ -916,13 +915,16 @@ public enum BuffType : byte
     CounterAttack,
     MentalState,
     EnergyShield,
+    MagicBooster,
+    PetEnhancer,
 
+    GameMaster,
     General,
     Exp,
     Drop,
     Gold,
     BagWeight,
-    GameMaster,
+    Transform,
 
     Impact,
     Magic,
@@ -1141,7 +1143,9 @@ public enum ServerPacketIds : short
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
-    NPCPearlGoods
+    NPCPearlGoods,
+
+    TransformUpdate,
 }
 
 public enum ClientPacketIds : short
@@ -2096,7 +2100,7 @@ public class ItemInfo
     public byte Strong;
     public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
     public byte CriticalRate, CriticalDamage;
-    public bool NeedIdentify, ShowGroupPickup, BindOnEquip, BindNoSRepair;
+    public bool NeedIdentify, ShowGroupPickup;
     public bool ClassBased;
     public bool LevelBased;
     public bool CanMine;
@@ -2104,7 +2108,7 @@ public class ItemInfo
     public bool CanAwakening;
     public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
     
-    public BindMode Bind = BindMode.none;//due to lack of space in bindmodes > bindonequip and srepair are seperate bools for now, if anyone adds 2/3 more bindmodes then it'd be more suitable to upgrade bindmode to short!
+    public BindMode Bind = BindMode.none;
     public byte Reflect;
     public SpecialItemMode Unique = SpecialItemMode.None;
     public byte RandomStatsId;
@@ -2114,7 +2118,7 @@ public class ItemInfo
 
     public bool IsConsumable
     {
-        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food; }
+        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform; }
     }
 
     public string FriendlyName
@@ -2195,11 +2199,9 @@ public class ItemInfo
             byte bools = reader.ReadByte();
             NeedIdentify = (bools & 0x01) == 0x01;
             ShowGroupPickup = (bools & 0x02) == 0x02;
-            BindOnEquip = (bools & 0x04) == 0x04;
-            ClassBased = (bools & 0x08) == 0x08;
-            LevelBased = (bools & 0x10) == 0x10;
-            BindNoSRepair = (bools & 0x20) == 0x20;
-            CanMine = (bools & 0x40) == 0x40;
+            ClassBased = (bools & 0x04) == 0x04;
+            LevelBased = (bools & 0x08) == 0x08;
+            CanMine = (bools & 0x10) == 0x10;
             MaxAcRate = reader.ReadByte();
             MaxMacRate = reader.ReadByte();
             Holy = reader.ReadByte();
@@ -2307,11 +2309,9 @@ public class ItemInfo
         byte bools = 0;
         if (NeedIdentify) bools |= 0x01;
         if (ShowGroupPickup) bools |= 0x02;
-        if (BindOnEquip) bools |= 0x04;
-        if (ClassBased) bools |= 0x08;
-        if (LevelBased) bools |= 0x10;
-        if (BindNoSRepair) bools |= 0x20;
-        if (CanMine) bools |= 0x40;
+        if (ClassBased) bools |= 0x04;
+        if (LevelBased) bools |= 0x08;
+        if (CanMine) bools |= 0x10;
         writer.Write(bools);
         writer.Write(MaxAcRate);
         writer.Write(MaxMacRate);
@@ -2401,11 +2401,11 @@ public class ItemInfo
         if (!bool.TryParse(data[52], out info.ClassBased)) return null;
         if (!bool.TryParse(data[53], out info.LevelBased)) return null;
         if (!Enum.TryParse(data[54], out info.Bind)) return null;
-        if (!bool.TryParse(data[55], out info.BindOnEquip)) return null;
+        //if (!bool.TryParse(data[55], out info.BindOnEquip)) return null;
         if (!byte.TryParse(data[56], out info.Reflect)) return null;
         if (!byte.TryParse(data[57], out info.HpDrainRate)) return null;
         if (!Enum.TryParse(data[58], out info.Unique)) return null;
-        if (!bool.TryParse(data[59], out info.BindNoSRepair)) return null;
+        //if (!bool.TryParse(data[59], out info.BindNoSRepair)) return null;
         if (!byte.TryParse(data[60], out info.RandomStatsId)) return null;
         if (!bool.TryParse(data[61], out info.CanMine)) return null;
         if (!bool.TryParse(data[62], out info.CanFastRun)) return null;
@@ -2442,7 +2442,7 @@ public class ItemInfo
             Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
-            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (byte)Bind, BindOnEquip, Reflect, HpDrainRate, (short)Unique, BindNoSRepair,
+            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (byte)Bind, "", Reflect, HpDrainRate, (short)Unique, "",
             RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
     }
 
@@ -4200,12 +4200,12 @@ public abstract class Packet
                 return new S.TradeCancel();
             case (short)ServerPacketIds.MountUpdate:
                 return new S.MountUpdate();
+            case (short)ServerPacketIds.TransformUpdate:
+                return new S.TransformUpdate();
             case (short)ServerPacketIds.EquipSlotItem:
                 return new S.EquipSlotItem();
             case (short)ServerPacketIds.FishingUpdate:
                 return new S.FishingUpdate();
-            //case (short)ServerPacketIds.UpdateQuests:
-            //    return new S.UpdateQuests();
             case (short)ServerPacketIds.ChangeQuest:
                 return new S.ChangeQuest();
             case (short)ServerPacketIds.CompleteQuest:

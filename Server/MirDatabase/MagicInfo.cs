@@ -58,7 +58,7 @@ namespace Server.MirDatabase
 
         //Taoist
         public static MagicInfo Healing,
-                                SpiriSword,
+                                SpiritSword,
                                 Poisoning,
                                 SoulFireBall,
                                 SummonSkeleton,
@@ -79,7 +79,8 @@ namespace Server.MirDatabase
                                 Curse,
                                 Plague,
                                 PoisonCloud,
-                                EnergyShield;
+                                EnergyShield,
+                                PetEnhancer;
 
         //Assassin
         public static MagicInfo FatalSword,
@@ -120,6 +121,9 @@ namespace Server.MirDatabase
                                 NapalmShot,
                                 OneWithNature,
                                 MentalState;
+
+        //Custom
+        public static MagicInfo Portal;
 
 
         public Spell Spell;
@@ -175,7 +179,7 @@ namespace Server.MirDatabase
 
             //Taoist
             Healing = new MagicInfo { Spell = Spell.Healing, Icon = 1, Level1 = 7, Level2 = 11, Level3 = 14, Need1 = 150, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2 };
-            SpiriSword = new MagicInfo { Spell = Spell.SpiritSword, Icon = 3, Level1 = 9, Level2 = 12, Level3 = 15, Need1 = 350, Need2 = 1300, Need3 = 2700 };
+            SpiritSword = new MagicInfo { Spell = Spell.SpiritSword, Icon = 3, Level1 = 9, Level2 = 12, Level3 = 15, Need1 = 350, Need2 = 1300, Need3 = 2700 };
             Poisoning = new MagicInfo { Spell = Spell.Poisoning, Icon = 5, Level1 = 14, Level2 = 17, Level3 = 20, Need1 = 700, Need2 = 1300, Need3 = 2700, BaseCost = 2, LevelCost = 1 };
             SoulFireBall = new MagicInfo { Spell = Spell.SoulFireBall, Icon = 12, Level1 = 18, Level2 = 21, Level3 = 24, Need1 = 1300, Need2 = 2700, Need3 = 4000, BaseCost = 3, LevelCost = 1 };
             SummonSkeleton = new MagicInfo { Spell = Spell.SummonSkeleton, Icon = 16, Level1 = 19, Level2 = 22, Level3 = 26, Need1 = 1000, Need2 = 2000, Need3 = 3500, BaseCost = 12, LevelCost = 4 };
@@ -197,6 +201,7 @@ namespace Server.MirDatabase
             Plague = new MagicInfo { Spell = Spell.Plague, Icon = 74, Level1 = 42, Level2 = 44, Level3 = 47, Need1 = 5000, Need2 = 9000, Need3 = 13000, BaseCost = 20, LevelCost = 5 };
             PoisonCloud = new MagicInfo { Spell = Spell.PoisonCloud, Icon = 54, Level1 = 43, Level2 = 45, Level3 = 48, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 5 };
             EnergyShield = new MagicInfo { Spell = Spell.EnergyShield, Icon = 57, Level1 = 48, Level2 = 51, Level3 = 54, Need1 = 5000, Need2 = 9000, Need3 = 13000, BaseCost = 50, LevelCost = 20 };
+            PetEnhancer = new MagicInfo { Spell = Spell.PetEnhancer, Icon = 78, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 40 };
 
             //Assassin
             FatalSword = new MagicInfo { Spell = Spell.FatalSword, Icon = 58, Level1 = 7, Level2 = 9, Level3 = 12, Need1 = 500, Need2 = 1000, Need3 = 2300 };
@@ -236,6 +241,9 @@ namespace Server.MirDatabase
             NapalmShot = new MagicInfo { Spell = Spell.NapalmShot, Icon = 105, Level1 = 48, Level2 = 52, Level3 = 55, Need1 = 15000, Need2 = 18000, Need3 = 21000, BaseCost = 40, LevelCost = 10 };
             OneWithNature = new MagicInfo { Spell = Spell.OneWithNature, Icon = 106, Level1 = 50, Level2 = 53, Level3 = 56, Need1 = 17000, Need2 = 19000, Need3 = 24000, BaseCost = 80, LevelCost = 15 };
             MentalState = new MagicInfo { Spell = Spell.MentalState, Icon = 81, Level1 = 11, Level2 = 15, Level3 = 22, Need1 = 500, Need2 = 900, Need3 = 1800, BaseCost = 1, LevelCost = 1 };//todo make this proper
+
+            //Custom
+            Portal = new MagicInfo { Spell = Spell.Portal, Icon = 1, Level1 = 7, Level2 = 11, Level3 = 14, Need1 = 150, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2 };
         }
 
         public MagicInfo()

@@ -186,6 +186,7 @@ namespace Server.MirObjects.Monsters
                 Effect = SpellEffect.None,
                 WingEffect = wing,
                 Extra = Summoned,
+                TransformType = -1
             };
         }
     }

@@ -73,6 +73,7 @@ namespace Server
                 PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
                 MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
                 ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
+                CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
 
                 while (!MessageLog.IsEmpty)
                 {

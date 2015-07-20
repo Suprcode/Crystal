@@ -263,7 +263,6 @@ namespace Server.MirObjects
             }
         }
 
-
         protected internal MonsterObject(MonsterInfo info)
         {
             Info = info;
@@ -383,38 +382,47 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
+                if (buff.Values == null || buff.Values.Length < 1) continue;
+
                 switch (buff.Type)
                 {
                     case BuffType.Haste:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Value)));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
                     case BuffType.SwiftFeet:
-                        MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed + 100 * buff.Value);
+                        MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed + 100 * buff.Values[0]);
                         break;
                     case BuffType.LightBody:
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Value);
+                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Values[0]);
                         break;
                     case BuffType.SoulShield:
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Value);
+                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.BlessedArmour:
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
                         break;
                     case BuffType.Curse:
-                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Value);
-                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Value);
-                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Value);
-                        sbyte rASpeed = (sbyte)(((int)ASpeed / 100) * buff.Value);
-                        ushort rMSpeed = (ushort)((MoveSpeed / 100) * buff.Value);
+                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Values[0]);
+                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Values[0]);
+                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Values[0]);
+                        sbyte rASpeed = (sbyte)(((int)ASpeed / 100) * buff.Values[0]);
+                        ushort rMSpeed = (ushort)((MoveSpeed / 100) * buff.Values[0]);
 
                         MaxDC = (byte)Math.Max(byte.MinValue, MaxDC - rMaxDC);
                         MaxMC = (byte)Math.Max(byte.MinValue, MaxMC - rMaxMC);
                         MaxSC = (byte)Math.Max(byte.MinValue, MaxSC - rMaxSC);
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed - rMSpeed);
+                        break;
+
+                    case BuffType.PetEnhancer:
+                        MinDC = (byte)Math.Min(byte.MaxValue, MinDC + buff.Values[0]);
+                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
+                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Values[1]);
+                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[1]);
                         break;
                 }
 
@@ -1054,7 +1062,7 @@ namespace Server.MirObjects
             
             SearchTime = Envir.Time + SearchDelay;
 
-            //if (CurrentMap.Players.Count < 1) return;
+            if (CurrentMap.Inactive(5)) return;
 
             //Stacking or Infront of master - Move
             bool stacking = CheckStacked();
@@ -1098,6 +1106,8 @@ namespace Server.MirObjects
             if (Target != null || Envir.Time < RoamTime) return;
 
             if (ProcessRoute()) return;
+
+            if (CurrentMap.Inactive(30)) return;
 
             if (Master != null)
             {
@@ -1914,6 +1924,16 @@ namespace Server.MirObjects
         }
         public override void AddBuff(Buff b)
         {
+            if (Buffs.Any(d => d.Infinite && d.Type == b.Type)) return; //cant overwrite infinite buff with regular buff
+
+            string caster = b.Caster != null ? b.Caster.Name : string.Empty;
+
+            if (b.Values == null) b.Values = new int[1];
+
+            S.AddBuff addBuff = new S.AddBuff { Type = b.Type, Caster = caster, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible };
+
+            if (b.Visible) Broadcast(addBuff);
+
             base.AddBuff(b);
             RefreshAll();
         }
@@ -2547,6 +2567,12 @@ namespace Server.MirObjects
             }
         }
 
+        public override void Add(PlayerObject player)
+        {
+            player.Enqueue(GetInfo());
+            SendHealth(player);
+        }
+
         public override void SendHealth(PlayerObject player)
         {
             if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
@@ -2577,9 +2603,5 @@ namespace Server.MirObjects
             base.Despawn();
         }
 
-        public void AddNeedHole()
-        {
-            
-        }
     }
 }
