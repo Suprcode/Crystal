@@ -1348,7 +1348,7 @@ namespace Client.MirControls
                 case EquipmentSlot.Armour:
                     return type == ItemType.Armour;
                 case EquipmentSlot.Helmet:
-                    return i.Info.Type == ItemType.Helmet;
+                    return type == ItemType.Helmet;
                 case EquipmentSlot.Torch:
                     return type == ItemType.Torch;
                 case EquipmentSlot.Necklace:
