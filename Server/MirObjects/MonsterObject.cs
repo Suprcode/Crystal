@@ -1062,7 +1062,7 @@ namespace Server.MirObjects
             
             SearchTime = Envir.Time + SearchDelay;
 
-            if (CurrentMap.Inactive()) return;
+            if (CurrentMap.Inactive(5)) return;
 
             //Stacking or Infront of master - Move
             bool stacking = CheckStacked();
@@ -1107,7 +1107,7 @@ namespace Server.MirObjects
 
             if (ProcessRoute()) return;
 
-            if (CurrentMap.Inactive()) return;
+            if (CurrentMap.Inactive(30)) return;
 
             if (Master != null)
             {
