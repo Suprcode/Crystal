@@ -1743,6 +1743,14 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
+                      #region HealingField // stupple
+
+                            case Spell.HealingField:
+                                MapControl.Effects.Add(new Effect(Libraries.Magic3, 620, 20, 1800, CurrentLocation));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
 
                             #region Trap
 
