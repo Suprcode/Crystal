@@ -7281,6 +7281,8 @@ namespace Server.MirObjects
                 PortalObjectsArray[0].Process();
             }
 
+            if (!CanFly(location)) return;
+
             int duration = 30 + (magic.Level * 30);
             int value = duration;
 

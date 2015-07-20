@@ -4889,6 +4889,8 @@ namespace Client.MirScenes
                         break;
                     case ItemType.Potion:
                         break;
+                    case ItemType.Transform:
+                        break;
                     case ItemType.Pets:
                         if (HoverItem.Info.Shape == 26)//WonderDrug
                         {
@@ -6015,6 +6017,23 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     Text = string.Format(HoverItem.Info.Shape == 3 ? "Time : {0}s" : "Range : {0}", HoverItem.Info.Durability)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TNRLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, TNRLabel.DisplayRectangle.Bottom));
+            }
+
+            if (HoverItem.Info.Type == ItemType.Transform && HoverItem.Info.Durability > 0)
+            {
+                count++;
+                MirLabel TNRLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("Time : {0}", CreateTimeString(HoverItem.Info.Durability))
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TNRLabel.DisplayRectangle.Right + 4),
