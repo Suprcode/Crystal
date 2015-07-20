@@ -5269,6 +5269,12 @@ namespace Server.MirObjects
                     if (spell == Spell.FlameField)
                         SpellTime = Envir.Time + 2500; //Spell Delay
                     break;
+                    
+                case Spell.HealingField://stupple
+                    ThunderStorm(magic);
+                    if (spell == Spell.HealingField)
+                        SpellTime = Envir.Time + 2500; //Spell Delay
+                    break;
                 case Spell.MagicShield:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(MinMC, MaxMC) + 15)));
                     break;
