@@ -1904,6 +1904,44 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
+
+                #region Portal
+
+                case Spell.Portal:                  
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    spellOb = new SpellObject
+                    {
+                        Spell = Spell.Portal,
+                        Value = 0,
+                        ExpireTime = Envir.Time + value * 1000,
+                        TickSpeed = 2000,
+                        Caster = player,
+                        CurrentLocation = location,
+                        CurrentMap = this,
+                    };
+
+                    if (player.PortalObjectsArray[0] == null)
+                    {
+                        player.PortalObjectsArray[0] = spellOb;
+                    }
+                    else
+                    {
+                        player.PortalObjectsArray[1] = spellOb;
+                        player.PortalObjectsArray[1].ExitMap = player.PortalObjectsArray[0].CurrentMap;
+                        player.PortalObjectsArray[1].ExitCoord = player.PortalObjectsArray[0].CurrentLocation;
+
+                        player.PortalObjectsArray[0].ExitMap = player.PortalObjectsArray[1].CurrentMap;
+                        player.PortalObjectsArray[0].ExitCoord = player.PortalObjectsArray[1].CurrentLocation;
+                    }
+
+                    AddObject(spellOb);
+                    spellOb.Spawned();
+                    train = true;
+                    break;
+
+                #endregion
             }
 
             if (train)

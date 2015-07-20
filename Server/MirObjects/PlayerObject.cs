@@ -15,7 +15,7 @@ namespace Server.MirObjects
     public sealed class PlayerObject : MapObject
     {
         public string GMPassword = Settings.GMPassword;
-        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, ShowTransform = true;
+        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite;
 
         public bool HasUpdatedBaseStats = true;
 
@@ -227,7 +227,7 @@ namespace Server.MirObjects
         private int _stepCounter, _runCounter, _fishCounter;
 
         public MapObject[,] ArcherTrapObjectsArray = new MapObject[4,3];
-        public PortalObject[] PortalObjectsArray = new PortalObject[2];
+        public SpellObject[] PortalObjectsArray = new SpellObject[2];
 
         public NPCObject DefaultNPC
         {
@@ -4148,14 +4148,10 @@ namespace Server.MirObjects
                         break;
 
                     case "TOGGLETRANSFORM":
-                        ShowTransform = !ShowTransform;
-                        hintstring = ShowTransform ? "Transform Enabled." : "Transform Disabled.";
-                        ReceiveChat(hintstring, ChatType.Hint);
-
                         Buff b = Buffs.FirstOrDefault(e => e.Type == BuffType.Transform);
                         if (b == null) return;
 
-                        if (!ShowTransform)
+                        if (!b.Paused)
                         {
                             PauseBuff(b);
                         }
@@ -4165,10 +4161,9 @@ namespace Server.MirObjects
                         }
 
                         RefreshStats();
-                        
-                        //p = new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType };
-                        //Enqueue(p);
-
+                                                
+                        hintstring = b.Paused ? "Transform Disabled." : "Transform Enabled.";
+                        ReceiveChat(hintstring, ChatType.Hint);
                         break;
 
                     default:
@@ -7283,42 +7278,15 @@ namespace Server.MirObjects
             if (PortalObjectsArray[1] != null && PortalObjectsArray[1].Node != null)
             {
                 PortalObjectsArray[0].ExpireTime = 0;
-                PortalObjectsArray[1].ExpireTime = 0;
-
                 PortalObjectsArray[0].Process();
-                PortalObjectsArray[1].Process();
             }
 
+            int duration = 30 + (magic.Level * 30);
+            int value = duration;
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location);
+            CurrentMap.ActionList.Add(action);
             cast = true;
-
-            int expire = 60 * 60;
-            PortalObject ob = new PortalObject
-            {
-                Spell = Spell.Portal,
-                Value = 0,
-                ExpireTime = Envir.Time + (10 + expire / 2) * 1000,
-                TickSpeed = 2000,
-                Caster = this,
-                CurrentLocation = location,
-                CurrentMap = CurrentMap,
-            };
-
-            if (PortalObjectsArray[0] == null)
-            {
-                PortalObjectsArray[0] = ob;
-            }
-            else
-            {
-                PortalObjectsArray[1] = ob;
-                PortalObjectsArray[1].ExitMap = PortalObjectsArray[0].CurrentMap;
-                PortalObjectsArray[1].ExitCoord = PortalObjectsArray[0].CurrentLocation;
-
-                PortalObjectsArray[0].ExitMap = PortalObjectsArray[1].CurrentMap;
-                PortalObjectsArray[0].ExitCoord = PortalObjectsArray[1].CurrentLocation;
-            }
-
-            CurrentMap.AddObject(ob);
-            ob.Spawned();
         }
 
         #endregion

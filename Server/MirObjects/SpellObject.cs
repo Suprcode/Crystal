@@ -35,9 +35,14 @@ namespace Server.MirObjects
         public Point CastLocation;
         public bool Show;
 
+        //ExplosiveTrap
         public int ExplosiveTrapID;
         public int ExplosiveTrapCount;
         public bool DetonatedTrap;
+
+        //Portal
+        public Map ExitMap;
+        public Point ExitCoord;
 
         public override uint Health
         {
@@ -173,20 +178,15 @@ namespace Server.MirObjects
                     if (ob.Race != ObjectType.Player) return;
                     if (Caster != ob && (Caster == null || Caster.GroupMembers.Count < 1 || !Caster.GroupMembers.Contains((PlayerObject)ob))) return;
 
-                    PortalObject portal = this as PortalObject;
-
-                    if (portal == null || portal.ExitMap == null) return;
+                    if (ExitMap == null) return;
 
                     MirDirection dir = ob.Direction;
 
-                    Point newExit = Functions.PointMove(portal.ExitCoord, dir, 1);
+                    Point newExit = Functions.PointMove(ExitCoord, dir, 1);
 
-                    if (!portal.ExitMap.ValidPoint(newExit)) return;
+                    if (!ExitMap.ValidPoint(newExit)) return;
 
-                    if (portal != null)
-                    {
-                        ob.Teleport(portal.ExitMap, newExit, false);
-                    }
+                    ob.Teleport(ExitMap, newExit, false);
 
                     break;
             }
@@ -354,6 +354,24 @@ namespace Server.MirObjects
 
             if (Spell == Spell.ExplosiveTrap && Caster != null)
                 Caster.ExplosiveTrapDetonated(ExplosiveTrapID, ExplosiveTrapCount);
+
+            if (Spell == Spell.Portal && Caster != null)
+            {
+                if (Caster.PortalObjectsArray[0] == this)
+                {
+                    Caster.PortalObjectsArray[0] = null;
+
+                    if (Caster.PortalObjectsArray[1] != null)
+                    {
+                        Caster.PortalObjectsArray[1].ExpireTime = 0;
+                        Caster.PortalObjectsArray[1].Process();
+                    }
+                }
+                else
+                {
+                    Caster.PortalObjectsArray[1] = null;
+                }
+            }
         }
 
         public override void BroadcastInfo()
@@ -375,29 +393,6 @@ namespace Server.MirObjects
                         if (p != null)
                             player.Enqueue(p);
                     }
-                }
-            }
-        }
-    }
-
-    public class PortalObject : SpellObject
-    {
-        public Map ExitMap;
-        public Point ExitCoord;
-
-        public override void Despawn()
-        {
-            base.Despawn();
-
-            if (Spell == Spell.Portal && Caster != null)
-            {
-                if (Caster.PortalObjectsArray[0] == this)
-                {
-                    Caster.PortalObjectsArray[0] = null;
-                }
-                else
-                {
-                    Caster.PortalObjectsArray[1] = null;
                 }
             }
         }
