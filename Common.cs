@@ -810,6 +810,7 @@ public enum Spell : byte
     Plague = 82,
     PoisonCloud = 83,
     EnergyShield = 84,
+    HealingField = 85, //stupple wi
     
     //Assassin
     FatalSword = 91,

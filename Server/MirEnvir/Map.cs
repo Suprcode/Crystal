@@ -1088,6 +1088,49 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
+                #region HealingField //stupple
+
+                case Spell.HealingField://stupple 
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 2; x <= location.X + 2; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        //Only targets
+                                        if (target.IsFriendlyTarget(player))
+                                        {
+                                            if (target.Health >= target.MaxHealth) continue;
+                                            target.HealAmount = (ushort)Math.Min(ushort.MaxValue, target.HealAmount + value);
+                                            target.OperateTime = 0;
+                                            train = true;
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+
+                #endregion
 
                 #region SummonShinsu
 
