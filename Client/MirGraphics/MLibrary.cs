@@ -66,7 +66,11 @@ namespace Client.MirGraphics
                                           Mounts = new MLibrary[12],
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[10];
+                                          Pets = new MLibrary[10],
+                                          Transform = new MLibrary[27],
+                                          TransformMounts = new MLibrary[26],
+                                          TransformEffect = new MLibrary[2],
+                                          TransformWeaponEffect = new MLibrary[1];
 
         static Libraries()
         {
@@ -130,6 +134,18 @@ namespace Client.MirGraphics
 
             for (int i = 0; i < Pets.Length; i++)
                 Pets[i] = new MLibrary(Settings.PetsPath + i.ToString("00"));
+
+            for (int i = 0; i < Transform.Length; i++)
+                Transform[i] = new MLibrary(Settings.TransformPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformMounts.Length; i++)
+                TransformMounts[i] = new MLibrary(Settings.TransformMountsPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformEffect.Length; i++)
+                TransformEffect[i] = new MLibrary(Settings.TransformEffectPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformWeaponEffect.Length; i++)
+                TransformWeaponEffect[i] = new MLibrary(Settings.TransformWeaponEffectPath + i.ToString("00"));
 
             #region Maplibs
             //wemade mir2 (allowed from 0-99)
@@ -206,7 +222,8 @@ namespace Client.MirGraphics
             Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
-                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length + 20;
+                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 20;
 
             Dragon.Initialize();
             Progress++;
@@ -241,6 +258,7 @@ namespace Client.MirGraphics
             Progress++;
             MagicC.Initialize();
             Progress++;
+
             Effect.Initialize();
             Progress++;
             CustomEffects.Initialize();

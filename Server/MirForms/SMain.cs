@@ -66,11 +66,12 @@ namespace Server
         {
             try
             {
-                Text = string.Format("Total: {0}, Real: {1}, CycleDelay: {2}", Envir.LastCount, Envir.LastRealCount, Envir.LastRunTime);
+                Text = string.Format("Total: {0}, Real: {1}", Envir.LastCount, Envir.LastRealCount);
 
                 PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
                 MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
                 ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
+                CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
 
                 while (!MessageLog.IsEmpty)
                 {

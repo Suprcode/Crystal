@@ -655,7 +655,8 @@ namespace ServerPackets
         public bool RidingMount;
         public bool Fishing;
 
-        //ArcherSpells - Elemental system
+        public short TransformType;
+
         public uint ElementOrbEffect;
         public uint ElementOrbLvl;
         public uint ElementOrbMax;
@@ -690,7 +691,8 @@ namespace ServerPackets
             RidingMount = reader.ReadBoolean();
             Fishing = reader.ReadBoolean();
 
-            //ArcherSpells - Elemental system
+            TransformType = reader.ReadInt16();
+
             ElementOrbEffect = reader.ReadUInt32();
             ElementOrbLvl = reader.ReadUInt32();
             ElementOrbMax = reader.ReadUInt32();
@@ -731,7 +733,8 @@ namespace ServerPackets
             writer.Write(RidingMount);
             writer.Write(Fishing);
 
-            //ArcherSpells - Elemental system
+            writer.Write(TransformType);
+
             writer.Write(ElementOrbEffect);
             writer.Write(ElementOrbLvl);
             writer.Write(ElementOrbMax);
@@ -2929,7 +2932,7 @@ namespace ServerPackets
         public uint ObjectID;
         public bool Visible;
         public long Expire;
-        public int Value;
+        public int[] Values;
         public bool Infinite;
 
         protected override void ReadPacket(BinaryReader reader)
@@ -2939,7 +2942,13 @@ namespace ServerPackets
             Visible = reader.ReadBoolean();
             ObjectID = reader.ReadUInt32();
             Expire = reader.ReadInt64();
-            Value = reader.ReadInt32();
+
+            Values = new int[reader.ReadInt32()];
+            for (int i = 0; i < Values.Length; i++)
+            {
+                Values[i] = reader.ReadInt32();
+            }
+
             Infinite = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
@@ -2949,7 +2958,13 @@ namespace ServerPackets
             writer.Write(Visible);
             writer.Write(ObjectID);
             writer.Write(Expire);
-            writer.Write(Value);
+
+            writer.Write(Values.Length);
+            for (int i = 0; i < Values.Length; i++)
+            {
+                writer.Write(Values[i]);
+            }
+
             writer.Write(Infinite);
         }
     }
@@ -3664,7 +3679,24 @@ namespace ServerPackets
         }
     }
 
-    
+    public sealed class TransformUpdate : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.TransformUpdate; } }
+
+        public long ObjectID;
+        public short TransformType;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadInt64();
+            TransformType = reader.ReadInt16();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(TransformType);
+        }
+    }
 
     public sealed class EquipSlotItem : Packet
     {
