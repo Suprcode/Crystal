@@ -174,6 +174,18 @@ namespace Server.MirEnvir
 
             StartNetwork();
 
+            //thedeath
+            Thread[] MobThreading = new Thread[4];
+            if (Multithread)
+            {
+                for (int j = 0; j < MobThreads.Length; j++)
+                {
+                    MobThreads[j] = new MobThread();
+                    MobThreads[j].Id = j;
+                }                
+            }
+            //thedeath end
+
             try
             {
 
