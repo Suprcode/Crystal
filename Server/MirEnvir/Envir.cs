@@ -149,6 +149,19 @@ namespace Server.MirEnvir
             int processRealCount = 0;
 
             LinkedListNode<MapObject> current = null;
+
+            //thedeath
+            Thread[] MobThreading = new Thread[4];
+            if (Multithread)
+            {
+                for (int j = 0; j < MobThreads.Length; j++)
+                {
+                    MobThreads[j] = new MobThread();
+                    MobThreads[j].Id = j;
+                }
+            }
+            //thedeath end
+
             StartEnvir();
             if (StartPoints.Count == 0)
             {
@@ -160,18 +173,6 @@ namespace Server.MirEnvir
             }
 
             StartNetwork();
-
-            //thedeath
-            Thread[] MobThreading = new Thread[4];
-            if (Multithread)
-            {
-                for (int j = 0; j < MobThreads.Length; j++)
-                {
-                    MobThreads[j] = new MobThread();
-                    MobThreads[j].Id = j;
-                }                
-            }
-            //thedeath end
 
             try
             {

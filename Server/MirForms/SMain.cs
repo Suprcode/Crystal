@@ -66,14 +66,15 @@ namespace Server
         {
             try
             {
-                if (Envir.Multithread && (Envir.MobThreads != null) && (Envir.MobThreads[1] != null) && (Envir.MobThreads[2] != null) && (Envir.MobThreads[3] != null))
-                    Text = string.Format("Total: {0}, Real: {1}, CycleDelays: {2:0000}|{3:0000}|{4:0000}|{5:0000}|{6:0000}", Envir.LastCount, Envir.LastRealCount, Envir.LastRunTime, Envir.MobThreads[0].LastRunTime, Envir.MobThreads[1].LastRunTime, Envir.MobThreads[2].LastRunTime, Envir.MobThreads[3].LastRunTime);
-                else
-                    Text = string.Format("Total: {0}, Real: {1}, CycleDelay: {2}", Envir.LastCount, Envir.LastRealCount, Envir.LastRunTime);
+                Text = string.Format("Total: {0}, Real: {1}", Envir.LastCount, Envir.LastRealCount);
                 PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
                 MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
                 ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
-                CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
+
+                if (Envir.Multithread && (Envir.MobThreads != null) && (Envir.MobThreads[1] != null) && (Envir.MobThreads[2] != null) && (Envir.MobThreads[3] != null))
+                    CycleDelayLabel.Text = string.Format("CycleDelays: {0:0000}|{1:0000}|{2:0000}|{3:0000}|{4:0000}", Envir.LastRunTime, Envir.MobThreads[0].LastRunTime, Envir.MobThreads[1].LastRunTime, Envir.MobThreads[2].LastRunTime, Envir.MobThreads[3].LastRunTime);
+                else
+                    CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
 
                 while (!MessageLog.IsEmpty)
                 {
