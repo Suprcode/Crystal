@@ -14,6 +14,19 @@ using S = ServerPackets;
 
 namespace Server.MirEnvir
 {
+    //thedeath
+    public class MobThread
+    {
+        public int Id = 0;
+        public long LastRunTime = 0;
+        public long StartTime = 0;
+        public long EndTime = 0;
+        public LinkedList<MapObject> ObjectsList = new LinkedList<MapObject>();
+        public LinkedListNode<MapObject> current = null;
+        public Boolean Stop = false;
+    }
+    //thedeath end
+
     public class Envir
     {
         public static object AccountLock = new object();
@@ -88,6 +101,11 @@ namespace Server.MirEnvir
         public bool Saving = false;
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
+        //thedeath
+        public bool Multithread = true;
+        public MobThread[] MobThreads = new MobThread[4];
+        //thedeath end
+
         public List<string> CustomCommands = new List<string>();
         public Dragon DragonSystem;
         public NPCObject DefaultNPC;
@@ -145,6 +163,18 @@ namespace Server.MirEnvir
 
             StartNetwork();
 
+            //thedeath
+            Thread[] MobThreading = new Thread[4];
+            if (Multithread)
+            {
+                for (int j = 0; j < MobThreads.Length; j++)
+                {
+                    MobThreads[j] = new MobThread();
+                    MobThreads[j].Id = j;
+                }                
+            }
+            //thedeath end
+
             try
             {
 
@@ -188,27 +218,50 @@ namespace Server.MirEnvir
                         LastRunTime = Time - StartTime;
                         StartTime = Time;
                     }
-                    for (int i = 0; i < 100; i++)
+
+                    //thedeath
+                    if (Multithread)
+                    {
+                        for (int j = 1; j < MobThreads.Length; j++)
+                        {
+                            MobThread Info = MobThreads[j];
+
+                            if ((MobThreading[j] != null) &&
+                                (MobThreading[j].IsAlive == true))
+                            {
+
+                            }
+                            else
+                            {
+                                Info.EndTime = Time + 20;
+                                MobThreading[j] = new Thread(() => ThreadLoop(Info));
+                                MobThreading[j].Start();
+                            }
+                        }
+                        //run the first loop in the main thread so the main thread automaticaly 'halts' untill the other threads are finished
+                        ThreadLoop(MobThreads[0]);                        
+                    }
+                    
+                    //thedeath end
+                    int k = 0;
+                    while (k < 100)
                     {
                         if (current == null) break;
 
                         LinkedListNode<MapObject> next = current.Next;
-
-
-                        if (Time > current.Value.OperateTime)
+                        if (!Multithread || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
                         {
+                            k++;
+                            if (Time > current.Value.OperateTime)
+                            {
 
-                            processRealCount++;
-                            //thedeath
-                            current.Value.Process();
-                            current.Value.SetOperateTime();
-
+                                current.Value.Process();
+                                current.Value.SetOperateTime();
+                            }
+                            processCount++;
                         }
-                        processCount++;
                         current = next;
                     }
-
-                    
                     for (int i = 0; i < MapList.Count; i++)
                         MapList[i].Process();
                     
@@ -261,6 +314,78 @@ namespace Server.MirEnvir
             SaveGuilds(true);
 
             _thread = null;
+        }
+        
+        private void ThreadLoop(MobThread Info)
+        {
+            Info.Stop = false;
+            long starttime = Time;
+            int count = 0;
+            try
+            {
+
+                bool stopping = false;
+                if (Info.current == null)
+                    Info.current = Info.ObjectsList.First;
+                stopping = Info.current == null;
+                while (stopping == false)
+                {
+                    if (Info.current == null)
+                        break;
+
+                    LinkedListNode<MapObject> next = Info.current.Next;
+
+                    //if we reach the end of our list > go back to the top (since we are running threaded, we dont want the system to sit there for xxms doing nothing)
+                    if (Info.current == Info.ObjectsList.Last)
+                    {
+                        next = Info.ObjectsList.First;
+                        Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
+                        //Info.LastRunTime = (Time - Info.StartTime) /*> 0 ? (Time - Info.StartTime) : Info.LastRunTime */;
+                        Info.StartTime = Time;
+                    }
+                    if (Time > Info.current.Value.OperateTime)
+                    {
+                        if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
+                        {
+                            Info.current.Value.Process();
+                            
+                            
+                            Info.current.Value.SetOperateTime();
+                        }
+                    }
+                    Info.current = next;
+                    count++;
+                    //if it's the main thread > make it loop till the subthreads are done, else make it stop after 'endtime'
+                    if (Info.Id == 0)
+                    {
+                        stopping = true;
+                        for (int x = 1; x < MobThreads.Length; x++)
+                            if (MobThreads[x].Stop == false)
+                                stopping = false;
+                        if (stopping)
+                            Info.Stop = stopping;
+                    }
+                    else
+                    {
+                        //if (count > 500)
+                        //    stopping = true;
+                        
+                        if (Stopwatch.ElapsedMilliseconds > Info.EndTime)
+                        {
+                            stopping = true;
+                        }
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SMain.Enqueue(ex);
+
+                File.AppendAllText(@".\Error.txt",
+                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+            }
+            Info.Stop = true;
         }
 
         private void AdjustLights()

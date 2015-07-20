@@ -1148,20 +1148,21 @@ namespace Server.MirObjects
         protected virtual void FindTarget()
         {
             //if (CurrentMap.Players.Count < 1) return;
+            Map Current = CurrentMap;
 
             for (int d = 0; d <= Info.ViewRange; d++)
             {
                 for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
                 {
                     if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
+                    if (y >= Current.Height) break;
 
                     for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d*2)
                     {
                         if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
+                        if (x >= Current.Width) break;
+                        Cell cell = Current.Cells[x, y];
+                        if (cell.Objects == null || !cell.Valid) continue;
                         for (int i = 0; i < cell.Objects.Count; i++)
                         {
                             MapObject ob = cell.Objects[i];
@@ -1581,7 +1582,7 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || attacker == this) return false;
-
+            
             if (attacker.Info.AI == 6) // Guard
             {
                 if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3 && (Master == null || Master.PKPoints >= 200)) //Not Dear/Hen/Tree/Pets or Red Master 
