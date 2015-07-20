@@ -26,6 +26,9 @@ namespace Server.MirObjects
         public long ExplosionInflictedTime;
         public int ExplosionInflictedStage;
 
+        //thedeath
+        private int SpawnThread;
+
         //Position
         private Map _currentMap;
         public Map CurrentMap
@@ -172,6 +175,7 @@ namespace Server.MirObjects
         public List<DelayedAction> ActionList = new List<DelayedAction>();
 
         public LinkedListNode<MapObject> Node;
+        public LinkedListNode<MapObject> NodeThreaded;
         public long RevTime;
 
         public virtual bool Blocking
@@ -287,9 +291,15 @@ namespace Server.MirObjects
             return true;
         }
 
+        //thedeath
         public virtual void Spawned()
         {
             Node = Envir.Objects.AddLast(this);
+            if ((Race == ObjectType.Monster) && Envir.Multithread)
+            {
+                SpawnThread = CurrentMap.Thread;
+                NodeThreaded = Envir.MobThreads[SpawnThread].ObjectsList.AddLast(this);
+            }
             OperateTime = Envir.Time + Envir.Random.Next(OperateDelay);
 
             InSafeZone = CurrentMap != null && CurrentMap.GetSafeZone(CurrentLocation) != null;
@@ -300,6 +310,10 @@ namespace Server.MirObjects
         {
             Broadcast(new S.ObjectRemove {ObjectID = ObjectID});
             Envir.Objects.Remove(Node);
+            if (Envir.Multithread && (Race == ObjectType.Monster))
+            {
+                Envir.MobThreads[SpawnThread].ObjectsList.Remove(NodeThreaded);
+            }            
 
             ActionList.Clear();
 
@@ -308,6 +322,7 @@ namespace Server.MirObjects
 
             Node = null;
         }
+        //thedeath end
 
         public MapObject FindObject(uint targetID, int dist)
         {

@@ -17,6 +17,8 @@ namespace Server.MirEnvir
         }
         
         public MapInfo Info;
+        //thedeath
+        public int Thread = 0;
 
         public int Width, Height;
         public Cell[,] Cells;
@@ -32,6 +34,7 @@ namespace Server.MirEnvir
         public Map(MapInfo info)
         {
             Info = info;
+            Thread = Envir.Random.Next(4);
         }
 
         private byte FindType(byte[] input)
