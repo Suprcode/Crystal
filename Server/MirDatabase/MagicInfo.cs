@@ -79,7 +79,8 @@ namespace Server.MirDatabase
                                 Curse,
                                 Plague,
                                 PoisonCloud,
-                                EnergyShield;
+                                EnergyShield,
+                                HealingField;//stupple
 
         //Assassin
         public static MagicInfo FatalSword,
@@ -197,6 +198,7 @@ namespace Server.MirDatabase
             Plague = new MagicInfo { Spell = Spell.Plague, Icon = 74, Level1 = 42, Level2 = 44, Level3 = 47, Need1 = 5000, Need2 = 9000, Need3 = 13000, BaseCost = 20, LevelCost = 5 };
             PoisonCloud = new MagicInfo { Spell = Spell.PoisonCloud, Icon = 54, Level1 = 43, Level2 = 45, Level3 = 48, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 5 };
             EnergyShield = new MagicInfo { Spell = Spell.EnergyShield, Icon = 57, Level1 = 48, Level2 = 51, Level3 = 54, Need1 = 5000, Need2 = 9000, Need3 = 13000, BaseCost = 50, LevelCost = 20 };
+            HealingField = new MagicInfo { Spell = Spell.HealingField, Icon = 82, Level1 = 52, Level2 = 53, Level3 = 55, Need1 = 6000, Need2 = 11000, Need3 = 16000, BaseCost = 45, LevelCost = 8 };
 
             //Assassin
             FatalSword = new MagicInfo { Spell = Spell.FatalSword, Icon = 58, Level1 = 7, Level2 = 9, Level3 = 12, Need1 = 500, Need2 = 1000, Need3 = 2300 };
@@ -359,6 +361,8 @@ namespace Server.MirDatabase
                     return 12;
                 case Spell.FlameField:
                     return 100;
+                case Spell.HealingField://stupple
+                    return 100;
 
 
                 case Spell.Healing:
@@ -436,6 +440,8 @@ namespace Server.MirDatabase
                 case Spell.Vampirism:
                     return 12;
                 case Spell.FlameField:
+                    return 25;
+                case Spell.HealingField://stupple
                     return 25;
 
                 case Spell.SlashingBurst:
