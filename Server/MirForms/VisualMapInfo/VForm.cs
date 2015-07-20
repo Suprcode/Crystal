@@ -52,6 +52,7 @@ namespace Server.MirForms.VisualMapInfo
                     NewRespawnZone.Spread = RespawnControl.Range;
                     NewRespawnZone.Count = Convert.ToUInt16(RespawnControl.Count.Text);
                     NewRespawnZone.Delay = Convert.ToUInt16(RespawnControl.Delay.Text);
+                    NewRespawnZone.RoutePath = RespawnControl.RoutePath;
 
                     VisualizerGlobal.MapInfo.Respawns.Add(NewRespawnZone);
                 }
@@ -138,6 +139,7 @@ namespace Server.MirForms.VisualMapInfo
                 RespawnRegion.Range = VisualizerGlobal.MapInfo.Respawns[i].Spread;
                 RespawnRegion.Count.Text = VisualizerGlobal.MapInfo.Respawns[i].Count.ToString();
                 RespawnRegion.Delay.Text = VisualizerGlobal.MapInfo.Respawns[i].Delay.ToString();
+                RespawnRegion.RoutePath = VisualizerGlobal.MapInfo.Respawns[i].RoutePath;
                 RespawnRegion.HideControl();
 
                 RespawnPanel.Controls.Add(RespawnRegion);

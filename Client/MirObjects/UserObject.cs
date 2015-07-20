@@ -304,16 +304,16 @@ namespace Client.MirObjects
                 MPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, MPrate + RealItem.MPrate));
                 Acrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Acrate + RealItem.MaxAcRate));
                 Macrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Macrate + RealItem.MaxMacRate));
-                MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + RealItem.MagicResist)));
-                PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + RealItem.PoisonResist)));
-                HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + RealItem.HealthRecovery)));
-                SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + RealItem.SpellRecovery)));
-                PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + RealItem.PoisonRecovery)));
-                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + RealItem.CriticalRate)));
-                CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + RealItem.CriticalDamage)));
+                MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + temp.MagicResist + RealItem.MagicResist)));
+                PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + temp.PoisonResist + RealItem.PoisonResist)));
+                HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + temp.HealthRecovery + RealItem.HealthRecovery)));
+                SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + temp.ManaRecovery + RealItem.SpellRecovery)));
+                PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + temp.PoisonRecovery + RealItem.PoisonRecovery)));
+                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.CriticalRate + RealItem.CriticalRate)));
+                CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + temp.CriticalDamage + RealItem.CriticalDamage)));
                 Holy = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Holy + RealItem.Holy)));
-                Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + RealItem.Freezing)));
-                PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + RealItem.PoisonAttack)));
+                Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + temp.Freezing + RealItem.Freezing)));
+                PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + temp.PoisonAttack + RealItem.PoisonAttack)));
                 HpDrainRate = (byte)Math.Max(100, Math.Min(byte.MaxValue, HpDrainRate + RealItem.HpDrainRate));
 
 
@@ -350,16 +350,28 @@ namespace Client.MirObjects
 
                 if (RealItem.Set == ItemSet.None) continue;
 
-                bool sameSetFound = false;
-                foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
+                ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
+
+                if (itemSet != null)
                 {
-                    set.Type.Add(RealItem.Type);
-                    set.Count++;
-                    sameSetFound = true;
+                    itemSet.Type.Add(RealItem.Type);
+                    itemSet.Count++;
+                }
+                else
+                {
+                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
                 }
 
-                if (!ItemSets.Any() || !sameSetFound)
-                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
+                //bool sameSetFound = false;
+                //foreach (var set in ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type)).TakeWhile(set => !set.SetComplete))
+                //{
+                //    set.Type.Add(RealItem.Type);
+                //    set.Count++;
+                //    sameSetFound = true;
+                //}
+
+                //if (!ItemSets.Any() || !sameSetFound)
+                //    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
 
                 //Mir Set
                 if (RealItem.Set == ItemSet.Mir)
@@ -633,7 +645,18 @@ namespace Client.MirObjects
                         MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
                         break;
                     case BuffType.UltimateEnhancer:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        if (Class == MirClass.Wizard || Class == MirClass.Archer)
+                        {
+                            MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + buff.Value);
+                        }
+                        else if (Class == MirClass.Taoist)
+                        {
+                            MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + buff.Value);
+                        }
+                        else
+                        {
+                            MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Value);
+                        }
                         break;
                     case BuffType.ProtectionField:
                         MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Value);
@@ -904,46 +927,6 @@ namespace Client.MirObjects
             NextMagicLocation = Point.Empty;
             NextMagicObject = null;
         } 
-    }
-}
-
-public class ItemSets
-{
-    public ItemSet Set;
-    public List<ItemType> Type;
-    private byte Amount
-    {
-        get
-        {
-            switch (Set)
-            {
-                case ItemSet.Mundane:
-                case ItemSet.NokChi:
-                case ItemSet.TaoProtect:
-                    return 2;
-                case ItemSet.RedOrchid:
-                case ItemSet.RedFlower:
-                case ItemSet.Smash:
-                case ItemSet.HwanDevil:
-                case ItemSet.Purity:
-                case ItemSet.FiveString:
-                    return 3;
-                case ItemSet.Recall:
-                    return 4;
-                case ItemSet.Spirit:
-                    return 5;
-                default:
-                    return 0;
-            }
-        }
-    }
-    public byte Count;
-    public bool SetComplete
-    {
-        get
-        {
-            return Count == Amount;
-        }
     }
 }
 

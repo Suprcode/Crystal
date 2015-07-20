@@ -512,7 +512,7 @@ namespace Server.MirObjects
             if (Respawn != null)
                 Respawn.Count--;
 
-            if (Master == null)
+            if (Master == null && EXPOwner != null)
                  Drop();
 
             Master = null;
@@ -882,11 +882,11 @@ namespace Server.MirObjects
                 if (Dead) return;
 
                 Poison poison = PoisonList[i];
-                //if (poison.Owner != null && poison.Owner.Node == null)
-                //{
-                //    PoisonList.RemoveAt(i);
-                //    continue;
-                //}
+                if (poison.Owner != null && poison.Owner.Node == null)
+                {
+                    PoisonList.RemoveAt(i);
+                    continue;
+                }
 
                 if (Envir.Time > poison.TickTime)
                 {
@@ -1057,18 +1057,7 @@ namespace Server.MirObjects
             //if (CurrentMap.Players.Count < 1) return;
 
             //Stacking or Infront of master - Move
-            bool stacking = false;
-
-            Cell cell = CurrentMap.GetCell(CurrentLocation);
-
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
-                    MapObject ob = cell.Objects[i];
-                    if (ob == this || !ob.Blocking) continue;
-                    stacking = true;
-                    break;
-                }
+            bool stacking = CheckStacked();
 
             if (CanMove && ((Master != null && Master.Front == CurrentLocation) || stacking))
             {
@@ -1757,17 +1746,20 @@ namespace Server.MirObjects
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
-            if (attacker.HasParalysisRing && 1 == Envir.Random.Next(1, 15))
-                ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
             byte LevelOffset = (byte)(Level > attacker.Level ? 0 : Math.Min(10, attacker.Level - Level));
 
+            if (attacker.HasParalysisRing && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
+            {
+                ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
+            }
+            
             if (attacker.Freezing > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
                 if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Freezing) && (Envir.Random.Next(LevelOffset) == 0))
                     ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Freezing))), TickSpeed = 1000 }, attacker);
             }
 
-            if (attacker.PoisonAttack > 0)
+            if (attacker.PoisonAttack > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
                 if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.PoisonAttack) && (Envir.Random.Next(LevelOffset) == 0))
                     ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.PoisonAttack)) }, attacker);

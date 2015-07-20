@@ -417,6 +417,7 @@ public enum MirAction : byte
     Mine,
     Sneek,
     DashAttack,
+    Lunge,
 
     WalkingBow,
     RunningBow,
@@ -635,7 +636,7 @@ public enum PoisonType : byte
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum BindMode : byte
+public enum BindMode : short
 {
     none = 0,
     DontDeathdrop = 1,
@@ -645,7 +646,10 @@ public enum BindMode : byte
     DontTrade = 16,
     DontRepair = 32,
     DontUpgrade = 64,
-    DestroyOnDrop = 128
+    DestroyOnDrop = 128,
+    BreakOnDeath = 256,
+    BindOnEquip = 512,
+    NoSRepair = 1024,
 }
 
 [Flags]
@@ -884,6 +888,8 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
+    EnergyShieldUp,
+    EnergyShieldDown,
 }
 
 public enum BuffType : byte
@@ -909,6 +915,7 @@ public enum BuffType : byte
     PoisonShot,
     CounterAttack,
     MentalState,
+    EnergyShield,
 
     General,
     Exp,
@@ -2198,7 +2205,14 @@ public class ItemInfo
             Holy = reader.ReadByte();
             Freezing = reader.ReadByte();
             PoisonAttack = reader.ReadByte();
-            Bind = (BindMode)reader.ReadByte();
+            if (version < 55)
+            {
+                Bind = (BindMode)reader.ReadByte();
+            }
+            else
+            {
+                Bind = (BindMode)reader.ReadInt16();
+            }
             
         }
         if (version >= 21)
@@ -2304,7 +2318,7 @@ public class ItemInfo
         writer.Write(Holy);
         writer.Write(Freezing);
         writer.Write(PoisonAttack);
-        writer.Write((byte)Bind);
+        writer.Write((short)Bind);
         writer.Write(Reflect);
         writer.Write(HpDrainRate);
         writer.Write((short)Unique);
@@ -4721,6 +4735,68 @@ public class UserId
     public long Id = 0;
     public string UserName = "";
 }
+
+#region ItemSets
+
+public class ItemSets
+{
+    public ItemSet Set;
+    public List<ItemType> Type;
+    private byte Amount
+    {
+        get
+        {
+            switch (Set)
+            {
+                case ItemSet.Mundane:
+                case ItemSet.NokChi:
+                case ItemSet.TaoProtect:
+                    return 2;
+                case ItemSet.RedOrchid:
+                case ItemSet.RedFlower:
+                case ItemSet.Smash:
+                case ItemSet.HwanDevil:
+                case ItemSet.Purity:
+                case ItemSet.FiveString:
+                case ItemSet.Bone:
+                case ItemSet.Bug:
+                    return 3;
+                case ItemSet.Recall:
+                    return 4;
+                case ItemSet.Spirit:
+                case ItemSet.WhiteGold:
+                case ItemSet.WhiteGoldH:
+                case ItemSet.RedJade:
+                case ItemSet.RedJadeH:
+                case ItemSet.Nephrite:
+                case ItemSet.NephriteH:
+                case ItemSet.Whisker1:
+                case ItemSet.Whisker2:
+                case ItemSet.Whisker3:
+                case ItemSet.Whisker4:
+                case ItemSet.Whisker5:
+                case ItemSet.Hyeolryong:
+                case ItemSet.Monitor:
+                case ItemSet.Oppressive:
+                case ItemSet.Paeok:
+                case ItemSet.Sulgwan:
+                    return 5;
+                default:
+                    return 0;
+            }
+        }
+    }
+    public byte Count;
+    public bool SetComplete
+    {
+        get
+        {
+            return Count == Amount;
+        }
+    }
+}
+
+#endregion
 
 #region "Mine Related"
 public class MineSet

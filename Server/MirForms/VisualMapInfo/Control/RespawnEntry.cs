@@ -54,6 +54,8 @@ namespace Server.MirForms.VisualMapInfo.Control
             }
         }
 
+        public string RoutePath = string.Empty;
+
         public RespawnEntry()
         {
             InitializeComponent();
@@ -219,6 +221,7 @@ namespace Server.MirForms.VisualMapInfo.Control
             RespawnDetail.Spread.Text = Range.ToString();
             RespawnDetail.Count.Text = Count.Text;
             RespawnDetail.Delay.Text = Delay.Text;
+            RespawnDetail.RoutePath.Text = RoutePath;
 
             RespawnDetail.ShowDialog();
 
@@ -227,6 +230,7 @@ namespace Server.MirForms.VisualMapInfo.Control
             Range = Convert.ToUInt16(RespawnDetail.Spread.Text);
             Count.Text = RespawnDetail.Count.Text;
             Delay.Text = RespawnDetail.Delay.Text;
+            RoutePath = RespawnDetail.RoutePath.Text;
 
             RespawnDetail.Dispose();
         }

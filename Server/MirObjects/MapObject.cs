@@ -442,6 +442,20 @@ namespace Server.MirObjects
             Buffs.Add(b);
         }
 
+        public bool CheckStacked()
+        {
+            Cell cell = CurrentMap.GetCell(CurrentLocation);
+
+            if (cell.Objects != null)
+                for (int i = 0; i < cell.Objects.Count; i++)
+                {
+                    MapObject ob = cell.Objects[i];
+                    if (ob == this || !ob.Blocking) continue;
+                    return true;
+                }
+
+            return false;
+        }
 
         public virtual bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
@@ -672,16 +686,6 @@ namespace Server.MirObjects
             Time = reader.ReadInt64();
             TickTime = reader.ReadInt64();
             TickSpeed = reader.ReadInt64();
-        }
-
-        public void Save(BinaryWriter writer)
-        {
-            writer.Write((byte)PType);
-            writer.Write(Value);
-            writer.Write(Duration);
-            writer.Write(Time);
-            writer.Write(TickTime);
-            writer.Write(TickSpeed);
         }
     }
 

@@ -215,7 +215,8 @@ namespace AutoPatcher
                 {
                     if (Settings.NeedLogin)
                         client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
-                    client.Credentials = new NetworkCredential("", "");
+                    else
+                        client.Credentials = new NetworkCredential("", "");
 
                     return Decompress(client.DownloadData(Settings.Host + Path.ChangeExtension(fileName, ".gz")));
                 }

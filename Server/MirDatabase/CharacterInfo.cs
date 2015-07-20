@@ -275,7 +275,7 @@ namespace Server.MirDatabase
                     CompletedQuests.Add(reader.ReadInt32());
             }
 
-            if (Envir.LoadVersion > 50)
+            if (Envir.LoadVersion > 50 && Envir.LoadVersion < 54)
             {
                 count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
@@ -404,13 +404,6 @@ namespace Server.MirDatabase
             writer.Write(CompletedQuests.Count);
             for (int i = 0; i < CompletedQuests.Count; i++)
                 writer.Write(CompletedQuests[i]);
-
-            writer.Write(Poisons.Count);
-            for (int i = 0; i < Poisons.Count; i++)
-            {
-                Poisons[i].Save(writer);
-                //writer.Write(Poisons[i].Owner != null ? Poisons[i].Owner.ObjectID : 0);
-            }
         }
 
         public ListViewItem CreateListView()

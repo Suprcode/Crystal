@@ -1336,7 +1336,7 @@ namespace Client.MirObjects
                                     MapObject ob = MapControl.GetObject(TargetID);
                                     if (ob != null)
                                     {
-                                        ob.Effects.Add(new Effect(Libraries.Dragon, 350, 35, 1200, ob));
+                                        ob.Effects.Add(new Effect(Libraries.Dragon, 350, 35, 2400, ob));
                                         SoundManager.PlaySound(BaseSound + 6);
                                     }
                                     break;
@@ -1505,7 +1505,7 @@ namespace Client.MirObjects
                                                     missile.Complete += (o, e) =>
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                                        missile.Target.Effects.Add(new Effect(Libraries.Dragon, 200, 20, 600, missile.Target));
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Dragon, 200, 20, 1200, missile.Target));
                                                     };
                                                 }
                                                 break;

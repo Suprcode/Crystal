@@ -579,7 +579,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            if (CMain.Time < User.ReincarnationStopTime) return;
+            if (CMain.Time < User.BlizzardStopTime || CMain.Time < User.ReincarnationStopTime) return;
 
             ClientMagic magic = null;
 
@@ -1436,7 +1436,18 @@ namespace Client.MirScenes
             switch (buff.Type)
             {
                 case BuffType.UltimateEnhancer:
-                    text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
+                    {
+                        text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    }
+                    else if (GameScene.User.Class == MirClass.Taoist)
+                    {
+                        text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    }
+                    else
+                    {
+                        text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
+                    }
                     break;
                 case BuffType.Impact:
                     text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Value, (buff.Expire - CMain.Time) / 1000);
@@ -2446,7 +2457,7 @@ namespace Client.MirScenes
             LogTime = CMain.Time + Globals.LogDelay;
 
             NextRunTime = CMain.Time + 2500;
-            User.BlizzardFreezeTime = 0;
+            User.BlizzardStopTime = 0;
             User.ClearMagic();
             if (User.ReincarnationStopTime > CMain.Time)
                 Network.Enqueue(new C.CancelReincarnation {});
@@ -2484,7 +2495,7 @@ namespace Client.MirScenes
                 if (ob.ActionFeed.Count > 0 && ob.ActionFeed[ob.ActionFeed.Count - 1].Action == MirAction.Struck) return;
 
                 if (ob.Race == ObjectType.Player)
-                    ((PlayerObject)ob).BlizzardFreezeTime = 0;
+                    ((PlayerObject)ob).BlizzardStopTime = 0;
                 QueuedAction action = new QueuedAction { Action = MirAction.Struck, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                 action.Params.Add(p.AttackerID);
                 ob.ActionFeed.Add(action);
@@ -2880,9 +2891,12 @@ namespace Client.MirScenes
                             break;
                         }
                 }
+
                 SoundManager.PlaySound(SoundList.Teleport);
                 return;
             }
+
+            
         }
         private void TeleportIn()
         {
@@ -3179,6 +3193,29 @@ namespace Client.MirScenes
                         }
                         player.ShieldEffect = null;
                         player.MagicShield = false;
+                        break;
+                    case SpellEffect.EnergyShieldUp:
+                        if (ob.Race != ObjectType.Player) return;
+                        player = (PlayerObject)ob;
+                        if (player.EnergyShieldEffect != null)
+                        {
+                            player.EnergyShieldEffect.Clear();
+                            player.EnergyShieldEffect.Remove();
+                        }
+
+                        player.EnergyShield = true;
+                        player.Effects.Add(player.EnergyShieldEffect = new Effect(Libraries.Magic2, 1886, 3, 600, ob) { Repeat = true });
+                        break;
+                    case SpellEffect.EnergyShieldDown:
+                        if (ob.Race != ObjectType.Player) return;
+                        player = (PlayerObject)ob;
+                        if (player.EnergyShieldEffect != null)
+                        {
+                            player.EnergyShieldEffect.Clear();
+                            player.EnergyShieldEffect.Remove();
+                        }
+                        player.EnergyShieldEffect = null;
+                        player.EnergyShield = false;
                         break;
                     case SpellEffect.GreatFoxSpirit:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, ob));
@@ -5342,7 +5379,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "AC + {0}~{1} (+{2})" : "AC + {0}~{1}", minValue, maxValue + addValue, addValue);
                 else
-                    text = "Adds AC";
+                    text = string.Format("Adds {0} AC", minValue + maxValue + addValue);
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5388,7 +5425,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "MAC + {0}~{1} (+{2})" : "MAC + {0}~{1}", minValue, maxValue + addValue, addValue);
                 else
-                    text = "Adds MAC";
+                    text = string.Format("Adds {0} MAC", minValue + maxValue + addValue);
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5709,7 +5746,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Poison Resist + {0} (+{1})" : "Poison Resist + {0}", minValue + addValue, addValue);
                 else
-                    text = "Adds Poison Resist";
+                    text = string.Format("Adds {0} Poison Resist", minValue + maxValue + addValue);
                 MirLabel POISON_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5739,7 +5776,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Magic Resist + {0} (+{1})" : "Magic Resist + {0}", minValue + addValue, addValue);
                 else
-                    text = "Adds Magic Resist";
+                    text = string.Format("Adds {0} Magic Resist", minValue + maxValue + addValue);
                 MirLabel MAGIC_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6349,12 +6386,12 @@ namespace Client.MirScenes
 
             #endregion
 
-            #region DONT_SUERREPAIR
+            #region DONT_SPECIALREPAIR
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.BindNoSRepair)
+            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.NoSRepair))
             {
                 count++;
-                MirLabel DONT_SUERREPAIRLabel = new MirLabel
+                MirLabel DONT_REPAIRLabel = new MirLabel
                 {
                     AutoSize = true,
                     ForeColour = Color.Yellow,
@@ -6364,8 +6401,29 @@ namespace Client.MirScenes
                     Text = string.Format("Can't special repair")
                 };
 
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_SUERREPAIRLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, DONT_SUERREPAIRLabel.DisplayRectangle.Bottom));
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_REPAIRLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DONT_REPAIRLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
+            #region BREAK_ON_DEATH
+
+            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.BreakOnDeath))
+            {
+                count++;
+                MirLabel DONT_REPAIRLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Yellow,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("Breaks on death")
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_REPAIRLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DONT_REPAIRLabel.DisplayRectangle.Bottom));
             }
 
             #endregion
@@ -6393,7 +6451,7 @@ namespace Client.MirScenes
 
             #region BIND_ON_EQUIP
 
-            if ((HoverItem.Info.BindOnEquip) & HoverItem.SoulBoundId == -1)
+            if ((HoverItem.Info.Bind.HasFlag(BindMode.BindOnEquip)) & HoverItem.SoulBoundId == -1)
             {
                 count++;
                 MirLabel BOELabel = new MirLabel
@@ -6856,18 +6914,16 @@ namespace Client.MirScenes
                         HoverItem.Info.ToolTip = string.Format("Increase MaxMP +{0} for {1}.", HoverItem.MP + realItem.MP, strTime);
                         break;
                     case 4://ac low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AC {0}-{1} for {2}.", HoverItem.AC + realItem.MaxAC, strTime);
+                        HoverItem.Info.ToolTip = string.Format("Increase AC {0}-{0} for {1}.", HoverItem.AC + realItem.MaxAC, strTime);
                         break;
                     case 5://amc low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AMC {0}-{1} for {2}.", HoverItem.MAC + realItem.MaxAC, strTime);
+                        HoverItem.Info.ToolTip = string.Format("Increase AMC {0}-{0} for {1}.", HoverItem.MAC + realItem.MaxAC, strTime);
                         break;
                     case 6://speed low/med/high
                         HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
                         break;
                     case 7://knapsack low/med/high
                         HoverItem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", HoverItem.Luck + realItem.Luck, strTime);
-                        //strTime = CreateTimeString((dropitem.Durability * 3600) * 1000);
-                        //dropitem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", dropitem.Info.BagWeight, strTime);
                         break;
                 }
             }
@@ -8042,7 +8098,7 @@ namespace Client.MirScenes
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
             if (!CanRideAttack()) AutoHit = false;
             
-            if (CMain.Time < InputDelay || CMain.Time < User.BlizzardFreezeTime || User.Poison == PoisonType.Paralysis || User.Poison == PoisonType.Frozen || User.Fishing) return;
+            if (CMain.Time < InputDelay || User.Poison == PoisonType.Paralysis || User.Poison == PoisonType.Frozen || User.Fishing) return;
             
             if (User.NextMagic != null && !User.RidingMount)
             {
@@ -8050,7 +8106,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            if (CMain.Time < User.ReincarnationStopTime) return; 
+            if (CMain.Time < User.BlizzardStopTime || CMain.Time < User.ReincarnationStopTime) return; 
 
             if (MapObject.TargetObject != null && !MapObject.TargetObject.Dead)
             {
@@ -8111,7 +8167,7 @@ namespace Client.MirScenes
                 direction = MouseDirection();
                 if (AutoRun)
                 {
-                    if (GameScene.CanRun && CanRun(direction) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && User.Poison != PoisonType.Slow && (!User.Sneaking || (User.Sneaking && User.Sprint)))
+                    if (GameScene.CanRun && CanRun(direction) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && (!User.Sneaking || (User.Sneaking && User.Sprint))) //slow remove
                     {
                         User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, User.RidingMount || User.Sprint && !User.Sneaking ? 3 : 2) };
                         return;
@@ -8255,7 +8311,7 @@ namespace Client.MirScenes
 
                         GameScene.CanRun = User.FastRun ? true : GameScene.CanRun;
 
-                        if (GameScene.CanRun && CanRun(direction) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && User.Poison != PoisonType.Slow && (!User.Sneaking || (User.Sneaking && User.Sprint)) )
+                        if (GameScene.CanRun && CanRun(direction) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && (!User.Sneaking || (User.Sneaking && User.Sprint))) //slow removed
                         {
                             User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, User.RidingMount || (User.Sprint && !User.Sneaking) ? 3 : 2) };
                             return;
@@ -8405,6 +8461,7 @@ namespace Client.MirScenes
                 case Spell.Purification:
                 case Spell.Healing:
                 case Spell.UltimateEnhancer:
+                case Spell.EnergyShield:
                     if (User.NextMagicObject != null)
                     {
                         if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
@@ -13647,7 +13704,7 @@ namespace Client.MirScenes
                     GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
                     break;
                 case PanelType.SpecialRepair:
-                    if (TargetItem.Info.Bind.HasFlag(BindMode.DontRepair))
+                    if ((TargetItem.Info.Bind.HasFlag(BindMode.DontRepair)) || (TargetItem.Info.Bind.HasFlag(BindMode.NoSRepair)))
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("Cannot repair this item.", ChatType.System);
                         return;
@@ -17640,8 +17697,8 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.Name, Selected.Listing.Price));
-                    box.OKButton.Click += (o1, e2) =>
+                    MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.Name, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
+                    box.YesButton.Click += (o1, e2) =>
                     {
                         MarketTime = CMain.Time + 3000;
                         Network.Enqueue(new C.MarketBuy { AuctionID = Selected.Listing.AuctionID });
@@ -19990,7 +20047,18 @@ namespace Client.MirScenes
                     text = string.Format("CounterAttack\nIncreases AC/MAC by: {0}-{1}.\n", Value, Value);
                     break;
                 case BuffType.UltimateEnhancer:
-                    text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Value);
+                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
+                    {
+                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Value);
+                    }
+                    else if (GameScene.User.Class == MirClass.Taoist)
+                    {
+                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Value);
+                    }
+                    else
+                    {
+                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Value);
+                    }
                     break;
                 case BuffType.Curse:
                     text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Value);
