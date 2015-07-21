@@ -102,7 +102,10 @@ namespace Server.MirEnvir
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
         //thedeath
         public bool Multithread = true;
-        public MobThread[] MobThreads = new MobThread[4];
+        readonly object _locker = new object();
+        public static int ThreadLimit = 6;//i would suggest setting this to maximum: "(cpu cores * (thread on each core)) - 1" this way your pc will always have 1 thread/core to simply run your windows and network
+        public MobThread[] MobThreads = new MobThread[ThreadLimit];
+        public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
         //thedeath end
 
         public List<string> CustomCommands = new List<string>();
@@ -151,13 +154,19 @@ namespace Server.MirEnvir
             LinkedListNode<MapObject> current = null;
 
             //thedeath
-            Thread[] MobThreading = new Thread[4];
+            Thread[] MobThreading = new Thread[ThreadLimit];
             if (Multithread)
             {
                 for (int j = 0; j < MobThreads.Length; j++)
                 {
                     MobThreads[j] = new MobThread();
                     MobThreads[j].Id = j;
+                    MobThread Info = MobThreads[j];
+                    if (j > 0) //dont start up 0 
+                    {
+                        MobThreading[j] = new Thread(() => ThreadLoop(Info));
+                        MobThreading[j].Start();
+                    }
                 }
             }
             //thedeath end
@@ -226,40 +235,50 @@ namespace Server.MirEnvir
                             MobThread Info = MobThreads[j];
 
                             if ((MobThreading[j] != null) &&
-                                (MobThreading[j].IsAlive == true))
+                                (Info.Stop == false))
                             {
 
                             }
                             else
                             {
                                 Info.EndTime = Time + 20;
-                                MobThreading[j] = new Thread(() => ThreadLoop(Info));
-                                MobThreading[j].Start();
+                                Info.Stop = false;
                             }
+                        }
+                        lock (_locker)
+                        {
+                            Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
                         }
                         //run the first loop in the main thread so the main thread automaticaly 'halts' untill the other threads are finished
                         ThreadLoop(MobThreads[0]);                        
                     }
                     
                     //thedeath end
-                    int k = 0;
-                    while (k < 100)
+                    Boolean TheEnd = false;
+                    long Start = Stopwatch.ElapsedMilliseconds;
+                    //while (k < 100)
+                    while ((!TheEnd) && (Stopwatch.ElapsedMilliseconds - Start > 20))
                     {
-                        if (current == null) break;
-
-                        LinkedListNode<MapObject> next = current.Next;
-                        if (!Multithread || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
+                        if (current == null)
                         {
-                            k++;
-                            if (Time > current.Value.OperateTime)
-                            {
-
-                                current.Value.Process();
-                                current.Value.SetOperateTime();
-                            }
-                            processCount++;
+                            TheEnd = true;
+                            break;
                         }
-                        current = next;
+                        else
+                        {
+                            LinkedListNode<MapObject> next = current.Next;
+                            if (!Multithread || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
+                            {
+                                if (Time > current.Value.OperateTime)
+                                {
+
+                                    current.Value.Process();
+                                    current.Value.SetOperateTime();
+                                }
+                                processCount++;
+                            }
+                            current = next;
+                        }
                     }
                     for (int i = 0; i < MapList.Count; i++)
                         MapList[i].Process();
@@ -319,7 +338,6 @@ namespace Server.MirEnvir
         {
             Info.Stop = false;
             long starttime = Time;
-            int count = 0;
             try
             {
 
@@ -327,33 +345,35 @@ namespace Server.MirEnvir
                 if (Info.current == null)
                     Info.current = Info.ObjectsList.First;
                 stopping = Info.current == null;
-                while (stopping == false)
+                //while (stopping == false)
+                while (Running)
                 {
                     if (Info.current == null)
-                        break;
-
-                    LinkedListNode<MapObject> next = Info.current.Next;
-
-                    //if we reach the end of our list > go back to the top (since we are running threaded, we dont want the system to sit there for xxms doing nothing)
-                    if (Info.current == Info.ObjectsList.Last)
+                        Info.current = Info.ObjectsList.First;
+                    else
                     {
-                        next = Info.ObjectsList.First;
-                        Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
-                        //Info.LastRunTime = (Time - Info.StartTime) /*> 0 ? (Time - Info.StartTime) : Info.LastRunTime */;
-                        Info.StartTime = Time;
-                    }
-                    if (Time > Info.current.Value.OperateTime)
-                    {
-                        if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
+                        LinkedListNode<MapObject> next = Info.current.Next;
+
+                        //if we reach the end of our list > go back to the top (since we are running threaded, we dont want the system to sit there for xxms doing nothing)
+                        if (Info.current == Info.ObjectsList.Last)
                         {
-                            Info.current.Value.Process();
-                            
-                            
-                            Info.current.Value.SetOperateTime();
+                            next = Info.ObjectsList.First;
+                            Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
+                            //Info.LastRunTime = (Time - Info.StartTime) /*> 0 ? (Time - Info.StartTime) : Info.LastRunTime */;
+                            Info.StartTime = Time;
                         }
+                        if (Time > Info.current.Value.OperateTime)
+                        {
+                            if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
+                            {
+                                Info.current.Value.Process();
+
+
+                                Info.current.Value.SetOperateTime();
+                            }
+                        }
+                        Info.current = next;
                     }
-                    Info.current = next;
-                    count++;
                     //if it's the main thread > make it loop till the subthreads are done, else make it stop after 'endtime'
                     if (Info.Id == 0)
                     {
@@ -362,16 +382,20 @@ namespace Server.MirEnvir
                             if (MobThreads[x].Stop == false)
                                 stopping = false;
                         if (stopping)
+                        {
                             Info.Stop = stopping;
+                            return;
+                        }
                     }
                     else
                     {
-                        //if (count > 500)
-                        //    stopping = true;
-                        
                         if (Stopwatch.ElapsedMilliseconds > Info.EndTime)
                         {
-                            stopping = true;
+                            Info.Stop = true;
+                            lock (_locker)
+                            {
+                                while (Info.Stop) Monitor.Wait(_locker);
+                            }
                         }
                         
                     }

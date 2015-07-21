@@ -34,7 +34,7 @@ namespace Server.MirEnvir
         public Map(MapInfo info)
         {
             Info = info;
-            Thread = Envir.Random.Next(4);
+            Thread = Envir.Random.Next(Envir.ThreadLimit);
         }
 
         private byte FindType(byte[] input)
@@ -603,8 +603,8 @@ namespace Server.MirEnvir
                 if (Envir.Time < respawn.RespawnTime) continue;
                 if (respawn.Count < respawn.Info.Count)
                 {
-                    int count = respawn.Info.Count - respawn.Count;
-
+                    int count = (respawn.Info.Count * Envir.spawnmultiplyer) - respawn.Count;
+                    
                     for (int c = 0; c < count; c++)
                         Success = respawn.Spawn();
                 }
