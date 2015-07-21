@@ -149,6 +149,7 @@ namespace Server.MirEnvir
             int processRealCount = 0;
 
             LinkedListNode<MapObject> current = null;
+
             //thedeath
             Thread[] MobThreading = new Thread[4];
             if (Multithread)
@@ -160,6 +161,7 @@ namespace Server.MirEnvir
                 }
             }
             //thedeath end
+
             StartEnvir();
             if (StartPoints.Count == 0)
             {

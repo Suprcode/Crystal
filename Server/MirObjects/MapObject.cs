@@ -770,6 +770,7 @@ namespace Server.MirObjects
             {
                 writer.Write(Values[i]);
             }
+
             writer.Write(Infinite);
         }
     }
