@@ -71,7 +71,7 @@ namespace Server
                 MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
                 ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
 
-                if (Envir.Multithread && (Envir.MobThreads != null))
+                if (Settings.Multithreaded && (Envir.MobThreads != null))
                 {
                     CycleDelayLabel.Text = string.Format("CycleDelays: {0:0000}", Envir.LastRunTime);
                     for (int i = 0; i < Envir.MobThreads.Length; i++)

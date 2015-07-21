@@ -34,7 +34,7 @@ namespace Server.MirEnvir
         public Map(MapInfo info)
         {
             Info = info;
-            Thread = Envir.Random.Next(Envir.ThreadLimit);
+            Thread = Envir.Random.Next(Settings.ThreadLimit);
         }
 
         private byte FindType(byte[] input)

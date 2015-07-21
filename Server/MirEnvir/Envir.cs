@@ -127,11 +127,9 @@ namespace Server.MirEnvir
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
         //thedeath
-        public bool Multithread = true;
         readonly object _locker = new object();
-        public static int ThreadLimit = 6;//i would suggest setting this to maximum: "(cpu cores * (thread on each core)) - 1" this way your pc will always have 1 thread/core to simply run your windows and network
-        public MobThread[] MobThreads = new MobThread[ThreadLimit];
-        private Thread[] MobThreading = new Thread[ThreadLimit];
+        public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
+        private Thread[] MobThreading = new Thread[Settings.ThreadLimit];
         public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
         //thedeath end
 
@@ -181,7 +179,7 @@ namespace Server.MirEnvir
             LinkedListNode<MapObject> current = null;
 
             //thedeath
-            if (Multithread)
+            if (Settings.Multithreaded)
             {
                 for (int j = 0; j < MobThreads.Length; j++)
                 {
@@ -254,7 +252,7 @@ namespace Server.MirEnvir
                     }
 
                     //thedeath
-                    if (Multithread)
+                    if (Settings.Multithreaded)
                     {
                         for (int j = 1; j < MobThreads.Length; j++)
                         {
@@ -293,7 +291,7 @@ namespace Server.MirEnvir
                         else
                         {
                             LinkedListNode<MapObject> next = current.Next;
-                            if (!Multithread || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
+                            if (!Settings.Multithreaded || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
                             {
                                 if (Time > current.Value.OperateTime)
                                 {
