@@ -253,13 +253,17 @@ namespace Server.MirObjects
         }
         public virtual void Add(PlayerObject player)
         {
-            if (Race == ObjectType.Player)
-            {
-                PlayerObject me = (PlayerObject)this;
-                player.Enqueue(me.GetInfoEx(player));
-            }
-            else
-                player.Enqueue(GetInfo());
+            player.Enqueue(GetInfo());
+
+            //if (Race == ObjectType.Player)
+            //{
+            //    PlayerObject me = (PlayerObject)this;
+            //    player.Enqueue(me.GetInfoEx(player));
+            //}
+            //else
+            //{
+            //    player.Enqueue(GetInfo());
+            //}
         }
         public virtual void Remove(MonsterObject monster)
         {
@@ -451,10 +455,21 @@ namespace Server.MirObjects
                 if (Buffs[i].Type != b.Type) continue;
 
                 Buffs[i] = b;
+                Buffs[i].Paused = false;
                 return;
             }
 
             Buffs.Add(b);
+        }
+        public void RemoveBuff(BuffType b)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Type != b) continue;
+
+                Buffs[i].Infinite = false;
+                Buffs[i].ExpireTime = Envir.Time;
+            }
         }
 
         public bool CheckStacked()
@@ -711,8 +726,10 @@ namespace Server.MirObjects
         public bool Visible;
         public uint ObjectID;
         public long ExpireTime;
-        public int Value;
+        public int[] Values;
         public bool Infinite;
+
+        public bool Paused;
 
         public Buff() { }
 
@@ -723,7 +740,21 @@ namespace Server.MirObjects
             Visible = reader.ReadBoolean();
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
-            Value = reader.ReadInt32();
+
+            if (Envir.LoadVersion < 56)
+            {
+                Values = new int[] { reader.ReadInt32() };
+            }
+            else
+            {
+                Values = new int[reader.ReadInt32()];
+
+                for (int i = 0; i < Values.Length; i++)
+                {
+                    Values[i] = reader.ReadInt32();
+                }
+            }
+
             Infinite = reader.ReadBoolean();
         }
 
@@ -733,7 +764,12 @@ namespace Server.MirObjects
             writer.Write(Visible);
             writer.Write(ObjectID);
             writer.Write(ExpireTime);
-            writer.Write(Value);
+
+            writer.Write(Values.Length);
+            for (int i = 0; i < Values.Length; i++)
+            {
+                writer.Write(Values[i]);
+            }
             writer.Write(Infinite);
         }
     }

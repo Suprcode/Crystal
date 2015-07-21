@@ -32,7 +32,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 55;
+        public const int Version = 56;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
@@ -73,7 +73,6 @@ namespace Server.MirEnvir
         private int _sessionID;
         public List<MirConnection> Connections = new List<MirConnection>();
 
-
         //Server DB
         public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
@@ -109,7 +108,6 @@ namespace Server.MirEnvir
         public List<string> CustomCommands = new List<string>();
         public Dragon DragonSystem;
         public NPCObject DefaultNPC;
-
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
@@ -151,6 +149,17 @@ namespace Server.MirEnvir
             int processRealCount = 0;
 
             LinkedListNode<MapObject> current = null;
+            //thedeath
+            Thread[] MobThreading = new Thread[4];
+            if (Multithread)
+            {
+                for (int j = 0; j < MobThreads.Length; j++)
+                {
+                    MobThreads[j] = new MobThread();
+                    MobThreads[j].Id = j;
+                }
+            }
+            //thedeath end
             StartEnvir();
             if (StartPoints.Count == 0)
             {
@@ -162,18 +171,6 @@ namespace Server.MirEnvir
             }
 
             StartNetwork();
-
-            //thedeath
-            Thread[] MobThreading = new Thread[4];
-            if (Multithread)
-            {
-                for (int j = 0; j < MobThreads.Length; j++)
-                {
-                    MobThreads[j] = new MobThread();
-                    MobThreads[j].Id = j;
-                }                
-            }
-            //thedeath end
 
             try
             {
@@ -677,7 +674,6 @@ namespace Server.MirEnvir
             Saving = false;
         }
 
-
         public void LoadDB()
         {
             lock (LoadLock)
@@ -1092,38 +1088,6 @@ namespace Server.MirEnvir
             //FixGuilds();
         }
 
-        //private void FixGuilds()
-        //{
-        //    NextGuildID = 0;
-        //    int nullChars = 0;
-
-        //    for (int i = 0; i < GuildList.Count; i++)
-        //    {
-        //        GuildObject g = GuildList[i];
-
-        //        g.Guildindex = ++NextGuildID;
-
-        //        for (int j = 0; j < g.Ranks.Count; j++)
-        //        {
-        //            Rank r = g.Ranks[j];
-
-        //            for (int k = 0; k < r.Members.Count; k++)
-        //            {
-        //                GuildMember m = r.Members[k];
-
-        //                CharacterInfo inf = GetCharacterInfo(m.name);
-        //                if (inf == null)
-        //                {
-        //                    nullChars++;
-        //                        continue;
-        //                }
-
-        //                inf.GuildIndex = g.Guildindex;
-        //            }
-        //        }
-        //    }
-        //}
-
         private void StopEnvir()
         {
             SaveGoods(true);
@@ -1187,8 +1151,7 @@ namespace Server.MirEnvir
                     _listener.BeginAcceptTcpClient(Connection, null);
             }
         }
-
-        
+     
         public void NewAccount(ClientPackets.NewAccount p, MirConnection c)
         {
             if (!Settings.AllowNewAccount)
@@ -1510,27 +1473,22 @@ namespace Server.MirEnvir
         {
             AccountList.Add(new AccountInfo {Index = ++NextAccountID});
         }
-
         public void CreateMapInfo()
         {
             MapInfoList.Add(new MapInfo {Index = ++MapIndex});
         }
-
         public void CreateItemInfo(ItemType type = ItemType.Nothing)
         {
             ItemInfoList.Add(new ItemInfo { Index = ++ItemIndex, Type = type, RandomStatsId = 255});
         }
-
         public void CreateMonsterInfo()
         {
             MonsterInfoList.Add(new MonsterInfo {Index = ++MonsterIndex});
         }
-
         public void CreateNPCInfo()
         {
             NPCInfoList.Add(new NPCInfo { Index = ++NPCIndex });
         }
-
         public void CreateQuestInfo()
         {
             QuestInfoList.Add(new QuestInfo { Index = ++QuestIndex });
@@ -1550,7 +1508,6 @@ namespace Server.MirEnvir
             MonsterInfoList.Remove(info);
             //Desync all objects\
         }
-
         public void Remove(NPCInfo info)
         {
             NPCInfoList.Remove(info);
@@ -1767,7 +1724,6 @@ namespace Server.MirEnvir
             }
             return null;
         }
-
         public QuestInfo GetQuestInfo(int index)
         {
             return QuestInfoList.FirstOrDefault(info => info.Index == index);

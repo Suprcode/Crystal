@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
+using Client.MirSounds;
 
 namespace Client.MirObjects
 {
@@ -44,6 +45,7 @@ namespace Client.MirObjects
         }
 
         public List<Effect> Effects = new List<Effect>();
+        public List<BuffType> Buffs = new List<BuffType>();
 
         public MLibrary BodyLibrary;
         public Color DrawColour = Color.White, NameColour = Color.White;
@@ -129,6 +131,23 @@ namespace Client.MirObjects
                     break;
                 case BuffType.PoisonShot:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 2310, 7, 1400, this, true, type) { Repeat = false });
+                    break;
+                case BuffType.EnergyShield:
+                    BuffEffect effect;
+
+                    Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1880, 9, 900, this, true, type) { Repeat = false });
+                    SoundManager.PlaySound(20000 + (ushort)Spell.EnergyShield * 10 + 0);
+
+                    effect.Complete += (o, e) =>
+                    {
+                        Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, this, true, type) { Repeat = true });
+                    };
+                    break;
+                case BuffType.MagicBooster:
+                    Effects.Add(new BuffEffect(Libraries.Magic3, 90, 6, 1200, this, true, type) { Repeat = true });
+                    break;
+                case BuffType.PetEnhancer:
+                    Effects.Add(new BuffEffect(Libraries.Magic3, 230, 6, 1200, this, true, type) { Repeat = true });
                     break;
             }
         }
