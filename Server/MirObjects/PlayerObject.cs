@@ -424,6 +424,7 @@ namespace Server.MirObjects
             }
 
             TradeCancel();
+            RefineCancel();
 
             string logReason = LogOutReason(reason);
 
@@ -8871,6 +8872,352 @@ namespace Server.MirObjects
             RefreshStats();
         }
 
+        public void DepositRefineItem(int from, int to) //REFINE
+        {
+
+            S.DepositRefineItem p = new S.DepositRefineItem { From = from, To = to, Success = false };
+
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Enqueue(p);
+                return;
+            }
+            NPCObject ob = null;
+            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            {
+                if (CurrentMap.NPCs[i].ObjectID != NPCID) continue;
+                ob = CurrentMap.NPCs[i];
+                break;
+            }
+
+            if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+            {
+                Enqueue(p);
+                return;
+            }
+
+
+            if (from < 0 || from >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Refine.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Inventory[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Refine[to] == null)
+            {
+                Info.Refine[to] = temp;
+                Info.Inventory[from] = null;
+                RefreshBagWeight();
+
+                Report.ItemMoved("StoreItem", temp, MirGridType.Inventory, MirGridType.Storage, from, to);
+
+                p.Success = true;
+                Enqueue(p);
+                return;
+            }
+            Enqueue(p);
+
+        }
+
+        public void RetrieveRefineItem(int from, int to)
+        {
+            S.RetrieveRefineItem p = new S.RetrieveRefineItem { From = from, To = to, Success = false };
+
+            if (from < 0 || from >= Info.Refine.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Refine[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat("Too heavy to get back.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Inventory[to] == null)
+            {
+                Info.Inventory[to] = temp;
+                Info.Refine[from] = null;
+
+                Report.ItemMoved("TakeBackRefineItem", temp, MirGridType.Storage, MirGridType.Inventory, from, to);
+
+                p.Success = true;
+                RefreshBagWeight();
+                Enqueue(p);
+
+                return;
+            }
+            Enqueue(p);
+        }
+
+        public void RefineCancel()
+        {
+            //PlayerObject[] TradePair = new PlayerObject[2] { TradePartner, this };
+
+                    for (int t = 0; t < Info.Refine.Length; t++)
+                    {
+                        UserItem temp = Info.Refine[t];
+
+                        if (temp == null) continue;
+
+                        for (int i = 0; i < Info.Inventory.Length; i++)
+                        {
+                            if (Info.Inventory[i] != null) continue;
+
+                            //Put item back in inventory
+                            if (CanGainItem(temp))
+                            {
+                                RetrieveRefineItem(t, i);
+                            }
+                            else //Drop item on floor if it can no longer be stored
+                            {
+                                if (DropItem(temp, Settings.DropRange))
+                                {
+                                    Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                                }
+                            }
+
+                            Info.Refine[t] = null;
+
+                            break;
+                        }
+                    }
+        }
+
+        public void RefineItem(ulong uniqueID)
+        {
+            Enqueue(new S.RepairItem { UniqueID = uniqueID });
+
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+                UserItem temp = null;
+                UserItem temp2 = null;
+
+                int index = -1;
+
+                if (Info.CurrentRefine != null)
+                {
+                    ReceiveChat("You already have an item in for refine.", ChatType.System);
+                    return;
+                }
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != uniqueID) continue;
+                    index = i;
+                    break;
+                }
+
+                    
+                    for (int i = 0; i < Info.Refine.Length; i++)
+                    {
+                        temp2 = Info.Refine[i];
+                        if (temp2 == null) continue;
+                        if (temp2.Info.FriendlyName == Settings.RefineOreName)
+                        {
+                            //RefinePurity = RefinePurity + temp2.Info.Durability;
+                            continue;
+                        }
+                    }
+                    
+
+                if (temp == null || index == -1) return;
+
+                if ((temp.Info.Type != ItemType.Weapon) && (Settings.OnlyRefineWeapon))
+                {
+                    ReceiveChat("You cannot Refine this item.", ChatType.System);
+                    return;
+                }
+
+                //if (RefineAmount == 0)
+                //{
+                    //ReceiveChat("The items in the refine don't provide any DC, MC or SC.", ChatType.System);
+                    //return;
+                //}
+
+                if (temp.RefineAdded != 0)
+                {
+                    ReceiveChat("This item needs to be checked before you can refine it again.", ChatType.System);
+                    return;
+                }
+
+                //if (ob.Types.Count != 0 && !ob.Types.Contains(temp.Info.Type))
+                //{
+                    //ReceiveChat("You cannot Repair this item here.", ChatType.System);
+                    //return;
+                //}
+
+                //uint cost = (uint)(temp.RepairPrice() * ob.Info.PriceRate);
+
+                //if (cost > Account.Gold || cost == 0) return;
+
+                for (int i = 0; i < Info.Refine.Length; i++)
+                {
+                    Info.Refine[i] = null;
+                }
+
+
+
+                Info.CurrentRefine = Info.Inventory[index];
+                Info.Inventory[index] = null;
+                Info.CollectTime = (Envir.Time + 300000);
+
+
+                Info.CurrentRefine.RefinedValue = RefinedValue.DC;
+                Info.CurrentRefine.RefineAdded = 1;
+
+                Enqueue(new S.RefineItem { UniqueID = uniqueID});
+                return;
+            
+        }
+
+        public void CollectRefine()
+        {
+            S.NPCCollectRefine p = new S.NPCCollectRefine{Success = false};
+
+            if (Info.CurrentRefine == null)
+            {
+                ReceiveChat("You don't have an item in for refine.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.CollectTime > Envir.Time)
+            {
+                ReceiveChat("Your refine isn't ready yet.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+
+            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat("Too heavy to get back.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            int index = -1;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                if (Info.Inventory[i] != null) continue;
+                index = i;
+                break;
+            }
+
+            if (index == -1)
+            {
+                ReceiveChat("You dont have room in your bag to collect your refined item.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            p.Success = true;
+            Enqueue(new S.GainedItem { Item = Info.CurrentRefine });
+            AddItem(Info.CurrentRefine);
+            RefreshBagWeight();
+            Info.CurrentRefine = null;
+            Info.CollectTime = 0;
+            Enqueue(p);
+            return;
+        }
+
+        public void CheckRefine(ulong uniqueID)
+        {
+            Enqueue(new S.RepairItem { UniqueID = uniqueID });
+
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineCheckKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+                UserItem temp = null;
+
+                int index = -1;
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != uniqueID) continue;
+                    index = i;
+                    break;
+                }
+
+
+            if (Info.Inventory[index].RefineAdded == 0)
+            {
+                ReceiveChat("This item doesn't need to be checked as it hasn't been refined.", ChatType.System);
+                return;
+            }
+
+
+            if ((Info.Inventory[index].RefinedValue == RefinedValue.DC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat("Congratulations, your refine worked.", ChatType.System);
+                Info.Inventory[index].DC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].DC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.MC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat("Congratulations, your refine worked.", ChatType.System);
+                Info.Inventory[index].MC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].MC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.SC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat("Congratulations, your refine worked.", ChatType.System);
+                Info.Inventory[index].SC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].SC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.None) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat("Your item smashed into a thousand pieces upon testing.", ChatType.System);
+                Enqueue(new S.RefineItem { UniqueID = Info.Inventory[index].UniqueID});
+                Info.Inventory[index] = null;
+            }
+
+
+            Enqueue(new S.ItemUpgraded { Item = Info.Inventory[index] });
+            return;
+        }
+
+
         public void DepositTradeItem(int from, int to)
         {
             S.DepositTradeItem p = new S.DepositTradeItem { From = from, To = to, Success = false };
@@ -8917,6 +9264,8 @@ namespace Server.MirObjects
             Enqueue(p);
 
         }
+
+
         public void RetrieveTradeItem(int from, int to)
         {
             S.RetrieveTradeItem p = new S.RetrieveTradeItem { From = from, To = to, Success = false };
@@ -9205,6 +9554,9 @@ namespace Server.MirObjects
                 case MirGridType.Trade:
                     array = Info.Trade;
                     TradeItem();
+                    break;
+                case MirGridType.Refine: //REFINE
+                    array = Info.Refine;
                     break;
                 default:
                     Enqueue(p);
@@ -13733,6 +14085,7 @@ namespace Server.MirObjects
         }
 
         #endregion
+
 
         #region Trading
 

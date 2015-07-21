@@ -138,6 +138,11 @@ namespace Server
         public static uint MailCostPer1KGold = 100;
         public static uint MailItemInsurancePercentage = 5;
 
+        //Refine Settings
+        public static bool OnlyRefineWeapon = true;
+        public static string RefineOreName = "BlackIronOre";
+        public static byte RefineTime = 20;
+
         //Goods Settings
         public static bool GoodsOn = true;
         public static uint GoodsMaxStored = 50;
@@ -371,6 +376,7 @@ namespace Server
 			LoadAwakeAttribute();
             LoadFishing();
             LoadMail();
+            LoadRefine();
             LoadGoods();
         }
         public static void Save()
@@ -1028,6 +1034,29 @@ namespace Server
             reader.Write("Rates", "FreeWithStamp", MailFreeWithStamp);
             reader.Write("Rates", "CostPer1k", MailCostPer1KGold);
             reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
+        }
+
+        public static void LoadRefine()
+        {
+            if (!File.Exists(ConfigPath + @".\RefineSystem.ini"))
+            {
+                SaveRefine();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
+            OnlyRefineWeapon = reader.ReadBoolean("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
+            RefineTime = reader.ReadByte("Config", "Time", RefineTime);
+            RefineOreName = reader.ReadString("Ore", "OreName", RefineOreName);
+        }
+        public static void SaveRefine()
+        {
+            File.Delete(ConfigPath + @".\RefineSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
+            reader.Write("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
+            reader.Write("Config", "Time", RefineTime);
+            reader.Write("Ore", "OreName", RefineOreName);
+
         }
 
         public static void LoadGoods()

@@ -284,6 +284,87 @@ namespace ClientPackets
             writer.Write(To);
         }
     }
+
+    public sealed class DepositRefineItem : Packet
+    {
+
+        public override short Index { get { return (short)ClientPacketIds.DepositRefineItem; } }
+
+        public int From, To;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
+
+    public sealed class RetrieveRefineItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RetrieveRefineItem; } }
+
+        public int From, To;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
+
+    public sealed class RefineCancel : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RefineCancel; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class RefineItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RefineItem; } }
+
+        public ulong UniqueID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadUInt64();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+        }
+    }
+
+    public sealed class CheckRefine : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.CheckRefine; } }
+
+        public ulong UniqueID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadUInt64();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+        }
+    }
+
+
     public sealed class DepositTradeItem : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.DepositTradeItem; } }
@@ -300,6 +381,9 @@ namespace ClientPackets
             writer.Write(To);
         }
     }
+
+
+
     public sealed class RetrieveTradeItem : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.RetrieveTradeItem; } }
