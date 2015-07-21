@@ -25,6 +25,30 @@ namespace Server.MirEnvir
         public LinkedListNode<MapObject> current = null;
         public Boolean Stop = false;
     }
+
+    public class RandomProvider
+    {
+        private static int seed = Environment.TickCount;
+        private static ThreadLocal<Random> RandomWrapper = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
+
+        public static Random GetThreadRadom()
+        {
+            return RandomWrapper.Value;
+        }
+
+        public int Next()
+        {
+            return RandomWrapper.Value.Next();
+        }
+        public int Next(int maxValue)
+        {
+            return RandomWrapper.Value.Next(maxValue);
+        }
+        public int Next(int minValue, int maxValue)
+        {
+            return RandomWrapper.Value.Next(minValue, maxValue);
+        }
+    }
     //thedeath end
 
     public class Envir
@@ -66,8 +90,10 @@ namespace Server.MirEnvir
             get { return Players.Count; }
         }
 
+        //thedeath
+        public RandomProvider Random = new RandomProvider();
 
-        public Random Random = new Random();
+
         private Thread _thread;
         private TcpListener _listener;
         private int _sessionID;
@@ -105,6 +131,7 @@ namespace Server.MirEnvir
         readonly object _locker = new object();
         public static int ThreadLimit = 6;//i would suggest setting this to maximum: "(cpu cores * (thread on each core)) - 1" this way your pc will always have 1 thread/core to simply run your windows and network
         public MobThread[] MobThreads = new MobThread[ThreadLimit];
+        private Thread[] MobThreading = new Thread[ThreadLimit];
         public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
         //thedeath end
 
@@ -154,7 +181,6 @@ namespace Server.MirEnvir
             LinkedListNode<MapObject> current = null;
 
             //thedeath
-            Thread[] MobThreading = new Thread[ThreadLimit];
             if (Multithread)
             {
                 for (int j = 0; j < MobThreads.Length; j++)
@@ -403,6 +429,7 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
+                if (ex is ThreadInterruptedException) return;
                 SMain.Enqueue(ex);
 
                 File.AppendAllText(@".\Error.txt",
@@ -1050,9 +1077,21 @@ namespace Server.MirEnvir
         public void Stop()
         {
             Running = false;
+            //simply intterupt all the mob threads if they are running (will give an invisible error on them but fastest way of getting rid of them on shutdowns)
+            for (int i = 1; i < MobThreading.Length; i++)
+            {
+                if (MobThreads[i] != null)
+                    MobThreads[i].EndTime = Time + 9999;
+                if ((MobThreading[i] != null) &&
+                    (MobThreading[i].ThreadState != System.Threading.ThreadState.Stopped) && (MobThreading[i].ThreadState != System.Threading.ThreadState.Unstarted))
+                {
+                    MobThreading[i].Interrupt();
+                }
+            }
 
-            while (_thread != null)
-                Thread.Sleep(1);
+
+                while (_thread != null)
+                    Thread.Sleep(1);
         }
         
         private void StartEnvir()
