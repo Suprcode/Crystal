@@ -257,7 +257,7 @@ namespace Server.MirEnvir
                     Boolean TheEnd = false;
                     long Start = Stopwatch.ElapsedMilliseconds;
                     //while (k < 100)
-                    while ((!TheEnd) && (Stopwatch.ElapsedMilliseconds - Start > 20))
+                    while ((!TheEnd) && (Stopwatch.ElapsedMilliseconds - Start < 20))
                     {
                         if (current == null)
                         {
