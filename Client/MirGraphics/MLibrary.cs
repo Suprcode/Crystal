@@ -398,6 +398,24 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
+            for (int i = 0; i < Transform.Length; i++)
+            {
+                Transform[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < TransformEffect.Length; i++)
+            {
+                TransformEffect[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < TransformWeaponEffect.Length; i++)
+            {
+                TransformWeaponEffect[i].Initialize();
+                Progress++;
+            }
+
             Loaded = true;
         }
 

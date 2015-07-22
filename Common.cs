@@ -1146,6 +1146,7 @@ public enum ServerPacketIds : short
     NPCPearlGoods,
 
     TransformUpdate,
+    FriendUpdate
 }
 
 public enum ClientPacketIds : short
@@ -1248,7 +1249,12 @@ public enum ClientPacketIds : short
     MailCost,
 
     UpdateIntelligentCreature,
-    IntelligentCreaturePickup
+    IntelligentCreaturePickup,
+
+    AddFriend,
+    RemoveFriend,
+    RefreshFriends,
+    AddMemo
 }
 
 public class InIReader
@@ -3392,15 +3398,48 @@ public class ClientMail
     }
 }
 
+public class ClientFriend
+{
+    public int Index;
+    public string Name;
+    public string Memo = "";
+    public bool Blocked;
 
+    public bool Online;
+    //public DateTime LastOnline;
 
-public enum IntelligentCreaturePickupMode : byte//IntelligentCreature
+    public ClientFriend() { }
+
+    public ClientFriend(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Memo = reader.ReadString();
+        Blocked = reader.ReadBoolean();
+
+        Online = reader.ReadBoolean();
+        //LastOnline = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Memo);
+        writer.Write(Blocked);
+
+        writer.Write(Online);
+        //writer.Write(LastOnline.ToBinary());
+    }
+}
+
+public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
     SemiAutomatic = 1,
 }
 
-public class IntelligentCreatureRules//IntelligentCreature
+public class IntelligentCreatureRules
 {
     public int MinimalFullness = 1;
 
@@ -3895,6 +3934,14 @@ public abstract class Packet
                 return new C.UpdateIntelligentCreature();
             case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
                 return new C.IntelligentCreaturePickup();
+            case (short)ClientPacketIds.AddFriend:
+                return new C.AddFriend();
+            case (short)ClientPacketIds.RemoveFriend:
+                return new C.RemoveFriend();
+            case (short)ClientPacketIds.RefreshFriends:
+                return new C.RefreshFriends();
+            case (short)ClientPacketIds.AddMemo:
+                return new C.AddMemo();
             default:
                 throw new NotImplementedException();
         }
@@ -4292,6 +4339,8 @@ public abstract class Packet
                 return new S.IntelligentCreatureEnableRename();
             case (short)ServerPacketIds.NPCPearlGoods:
                 return new S.NPCPearlGoods();
+            case (short)ServerPacketIds.FriendUpdate:
+                return new S.FriendUpdate();
             default:
                 throw new NotImplementedException();
         }

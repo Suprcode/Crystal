@@ -434,7 +434,6 @@ namespace Server.MirDatabase
                 };
         }
 
-        //IntelligentCreature
         public bool CheckHasIntelligentCreature(IntelligentCreatureType petType)
         {
             for (int i = 0; i < IntelligentCreatures.Count; i++)
@@ -451,7 +450,8 @@ namespace Server.MirDatabase
                 Array.Resize(ref Inventory, Inventory.Length + 4);
 
             return Inventory.Length;
-        }    }
+        }    
+    }
 
     public class PetInfo
     {
@@ -541,26 +541,47 @@ namespace Server.MirDatabase
 
     public class FriendInfo
     {
-        public int CharacterIndex;
+        public int CharacterIndex
+        {
+            get {return CharacterInfo.Index; }
+        }
+
         public CharacterInfo CharacterInfo;
 
-        public string Memo;
+        public bool Blocked;
+        public string Memo = "";
 
-        public FriendInfo(int charIndex) 
+        public FriendInfo(CharacterInfo info, bool blocked) 
         {
-            CharacterIndex = charIndex;
+            CharacterInfo = info;
+            Blocked = blocked;
         }
 
         public FriendInfo(BinaryReader reader)
         {
-            CharacterIndex = reader.ReadInt32();
+            CharacterInfo = SMain.Envir.GetCharacterInfo(reader.ReadInt32());
+
+            Blocked = reader.ReadBoolean();
             Memo = reader.ReadString();
         }
 
         public void Save(BinaryWriter writer)
         {
             writer.Write(CharacterIndex);
+            writer.Write(Blocked);
             writer.Write(Memo);
+        }
+
+        public ClientFriend CreateClientFriend()
+        {
+            return new ClientFriend()
+            {
+                Index = CharacterIndex,
+                Name = CharacterInfo.Name,
+                Blocked = Blocked,
+                Memo = Memo,
+                Online = CharacterInfo.Player != null && CharacterInfo.Player.Node != null
+            };
         }
     }
 

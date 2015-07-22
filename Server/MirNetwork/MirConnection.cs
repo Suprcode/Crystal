@@ -477,6 +477,21 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
                     IntelligentCreaturePickup((C.IntelligentCreaturePickup)p);
                     break;
+                case (short)ClientPacketIds.AddFriend:
+                    AddFriend((C.AddFriend)p);
+                    break;
+                case (short)ClientPacketIds.RemoveFriend:
+                    RemoveFriend((C.RemoveFriend)p);
+                    break;
+                case (short)ClientPacketIds.RefreshFriends:
+                    {
+                        if (Stage != GameStage.Game) return;
+                        Player.GetFriends();
+                        break;
+                    }
+                case (short)ClientPacketIds.AddMemo:
+                    AddMemo((C.AddMemo)p);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -1324,5 +1339,25 @@ namespace Server.MirNetwork
             Player.IntelligentCreaturePickup(p.MouseMode, p.Location);
         }
 
+        private void AddFriend(C.AddFriend p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.AddFriend(p.Name, p.Blocked);
+        }
+
+        private void RemoveFriend(C.RemoveFriend p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RemoveFriend(p.CharacterIndex);
+        }
+
+        private void AddMemo(C.AddMemo p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.AddMemo(p.CharacterIndex, p.Memo);
+        }
     }
 }

@@ -4693,4 +4693,30 @@ namespace ServerPackets
             writer.Write(Rate);
         }
     }
+
+    public sealed class FriendUpdate : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.FriendUpdate; }
+        }
+
+        public List<ClientFriend> Friends = new List<ClientFriend>();
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int count = reader.ReadInt32();
+
+            for (int i = 0; i < count; i++)
+                Friends.Add(new ClientFriend(reader));
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Friends.Count);
+
+            for (int i = 0; i < Friends.Count; i++)
+                Friends[i].Save(writer);
+        }
+    }
 }

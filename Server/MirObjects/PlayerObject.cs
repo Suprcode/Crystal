@@ -1728,13 +1728,12 @@ namespace Server.MirObjects
             GetCompletedQuests();
 
             GetMail();
+            GetFriends();
 
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
-                QuestProgressInfo quest = CurrentQuests[i];
-
-                quest.ResyncTasks();
-                SendUpdateQuest(quest, QuestState.Add);
+                CurrentQuests[i].ResyncTasks();
+                SendUpdateQuest(CurrentQuests[i], QuestState.Add);
             }
 
             Enqueue(new S.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
@@ -1909,7 +1908,7 @@ namespace Server.MirObjects
             {
                 item = Info.Inventory[i];
                 if (item == null) continue;
-                //CheckItemInfo(item.Info);
+
                 CheckItem(item);
             }
 
@@ -1918,7 +1917,7 @@ namespace Server.MirObjects
                 item = Info.Equipment[i];
 
                 if (item == null) continue;
-                //CheckItemInfo(item.Info);
+
                 CheckItem(item);
             }
 
@@ -14830,10 +14829,6 @@ namespace Server.MirObjects
 
         public void GetCompletedQuests()
         {
-            //CompletedQuests.Clear();
-            //for (int i = 1000; i < Globals.FlagIndexCount; i++)
-            //    if (Info.Flags[i]) CompletedQuests.Add(i - 1000);
-
             Enqueue(new S.CompleteQuest
             {
                 CompletedQuests = CompletedQuests
@@ -15548,26 +15543,45 @@ namespace Server.MirObjects
 
         #region Friends
 
-        public void AddFriend(int index)
+        public void AddFriend(string name, bool blocked = false)
         {
-            CharacterInfo info = Envir.GetCharacterInfo(index);
+            CharacterInfo info = Envir.GetCharacterInfo(name);
 
-            if (info == null) return;
+            if (info == null)
+            {
+                //player doesn't exist
+                ReceiveChat("Player doesn't exist", ChatType.System);
+                return;
+            }
 
-            if (Info.Friends.Any(e => e.CharacterIndex == index)) return;
+            if (Info.Friends.Any(e => e.CharacterIndex == info.Index))
+            {
+                //player added already
+                ReceiveChat("Player already added", ChatType.System);
+                return;
+            }
 
-            FriendInfo friend = new FriendInfo(index);
+            FriendInfo friend = new FriendInfo(info, blocked);
 
             Info.Friends.Add(friend);
+
+            GetFriends();
         }
 
         public void RemoveFriend(int index)
         {
             FriendInfo friend = Info.Friends.FirstOrDefault(e => e.CharacterIndex == index);
 
-            if (friend == null) return;
+            if (friend == null)
+            {
+                //player doesn't exist
+                ReceiveChat("Player doesn't exist " + index, ChatType.System);
+                return;
+            }
 
             Info.Friends.Remove(friend);
+
+            GetFriends();
         }
 
         public void AddMemo(int index, string memo)
@@ -15577,11 +15591,20 @@ namespace Server.MirObjects
             if (friend == null) return;
 
             friend.Memo = memo;
+
+            GetFriends();
         }
 
         public void GetFriends()
         {
+            List<ClientFriend> friends = new List<ClientFriend>();
 
+            foreach (FriendInfo friend in Info.Friends)
+            {
+                friends.Add(friend.CreateClientFriend());
+            }
+
+            Enqueue(new S.FriendUpdate { Friends = friends });
         }
 
         #endregion

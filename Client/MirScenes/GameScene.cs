@@ -362,8 +362,8 @@ namespace Client.MirScenes
                     break;
 
                 case Keys.W:
-                    if (!FriendDialog.Visible) FriendDialog.Show();
-                    else FriendDialog.Hide();
+                    if (!MentorDialog.Visible) MentorDialog.Show();
+                    else MentorDialog.Hide();
                     break;
 
                 case Keys.L:
@@ -372,8 +372,8 @@ namespace Client.MirScenes
                     break;
 
                 case Keys.F:
-                    if (!MentorDialog.Visible) MentorDialog.Show();
-                    else MentorDialog.Hide();
+                    if (!FriendDialog.Visible) FriendDialog.Show();
+                    else FriendDialog.Hide();
                     break;
 
                 case Keys.G:
@@ -1388,6 +1388,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.NPCPearlGoods://pearl currency
                     NPCPearlGoods((S.NPCPearlGoods)p);
+                    break;
+                case (short)ServerPacketIds.FriendUpdate:
+                    FriendUpdate((S.FriendUpdate)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -4717,6 +4720,16 @@ namespace Client.MirScenes
             NPCGoodsDialog.usePearls = true;
             NPCGoodsDialog.NewGoods(p.List);
             NPCGoodsDialog.Show();
+        }
+
+        private void FriendUpdate(S.FriendUpdate p)
+        {
+            GameScene.Scene.FriendDialog.Friends = p.Friends;
+
+            if (GameScene.Scene.FriendDialog.Visible)
+            {
+                GameScene.Scene.FriendDialog.Update();
+            }
         }
 
         public void AddItem(UserItem item)
@@ -12890,7 +12903,8 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
-                Visible = true
+                Visible = true,
+                Hint = "Friends (F)"
             };
             FriendButton.Click += (o, e) =>
             {
@@ -19873,8 +19887,18 @@ namespace Client.MirScenes
     public sealed class FriendDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
-        public MirButton CloseButton;
+        public MirButton CloseButton, PreviousButton, NextButton;
+        public MirLabel FriendTabLabel, BlockedTabLabel;
         public MirButton AddButton, RemoveButton, MemoButton, EmailButton, WhisperButton;
+        public FriendRow[] Rows = new FriendRow[10];
+
+        public List<ClientFriend> Friends = new List<ClientFriend>();
+        private ClientFriend SelectedFriend = null;
+        private bool _tempBlockedTab = false;
+        private bool _blockedTab = false;
+
+        public int SelectedIndex = 0;
+        public int StartIndex = 0;
 
         public FriendDialog()
         {
@@ -19884,6 +19908,7 @@ namespace Client.MirScenes
             Sort = true;
             Location = Center;
 
+            AfterDraw += FriendDialog_BeforeDraw;
 
             TitleLabel = new MirImageControl
             {
@@ -19892,6 +19917,8 @@ namespace Client.MirScenes
                 Location = new Point(18, 4),
                 Parent = this
             };
+
+            #region Buttons
 
             CloseButton = new MirButton
             {
@@ -19905,6 +19932,44 @@ namespace Client.MirScenes
             };
             CloseButton.Click += (o, e) => Hide();
 
+            FriendTabLabel = new MirLabel
+            {
+                Location = new Point(10,36),
+                BackColour = Color.FromArgb(18,13,13),
+                ForeColour = Color.Gray,
+                Text = "Friends",
+                Size = new Size(113,17),
+                Parent = this,
+                Visible = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                Sound = SoundList.ButtonA,
+            };
+            FriendTabLabel.Click += (o, e) =>
+            {
+                _tempBlockedTab = false;
+                
+                Update();
+            };
+
+
+            BlockedTabLabel = new MirLabel
+            {
+                Location = new Point(132, 36),
+                BackColour = Color.FromArgb(18, 13, 13),
+                ForeColour = Color.White,
+                Text = "Blocked",
+                Size = new Size(113, 17),
+                Parent = this,
+                Visible = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                Sound = SoundList.ButtonA,
+            };
+            BlockedTabLabel.Click += (o, e) =>
+            {
+                _tempBlockedTab = true;
+
+                Update();
+            };
 
             AddButton = new MirButton
             {
@@ -19918,12 +19983,14 @@ namespace Client.MirScenes
             };
             AddButton.Click += (o, e) =>
             {
-                MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to add.");
+                ;
+                string message = string.Format("Please enter the name of the person you would like to {0}.", _blockedTab ? "block" : "add");
+
+                MirInputBox inputBox = new MirInputBox(message);
 
                 inputBox.OKButton.Click += (o1, e1) =>
                 {
-                    //GameScene.Scene.MailComposeLetterDialog.ComposeMail(inputBox.InputTextBox.Text);
-
+                    Network.Enqueue(new C.AddFriend { Name = inputBox.InputTextBox.Text, Blocked = _blockedTab });
                     inputBox.Dispose();
                 };
 
@@ -19940,6 +20007,20 @@ namespace Client.MirScenes
                 Parent = this,
                 Sound = SoundList.ButtonA
             };
+            RemoveButton.Click += (o, e) =>
+            {
+                if (SelectedFriend == null) return;
+
+                MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you wish to remove '{0}'?", SelectedFriend.Name), MirMessageBoxButtons.YesNo);
+
+                messageBox.YesButton.Click += (o1, e1) =>
+                {
+                    Network.Enqueue(new C.RemoveFriend { CharacterIndex = SelectedFriend.Index });
+                    messageBox.Dispose();
+                };
+
+                messageBox.Show();
+            };
 
             MemoButton = new MirButton
             {
@@ -19950,6 +20031,10 @@ namespace Client.MirScenes
                 Location = new Point(116, 241),
                 Parent = this,
                 Sound = SoundList.ButtonA
+            };
+            MemoButton.Click += (o, e) =>
+            {
+
             };
 
             EmailButton = new MirButton
@@ -19962,6 +20047,12 @@ namespace Client.MirScenes
                 Parent = this,
                 Sound = SoundList.ButtonA
             };
+            EmailButton.Click += (o, e) =>
+            {
+                if (SelectedFriend == null) return;
+
+                GameScene.Scene.MailComposeLetterDialog.ComposeMail(SelectedFriend.Name);
+            };
 
             WhisperButton = new MirButton
             {
@@ -19973,8 +20064,149 @@ namespace Client.MirScenes
                 Parent = this,
                 Sound = SoundList.ButtonA
             };
+            WhisperButton.Click += (o, e) =>
+            {
+                if (SelectedFriend == null) return;
+
+                if (!SelectedFriend.Online)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("Player is not online", ChatType.System);
+                    return;
+                }
+
+                GameScene.Scene.ChatDialog.ChatTextBox.SetFocus();
+                GameScene.Scene.ChatDialog.ChatTextBox.Text = "/" + SelectedFriend.Name + " ";
+                GameScene.Scene.ChatDialog.ChatTextBox.Visible = true;
+                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionLength = 0;
+                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart = GameScene.Scene.ChatDialog.ChatTextBox.Text.Length;
+            };
+            #endregion
         }
 
+        void FriendDialog_BeforeDraw(object sender, EventArgs e)
+        {
+            if (!Visible) return;
+
+            if (_blockedTab != _tempBlockedTab)
+            {
+                _blockedTab = _tempBlockedTab;
+
+                if (_blockedTab)
+                {
+                    FriendTabLabel.ForeColour = Color.White;
+                    BlockedTabLabel.ForeColour = Color.Gray;
+                }
+                else
+                {
+                    FriendTabLabel.ForeColour = Color.Gray;
+                    BlockedTabLabel.ForeColour = Color.White;
+                }
+                Update();
+            }
+        }
+
+        public void Refresh()
+        {
+            Network.Enqueue(new C.RefreshFriends());
+        }
+
+        public void Update()
+        {
+            SelectedFriend = null;
+
+            for (int i = 0; i < Rows.Length; i++)
+            {
+                if (Rows[i] != null) Rows[i].Dispose();
+
+                Rows[i] = null;
+            }
+
+            List<ClientFriend> filteredFriends = new List<ClientFriend>();
+
+            if (_blockedTab)
+                filteredFriends = Friends.Where(e => e.Blocked).ToList();
+            else
+                filteredFriends = Friends.Where(e => !e.Blocked).ToList();
+
+            int maxIndex = filteredFriends.Count - Rows.Length;
+
+            if (StartIndex > maxIndex) StartIndex = maxIndex;
+            if (StartIndex < 0) StartIndex = 0;
+
+            for (int i = 0; i < Rows.Length; i++)
+            {
+                if (i >= Friends.Count) break;
+
+                if (Rows[i] != null)
+                    Rows[i].Dispose();
+
+                Rows[i] = new FriendRow
+                {
+                    Friend = filteredFriends[i + StartIndex],
+                    Location = new Point((i % 2) * 115 + 16, 55 + ((i) / 2) * 22),
+                    Parent = this,
+                };
+                Rows[i].Click += (o, e) =>
+                {
+                    FriendRow row = (FriendRow)o;
+
+                    if (row.Friend != SelectedFriend)
+                    {
+                        SelectedFriend = row.Friend;
+                        SelectedIndex = FindSelectedIndex();
+                        UpdateRows();
+                    }
+                };
+
+                if (SelectedFriend != null)
+                {
+                    if (SelectedIndex == i)
+                    {
+                        SelectedFriend = Rows[i].Friend;
+                    }
+                }
+            }
+        }
+
+        public void UpdateRows()
+        {
+            if (SelectedFriend == null)
+            {
+                if (Rows[0] == null) return;
+
+                SelectedFriend = Rows[0].Friend;
+            }
+
+            for (int i = 0; i < Rows.Length; i++)
+            {
+                if (Rows[i] == null) continue;
+
+                Rows[i].Selected = false;
+
+                if (Rows[i].Friend == SelectedFriend)
+                {
+                    Rows[i].Selected = true;
+                }
+
+                Rows[i].UpdateInterface();
+            }
+        }
+
+        public int FindSelectedIndex()
+        {
+            int selectedIndex = 0;
+            if (SelectedFriend != null)
+            {
+                for (int i = 0; i < Rows.Length; i++)
+                {
+                    if (Rows[i] == null || SelectedFriend != Rows[i].Friend) continue;
+
+                    selectedIndex = i;
+                }
+            }
+
+            return selectedIndex;
+        }
 
         public void Hide()
         {
@@ -19985,8 +20217,81 @@ namespace Client.MirScenes
         {
             if (Visible) return;
             Visible = true;
+
+            Refresh();
         }
     }
+    public sealed class FriendRow : MirControl
+    {
+        public ClientFriend Friend;
+        public MirLabel NameLabel, OnlineLabel;
+
+        public bool Selected = false;
+
+        public FriendRow()
+        {
+            Sound = SoundList.ButtonA;
+            Size = new Size(115, 17);
+
+            BeforeDraw += FriendRow_BeforeDraw;
+
+            NameLabel = new MirLabel
+            {
+                Location = new Point(0, 0),
+                Size = new Size(115, 17),
+                BackColour = Color.Empty,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+            };
+
+            UpdateInterface();
+        }
+
+        void FriendRow_BeforeDraw(object sender, EventArgs e)
+        {
+            UpdateInterface();
+        }
+
+        public void UpdateInterface()
+        {
+            if (Friend == null) return;
+
+            NameLabel.Text = Friend.Name;
+
+            if (Friend.Online)
+            {
+                NameLabel.ForeColour = Color.Green;
+            }
+            else
+            {
+                NameLabel.ForeColour = Color.White;
+            }
+
+            if (Selected)
+            {
+                NameLabel.BackColour = Color.Gray;
+            }
+            else
+            {
+                NameLabel.BackColour = Color.Empty;
+            }
+        }
+
+
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            Friend = null;
+            NameLabel = null;
+
+            Selected = false;
+        }
+    }
+
+
     public sealed class RelationshipDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
