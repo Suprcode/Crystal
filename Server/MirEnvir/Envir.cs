@@ -200,7 +200,7 @@ namespace Server.MirEnvir
                 return;
             }
             //thedeath
-            if (Multithread)
+            if (Settings.Multithreaded)
             {
                 for (int j = 0; j < MobThreads.Length; j++)
                 {
