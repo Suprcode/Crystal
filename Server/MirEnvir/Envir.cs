@@ -185,7 +185,6 @@ namespace Server.MirEnvir
                 {
                     MobThreads[j] = new MobThread();
                     MobThreads[j].Id = j;
-                    MobThread Info = MobThreads[j];
                 }
             }
             //thedeath end

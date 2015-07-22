@@ -323,5 +323,10 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        private void magicInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }
