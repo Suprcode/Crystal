@@ -68,7 +68,7 @@ namespace Client.MirScenes
         public MountDialog MountDialog;
         public FishingDialog FishingDialog;
         public FishingStatusDialog FishingStatusDialog;
-        public RefineDialog RefineDialog; //REFINE
+        public RefineDialog RefineDialog;
 
         public GroupDialog GroupDialog;
         public GuildDialog GuildDialog;
@@ -115,7 +115,7 @@ namespace Client.MirScenes
 
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
-        public static UserItem[] Refine = new UserItem[16]; //REFINE
+        public static UserItem[] Refine = new UserItem[16];
         public static UserItem HoverItem;
         public static MirItemCell SelectedCell;
 
@@ -224,7 +224,7 @@ namespace Client.MirScenes
             IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };//IntelligentCreature
             IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
 
-            RefineDialog = new RefineDialog { Parent = this, Visible = false }; //REFINE
+            RefineDialog = new RefineDialog { Parent = this, Visible = false };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -423,7 +423,7 @@ namespace Client.MirScenes
                     QuestDetailDialog.Hide();
                     QuestLogDialog.Hide();
                     NPCAwakeDialog.Hide();
-                    RefineDialog.Hide(); //REFINE
+                    RefineDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
                     break;
@@ -1743,7 +1743,7 @@ namespace Client.MirScenes
                 case MirGridType.Trade:
                     fromCell = TradeDialog.Grid[p.From];
                     break;
-                case MirGridType.Refine: //REFINE
+                case MirGridType.Refine:
                     fromCell = RefineDialog.Grid[p.From];
                     break;
                 default:
@@ -1761,7 +1761,7 @@ namespace Client.MirScenes
                 case MirGridType.Trade:
                     toCell = TradeDialog.Grid[p.To];
                     break;
-                case MirGridType.Refine: //REFINE
+                case MirGridType.Refine:
                     toCell = RefineDialog.Grid[p.To];
                     break;
                 default:
@@ -2063,6 +2063,7 @@ namespace Client.MirScenes
                     break;
                 }
             }
+            NPCDialog.Hide();
         }
 
 
@@ -3018,22 +3019,28 @@ namespace Client.MirScenes
             NPCDropDialog.Show();
         }
 
-        private void NPCRefine(S.NPCRefine p) //REFINE
+        private void NPCRefine(S.NPCRefine p)
         {
             NPCRate = p.Rate;
             if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Refine;
-            NPCDropDialog.Show();
+            if (p.Refining)
+            {
+                NPCDropDialog.Hide();
+                NPCDialog.Hide();
+            }
+            else
+                NPCDropDialog.Show();
         }
 
-        private void NPCCheckRefine(S.NPCCheckRefine p) //REFINE
+        private void NPCCheckRefine(S.NPCCheckRefine p)
         {
             if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.CheckRefine;
             NPCDropDialog.Show();
         }
 
-        private void NPCCollectRefine(S.NPCCollectRefine p) //REFINE
+        private void NPCCollectRefine(S.NPCCollectRefine p)
         {
             if (!NPCDialog.Visible) return;
             NPCDialog.Hide();
@@ -10139,7 +10146,7 @@ namespace Client.MirScenes
 
     }
 
-    public sealed class RefineDialog : MirImageControl //REFINE
+    public sealed class RefineDialog : MirImageControl
     {
         public MirItemCell[] Grid;
         public MirButton RefineButton;
@@ -13444,7 +13451,7 @@ namespace Client.MirScenes
             GameScene.Scene.NPCGoodsDialog.Hide();
             GameScene.Scene.NPCDropDialog.Hide();
             GameScene.Scene.NPCAwakeDialog.Hide();
-            GameScene.Scene.RefineDialog.Hide(); //REFINE
+            GameScene.Scene.RefineDialog.Hide();
 
             /*
             GameScene.Scene.BuyBackDialog.Hide();*/
@@ -13933,31 +13940,30 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.ResetAddedItem { UniqueID = TargetItem.UniqueID });
                     }
                     break;
-                case PanelType.Refine: //REFINE
+                case PanelType.Refine:
 
                     for (int i = 0; i < GameScene.Scene.RefineDialog.Grid.Length; i++)
                     {
                         if (GameScene.Scene.RefineDialog.Grid[i].Item != null)
                         {
-                            // CHECKS PRICE, ADD BACK AFTER TESTING
-                            //if (GameScene.Gold >= (TargetItem.RepairPrice() * 3) * GameScene.NPCRate)
-                            //{
+                            if (GameScene.Gold >= ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate))
+                            {
                                 Network.Enqueue(new C.RefineItem { UniqueID = TargetItem.UniqueID });
                                 TargetItem = null;
                                 return;
-                            //}
-                            //GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
-                            //return;
+                            }
+                            GameScene.Scene.ChatDialog.ReceiveChat(String.Format("You don't have enough gold to refine your {0}.", TargetItem.FriendlyName), ChatType.System);
+                            return;
                         }
 
                     }
-                    GameScene.Scene.ChatDialog.ReceiveChat("You haven't deposited any items to refine your weapon with", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(String.Format("You haven't deposited any items to refine your {0} with.", TargetItem.FriendlyName), ChatType.System);
                     break;
-                case PanelType.CheckRefine: //REFINE
+                case PanelType.CheckRefine:
 
                     if (TargetItem.RefineAdded == 0)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("This item hasn't been refined, so doesn't need checking", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(String.Format("Your {0} hasn't been refined so it doesn't need checking.", TargetItem.FriendlyName), ChatType.System);
                         return;
                     }
                         Network.Enqueue(new C.CheckRefine { UniqueID = TargetItem.UniqueID });
@@ -14119,11 +14125,16 @@ namespace Client.MirScenes
                     text = "Reset: ";
                     HoldButton.Visible = false;
                     break;
-                case PanelType.Refine: //REFINE
+                case PanelType.Refine:
                     text = "Refine: ";
                     HoldButton.Visible = false;
                     ConfirmButton.Visible = true;
                     GameScene.Scene.RefineDialog.Show();
+                    break;
+                case PanelType.CheckRefine:
+                    text = "Check Refine";
+                    HoldButton.Visible = false;
+                    ConfirmButton.Visible = true;
                     break;
 
                 default: return;
@@ -14154,7 +14165,7 @@ namespace Client.MirScenes
                         text += TargetItem.ResetPrice().ToString();
                         break;
                     case PanelType.Refine:
-                        text += ((TargetItem.RepairPrice() * 3) * GameScene.NPCRate).ToString();
+                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
                         break;
 
                     default: return;

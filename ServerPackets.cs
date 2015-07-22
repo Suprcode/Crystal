@@ -1070,7 +1070,7 @@ namespace ServerPackets
         }
     }
 
-    public sealed class DepositRefineItem : Packet //REFINE
+    public sealed class DepositRefineItem : Packet
     {
         public override short Index
         {
@@ -2430,23 +2430,26 @@ namespace ServerPackets
             }
         }
 
-        public sealed class NPCRefine : Packet //REFINE
+        public sealed class NPCRefine : Packet
         {
             public override short Index { get { return (short)ServerPacketIds.NPCRefine; } }
 
             public float Rate;
+            public bool Refining;
 
             protected override void ReadPacket(BinaryReader reader)
             {
                 Rate = reader.ReadSingle();
+                Refining = reader.ReadBoolean();
             }
             protected override void WritePacket(BinaryWriter writer)
             {
                 writer.Write(Rate);
+                writer.Write(Refining);
             }
         }
 
-        public sealed class NPCCheckRefine : Packet //REFINE
+        public sealed class NPCCheckRefine : Packet
         {
             public override short Index { get { return (short)ServerPacketIds.NPCCheckRefine; } }
 
@@ -2459,7 +2462,7 @@ namespace ServerPackets
             }
         }
 
-        public sealed class NPCCollectRefine : Packet //REFINE
+        public sealed class NPCCollectRefine : Packet
         {
             public override short Index { get { return (short)ServerPacketIds.NPCCollectRefine; } }
 

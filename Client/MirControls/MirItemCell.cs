@@ -73,7 +73,7 @@ namespace Client.MirControls
                     case MirGridType.Mail:
                         return MailComposeParcelDialog.Items;
                     case MirGridType.Refine:
-                        return GameScene.Refine; //REFINE
+                        return GameScene.Refine;
                     default:
                         throw new NotImplementedException();
                 }
@@ -1183,7 +1183,7 @@ namespace Client.MirControls
                     #endregion
 
                     #region To Refine 
-                    //REFINE
+                  
                     case MirGridType.Refine:
 
                         switch (GameScene.SelectedCell.GridType)

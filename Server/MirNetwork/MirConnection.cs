@@ -240,7 +240,7 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.StoreItem:
                     StoreItem((C.StoreItem) p);
                     break;
-                case (short)ClientPacketIds.DepositRefineItem: //REFINE
+                case (short)ClientPacketIds.DepositRefineItem:
                     DepositRefineItem((C.DepositRefineItem)p);
                     break;
                 case (short)ClientPacketIds.RetrieveRefineItem:
@@ -769,35 +769,35 @@ namespace Server.MirNetwork
             Player.StoreItem(p.From, p.To);
         }
 
-        private void DepositRefineItem(C.DepositRefineItem p) //REFINE
+        private void DepositRefineItem(C.DepositRefineItem p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.DepositRefineItem(p.From, p.To);
         }
 
-        private void RetrieveRefineItem(C.RetrieveRefineItem p) //REFINE
+        private void RetrieveRefineItem(C.RetrieveRefineItem p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.RetrieveRefineItem(p.From, p.To);
         }
 
-        private void RefineCancel(C.RefineCancel p) //REFINE
+        private void RefineCancel(C.RefineCancel p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.RefineCancel();
         }
 
-        private void RefineItem(C.RefineItem p) //REFINE
+        private void RefineItem(C.RefineItem p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.RefineItem(p.UniqueID);
         }
 
-        private void CheckRefine(C.CheckRefine p) //REFINE
+        private void CheckRefine(C.CheckRefine p)
         {
             if (Stage != GameStage.Game) return;
 

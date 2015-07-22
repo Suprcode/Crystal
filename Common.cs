@@ -571,7 +571,7 @@ public enum MirGridType : byte
     QuestInventory = 13,
     AwakenItem = 14,
     Mail = 15,
-    Refine = 16, //REFINE
+    Refine = 16,
 }
 
 public enum EquipmentSlot : byte
@@ -1042,9 +1042,9 @@ public enum ServerPacketIds : short
     NPCSell,
     NPCRepair,
     NPCSRepair,
-    NPCRefine, //REFINE
-    NPCCheckRefine, //REFINE
-    NPCCollectRefine, //REFINE
+    NPCRefine,
+    NPCCheckRefine,
+    NPCCollectRefine,
     NPCStorage,
     SellItem,
     RepairItem,
@@ -1186,7 +1186,7 @@ public enum ClientPacketIds : short
     SplitItem,
     UseItem,
     DropItem,
-    DepositRefineItem, //REFINE
+    DepositRefineItem,
     RetrieveRefineItem,
     RefineCancel,
     RefineItem,
@@ -2595,11 +2595,10 @@ public class UserItem
 
         Awake = new Awake(reader);
 
-        if (version > 55)
-        {
+        if (version <= 55) return;
+
             RefinedValue = (RefinedValue)reader.ReadByte();
             RefineAdded = reader.ReadByte();
-        }
 
 
     }
@@ -2855,6 +2854,9 @@ public class UserItem
 
                 Slots = Slots,
 				Awake = Awake,
+
+                RefinedValue = RefinedValue,
+                RefineAdded = RefineAdded
             };
 
         return item;
@@ -3791,7 +3793,7 @@ public abstract class Packet
                 return new C.UseItem();
             case (short)ClientPacketIds.DropItem:
                 return new C.DropItem();
-            case (short)ClientPacketIds.DepositRefineItem: //REFINE
+            case (short)ClientPacketIds.DepositRefineItem:
                 return new C.DepositRefineItem();
             case (short)ClientPacketIds.RetrieveRefineItem:
                 return new C.RetrieveRefineItem();
@@ -4122,11 +4124,11 @@ public abstract class Packet
                 return new S.NPCRepair();
             case (short)ServerPacketIds.NPCSRepair: 
                 return new S.NPCSRepair();
-            case (short)ServerPacketIds.NPCRefine: //REFINE
+            case (short)ServerPacketIds.NPCRefine:
                 return new S.NPCRefine();
-            case (short)ServerPacketIds.NPCCheckRefine: //REFINE
+            case (short)ServerPacketIds.NPCCheckRefine:
                 return new S.NPCCheckRefine();
-            case (short)ServerPacketIds.NPCCollectRefine: //REFINE
+            case (short)ServerPacketIds.NPCCollectRefine:
                 return new S.NPCCollectRefine();
             case (short)ServerPacketIds.NPCStorage:
                 return new S.NPCStorage();

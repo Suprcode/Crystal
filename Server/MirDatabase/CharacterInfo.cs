@@ -293,15 +293,15 @@ namespace Server.MirDatabase
                 }
             }
 
-            //if (Envir.LoadVersion > 56)
-            //{
-                //if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion);
-                  //if (CurrentRefine != null)
-                    //SMain.Envir.BindItem(CurrentRefine);
+            if (Envir.LoadVersion > 55)
+            {
+                if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion);
+                  if (CurrentRefine != null)
+                    SMain.Envir.BindItem(CurrentRefine);
 
-                //CollectTime = reader.ReadInt64();
-                //CollectTime += SMain.Envir.Time;
-            //}
+                CollectTime = reader.ReadInt64();
+                CollectTime += SMain.Envir.Time;
+            }
 
         }
 
@@ -419,16 +419,16 @@ namespace Server.MirDatabase
                 writer.Write(CompletedQuests[i]);
 
 
-            //writer.Write(CurrentRefine != null);
-            //if (CurrentRefine != null)
-                //CurrentRefine.Save(writer);
+            writer.Write(CurrentRefine != null);
+            if (CurrentRefine != null)
+                CurrentRefine.Save(writer);
 
-            //if ((CollectTime - SMain.Envir.Time) < 0)
-                //CollectTime = 0;
-            //else
-                //CollectTime = CollectTime - SMain.Envir.Time;
+            if ((CollectTime - SMain.Envir.Time) < 0)
+                CollectTime = 0;
+            else
+                CollectTime = CollectTime - SMain.Envir.Time;
 
-            //writer.Write(CollectTime);
+            writer.Write(CollectTime);
         }
 
         public ListViewItem CreateListView()
