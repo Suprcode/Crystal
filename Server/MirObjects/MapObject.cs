@@ -299,7 +299,7 @@ namespace Server.MirObjects
         public virtual void Spawned()
         {
             Node = Envir.Objects.AddLast(this);
-            if ((Race == ObjectType.Monster) && Envir.Multithread)
+            if ((Race == ObjectType.Monster) && Settings.Multithreaded)
             {
                 SpawnThread = CurrentMap.Thread;
                 NodeThreaded = Envir.MobThreads[SpawnThread].ObjectsList.AddLast(this);
@@ -314,7 +314,7 @@ namespace Server.MirObjects
         {
             Broadcast(new S.ObjectRemove {ObjectID = ObjectID});
             Envir.Objects.Remove(Node);
-            if (Envir.Multithread && (Race == ObjectType.Monster))
+            if (Settings.Multithreaded && (Race == ObjectType.Monster))
             {
                 Envir.MobThreads[SpawnThread].ObjectsList.Remove(NodeThreaded);
             }            

@@ -3309,6 +3309,12 @@ namespace Server.MirObjects
                             return;
                         }
 
+                        if (CurrentMap.Info.NoRecall)
+                        {
+                            ReceiveChat("You cannot recall people on this map", ChatType.System);
+                            return;
+                        }
+
                         if (Envir.Time < LastRecallTime)
                         {
                             ReceiveChat(string.Format("You cannot recall for another {0} seconds", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
