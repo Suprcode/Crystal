@@ -51,6 +51,14 @@ public enum ItemGrade : byte
     Mythical = 4,
 }
 
+public enum RefinedValue : byte
+{
+    None = 0,
+    DC = 1,
+    MC = 2,
+    SC = 3,
+}
+
 public enum QuestType : byte
 {
     General = 0,
@@ -563,7 +571,8 @@ public enum MirGridType : byte
     Fishing = 12,
     QuestInventory = 13,
     AwakenItem = 14,
-    Mail = 15
+    Mail = 15,
+    Refine = 16,
 }
 
 public enum EquipmentSlot : byte
@@ -637,6 +646,7 @@ public enum PoisonType : byte
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
+
 public enum BindMode : short
 {
     none = 0,
@@ -984,6 +994,10 @@ public enum ServerPacketIds : short
     StoreItem,
     SplitItem,
     SplitItem1,
+    DepositRefineItem,
+    RetrieveRefineItem,
+    RefineCancel,
+    RefineItem,
     DepositTradeItem,
     RetrieveTradeItem,
     UseItem,
@@ -1030,6 +1044,9 @@ public enum ServerPacketIds : short
     NPCSell,
     NPCRepair,
     NPCSRepair,
+    NPCRefine,
+    NPCCheckRefine,
+    NPCCollectRefine,
     NPCStorage,
     SellItem,
     RepairItem,
@@ -1174,6 +1191,11 @@ public enum ClientPacketIds : short
     SplitItem,
     UseItem,
     DropItem,
+    DepositRefineItem,
+    RetrieveRefineItem,
+    RefineCancel,
+    RefineItem,
+    CheckRefine,
     DepositTradeItem,
     RetrieveTradeItem,
     DropGold,
@@ -2088,6 +2110,8 @@ public class ItemInfo
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 
+
+
     public short Shape;
     public byte Weight, Light, RequiredAmount;
 
@@ -2472,6 +2496,9 @@ public class UserItem
     public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
     public sbyte AttackSpeed, Luck;
 
+    public RefinedValue RefinedValue = RefinedValue.None;
+    public byte RefineAdded = 0;
+
     public bool DuraChanged;
     public int SoulBoundId = -1;
     public bool Identified = false;
@@ -2553,6 +2580,8 @@ public class UserItem
         CriticalDamage = reader.ReadByte();
         Freezing = reader.ReadByte();
         PoisonAttack = reader.ReadByte();
+        
+        
 
         if (version <= 31) return;
 
@@ -2571,7 +2600,13 @@ public class UserItem
         if (version <= 40) return;
 
         Awake = new Awake(reader);
-        
+
+        if (version <= 56) return;
+
+            RefinedValue = (RefinedValue)reader.ReadByte();
+            RefineAdded = reader.ReadByte();
+
+
     }
 
     public void Save(BinaryWriter writer)
@@ -2623,7 +2658,12 @@ public class UserItem
         }
 
         writer.Write(GemCount);
+
+       
         Awake.Save(writer);
+
+        writer.Write((byte)RefinedValue);
+        writer.Write(RefineAdded);
     }
 
 
@@ -2820,6 +2860,9 @@ public class UserItem
 
                 Slots = Slots,
 				Awake = Awake,
+
+                RefinedValue = RefinedValue,
+                RefineAdded = RefineAdded
             };
 
         return item;
@@ -2891,7 +2934,6 @@ public class Awake
         if (item.Info.Grade == ItemGrade.None) return false;
 
         if (IsMaxLevel()) return false;
-
 
         if (this.type == AwakeType.None)
         {
@@ -3406,7 +3448,6 @@ public class ClientFriend
     public bool Blocked;
 
     public bool Online;
-    //public DateTime LastOnline;
 
     public ClientFriend() { }
 
@@ -3418,7 +3459,6 @@ public class ClientFriend
         Blocked = reader.ReadBoolean();
 
         Online = reader.ReadBoolean();
-        //LastOnline = DateTime.FromBinary(reader.ReadInt64());
     }
 
     public void Save(BinaryWriter writer)
@@ -3429,7 +3469,6 @@ public class ClientFriend
         writer.Write(Blocked);
 
         writer.Write(Online);
-        //writer.Write(LastOnline.ToBinary());
     }
 }
 
@@ -3790,6 +3829,16 @@ public abstract class Packet
                 return new C.UseItem();
             case (short)ClientPacketIds.DropItem:
                 return new C.DropItem();
+            case (short)ClientPacketIds.DepositRefineItem:
+                return new C.DepositRefineItem();
+            case (short)ClientPacketIds.RetrieveRefineItem:
+                return new C.RetrieveRefineItem();
+            case (short)ClientPacketIds.RefineCancel:
+                return new C.RefineCancel();
+            case (short)ClientPacketIds.RefineItem:
+                return new C.RefineItem();
+            case (short)ClientPacketIds.CheckRefine:
+                return new C.CheckRefine();
             case (short)ClientPacketIds.DepositTradeItem:
                 return new C.DepositTradeItem();
             case (short)ClientPacketIds.RetrieveTradeItem:
@@ -4017,6 +4066,12 @@ public abstract class Packet
                 return new S.TakeBackItem();
             case (short)ServerPacketIds.StoreItem:
                 return new S.StoreItem();
+            case (short)ServerPacketIds.DepositRefineItem:
+                return new S.DepositRefineItem();
+            case (short)ServerPacketIds.RetrieveRefineItem:
+                return new S.RetrieveRefineItem();
+            case (short)ServerPacketIds.RefineItem:
+                return new S.RefineItem();
             case (short)ServerPacketIds.DepositTradeItem:
                 return new S.DepositTradeItem();
             case (short)ServerPacketIds.RetrieveTradeItem:
@@ -4111,8 +4166,14 @@ public abstract class Packet
                 return new S.NPCSell();
             case (short)ServerPacketIds.NPCRepair:
                 return new S.NPCRepair();
-            case (short)ServerPacketIds.NPCSRepair:
+            case (short)ServerPacketIds.NPCSRepair: 
                 return new S.NPCSRepair();
+            case (short)ServerPacketIds.NPCRefine:
+                return new S.NPCRefine();
+            case (short)ServerPacketIds.NPCCheckRefine:
+                return new S.NPCCheckRefine();
+            case (short)ServerPacketIds.NPCCollectRefine:
+                return new S.NPCCollectRefine();
             case (short)ServerPacketIds.NPCStorage:
                 return new S.NPCStorage();
             case (short)ServerPacketIds.SellItem:

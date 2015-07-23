@@ -56,7 +56,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 56;
+        public const int Version = 57;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
@@ -186,11 +186,6 @@ namespace Server.MirEnvir
                     MobThreads[j] = new MobThread();
                     MobThreads[j].Id = j;
                     MobThread Info = MobThreads[j];
-                    if (j > 0) //dont start up 0 
-                    {
-                        MobThreading[j] = new Thread(() => ThreadLoop(Info));
-                        MobThreading[j].Start();
-                    }
                 }
             }
             //thedeath end
@@ -204,7 +199,21 @@ namespace Server.MirEnvir
                 Stop();                
                 return;
             }
-
+            //thedeath
+            if (Settings.Multithreaded)
+            {
+                for (int j = 0; j < MobThreads.Length; j++)
+                {
+                    MobThread Info = MobThreads[j];
+                    if (j > 0) //dont start up 0 
+                    {
+                        MobThreading[j] = new Thread(() => ThreadLoop(Info));
+                        MobThreading[j].IsBackground = true;
+                        MobThreading[j].Start();
+                    }
+                }
+            }
+            //thedeath end
             StartNetwork();
 
             try
@@ -258,12 +267,7 @@ namespace Server.MirEnvir
                         {
                             MobThread Info = MobThreads[j];
 
-                            if ((MobThreading[j] != null) &&
-                                (Info.Stop == false))
-                            {
-
-                            }
-                            else
+                            if (Info.Stop == true)
                             {
                                 Info.EndTime = Time + 20;
                                 Info.Stop = false;
@@ -413,7 +417,7 @@ namespace Server.MirEnvir
                     }
                     else
                     {
-                        if (Stopwatch.ElapsedMilliseconds > Info.EndTime)
+                        if ((Stopwatch.ElapsedMilliseconds > Info.EndTime) && Running)
                         {
                             Info.Stop = true;
                             lock (_locker)
@@ -433,7 +437,7 @@ namespace Server.MirEnvir
                 File.AppendAllText(@".\Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
-            Info.Stop = true;
+            //Info.Stop = true;
         }
 
         private void AdjustLights()
@@ -1075,6 +1079,12 @@ namespace Server.MirEnvir
         public void Stop()
         {
             Running = false;
+
+            lock (_locker)
+            {
+                Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
+            }
+
             //simply intterupt all the mob threads if they are running (will give an invisible error on them but fastest way of getting rid of them on shutdowns)
             for (int i = 1; i < MobThreading.Length; i++)
             {

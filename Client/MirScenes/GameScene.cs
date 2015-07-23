@@ -30,6 +30,9 @@ namespace Client.MirScenes
         Disassemble, 
         Downgrade,
         Reset,
+        Refine,
+        CheckRefine,
+        CollectRefine,
     }
 
     public sealed class GameScene : MirScene
@@ -65,6 +68,7 @@ namespace Client.MirScenes
         public MountDialog MountDialog;
         public FishingDialog FishingDialog;
         public FishingStatusDialog FishingStatusDialog;
+        public RefineDialog RefineDialog;
 
         public GroupDialog GroupDialog;
         public GuildDialog GuildDialog;
@@ -96,9 +100,11 @@ namespace Client.MirScenes
         public IntelligentCreatureOptionsDialog IntelligentCreatureOptionsDialog;//IntelligentCreature
         public IntelligentCreatureOptionsGradeDialog IntelligentCreatureOptionsGradeDialog;//IntelligentCreature
 
+        public FriendDialog FriendDialog;
+        public MemoDialog MemoDialog;
+
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
-        public FriendDialog FriendDialog;
         public RelationshipDialog RelationshipDialog;
         public MentorDialog MentorDialog;
 
@@ -111,6 +117,7 @@ namespace Client.MirScenes
 
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
+        public static UserItem[] Refine = new UserItem[16];
         public static UserItem HoverItem;
         public static MirItemCell SelectedCell;
 
@@ -221,10 +228,14 @@ namespace Client.MirScenes
             IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };//IntelligentCreature
             IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
 
+            RefineDialog = new RefineDialog { Parent = this, Visible = false };
+
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
             RelationshipDialog = new RelationshipDialog { Parent = this, Visible = false };
             FriendDialog = new FriendDialog { Parent = this, Visible = false };
+            MemoDialog = new MemoDialog { Parent = this, Visible = false };
+
             MentorDialog = new MentorDialog { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
@@ -418,6 +429,7 @@ namespace Client.MirScenes
                     QuestDetailDialog.Hide();
                     QuestLogDialog.Hide();
                     NPCAwakeDialog.Hide();
+                    RefineDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
                     break;
@@ -907,6 +919,18 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.StoreItem:
                     StoreItem((S.StoreItem)p);
                     break;
+                case (short)ServerPacketIds.DepositRefineItem:
+                    DepositRefineItem((S.DepositRefineItem)p);
+                    break;
+                case (short)ServerPacketIds.RetrieveRefineItem:
+                    RetrieveRefineItem((S.RetrieveRefineItem)p);
+                    break;
+                case (short)ServerPacketIds.RefineCancel:
+                    RefineCancel((S.RefineCancel)p);
+                    break;
+                case (short)ServerPacketIds.RefineItem:
+                    RefineItem((S.RefineItem)p);
+                    break;
                 case (short)ServerPacketIds.DepositTradeItem:
                     DepositTradeItem((S.DepositTradeItem)p);
                     break;
@@ -1050,6 +1074,15 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.NPCSRepair:
                     NPCSRepair((S.NPCSRepair)p);
+                    break;
+                case (short)ServerPacketIds.NPCRefine:
+                    NPCRefine((S.NPCRefine)p);
+                    break;
+                case (short)ServerPacketIds.NPCCheckRefine:
+                    NPCCheckRefine((S.NPCCheckRefine)p);
+                    break;
+                case (short)ServerPacketIds.NPCCollectRefine:
+                    NPCCollectRefine((S.NPCCollectRefine)p);
                     break;
                 case (short)ServerPacketIds.NPCStorage:
                     NPCStorage();
@@ -1729,6 +1762,9 @@ namespace Client.MirScenes
                 case MirGridType.Trade:
                     fromCell = TradeDialog.Grid[p.From];
                     break;
+                case MirGridType.Refine:
+                    fromCell = RefineDialog.Grid[p.From];
+                    break;
                 default:
                     return;
             }
@@ -1743,6 +1779,9 @@ namespace Client.MirScenes
                     break;
                 case MirGridType.Trade:
                     toCell = TradeDialog.Grid[p.To];
+                    break;
+                case MirGridType.Refine:
+                    toCell = RefineDialog.Grid[p.To];
                     break;
                 default:
                     return;
@@ -1994,6 +2033,59 @@ namespace Client.MirScenes
             fromCell.Item = null;
             User.RefreshStats();
         }
+        private void DepositRefineItem(S.DepositRefineItem p)
+        {
+            MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
+
+            MirItemCell toCell = RefineDialog.Grid[p.To];
+
+            if (toCell == null || fromCell == null) return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success) return;
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+        }
+
+        private void RetrieveRefineItem(S.RetrieveRefineItem p)
+        {
+            MirItemCell fromCell = RefineDialog.Grid[p.From];
+            MirItemCell toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+
+            if (toCell == null || fromCell == null) return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success) return;
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+        }
+
+        private void RefineCancel(S.RefineCancel p)
+        {
+            RefineDialog.RefineReset();  
+        }
+
+        private void RefineItem(S.RefineItem p)
+        {
+            RefineDialog.RefineReset();
+            for (int i = 0; i < User.Inventory.Length; i++)
+            {
+                if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.UniqueID)
+                {
+                    User.Inventory[i] = null;
+                    break;
+                }
+            }
+            NPCDialog.Hide();
+        }
+
+
         private void DepositTradeItem(S.DepositTradeItem p)
         {
             MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
@@ -3023,6 +3115,35 @@ namespace Client.MirScenes
             NPCDropDialog.PType = PanelType.SpecialRepair;
             NPCDropDialog.Show();
         }
+
+        private void NPCRefine(S.NPCRefine p)
+        {
+            NPCRate = p.Rate;
+            if (!NPCDialog.Visible) return;
+            NPCDropDialog.PType = PanelType.Refine;
+            if (p.Refining)
+            {
+                NPCDropDialog.Hide();
+                NPCDialog.Hide();
+            }
+            else
+                NPCDropDialog.Show();
+        }
+
+        private void NPCCheckRefine(S.NPCCheckRefine p)
+        {
+            if (!NPCDialog.Visible) return;
+            NPCDropDialog.PType = PanelType.CheckRefine;
+            NPCDropDialog.Show();
+        }
+
+        private void NPCCollectRefine(S.NPCCollectRefine p)
+        {
+            if (!NPCDialog.Visible) return;
+            NPCDialog.Hide();
+        }
+
+
         private void SellItem(S.SellItem p)
         {
             MirItemCell cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
@@ -3106,6 +3227,9 @@ namespace Client.MirScenes
             item.Freezing = p.Item.Freezing;
             item.MagicResist = p.Item.MagicResist;
             item.PoisonResist = p.Item.PoisonResist;
+            item.RefinedValue = p.Item.RefinedValue;
+            item.RefineAdded = p.Item.RefineAdded;
+            
 
             GameScene.Scene.InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
 
@@ -4866,8 +4990,12 @@ namespace Client.MirScenes
                 OutLine = true,
                 Parent = ItemLabel,
                 Text = HoverItem.Info.Grade != ItemGrade.None ? HoverItem.Info.FriendlyName + "\n" + HoverItem.Info.Grade.ToString() : 
-                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName
+                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName,
             };
+
+            if (HoverItem.RefineAdded > 0)
+            nameLabel.Text = "(*)" + nameLabel.Text;
+
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, nameLabel.DisplayRectangle.Bottom));
@@ -5122,6 +5250,8 @@ namespace Client.MirScenes
             }
 
             #endregion
+
+
 
             #region ACC
 
@@ -6522,6 +6652,7 @@ namespace Client.MirScenes
             }
 
             #endregion
+
 
             #region DONT_DESTROY_ON_DROP
 
@@ -10128,6 +10259,83 @@ namespace Client.MirScenes
 
 
     }
+
+    public sealed class RefineDialog : MirImageControl
+    {
+        public MirItemCell[] Grid;
+        public MirButton RefineButton;
+
+        public RefineDialog()
+        {
+            Index = 1002;
+            Library = Libraries.Prguse;
+            Location = new Point(0, 225);
+            Sort = true;
+
+            MirImageControl TitleLabel = new MirImageControl
+            {
+                Index = 18,
+                Library = Libraries.Title,
+                Location = new Point(28, 5),
+                Parent = this
+            };
+
+
+            Grid = new MirItemCell[4 * 4];
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    int idx = 4 * y + x;
+                    Grid[idx] = new MirItemCell
+                    {
+                        ItemSlot = idx,
+                        GridType = MirGridType.Refine,
+                        Library = Libraries.Items,
+                        Parent = this,
+                        Size = new Size(34, 32),
+                        Location = new Point(x * 34 + 12 + x, y * 32 + 37 + y),
+                    };
+                }
+            }
+        }
+
+        public void Hide()
+        {
+            Visible = false;
+            RefineCancel();
+        }
+
+        public void Show()
+        {
+            Visible = true;
+        }
+
+        public void RefineCancel()
+        {
+            Network.Enqueue(new C.RefineCancel());
+        }
+
+        public void RefineReset()
+        {
+            for (int i = 0; i < Grid.Length; i++)
+                Grid[i].Item = null;
+        }
+
+
+
+        public MirItemCell GetCell(ulong id)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+                return Grid[i];
+            }
+            return null;
+        }
+
+    }
+
     public sealed class InventoryDialog : MirImageControl
     {
         public MirImageControl WeightBar;
@@ -12107,6 +12315,10 @@ namespace Client.MirScenes
                 PressedIndex = 436,
                 Sound = SoundList.ButtonA,
             };
+            FriendButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.AddFriend { Name = Name, Blocked = false });
+            };
 
             MailButton = new MirButton
             {
@@ -13358,6 +13570,7 @@ namespace Client.MirScenes
             GameScene.Scene.NPCGoodsDialog.Hide();
             GameScene.Scene.NPCDropDialog.Hide();
             GameScene.Scene.NPCAwakeDialog.Hide();
+            GameScene.Scene.RefineDialog.Hide();
 
             /*
             GameScene.Scene.BuyBackDialog.Hide();*/
@@ -13846,6 +14059,34 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.ResetAddedItem { UniqueID = TargetItem.UniqueID });
                     }
                     break;
+                case PanelType.Refine:
+
+                    for (int i = 0; i < GameScene.Scene.RefineDialog.Grid.Length; i++)
+                    {
+                        if (GameScene.Scene.RefineDialog.Grid[i].Item != null)
+                        {
+                            if (GameScene.Gold >= ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate))
+                            {
+                                Network.Enqueue(new C.RefineItem { UniqueID = TargetItem.UniqueID });
+                                TargetItem = null;
+                                return;
+                            }
+                            GameScene.Scene.ChatDialog.ReceiveChat(String.Format("You don't have enough gold to refine your {0}.", TargetItem.FriendlyName), ChatType.System);
+                            return;
+                        }
+
+                    }
+                    GameScene.Scene.ChatDialog.ReceiveChat(String.Format("You haven't deposited any items to refine your {0} with.", TargetItem.FriendlyName), ChatType.System);
+                    break;
+                case PanelType.CheckRefine:
+
+                    if (TargetItem.RefineAdded == 0)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(String.Format("Your {0} hasn't been refined so it doesn't need checking.", TargetItem.FriendlyName), ChatType.System);
+                        return;
+                    }
+                        Network.Enqueue(new C.CheckRefine { UniqueID = TargetItem.UniqueID });
+                    break;
             }
 
 
@@ -13952,8 +14193,8 @@ namespace Client.MirScenes
 
             HoldButton.Visible = true;
 
-            Index = 392;
-            Library = Libraries.Prguse;
+            Index = 351;
+            Library = Libraries.Prguse2;
             Location = new Point(264, 224);
 
             ConfirmButton.HoverIndex = 291;
@@ -14003,6 +14244,18 @@ namespace Client.MirScenes
                     text = "Reset: ";
                     HoldButton.Visible = false;
                     break;
+                case PanelType.Refine:
+                    text = "Refine: ";
+                    HoldButton.Visible = false;
+                    ConfirmButton.Visible = true;
+                    GameScene.Scene.RefineDialog.Show();
+                    break;
+                case PanelType.CheckRefine:
+                    text = "Check Refine";
+                    HoldButton.Visible = false;
+                    ConfirmButton.Visible = true;
+                    break;
+
                 default: return;
 
             }
@@ -14030,6 +14283,10 @@ namespace Client.MirScenes
                     case PanelType.Reset:
                         text += TargetItem.ResetPrice().ToString();
                         break;
+                    case PanelType.Refine:
+                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
+                        break;
+
                     default: return;
                 }
 
@@ -19951,7 +20208,6 @@ namespace Client.MirScenes
                 Update();
             };
 
-
             BlockedTabLabel = new MirLabel
             {
                 Location = new Point(132, 36),
@@ -20034,7 +20290,11 @@ namespace Client.MirScenes
             };
             MemoButton.Click += (o, e) =>
             {
+                if (SelectedFriend == null) return;
 
+                GameScene.Scene.MemoDialog.Friend = SelectedFriend;
+
+                GameScene.Scene.MemoDialog.Show();
             };
 
             EmailButton = new MirButton
@@ -20102,12 +20362,8 @@ namespace Client.MirScenes
                     BlockedTabLabel.ForeColour = Color.White;
                 }
                 Update();
+                GameScene.Scene.MemoDialog.Hide();
             }
-        }
-
-        public void Refresh()
-        {
-            Network.Enqueue(new C.RefreshFriends());
         }
 
         public void Update()
@@ -20212,13 +20468,15 @@ namespace Client.MirScenes
         {
             if (!Visible) return;
             Visible = false;
+
+            GameScene.Scene.MemoDialog.Hide();
         }
         public void Show()
         {
             if (Visible) return;
             Visible = true;
 
-            Refresh();
+            Network.Enqueue(new C.RefreshFriends());
         }
     }
     public sealed class FriendRow : MirControl
@@ -20291,6 +20549,82 @@ namespace Client.MirScenes
         }
     }
 
+    public sealed class MemoDialog : MirImageControl
+    {
+        public MirImageControl TitleLabel;
+        MirTextBox MemoTextBox;
+        public MirButton CloseButton, OKButton, CancelButton;
+
+        public ClientFriend Friend;
+
+        public MemoDialog()
+        {
+            Index = 199;
+            Library = Libraries.Title;
+            Movable = true;
+            Sort = true;
+            Location = Center;
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 6,
+                Library = Libraries.Title,
+                Location = new Point(18, 4),
+                Parent = this
+            };
+
+            MemoTextBox = new MirTextBox
+            {
+                ForeColour = Color.White,
+                Parent = this,
+                Font = new Font(Settings.FontName, 8F),
+                Location = new Point(15, 15),
+                Size = new Size(150, 120),
+            };
+
+            OKButton = new MirButton
+            {
+                Index = 607,
+                HoverIndex = 608,
+                PressedIndex = 609,
+                Parent = this,
+                Library = Libraries.Title,
+                Sound = SoundList.ButtonA,
+                Location = new Point(30, 165)
+            };
+            OKButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.AddMemo { CharacterIndex = Friend.Index, Memo = MemoTextBox.Text });
+            };
+
+            #region Buttons
+
+            CloseButton = new MirButton
+            {
+                HoverIndex = 361,
+                Index = 360,
+                Location = new Point(237, 3),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                PressedIndex = 362,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+            #endregion
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+        public void Show()
+        {
+            if (Visible) return;
+            Visible = true;
+        }
+    }
 
     public sealed class RelationshipDialog : MirImageControl
     {
@@ -20338,6 +20672,8 @@ namespace Client.MirScenes
             Visible = true;
         }
     }
+
+
     public sealed class MentorDialog : MirImageControl
     {
         public MirImageControl TitleLabel;

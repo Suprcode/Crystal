@@ -28,6 +28,9 @@ namespace Server.MirObjects
             BuySellKey = "[@BUYSELL]",
             RepairKey = "[@REPAIR]",
             SRepairKey = "[@SREPAIR]",
+            RefineKey = "[@REFINE]",
+            RefineCheckKey = "[@REFINECHECK]",
+            RefineCollectKey = "[@REFINECOLLECT]",
             BuyBackKey = "[@BUYBACK]",
             StorageKey = "[@STORAGE]",
             ConsignKey = "[@CONSIGN]",
@@ -879,6 +882,22 @@ namespace Server.MirObjects
                     break;
                 case SRepairKey:
                     player.Enqueue(new S.NPCSRepair { Rate = Info.PriceRate });
+                    break;
+                case RefineKey:
+                    if (player.Info.CurrentRefine != null)
+                    {
+                        player.ReceiveChat("You're already refining an item.", ChatType.System);
+                        player.Enqueue(new S.NPCRefine { Rate = (Settings.RefineCost), Refining = true });
+                        break;
+                    }
+                    else
+                        player.Enqueue(new S.NPCRefine { Rate = (Settings.RefineCost), Refining = false });
+                    break;
+                case RefineCheckKey:
+                    player.Enqueue(new S.NPCCheckRefine());
+                    break;
+                case RefineCollectKey:
+                    player.CollectRefine();
                     break;
                 case StorageKey:
                     player.SendStorage();
