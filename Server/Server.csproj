@@ -330,6 +330,9 @@
     <EmbeddedResource Include="MirForms\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
+      <DependentUpon>MagicInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\DragonInfoForm.resx">
       <DependentUpon>DragonInfoForm.cs</DependentUpon>
     </EmbeddedResource>
