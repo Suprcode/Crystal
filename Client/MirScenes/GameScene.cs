@@ -122,7 +122,7 @@ namespace Client.MirScenes
         public static MirItemCell SelectedCell;
 
         public static bool PickedUpGold;
-        public MirControl ItemLabel, MailLabel;
+        public MirControl ItemLabel, MailLabel, MemoLabel;
         public static long UseItemTime, PickUpTime;
         public static uint Gold;
         public static long InspectTime;
@@ -820,6 +820,19 @@ namespace Client.MirScenes
                 if (y + MailLabel.Size.Height > Settings.ScreenHeight)
                     y = Settings.ScreenHeight - MailLabel.Size.Height;
                 MailLabel.Location = new Point(x, y);
+            }
+
+            if (MemoLabel != null && !MemoLabel.IsDisposed)
+            {
+                MemoLabel.BringToFront();
+
+                int x = CMain.MPoint.X + 15, y = CMain.MPoint.Y;
+                if (x + MemoLabel.Size.Width > Settings.ScreenWidth)
+                    x = Settings.ScreenWidth - MailLabel.Size.Width;
+
+                if (y + MemoLabel.Size.Height > Settings.ScreenHeight)
+                    y = Settings.ScreenHeight - MemoLabel.Size.Height;
+                MemoLabel.Location = new Point(x, y);
             }
 
             if (!User.Dead) ShowReviveMessage = false;
@@ -4974,6 +4987,12 @@ namespace Client.MirScenes
                 MailLabel.Dispose();
             MailLabel = null;
         }
+        public void DisposeMemoLabel()
+        {
+            if (MemoLabel != null && !MemoLabel.IsDisposed)
+                MemoLabel.Dispose();
+            MemoLabel = null;
+        }
 
         public MirControl NameInfoLabel(UserItem item, bool Inspect = false)
         {
@@ -7333,6 +7352,51 @@ namespace Client.MirScenes
 
             MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, openedLabel.DisplayRectangle.Right + 4),
             Math.Max(MailLabel.Size.Height, openedLabel.DisplayRectangle.Bottom));
+        }
+
+        public void CreateMemoLabel(ClientFriend friend)
+        {
+            if (friend == null)
+            {
+                DisposeMemoLabel();
+                return;
+            }
+
+            if (MemoLabel != null && !MemoLabel.IsDisposed) return;
+
+            MemoLabel = new MirControl
+            {
+                BackColour = Color.FromArgb(255, 50, 50, 50),
+                Border = true,
+                BorderColour = Color.Gray,
+                DrawControlTexture = true,
+                NotControl = true,
+                Parent = this,
+                Opacity = 0.7F
+            };
+
+            string[] words = friend.Memo.Split(' ');
+
+            string newMemo = string.Empty;
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                newMemo += words[i] + " ";
+                if (i % 5 == 0 && i > 0) newMemo += "\r\n";
+            }
+
+            MirLabel memoLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.White,
+                Location = new Point(4, 4),
+                OutLine = true,
+                Parent = MemoLabel,
+                Text = newMemo
+            };
+
+            MemoLabel.Size = new Size(Math.Max(MemoLabel.Size.Width, memoLabel.DisplayRectangle.Right + 4),
+                Math.Max(MemoLabel.Size.Height, memoLabel.DisplayRectangle.Bottom));
         }
 
         public class OutPutMessage
@@ -20409,11 +20473,7 @@ namespace Client.MirScenes
 
         public void Update()
         {
-            int maxPage = Friends.Count / Rows.Length + 1;
-            if (maxPage < 1) maxPage = 1;
-
-            PageNumberLabel.Text = (Page + 1) + " / " + maxPage;
-
+            
             SelectedFriend = null;
 
             for (int i = 0; i < Rows.Length; i++)
@@ -20430,6 +20490,11 @@ namespace Client.MirScenes
             else
                 filteredFriends = Friends.Where(e => !e.Blocked).ToList();
 
+            int maxPage = filteredFriends.Count / Rows.Length + 1;
+            if (maxPage < 1) maxPage = 1;
+
+            PageNumberLabel.Text = (Page + 1) + " / " + maxPage;
+
             int maxIndex = filteredFriends.Count - 1;
 
             if (StartIndex > maxIndex) StartIndex = maxIndex;
@@ -20437,7 +20502,7 @@ namespace Client.MirScenes
 
             for (int i = 0; i < Rows.Length; i++)
             {
-                if (i + StartIndex >= Friends.Count) break;
+                if (i + StartIndex >= filteredFriends.Count) break;
 
                 if (Rows[i] != null)
                     Rows[i].Dispose();
@@ -20583,6 +20648,18 @@ namespace Client.MirScenes
         }
 
 
+        protected override void OnMouseEnter()
+        {
+            if (Friend == null || Friend.Memo.Length < 1) return;
+
+            base.OnMouseEnter();
+            GameScene.Scene.CreateMemoLabel(Friend);
+        }
+        protected override void OnMouseLeave()
+        {
+            base.OnMouseLeave();
+            GameScene.Scene.DisposeMemoLabel();
+        }
 
         protected override void Dispose(bool disposing)
         {

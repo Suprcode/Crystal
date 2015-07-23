@@ -303,12 +303,12 @@ namespace Server.MirDatabase
                 CollectTime += SMain.Envir.Time;
             }
 
-            //if (Envir.LoadVersion > 58)
-            //{
-            //    count = reader.ReadInt32();
-            //    for (int i = 0; i < count; i++)
-            //        Friends.Add(new FriendInfo(reader));
-            //}
+            if (Envir.LoadVersion > 58)
+            {
+                //count = reader.ReadInt32();
+                //for (int i = 0; i < count; i++)
+                //    Friends.Add(new FriendInfo(reader));
+            }
 
         }
 
@@ -577,25 +577,26 @@ namespace Server.MirDatabase
 
     public class FriendInfo
     {
-        public int CharacterIndex
-        {
-            get {return CharacterInfo.Index; }
-        }
+        public int CharacterIndex;
 
         public CharacterInfo CharacterInfo;
 
         public bool Blocked;
-        public string Memo = "";
+        public string Memo;
 
         public FriendInfo(CharacterInfo info, bool blocked) 
         {
             CharacterInfo = info;
+            CharacterIndex = CharacterInfo.Index;
             Blocked = blocked;
+            Memo = "";
         }
 
         public FriendInfo(BinaryReader reader)
         {
             CharacterInfo = SMain.Envir.GetCharacterInfo(reader.ReadInt32());
+
+            if (CharacterInfo != null) CharacterIndex = CharacterInfo.Index;
 
             Blocked = reader.ReadBoolean();
             Memo = reader.ReadString();

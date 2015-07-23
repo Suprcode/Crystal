@@ -2960,7 +2960,7 @@ namespace Server.MirObjects
 
                 if (Info.Friends.Any(e => e.CharacterInfo == player.Info && e.Blocked))
                 {
-                    ReceiveChat("Cannot message player whilst they are on your block list.", ChatType.System);
+                    ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
                     return;
                 }
 
@@ -15328,6 +15328,18 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (player.Friends.Any(e => e.CharacterInfo == Info && e.Blocked))
+            {
+                ReceiveChat("Player is not accepting your mail.", ChatType.System);
+                return;
+            }
+
+            if (Info.Friends.Any(e => e.CharacterInfo == player && e.Blocked))
+            {
+                ReceiveChat("Cannot mail player whilst they are on your blacklist.", ChatType.System);
+                return;
+            }
+
             //sent from player
             MailInfo mail = new MailInfo(player.Index, true)
             {
@@ -16028,15 +16040,19 @@ namespace Server.MirObjects
 
             if (info == null)
             {
-                //player doesn't exist
-                ReceiveChat("Player doesn't exist", ChatType.System);
+                ReceiveChat("Player doesn't exist.", ChatType.System);
+                return;
+            }
+
+            if (Name == name)
+            {
+                ReceiveChat("Cannot add yourself.", ChatType.System);
                 return;
             }
 
             if (Info.Friends.Any(e => e.CharacterIndex == info.Index))
             {
-                //player added already
-                ReceiveChat("Player already added", ChatType.System);
+                ReceiveChat("Player already added.", ChatType.System);
                 return;
             }
 
