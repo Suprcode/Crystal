@@ -303,6 +303,13 @@ namespace Server.MirDatabase
                 CollectTime += SMain.Envir.Time;
             }
 
+            //if (Envir.LoadVersion > 58)
+            //{
+            //    count = reader.ReadInt32();
+            //    for (int i = 0; i < count; i++)
+            //        Friends.Add(new FriendInfo(reader));
+            //}
+
         }
 
         public void Save(BinaryWriter writer)
@@ -429,6 +436,10 @@ namespace Server.MirDatabase
                 CollectTime = CollectTime - SMain.Envir.Time;
 
             writer.Write(CollectTime);
+
+            //writer.Write(Friends.Count);
+            //for (int i = 0; i < Friends.Count; i++)
+            //    Friends[i].Save(writer);
         }
 
         public ListViewItem CreateListView()
