@@ -2595,7 +2595,7 @@ public class UserItem
 
         Awake = new Awake(reader);
 
-        if (version <= 55) return;
+        if (version <= 56) return;
 
             RefinedValue = (RefinedValue)reader.ReadByte();
             RefineAdded = reader.ReadByte();
