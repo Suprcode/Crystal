@@ -20143,7 +20143,7 @@ namespace Client.MirScenes
     }
     public sealed class FriendDialog : MirImageControl
     {
-        public MirImageControl TitleLabel;
+        public MirImageControl TitleLabel, FriendLabel, BlacklistLabel;
         public MirButton CloseButton, PreviousButton, NextButton;
         public MirLabel FriendTabLabel, BlockedTabLabel;
         public MirButton AddButton, RemoveButton, MemoButton, EmailButton, WhisperButton;
@@ -20170,6 +20170,22 @@ namespace Client.MirScenes
             TitleLabel = new MirImageControl
             {
                 Index = 6,
+                Library = Libraries.Title,
+                Location = new Point(18, 4),
+                Parent = this
+            };
+
+            FriendLabel = new MirImageControl
+            {
+                Index = 163,
+                Library = Libraries.Title,
+                Location = new Point(18, 4),
+                Parent = this
+            };
+
+            BlacklistLabel = new MirImageControl
+            {
+                Index = 167,
                 Library = Libraries.Title,
                 Location = new Point(18, 4),
                 Parent = this
@@ -20559,7 +20575,7 @@ namespace Client.MirScenes
 
         public MemoDialog()
         {
-            Index = 199;
+            Index = 209;
             Library = Libraries.Title;
             Movable = true;
             Sort = true;
