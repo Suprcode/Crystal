@@ -996,7 +996,10 @@ namespace Server.MirObjects
                     switch (poison.Owner.Race)
                     {
                         case ObjectType.Player:
-                            Attacked((PlayerObject)poison.Owner, poison.Value, DefenceType.MAC, false);
+                            PlayerObject caster = (PlayerObject)poison.Owner;
+                            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time, poison.Owner, caster.GetMagic(Spell.DelayedExplosion), poison.Value, this.CurrentLocation);
+                            CurrentMap.ActionList.Add(action);
+                            //Attacked((PlayerObject)poison.Owner, poison.Value, DefenceType.MAC, false);
                             break;
                         case ObjectType.Monster://this is in place so it could be used by mobs if one day someone chooses to
                             Attacked((MonsterObject)poison.Owner, poison.Value, DefenceType.MAC);
