@@ -293,7 +293,7 @@ namespace Server.MirDatabase
                 }
             }
 
-            if (Envir.LoadVersion > 55)
+            if (Envir.LoadVersion > 56)
             {
                 if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion);
                   if (CurrentRefine != null)

@@ -33,6 +33,8 @@ namespace Server
         {
              _selectedMagicInfo = (MagicInfo)MagiclistBox.SelectedItem;
 
+             lblBookValid.BackColor = SystemColors.Window;
+
              if (_selectedMagicInfo == null)
              {
                  tabControl1.Enabled = false;
@@ -58,7 +60,6 @@ namespace Server
              else
              {
                  tabControl1.Enabled = true;
-                 lblBookValid.Text = "Searching";
                  lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
                  lblDamageExample.Text = string.Format("Damage @ Skill level 0: {0:000}-{1:000}   |||   level 1: {2:000}-{3:000}   |||   level 2: {4:000}-{5:000}   |||   level 3: {6:000}-{7:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3));
                  txtSkillIcon.Text = _selectedMagicInfo.Icon.ToString();
@@ -76,6 +77,17 @@ namespace Server
                  txtDmgBaseMax.Text = (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus).ToString();
                  txtDmgBonusMin.Text = _selectedMagicInfo.MPowerBase.ToString();
                  txtDmgBonusMax.Text = (_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus).ToString();
+                 ItemInfo Book = Envir.GetBook((short)_selectedMagicInfo.Spell);
+                 if (Book != null)
+                 {
+                     lblBookValid.Text = Book.Name;
+                 }
+                 else
+                 {
+                     lblBookValid.Text = "No book found";
+                     lblBookValid.BackColor = Color.Red;
+                 }
+                 
              }
         }
 
@@ -201,13 +213,13 @@ namespace Server
             this.panel5.Controls.Add(this.lblDamageExample);
             this.panel5.Location = new System.Drawing.Point(14, 315);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(455, 28);
+            this.panel5.Size = new System.Drawing.Size(480, 28);
             this.panel5.TabIndex = 7;
             // 
             // lblDamageExample
             // 
             this.lblDamageExample.AutoSize = true;
-            this.lblDamageExample.Location = new System.Drawing.Point(12, 8);
+            this.lblDamageExample.Location = new System.Drawing.Point(8, 8);
             this.lblDamageExample.Name = "lblDamageExample";
             this.lblDamageExample.Size = new System.Drawing.Size(0, 13);
             this.lblDamageExample.TabIndex = 0;

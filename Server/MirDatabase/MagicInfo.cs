@@ -23,6 +23,53 @@ namespace Server.MirDatabase
         {
             return Name;
         }
+
+        public MagicInfo()
+        {
+
+        }
+
+        public MagicInfo (BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+        {
+            Name = reader.ReadString();
+            Spell = (Spell)reader.ReadByte();
+            BaseCost = reader.ReadByte();
+            LevelCost = reader.ReadByte();
+            Icon = reader.ReadByte();
+            Level1 = reader.ReadByte();
+            Level2 = reader.ReadByte();
+            Level3 = reader.ReadByte();
+            Need1 = reader.ReadUInt16();
+            Need2 = reader.ReadUInt16();
+            Need3 = reader.ReadUInt16();
+            DelayBase = reader.ReadUInt32();
+            DelayReduction = reader.ReadUInt32();
+            PowerBase = reader.ReadUInt16();
+            PowerBonus = reader.ReadUInt16();
+            MPowerBase = reader.ReadUInt16();
+            MPowerBonus = reader.ReadUInt16();
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write((byte)Spell);
+            writer.Write(BaseCost);
+            writer.Write(LevelCost);
+            writer.Write(Icon);
+            writer.Write(Level1);
+            writer.Write(Level2);
+            writer.Write(Level3);
+            writer.Write(Need1);
+            writer.Write(Need2);
+            writer.Write(Need3);
+            writer.Write(DelayBase);
+            writer.Write(DelayReduction);
+            writer.Write(PowerBase);
+            writer.Write(PowerBonus);
+            writer.Write(MPowerBase);
+            writer.Write(MPowerBonus);
+        }
     }
 
     public class UserMagic

@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 56;
+        public const int Version = 58;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -278,6 +278,40 @@ namespace Server.MirEnvir
             MagicInfoList.Add(new MagicInfo {Name = "Portal", Spell = Spell.Portal, Icon = 1, Level1 = 7, Level2 = 11, Level3 = 14, Need1 = 150, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2 });
         }
 
+        private string CanStartEnvir()
+        {
+            if (StartPoints.Count == 0) return "Cannot start server without start points";
+            if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName;
+            if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName;
+            if (GetMonsterInfo(Settings.BugBatName, true) == null) return "Cannot start server without mob: " + Settings.BugBatName;
+            if (GetMonsterInfo(Settings.Zuma1, true) == null) return "Cannot start server without mob: " + Settings.Zuma1;
+            if (GetMonsterInfo(Settings.Zuma2, true) == null) return "Cannot start server without mob: " + Settings.Zuma2;
+            if (GetMonsterInfo(Settings.Zuma3, true) == null) return "Cannot start server without mob: " + Settings.Zuma3;
+            if (GetMonsterInfo(Settings.Zuma4, true) == null) return "Cannot start server without mob: " + Settings.Zuma4;
+            if (GetMonsterInfo(Settings.Zuma5, true) == null) return "Cannot start server without mob: " + Settings.Zuma5;
+            if (GetMonsterInfo(Settings.Zuma6, true) == null) return "Cannot start server without mob: " + Settings.Zuma6;
+            if (GetMonsterInfo(Settings.Zuma7, true) == null) return "Cannot start server without mob: " + Settings.Zuma7;
+            if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster1;
+            if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster2;
+            if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster3;
+            if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster4;
+            if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return "Cannot start server without mob: " + Settings.WhiteSnake;
+            if (GetMonsterInfo(Settings.AngelName, true) == null) return "Cannot start server without mob: " + Settings.AngelName;
+            if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return "Cannot start server without mob: " + Settings.BombSpiderName;
+            if (GetMonsterInfo(Settings.CloneName, true) == null) return "Cannot start server without mob: " + Settings.CloneName;
+            if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return "Cannot start server without mob: " + Settings.AssassinCloneName;
+            if (GetMonsterInfo(Settings.VampireName, true) == null) return "Cannot start server without mob: " + Settings.VampireName;
+            if (GetMonsterInfo(Settings.ToadName, true) == null) return "Cannot start server without mob: " + Settings.ToadName;
+            if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "Cannot start server without mob: " + Settings.SnakeTotemName;
+            if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "Cannot start server without mob: " + Settings.FishingMonster;
+            if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
+
+            //add intleligent creature checks?
+
+
+            return "true";
+        }
+
         private void WorkLoop()
         {
             Time = Stopwatch.ElapsedMilliseconds;
@@ -303,9 +337,10 @@ namespace Server.MirEnvir
             }
 
             StartEnvir();
-            if (StartPoints.Count == 0)
+            string canstartserver = CanStartEnvir();
+            if (canstartserver != "true")
             {
-                SMain.Enqueue("Cannot start server without start points");
+                SMain.Enqueue(canstartserver);
                 StopEnvir();
                 _thread = null;
                 Stop();                
@@ -624,7 +659,7 @@ namespace Server.MirEnvir
             using (BinaryWriter writer = new BinaryWriter(stream))
             {
                 writer.Write(Version);
-                //writer.Write(CustomVersion);
+                writer.Write(CustomVersion);
                 writer.Write(MapIndex);
                 writer.Write(ItemIndex);
                 writer.Write(MonsterIndex);
@@ -653,7 +688,9 @@ namespace Server.MirEnvir
 
                 DragonInfo.Save(writer);
                 //thedeath2
-                //write magicinfolist
+                writer.Write(MagicInfoList.Count);
+                for (int i = 0; i < MagicInfoList.Count; i++)
+                    MagicInfoList[i].Save(writer);
             }
         }
         public void SaveAccounts()
@@ -683,6 +720,7 @@ namespace Server.MirEnvir
             using (BinaryWriter writer = new BinaryWriter(stream))
             {
                 writer.Write(Version);
+                writer.Write(CustomVersion);
                 writer.Write(NextAccountID);
                 writer.Write(NextCharacterID);
                 writer.Write(NextUserItemID);
@@ -852,6 +890,8 @@ namespace Server.MirEnvir
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
+                    if (LoadVersion > 57)
+                        LoadCustomVersion = reader.ReadInt32();
                     MapIndex = reader.ReadInt32();
                     ItemIndex = reader.ReadInt32();
                     MonsterIndex = reader.ReadInt32();
@@ -870,7 +910,7 @@ namespace Server.MirEnvir
                     ItemInfoList.Clear();
                     for (int i = 0; i < count; i++)
                     {
-                        ItemInfoList.Add(new ItemInfo(reader, LoadVersion));
+                        ItemInfoList.Add(new ItemInfo(reader, LoadVersion, LoadCustomVersion));
                         if ((ItemInfoList[i] != null) && (ItemInfoList[i].RandomStatsId < Settings.RandomItemStatsList.Count))
                         {
                             ItemInfoList[i].RandomStats = Settings.RandomItemStatsList[ItemInfoList[i].RandomStatsId];
@@ -896,10 +936,14 @@ namespace Server.MirEnvir
 
                     if (LoadVersion >= 11) DragonInfo = new DragonInfo(reader);
                     else DragonInfo = new DragonInfo();
-                    if (LoadVersion < 500)
+                    if (LoadVersion < 58)
                         FillMagicInfoList();
-                    //thedeath2
-                    //add magicinfolist code here
+                    else
+                    {
+                        count = reader.ReadInt32();
+                        for (int i = 0; i < count; i++)
+                            MagicInfoList.Add(new MagicInfo(reader));
+                    }
                 }
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
@@ -917,6 +961,7 @@ namespace Server.MirEnvir
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
+                    if (LoadVersion > 57) LoadCustomVersion = reader.ReadInt32();
                     NextAccountID = reader.ReadInt32();
                     NextCharacterID = reader.ReadInt32();
                     NextUserItemID = reader.ReadUInt64();
@@ -1847,7 +1892,7 @@ namespace Server.MirEnvir
         {
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
         }
-
+        /*
         public MonsterInfo GetMonsterInfo(string name)
         {
             for (int i = 0; i < MonsterInfoList.Count; i++)
@@ -1856,6 +1901,26 @@ namespace Server.MirEnvir
                 //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
                 if (String.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && String.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
                 return info;
+            }
+            return null;
+        }
+        */
+        public MonsterInfo GetMonsterInfo(string name, bool Strict = false)
+        {
+            for (int i = 0; i < MonsterInfoList.Count; i++)
+            {
+                MonsterInfo info = MonsterInfoList[i];
+                if (Strict)
+                {
+                    if (info.Name != name) continue;
+                    return info;
+                }
+                else
+                {
+                    //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
+                    if (String.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && String.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
+                    return info;
+                }
             }
             return null;
         }
@@ -1916,6 +1981,17 @@ namespace Server.MirEnvir
         public QuestInfo GetQuestInfo(int index)
         {
             return QuestInfoList.FirstOrDefault(info => info.Index == index);
+        }
+
+        public ItemInfo GetBook(short Skill)
+        {
+            for (int i = 0; i < ItemInfoList.Count; i++)
+            {
+                ItemInfo info = ItemInfoList[i];
+                if ((info.Type != ItemType.Book) || (info.Shape != Skill)) continue;
+                return info;
+            }
+            return null;
         }
 
         public void MessageAccount(AccountInfo account, string message, ChatType type)
