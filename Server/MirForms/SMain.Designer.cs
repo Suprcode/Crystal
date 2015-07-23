@@ -45,16 +45,11 @@ namespace Server
             this.GlobalMessageTextBox = new System.Windows.Forms.TextBox();
             this.ChatLogTextBox = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.PlayersOnlineListView = new Server.ListViewNF();
-            this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.nameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.levelHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.classHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.genderHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.StatusBar = new System.Windows.Forms.StatusStrip();
             this.PlayersLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MonsterLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.ConnectionsLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.CycleDelayLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.controlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,8 +72,14 @@ namespace Server
             this.guildsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fishingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
             this.goodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
+            this.PlayersOnlineListView = new Server.ListViewNF();
+            this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.nameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.levelHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.classHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.genderHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -208,60 +209,13 @@ namespace Server
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Players Online";
             // 
-            // PlayersOnlineListView
-            // 
-            this.PlayersOnlineListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.PlayersOnlineListView.BackColor = System.Drawing.SystemColors.Window;
-            this.PlayersOnlineListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.indexHeader,
-            this.nameHeader,
-            this.levelHeader,
-            this.classHeader,
-            this.genderHeader});
-            this.PlayersOnlineListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PlayersOnlineListView.FullRowSelect = true;
-            this.PlayersOnlineListView.GridLines = true;
-            this.PlayersOnlineListView.Location = new System.Drawing.Point(3, 3);
-            this.PlayersOnlineListView.Name = "PlayersOnlineListView";
-            this.PlayersOnlineListView.Size = new System.Drawing.Size(471, 314);
-            this.PlayersOnlineListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.PlayersOnlineListView.TabIndex = 0;
-            this.PlayersOnlineListView.UseCompatibleStateImageBehavior = false;
-            this.PlayersOnlineListView.View = System.Windows.Forms.View.Details;
-            this.PlayersOnlineListView.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.PlayersOnlineListView_ColumnWidthChanging);
-            this.PlayersOnlineListView.DoubleClick += new System.EventHandler(this.PlayersOnlineListView_DoubleClick);
-            // 
-            // indexHeader
-            // 
-            this.indexHeader.Text = "Index";
-            this.indexHeader.Width = 71;
-            // 
-            // nameHeader
-            // 
-            this.nameHeader.Text = "Name";
-            this.nameHeader.Width = 93;
-            // 
-            // levelHeader
-            // 
-            this.levelHeader.Text = "Level";
-            this.levelHeader.Width = 90;
-            // 
-            // classHeader
-            // 
-            this.classHeader.Text = "Class";
-            this.classHeader.Width = 100;
-            // 
-            // genderHeader
-            // 
-            this.genderHeader.Text = "Gender";
-            this.genderHeader.Width = 98;
-            // 
             // StatusBar
             // 
             this.StatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.PlayersLabel,
             this.MonsterLabel,
-            this.ConnectionsLabel});
+            this.ConnectionsLabel,
+            this.CycleDelayLabel});
             this.StatusBar.Location = new System.Drawing.Point(0, 370);
             this.StatusBar.Name = "StatusBar";
             this.StatusBar.Size = new System.Drawing.Size(485, 24);
@@ -295,6 +249,15 @@ namespace Server
             this.ConnectionsLabel.Name = "ConnectionsLabel";
             this.ConnectionsLabel.Size = new System.Drawing.Size(90, 19);
             this.ConnectionsLabel.Text = "Connections: 0";
+            // 
+            // CycleDelayLabel
+            // 
+            this.CycleDelayLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.CycleDelayLabel.Name = "CycleDelayLabel";
+            this.CycleDelayLabel.Size = new System.Drawing.Size(81, 19);
+            this.CycleDelayLabel.Text = "CycleDelay: 0";
             // 
             // MainMenu
             // 
@@ -413,14 +376,14 @@ namespace Server
             // serverToolStripMenuItem
             // 
             this.serverToolStripMenuItem.Name = "serverToolStripMenuItem";
-            this.serverToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.serverToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.serverToolStripMenuItem.Text = "Server";
             this.serverToolStripMenuItem.Click += new System.EventHandler(this.serverToolStripMenuItem_Click);
             // 
             // balanceToolStripMenuItem
             // 
             this.balanceToolStripMenuItem.Name = "balanceToolStripMenuItem";
-            this.balanceToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.balanceToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.balanceToolStripMenuItem.Text = "Balance";
             this.balanceToolStripMenuItem.Click += new System.EventHandler(this.balanceToolStripMenuItem_Click);
             // 
@@ -434,55 +397,103 @@ namespace Server
             this.mailToolStripMenuItem,
             this.goodsToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            this.systemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.systemToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.systemToolStripMenuItem.Text = "System";
             // 
             // dragonSystemToolStripMenuItem
             // 
             this.dragonSystemToolStripMenuItem.Name = "dragonSystemToolStripMenuItem";
-            this.dragonSystemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dragonSystemToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.dragonSystemToolStripMenuItem.Text = "Dragon";
             this.dragonSystemToolStripMenuItem.Click += new System.EventHandler(this.dragonSystemToolStripMenuItem_Click);
             // 
             // miningToolStripMenuItem
             // 
             this.miningToolStripMenuItem.Name = "miningToolStripMenuItem";
-            this.miningToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.miningToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.miningToolStripMenuItem.Text = "Mining";
             this.miningToolStripMenuItem.Click += new System.EventHandler(this.miningToolStripMenuItem_Click);
             // 
             // guildsToolStripMenuItem
             // 
             this.guildsToolStripMenuItem.Name = "guildsToolStripMenuItem";
-            this.guildsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.guildsToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.guildsToolStripMenuItem.Text = "Guilds";
             this.guildsToolStripMenuItem.Click += new System.EventHandler(this.guildsToolStripMenuItem_Click);
             // 
             // fishingToolStripMenuItem
             // 
             this.fishingToolStripMenuItem.Name = "fishingToolStripMenuItem";
-            this.fishingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fishingToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.fishingToolStripMenuItem.Text = "Fishing";
             this.fishingToolStripMenuItem.Click += new System.EventHandler(this.fishingToolStripMenuItem_Click);
             // 
             // mailToolStripMenuItem
             // 
             this.mailToolStripMenuItem.Name = "mailToolStripMenuItem";
-            this.mailToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.mailToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.mailToolStripMenuItem.Text = "Mail";
             this.mailToolStripMenuItem.Click += new System.EventHandler(this.mailToolStripMenuItem_Click);
+            // 
+            // goodsToolStripMenuItem
+            // 
+            this.goodsToolStripMenuItem.Name = "goodsToolStripMenuItem";
+            this.goodsToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.goodsToolStripMenuItem.Text = "Goods";
+            this.goodsToolStripMenuItem.Click += new System.EventHandler(this.goodsToolStripMenuItem_Click);
             // 
             // InterfaceTimer
             // 
             this.InterfaceTimer.Enabled = true;
             this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
             // 
-            // goodsToolStripMenuItem
+            // PlayersOnlineListView
             // 
-            this.goodsToolStripMenuItem.Name = "goodsToolStripMenuItem";
-            this.goodsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.goodsToolStripMenuItem.Text = "Goods";
-            this.goodsToolStripMenuItem.Click += new System.EventHandler(this.goodsToolStripMenuItem_Click);
+            this.PlayersOnlineListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.PlayersOnlineListView.BackColor = System.Drawing.SystemColors.Window;
+            this.PlayersOnlineListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.indexHeader,
+            this.nameHeader,
+            this.levelHeader,
+            this.classHeader,
+            this.genderHeader});
+            this.PlayersOnlineListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PlayersOnlineListView.FullRowSelect = true;
+            this.PlayersOnlineListView.GridLines = true;
+            this.PlayersOnlineListView.Location = new System.Drawing.Point(3, 3);
+            this.PlayersOnlineListView.Name = "PlayersOnlineListView";
+            this.PlayersOnlineListView.Size = new System.Drawing.Size(471, 314);
+            this.PlayersOnlineListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.PlayersOnlineListView.TabIndex = 0;
+            this.PlayersOnlineListView.UseCompatibleStateImageBehavior = false;
+            this.PlayersOnlineListView.View = System.Windows.Forms.View.Details;
+            this.PlayersOnlineListView.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.PlayersOnlineListView_ColumnWidthChanging);
+            this.PlayersOnlineListView.DoubleClick += new System.EventHandler(this.PlayersOnlineListView_DoubleClick);
+            // 
+            // indexHeader
+            // 
+            this.indexHeader.Text = "Index";
+            this.indexHeader.Width = 71;
+            // 
+            // nameHeader
+            // 
+            this.nameHeader.Text = "Name";
+            this.nameHeader.Width = 93;
+            // 
+            // levelHeader
+            // 
+            this.levelHeader.Text = "Level";
+            this.levelHeader.Width = 90;
+            // 
+            // classHeader
+            // 
+            this.classHeader.Text = "Class";
+            this.classHeader.Width = 100;
+            // 
+            // genderHeader
+            // 
+            this.genderHeader.Text = "Gender";
+            this.genderHeader.Width = 98;
             // 
             // SMain
             // 
@@ -564,6 +575,7 @@ namespace Server
         private ColumnHeader indexHeader;
         private ToolStripMenuItem mailToolStripMenuItem;
         private ToolStripMenuItem goodsToolStripMenuItem;
+        private ToolStripStatusLabel CycleDelayLabel;
     }
 }
 

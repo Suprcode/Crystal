@@ -223,6 +223,8 @@ namespace Client.MirControls
                     MirMessageBox.Show("Disconnected: Kicked by Admin.", true);
                     break;
             }
+
+            GameScene.LogTime = 0;
         }
 
         public abstract void Process();

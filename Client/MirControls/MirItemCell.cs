@@ -414,6 +414,7 @@ namespace Client.MirControls
                 case ItemType.Food:
                 case ItemType.Script:
                 case ItemType.Pets:
+                case ItemType.Transform:
                     if (CanUseItem() && GridType == MirGridType.Inventory)
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;

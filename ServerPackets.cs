@@ -655,7 +655,8 @@ namespace ServerPackets
         public bool RidingMount;
         public bool Fishing;
 
-        //ArcherSpells - Elemental system
+        public short TransformType;
+
         public uint ElementOrbEffect;
         public uint ElementOrbLvl;
         public uint ElementOrbMax;
@@ -690,7 +691,8 @@ namespace ServerPackets
             RidingMount = reader.ReadBoolean();
             Fishing = reader.ReadBoolean();
 
-            //ArcherSpells - Elemental system
+            TransformType = reader.ReadInt16();
+
             ElementOrbEffect = reader.ReadUInt32();
             ElementOrbLvl = reader.ReadUInt32();
             ElementOrbMax = reader.ReadUInt32();
@@ -731,7 +733,8 @@ namespace ServerPackets
             writer.Write(RidingMount);
             writer.Write(Fishing);
 
-            //ArcherSpells - Elemental system
+            writer.Write(TransformType);
+
             writer.Write(ElementOrbEffect);
             writer.Write(ElementOrbLvl);
             writer.Write(ElementOrbMax);
@@ -3064,41 +3067,53 @@ namespace ServerPackets
         {
             public override short Index { get { return (short)ServerPacketIds.AddBuff; } }
 
-            public BuffType Type;
-            public string Caster = string.Empty;
-            public uint ObjectID;
-            public bool Visible;
-            public long Expire;
-            public int Value;
-            public bool Infinite;
+        public BuffType Type;
+        public string Caster = string.Empty;
+        public uint ObjectID;
+        public bool Visible;
+        public long Expire;
+        public int[] Values;
+        public bool Infinite;
 
-            protected override void ReadPacket(BinaryReader reader)
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Type = (BuffType)reader.ReadByte();
+            Caster = reader.ReadString();
+            Visible = reader.ReadBoolean();
+            ObjectID = reader.ReadUInt32();
+            Expire = reader.ReadInt64();
+
+            Values = new int[reader.ReadInt32()];
+            for (int i = 0; i < Values.Length; i++)
             {
-                Type = (BuffType)reader.ReadByte();
-                Caster = reader.ReadString();
-                Visible = reader.ReadBoolean();
-                ObjectID = reader.ReadUInt32();
-                Expire = reader.ReadInt64();
-                Value = reader.ReadInt32();
-                Infinite = reader.ReadBoolean();
+                Values[i] = reader.ReadInt32();
             }
-            protected override void WritePacket(BinaryWriter writer)
-            {
-                writer.Write((byte)Type);
-                writer.Write(Caster);
-                writer.Write(Visible);
-                writer.Write(ObjectID);
-                writer.Write(Expire);
-                writer.Write(Value);
-                writer.Write(Infinite);
-            }
+
+            Infinite = reader.ReadBoolean();
         }
         public sealed class RemoveBuff : Packet
         {
-            public override short Index { get { return (short)ServerPacketIds.RemoveBuff; } }
+            writer.Write((byte)Type);
+            writer.Write(Caster);
+            writer.Write(Visible);
+            writer.Write(ObjectID);
+            writer.Write(Expire);
 
-            public BuffType Type;
-            public uint ObjectID;
+            writer.Write(Values.Length);
+            for (int i = 0; i < Values.Length; i++)
+            {
+                writer.Write(Values[i]);
+            }
+
+            writer.Write(Infinite);
+        }
+    }
+    public sealed class RemoveBuff : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.RemoveBuff; } }
+
+        public BuffType Type;
+        public uint ObjectID;
 
             protected override void ReadPacket(BinaryReader reader)
             {
@@ -3813,21 +3828,34 @@ namespace ServerPackets
                 get { return (short)ServerPacketIds.EquipSlotItem; }
             }
 
-            public MirGridType Grid;
-            public ulong UniqueID;
-            public int To;
-            public bool Success;
-            public MirGridType GridTo;
+    public sealed class TransformUpdate : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.TransformUpdate; } }
 
-            protected override void ReadPacket(BinaryReader reader)
-            {
-                Grid = (MirGridType)reader.ReadByte();
-                UniqueID = reader.ReadUInt64();
-                To = reader.ReadInt32();
-                GridTo = (MirGridType)reader.ReadByte();
-                Success = reader.ReadBoolean();
-            }
+        public long ObjectID;
+        public short TransformType;
 
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadInt64();
+            TransformType = reader.ReadInt16();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(TransformType);
+        }
+    }
+
+    public sealed class EquipSlotItem : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.EquipSlotItem; }
+        }
+
+        public MirGridType Grid;
+        public ulong UniqueID;
             protected override void WritePacket(BinaryWriter writer)
             {
                 writer.Write((byte)Grid);

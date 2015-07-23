@@ -14,6 +14,43 @@ using S = ServerPackets;
 
 namespace Server.MirEnvir
 {
+    //thedeath
+    public class MobThread
+    {
+        public int Id = 0;
+        public long LastRunTime = 0;
+        public long StartTime = 0;
+        public long EndTime = 0;
+        public LinkedList<MapObject> ObjectsList = new LinkedList<MapObject>();
+        public LinkedListNode<MapObject> current = null;
+        public Boolean Stop = false;
+    }
+
+    public class RandomProvider
+    {
+        private static int seed = Environment.TickCount;
+        private static ThreadLocal<Random> RandomWrapper = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
+
+        public static Random GetThreadRadom()
+        {
+            return RandomWrapper.Value;
+        }
+
+        public int Next()
+        {
+            return RandomWrapper.Value.Next();
+        }
+        public int Next(int maxValue)
+        {
+            return RandomWrapper.Value.Next(maxValue);
+        }
+        public int Next(int minValue, int maxValue)
+        {
+            return RandomWrapper.Value.Next(minValue, maxValue);
+        }
+    }
+    //thedeath end
+
     public class Envir
     {
         public static object AccountLock = new object();
@@ -53,13 +90,14 @@ namespace Server.MirEnvir
             get { return Players.Count; }
         }
 
+        //thedeath
+        public RandomProvider Random = new RandomProvider();
 
-        public Random Random = new Random();
+
         private Thread _thread;
         private TcpListener _listener;
         private int _sessionID;
         public List<MirConnection> Connections = new List<MirConnection>();
-
 
         //Server DB
         public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex;
@@ -88,10 +126,16 @@ namespace Server.MirEnvir
         public bool Saving = false;
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
+        //thedeath
+        readonly object _locker = new object();
+        public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
+        private Thread[] MobThreading = new Thread[Settings.ThreadLimit];
+        public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
+        //thedeath end
+
         public List<string> CustomCommands = new List<string>();
         public Dragon DragonSystem;
         public NPCObject DefaultNPC;
-
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
@@ -133,6 +177,19 @@ namespace Server.MirEnvir
             int processRealCount = 0;
 
             LinkedListNode<MapObject> current = null;
+
+            //thedeath
+            if (Settings.Multithreaded)
+            {
+                for (int j = 0; j < MobThreads.Length; j++)
+                {
+                    MobThreads[j] = new MobThread();
+                    MobThreads[j].Id = j;
+                    MobThread Info = MobThreads[j];
+                }
+            }
+            //thedeath end
+
             StartEnvir();
             if (StartPoints.Count == 0)
             {
@@ -142,7 +199,21 @@ namespace Server.MirEnvir
                 Stop();                
                 return;
             }
-
+            //thedeath
+            if (Settings.Multithreaded)
+            {
+                for (int j = 0; j < MobThreads.Length; j++)
+                {
+                    MobThread Info = MobThreads[j];
+                    if (j > 0) //dont start up 0 
+                    {
+                        MobThreading[j] = new Thread(() => ThreadLoop(Info));
+                        MobThreading[j].IsBackground = true;
+                        MobThreading[j].Start();
+                    }
+                }
+            }
+            //thedeath end
             StartNetwork();
 
             try
@@ -188,27 +259,55 @@ namespace Server.MirEnvir
                         LastRunTime = Time - StartTime;
                         StartTime = Time;
                     }
-                    for (int i = 0; i < 100; i++)
+
+                    //thedeath
+                    if (Settings.Multithreaded)
                     {
-                        if (current == null) break;
-
-                        LinkedListNode<MapObject> next = current.Next;
-
-
-                        if (Time > current.Value.OperateTime)
+                        for (int j = 1; j < MobThreads.Length; j++)
                         {
+                            MobThread Info = MobThreads[j];
 
-                            processRealCount++;
-                            //thedeath
-                            current.Value.Process();
-                            current.Value.SetOperateTime();
-
+                            if (Info.Stop == true)
+                            {
+                                Info.EndTime = Time + 20;
+                                Info.Stop = false;
+                            }
                         }
-                        processCount++;
-                        current = next;
+                        lock (_locker)
+                        {
+                            Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
+                        }
+                        //run the first loop in the main thread so the main thread automaticaly 'halts' untill the other threads are finished
+                        ThreadLoop(MobThreads[0]);                        
                     }
-
                     
+                    //thedeath end
+                    Boolean TheEnd = false;
+                    long Start = Stopwatch.ElapsedMilliseconds;
+                    //while (k < 100)
+                    while ((!TheEnd) && (Stopwatch.ElapsedMilliseconds - Start < 20))
+                    {
+                        if (current == null)
+                        {
+                            TheEnd = true;
+                            break;
+                        }
+                        else
+                        {
+                            LinkedListNode<MapObject> next = current.Next;
+                            if (!Settings.Multithreaded || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
+                            {
+                                if (Time > current.Value.OperateTime)
+                                {
+
+                                    current.Value.Process();
+                                    current.Value.SetOperateTime();
+                                }
+                                processCount++;
+                            }
+                            current = next;
+                        }
+                    }
                     for (int i = 0; i < MapList.Count; i++)
                         MapList[i].Process();
                     
@@ -261,6 +360,84 @@ namespace Server.MirEnvir
             SaveGuilds(true);
 
             _thread = null;
+        }
+        
+        private void ThreadLoop(MobThread Info)
+        {
+            Info.Stop = false;
+            long starttime = Time;
+            try
+            {
+
+                bool stopping = false;
+                if (Info.current == null)
+                    Info.current = Info.ObjectsList.First;
+                stopping = Info.current == null;
+                //while (stopping == false)
+                while (Running)
+                {
+                    if (Info.current == null)
+                        Info.current = Info.ObjectsList.First;
+                    else
+                    {
+                        LinkedListNode<MapObject> next = Info.current.Next;
+
+                        //if we reach the end of our list > go back to the top (since we are running threaded, we dont want the system to sit there for xxms doing nothing)
+                        if (Info.current == Info.ObjectsList.Last)
+                        {
+                            next = Info.ObjectsList.First;
+                            Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
+                            //Info.LastRunTime = (Time - Info.StartTime) /*> 0 ? (Time - Info.StartTime) : Info.LastRunTime */;
+                            Info.StartTime = Time;
+                        }
+                        if (Time > Info.current.Value.OperateTime)
+                        {
+                            if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
+                            {
+                                Info.current.Value.Process();
+
+
+                                Info.current.Value.SetOperateTime();
+                            }
+                        }
+                        Info.current = next;
+                    }
+                    //if it's the main thread > make it loop till the subthreads are done, else make it stop after 'endtime'
+                    if (Info.Id == 0)
+                    {
+                        stopping = true;
+                        for (int x = 1; x < MobThreads.Length; x++)
+                            if (MobThreads[x].Stop == false)
+                                stopping = false;
+                        if (stopping)
+                        {
+                            Info.Stop = stopping;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if ((Stopwatch.ElapsedMilliseconds > Info.EndTime) && Running)
+                        {
+                            Info.Stop = true;
+                            lock (_locker)
+                            {
+                                while (Info.Stop) Monitor.Wait(_locker);
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is ThreadInterruptedException) return;
+                SMain.Enqueue(ex);
+
+                File.AppendAllText(@".\Error.txt",
+                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+            }
+            //Info.Stop = true;
         }
 
         private void AdjustLights()
@@ -551,7 +728,6 @@ namespace Server.MirEnvir
 
             Saving = false;
         }
-
 
         public void LoadDB()
         {
@@ -904,8 +1080,26 @@ namespace Server.MirEnvir
         {
             Running = false;
 
-            while (_thread != null)
-                Thread.Sleep(1);
+            lock (_locker)
+            {
+                Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
+            }
+
+            //simply intterupt all the mob threads if they are running (will give an invisible error on them but fastest way of getting rid of them on shutdowns)
+            for (int i = 1; i < MobThreading.Length; i++)
+            {
+                if (MobThreads[i] != null)
+                    MobThreads[i].EndTime = Time + 9999;
+                if ((MobThreading[i] != null) &&
+                    (MobThreading[i].ThreadState != System.Threading.ThreadState.Stopped) && (MobThreading[i].ThreadState != System.Threading.ThreadState.Unstarted))
+                {
+                    MobThreading[i].Interrupt();
+                }
+            }
+
+
+                while (_thread != null)
+                    Thread.Sleep(1);
         }
         
         private void StartEnvir()
@@ -966,38 +1160,6 @@ namespace Server.MirEnvir
 
             //FixGuilds();
         }
-
-        //private void FixGuilds()
-        //{
-        //    NextGuildID = 0;
-        //    int nullChars = 0;
-
-        //    for (int i = 0; i < GuildList.Count; i++)
-        //    {
-        //        GuildObject g = GuildList[i];
-
-        //        g.Guildindex = ++NextGuildID;
-
-        //        for (int j = 0; j < g.Ranks.Count; j++)
-        //        {
-        //            Rank r = g.Ranks[j];
-
-        //            for (int k = 0; k < r.Members.Count; k++)
-        //            {
-        //                GuildMember m = r.Members[k];
-
-        //                CharacterInfo inf = GetCharacterInfo(m.name);
-        //                if (inf == null)
-        //                {
-        //                    nullChars++;
-        //                        continue;
-        //                }
-
-        //                inf.GuildIndex = g.Guildindex;
-        //            }
-        //        }
-        //    }
-        //}
 
         private void StopEnvir()
         {
@@ -1062,8 +1224,7 @@ namespace Server.MirEnvir
                     _listener.BeginAcceptTcpClient(Connection, null);
             }
         }
-
-        
+     
         public void NewAccount(ClientPackets.NewAccount p, MirConnection c)
         {
             if (!Settings.AllowNewAccount)
@@ -1385,27 +1546,22 @@ namespace Server.MirEnvir
         {
             AccountList.Add(new AccountInfo {Index = ++NextAccountID});
         }
-
         public void CreateMapInfo()
         {
             MapInfoList.Add(new MapInfo {Index = ++MapIndex});
         }
-
         public void CreateItemInfo(ItemType type = ItemType.Nothing)
         {
             ItemInfoList.Add(new ItemInfo { Index = ++ItemIndex, Type = type, RandomStatsId = 255});
         }
-
         public void CreateMonsterInfo()
         {
             MonsterInfoList.Add(new MonsterInfo {Index = ++MonsterIndex});
         }
-
         public void CreateNPCInfo()
         {
             NPCInfoList.Add(new NPCInfo { Index = ++NPCIndex });
         }
-
         public void CreateQuestInfo()
         {
             QuestInfoList.Add(new QuestInfo { Index = ++QuestIndex });
@@ -1425,7 +1581,6 @@ namespace Server.MirEnvir
             MonsterInfoList.Remove(info);
             //Desync all objects\
         }
-
         public void Remove(NPCInfo info)
         {
             NPCInfoList.Remove(info);
@@ -1642,7 +1797,6 @@ namespace Server.MirEnvir
             }
             return null;
         }
-
         public QuestInfo GetQuestInfo(int index)
         {
             return QuestInfoList.FirstOrDefault(info => info.Index == index);

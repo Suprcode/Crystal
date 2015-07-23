@@ -33,6 +33,9 @@ namespace Server
         public static bool CheckVersion = true;
         public static byte[] VersionHash;
         public static string GMPassword = "C#Mir 4.0";
+        public static bool Multithreaded = true;
+        public static int ThreadLimit = 2;
+
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
 	    public static string AwakeningDropFilename = "00Awakening";
@@ -223,6 +226,8 @@ namespace Server
             CheckVersion = Reader.ReadBoolean("General", "CheckVersion", CheckVersion);
             RelogDelay = Reader.ReadUInt16("General", "RelogDelay", RelogDelay);
             GMPassword = Reader.ReadString("General", "GMPassword", GMPassword);
+            Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
+            ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -395,6 +400,8 @@ namespace Server
             Reader.Write("General", "VersionPath", VersionPath);
             Reader.Write("General", "CheckVersion", CheckVersion);
             Reader.Write("General", "RelogDelay", RelogDelay);
+            Reader.Write("General", "Multithreaded", Multithreaded);
+            Reader.Write("General", "ThreadLimit", ThreadLimit);
 
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
