@@ -9215,14 +9215,14 @@ namespace Server.MirObjects
                     TotalMC += (short)(Ingredient.Info.MinMC + Ingredient.Info.MaxMC + Ingredient.MC);
                     TotalSC += (short)(Ingredient.Info.MinSC + Ingredient.Info.MaxSC + Ingredient.SC);
                     RequiredLevel += Ingredient.Info.RequiredAmount;
-                    if (Ingredient.MaxDura == Ingredient.Info.Durability) Durability++;
-                    if (Ingredient.CurrentDura == Ingredient.MaxDura) CurrentDura++;
+                    if (Math.Round(Ingredient.MaxDura / 1000M) == Math.Round(Ingredient.Info.Durability / 1000M)) Durability++;
+                    if (Math.Round(Ingredient.CurrentDura / 1000M) == Math.Round(Ingredient.MaxDura / 1000M)) CurrentDura++;
                     ItemAmount++;
                 }
 
                 if (Ingredient.Info.FriendlyName == Settings.RefineOreName)
                 {
-                    OrePurity += (short)Ingredient.CurrentDura;
+                    OrePurity += (short)Math.Round(Ingredient.CurrentDura / 1000M);
                     OreAmount++;
                 }
 
