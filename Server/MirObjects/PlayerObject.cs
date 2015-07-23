@@ -2959,6 +2959,18 @@ namespace Server.MirObjects
                     return;
                 }
 
+                if (player.Info.Friends.Any(e => e.CharacterInfo == Info && e.Blocked))
+                {
+                    ReceiveChat("Player is not accepting your messages.", ChatType.System);
+                    return;
+                }
+
+                if (Info.Friends.Any(e => e.CharacterInfo == player.Info && e.Blocked))
+                {
+                    ReceiveChat("Cannot message player whilst they are on your block list.", ChatType.System);
+                    return;
+                }
+
                 ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
                 player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
             }

@@ -3448,7 +3448,6 @@ public class ClientFriend
     public bool Blocked;
 
     public bool Online;
-    //public DateTime LastOnline;
 
     public ClientFriend() { }
 
@@ -3460,7 +3459,6 @@ public class ClientFriend
         Blocked = reader.ReadBoolean();
 
         Online = reader.ReadBoolean();
-        //LastOnline = DateTime.FromBinary(reader.ReadInt64());
     }
 
     public void Save(BinaryWriter writer)
@@ -3471,7 +3469,6 @@ public class ClientFriend
         writer.Write(Blocked);
 
         writer.Write(Online);
-        //writer.Write(LastOnline.ToBinary());
     }
 }
 

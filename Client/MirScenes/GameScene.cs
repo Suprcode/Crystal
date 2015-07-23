@@ -100,9 +100,11 @@ namespace Client.MirScenes
         public IntelligentCreatureOptionsDialog IntelligentCreatureOptionsDialog;//IntelligentCreature
         public IntelligentCreatureOptionsGradeDialog IntelligentCreatureOptionsGradeDialog;//IntelligentCreature
 
+        public FriendDialog FriendDialog;
+        public MemoDialog MemoDialog;
+
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
-        public FriendDialog FriendDialog;
         public RelationshipDialog RelationshipDialog;
         public MentorDialog MentorDialog;
 
@@ -232,6 +234,8 @@ namespace Client.MirScenes
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
             RelationshipDialog = new RelationshipDialog { Parent = this, Visible = false };
             FriendDialog = new FriendDialog { Parent = this, Visible = false };
+            MemoDialog = new MemoDialog { Parent = this, Visible = false };
+
             MentorDialog = new MentorDialog { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
@@ -12311,6 +12315,10 @@ namespace Client.MirScenes
                 PressedIndex = 436,
                 Sound = SoundList.ButtonA,
             };
+            FriendButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.AddFriend { Name = Name, Blocked = false });
+            };
 
             MailButton = new MirButton
             {
@@ -20200,7 +20208,6 @@ namespace Client.MirScenes
                 Update();
             };
 
-
             BlockedTabLabel = new MirLabel
             {
                 Location = new Point(132, 36),
@@ -20283,7 +20290,11 @@ namespace Client.MirScenes
             };
             MemoButton.Click += (o, e) =>
             {
+                if (SelectedFriend == null) return;
 
+                GameScene.Scene.MemoDialog.Friend = SelectedFriend;
+
+                GameScene.Scene.MemoDialog.Show();
             };
 
             EmailButton = new MirButton
@@ -20351,12 +20362,8 @@ namespace Client.MirScenes
                     BlockedTabLabel.ForeColour = Color.White;
                 }
                 Update();
+                GameScene.Scene.MemoDialog.Hide();
             }
-        }
-
-        public void Refresh()
-        {
-            Network.Enqueue(new C.RefreshFriends());
         }
 
         public void Update()
@@ -20461,13 +20468,15 @@ namespace Client.MirScenes
         {
             if (!Visible) return;
             Visible = false;
+
+            GameScene.Scene.MemoDialog.Hide();
         }
         public void Show()
         {
             if (Visible) return;
             Visible = true;
 
-            Refresh();
+            Network.Enqueue(new C.RefreshFriends());
         }
     }
     public sealed class FriendRow : MirControl
@@ -20540,6 +20549,82 @@ namespace Client.MirScenes
         }
     }
 
+    public sealed class MemoDialog : MirImageControl
+    {
+        public MirImageControl TitleLabel;
+        MirTextBox MemoTextBox;
+        public MirButton CloseButton, OKButton, CancelButton;
+
+        public ClientFriend Friend;
+
+        public MemoDialog()
+        {
+            Index = 199;
+            Library = Libraries.Title;
+            Movable = true;
+            Sort = true;
+            Location = Center;
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 6,
+                Library = Libraries.Title,
+                Location = new Point(18, 4),
+                Parent = this
+            };
+
+            MemoTextBox = new MirTextBox
+            {
+                ForeColour = Color.White,
+                Parent = this,
+                Font = new Font(Settings.FontName, 8F),
+                Location = new Point(15, 15),
+                Size = new Size(150, 120),
+            };
+
+            OKButton = new MirButton
+            {
+                Index = 607,
+                HoverIndex = 608,
+                PressedIndex = 609,
+                Parent = this,
+                Library = Libraries.Title,
+                Sound = SoundList.ButtonA,
+                Location = new Point(30, 165)
+            };
+            OKButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.AddMemo { CharacterIndex = Friend.Index, Memo = MemoTextBox.Text });
+            };
+
+            #region Buttons
+
+            CloseButton = new MirButton
+            {
+                HoverIndex = 361,
+                Index = 360,
+                Location = new Point(237, 3),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                PressedIndex = 362,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+            #endregion
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+        public void Show()
+        {
+            if (Visible) return;
+            Visible = true;
+        }
+    }
 
     public sealed class RelationshipDialog : MirImageControl
     {
@@ -20587,6 +20672,8 @@ namespace Client.MirScenes
             Visible = true;
         }
     }
+
+
     public sealed class MentorDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
