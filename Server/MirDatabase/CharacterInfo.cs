@@ -61,7 +61,9 @@ namespace Server.MirDatabase
         public byte MentalState;
         public byte MentalStateLvl;
 
-        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40];
+        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];
+        public UserItem CurrentRefine = null;
+        public long CollectTime = 0;
         public List<UserMagic> Magics = new List<UserMagic>();
         public List<PetInfo> Pets = new List<PetInfo>();
         public List<Buff> Buffs = new List<Buff>();
@@ -290,6 +292,17 @@ namespace Server.MirDatabase
                     Poisons.Add(poison);
                 }
             }
+
+            if (Envir.LoadVersion > 55)
+            {
+                if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion);
+                  if (CurrentRefine != null)
+                    SMain.Envir.BindItem(CurrentRefine);
+
+                CollectTime = reader.ReadInt64();
+                CollectTime += SMain.Envir.Time;
+            }
+
         }
 
         public void Save(BinaryWriter writer)
@@ -404,6 +417,18 @@ namespace Server.MirDatabase
             writer.Write(CompletedQuests.Count);
             for (int i = 0; i < CompletedQuests.Count; i++)
                 writer.Write(CompletedQuests[i]);
+
+
+            writer.Write(CurrentRefine != null);
+            if (CurrentRefine != null)
+                CurrentRefine.Save(writer);
+
+            if ((CollectTime - SMain.Envir.Time) < 0)
+                CollectTime = 0;
+            else
+                CollectTime = CollectTime - SMain.Envir.Time;
+
+            writer.Write(CollectTime);
         }
 
         public ListViewItem CreateListView()

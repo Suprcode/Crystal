@@ -432,6 +432,7 @@ namespace Server.MirObjects
             }
 
             TradeCancel();
+            RefineCancel();
 
             string logReason = LogOutReason(reason);
 
@@ -8983,6 +8984,468 @@ namespace Server.MirObjects
             Enqueue(new S.AddBuff { Type = b.Type, Caster = Name, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible });
         }
 
+        public void DepositRefineItem(int from, int to)
+        {
+
+            S.DepositRefineItem p = new S.DepositRefineItem { From = from, To = to, Success = false };
+
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Enqueue(p);
+                return;
+            }
+            NPCObject ob = null;
+            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            {
+                if (CurrentMap.NPCs[i].ObjectID != NPCID) continue;
+                ob = CurrentMap.NPCs[i];
+                break;
+            }
+
+            if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+            {
+                Enqueue(p);
+                return;
+            }
+
+
+            if (from < 0 || from >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Refine.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Inventory[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Refine[to] == null)
+            {
+                Info.Refine[to] = temp;
+                Info.Inventory[from] = null;
+                RefreshBagWeight();
+
+                Report.ItemMoved("DepositRefineItems", temp, MirGridType.Inventory, MirGridType.Refine, from, to);
+
+                p.Success = true;
+                Enqueue(p);
+                return;
+            }
+            Enqueue(p);
+
+        }
+
+        public void RetrieveRefineItem(int from, int to)
+        {
+            S.RetrieveRefineItem p = new S.RetrieveRefineItem { From = from, To = to, Success = false };
+
+            if (from < 0 || from >= Info.Refine.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Refine[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat("Too heavy to get back.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Inventory[to] == null)
+            {
+                Info.Inventory[to] = temp;
+                Info.Refine[from] = null;
+
+                Report.ItemMoved("TakeBackRefineItems", temp, MirGridType.Refine, MirGridType.Inventory, from, to);
+
+                p.Success = true;
+                RefreshBagWeight();
+                Enqueue(p);
+
+                return;
+            }
+            Enqueue(p);
+        }
+
+        public void RefineCancel()
+        {
+                    for (int t = 0; t < Info.Refine.Length; t++)
+                    {
+                        UserItem temp = Info.Refine[t];
+
+                        if (temp == null) continue;
+
+                        for (int i = 0; i < Info.Inventory.Length; i++)
+                        {
+                            if (Info.Inventory[i] != null) continue;
+
+                            //Put item back in inventory
+                            if (CanGainItem(temp))
+                            {
+                                RetrieveRefineItem(t, i);
+                            }
+                            else //Drop item on floor if it can no longer be stored
+                            {
+                                if (DropItem(temp, Settings.DropRange))
+                                {
+                                    Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                                }
+                            }
+
+                            Info.Refine[t] = null;
+
+                            break;
+                        }
+                    }
+        }
+
+        public void RefineItem(ulong uniqueID)
+        {
+            Enqueue(new S.RepairItem { UniqueID = uniqueID }); //CHECK THIS.
+
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+                int index = -1;
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    if (Info.Inventory[i] == null || Info.Inventory[i].UniqueID != uniqueID) continue;
+                    index = i;
+                    break;
+                }
+
+                if (Info.Inventory[index].RefineAdded != 0)
+                {
+                    ReceiveChat(String.Format("Your {0} needs to be checked before you can attempt to refine it again.", Info.Inventory[index].FriendlyName), ChatType.System);
+                    return;
+                }
+
+                if ((Info.Inventory[index].Info.Type != ItemType.Weapon) && (Settings.OnlyRefineWeapon))
+                {
+                    ReceiveChat(String.Format("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
+                    return;
+                }
+                
+                if (Info.Inventory[index].Info.Bind.HasFlag(BindMode.DontUpgrade))
+                {
+                    ReceiveChat(String.Format("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
+                    return;
+                }
+                    
+
+
+                if (index == -1) return;
+
+
+
+
+            //CHECK GOLD HERE
+                uint cost = (uint)((Info.Inventory[index].Info.RequiredAmount * 10) * Settings.RefineCost);
+
+                if (cost > Account.Gold || cost == 0)
+                {
+                    ReceiveChat(String.Format("You don't have enough gold to refine your {0}.", Info.Inventory[index].FriendlyName), ChatType.System);
+                    return;
+                }
+
+                Account.Gold -= cost;
+                Enqueue(new S.LoseGold { Gold = cost });
+
+            //START OF FORMULA
+
+                Info.CurrentRefine = Info.Inventory[index];
+                Info.Inventory[index] = null;
+                Info.CollectTime = (Envir.Time + (Settings.RefineTime * Settings.Minute));
+                Enqueue(new S.RefineItem { UniqueID = uniqueID });
+                
+
+                short OrePurity = 0;
+                byte OreAmount = 0;
+                byte ItemAmount = 0;
+                short TotalDC = 0;
+                short TotalMC = 0;
+                short TotalSC = 0;
+                short RequiredLevel = 0;
+                short Durability = 0;
+                short CurrentDura = 0;
+                short AddedStats = 0;
+                UserItem Ingredient;
+
+                for (int i = 0; i < Info.Refine.Length; i++)
+                {
+                    Ingredient = Info.Refine[i];
+
+                    if (Ingredient == null) continue;
+
+                    if ((Ingredient.Info.MaxDC > 0) || (Ingredient.Info.MaxMC > 0) || (Ingredient.Info.MaxSC > 0))
+                    {
+                        TotalDC += (short)(Ingredient.Info.MinDC + Ingredient.Info.MaxDC + Ingredient.DC);
+                        TotalMC += (short)(Ingredient.Info.MinMC + Ingredient.Info.MaxMC + Ingredient.MC);
+                        TotalSC += (short)(Ingredient.Info.MinSC + Ingredient.Info.MaxSC + Ingredient.SC);
+                        RequiredLevel += Ingredient.Info.RequiredAmount;
+                        if (Ingredient.MaxDura == Ingredient.Info.Durability) Durability++;
+                        if (Ingredient.CurrentDura == Ingredient.MaxDura) CurrentDura++;
+                        ItemAmount++;
+                    }
+
+                    if (Ingredient.Info.FriendlyName == Settings.RefineOreName)
+                    {
+                        OrePurity += (short)Ingredient.CurrentDura;
+                        OreAmount++;
+                    }
+
+                    Info.Refine[i] = null;
+                }
+
+                if ((TotalDC == 0) && (TotalMC == 0) && (TotalSC == 0))
+                {
+                    Info.CurrentRefine.RefinedValue = RefinedValue.None;
+                    Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
+                    if (Settings.RefineTime == 0)
+                    {
+                        CollectRefine();
+                    }
+                    else
+                    {
+                        ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                    }
+                    return;
+                }
+                
+                if (OreAmount == 0)
+                {
+                    Info.CurrentRefine.RefinedValue = RefinedValue.None;
+                    Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
+                    if (Settings.RefineTime == 0)
+                    {
+                        CollectRefine();
+                    }
+                    else
+                    {
+                        ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                    }
+                    return;
+                }
+
+
+                short RefineStat = 0;
+
+                if ((TotalDC > TotalMC) && (TotalDC > TotalSC))
+                {
+                    Info.CurrentRefine.RefinedValue = RefinedValue.DC;
+                    RefineStat = TotalDC;
+                }
+                    
+                if ((TotalMC > TotalDC) && (TotalMC > TotalSC))
+                {
+                    Info.CurrentRefine.RefinedValue = RefinedValue.MC;
+                    RefineStat = TotalMC;
+                }
+                    
+                if ((TotalSC > TotalDC) && (TotalSC > TotalMC))
+                {
+                    Info.CurrentRefine.RefinedValue = RefinedValue.SC;
+                    RefineStat = TotalSC;
+                }
+                    
+                Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
+
+
+                int ItemSuccess = 0; //Chance out of 35%
+
+                ItemSuccess += (RefineStat * 5) - Info.CurrentRefine.Info.RequiredAmount;
+                ItemSuccess += 5;
+                if (ItemSuccess > 10) ItemSuccess = 10;
+                if (ItemSuccess < 0) ItemSuccess = 0; //10%
+                
+
+                if ((RequiredLevel / ItemAmount) > (Info.CurrentRefine.Info.RequiredAmount - 5)) ItemSuccess += 10; //20%
+                if (Durability == ItemAmount) ItemSuccess += 10; //30%
+                if (CurrentDura == ItemAmount) ItemSuccess += 5; //35%
+
+                int OreSuccess = 0; //Chance out of 35%
+                
+                if (OreAmount >= ItemAmount) OreSuccess += 15; //15%
+                if ((OrePurity / OreAmount) >= (RefineStat / ItemAmount)) OreSuccess += 15; //30%
+                if (OrePurity == RefineStat) OreSuccess += 5; //35%
+
+                int LuckSuccess = 0; //Chance out of 10%
+
+                LuckSuccess = (Info.CurrentRefine.Luck + 5);
+                if (LuckSuccess > 10) LuckSuccess = 10;
+                if (LuckSuccess < 0) LuckSuccess = 0;
+
+
+                int BaseSuccess = Settings.RefineBaseChance; //20% as standard
+
+                int SuccessChance = (ItemSuccess + OreSuccess + LuckSuccess + BaseSuccess);
+
+                AddedStats = (byte)(Info.CurrentRefine.DC + Info.CurrentRefine.MC + Info.CurrentRefine.SC);
+                if (Info.CurrentRefine.Info.Type == ItemType.Weapon) AddedStats = (short)(AddedStats * Settings.RefineWepStatReduce);
+                else AddedStats = (short)(AddedStats * Settings.RefineItemStatReduce);
+                if (AddedStats > 50) AddedStats = 50;
+
+                SuccessChance -= AddedStats;
+
+                
+                if (Envir.Random.Next(1, 100) > SuccessChance)
+                    Info.CurrentRefine.RefinedValue = RefinedValue.None;
+
+                if (Envir.Random.Next(1, 100) < Settings.RefineCritChance)
+                    Info.CurrentRefine.RefineAdded = (byte)(Info.CurrentRefine.RefineAdded * Settings.RefineCritIncrease);
+                    
+            //END OF FORMULA (SET REFINEDVALUE TO REFINEDVALUE.NONE) REFINEADDED SHOULD BE > 0
+
+                if (Settings.RefineTime == 0)
+                { 
+                    CollectRefine();
+                }
+                else
+                {
+                    ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                }
+        }
+
+        public void CollectRefine()
+        {
+            S.NPCCollectRefine p = new S.NPCCollectRefine{Success = false};
+
+            if (Info.CurrentRefine == null)
+            {
+                ReceiveChat("You aren't currently refining any items.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.CollectTime > Envir.Time)
+            {
+                ReceiveChat(String.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+
+            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat(String.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            int index = -1;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                if (Info.Inventory[i] != null) continue;
+                index = i;
+                break;
+            }
+
+            if (index == -1)
+            {
+                ReceiveChat(String.Format("There isn't room in your bag for your {0}, make some space and try again.", Info.CurrentRefine.FriendlyName), ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            p.Success = true;
+            Enqueue(new S.GainedItem { Item = Info.CurrentRefine });
+            AddItem(Info.CurrentRefine);
+            RefreshBagWeight();
+            Info.CurrentRefine = null;
+            Info.CollectTime = 0;
+            Enqueue(p);
+            return;
+        }
+
+        public void CheckRefine(ulong uniqueID)
+        {
+            //Enqueue(new S.RepairItem { UniqueID = uniqueID });
+
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineCheckKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+                UserItem temp = null;
+
+                int index = -1;
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != uniqueID) continue;
+                    index = i;
+                    break;
+                }
+
+            if (Info.Inventory[index].RefineAdded == 0)
+            {
+                ReceiveChat(String.Format("{0} doesn't need to be checked as it hasn't been refined yet.", Info.Inventory[index].FriendlyName), ChatType.System);
+                return;
+            }
+
+
+            if ((Info.Inventory[index].RefinedValue == RefinedValue.DC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra DC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                Info.Inventory[index].DC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].DC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.MC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra MC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                Info.Inventory[index].MC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].MC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.SC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra SC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                Info.Inventory[index].SC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].SC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.None) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Your {0} smashed into a thousand pieces upon testing.", Info.Inventory[index].FriendlyName), ChatType.System);
+                Enqueue(new S.RefineItem { UniqueID = Info.Inventory[index].UniqueID});
+                Info.Inventory[index] = null;
+                return;
+            }
+
+            Enqueue(new S.ItemUpgraded { Item = Info.Inventory[index] });
+            return;
+        }
+
+
         public void DepositTradeItem(int from, int to)
         {
             S.DepositTradeItem p = new S.DepositTradeItem { From = from, To = to, Success = false };
@@ -9029,6 +9492,8 @@ namespace Server.MirObjects
             Enqueue(p);
 
         }
+
+
         public void RetrieveTradeItem(int from, int to)
         {
             S.RetrieveTradeItem p = new S.RetrieveTradeItem { From = from, To = to, Success = false };
@@ -9317,6 +9782,9 @@ namespace Server.MirObjects
                 case MirGridType.Trade:
                     array = Info.Trade;
                     TradeItem();
+                    break;
+                case MirGridType.Refine:
+                    array = Info.Refine;
                     break;
                 default:
                     Enqueue(p);
@@ -13854,6 +14322,7 @@ namespace Server.MirObjects
         }
 
         #endregion
+
 
         #region Trading
 
