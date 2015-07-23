@@ -9196,28 +9196,28 @@ namespace Server.MirObjects
                 short Durability = 0;
                 short CurrentDura = 0;
                 short AddedStats = 0;
-                UserItem Ingrediant;
+                UserItem Ingredient;
 
                 for (int i = 0; i < Info.Refine.Length; i++)
                 {
-                    Ingrediant = Info.Refine[i];
+                    Ingredient = Info.Refine[i];
 
-                    if (Ingrediant == null) continue;
+                    if (Ingredient == null) continue;
 
-                    if ((Ingrediant.Info.MaxDC > 0) || (Ingrediant.Info.MaxMC > 0) || (Ingrediant.Info.MaxSC > 0))
+                    if ((Ingredient.Info.MaxDC > 0) || (Ingredient.Info.MaxMC > 0) || (Ingredient.Info.MaxSC > 0))
                     {
-                        TotalDC += (short)(Ingrediant.Info.MinDC + Ingrediant.Info.MaxDC + Ingrediant.DC);
-                        TotalMC += (short)(Ingrediant.Info.MinMC + Ingrediant.Info.MaxMC + Ingrediant.MC);
-                        TotalSC += (short)(Ingrediant.Info.MinSC + Ingrediant.Info.MaxSC + Ingrediant.SC);
-                        RequiredLevel += Ingrediant.Info.RequiredAmount;
-                        if (Ingrediant.MaxDura == Ingrediant.Info.Durability) Durability++;
-                        if (Ingrediant.CurrentDura == Ingrediant.MaxDura) CurrentDura++;
+                        TotalDC += (short)(Ingredient.Info.MinDC + Ingredient.Info.MaxDC + Ingredient.DC);
+                        TotalMC += (short)(Ingredient.Info.MinMC + Ingredient.Info.MaxMC + Ingredient.MC);
+                        TotalSC += (short)(Ingredient.Info.MinSC + Ingredient.Info.MaxSC + Ingredient.SC);
+                        RequiredLevel += Ingredient.Info.RequiredAmount;
+                        if (Ingredient.MaxDura == Ingredient.Info.Durability) Durability++;
+                        if (Ingredient.CurrentDura == Ingredient.MaxDura) CurrentDura++;
                         ItemAmount++;
                     }
 
-                    if (Ingrediant.Info.FriendlyName == Settings.RefineOreName)
+                    if (Ingredient.Info.FriendlyName == Settings.RefineOreName)
                     {
-                        OrePurity += (short)Ingrediant.CurrentDura;
+                        OrePurity += (short)Ingredient.CurrentDura;
                         OreAmount++;
                     }
 
