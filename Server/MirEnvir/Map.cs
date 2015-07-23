@@ -1945,6 +1945,51 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
+
+                #region DelayedExplosion
+
+                case Spell.DelayedExplosion:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    for (int y = location.Y - 1; y <= location.Y + 1; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 1; x <= location.X + 1; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        //Only targets
+                                        if (target.IsAttackTarget(player))
+                                        {
+                                            if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
+                                                train = false;//wouldnt want to make the skill give twice the points
+                                        }
+                                        break;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    break;
+
+                #endregion
             }
 
             if (train)

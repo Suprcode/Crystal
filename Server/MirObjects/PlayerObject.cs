@@ -981,15 +981,22 @@ namespace Server.MirObjects
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
                 if (poison.Owner != null)
                 {
+                    //thedeath
+                    
                     switch (poison.Owner.Race)
-                    {
+                    { 
                         case ObjectType.Player:
-                            Attacked((PlayerObject)poison.Owner, poison.Value, DefenceType.MAC, false);
+                            PlayerObject caster = (PlayerObject)poison.Owner;
+                            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time, poison.Owner, caster.GetMagic(Spell.DelayedExplosion), poison.Value, this.CurrentLocation);
+                            CurrentMap.ActionList.Add(action);
+                            //Attacked((PlayerObject)poison.Owner, poison.Value, DefenceType.MAC, false);
                             break;
                         case ObjectType.Monster://this is in place so it could be used by mobs if one day someone chooses to
                             Attacked((MonsterObject)poison.Owner, poison.Value, DefenceType.MAC);
                             break;
+                     
                     }
+                    
                     LastHitter = poison.Owner;
                 }
                 return false;
@@ -8192,7 +8199,7 @@ namespace Server.MirObjects
             }
         }
 
-        private UserMagic GetMagic(Spell spell)
+        public UserMagic GetMagic(Spell spell)
         {
             for (int i = 0; i < Info.Magics.Count; i++)
             {
@@ -9215,14 +9222,14 @@ namespace Server.MirObjects
                     TotalMC += (short)(Ingredient.Info.MinMC + Ingredient.Info.MaxMC + Ingredient.MC);
                     TotalSC += (short)(Ingredient.Info.MinSC + Ingredient.Info.MaxSC + Ingredient.SC);
                     RequiredLevel += Ingredient.Info.RequiredAmount;
-                    if (Ingredient.MaxDura == Ingredient.Info.Durability) Durability++;
-                    if (Ingredient.CurrentDura == Ingredient.MaxDura) CurrentDura++;
+                    if (Math.Round(Ingredient.MaxDura / 1000M) == Math.Round(Ingredient.Info.Durability / 1000M)) Durability++;
+                    if (Math.Round(Ingredient.CurrentDura / 1000M) == Math.Round(Ingredient.MaxDura / 1000M)) CurrentDura++;
                     ItemAmount++;
                 }
 
                 if (Ingredient.Info.FriendlyName == Settings.RefineOreName)
                 {
-                    OrePurity += (short)Ingredient.CurrentDura;
+                    OrePurity += (short)Math.Round(Ingredient.CurrentDura / 1000M);
                     OreAmount++;
                 }
 
