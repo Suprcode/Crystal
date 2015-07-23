@@ -240,6 +240,21 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.StoreItem:
                     StoreItem((C.StoreItem) p);
                     break;
+                case (short)ClientPacketIds.DepositRefineItem:
+                    DepositRefineItem((C.DepositRefineItem)p);
+                    break;
+                case (short)ClientPacketIds.RetrieveRefineItem:
+                    RetrieveRefineItem((C.RetrieveRefineItem)p);
+                    break;
+                case (short)ClientPacketIds.RefineCancel:
+                    RefineCancel((C.RefineCancel)p);
+                    break;
+                case (short)ClientPacketIds.RefineItem:
+                    RefineItem((C.RefineItem)p);
+                    break;
+                case (short)ClientPacketIds.CheckRefine:
+                    CheckRefine((C.CheckRefine)p);
+                    break;
                 case (short)ClientPacketIds.DepositTradeItem:
                     DepositTradeItem((C.DepositTradeItem)p);
                     break;
@@ -768,12 +783,49 @@ namespace Server.MirNetwork
 
             Player.StoreItem(p.From, p.To);
         }
+
+        private void DepositRefineItem(C.DepositRefineItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DepositRefineItem(p.From, p.To);
+        }
+
+        private void RetrieveRefineItem(C.RetrieveRefineItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RetrieveRefineItem(p.From, p.To);
+        }
+
+        private void RefineCancel(C.RefineCancel p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RefineCancel();
+        }
+
+        private void RefineItem(C.RefineItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RefineItem(p.UniqueID);
+        }
+
+        private void CheckRefine(C.CheckRefine p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.CheckRefine(p.UniqueID);
+        }
+
         private void DepositTradeItem(C.DepositTradeItem p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.DepositTradeItem(p.From, p.To);
         }
+        
         private void RetrieveTradeItem(C.RetrieveTradeItem p)
         {
             if (Stage != GameStage.Game) return;

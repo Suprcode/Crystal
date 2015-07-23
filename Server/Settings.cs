@@ -141,6 +141,21 @@ namespace Server
         public static uint MailCostPer1KGold = 100;
         public static uint MailItemInsurancePercentage = 5;
 
+        //Refine Settings
+        public static bool OnlyRefineWeapon = true;
+        public static byte RefineBaseChance = 20;
+        public static byte RefineTime = 20;
+        public static byte RefineIncrease = 1;
+        public static byte RefineCritChance = 10;
+        public static byte RefineCritIncrease = 2;
+        public static byte RefineWepStatReduce = 6;
+        public static byte RefineItemStatReduce = 15;
+        public static byte RefineCost = 200;
+
+        public static string RefineOreName = "BlackIronOre";
+
+
+
         //Goods Settings
         public static bool GoodsOn = true;
         public static uint GoodsMaxStored = 50;
@@ -376,6 +391,7 @@ namespace Server
 			LoadAwakeAttribute();
             LoadFishing();
             LoadMail();
+            LoadRefine();
             LoadGoods();
         }
         public static void Save()
@@ -1035,6 +1051,45 @@ namespace Server
             reader.Write("Rates", "FreeWithStamp", MailFreeWithStamp);
             reader.Write("Rates", "CostPer1k", MailCostPer1KGold);
             reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
+        }
+
+        public static void LoadRefine()
+        {
+            if (!File.Exists(ConfigPath + @".\RefineSystem.ini"))
+            {
+                SaveRefine();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
+            OnlyRefineWeapon = reader.ReadBoolean("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
+            RefineBaseChance = reader.ReadByte("Config", "BaseChance", RefineBaseChance);
+            RefineTime = reader.ReadByte("Config", "Time", RefineTime);
+            RefineIncrease = reader.ReadByte("Config", "StatIncrease", RefineIncrease);
+            RefineCritChance = reader.ReadByte("Config", "CritChance", RefineCritChance);
+            RefineCritIncrease = reader.ReadByte("Config", "CritIncrease", RefineCritIncrease);
+            RefineWepStatReduce = reader.ReadByte("Config", "WepStatReducedChance", RefineWepStatReduce);
+            RefineItemStatReduce = reader.ReadByte("Config", "ItemStatReducedChance", RefineItemStatReduce);
+            RefineCost = reader.ReadByte("Config", "RefineCost", RefineCost);
+
+            RefineOreName = reader.ReadString("Ore", "OreName", RefineOreName);
+        }
+        public static void SaveRefine()
+        {
+            File.Delete(ConfigPath + @".\RefineSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
+            reader.Write("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
+            reader.Write("Config", "BaseChance", RefineBaseChance);
+            reader.Write("Config", "Time", RefineTime);
+            reader.Write("Config", "StatIncrease", RefineIncrease);
+            reader.Write("Config", "CritChance", RefineCritChance);
+            reader.Write("Config", "CritIncrease", RefineCritIncrease);
+            reader.Write("Config", "WepStatReducedChance", RefineWepStatReduce);
+            reader.Write("Config", "ItemStatReducedChance", RefineItemStatReduce);
+            reader.Write("Config", "RefineCost", RefineCost);
+
+            reader.Write("Ore", "OreName", RefineOreName);
+
         }
 
         public static void LoadGoods()
