@@ -2159,7 +2159,7 @@ public class ItemInfo
     public ItemInfo()
     {
     }
-    public ItemInfo(BinaryReader reader, int version = int.MaxValue)
+    public ItemInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
     {
         Index = reader.ReadInt32();
         Name = reader.ReadString();
@@ -2541,7 +2541,7 @@ public class UserItem
 
         SetSlotSize();
     }
-    public UserItem(BinaryReader reader, int version = int.MaxValue)
+    public UserItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
     {
         UniqueID = reader.ReadUInt64();
         ItemIndex = reader.ReadInt32();
@@ -2589,7 +2589,7 @@ public class UserItem
         for (int i = 0; i < count; i++)
         {
             if (reader.ReadBoolean()) continue;
-            UserItem item = new UserItem(reader, version);
+            UserItem item = new UserItem(reader, version, Customversion);
             Slots[i] = item;
         }
 
@@ -2603,8 +2603,8 @@ public class UserItem
 
         if (version <= 56) return;
 
-            RefinedValue = (RefinedValue)reader.ReadByte();
-            RefineAdded = reader.ReadByte();
+        RefinedValue = (RefinedValue)reader.ReadByte();
+        RefineAdded = reader.ReadByte();
 
 
     }

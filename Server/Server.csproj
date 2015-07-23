@@ -33,7 +33,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Mir 2\Server\</OutputPath>
+    <OutputPath>..\..\..\Mir 2\Server\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -92,6 +92,12 @@
     </Compile>
     <Compile Include="MirForms\BalanceConfigForm.Designer.cs">
       <DependentUpon>BalanceConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\Database\MagicInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Database\MagicInfoForm.Designer.cs">
+      <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirForms\Systems\DragonInfoForm.cs">
       <SubType>Form</SubType>
@@ -323,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
+      <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\DragonInfoForm.resx">
       <DependentUpon>DragonInfoForm.cs</DependentUpon>
