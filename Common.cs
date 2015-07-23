@@ -3495,7 +3495,7 @@ public class IntelligentCreatureRules
     }
 }
 
-public class IntelligentCreatureItemFilter//IntelligentCreature
+public class IntelligentCreatureItemFilter
 {
     public bool PetPickupAll = true;
     public bool PetPickupGold = false;
@@ -3609,7 +3609,7 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
     }
 }
 
-public class ClientIntelligentCreature//IntelligentCreature
+public class ClientIntelligentCreature
 {
     public IntelligentCreatureType PetType;
     public int Icon;

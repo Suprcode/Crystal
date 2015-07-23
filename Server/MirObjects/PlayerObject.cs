@@ -579,11 +579,6 @@ namespace Server.MirObjects
                 GetMail();
             }
 
-            //if (Envir.Time > ActionTime && _stepCounter > 0)
-            //{
-            //    _stepCounter = 0;
-            //}
-
             if (Envir.Time > IncreaseLoyaltyTime && Mount.HasMount)
             {
                 IncreaseLoyaltyTime = Envir.Time + (LoyaltyDelay * 60);
@@ -607,16 +602,7 @@ namespace Server.MirObjects
             ProcessRegen();
             ProcessPoison();
 
-            RefreshCreaturesTimeLeft();//IntelligentCreature
-
-            /*  if (HealthChanged)
-              {
-                  Enqueue(new S.HealthChanged { HP = HP, MP = MP });
-
-                  BroadcastHealthChange();
-
-                  HealthChanged = false;
-              }*/
+            RefreshCreaturesTimeLeft();
 
             UserItem item;
             if (Envir.Time > TorchTime)
