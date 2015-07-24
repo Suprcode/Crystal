@@ -147,7 +147,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader, Envir.LoadVersion);
+                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
                 if (SMain.Envir.BindItem(item) && i < Inventory.Length)
                     Inventory[i] = item;
             }
@@ -156,7 +156,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader, Envir.LoadVersion);
+                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
                 if (SMain.Envir.BindItem(item) && i < Equipment.Length)
                     Equipment[i] = item;
             }
@@ -165,7 +165,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader, Envir.LoadVersion);
+                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
                 if (SMain.Envir.BindItem(item) && i < QuestInventory.Length)
                     QuestInventory[i] = item;
             }
@@ -295,7 +295,7 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion > 56)
             {
-                if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion);
+                if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
                   if (CurrentRefine != null)
                     SMain.Envir.BindItem(CurrentRefine);
 
