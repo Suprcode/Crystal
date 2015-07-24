@@ -38,23 +38,6 @@ namespace Server.MirNetwork
         byte[] _rawData = new byte[0];
 
 
-        public double GetFakePlayerCount()
-        {
-            //lets face it: with open source mir it's to easy to cheat this number so i figured i'd make it easy for everyone, so ppl realise the number means nothings
-            double playercount = SMain.Envir.PlayerCount;
-            if (playercount < 10)
-                return (playercount * 2);
-            if (playercount < 20)
-                return (playercount * 2) + 5;
-            if (playercount < 30)
-                return Math.Round((playercount * 1.5) + 10);
-            if (playercount < 60)
-                return Math.Round((playercount * 1.25) + 10);            
-
-            return Math.Round(SMain.Envir.PlayerCount * 1.20);
-        }
-
-
         public MirStatusConnection( TcpClient client)
         {
             IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
@@ -151,7 +134,7 @@ namespace Server.MirNetwork
             if (SMain.Envir.Time - LastSendTime > 10 * 1000)
             {
                 LastSendTime = SMain.Envir.Time;
-                string output = string.Format("c;/{0}/{1}/{2}/{3}//;", "NoName",GetFakePlayerCount(),"CrystalM2", Application.ProductVersion);
+                string output = string.Format("c;/{0}/{1}/{2}/{3}//;", "NoName",SMain.Envir.PlayerCount,"CrystalM2", Application.ProductVersion);
                 byte[] data = Encoding.ASCII.GetBytes(output);
                 BeginSend(data);
             }
