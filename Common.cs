@@ -2066,6 +2066,29 @@ public static class Functions
         }
         return output;
     }
+
+    public static string StringOverLines(string line, int maxWordsPerLine, int maxLettersPerLine)
+    {
+        string newString = string.Empty;
+
+        string[] words = line.Split(' ');
+
+        int lineLength = 0;
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            lineLength += words[i].Length + 1;
+
+            newString += words[i] + " ";
+            if (i % maxWordsPerLine == 0 && i > 0 && lineLength > maxLettersPerLine)
+            {
+                lineLength = 0;
+                newString += "\r\n";
+            }
+        }
+
+        return newString;
+    }
 }
 
 public class SelectInfo

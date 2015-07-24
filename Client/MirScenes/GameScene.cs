@@ -7375,16 +7375,6 @@ namespace Client.MirScenes
                 Opacity = 0.7F
             };
 
-            string[] words = friend.Memo.Split(' ');
-
-            string newMemo = string.Empty;
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                newMemo += words[i] + " ";
-                if (i % 5 == 0 && i > 0) newMemo += "\r\n";
-            }
-
             MirLabel memoLabel = new MirLabel
             {
                 AutoSize = true,
@@ -7392,12 +7382,14 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = MemoLabel,
-                Text = newMemo
+                Text = Functions.StringOverLines(friend.Memo, 5, 20)
             };
 
             MemoLabel.Size = new Size(Math.Max(MemoLabel.Size.Width, memoLabel.DisplayRectangle.Right + 4),
                 Math.Max(MemoLabel.Size.Height, memoLabel.DisplayRectangle.Bottom));
         }
+
+
 
         public class OutPutMessage
         {
