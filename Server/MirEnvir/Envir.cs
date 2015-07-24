@@ -811,7 +811,10 @@ namespace Server.MirEnvir
 
                     MemoryStream mStream = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(mStream);
-
+                    int Temp = 9999;
+                    writer.Write(Temp);
+                    writer.Write(Version);
+                    writer.Write(CustomVersion);
                     writer.Write(npc.UsedGoods.Count);
 
                     for (int k = 0; k < npc.UsedGoods.Count; k++)

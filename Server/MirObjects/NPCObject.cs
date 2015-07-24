@@ -154,11 +154,22 @@ namespace Server.MirObjects
             {
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    int count = reader.ReadInt32();
+                    int version = reader.ReadInt32();
+                    int count = version;
+                    int customversion = Envir.LoadCustomVersion;
+                    if (version == 9999)//the only real way to tell if the file was made before or after version code got added: assuming nobody had a config option to save more then 10000 sold items :p
+                    {
+                        version = reader.ReadInt32();
+                        customversion = reader.ReadInt32();
+                        count = reader.ReadInt32();
+                    }
+                    else
+                        version = Envir.LoadVersion;
+                    
 
                     for (int k = 0; k < count; k++)
                     {
-                        UserItem item = new UserItem(reader, Envir.LoadVersion);
+                        UserItem item = new UserItem(reader, version, customversion);
                         if (SMain.Envir.BindItem(item))
                             UsedGoods.Add(item);
                     }
