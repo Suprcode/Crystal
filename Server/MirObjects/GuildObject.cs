@@ -54,7 +54,17 @@ namespace Server.MirObjects
         }
         public GuildObject(BinaryReader reader) 
         {
-            Guildindex = reader.ReadInt32();
+            int customversion = Envir.LoadCustomVersion;
+            int version = reader.ReadInt32();
+            Guildindex = version;
+            if (version == int.MaxValue)
+            {
+                version = reader.ReadInt32();
+                customversion = reader.ReadInt32();
+                Guildindex = reader.ReadInt32();
+            }
+            else
+                version = Envir.LoadVersion;
             Name = reader.ReadString();
             Level = reader.ReadByte();
             SparePoints = reader.ReadByte();
@@ -78,7 +88,7 @@ namespace Server.MirObjects
                     if (!reader.ReadBoolean()) continue;
                 GuildStorageItem Guilditem = new GuildStorageItem()
                 {
-                    Item = new UserItem(reader, Envir.LoadVersion),
+                    Item = new UserItem(reader, version, customversion),
                     UserId = reader.ReadInt64()
                 };
                 
@@ -99,6 +109,11 @@ namespace Server.MirObjects
         }
         public void Save(BinaryWriter writer)
         {
+            int temp = int.MaxValue;
+            writer.Write(temp);
+            writer.Write(Envir.Version);
+            writer.Write(Envir.LoadVersion);
+
             int RankCount = 0;
             for (int i = Ranks.Count - 1; i >= 0; i--)
                 if (Ranks[i].Members.Count > 0)
