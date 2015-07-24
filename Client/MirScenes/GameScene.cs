@@ -4865,7 +4865,7 @@ namespace Client.MirScenes
 
             if (GameScene.Scene.FriendDialog.Visible)
             {
-                GameScene.Scene.FriendDialog.Update();
+                GameScene.Scene.FriendDialog.Update(false);
             }
         }
 
@@ -20203,7 +20203,7 @@ namespace Client.MirScenes
         public MirLabel PageNumberLabel;
         public MirButton CloseButton, PreviousButton, NextButton;
         public MirButton AddButton, RemoveButton, MemoButton, EmailButton, WhisperButton;
-        public FriendRow[] Rows = new FriendRow[10];
+        public FriendRow[] Rows = new FriendRow[12];
 
         public List<ClientFriend> Friends = new List<ClientFriend>();
         private ClientFriend SelectedFriend = null;
@@ -20243,8 +20243,6 @@ namespace Client.MirScenes
             FriendLabel.Click += (o, e) =>
             {
                 _tempBlockedTab = false;
-
-                Update();
             };
 
             BlacklistLabel = new MirImageControl
@@ -20258,8 +20256,6 @@ namespace Client.MirScenes
             BlacklistLabel.Click += (o, e) =>
             {
                 _tempBlockedTab = true;
-
-                Update();
             };
 
             PageNumberLabel = new MirLabel
@@ -20463,10 +20459,10 @@ namespace Client.MirScenes
             }
         }
 
-        public void Update()
+        public void Update(bool clearSelection = true)
         {
-            
-            SelectedFriend = null;
+            if (clearSelection)
+                SelectedFriend = null;
 
             for (int i = 0; i < Rows.Length; i++)
             {

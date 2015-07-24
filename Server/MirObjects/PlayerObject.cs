@@ -2952,13 +2952,13 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (player.Info.Friends.Any(e => e.CharacterInfo == Info && e.Blocked))
+                if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
                 {
                     ReceiveChat("Player is not accepting your messages.", ChatType.System);
                     return;
                 }
 
-                if (Info.Friends.Any(e => e.CharacterInfo == player.Info && e.Blocked))
+                if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
                 {
                     ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
                     return;
@@ -15328,13 +15328,13 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (player.Friends.Any(e => e.CharacterInfo == Info && e.Blocked))
+            if (player.Friends.Any(e => e.Info == Info && e.Blocked))
             {
                 ReceiveChat("Player is not accepting your mail.", ChatType.System);
                 return;
             }
 
-            if (Info.Friends.Any(e => e.CharacterInfo == player && e.Blocked))
+            if (Info.Friends.Any(e => e.Info == player && e.Blocked))
             {
                 ReceiveChat("Cannot mail player whilst they are on your blacklist.", ChatType.System);
                 return;
@@ -16040,19 +16040,19 @@ namespace Server.MirObjects
 
             if (info == null)
             {
-                ReceiveChat("Player doesn't exist.", ChatType.System);
+                ReceiveChat("Player doesn't exist", ChatType.System);
                 return;
             }
 
             if (Name == name)
             {
-                ReceiveChat("Cannot add yourself.", ChatType.System);
+                ReceiveChat("Cannot add yourself", ChatType.System);
                 return;
             }
 
-            if (Info.Friends.Any(e => e.CharacterIndex == info.Index))
+            if (Info.Friends.Any(e => e.Index == info.Index))
             {
-                ReceiveChat("Player already added.", ChatType.System);
+                ReceiveChat("Player already added", ChatType.System);
                 return;
             }
 
@@ -16065,12 +16065,10 @@ namespace Server.MirObjects
 
         public void RemoveFriend(int index)
         {
-            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.CharacterIndex == index);
+            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.Index == index);
 
             if (friend == null)
             {
-                //player doesn't exist
-                ReceiveChat("Player doesn't exist " + index, ChatType.System);
                 return;
             }
 
@@ -16081,9 +16079,12 @@ namespace Server.MirObjects
 
         public void AddMemo(int index, string memo)
         {
-            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.CharacterIndex == index);
+            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.Index == index);
 
-            if (friend == null) return;
+            if (friend == null)
+            {
+                return;
+            }
 
             friend.Memo = memo;
 

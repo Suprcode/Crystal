@@ -577,34 +577,40 @@ namespace Server.MirDatabase
 
     public class FriendInfo
     {
-        public int CharacterIndex;
+        public int Index;
 
-        public CharacterInfo CharacterInfo;
+        private CharacterInfo _Info;
+        public CharacterInfo Info
+        {
+            get 
+            {
+                if (_Info == null) 
+                    _Info = SMain.Envir.GetCharacterInfo(Index);
+
+                return _Info;
+            }
+        }
 
         public bool Blocked;
         public string Memo;
 
         public FriendInfo(CharacterInfo info, bool blocked) 
         {
-            CharacterInfo = info;
-            CharacterIndex = CharacterInfo.Index;
+            Index = info.Index;
             Blocked = blocked;
             Memo = "";
         }
 
         public FriendInfo(BinaryReader reader)
         {
-            CharacterInfo = SMain.Envir.GetCharacterInfo(reader.ReadInt32());
-
-            if (CharacterInfo != null) CharacterIndex = CharacterInfo.Index;
-
+            Index = reader.ReadInt32();
             Blocked = reader.ReadBoolean();
             Memo = reader.ReadString();
         }
 
         public void Save(BinaryWriter writer)
         {
-            writer.Write(CharacterIndex);
+            writer.Write(Index);
             writer.Write(Blocked);
             writer.Write(Memo);
         }
@@ -613,11 +619,11 @@ namespace Server.MirDatabase
         {
             return new ClientFriend()
             {
-                Index = CharacterIndex,
-                Name = CharacterInfo.Name,
+                Index = Index,
+                Name = Info.Name,
                 Blocked = Blocked,
                 Memo = Memo,
-                Online = CharacterInfo.Player != null && CharacterInfo.Player.Node != null
+                Online = Info.Player != null && Info.Player.Node != null
             };
         }
     }
