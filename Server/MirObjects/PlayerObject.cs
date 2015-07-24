@@ -580,11 +580,6 @@ namespace Server.MirObjects
                 GetMail();
             }
 
-            //if (Envir.Time > ActionTime && _stepCounter > 0)
-            //{
-            //    _stepCounter = 0;
-            //}
-
             if (Envir.Time > IncreaseLoyaltyTime && Mount.HasMount)
             {
                 IncreaseLoyaltyTime = Envir.Time + (LoyaltyDelay * 60);
@@ -608,16 +603,7 @@ namespace Server.MirObjects
             ProcessRegen();
             ProcessPoison();
 
-            RefreshCreaturesTimeLeft();//IntelligentCreature
-
-            /*  if (HealthChanged)
-              {
-                  Enqueue(new S.HealthChanged { HP = HP, MP = MP });
-
-                  BroadcastHealthChange();
-
-                  HealthChanged = false;
-              }*/
+            RefreshCreaturesTimeLeft();
 
             UserItem item;
             if (Envir.Time > TorchTime)
@@ -1736,13 +1722,12 @@ namespace Server.MirObjects
             GetCompletedQuests();
 
             GetMail();
+            GetFriends();
 
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
-                QuestProgressInfo quest = CurrentQuests[i];
-
-                quest.ResyncTasks();
-                SendUpdateQuest(quest, QuestState.Add);
+                CurrentQuests[i].ResyncTasks();
+                SendUpdateQuest(CurrentQuests[i], QuestState.Add);
             }
 
             Enqueue(new S.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
@@ -1917,7 +1902,7 @@ namespace Server.MirObjects
             {
                 item = Info.Inventory[i];
                 if (item == null) continue;
-                //CheckItemInfo(item.Info);
+
                 CheckItem(item);
             }
 
@@ -1926,7 +1911,7 @@ namespace Server.MirObjects
                 item = Info.Equipment[i];
 
                 if (item == null) continue;
-                //CheckItemInfo(item.Info);
+
                 CheckItem(item);
             }
 
@@ -2964,6 +2949,18 @@ namespace Server.MirObjects
                         return;
                     }
                     ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
+                    return;
+                }
+
+                if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
+                {
+                    ReceiveChat("Player is not accepting your messages.", ChatType.System);
+                    return;
+                }
+
+                if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
+                {
+                    ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
                     return;
                 }
 
@@ -15311,10 +15308,6 @@ namespace Server.MirObjects
 
         public void GetCompletedQuests()
         {
-            //CompletedQuests.Clear();
-            //for (int i = 1000; i < Globals.FlagIndexCount; i++)
-            //    if (Info.Flags[i]) CompletedQuests.Add(i - 1000);
-
             Enqueue(new S.CompleteQuest
             {
                 CompletedQuests = CompletedQuests
@@ -15332,6 +15325,18 @@ namespace Server.MirObjects
             if (player == null)
             {
                 ReceiveChat(string.Format("Could not find player {0}", name), ChatType.System);
+                return;
+            }
+
+            if (player.Friends.Any(e => e.Info == Info && e.Blocked))
+            {
+                ReceiveChat("Player is not accepting your mail.", ChatType.System);
+                return;
+            }
+
+            if (Info.Friends.Any(e => e.Info == player && e.Blocked))
+            {
+                ReceiveChat("Cannot mail player whilst they are on your blacklist.", ChatType.System);
                 return;
             }
 
@@ -16029,40 +16034,73 @@ namespace Server.MirObjects
 
         #region Friends
 
-        public void AddFriend(int index)
+        public void AddFriend(string name, bool blocked = false)
         {
-            CharacterInfo info = Envir.GetCharacterInfo(index);
+            CharacterInfo info = Envir.GetCharacterInfo(name);
 
-            if (info == null) return;
+            if (info == null)
+            {
+                ReceiveChat("Player doesn't exist", ChatType.System);
+                return;
+            }
 
-            if (Info.Friends.Any(e => e.CharacterIndex == index)) return;
+            if (Name == name)
+            {
+                ReceiveChat("Cannot add yourself", ChatType.System);
+                return;
+            }
 
-            FriendInfo friend = new FriendInfo(index);
+            if (Info.Friends.Any(e => e.Index == info.Index))
+            {
+                ReceiveChat("Player already added", ChatType.System);
+                return;
+            }
+
+            FriendInfo friend = new FriendInfo(info, blocked);
 
             Info.Friends.Add(friend);
+
+            GetFriends();
         }
 
         public void RemoveFriend(int index)
         {
-            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.CharacterIndex == index);
+            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.Index == index);
 
-            if (friend == null) return;
+            if (friend == null)
+            {
+                return;
+            }
 
             Info.Friends.Remove(friend);
+
+            GetFriends();
         }
 
         public void AddMemo(int index, string memo)
         {
-            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.CharacterIndex == index);
+            FriendInfo friend = Info.Friends.FirstOrDefault(e => e.Index == index);
 
-            if (friend == null) return;
+            if (friend == null)
+            {
+                return;
+            }
 
             friend.Memo = memo;
+
+            GetFriends();
         }
 
         public void GetFriends()
         {
+            List<ClientFriend> friends = new List<ClientFriend>();
 
+            foreach (FriendInfo friend in Info.Friends)
+            {
+                friends.Add(friend.CreateClientFriend());
+            }
+
+            Enqueue(new S.FriendUpdate { Friends = friends });
         }
 
         #endregion
