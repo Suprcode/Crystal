@@ -210,6 +210,7 @@
       <DependentUpon>VForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirNetwork\MirConnection.cs" />
+    <Compile Include="MirNetwork\MirStatusConnection.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\DelayedAction.cs" />
     <Compile Include="MirObjects\GuildObject.cs" />
