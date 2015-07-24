@@ -8,10 +8,6 @@ using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
-    #region Notes
-    //clean up new flag methods
-    #endregion
-
     public class QuestProgressInfo
     {
         public int Index;

@@ -1742,4 +1742,75 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(Location.Y);
         }
     }
+
+    public sealed class AddFriend : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AddFriend; } }
+
+        public string Name;
+        public bool Blocked;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+            Blocked = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write(Blocked);
+        }
+    }
+
+    public sealed class RemoveFriend : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RemoveFriend; } }
+
+        public int CharacterIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            CharacterIndex = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(CharacterIndex);
+        }
+    }
+
+    public sealed class RefreshFriends : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RefreshFriends; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+
+    public sealed class AddMemo : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AddMemo; } }
+
+        public int CharacterIndex;
+        public string Memo;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            CharacterIndex = reader.ReadInt32();
+            Memo = reader.ReadString();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(CharacterIndex);
+            writer.Write(Memo);
+        }
+    }
 }

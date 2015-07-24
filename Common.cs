@@ -1163,6 +1163,7 @@ public enum ServerPacketIds : short
     NPCPearlGoods,
 
     TransformUpdate,
+    FriendUpdate
 }
 
 public enum ClientPacketIds : short
@@ -1270,7 +1271,12 @@ public enum ClientPacketIds : short
     MailCost,
 
     UpdateIntelligentCreature,
-    IntelligentCreaturePickup
+    IntelligentCreaturePickup,
+
+    AddFriend,
+    RemoveFriend,
+    RefreshFriends,
+    AddMemo
 }
 
 public class InIReader
@@ -2059,6 +2065,29 @@ public static class Functions
                         output = info;
         }
         return output;
+    }
+
+    public static string StringOverLines(string line, int maxWordsPerLine, int maxLettersPerLine)
+    {
+        string newString = string.Empty;
+
+        string[] words = line.Split(' ');
+
+        int lineLength = 0;
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            lineLength += words[i].Length + 1;
+
+            newString += words[i] + " ";
+            if (i > 0 && i % maxWordsPerLine == 0 && lineLength > maxLettersPerLine)
+            {
+                lineLength = 0;
+                newString += "\r\n";
+            }
+        }
+
+        return newString;
     }
 }
 
@@ -3434,15 +3463,45 @@ public class ClientMail
     }
 }
 
+public class ClientFriend
+{
+    public int Index;
+    public string Name;
+    public string Memo = "";
+    public bool Blocked;
 
+    public bool Online;
 
-public enum IntelligentCreaturePickupMode : byte//IntelligentCreature
+    public ClientFriend() { }
+
+    public ClientFriend(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Memo = reader.ReadString();
+        Blocked = reader.ReadBoolean();
+
+        Online = reader.ReadBoolean();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Memo);
+        writer.Write(Blocked);
+
+        writer.Write(Online);
+    }
+}
+
+public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
     SemiAutomatic = 1,
 }
 
-public class IntelligentCreatureRules//IntelligentCreature
+public class IntelligentCreatureRules
 {
     public int MinimalFullness = 1;
 
@@ -3498,7 +3557,7 @@ public class IntelligentCreatureRules//IntelligentCreature
     }
 }
 
-public class IntelligentCreatureItemFilter//IntelligentCreature
+public class IntelligentCreatureItemFilter
 {
     public bool PetPickupAll = true;
     public bool PetPickupGold = false;
@@ -3612,7 +3671,7 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
     }
 }
 
-public class ClientIntelligentCreature//IntelligentCreature
+public class ClientIntelligentCreature
 {
     public IntelligentCreatureType PetType;
     public int Icon;
@@ -3947,6 +4006,14 @@ public abstract class Packet
                 return new C.UpdateIntelligentCreature();
             case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
                 return new C.IntelligentCreaturePickup();
+            case (short)ClientPacketIds.AddFriend:
+                return new C.AddFriend();
+            case (short)ClientPacketIds.RemoveFriend:
+                return new C.RemoveFriend();
+            case (short)ClientPacketIds.RefreshFriends:
+                return new C.RefreshFriends();
+            case (short)ClientPacketIds.AddMemo:
+                return new C.AddMemo();
             default:
                 throw new NotImplementedException();
         }
@@ -4356,6 +4423,8 @@ public abstract class Packet
                 return new S.IntelligentCreatureEnableRename();
             case (short)ServerPacketIds.NPCPearlGoods:
                 return new S.NPCPearlGoods();
+            case (short)ServerPacketIds.FriendUpdate:
+                return new S.FriendUpdate();
             default:
                 throw new NotImplementedException();
         }
