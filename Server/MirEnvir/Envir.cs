@@ -95,8 +95,12 @@ namespace Server.MirEnvir
 
         private Thread _thread;
         private TcpListener _listener;
+        private bool StatusPortEnabled = true;
+        public List<MirStatusConnection> StatusConnections = new List<MirStatusConnection>();
+        private TcpListener _StatusPort;
         private int _sessionID;
         public List<MirConnection> Connections = new List<MirConnection>();
+        
 
         //Server DB
         public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex;
@@ -403,7 +407,13 @@ namespace Server.MirEnvir
                                 Connections[i].Process();
                             }
                         }
-
+                        lock (StatusConnections)
+                        {
+                            for (int i = StatusConnections.Count - 1; i >= 0; i--)
+                            {
+                                StatusConnections[i].Process();
+                            }
+                        }
                     }
                     
 
@@ -1328,6 +1338,13 @@ namespace Server.MirEnvir
             _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
             _listener.Start();
             _listener.BeginAcceptTcpClient(Connection, null);
+
+            if (StatusPortEnabled)
+            {
+                _StatusPort = new TcpListener(IPAddress.Parse(Settings.IPAddress), 3000);
+                _StatusPort.Start();
+                _StatusPort.BeginAcceptSocket(StatusConnection, null);
+            }
             SMain.Enqueue("Network Started.");
 
             //FixGuilds();
@@ -1349,11 +1366,17 @@ namespace Server.MirEnvir
         private void StopNetwork()
         {
             _listener.Stop();
-
             lock (Connections)
             {
                 for (int i = Connections.Count - 1; i >= 0; i--)
                     Connections[i].SendDisconnect(0);
+            }
+
+            if (StatusPortEnabled)
+            {
+                _StatusPort.Stop();
+                for (int i = StatusConnections.Count - 1; i >= 0; i--)
+                    StatusConnections[i].SendDisconnect();
             }
 
             long expire = Time + 5000;
@@ -1370,6 +1393,20 @@ namespace Server.MirEnvir
             
 
             Connections.Clear();
+
+            expire = Time + 10000;
+            while (StatusConnections.Count != 0 && Stopwatch.ElapsedMilliseconds < expire)
+            {
+                Time = Stopwatch.ElapsedMilliseconds;
+
+                for (int i = StatusConnections.Count - 1; i >= 0; i--)
+                    StatusConnections[i].Process();
+
+                Thread.Sleep(1);
+            }
+
+
+            StatusConnections.Clear();
             SMain.Enqueue("Network Stopped.");
         }
 
@@ -1394,6 +1431,30 @@ namespace Server.MirEnvir
 
                 if (Running && _listener.Server.IsBound)
                     _listener.BeginAcceptTcpClient(Connection, null);
+            }
+        }
+
+        private void StatusConnection(IAsyncResult result)
+        {
+            if (!Running || !_StatusPort.Server.IsBound) return;
+
+            try
+            {
+                TcpClient tempTcpClient = _StatusPort.EndAcceptTcpClient(result);
+                lock (StatusConnections)
+                    StatusConnections.Add(new MirStatusConnection(tempTcpClient));
+            }
+            catch (Exception ex)
+            {
+                SMain.Enqueue(ex);
+            }
+            finally
+            {
+                while (StatusConnections.Count >= 5) //dont allow to many status port connections it's just an abuse thing
+                    Thread.Sleep(1);
+
+                if (Running && _StatusPort.Server.IsBound)
+                    _StatusPort.BeginAcceptTcpClient(StatusConnection, null);
             }
         }
      
