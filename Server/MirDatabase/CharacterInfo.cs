@@ -247,7 +247,7 @@ namespace Server.MirDatabase
             {
                 count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
-                    Mail.Add(new MailInfo(reader));
+                    Mail.Add(new MailInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
             }
 
             //IntelligentCreature

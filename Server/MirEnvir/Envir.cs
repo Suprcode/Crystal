@@ -1022,7 +1022,7 @@ namespace Server.MirEnvir
                     count = reader.ReadInt32();
                     for (int i = 0; i < count; i++)
                     {
-                        AuctionInfo auction = new AuctionInfo(reader);
+                        AuctionInfo auction = new AuctionInfo(reader, LoadVersion, LoadCustomVersion);
 
                         if (!BindItem(auction.Item) || !BindCharacter(auction)) continue;
 
@@ -1049,7 +1049,7 @@ namespace Server.MirEnvir
                         count = reader.ReadInt32();
                         for (int i = 0; i < count; i++)
                         {
-                            Mail.Add(new MailInfo(reader));
+                            Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
                         }
                     }
                 }
