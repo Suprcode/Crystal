@@ -7386,7 +7386,7 @@ namespace Client.MirScenes
             };
 
             MemoLabel.Size = new Size(Math.Max(MemoLabel.Size.Width, memoLabel.DisplayRectangle.Right + 4),
-                Math.Max(MemoLabel.Size.Height, memoLabel.DisplayRectangle.Bottom));
+                Math.Max(MemoLabel.Size.Height, memoLabel.DisplayRectangle.Bottom + 4));
         }
 
 
@@ -20386,7 +20386,6 @@ namespace Client.MirScenes
                 if (SelectedFriend == null) return;
 
                 GameScene.Scene.MemoDialog.Friend = SelectedFriend;
-
                 GameScene.Scene.MemoDialog.Show();
             };
 
@@ -20456,6 +20455,7 @@ namespace Client.MirScenes
                 }
                 Update();
                 GameScene.Scene.MemoDialog.Hide();
+                GameScene.Scene.DisposeMemoLabel();
             }
         }
 
@@ -20749,6 +20749,9 @@ namespace Client.MirScenes
             }
 
             MemoTextBox.Text = Friend.Memo;
+            MemoTextBox.SetFocus();
+            MemoTextBox.TextBox.SelectionLength = 0;
+            MemoTextBox.TextBox.SelectionStart = MemoTextBox.Text.Length;
         }
     }
 
@@ -20855,7 +20858,6 @@ namespace Client.MirScenes
         public bool Visible;
         public uint ObjectID;
         public long Expire;
-        //public int Value;
         public int[] Values;
         public bool Infinite;
 

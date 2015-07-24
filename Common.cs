@@ -2080,7 +2080,7 @@ public static class Functions
             lineLength += words[i].Length + 1;
 
             newString += words[i] + " ";
-            if (i % maxWordsPerLine == 0 && i > 0 && lineLength > maxLettersPerLine)
+            if (i > 0 && i % maxWordsPerLine == 0 && lineLength > maxLettersPerLine)
             {
                 lineLength = 0;
                 newString += "\r\n";

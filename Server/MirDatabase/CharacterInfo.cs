@@ -305,9 +305,9 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion > 58)
             {
-                //count = reader.ReadInt32();
-                //for (int i = 0; i < count; i++)
-                //    Friends.Add(new FriendInfo(reader));
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                    Friends.Add(new FriendInfo(reader));
             }
 
         }
@@ -408,7 +408,6 @@ namespace Server.MirDatabase
             for (int i = 0; i < Buffs.Count; i++)
             {
                 Buffs[i].Save(writer);
-                //writer.Write(Buffs[i].Caster != null ? Buffs[i].Caster.ObjectID : 0);
             }
 
             writer.Write(Mail.Count);
@@ -437,9 +436,9 @@ namespace Server.MirDatabase
 
             writer.Write(CollectTime);
 
-            //writer.Write(Friends.Count);
-            //for (int i = 0; i < Friends.Count; i++)
-            //    Friends[i].Save(writer);
+            writer.Write(Friends.Count);
+            for (int i = 0; i < Friends.Count; i++)
+                Friends[i].Save(writer);
         }
 
         public ListViewItem CreateListView()
