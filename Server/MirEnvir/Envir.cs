@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int Version = 59;
-        public const int CustomVersion = 0;
+        public const int CustomVersion = 1;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";

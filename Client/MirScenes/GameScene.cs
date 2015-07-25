@@ -1278,6 +1278,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCUpdate:
                     NPCUpdate((S.NPCUpdate)p);
                     break;
+                case (short)ServerPacketIds.MarriageRequest:
+                    MarriageRequest((S.MarriageRequest)p);
+                    break;
                 case (short)ServerPacketIds.TradeRequest:
                     TradeRequest((S.TradeRequest)p);
                     break;
@@ -4514,6 +4517,16 @@ namespace Client.MirScenes
             }
         }
 
+        private void MarriageRequest(S.MarriageRequest p)
+        {
+            MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
+
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MarriageReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MarriageReply { AcceptInvite = false }); messageBox.Dispose(); };
+
+            messageBox.Show();
+        }
+
         private void TradeRequest(S.TradeRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
@@ -5065,6 +5078,18 @@ namespace Client.MirScenes
                 }
             }
 
+            String WedRingName = "";
+            if (HoverItem.WeddingRing == -1)
+            {
+                WedRingName = HoverItem.Info.Type.ToString() +
+                "\n" + "W " + HoverItem.Weight + text;
+            }
+            else
+            {
+                WedRingName = "Wedding Ring" +
+                "\n" + "W " + HoverItem.Weight + text;
+            }
+
             MirLabel etcLabel = new MirLabel
             {
                 AutoSize = true,
@@ -5072,8 +5097,7 @@ namespace Client.MirScenes
                 Location = new Point(4, nameLabel.DisplayRectangle.Bottom),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Type.ToString() +
-                "\n" + "W " + HoverItem.Weight + text 
+                Text = WedRingName
             };
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
@@ -13207,7 +13231,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
-                Visible = false
+                Visible = true
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -20762,7 +20786,7 @@ namespace Client.MirScenes
 
         public RelationshipDialog()
         {
-            Index = 120;
+            Index = 583;
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;

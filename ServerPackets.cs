@@ -1397,6 +1397,21 @@ namespace ServerPackets
         }
     }
 
+    public sealed class MarriageRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.MarriageRequest; } }
+
+        public string Name;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+        }
+    }
+
     public sealed class TradeRequest : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.TradeRequest; } }

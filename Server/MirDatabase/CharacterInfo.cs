@@ -37,6 +37,10 @@ namespace Server.MirDatabase
 
         public ListViewItem ListItem;
 
+        //Marriage
+        public int Married = 0;
+        public DateTime MarriedDate;
+
         //Location
         public int CurrentMapIndex;
         public Point CurrentLocation;
@@ -310,6 +314,13 @@ namespace Server.MirDatabase
                     Friends.Add(new FriendInfo(reader));
             }
 
+            if (Envir.LoadCustomVersion > 0)
+            {
+                Married = reader.ReadInt32();
+                MarriedDate = DateTime.FromBinary(reader.ReadInt64());
+
+            }
+
         }
 
         public void Save(BinaryWriter writer)
@@ -439,6 +450,9 @@ namespace Server.MirDatabase
             writer.Write(Friends.Count);
             for (int i = 0; i < Friends.Count; i++)
                 Friends[i].Save(writer);
+
+            writer.Write(Married);
+            writer.Write(MarriedDate.ToBinary());
         }
 
         public ListViewItem CreateListView()

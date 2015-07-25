@@ -1107,6 +1107,7 @@ public enum ServerPacketIds : short
     GuildRequestWar,
     DefaultNPC,
     NPCUpdate,
+    MarriageRequest,
     TradeRequest,
     TradeAccept,
     TradeGold,
@@ -1237,6 +1238,7 @@ public enum ClientPacketIds : short
     GuildStorageGoldChange,
     GuildStorageItemChange,
     GuildWarReturn,
+    MarriageReply,
     TradeRequest,
     TradeReply,
     TradeGold,
@@ -2527,6 +2529,8 @@ public class UserItem
     public bool Identified = false;
     public bool Cursed = false;
 
+    public int WeddingRing = -1;
+
     public UserItem[] Slots = new UserItem[5];
 
     public DateTime BuybackExpiryDate;
@@ -2629,6 +2633,8 @@ public class UserItem
         RefinedValue = (RefinedValue)reader.ReadByte();
         RefineAdded = reader.ReadByte();
 
+        if (Customversion < 1) return;
+        WeddingRing = reader.ReadInt32();
 
     }
 
@@ -2687,6 +2693,8 @@ public class UserItem
 
         writer.Write((byte)RefinedValue);
         writer.Write(RefineAdded);
+
+        writer.Write(WeddingRing);
     }
 
 
@@ -3944,6 +3952,8 @@ public abstract class Packet
                 return new C.GuildStorageItemChange();
             case (short)ClientPacketIds.GuildWarReturn:
                 return new C.GuildWarReturn();
+            case (short)ClientPacketIds.MarriageReply:
+                return new C.MarriageReply();
             case (short)ClientPacketIds.TradeRequest:
                 return new C.TradeRequest();
             case (short)ClientPacketIds.TradeReply:
@@ -4317,6 +4327,8 @@ public abstract class Packet
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:
                 return new S.NPCUpdate();
+            case (short)ServerPacketIds.MarriageRequest:
+                return new S.MarriageRequest();
             case (short)ServerPacketIds.TradeRequest:
                 return new S.TradeRequest();
             case (short)ServerPacketIds.TradeAccept:

@@ -1598,6 +1598,9 @@ namespace Server.MirObjects
                 case "ENTERMAP":
                     acts.Add(new NPCActions(ActionType.EnterMap));
                     break;
+                case "MARRIAGE":
+                    acts.Add(new NPCActions(ActionType.Marriage));
+                    break;
             }
 
         }
@@ -2697,6 +2700,11 @@ namespace Server.MirObjects
                         player.NPCMoveMap = null;
                         player.NPCMoveCoord = Point.Empty;
                         break;
+                    case ActionType.Marriage:
+                        player.MarriageRequest();
+                        //CODE THAT RUNS AFTER #ACT MARRIAGE
+
+                        break;
                 }
             }
         }
@@ -3001,6 +3009,7 @@ namespace Server.MirObjects
         EnterMap,
         GivePearls,
         TakePearls,
+        Marriage,
     }
     public enum CheckType
     {

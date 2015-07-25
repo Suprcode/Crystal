@@ -882,6 +882,22 @@ namespace ClientPackets
             writer.Write(AcceptInvite);
         }
     }
+
+    public sealed class MarriageReply : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MarriageReply; } }
+
+        public bool AcceptInvite;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AcceptInvite = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(AcceptInvite);
+        }
+    }
+
     public sealed class TradeReply : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.TradeReply; } }

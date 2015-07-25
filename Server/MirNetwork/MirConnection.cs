@@ -1139,6 +1139,14 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
             Player.GuildWarReturn(p.Name);
         }
+
+        private void MarriageReply(C.MarriageReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarriageReply(p.AcceptInvite);
+        }
+
         private void TradeRequest(C.TradeRequest p)
         {
             if (Stage != GameStage.Game) return;

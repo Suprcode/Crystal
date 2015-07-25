@@ -297,6 +297,8 @@ namespace Server.MirObjects
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing;
         public bool HasMuscleRing, HasClearRing, HasParalysisRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss;
 
+        public PlayerObject MarriageProposal;
+
         public PlayerObject GroupInvitation;
         public PlayerObject TradeInvitation;
 
@@ -9452,6 +9454,144 @@ namespace Server.MirObjects
 
             Enqueue(new S.ItemUpgraded { Item = Info.Inventory[index] });
             return;
+        }
+
+        public void MarriageRequest()
+        {
+            if (TradePartner != null)
+            {
+                ReceiveChat("You are currently trading, please stop before attempting Marriage again.", ChatType.System);
+                return;
+            }
+
+            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+            Cell cell = CurrentMap.GetCell(target);
+            PlayerObject player = null;
+
+            if (cell.Objects == null || cell.Objects.Count < 1) return;
+
+            for (int i = 0; i < cell.Objects.Count; i++)
+            {
+                MapObject ob = cell.Objects[i];
+                if (ob.Race != ObjectType.Player) continue;
+
+                player = Envir.GetPlayer(ob.Name);
+            }
+
+            if (player == null)
+            {
+                ReceiveChat(string.Format("You need to be facing someone to marry them."), ChatType.System);
+                return;
+            }
+
+            if (player != null)
+            {
+                if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
+                {
+                    ReceiveChat(string.Format("You need to be facing each other to perform a marriage."), ChatType.System);
+                    return;
+                }
+
+                if (player == this)
+                {
+                    ReceiveChat("You cant marry yourself...", ChatType.System);
+                    return;
+                }
+
+                if (player.Dead || Dead)
+                {
+                    ReceiveChat("Why would you wish to marry a dead person?", ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
+                    return;
+                }
+
+                if (player.MarriageProposal != null)
+                {
+                    ReceiveChat(string.Format("Player {0} already has a marriage invitation.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
+                {
+                    ReceiveChat(string.Format("Player {0} is not within marriage range.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (player.TradePartner != null) //Change this to check for marriage?
+                {
+                    ReceiveChat(string.Format("Player {0} is already trading.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                player.MarriageProposal = this;
+                player.Enqueue(new S.MarriageRequest { Name = Info.Name });
+            }
+        }
+
+        public void MarriageReply(bool accept)
+        {
+            if (MarriageProposal == null || MarriageProposal.Info == null)
+            {
+                MarriageProposal = null;
+                return;
+            }
+
+            if (!accept)
+            {
+                MarriageProposal.ReceiveChat(string.Format("Player {0} has refused to marry you.", Info.Name), ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
+
+            //if (TradePartner != null) NOT SURE WHY THIS WOULD BE NEEDED? NEED TO CHECK BUGS INGAME.
+            //{
+            //ReceiveChat("You are already trading.", ChatType.System);
+            //TradeInvitation = null;
+            //return;
+            //}
+
+            //if (TradeInvitation.TradePartner != null) Don't think it's needed, not sure.
+            //{
+            //ReceiveChat(string.Format("Player {0} is already trading.", TradeInvitation.Info.Name), ChatType.System);
+            //TradeInvitation = null;
+            //return;
+            //}
+
+            //TradePartner = TradeInvitation;
+            //TradeInvitation.TradePartner = this;
+
+
+            if (MarriageProposal.Info.Equipment[(int)EquipmentSlot.RingL] == null)
+            {
+                MarriageProposal.ReceiveChat(string.Format("You aren't wearing a ring on your left finger.", Info.Name), ChatType.System);
+                ReceiveChat(string.Format("{0} isn't wearing a ring on their left finger.", MarriageProposal.Name), ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
+
+            if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
+            {
+                MarriageProposal.ReceiveChat(string.Format("{0} isn't wearing a ring on their left finger.", Info.Name), ChatType.System);
+                ReceiveChat(string.Format("You aren't wearing a ring on your left finger.", MarriageProposal.Name), ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
+
+
+            MarriageProposal.Info.Married = Info.Index;
+            //MarriageInvitation.Info.MarriedDate = DateTime;
+            MarriageProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Index;
+            Info.Married = MarriageProposal.Info.Index;
+            //Info.MarriedDate = DateTime;
+            Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = MarriageProposal.Info.Index;
+
+
+            MarriageProposal.ReceiveChat(string.Format("This has worked.", Info.Name), ChatType.System);
+            ReceiveChat("This has worked.", ChatType.System);
+
+
+            MarriageProposal = null;
+            //Enqueue(new S.TradeAccept { Name = TradePartner.Info.Name });
+            //TradePartner.Enqueue(new S.TradeAccept { Name = Info.Name });
         }
 
 
