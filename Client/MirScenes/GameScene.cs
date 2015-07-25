@@ -8057,6 +8057,7 @@ namespace Client.MirScenes
 
                 Objects[i].DrawChat();
                 Objects[i].DrawHealth();
+                Objects[i].DrawPoison();
             }
 
             if (!Settings.Effect) return;

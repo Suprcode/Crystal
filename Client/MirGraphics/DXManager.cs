@@ -32,6 +32,7 @@ namespace Client.MirGraphics
 
         public static Texture RadarTexture;
         public static List<Texture> Lights = new List<Texture>();
+        public static Texture PoisonDotBackground;
 
         public static Point[] LightSizes =
         {
@@ -109,7 +110,15 @@ namespace Client.MirGraphics
                 using (Graphics graphics = Graphics.FromImage(image))
                     graphics.Clear(Color.White);
             }
+            if (PoisonDotBackground == null || PoisonDotBackground.Disposed)
+            {
+                PoisonDotBackground = new Texture(Device, 5, 5, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
 
+                using (GraphicsStream stream = PoisonDotBackground.LockRectangle(0, LockFlags.Discard))
+                using (Bitmap image = new Bitmap(5, 5, 20, PixelFormat.Format32bppArgb, (IntPtr)stream.InternalDataPointer))
+                using (Graphics graphics = Graphics.FromImage(image))
+                    graphics.Clear(Color.White);
+            }
             CreateLights();
         }
         //FAR - createlights
