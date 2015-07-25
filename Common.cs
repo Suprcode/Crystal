@@ -631,17 +631,19 @@ public enum PetMode : byte
     None = 3,
 }
 
+[Flags]
+[Obfuscation(Feature = "renaming", Exclude = true)]
 public enum PoisonType : byte
 {
-    None,
-    Green,
-    Red,
-    Slow,
-    Frozen,
-    Stun,
-    Paralysis,
-    DelayedExplosion,
-    Bleeding
+    None = 0,
+    Green = 1,
+    Red = 2,
+    Slow = 4,
+    Frozen = 8,
+    Stun = 16,
+    Paralysis = 32,
+    DelayedExplosion = 64,
+    Bleeding = 128
 }
 
 [Flags]

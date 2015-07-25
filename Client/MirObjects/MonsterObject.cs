@@ -656,37 +656,27 @@ namespace Client.MirObjects
 
             Color colour = DrawColour;
 
-            switch (Poison)
+            DrawColour = Color.White;
+            if (Poison != PoisonType.None)
             {
-                case PoisonType.None:
-                    DrawColour = Color.White;
-                    break;
-                case PoisonType.Green:
+                
+                if (Poison.HasFlag(PoisonType.Green))
                     DrawColour = Color.Green;
-                    break;
-                case PoisonType.Red:
+                if (Poison.HasFlag(PoisonType.Red))
                     DrawColour = Color.Red;
-                    break;
-                case PoisonType.Bleeding:
+                if (Poison.HasFlag(PoisonType.Bleeding))
                     DrawColour = Color.DarkRed;
-                    break;
-                case PoisonType.Slow:
+                if (Poison.HasFlag(PoisonType.Slow))
                     DrawColour = Color.Purple;
-                    break;
-                case PoisonType.Stun:
+                if (Poison.HasFlag(PoisonType.Stun))
                     DrawColour = Color.Yellow;
-                    break;
-                case PoisonType.Frozen:
+                if (Poison.HasFlag(PoisonType.Frozen))
                     DrawColour = Color.Blue;
-                    break;
-                case PoisonType.Paralysis:
+                if (Poison.HasFlag(PoisonType.Paralysis))
                     DrawColour = Color.Gray;
-                    break;
-                case PoisonType.DelayedExplosion:
+                if (Poison.HasFlag(PoisonType.DelayedExplosion))
                     DrawColour = Color.Orange;
-                    break;
             }
-
 
             if (colour != DrawColour) GameScene.Scene.MapControl.TextureValid = false;
         }

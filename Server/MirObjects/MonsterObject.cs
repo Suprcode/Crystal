@@ -960,9 +960,11 @@ namespace Server.MirObjects
                         }
                         break;
                 }
-
+                type |= poison.PType;
+                /*
                 if ((int)type < (int)poison.PType)
                     type = poison.PType;
+                 */
             }
 
             
