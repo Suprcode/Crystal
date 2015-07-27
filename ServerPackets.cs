@@ -4871,4 +4871,33 @@ namespace ServerPackets
                 Friends[i].Save(writer);
         }
     }
+
+    public sealed class LoverUpdate : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.LoverUpdate; }
+        }
+
+        public long ID;
+        public string Name;
+        public DateTime Date;
+        public bool Online;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ID = reader.ReadInt64();
+            Name = reader.ReadString();
+            Date = DateTime.FromBinary(reader.ReadInt64());
+            Online = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ID);
+            writer.Write(Name);
+            writer.Write(Date.ToBinary());
+            writer.Write(Online);
+        }
+    }
 }

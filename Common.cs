@@ -1164,7 +1164,8 @@ public enum ServerPacketIds : short
     NPCPearlGoods,
 
     TransformUpdate,
-    FriendUpdate
+    FriendUpdate,
+    LoverUpdate
 }
 
 public enum ClientPacketIds : short
@@ -3503,6 +3504,35 @@ public class ClientFriend
     }
 }
 
+public class ClientLover
+{
+    public int Index;
+    public string Name;
+    public string Date = "";
+
+    public bool Online;
+
+    public ClientLover() { }
+
+    public ClientLover(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Date = reader.ReadString();
+
+        Online = reader.ReadBoolean();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Date);
+
+        writer.Write(Online);
+    }
+}
+
 public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
@@ -4437,6 +4467,8 @@ public abstract class Packet
                 return new S.NPCPearlGoods();
             case (short)ServerPacketIds.FriendUpdate:
                 return new S.FriendUpdate();
+            case (short)ServerPacketIds.LoverUpdate:
+                return new S.LoverUpdate();
             default:
                 throw new NotImplementedException();
         }

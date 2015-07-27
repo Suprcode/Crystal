@@ -1441,6 +1441,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.FriendUpdate:
                     FriendUpdate((S.FriendUpdate)p);
                     break;
+                case (short)ServerPacketIds.LoverUpdate:
+                    LoverUpdate((S.LoverUpdate)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -4880,6 +4883,14 @@ namespace Client.MirScenes
             {
                 GameScene.Scene.FriendDialog.Update(false);
             }
+        }
+
+        private void LoverUpdate(S.LoverUpdate p)
+        {
+            GameScene.Scene.RelationshipDialog.LoverName = p.Name;
+            GameScene.Scene.RelationshipDialog.Date = p.Date;
+            GameScene.Scene.RelationshipDialog.Online = p.Online;
+            GameScene.Scene.RelationshipDialog.UpdateInterface();
         }
 
         public void AddItem(UserItem item)
@@ -13231,7 +13242,8 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
-                Visible = true
+                Visible = true,
+                Hint = "Relationship (L)"
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -20782,7 +20794,14 @@ namespace Client.MirScenes
     public sealed class RelationshipDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
-        public MirButton CloseButton;
+        public MirButton CloseButton, HeartButton, MailButton, Heart2Button, WingsHeartButton, WhisperButton;
+        public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel;
+
+        public ClientLover Friend;
+        public string LoverName = "-";
+        public DateTime Date;
+        public bool Online = false;
+
 
         public RelationshipDialog()
         {
@@ -20804,13 +20823,109 @@ namespace Client.MirScenes
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(206, 3),
+                Location = new Point(260, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            HeartButton = new MirButton
+            {
+                HoverIndex = 611,
+                Index = 610,
+                Location = new Point(50, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 612,
+                Sound = SoundList.ButtonA,
+            };
+            HeartButton.Click += (o, e) => Hide();
+
+            MailButton = new MirButton
+            {
+                HoverIndex = 601,
+                Index = 600,
+                Location = new Point(85, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 602,
+                Sound = SoundList.ButtonA,
+            };
+            MailButton.Click += (o, e) => Hide();
+
+            Heart2Button = new MirButton
+            {
+                HoverIndex = 617,
+                Index = 616,
+                Location = new Point(120, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 618,
+                Sound = SoundList.ButtonA,
+            };
+            Heart2Button.Click += (o, e) => Hide();
+
+            WingsHeartButton = new MirButton
+            {
+                HoverIndex = 438,
+                Index = 437,
+                Location = new Point(155, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 439,
+                Sound = SoundList.ButtonA,
+            };
+            WingsHeartButton.Click += (o, e) => Hide();
+
+            WhisperButton = new MirButton
+            {
+                HoverIndex = 567,
+                Index = 566,
+                Location = new Point(190, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 568,
+                Sound = SoundList.ButtonA,
+            };
+            WhisperButton.Click += (o, e) => Hide();
+
+            LoverNameLabel = new MirLabel
+            {
+                Location = new Point(30, 30),
+                Size = new Size(115, 17),
+                BackColour = Color.Empty,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                //Text = Friend.Name + " Hello",
+            };
+
+            LoverDateLabel = new MirLabel
+            {
+                Location = new Point(30, 40),
+                Size = new Size(115, 17),
+                BackColour = Color.Empty,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                //Text = Friend.Name + " Hello",
+            };
+
+            LoverOnlineLabel = new MirLabel
+            {
+                Location = new Point(30, 50),
+                Size = new Size(115, 17),
+                BackColour = Color.Empty,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                //Text = Friend.Name + " Hello",
+            };
+
+
+
         }
 
 
@@ -20823,6 +20938,18 @@ namespace Client.MirScenes
         {
             if (Visible) return;
             Visible = true;
+        }
+
+
+        public void UpdateInterface()
+        {
+            //if (Friend == null) return;
+            LoverNameLabel.Text = LoverName;
+            LoverDateLabel.Text = Date.ToString();
+            if (Online)
+            LoverOnlineLabel.Text = "Online";
+            else
+            LoverOnlineLabel.Text = "Offline";
         }
     }
 

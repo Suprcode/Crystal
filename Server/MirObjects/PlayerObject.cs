@@ -1725,6 +1725,7 @@ namespace Server.MirObjects
 
             GetMail();
             GetFriends();
+            GetRelationship();
 
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
@@ -9578,20 +9579,18 @@ namespace Server.MirObjects
 
 
             MarriageProposal.Info.Married = Info.Index;
-            //MarriageInvitation.Info.MarriedDate = DateTime;
+            MarriageProposal.Info.MarriedDate = DateTime.Now;
             MarriageProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Index;
             Info.Married = MarriageProposal.Info.Index;
-            //Info.MarriedDate = DateTime;
+            Info.MarriedDate = DateTime.Now;
             Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = MarriageProposal.Info.Index;
 
-
-            MarriageProposal.ReceiveChat(string.Format("This has worked.", Info.Name), ChatType.System);
-            ReceiveChat("This has worked.", ChatType.System);
-
+            UpdateRelationship();
+            MarriageProposal.UpdateRelationship();
+            MarriageProposal.ReceiveChat(string.Format("You're now married to... [Insert Name]", Info.Name), ChatType.System);
+            ReceiveChat("You're now married to... [Insert Name]", ChatType.System);
 
             MarriageProposal = null;
-            //Enqueue(new S.TradeAccept { Name = TradePartner.Info.Name });
-            //TradePartner.Enqueue(new S.TradeAccept { Name = Info.Name });
         }
 
 
@@ -16241,6 +16240,37 @@ namespace Server.MirObjects
             }
 
             Enqueue(new S.FriendUpdate { Friends = friends });
+        }
+
+        public void GetRelationship()
+        {
+
+            if (Info.Married == 0) return;
+
+            CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+
+            PlayerObject player = Envir.GetPlayer(Lover.Name);
+
+            if (player == null)
+                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = false });
+            else
+                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = true });
+
+
+        }
+
+        public void UpdateRelationship()
+        {
+            if (Info.Married == 0) return;
+
+            CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+
+            PlayerObject player = Envir.GetPlayer(Lover.Name);
+
+            if (player == null)
+                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = false });
+            else
+                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = true });
         }
 
         #endregion

@@ -399,6 +399,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GuildWarReturn:
                     GuildWarReturn((C.GuildWarReturn)p);
                     return;
+                case (short)ClientPacketIds.MarriageReply:
+                    MarriageReply((C.MarriageReply)p);
+                    return;
                 case (short)ClientPacketIds.TradeRequest:
                     TradeRequest((C.TradeRequest)p);
                     return;
