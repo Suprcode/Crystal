@@ -1281,6 +1281,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.MarriageRequest:
                     MarriageRequest((S.MarriageRequest)p);
                     break;
+                case (short)ServerPacketIds.DivorceRequest:
+                    DivorceRequest((S.DivorceRequest)p);
+                    break;
                 case (short)ServerPacketIds.TradeRequest:
                     TradeRequest((S.TradeRequest)p);
                     break;
@@ -4530,6 +4533,16 @@ namespace Client.MirScenes
             messageBox.Show();
         }
 
+        private void DivorceRequest(S.DivorceRequest p)
+        {
+            MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has asked asked you for a divorce", p.Name), MirMessageBoxButtons.YesNo);
+
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.DivorceReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.DivorceReply { AcceptInvite = false }); messageBox.Dispose(); };
+
+            messageBox.Show();
+        }
+
         private void TradeRequest(S.TradeRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
@@ -4890,6 +4903,8 @@ namespace Client.MirScenes
             GameScene.Scene.RelationshipDialog.LoverName = p.Name;
             GameScene.Scene.RelationshipDialog.Date = p.Date;
             GameScene.Scene.RelationshipDialog.Online = p.Online;
+            GameScene.Scene.RelationshipDialog.MapName = p.MapName;
+
             GameScene.Scene.RelationshipDialog.UpdateInterface();
         }
 
@@ -20794,13 +20809,14 @@ namespace Client.MirScenes
     public sealed class RelationshipDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
-        public MirButton CloseButton, HeartButton, MailButton, Heart2Button, WingsHeartButton, WhisperButton;
-        public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel;
+        public MirButton CloseButton, AllowButton, RequestButton, DivorceButton, MailButton, WhisperButton;
+        public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel, LoverMapLabel;
 
         public ClientLover Friend;
-        public string LoverName = "-";
+        public string LoverName = "";
         public DateTime Date;
         public bool Online = false;
+        public string MapName = "";
 
 
         public RelationshipDialog()
@@ -20831,7 +20847,7 @@ namespace Client.MirScenes
             };
             CloseButton.Click += (o, e) => Hide();
 
-            HeartButton = new MirButton
+            AllowButton = new MirButton
             {
                 HoverIndex = 611,
                 Index = 610,
@@ -20840,10 +20856,11 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 612,
                 Sound = SoundList.ButtonA,
+                Hint = "Allow/Block Marriage"
             };
-            HeartButton.Click += (o, e) => Hide();
+            AllowButton.Click += (o, e) => Network.Enqueue(new C.ChangeMarriage());
 
-            MailButton = new MirButton
+            RequestButton = new MirButton
             {
                 HoverIndex = 601,
                 Index = 600,
@@ -20852,10 +20869,11 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 602,
                 Sound = SoundList.ButtonA,
+                Hint = "Request Marriage"
             };
-            MailButton.Click += (o, e) => Hide();
+            RequestButton.Click += (o, e) => Network.Enqueue(new C.MarriageRequest());
 
-            Heart2Button = new MirButton
+            DivorceButton = new MirButton
             {
                 HoverIndex = 617,
                 Index = 616,
@@ -20864,10 +20882,11 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 618,
                 Sound = SoundList.ButtonA,
+                Hint = "Request Divorce"
             };
-            Heart2Button.Click += (o, e) => Hide();
+            DivorceButton.Click += (o, e) => Network.Enqueue(new C.DivorceRequest());
 
-            WingsHeartButton = new MirButton
+            MailButton = new MirButton
             {
                 HoverIndex = 438,
                 Index = 437,
@@ -20876,8 +20895,14 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
+                Hint = "Mail Lover"
             };
-            WingsHeartButton.Click += (o, e) => Hide();
+            MailButton.Click += (o, e) =>
+            {
+                if (LoverName == null) return;
+
+                GameScene.Scene.MailComposeLetterDialog.ComposeMail(LoverName);
+            };
 
             WhisperButton = new MirButton
             {
@@ -20888,44 +20913,59 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 568,
                 Sound = SoundList.ButtonA,
+                Hint = "Whisper Lover"
             };
-            WhisperButton.Click += (o, e) => Hide();
+            WhisperButton.Click += (o, e) =>
+            {
+                if (LoverName == "") return;
+                if (!Online)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("Lover is not online", ChatType.System);
+                    return;
+                }
+                GameScene.Scene.ChatDialog.ChatTextBox.SetFocus();
+                GameScene.Scene.ChatDialog.ChatTextBox.Text = "/" + LoverName + " ";
+                GameScene.Scene.ChatDialog.ChatTextBox.Visible = true;
+                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionLength = 0;
+                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart = GameScene.Scene.ChatDialog.ChatTextBox.Text.Length;
+            };
 
             LoverNameLabel = new MirLabel
             {
-                Location = new Point(30, 30),
-                Size = new Size(115, 17),
+                Location = new Point(30, 45),
+                Size = new Size(200, 30),
                 BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
-                //Text = Friend.Name + " Hello",
+                Font = new Font(Settings.FontName, 10F),
+
             };
 
             LoverDateLabel = new MirLabel
             {
-                Location = new Point(30, 40),
-                Size = new Size(115, 17),
+                Location = new Point(30, 75),
+                Size = new Size(200, 30),
                 BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
-                //Text = Friend.Name + " Hello",
+                Font = new Font(Settings.FontName, 10F),
             };
 
             LoverOnlineLabel = new MirLabel
             {
-                Location = new Point(30, 50),
-                Size = new Size(115, 17),
+                Location = new Point(30, 105),
+                Size = new Size(200, 30),
                 BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
-                //Text = Friend.Name + " Hello",
+                Font = new Font(Settings.FontName, 10F),
             };
-
-
-
         }
 
 
@@ -20941,15 +20981,29 @@ namespace Client.MirScenes
         }
 
 
+        public void RequestMarriage()
+        {
+
+        }
+
         public void UpdateInterface()
         {
-            //if (Friend == null) return;
-            LoverNameLabel.Text = LoverName;
-            LoverDateLabel.Text = Date.ToString();
+            LoverNameLabel.Text = "Lover:  " + LoverName;
+            
             if (Online)
-            LoverOnlineLabel.Text = "Online";
+            {
+                LoverOnlineLabel.Text = "Location:  " + MapName;
+            }
             else
-            LoverOnlineLabel.Text = "Offline";
+                LoverOnlineLabel.Text = "Location:  Offline";
+
+            if ((LoverName == "") && (Date != null))
+            {
+                LoverDateLabel.Text = "Date divorced:  " + Date.ToShortDateString();
+                LoverOnlineLabel.Text = "Location: ";
+            }
+            else
+                LoverDateLabel.Text = "Date started:  " + Date.ToShortDateString();
         }
     }
 

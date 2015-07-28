@@ -1412,6 +1412,21 @@ namespace ServerPackets
         }
     }
 
+    public sealed class DivorceRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.DivorceRequest; } }
+
+        public string Name;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+        }
+    }
+
     public sealed class TradeRequest : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.TradeRequest; } }
@@ -4883,6 +4898,7 @@ namespace ServerPackets
         public string Name;
         public DateTime Date;
         public bool Online;
+        public string MapName;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -4890,6 +4906,7 @@ namespace ServerPackets
             Name = reader.ReadString();
             Date = DateTime.FromBinary(reader.ReadInt64());
             Online = reader.ReadBoolean();
+            MapName = reader.ReadString();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -4898,6 +4915,7 @@ namespace ServerPackets
             writer.Write(Name);
             writer.Write(Date.ToBinary());
             writer.Write(Online);
+            writer.Write(MapName);
         }
     }
 }

@@ -292,12 +292,16 @@ namespace Server.MirObjects
             set { Info.AllowTrade = value; }
         }
 
+
+
         public bool GameStarted { get; set; }
 
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing;
         public bool HasMuscleRing, HasClearRing, HasParalysisRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss;
 
         public PlayerObject MarriageProposal;
+        public PlayerObject DivorceProposal;
+        public bool AllowMarriage = false;
 
         public PlayerObject GroupInvitation;
         public PlayerObject TradeInvitation;
@@ -435,6 +439,7 @@ namespace Server.MirObjects
 
             TradeCancel();
             RefineCancel();
+            LogoutRelationship();
 
             string logReason = LogOutReason(reason);
 
@@ -1179,6 +1184,7 @@ namespace Server.MirObjects
 
                     if (temp == null) continue;
                     if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
+                    if (temp.WeddingRing != -1) continue;
 
                     if ((temp != null) && ((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
                     {
@@ -1244,6 +1250,7 @@ namespace Server.MirObjects
 
                 if (temp == null) continue;
                 if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
+                if (temp.WeddingRing != -1) continue;
 
                 if (temp.Count > 1)
                 {
@@ -1296,6 +1303,7 @@ namespace Server.MirObjects
 
                     if (temp == null) continue;
                     if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
+                    if (temp.WeddingRing != -1) continue;
 
                     if (temp.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                     {
@@ -1348,6 +1356,7 @@ namespace Server.MirObjects
 
                 if (temp == null) continue;
                 if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
+                if (temp.WeddingRing != -1) continue;
 
                 if (!DropItem(temp, Settings.DropRange)) continue;
 
@@ -3357,6 +3366,77 @@ namespace Server.MirObjects
                         }
                         break;
 
+                    case "RECALLLOVER":
+
+                        if (Info.Married == 0)
+                        {
+                            ReceiveChat("You're not married.", ChatType.System);
+                            return;
+                        }
+
+                        if (Dead)
+                        {
+                            ReceiveChat("You cannot recall when you are dead.", ChatType.System);
+                            return;
+                        }
+
+                        if (CurrentMap.Info.NoRecall)
+                        {
+                            ReceiveChat("You cannot recall people on this map", ChatType.System);
+                            return;
+                        }
+
+
+
+                        if (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1)
+                        {
+                            CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+                            player = Envir.GetPlayer(Lover.Name);
+
+                            if (player == null)
+                            {
+                                ReceiveChat((string.Format("{0} is not online.", Lover.Name)), ChatType.System);
+                                return;
+                            }
+                            if (!player.EnableGroupRecall)
+                            {
+                                player.ReceiveChat("A recall was attempted without your permission",
+                                        ChatType.System);
+                                ReceiveChat((string.Format("{0} is blocking grouprecall", player.Name)), ChatType.System);
+                                return;
+                            }
+
+                            if ((Envir.Time < LastRecallTime) && (Envir.Time < player.LastRecallTime))
+                            {
+                                ReceiveChat(string.Format("You cannot recall for another {0} seconds", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
+                                return;
+                            }
+
+                            if (player.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing == -1)
+                            {
+                                player.ReceiveChat((string.Format("You need to wear your Wedding Ring on your left finger for recall.", Lover.Name)), ChatType.System);
+                                ReceiveChat((string.Format("{0} Isn't wearing his wedding ring.", Lover.Name)), ChatType.System);
+                                return;
+                            }
+                            if ((player.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != Info.Index) || (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != player.Info.Index))
+                            {
+                                player.ReceiveChat((string.Format("You are not wearing matching Wedding Rings.", Lover.Name)), ChatType.System);
+                                ReceiveChat((string.Format("You are not wearing matching Wedding Rings.", Lover.Name)), ChatType.System);
+                                return;
+                            }
+                            LastRecallTime = Envir.Time + 60000;
+                            player.LastRecallTime = Envir.Time + 60000;
+
+                            if (!player.Teleport(CurrentMap, Front))
+                                player.Teleport(CurrentMap, CurrentLocation);
+                        }
+                        else
+                        {
+                            ReceiveChat("You cannot recall your lover without wearing your wedding ring", ChatType.System);
+                            return;
+                        }
+                        break;
+     
                     case "TIME":
                         ReceiveChat(string.Format("The time is : {0}", DateTime.Now.ToString("hh:mm tt")), ChatType.System);
                         break;
@@ -8369,6 +8449,8 @@ namespace Server.MirObjects
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
             }
+
+            if (Info.Married != 0) GetRelationship();
         }
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
@@ -9459,9 +9541,10 @@ namespace Server.MirObjects
 
         public void MarriageRequest()
         {
-            if (TradePartner != null)
+
+            if (Info.Married != 0)
             {
-                ReceiveChat("You are currently trading, please stop before attempting Marriage again.", ChatType.System);
+                ReceiveChat(string.Format("You're already married."), ChatType.System);
                 return;
             }
 
@@ -9481,7 +9564,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(string.Format("You need to be facing someone to marry them."), ChatType.System);
+                ReceiveChat(string.Format("You need to be facing someone to request a marriage."), ChatType.System);
                 return;
             }
 
@@ -9493,21 +9576,27 @@ namespace Server.MirObjects
                     return;
                 }
 
+                if (!player.AllowMarriage)
+                {
+                    ReceiveChat("The person you're trying to propose to isn't allowing marriage requests.", ChatType.System);
+                    return;
+                }
+
                 if (player == this)
                 {
-                    ReceiveChat("You cant marry yourself...", ChatType.System);
+                    ReceiveChat("You cant marry yourself.", ChatType.System);
                     return;
                 }
 
                 if (player.Dead || Dead)
                 {
-                    ReceiveChat("Why would you wish to marry a dead person?", ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
+                    ReceiveChat("You can't marry a dead person", ChatType.System);
                     return;
                 }
 
                 if (player.MarriageProposal != null)
                 {
-                    ReceiveChat(string.Format("Player {0} already has a marriage invitation.", player.Info.Name), ChatType.System);
+                    ReceiveChat(string.Format("{0} already has a marriage invitation.", player.Info.Name), ChatType.System);
                     return;
                 }
 
@@ -9517,9 +9606,9 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (player.TradePartner != null) //Change this to check for marriage?
+                if (player.Info.Married != 0)
                 {
-                    ReceiveChat(string.Format("Player {0} is already trading.", player.Info.Name), ChatType.System);
+                    ReceiveChat(string.Format("{0} is already married.", player.Info.Name), ChatType.System);
                     return;
                 }
 
@@ -9538,27 +9627,24 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                MarriageProposal.ReceiveChat(string.Format("Player {0} has refused to marry you.", Info.Name), ChatType.System);
+                MarriageProposal.ReceiveChat(string.Format("{0} has refused to marry you.", Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
 
-            //if (TradePartner != null) NOT SURE WHY THIS WOULD BE NEEDED? NEED TO CHECK BUGS INGAME.
-            //{
-            //ReceiveChat("You are already trading.", ChatType.System);
-            //TradeInvitation = null;
-            //return;
-            //}
+            if (Info.Married != 0)
+            {
+                ReceiveChat("You are already married.", ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
 
-            //if (TradeInvitation.TradePartner != null) Don't think it's needed, not sure.
-            //{
-            //ReceiveChat(string.Format("Player {0} is already trading.", TradeInvitation.Info.Name), ChatType.System);
-            //TradeInvitation = null;
-            //return;
-            //}
-
-            //TradePartner = TradeInvitation;
-            //TradeInvitation.TradePartner = this;
+            if (MarriageProposal.Info.Married != 0)
+            {
+                ReceiveChat(string.Format("{0} is already married.", TradeInvitation.Info.Name), ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
 
 
             if (MarriageProposal.Info.Equipment[(int)EquipmentSlot.RingL] == null)
@@ -9581,16 +9667,165 @@ namespace Server.MirObjects
             MarriageProposal.Info.Married = Info.Index;
             MarriageProposal.Info.MarriedDate = DateTime.Now;
             MarriageProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Index;
+
             Info.Married = MarriageProposal.Info.Index;
             Info.MarriedDate = DateTime.Now;
             Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = MarriageProposal.Info.Index;
 
-            UpdateRelationship();
-            MarriageProposal.UpdateRelationship();
-            MarriageProposal.ReceiveChat(string.Format("You're now married to... [Insert Name]", Info.Name), ChatType.System);
-            ReceiveChat("You're now married to... [Insert Name]", ChatType.System);
+            GetRelationship();
+            MarriageProposal.GetRelationship();
+
+            MarriageProposal.ReceiveChat(string.Format("Congratulations, you're now married to {0}.", Info.Name), ChatType.System);
+            ReceiveChat(String.Format("Congratulations, you're now married to {0}.", MarriageProposal.Info.Name), ChatType.System);
+
+            //NEED TO SEND SOMETHING TO UPDATE THE CLIENT ITEM (RING)
+
+            MarriageProposal.Enqueue(new S.RefreshItem { Item = MarriageProposal.Info.Equipment[(int)EquipmentSlot.RingL] });
+            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
 
             MarriageProposal = null;
+        }
+
+        public void DivorceRequest()
+        {
+
+            if (Info.Married == 0)
+            {
+                ReceiveChat(string.Format("You're not married."), ChatType.System);
+                return;
+            }
+
+            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+            Cell cell = CurrentMap.GetCell(target);
+            PlayerObject player = null;
+
+            if (cell.Objects == null || cell.Objects.Count < 1) return;
+
+            for (int i = 0; i < cell.Objects.Count; i++)
+            {
+                MapObject ob = cell.Objects[i];
+                if (ob.Race != ObjectType.Player) continue;
+
+                player = Envir.GetPlayer(ob.Name);
+            }
+
+            if (player == null)
+            {
+                ReceiveChat(string.Format("You need to be facing your partner to divorce them."), ChatType.System);
+                return;
+            }
+
+            if (player != null)
+            {
+                if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
+                {
+                    ReceiveChat(string.Format("You need to be facing your partner to divorce them."), ChatType.System);
+                    return;
+                }
+
+                if (player == this)
+                {
+                    ReceiveChat("You cant divorce yourself.", ChatType.System);
+                    return;
+                }
+
+                if (player.Dead || Dead)
+                {
+                    ReceiveChat("You can't attempt to divorce a dead player.", ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
+                    return;
+                }
+
+                if (player.Info.Index != Info.Married)
+                {
+                    ReceiveChat(string.Format("You aren't married to {0}", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
+                {
+                    ReceiveChat(string.Format("{0} is not within divorce range.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                player.DivorceProposal = this;
+                player.Enqueue(new S.DivorceRequest { Name = Info.Name });
+            }
+        }
+
+        public void DivorceReply(bool accept)
+        {
+            if (DivorceProposal == null || DivorceProposal.Info == null)
+            {
+                DivorceProposal = null;
+                return;
+            }
+
+            if (!accept)
+            {
+                DivorceProposal.ReceiveChat(string.Format("{0} has refused to divorce you.", Info.Name), ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+            if (Info.Married == 0)
+            {
+                ReceiveChat("You aren't married so you don't require a divorce.", ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+
+            if (DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] == null)
+            {
+                DivorceProposal.ReceiveChat(string.Format("You aren't wearing your wedding ring on your left finger.", Info.Name), ChatType.System);
+                ReceiveChat(string.Format("{0} isn't wearing their wedding ring on their left finger.", DivorceProposal.Name), ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+            if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
+            {
+                DivorceProposal.ReceiveChat(string.Format("{0} isn't wearing their wedding ring on their left finger.", Info.Name), ChatType.System);
+                ReceiveChat(string.Format("You aren't wearing your wedding ring on your left finger.", DivorceProposal.Name), ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+            if (DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing == -1)
+            {
+                DivorceProposal.ReceiveChat(string.Format("You aren't wearing your wedding ring on your left finger.", Info.Name), ChatType.System);
+                ReceiveChat(string.Format("{0} isn't wearing their wedding ring on their left finger.", DivorceProposal.Name), ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+            if (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing == -1)
+            {
+                DivorceProposal.ReceiveChat(string.Format("{0} isn't wearing their wedding ring on their left finger.", Info.Name), ChatType.System);
+                ReceiveChat(string.Format("You aren't wearing your wedding ring on your left finger.", DivorceProposal.Name), ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+
+
+            DivorceProposal.Info.Married = 0;
+            DivorceProposal.Info.MarriedDate = DateTime.Now;
+            DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+            Info.Married = 0;
+            Info.MarriedDate = DateTime.Now;
+            Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+
+            DivorceProposal.ReceiveChat(string.Format("You're now divorced", Info.Name), ChatType.System);
+            ReceiveChat("You're now divorced", ChatType.System);
+
+            GetRelationship();
+            DivorceProposal.GetRelationship();
+
+            DivorceProposal.Enqueue(new S.RefreshItem { Item = DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] });
+            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+
+            DivorceProposal = null;
         }
 
 
@@ -10945,7 +11180,6 @@ namespace Server.MirObjects
                     break;
                 case 3: //gems
                 case 4: //orbs
-
                     if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
                     {
                         Enqueue(p);
@@ -11927,13 +12161,14 @@ namespace Server.MirObjects
         }
         private void DamageItem(UserItem item, int amount, bool isChanged = false)
         {
-            if (item == null || item.CurrentDura == 0 || item.Info.Type == ItemType.Amulet) return;
+            if (item == null || item.CurrentDura == 0 || item.Info.Type == ItemType.Amulet || item.WeddingRing != -1) return;
             if (item.Info.Strong > 0) amount = Math.Max(1, amount - item.Info.Strong);
             item.CurrentDura = (ushort)Math.Max(ushort.MinValue, item.CurrentDura - amount);
             item.DuraChanged = true;
 
             if (item.CurrentDura > 0 && isChanged != true) return;
             Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
+
             item.DuraChanged = false;
             RefreshStats();
         }
@@ -16230,6 +16465,8 @@ namespace Server.MirObjects
             GetFriends();
         }
 
+        #endregion
+
         public void GetFriends()
         {
             List<ClientFriend> friends = new List<ClientFriend>();
@@ -16242,38 +16479,46 @@ namespace Server.MirObjects
             Enqueue(new S.FriendUpdate { Friends = friends });
         }
 
-        public void GetRelationship()
+        public void GetRelationship(bool CheckOnline = true)
         {
 
-            if (Info.Married == 0) return;
-
-            CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-
-            PlayerObject player = Envir.GetPlayer(Lover.Name);
-
-            if (player == null)
-                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = false });
+            if (Info.Married == 0)
+            {
+                Enqueue(new S.LoverUpdate { ID = 0, Name = "", Date = Info.MarriedDate, Online = false, MapName = "" });
+            }
             else
-                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = true });
+            {
+                CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
 
+                PlayerObject player = Envir.GetPlayer(Lover.Name);
 
+                if (player == null)
+                    Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = false, MapName = "" });
+                else
+                {
+                    Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = true, MapName = player.CurrentMap.Info.Title });
+                    if (CheckOnline)
+                    {
+                        player.GetRelationship(false);
+                        player.ReceiveChat(String.Format("{0} has come online.", Info.Name ), ChatType.System);
+                    }     
+                }
+            }
         }
 
-        public void UpdateRelationship()
+        public void LogoutRelationship()
         {
             if (Info.Married == 0) return;
-
             CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-
             PlayerObject player = Envir.GetPlayer(Lover.Name);
-
-            if (player == null)
-                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = false });
-            else
-                Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = true });
+            if (player != null)
+            {
+                player.Enqueue(new S.LoverUpdate { ID = player.Info.Married, Name = Info.Name, Date = player.Info.MarriedDate, Online = false, MapName = "" });
+                player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
+            }
         }
 
-        #endregion
+
     }
 }
 

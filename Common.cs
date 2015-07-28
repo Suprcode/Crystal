@@ -1108,6 +1108,7 @@ public enum ServerPacketIds : short
     DefaultNPC,
     NPCUpdate,
     MarriageRequest,
+    DivorceRequest,
     TradeRequest,
     TradeAccept,
     TradeGold,
@@ -1239,7 +1240,11 @@ public enum ClientPacketIds : short
     GuildStorageGoldChange,
     GuildStorageItemChange,
     GuildWarReturn,
+    MarriageRequest,
     MarriageReply,
+    ChangeMarriage,
+    DivorceRequest,
+    DivorceReply,
     TradeRequest,
     TradeReply,
     TradeGold,
@@ -3982,8 +3987,16 @@ public abstract class Packet
                 return new C.GuildStorageItemChange();
             case (short)ClientPacketIds.GuildWarReturn:
                 return new C.GuildWarReturn();
+            case (short)ClientPacketIds.MarriageRequest:
+                return new C.MarriageRequest();
             case (short)ClientPacketIds.MarriageReply:
                 return new C.MarriageReply();
+            case (short)ClientPacketIds.ChangeMarriage:
+                return new C.ChangeMarriage();
+            case (short)ClientPacketIds.DivorceRequest:
+                return new C.DivorceRequest();
+            case (short)ClientPacketIds.DivorceReply:
+                return new C.DivorceReply();
             case (short)ClientPacketIds.TradeRequest:
                 return new C.TradeRequest();
             case (short)ClientPacketIds.TradeReply:
@@ -4359,6 +4372,8 @@ public abstract class Packet
                 return new S.NPCUpdate();
             case (short)ServerPacketIds.MarriageRequest:
                 return new S.MarriageRequest();
+            case (short)ServerPacketIds.DivorceRequest:
+                return new S.DivorceRequest();
             case (short)ServerPacketIds.TradeRequest:
                 return new S.TradeRequest();
             case (short)ServerPacketIds.TradeAccept:

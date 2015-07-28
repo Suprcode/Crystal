@@ -883,9 +883,60 @@ namespace ClientPackets
         }
     }
 
+    public sealed class MarriageRequest : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MarriageRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
     public sealed class MarriageReply : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.MarriageReply; } }
+
+        public bool AcceptInvite;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AcceptInvite = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(AcceptInvite);
+        }
+    }
+
+    public sealed class ChangeMarriage : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ChangeMarriage; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class DivorceRequest : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DivorceRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class DivorceReply : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DivorceReply; } }
 
         public bool AcceptInvite;
         protected override void ReadPacket(BinaryReader reader)
@@ -926,6 +977,7 @@ namespace ClientPackets
             //writer.Write(Name);
         }
     }
+
     public sealed class TradeGold : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.TradeGold; } }

@@ -399,8 +399,20 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GuildWarReturn:
                     GuildWarReturn((C.GuildWarReturn)p);
                     return;
+                case (short)ClientPacketIds.MarriageRequest:
+                    MarriageRequest((C.MarriageRequest)p);
+                    return;
                 case (short)ClientPacketIds.MarriageReply:
                     MarriageReply((C.MarriageReply)p);
+                    return;
+                case (short)ClientPacketIds.ChangeMarriage:
+                    ChangeMarriage((C.ChangeMarriage)p);
+                    return;
+                case (short)ClientPacketIds.DivorceRequest:
+                    DivorceRequest((C.DivorceRequest)p);
+                    return;
+                case (short)ClientPacketIds.DivorceReply:
+                    DivorceReply((C.DivorceReply)p);
                     return;
                 case (short)ClientPacketIds.TradeRequest:
                     TradeRequest((C.TradeRequest)p);
@@ -1143,11 +1155,43 @@ namespace Server.MirNetwork
             Player.GuildWarReturn(p.Name);
         }
 
+
+        private void MarriageRequest(C.MarriageRequest p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarriageRequest();
+        }
+
         private void MarriageReply(C.MarriageReply p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.MarriageReply(p.AcceptInvite);
+        }
+
+        private void ChangeMarriage(C.ChangeMarriage p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.AllowMarriage = !Player.AllowMarriage;
+            if (Player.AllowMarriage)
+                Player.ReceiveChat("You're now allowing marriage requests.", ChatType.System);
+            else
+                Player.ReceiveChat("You're now blocking marriage requests.", ChatType.System);
+        }
+
+        private void DivorceRequest(C.DivorceRequest p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DivorceRequest();
+        }
+
+        private void DivorceReply(C.DivorceReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DivorceReply(p.AcceptInvite);
         }
 
         private void TradeRequest(C.TradeRequest p)
