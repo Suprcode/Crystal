@@ -154,7 +154,11 @@ namespace Server
 
         public static string RefineOreName = "BlackIronOre";
 
-
+        //Marriage Settings
+        public static int LoverEXPBonus = 5;
+        public static int MarriageCooldown = 0;
+        public static bool WeddingRingRecall = true;
+        public static int MarriageLevelRequired = 10;
 
         //Goods Settings
         public static bool GoodsOn = true;
@@ -1091,6 +1095,30 @@ namespace Server
             reader.Write("Ore", "OreName", RefineOreName);
 
         }
+
+        public static void LoadMarriage()
+        {
+            if (!File.Exists(ConfigPath + @".\MarriageSystem.ini"))
+            {
+                SaveMarriage();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\MarriageSystem.ini");
+            LoverEXPBonus = reader.ReadInt32("Config", "EXPBonus", LoverEXPBonus);
+            MarriageCooldown = reader.ReadInt32("Config", "MarriageCooldown", MarriageCooldown);
+            WeddingRingRecall = reader.ReadBoolean("Config", "AllowLoverRecall", WeddingRingRecall);
+            MarriageLevelRequired = reader.ReadInt32("Config", "MinimumLevel", MarriageLevelRequired);
+        }
+        public static void SaveMarriage()
+        {
+            File.Delete(ConfigPath + @".\MarriageSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\MarriageSystem.ini");
+            reader.Write("Config", "EXPBonus", LoverEXPBonus);
+            reader.Write("Config", "MarriageCooldown", MarriageCooldown);
+            reader.Write("Config", "AllowLoverRecall", WeddingRingRecall);
+            reader.Write("Config", "MinimumLevel", MarriageLevelRequired);
+        }
+
 
         public static void LoadGoods()
         {

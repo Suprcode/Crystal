@@ -1357,6 +1357,7 @@ namespace ServerPackets
         public MirGender Gender;
         public byte Hair;
         public byte Level;
+        public string LoverName;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1374,6 +1375,7 @@ namespace ServerPackets
             Gender = (MirGender)reader.ReadByte();
             Hair = reader.ReadByte();
             Level = reader.ReadByte();
+            LoverName = reader.ReadString();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1393,6 +1395,7 @@ namespace ServerPackets
             writer.Write((byte)Gender);
             writer.Write(Hair);
             writer.Write(Level);
+            writer.Write(LoverName);
 
         }
     }
@@ -2510,6 +2513,23 @@ namespace ServerPackets
             writer.Write(Success);
         }
     }
+
+    public sealed class NPCReplaceWedRing : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.NPCReplaceWedRing; } }
+
+        public float Rate;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Rate = reader.ReadSingle();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Rate);
+        }
+    }
+
     public sealed class NPCStorage : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.NPCStorage; } }

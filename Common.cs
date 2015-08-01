@@ -511,6 +511,7 @@ public enum ChatType : byte
     Trainer = 10,
     LevelUp = 11,
     System2 = 12,
+    Relationship = 13,
 }
 
 public enum ItemType : byte
@@ -1047,6 +1048,7 @@ public enum ServerPacketIds : short
     NPCRefine,
     NPCCheckRefine,
     NPCCollectRefine,
+    NPCReplaceWedRing,
     NPCStorage,
     SellItem,
     RepairItem,
@@ -1199,6 +1201,7 @@ public enum ClientPacketIds : short
     RefineCancel,
     RefineItem,
     CheckRefine,
+    ReplaceWedRing,
     DepositTradeItem,
     RetrieveTradeItem,
     DropGold,
@@ -2614,7 +2617,6 @@ public class UserItem
         Freezing = reader.ReadByte();
         PoisonAttack = reader.ReadByte();
         
-        
 
         if (version <= 31) return;
 
@@ -2861,45 +2863,45 @@ public class UserItem
     public UserItem Clone()
     {
         UserItem item = new UserItem(Info)
-            {
-                UniqueID =  UniqueID,
-                CurrentDura = CurrentDura,
-                MaxDura = MaxDura,
-                Count = Count,
+        {
+            UniqueID = UniqueID,
+            CurrentDura = CurrentDura,
+            MaxDura = MaxDura,
+            Count = Count,
 
-                AC = AC,
-                MAC = MAC,
-                DC = DC,
-                MC = MC,
-                SC = SC,
-                Accuracy = Accuracy,
-                Agility = Agility,
-                HP = HP,
-                MP = MP,
+            AC = AC,
+            MAC = MAC,
+            DC = DC,
+            MC = MC,
+            SC = SC,
+            Accuracy = Accuracy,
+            Agility = Agility,
+            HP = HP,
+            MP = MP,
 
-                AttackSpeed = AttackSpeed,
-                Luck = Luck,
+            AttackSpeed = AttackSpeed,
+            Luck = Luck,
 
-                DuraChanged = DuraChanged,
-                SoulBoundId = SoulBoundId,
-                Identified = Identified,
-                Cursed = Cursed,
-                Strong = Strong,
-                MagicResist = MagicResist,
-                PoisonResist = PoisonResist,
-                HealthRecovery = HealthRecovery,
-                ManaRecovery = ManaRecovery,
-                PoisonRecovery = PoisonRecovery,
-                CriticalRate = CriticalRate,
-                CriticalDamage = CriticalDamage,
-                Freezing = Freezing,
-                PoisonAttack = PoisonAttack,
+            DuraChanged = DuraChanged,
+            SoulBoundId = SoulBoundId,
+            Identified = Identified,
+            Cursed = Cursed,
+            Strong = Strong,
+            MagicResist = MagicResist,
+            PoisonResist = PoisonResist,
+            HealthRecovery = HealthRecovery,
+            ManaRecovery = ManaRecovery,
+            PoisonRecovery = PoisonRecovery,
+            CriticalRate = CriticalRate,
+            CriticalDamage = CriticalDamage,
+            Freezing = Freezing,
+            PoisonAttack = PoisonAttack,
 
-                Slots = Slots,
-				Awake = Awake,
+            Slots = Slots,
+            Awake = Awake,
 
-                RefinedValue = RefinedValue,
-                RefineAdded = RefineAdded
+            RefinedValue = RefinedValue,
+            RefineAdded = RefineAdded,
             };
 
         return item;
@@ -3905,6 +3907,8 @@ public abstract class Packet
                 return new C.RefineItem();
             case (short)ClientPacketIds.CheckRefine:
                 return new C.CheckRefine();
+            case (short)ClientPacketIds.ReplaceWedRing:
+                return new C.ReplaceWedRing();
             case (short)ClientPacketIds.DepositTradeItem:
                 return new C.DepositTradeItem();
             case (short)ClientPacketIds.RetrieveTradeItem:
@@ -4250,6 +4254,8 @@ public abstract class Packet
                 return new S.NPCCheckRefine();
             case (short)ServerPacketIds.NPCCollectRefine:
                 return new S.NPCCollectRefine();
+            case (short)ServerPacketIds.NPCReplaceWedRing:
+                return new S.NPCReplaceWedRing();
             case (short)ServerPacketIds.NPCStorage:
                 return new S.NPCStorage();
             case (short)ServerPacketIds.SellItem:

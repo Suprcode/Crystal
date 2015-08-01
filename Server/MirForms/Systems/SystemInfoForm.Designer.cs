@@ -60,12 +60,22 @@
             this.GoodsMaxStoredTextBox = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.GoodsOnCheckBox = new System.Windows.Forms.CheckBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.MarriageCooldown_textbox = new System.Windows.Forms.TextBox();
+            this.LoverRecall_checkbox = new System.Windows.Forms.CheckBox();
+            this.LoverBonusEXP_textbox = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.RequiredLevel_textbox = new System.Windows.Forms.TextBox();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -209,6 +219,8 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -387,6 +399,94 @@
             this.GoodsOnCheckBox.UseVisualStyleBackColor = true;
             this.GoodsOnCheckBox.CheckedChanged += new System.EventHandler(this.GoodsOnCheckBox_CheckedChanged);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(365, 229);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Refining";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.label14);
+            this.tabPage5.Controls.Add(this.RequiredLevel_textbox);
+            this.tabPage5.Controls.Add(this.LoverBonusEXP_textbox);
+            this.tabPage5.Controls.Add(this.label12);
+            this.tabPage5.Controls.Add(this.label13);
+            this.tabPage5.Controls.Add(this.MarriageCooldown_textbox);
+            this.tabPage5.Controls.Add(this.LoverRecall_checkbox);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(365, 229);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Relationship";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(30, 88);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(131, 13);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Marriage Cooldown (Days)";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(14, 55);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(147, 13);
+            this.label13.TabIndex = 8;
+            this.label13.Text = "Bonus % Experience in Group";
+            // 
+            // MarriageCooldown_textbox
+            // 
+            this.MarriageCooldown_textbox.Location = new System.Drawing.Point(167, 85);
+            this.MarriageCooldown_textbox.Name = "MarriageCooldown_textbox";
+            this.MarriageCooldown_textbox.Size = new System.Drawing.Size(64, 20);
+            this.MarriageCooldown_textbox.TabIndex = 7;
+            this.MarriageCooldown_textbox.TextChanged += new System.EventHandler(this.MarriageCooldown_textbox_TextChanged);
+            // 
+            // LoverRecall_checkbox
+            // 
+            this.LoverRecall_checkbox.AutoSize = true;
+            this.LoverRecall_checkbox.Location = new System.Drawing.Point(32, 23);
+            this.LoverRecall_checkbox.Name = "LoverRecall_checkbox";
+            this.LoverRecall_checkbox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.LoverRecall_checkbox.Size = new System.Drawing.Size(149, 17);
+            this.LoverRecall_checkbox.TabIndex = 1;
+            this.LoverRecall_checkbox.Text = "Recall with Wedding Ring";
+            this.LoverRecall_checkbox.UseVisualStyleBackColor = true;
+            this.LoverRecall_checkbox.CheckedChanged += new System.EventHandler(this.LoverRecall_checkbox_CheckedChanged);
+            // 
+            // LoverBonusEXP_textbox
+            // 
+            this.LoverBonusEXP_textbox.Location = new System.Drawing.Point(167, 55);
+            this.LoverBonusEXP_textbox.Name = "LoverBonusEXP_textbox";
+            this.LoverBonusEXP_textbox.Size = new System.Drawing.Size(64, 20);
+            this.LoverBonusEXP_textbox.TabIndex = 10;
+            this.LoverBonusEXP_textbox.TextChanged += new System.EventHandler(this.LoverBonusEXP_textbox_TextChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(37, 117);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(123, 13);
+            this.label14.TabIndex = 12;
+            this.label14.Text = "Marriage Required Level";
+            // 
+            // RequiredLevel_textbox
+            // 
+            this.RequiredLevel_textbox.Location = new System.Drawing.Point(167, 114);
+            this.RequiredLevel_textbox.Name = "RequiredLevel_textbox";
+            this.RequiredLevel_textbox.Size = new System.Drawing.Size(64, 20);
+            this.RequiredLevel_textbox.TabIndex = 11;
+            this.RequiredLevel_textbox.TextChanged += new System.EventHandler(this.RequiredLevel_textbox_TextChanged);
+            // 
             // SystemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -410,6 +510,8 @@
             this.groupBox2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -448,6 +550,14 @@
         private System.Windows.Forms.TextBox GoodsBuyBackTimeTextBox;
         private System.Windows.Forms.TextBox GoodsBuyBackMaxStoredTextBox;
         private System.Windows.Forms.Label label11;
-
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox MarriageCooldown_textbox;
+        private System.Windows.Forms.CheckBox LoverRecall_checkbox;
+        private System.Windows.Forms.TextBox LoverBonusEXP_textbox;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox RequiredLevel_textbox;
     }
 }

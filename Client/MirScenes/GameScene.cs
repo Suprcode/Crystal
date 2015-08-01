@@ -33,6 +33,7 @@ namespace Client.MirScenes
         Refine,
         CheckRefine,
         CollectRefine,
+        ReplaceWedRing,
     }
 
     public sealed class GameScene : MirScene
@@ -1096,6 +1097,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.NPCCollectRefine:
                     NPCCollectRefine((S.NPCCollectRefine)p);
+                    break;
+                case (short)ServerPacketIds.NPCReplaceWedRing:
+                    NPCReplaceWedRing((S.NPCReplaceWedRing)p);
                     break;
                 case (short)ServerPacketIds.NPCStorage:
                     NPCStorage();
@@ -2400,6 +2404,7 @@ namespace Client.MirScenes
             InspectDialog.Gender = p.Gender;
             InspectDialog.Hair = p.Hair;
             InspectDialog.Level = p.Level;
+            InspectDialog.LoverName = p.LoverName;
 
             InspectDialog.RefreshInferface();
             InspectDialog.Show();
@@ -3163,6 +3168,13 @@ namespace Client.MirScenes
         {
             if (!NPCDialog.Visible) return;
             NPCDialog.Hide();
+        }
+
+        private void NPCReplaceWedRing(S.NPCReplaceWedRing p)
+        {
+            if (!NPCDialog.Visible) return;
+            NPCDropDialog.PType = PanelType.ReplaceWedRing;
+            NPCDropDialog.Show();
         }
 
 
@@ -9825,6 +9837,10 @@ namespace Client.MirScenes
                     backColour = Color.FromArgb(255, 225,185, 250);
                     foreColour = Color.Blue;
                     break;
+                case ChatType.Relationship:
+                    backColour = Color.Transparent;
+                    foreColour = Color.HotPink;
+                    break;
                 default:
                     backColour = Color.White;
                     foreColour = Color.Black;
@@ -10349,6 +10365,11 @@ namespace Client.MirScenes
                     GuildButton.Index = 2056;
                     GuildButton.HoverIndex = 2056;
                     GameScene.Scene.ChatDialog.ChatPrefix = "!~";
+                    break;
+                case "Lover":
+                    LoverButton.Index = 2047;
+                    LoverButton.HoverIndex = 2047;
+                    GameScene.Scene.ChatDialog.ChatPrefix = ":)";
                     break;
             }
         }
@@ -12289,8 +12310,9 @@ namespace Client.MirScenes
         public MirGender Gender;
         public byte Hair;
         public byte Level;
+        public string LoverName;
 
-        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton;
+        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton, LoverButton;
         public MirImageControl CharacterPage, ClassImage;
         public MirLabel NameLabel;
         public MirLabel GuildLabel, LoverLabel;
@@ -12466,6 +12488,14 @@ namespace Client.MirScenes
                 GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart = Name.Length + 2;
 
             };
+            LoverButton = new MirButton
+            {
+                Index = 604,
+                Location = new Point(15, 15),
+                Library = Libraries.Prguse,
+                Parent = this,
+            };
+
             GuildLabel = new MirLabel
             {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
@@ -12622,6 +12652,14 @@ namespace Client.MirScenes
 
             NameLabel.Text = Name;
             GuildLabel.Text = GuildName + " " + GuildRank;
+            if (LoverName != "")
+            {
+                LoverButton.Visible = true;
+                LoverButton.Hint = LoverName;
+            }
+            else
+                LoverButton.Visible = false;
+                
 
             for (int i = 0; i < Items.Length; i++)
             {
@@ -14194,6 +14232,17 @@ namespace Client.MirScenes
                     }
                         Network.Enqueue(new C.CheckRefine { UniqueID = TargetItem.UniqueID });
                     break;
+
+                case PanelType.ReplaceWedRing:
+
+                    if (TargetItem.Info.Type != ItemType.Ring)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(String.Format("{0} isn't a ring.", TargetItem.FriendlyName), ChatType.System);
+                        return;
+                    }
+
+                    Network.Enqueue(new C.ReplaceWedRing { UniqueID = TargetItem.UniqueID });
+                    break;
             }
 
 
@@ -14359,6 +14408,11 @@ namespace Client.MirScenes
                     break;
                 case PanelType.CheckRefine:
                     text = "Check Refine";
+                    HoldButton.Visible = false;
+                    ConfirmButton.Visible = true;
+                    break;
+                case PanelType.ReplaceWedRing:
+                    text = "Replace Wedding Ring";
                     HoldButton.Visible = false;
                     ConfirmButton.Visible = true;
                     break;
@@ -20871,7 +20925,16 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
                 Hint = "Request Marriage"
             };
-            RequestButton.Click += (o, e) => Network.Enqueue(new C.MarriageRequest());
+            RequestButton.Click += (o, e) =>
+            {
+                if (LoverName != "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're already married.", ChatType.System);
+                    return;
+                }
+                
+                Network.Enqueue(new C.MarriageRequest());
+            };
 
             DivorceButton = new MirButton
             {
@@ -20884,7 +20947,16 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
                 Hint = "Request Divorce"
             };
-            DivorceButton.Click += (o, e) => Network.Enqueue(new C.DivorceRequest());
+            DivorceButton.Click += (o, e) =>
+            {
+                if (LoverName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    return;
+                }
+
+                Network.Enqueue(new C.DivorceRequest());
+            };
 
             MailButton = new MirButton
             {
@@ -20899,7 +20971,11 @@ namespace Client.MirScenes
             };
             MailButton.Click += (o, e) =>
             {
-                if (LoverName == null) return;
+                if (LoverName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    return;
+                }
 
                 GameScene.Scene.MailComposeLetterDialog.ComposeMail(LoverName);
             };
@@ -20917,14 +20993,19 @@ namespace Client.MirScenes
             };
             WhisperButton.Click += (o, e) =>
             {
-                if (LoverName == "") return;
+                if (LoverName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    return;
+                }
+                   
                 if (!Online)
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat("Lover is not online", ChatType.System);
                     return;
                 }
                 GameScene.Scene.ChatDialog.ChatTextBox.SetFocus();
-                GameScene.Scene.ChatDialog.ChatTextBox.Text = "/" + LoverName + " ";
+                GameScene.Scene.ChatDialog.ChatTextBox.Text = ":)";
                 GameScene.Scene.ChatDialog.ChatTextBox.Visible = true;
                 GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionLength = 0;
                 GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart = GameScene.Scene.ChatDialog.ChatTextBox.Text.Length;
@@ -20980,12 +21061,6 @@ namespace Client.MirScenes
             Visible = true;
         }
 
-
-        public void RequestMarriage()
-        {
-
-        }
-
         public void UpdateInterface()
         {
             LoverNameLabel.Text = "Lover:  " + LoverName;
@@ -20999,11 +21074,21 @@ namespace Client.MirScenes
 
             if ((LoverName == "") && (Date != null))
             {
-                LoverDateLabel.Text = "Date divorced:  " + Date.ToShortDateString();
+                if (Date < new DateTime(2000))
+                    LoverDateLabel.Text = "Date:";
+                else
+                    LoverDateLabel.Text = "Date divorced:  " + Date.ToShortDateString();
+
                 LoverOnlineLabel.Text = "Location: ";
+                AllowButton.Hint = "Allow/Block Marriage";
             }
             else
+            {
                 LoverDateLabel.Text = "Date started:  " + Date.ToShortDateString();
+                AllowButton.Hint = "Allow/Block Recall";
+            }
+                
+
         }
     }
 

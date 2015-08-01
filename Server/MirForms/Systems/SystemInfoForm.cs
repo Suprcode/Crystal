@@ -19,7 +19,7 @@ namespace Server
             get { return SMain.EditEnvir; }
         }
 
-        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false;
+        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false;
 
         public SystemInfoForm()
         {
@@ -37,6 +37,7 @@ namespace Server
             UpdateFishing();
             UpdateMail();
             UpdateGoods();
+            UpdateMarriage();
         }
 
         #region Update
@@ -78,6 +79,15 @@ namespace Server
             GoodsBuyBackMaxStoredTextBox.Text = Settings.GoodsBuyBackMaxStored.ToString();
         }
 
+        private void UpdateMarriage()
+        {
+            LoverRecall_checkbox.Checked = Settings.WeddingRingRecall;
+            LoverBonusEXP_textbox.Text = Settings.LoverEXPBonus.ToString();
+            MarriageCooldown_textbox.Text = Settings.MarriageCooldown.ToString();
+            RequiredLevel_textbox.Text = Settings.MarriageLevelRequired.ToString();
+
+        }
+
         #endregion
 
         private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -90,6 +100,12 @@ namespace Server
 
             if (GoodsChanged)
                 Settings.SaveGoods();
+
+            if (RefineChanged)
+                Settings.SaveRefine();
+
+            if (MarriageChanged)
+                Settings.SaveMarriage();
         }
 
         #region Fishing
@@ -247,7 +263,62 @@ namespace Server
             MailChanged = true;
         }
 
-        #endregion    
+        private void LoverRecall_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            Settings.WeddingRingRecall = LoverRecall_checkbox.Checked;
+            MarriageChanged = true;
+        }
+
+        private void LoverBonusEXP_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.LoverEXPBonus = temp;
+            MarriageChanged = true;
+        }
+
+        private void MarriageCooldown_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 365 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MarriageCooldown = temp;
+            MarriageChanged = true;
+        }
+
+        private void RequiredLevel_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MarriageLevelRequired = temp;
+            MarriageChanged = true;
+        }
+
+        #endregion
 
         #region Goods
 

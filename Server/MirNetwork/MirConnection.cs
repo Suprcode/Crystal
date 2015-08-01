@@ -255,6 +255,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CheckRefine:
                     CheckRefine((C.CheckRefine)p);
                     break;
+                case (short)ClientPacketIds.ReplaceWedRing:
+                    ReplaceWedRing((C.ReplaceWedRing)p);
+                    break;
                 case (short)ClientPacketIds.DepositTradeItem:
                     DepositTradeItem((C.DepositTradeItem)p);
                     break;
@@ -834,6 +837,13 @@ namespace Server.MirNetwork
             Player.CheckRefine(p.UniqueID);
         }
 
+        private void ReplaceWedRing(C.ReplaceWedRing p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.ReplaceWeddingRing(p.UniqueID);
+        }
+
         private void DepositTradeItem(C.DepositTradeItem p)
         {
             if (Stage != GameStage.Game) return;
@@ -1173,11 +1183,23 @@ namespace Server.MirNetwork
         private void ChangeMarriage(C.ChangeMarriage p)
         {
             if (Stage != GameStage.Game) return;
-            Player.AllowMarriage = !Player.AllowMarriage;
-            if (Player.AllowMarriage)
-                Player.ReceiveChat("You're now allowing marriage requests.", ChatType.System);
+
+            if (Player.Info.Married == 0)
+            {
+                Player.AllowMarriage = !Player.AllowMarriage;
+                if (Player.AllowMarriage)
+                    Player.ReceiveChat("You're now allowing marriage requests.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking marriage requests.", ChatType.Hint);
+            }
             else
-                Player.ReceiveChat("You're now blocking marriage requests.", ChatType.System);
+            {
+                Player.AllowLoverRecall = !Player.AllowLoverRecall;
+                if (Player.AllowLoverRecall)
+                    Player.ReceiveChat("You're now allowing recall from lover.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking recall from lover.", ChatType.Hint);
+            }
         }
 
         private void DivorceRequest(C.DivorceRequest p)

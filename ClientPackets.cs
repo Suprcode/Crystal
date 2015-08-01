@@ -364,6 +364,22 @@ namespace ClientPackets
         }
     }
 
+    public sealed class ReplaceWedRing : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ReplaceWedRing; } }
+
+        public ulong UniqueID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadUInt64();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+        }
+    }
+
 
     public sealed class DepositTradeItem : Packet
     {

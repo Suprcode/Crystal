@@ -31,6 +31,7 @@ namespace Server.MirObjects
             RefineKey = "[@REFINE]",
             RefineCheckKey = "[@REFINECHECK]",
             RefineCollectKey = "[@REFINECOLLECT]",
+            ReplaceWedRingKey = "[@REPLACEWEDDINGRING]",
             BuyBackKey = "[@BUYBACK]",
             StorageKey = "[@STORAGE]",
             ConsignKey = "[@CONSIGN]",
@@ -910,6 +911,9 @@ namespace Server.MirObjects
                 case RefineCollectKey:
                     player.CollectRefine();
                     break;
+                case ReplaceWedRingKey:
+                    player.Enqueue(new S.NPCReplaceWedRing { Rate = 1 });
+                    break;
                 case StorageKey:
                     player.SendStorage();
                     player.Enqueue(new S.NPCStorage());
@@ -1598,8 +1602,11 @@ namespace Server.MirObjects
                 case "ENTERMAP":
                     acts.Add(new NPCActions(ActionType.EnterMap));
                     break;
-                case "MARRIAGE":
-                    acts.Add(new NPCActions(ActionType.Marriage));
+                case "MAKEWEDDINGRING":
+                    acts.Add(new NPCActions(ActionType.MakeWeddingRing));
+                    break;
+                case "FORCEDIVORCE":
+                    acts.Add(new NPCActions(ActionType.ForceDivorce));
                     break;
             }
 
@@ -2700,10 +2707,11 @@ namespace Server.MirObjects
                         player.NPCMoveMap = null;
                         player.NPCMoveCoord = Point.Empty;
                         break;
-                    case ActionType.Marriage:
-                        player.MarriageRequest();
-                        //CODE THAT RUNS AFTER #ACT MARRIAGE
-
+                    case ActionType.MakeWeddingRing:
+                        player.MakeWeddingRing();
+                        break;
+                    case ActionType.ForceDivorce:
+                        player.NPCDivorce();
                         break;
                 }
             }
@@ -3009,7 +3017,8 @@ namespace Server.MirObjects
         EnterMap,
         GivePearls,
         TakePearls,
-        Marriage,
+        MakeWeddingRing,
+        ForceDivorce,
     }
     public enum CheckType
     {
