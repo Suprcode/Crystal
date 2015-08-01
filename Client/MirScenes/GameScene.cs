@@ -3173,6 +3173,7 @@ namespace Client.MirScenes
         private void NPCReplaceWedRing(S.NPCReplaceWedRing p)
         {
             if (!NPCDialog.Visible) return;
+            NPCRate = p.Rate;
             NPCDropDialog.PType = PanelType.ReplaceWedRing;
             NPCDropDialog.Show();
         }
@@ -4537,7 +4538,7 @@ namespace Client.MirScenes
 
         private void MarriageRequest(S.MarriageRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MarriageReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MarriageReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -4547,7 +4548,7 @@ namespace Client.MirScenes
 
         private void DivorceRequest(S.DivorceRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has asked asked you for a divorce", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has requested a divorce", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.DivorceReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.DivorceReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -14412,7 +14413,7 @@ namespace Client.MirScenes
                     ConfirmButton.Visible = true;
                     break;
                 case PanelType.ReplaceWedRing:
-                    text = "Replace Wedding Ring";
+                    text = "Replace: ";
                     HoldButton.Visible = false;
                     ConfirmButton.Visible = true;
                     break;
@@ -14447,7 +14448,9 @@ namespace Client.MirScenes
                     case PanelType.Refine:
                         text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
                         break;
-
+                    case PanelType.ReplaceWedRing:
+                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
+                        break;
                     default: return;
                 }
 

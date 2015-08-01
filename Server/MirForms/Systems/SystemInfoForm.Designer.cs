@@ -61,20 +61,42 @@
             this.label9 = new System.Windows.Forms.Label();
             this.GoodsOnCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.OreName_textbox = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.RefineCost_textbox = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.ItemDimReturn_textbox = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.WepDimReturn_textbox = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.CritMultiplier_textbox = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.CritChance_textbox = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.NormalStat_textbox = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.RefineTime_textbox = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.BaseChance_textbox = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.WeaponOnly_checkbox = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.RequiredLevel_textbox = new System.Windows.Forms.TextBox();
+            this.LoverBonusEXP_textbox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.MarriageCooldown_textbox = new System.Windows.Forms.TextBox();
             this.LoverRecall_checkbox = new System.Windows.Forms.CheckBox();
-            this.LoverBonusEXP_textbox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.RequiredLevel_textbox = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.ReplaceRingCost_textbox = new System.Windows.Forms.TextBox();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -401,6 +423,25 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.OreName_textbox);
+            this.tabPage4.Controls.Add(this.label23);
+            this.tabPage4.Controls.Add(this.RefineCost_textbox);
+            this.tabPage4.Controls.Add(this.label22);
+            this.tabPage4.Controls.Add(this.ItemDimReturn_textbox);
+            this.tabPage4.Controls.Add(this.label21);
+            this.tabPage4.Controls.Add(this.WepDimReturn_textbox);
+            this.tabPage4.Controls.Add(this.label20);
+            this.tabPage4.Controls.Add(this.CritMultiplier_textbox);
+            this.tabPage4.Controls.Add(this.label19);
+            this.tabPage4.Controls.Add(this.CritChance_textbox);
+            this.tabPage4.Controls.Add(this.label18);
+            this.tabPage4.Controls.Add(this.NormalStat_textbox);
+            this.tabPage4.Controls.Add(this.label17);
+            this.tabPage4.Controls.Add(this.RefineTime_textbox);
+            this.tabPage4.Controls.Add(this.label16);
+            this.tabPage4.Controls.Add(this.BaseChance_textbox);
+            this.tabPage4.Controls.Add(this.label15);
+            this.tabPage4.Controls.Add(this.WeaponOnly_checkbox);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(365, 229);
@@ -408,8 +449,175 @@
             this.tabPage4.Text = "Refining";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // OreName_textbox
+            // 
+            this.OreName_textbox.Location = new System.Drawing.Point(221, 75);
+            this.OreName_textbox.Name = "OreName_textbox";
+            this.OreName_textbox.Size = new System.Drawing.Size(130, 20);
+            this.OreName_textbox.TabIndex = 20;
+            this.OreName_textbox.TextChanged += new System.EventHandler(this.OreName_textbox_TextChanged);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(218, 59);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(55, 13);
+            this.label23.TabIndex = 19;
+            this.label23.Text = "Ore Name";
+            // 
+            // RefineCost_textbox
+            // 
+            this.RefineCost_textbox.Location = new System.Drawing.Point(286, 32);
+            this.RefineCost_textbox.Name = "RefineCost_textbox";
+            this.RefineCost_textbox.Size = new System.Drawing.Size(65, 20);
+            this.RefineCost_textbox.TabIndex = 18;
+            this.RefineCost_textbox.TextChanged += new System.EventHandler(this.RefineCost_textbox_TextChanged);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(218, 35);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(62, 13);
+            this.label22.TabIndex = 17;
+            this.label22.Text = "Refine Cost";
+            // 
+            // ItemDimReturn_textbox
+            // 
+            this.ItemDimReturn_textbox.Location = new System.Drawing.Point(154, 184);
+            this.ItemDimReturn_textbox.Name = "ItemDimReturn_textbox";
+            this.ItemDimReturn_textbox.Size = new System.Drawing.Size(51, 20);
+            this.ItemDimReturn_textbox.TabIndex = 16;
+            this.ItemDimReturn_textbox.TextChanged += new System.EventHandler(this.ItemDimReturn_textbox_TextChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(23, 187);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(123, 13);
+            this.label21.TabIndex = 15;
+            this.label21.Text = "Item Diminishing Returns";
+            // 
+            // WepDimReturn_textbox
+            // 
+            this.WepDimReturn_textbox.Location = new System.Drawing.Point(154, 158);
+            this.WepDimReturn_textbox.Name = "WepDimReturn_textbox";
+            this.WepDimReturn_textbox.Size = new System.Drawing.Size(51, 20);
+            this.WepDimReturn_textbox.TabIndex = 14;
+            this.WepDimReturn_textbox.TextChanged += new System.EventHandler(this.WepDimReturn_textbox_TextChanged);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(3, 161);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(144, 13);
+            this.label20.TabIndex = 13;
+            this.label20.Text = "Weapon Diminishing Returns";
+            // 
+            // CritMultiplier_textbox
+            // 
+            this.CritMultiplier_textbox.Location = new System.Drawing.Point(154, 132);
+            this.CritMultiplier_textbox.Name = "CritMultiplier_textbox";
+            this.CritMultiplier_textbox.Size = new System.Drawing.Size(51, 20);
+            this.CritMultiplier_textbox.TabIndex = 12;
+            this.CritMultiplier_textbox.TextChanged += new System.EventHandler(this.CritMultiplier_textbox_TextChanged);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(38, 135);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(110, 13);
+            this.label19.TabIndex = 11;
+            this.label19.Text = "Crit Increase Multiplier";
+            // 
+            // CritChance_textbox
+            // 
+            this.CritChance_textbox.Location = new System.Drawing.Point(154, 106);
+            this.CritChance_textbox.Name = "CritChance_textbox";
+            this.CritChance_textbox.Size = new System.Drawing.Size(51, 20);
+            this.CritChance_textbox.TabIndex = 10;
+            this.CritChance_textbox.TextChanged += new System.EventHandler(this.CritChance_textbox_TextChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(53, 109);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(95, 13);
+            this.label18.TabIndex = 9;
+            this.label18.Text = "Critical Chance (%)";
+            // 
+            // NormalStat_textbox
+            // 
+            this.NormalStat_textbox.Location = new System.Drawing.Point(154, 81);
+            this.NormalStat_textbox.Name = "NormalStat_textbox";
+            this.NormalStat_textbox.Size = new System.Drawing.Size(51, 20);
+            this.NormalStat_textbox.TabIndex = 8;
+            this.NormalStat_textbox.TextChanged += new System.EventHandler(this.NormalStat_textbox_TextChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(40, 84);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(106, 13);
+            this.label17.TabIndex = 7;
+            this.label17.Text = "Normal Stat Increase";
+            // 
+            // RefineTime_textbox
+            // 
+            this.RefineTime_textbox.Location = new System.Drawing.Point(154, 56);
+            this.RefineTime_textbox.Name = "RefineTime_textbox";
+            this.RefineTime_textbox.Size = new System.Drawing.Size(51, 20);
+            this.RefineTime_textbox.TabIndex = 6;
+            this.RefineTime_textbox.TextChanged += new System.EventHandler(this.RefineTime_textbox_TextChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(38, 59);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(110, 13);
+            this.label16.TabIndex = 5;
+            this.label16.Text = "Refine Time (Minutes)";
+            // 
+            // BaseChance_textbox
+            // 
+            this.BaseChance_textbox.Location = new System.Drawing.Point(154, 32);
+            this.BaseChance_textbox.Name = "BaseChance_textbox";
+            this.BaseChance_textbox.Size = new System.Drawing.Size(51, 20);
+            this.BaseChance_textbox.TabIndex = 4;
+            this.BaseChance_textbox.TextChanged += new System.EventHandler(this.BaseChance_textbox_TextChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(16, 35);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(132, 13);
+            this.label15.TabIndex = 3;
+            this.label15.Text = "Base Success Chance (%)";
+            // 
+            // WeaponOnly_checkbox
+            // 
+            this.WeaponOnly_checkbox.AutoSize = true;
+            this.WeaponOnly_checkbox.Location = new System.Drawing.Point(34, 9);
+            this.WeaponOnly_checkbox.Name = "WeaponOnly_checkbox";
+            this.WeaponOnly_checkbox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.WeaponOnly_checkbox.Size = new System.Drawing.Size(133, 17);
+            this.WeaponOnly_checkbox.TabIndex = 2;
+            this.WeaponOnly_checkbox.Text = "Only Weapon Refining";
+            this.WeaponOnly_checkbox.UseVisualStyleBackColor = true;
+            this.WeaponOnly_checkbox.CheckedChanged += new System.EventHandler(this.WeaponOnly_checkbox_CheckedChanged);
+            // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.label24);
+            this.tabPage5.Controls.Add(this.ReplaceRingCost_textbox);
             this.tabPage5.Controls.Add(this.label14);
             this.tabPage5.Controls.Add(this.RequiredLevel_textbox);
             this.tabPage5.Controls.Add(this.LoverBonusEXP_textbox);
@@ -423,6 +631,31 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Relationship";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(37, 117);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(123, 13);
+            this.label14.TabIndex = 12;
+            this.label14.Text = "Marriage Required Level";
+            // 
+            // RequiredLevel_textbox
+            // 
+            this.RequiredLevel_textbox.Location = new System.Drawing.Point(167, 114);
+            this.RequiredLevel_textbox.Name = "RequiredLevel_textbox";
+            this.RequiredLevel_textbox.Size = new System.Drawing.Size(64, 20);
+            this.RequiredLevel_textbox.TabIndex = 11;
+            this.RequiredLevel_textbox.TextChanged += new System.EventHandler(this.RequiredLevel_textbox_TextChanged);
+            // 
+            // LoverBonusEXP_textbox
+            // 
+            this.LoverBonusEXP_textbox.Location = new System.Drawing.Point(167, 55);
+            this.LoverBonusEXP_textbox.Name = "LoverBonusEXP_textbox";
+            this.LoverBonusEXP_textbox.Size = new System.Drawing.Size(64, 20);
+            this.LoverBonusEXP_textbox.TabIndex = 10;
+            this.LoverBonusEXP_textbox.TextChanged += new System.EventHandler(this.LoverBonusEXP_textbox_TextChanged);
             // 
             // label12
             // 
@@ -462,30 +695,22 @@
             this.LoverRecall_checkbox.UseVisualStyleBackColor = true;
             this.LoverRecall_checkbox.CheckedChanged += new System.EventHandler(this.LoverRecall_checkbox_CheckedChanged);
             // 
-            // LoverBonusEXP_textbox
+            // label24
             // 
-            this.LoverBonusEXP_textbox.Location = new System.Drawing.Point(167, 55);
-            this.LoverBonusEXP_textbox.Name = "LoverBonusEXP_textbox";
-            this.LoverBonusEXP_textbox.Size = new System.Drawing.Size(64, 20);
-            this.LoverBonusEXP_textbox.TabIndex = 10;
-            this.LoverBonusEXP_textbox.TextChanged += new System.EventHandler(this.LoverBonusEXP_textbox_TextChanged);
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(65, 143);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(96, 13);
+            this.label24.TabIndex = 14;
+            this.label24.Text = "Replace Ring Cost";
             // 
-            // label14
+            // ReplaceRingCost_textbox
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(37, 117);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(123, 13);
-            this.label14.TabIndex = 12;
-            this.label14.Text = "Marriage Required Level";
-            // 
-            // RequiredLevel_textbox
-            // 
-            this.RequiredLevel_textbox.Location = new System.Drawing.Point(167, 114);
-            this.RequiredLevel_textbox.Name = "RequiredLevel_textbox";
-            this.RequiredLevel_textbox.Size = new System.Drawing.Size(64, 20);
-            this.RequiredLevel_textbox.TabIndex = 11;
-            this.RequiredLevel_textbox.TextChanged += new System.EventHandler(this.RequiredLevel_textbox_TextChanged);
+            this.ReplaceRingCost_textbox.Location = new System.Drawing.Point(167, 140);
+            this.ReplaceRingCost_textbox.Name = "ReplaceRingCost_textbox";
+            this.ReplaceRingCost_textbox.Size = new System.Drawing.Size(64, 20);
+            this.ReplaceRingCost_textbox.TabIndex = 13;
+            this.ReplaceRingCost_textbox.TextChanged += new System.EventHandler(this.ReplaceRingCost_textbox_TextChanged);
             // 
             // SystemInfoForm
             // 
@@ -499,6 +724,7 @@
             this.Name = "SystemInfoForm";
             this.Text = "SystemInfoForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SystemInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.SystemInfoForm_Load);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -510,6 +736,8 @@
             this.groupBox2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
@@ -559,5 +787,26 @@
         private System.Windows.Forms.TextBox LoverBonusEXP_textbox;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox RequiredLevel_textbox;
+        private System.Windows.Forms.CheckBox WeaponOnly_checkbox;
+        private System.Windows.Forms.TextBox BaseChance_textbox;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox RefineTime_textbox;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox NormalStat_textbox;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox WepDimReturn_textbox;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox CritMultiplier_textbox;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox CritChance_textbox;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox ItemDimReturn_textbox;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox RefineCost_textbox;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox OreName_textbox;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox ReplaceRingCost_textbox;
     }
 }

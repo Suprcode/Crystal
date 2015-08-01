@@ -144,21 +144,22 @@ namespace Server
         //Refine Settings
         public static bool OnlyRefineWeapon = true;
         public static byte RefineBaseChance = 20;
-        public static byte RefineTime = 20;
+        public static int RefineTime = 20;
         public static byte RefineIncrease = 1;
         public static byte RefineCritChance = 10;
         public static byte RefineCritIncrease = 2;
         public static byte RefineWepStatReduce = 6;
         public static byte RefineItemStatReduce = 15;
-        public static byte RefineCost = 200;
+        public static int RefineCost = 125;
 
         public static string RefineOreName = "BlackIronOre";
 
         //Marriage Settings
         public static int LoverEXPBonus = 5;
-        public static int MarriageCooldown = 0;
+        public static int MarriageCooldown = 7;
         public static bool WeddingRingRecall = true;
         public static int MarriageLevelRequired = 10;
+        public static int ReplaceWedRingCost = 125;
 
         //Goods Settings
         public static bool GoodsOn = true;
@@ -396,6 +397,7 @@ namespace Server
             LoadFishing();
             LoadMail();
             LoadRefine();
+            LoadMarriage();
             LoadGoods();
         }
         public static void Save()
@@ -1068,13 +1070,13 @@ namespace Server
             InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
             OnlyRefineWeapon = reader.ReadBoolean("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
             RefineBaseChance = reader.ReadByte("Config", "BaseChance", RefineBaseChance);
-            RefineTime = reader.ReadByte("Config", "Time", RefineTime);
+            RefineTime = reader.ReadInt32("Config", "Time", RefineTime);
             RefineIncrease = reader.ReadByte("Config", "StatIncrease", RefineIncrease);
             RefineCritChance = reader.ReadByte("Config", "CritChance", RefineCritChance);
             RefineCritIncrease = reader.ReadByte("Config", "CritIncrease", RefineCritIncrease);
             RefineWepStatReduce = reader.ReadByte("Config", "WepStatReducedChance", RefineWepStatReduce);
             RefineItemStatReduce = reader.ReadByte("Config", "ItemStatReducedChance", RefineItemStatReduce);
-            RefineCost = reader.ReadByte("Config", "RefineCost", RefineCost);
+            RefineCost = reader.ReadInt32("Config", "RefineCost", RefineCost);
 
             RefineOreName = reader.ReadString("Ore", "OreName", RefineOreName);
         }
@@ -1108,6 +1110,7 @@ namespace Server
             MarriageCooldown = reader.ReadInt32("Config", "MarriageCooldown", MarriageCooldown);
             WeddingRingRecall = reader.ReadBoolean("Config", "AllowLoverRecall", WeddingRingRecall);
             MarriageLevelRequired = reader.ReadInt32("Config", "MinimumLevel", MarriageLevelRequired);
+            ReplaceWedRingCost = reader.ReadInt32("Config", "ReplaceRingCost", ReplaceWedRingCost);
         }
         public static void SaveMarriage()
         {
@@ -1117,6 +1120,7 @@ namespace Server
             reader.Write("Config", "MarriageCooldown", MarriageCooldown);
             reader.Write("Config", "AllowLoverRecall", WeddingRingRecall);
             reader.Write("Config", "MinimumLevel", MarriageLevelRequired);
+            reader.Write("Config", "ReplaceRingCost", ReplaceWedRingCost); 
         }
 
 
