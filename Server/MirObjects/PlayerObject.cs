@@ -499,6 +499,15 @@ namespace Server.MirObjects
 
         }
 
+        public long GetDelayTime(long original)
+        {
+            if (CurrentPoison.HasFlag(PoisonType.Slow))
+            {
+                return original * 2;
+            }
+            return original;
+        }
+
         public override void Process()
         {
             if (GroupInvitation != null && GroupInvitation.Node == null)
@@ -930,9 +939,11 @@ namespace Server.MirObjects
                         DamageRate += 0.20F;
                         break;
                 }
-
+                type |= poison.PType;
+                /*
                 if ((int)type < (int)poison.PType)
                     type = poison.PType;
+                */
             }
 
             if (type == CurrentPoison) return;
@@ -4204,7 +4215,7 @@ namespace Server.MirObjects
 
             if (CanMove)
             {
-                ActionTime = Envir.Time + TurnDelay;
+                ActionTime = Envir.Time + GetDelayTime(TurnDelay);
 
                 Direction = dir;
                 if (CheckMovement(CurrentLocation)) return;
@@ -4369,7 +4380,7 @@ namespace Server.MirObjects
 
 
             CellTime = Envir.Time + 500;
-            ActionTime = Envir.Time + MoveDelay;
+            ActionTime = Envir.Time + GetDelayTime(MoveDelay);
 
             if (TradePartner != null) TradeCancel();
 
@@ -4517,7 +4528,7 @@ namespace Server.MirObjects
 
 
             CellTime = Envir.Time + 500;
-            ActionTime = Envir.Time + MoveDelay;
+            ActionTime = Envir.Time + GetDelayTime(MoveDelay);
 
             if (!RidingMount)
                 _runCounter++;

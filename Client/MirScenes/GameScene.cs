@@ -2969,13 +2969,9 @@ namespace Client.MirScenes
         private void Poisoned(S.Poisoned p)
         {
             User.Poison = p.Poison;
-            switch (p.Poison)
+            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis))
             {
-                case PoisonType.Frozen:
-                case PoisonType.Paralysis:
-                case PoisonType.Stun:
                     User.ClearMagic();
-                    break;
             }
         }
         private void ObjectPoisoned(S.ObjectPoisoned p)
@@ -8061,6 +8057,7 @@ namespace Client.MirScenes
 
                 Objects[i].DrawChat();
                 Objects[i].DrawHealth();
+                Objects[i].DrawPoison();
             }
 
             if (!Settings.Effect) return;
@@ -8380,7 +8377,7 @@ namespace Client.MirScenes
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
             if (!CanRideAttack()) AutoHit = false;
             
-            if (CMain.Time < InputDelay || User.Poison == PoisonType.Paralysis || User.Poison == PoisonType.Frozen || User.Fishing) return;
+            if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
             
             if (User.NextMagic != null && !User.RidingMount)
             {
@@ -8626,7 +8623,7 @@ namespace Client.MirScenes
 
         private void UseMagic(ClientMagic magic)
         {
-            if (CMain.Time < GameScene.SpellTime || User.Poison == PoisonType.Stun)
+            if (CMain.Time < GameScene.SpellTime || User.Poison.HasFlag(PoisonType.Stun))
             {
                 User.ClearMagic();
                 return;

@@ -93,7 +93,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader);
+                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
                 if (SMain.Envir.BindItem(item) && i < Storage.Length)
                     Storage[i] = item;
             }

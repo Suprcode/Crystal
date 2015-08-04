@@ -64,7 +64,10 @@ namespace Server.MirObjects
                 Guildindex = reader.ReadInt32();
             }
             else
+            {
                 version = Envir.LoadVersion;
+                NeedSave = true;
+            }
             Name = reader.ReadString();
             Level = reader.ReadByte();
             SparePoints = reader.ReadByte();
