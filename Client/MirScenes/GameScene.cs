@@ -1288,6 +1288,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.DivorceRequest:
                     DivorceRequest((S.DivorceRequest)p);
                     break;
+                case (short)ServerPacketIds.MentorRequest:
+                    MentorRequest((S.MentorRequest)p);
+                    break;
                 case (short)ServerPacketIds.TradeRequest:
                     TradeRequest((S.TradeRequest)p);
                     break;
@@ -1450,6 +1453,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.LoverUpdate:
                     LoverUpdate((S.LoverUpdate)p);
+                    break;
+                case (short)ServerPacketIds.MentorUpdate:
+                    MentorUpdate((S.MentorUpdate)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -4556,6 +4562,16 @@ namespace Client.MirScenes
             messageBox.Show();
         }
 
+        private void MentorRequest(S.MentorRequest p)
+        {
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} (Level {1}) has requested you teach him the ways of the {2}.", p.Name, p.Level, GameScene.User.Class.ToString()), MirMessageBoxButtons.YesNo);
+
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MentorReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MentorReply { AcceptInvite = false }); messageBox.Dispose(); };
+
+            messageBox.Show();
+        }
+
         private void TradeRequest(S.TradeRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
@@ -4915,10 +4931,15 @@ namespace Client.MirScenes
         {
             GameScene.Scene.RelationshipDialog.LoverName = p.Name;
             GameScene.Scene.RelationshipDialog.Date = p.Date;
-            GameScene.Scene.RelationshipDialog.Online = p.Online;
             GameScene.Scene.RelationshipDialog.MapName = p.MapName;
-
             GameScene.Scene.RelationshipDialog.UpdateInterface();
+        }
+
+        private void MentorUpdate(S.MentorUpdate p)
+        {
+            GameScene.Scene.MentorDialog.MentorName = p.Name;
+            GameScene.Scene.MentorDialog.MentorLevel = p.Level;
+            GameScene.Scene.MentorDialog.UpdateInterface();
         }
 
         public void AddItem(UserItem item)
@@ -13278,7 +13299,8 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 202),
-                Visible = false
+                Visible = true,
+                Hint = "Mentor (W)"
             };
             MentorButton.Click += (o, e) =>
             {
@@ -20869,10 +20891,9 @@ namespace Client.MirScenes
         public MirButton CloseButton, AllowButton, RequestButton, DivorceButton, MailButton, WhisperButton;
         public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel, LoverMapLabel;
 
-        public ClientLover Friend;
+
         public string LoverName = "";
         public DateTime Date;
-        public bool Online = false;
         public string MapName = "";
 
 
@@ -21002,7 +21023,7 @@ namespace Client.MirScenes
                     return;
                 }
                    
-                if (!Online)
+                if (MapName == "")
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat("Lover is not online", ChatType.System);
                     return;
@@ -21068,7 +21089,7 @@ namespace Client.MirScenes
         {
             LoverNameLabel.Text = "Lover:  " + LoverName;
             
-            if (Online)
+            if (MapName != "")
             {
                 LoverOnlineLabel.Text = "Location:  " + MapName;
             }
@@ -21099,7 +21120,10 @@ namespace Client.MirScenes
     public sealed class MentorDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
-        public MirButton CloseButton;
+        public MirButton CloseButton, AllowButton, AddButton, RemoveButton;
+
+        public string MentorName;
+        public byte MentorLevel;
 
         public MentorDialog()
         {
@@ -21129,7 +21153,94 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            AllowButton = new MirButton
+            {
+                HoverIndex = 115,
+                Index = 114,
+                Location = new Point(30, 178),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 116,
+                Sound = SoundList.ButtonA,
+            };
+            AllowButton.Click += (o, e) =>
+            {
+                if (AllowButton.Index == 116)
+                {
+                    AllowButton.Index = 117;
+                    AllowButton.HoverIndex = 118;
+                    AllowButton.PressedIndex = 119;
+                }
+                else
+                {
+                    AllowButton.Index = 114;
+                    AllowButton.HoverIndex = 115;
+                    AllowButton.PressedIndex = 116;
+                }
+
+                Network.Enqueue(new C.AllowMentor());
+            };
+
+
+            AddButton = new MirButton
+            {
+                HoverIndex = 214,
+                Index = 213,
+                Location = new Point(60, 178),
+                Library = Libraries.Title,
+                Parent = this,
+                PressedIndex = 215,
+                Sound = SoundList.ButtonA,
+            };
+            AddButton.Click += (o, e) =>
+            {
+                string message = "Please enter the name of the person you would like to teach you.";
+
+                MirInputBox inputBox = new MirInputBox(message);
+
+                inputBox.OKButton.Click += (o1, e1) =>
+                {
+                    Network.Enqueue(new C.AddMentor { Name = inputBox.InputTextBox.Text });
+                    inputBox.Dispose();
+                };
+
+                inputBox.Show();
+
+            };
+
+            RemoveButton = new MirButton
+            {
+                HoverIndex = 217,
+                Index = 216,
+                Location = new Point(135, 178),
+                Library = Libraries.Title,
+                Parent = this,
+                PressedIndex = 218,
+                Sound = SoundList.ButtonA,
+            };
+            RemoveButton.Click += (o, e) =>
+            {
+                //string message = "Please enter the name of the person you would like to teach you.";
+
+                //MirInputBox inputBox = new MirInputBox(message);
+
+                //inputBox.OKButton.Click += (o1, e1) =>
+                //{
+                    //Network.Enqueue(new C.AddMentor { Name = inputBox.InputTextBox.Text });
+                    //inputBox.Dispose();
+                //};
+
+                //inputBox.Show();
+
+            };
+
+
+
+
         }
+
+
 
 
         public void Hide()
@@ -21142,6 +21253,12 @@ namespace Client.MirScenes
             if (Visible) return;
             Visible = true;
         }
+
+        public void UpdateInterface()
+        {
+
+        }
+
     }
 
     public class Buff

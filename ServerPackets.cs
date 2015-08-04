@@ -1430,6 +1430,25 @@ namespace ServerPackets
         }
     }
 
+    public sealed class MentorRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.MentorRequest; } }
+
+        public string Name;
+        public byte Level;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+            Level = reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write(Level);
+        }
+    }
+
     public sealed class TradeRequest : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.TradeRequest; } }
@@ -4914,28 +4933,45 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.LoverUpdate; }
         }
 
-        public long ID;
         public string Name;
         public DateTime Date;
-        public bool Online;
         public string MapName;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            ID = reader.ReadInt64();
             Name = reader.ReadString();
             Date = DateTime.FromBinary(reader.ReadInt64());
-            Online = reader.ReadBoolean();
             MapName = reader.ReadString();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(ID);
             writer.Write(Name);
             writer.Write(Date.ToBinary());
-            writer.Write(Online);
             writer.Write(MapName);
+        }
+    }
+
+    public sealed class MentorUpdate : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.MentorUpdate; }
+        }
+
+        public string Name;
+        public byte Level;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+            Level = reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write(Level);
         }
     }
 }

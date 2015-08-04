@@ -965,6 +965,50 @@ namespace ClientPackets
         }
     }
 
+    public sealed class AddMentor : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AddMentor; } }
+
+        public string Name;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+        }
+    }
+
+    public sealed class MentorReply : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MentorReply; } }
+
+        public bool AcceptInvite;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AcceptInvite = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(AcceptInvite);
+        }
+    }
+
+    public sealed class AllowMentor : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AllowMentor; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+
     public sealed class TradeReply : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.TradeReply; } }

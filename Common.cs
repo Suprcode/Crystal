@@ -1111,6 +1111,7 @@ public enum ServerPacketIds : short
     NPCUpdate,
     MarriageRequest,
     DivorceRequest,
+    MentorRequest,
     TradeRequest,
     TradeAccept,
     TradeGold,
@@ -1168,7 +1169,8 @@ public enum ServerPacketIds : short
 
     TransformUpdate,
     FriendUpdate,
-    LoverUpdate
+    LoverUpdate,
+    MentorUpdate,
 }
 
 public enum ClientPacketIds : short
@@ -1248,6 +1250,9 @@ public enum ClientPacketIds : short
     ChangeMarriage,
     DivorceRequest,
     DivorceReply,
+    AddMentor,
+    MentorReply,
+    AllowMentor,
     TradeRequest,
     TradeReply,
     TradeGold,
@@ -2402,6 +2407,7 @@ public class ItemInfo
 
         ItemInfo info = new ItemInfo { Name = data[0] };
 
+        
 
         if (!Enum.TryParse(data[1], out info.Type)) return null;
         if (!Enum.TryParse(data[2], out info.Grade)) return null;
@@ -2465,20 +2471,18 @@ public class ItemInfo
         if (!bool.TryParse(data[52], out info.ClassBased)) return null;
         if (!bool.TryParse(data[53], out info.LevelBased)) return null;
         if (!Enum.TryParse(data[54], out info.Bind)) return null;
-        //if (!bool.TryParse(data[55], out info.BindOnEquip)) return null;
-        if (!byte.TryParse(data[56], out info.Reflect)) return null;
-        if (!byte.TryParse(data[57], out info.HpDrainRate)) return null;
-        if (!Enum.TryParse(data[58], out info.Unique)) return null;
-        //if (!bool.TryParse(data[59], out info.BindNoSRepair)) return null;
-        if (!byte.TryParse(data[60], out info.RandomStatsId)) return null;
-        if (!bool.TryParse(data[61], out info.CanMine)) return null;
-        if (!bool.TryParse(data[62], out info.CanFastRun)) return null;
-		if (!bool.TryParse(data[63], out info.CanAwakening)) return null;
-        if (data[64] == "-")
+        if (!byte.TryParse(data[55], out info.Reflect)) return null;
+        if (!byte.TryParse(data[56], out info.HpDrainRate)) return null;
+        if (!Enum.TryParse(data[57], out info.Unique)) return null;
+        if (!byte.TryParse(data[58], out info.RandomStatsId)) return null;
+        if (!bool.TryParse(data[59], out info.CanMine)) return null;
+        if (!bool.TryParse(data[60], out info.CanFastRun)) return null;
+		if (!bool.TryParse(data[61], out info.CanAwakening)) return null;
+        if (data[62] == "-")
             info.ToolTip = "";
         else
         {
-            info.ToolTip = data[64];
+            info.ToolTip = data[62];
             info.ToolTip = info.ToolTip.Replace("&^&", "\r\n");
         }
             
@@ -2502,11 +2506,11 @@ public class ItemInfo
 
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
-                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64}",
+                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62}",
             Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
-            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (byte)Bind, "", Reflect, HpDrainRate, (short)Unique, "",
+            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
             RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
     }
 
@@ -3511,34 +3515,6 @@ public class ClientFriend
     }
 }
 
-public class ClientLover
-{
-    public int Index;
-    public string Name;
-    public string Date = "";
-
-    public bool Online;
-
-    public ClientLover() { }
-
-    public ClientLover(BinaryReader reader)
-    {
-        Index = reader.ReadInt32();
-        Name = reader.ReadString();
-        Date = reader.ReadString();
-
-        Online = reader.ReadBoolean();
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(Index);
-        writer.Write(Name);
-        writer.Write(Date);
-
-        writer.Write(Online);
-    }
-}
 
 public enum IntelligentCreaturePickupMode : byte
 {
@@ -4001,6 +3977,12 @@ public abstract class Packet
                 return new C.DivorceRequest();
             case (short)ClientPacketIds.DivorceReply:
                 return new C.DivorceReply();
+            case (short)ClientPacketIds.AddMentor:
+                return new C.AddMentor();
+            case (short)ClientPacketIds.MentorReply:
+                return new C.MentorReply();
+            case (short)ClientPacketIds.AllowMentor:
+                return new C.AllowMentor();
             case (short)ClientPacketIds.TradeRequest:
                 return new C.TradeRequest();
             case (short)ClientPacketIds.TradeReply:
@@ -4380,6 +4362,8 @@ public abstract class Packet
                 return new S.MarriageRequest();
             case (short)ServerPacketIds.DivorceRequest:
                 return new S.DivorceRequest();
+            case (short)ServerPacketIds.MentorRequest:
+                return new S.MentorRequest();
             case (short)ServerPacketIds.TradeRequest:
                 return new S.TradeRequest();
             case (short)ServerPacketIds.TradeAccept:
@@ -4490,6 +4474,8 @@ public abstract class Packet
                 return new S.FriendUpdate();
             case (short)ServerPacketIds.LoverUpdate:
                 return new S.LoverUpdate();
+            case (short)ServerPacketIds.MentorUpdate:
+                return new S.MentorUpdate();
             default:
                 throw new NotImplementedException();
         }

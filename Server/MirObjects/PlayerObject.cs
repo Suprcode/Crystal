@@ -15,7 +15,7 @@ namespace Server.MirObjects
     public sealed class PlayerObject : MapObject
     {
         public string GMPassword = Settings.GMPassword;
-        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall;
+        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor;
 
         public bool HasUpdatedBaseStats = true;
 
@@ -301,6 +301,8 @@ namespace Server.MirObjects
 
         public PlayerObject MarriageProposal;
         public PlayerObject DivorceProposal;
+        public PlayerObject MentorRequest;
+        public PlayerObject BreakMentorRequest;
 
         public PlayerObject GroupInvitation;
         public PlayerObject TradeInvitation;
@@ -9999,6 +10001,95 @@ namespace Server.MirObjects
 
         }
 
+
+        public void AddMentor(string Name)
+        {
+
+            if (Info.Mentor != 0)
+            {
+                ReceiveChat("You already have a Mentor.", ChatType.System);
+                return;
+            }
+
+            PlayerObject Mentor = Envir.GetPlayer(Name);
+
+            if (Mentor == null)
+            {
+                ReceiveChat(String.Format("Can't find anybody by the name {0}.", Name), ChatType.System);
+            }
+            else
+            {
+                Mentor.MentorRequest = null;
+
+                if (Mentor.Info.Mentor != 0)
+                {
+                    ReceiveChat(String.Format("{0} is already a Mentor.", Mentor.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (Info.Class != Mentor.Info.Class)
+                {
+                    ReceiveChat("You can only be mentored by someone of the same Class.", ChatType.System);
+                    return;
+                }
+                if ((Info.Level + Settings.MentorLevelGap) > Mentor.Level)
+                {
+                    ReceiveChat(String.Format("You can only be mentored by someone who at least {0} level(s) above you.", Settings.MentorLevelGap), ChatType.System);
+                    return;
+                }
+
+                Mentor.MentorRequest = this;
+                Mentor.Enqueue(new S.MentorRequest { Name = Info.Name, Level = Info.Level });
+                ReceiveChat(String.Format("Request Sent."), ChatType.System);
+            }
+
+        }
+
+        public void MentorReply(bool accept)
+        {
+            if (Info.Mentor != 0)
+            {
+                ReceiveChat("You already have a Student.", ChatType.System);
+                return;
+            }
+
+            PlayerObject Student = Envir.GetPlayer(MentorRequest.Info.Name);
+            MentorRequest = null;
+
+            if (Student == null)
+            {
+                ReceiveChat(String.Format("{0} is no longer online.", Student.Name), ChatType.System);
+                return;
+            }
+            else
+            {
+                if (Student.Info.Mentor != 0)
+                {
+                    ReceiveChat(String.Format("{0} already has a Mentor.", Student.Info.Name), ChatType.System);
+                    return;
+                }
+                if (Info.Class != Student.Info.Class)
+                {
+                    ReceiveChat("You can only mentor someone of the same Class.", ChatType.System);
+                    return;
+                }
+                if ((Info.Level - Settings.MentorLevelGap) < Student.Level)
+                {
+                    ReceiveChat(String.Format("You can only mentor someone who at least {0} level(s) below you.", Settings.MentorLevelGap), ChatType.System);
+                    return;
+                }
+
+                Student.Info.Mentor = Info.Index;
+                Info.Mentor = Student.Info.Mentor;
+                Student.Info.MentorDate = DateTime.Now;
+                Info.MentorDate = DateTime.Now;
+
+                ReceiveChat(String.Format("You're now the Mentor of {0}.", Student.Info.Name), ChatType.System);
+                Student.ReceiveChat(String.Format("You're now being Mentored by {0}.", Info.Name), ChatType.System);
+                GetMentor();
+            }
+        }
+
         public void DepositTradeItem(int from, int to)
         {
             S.DepositTradeItem p = new S.DepositTradeItem { From = from, To = to, Success = false };
@@ -16677,7 +16768,7 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0)
             {
-                Enqueue(new S.LoverUpdate { ID = 0, Name = "", Date = Info.MarriedDate, Online = false, MapName = "" });
+                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate, MapName = "" });
             }
             else
             {
@@ -16686,10 +16777,10 @@ namespace Server.MirObjects
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
 
                 if (player == null)
-                    Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = false, MapName = "" });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "" });
                 else
                 {
-                    Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = true, MapName = player.CurrentMap.Info.Title });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title });
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
@@ -16698,7 +16789,6 @@ namespace Server.MirObjects
                 }
             }
         }
-
         public void LogoutRelationship()
         {
             if (Info.Married == 0) return;
@@ -16706,7 +16796,45 @@ namespace Server.MirObjects
             PlayerObject player = Envir.GetPlayer(Lover.Name);
             if (player != null)
             {
-                player.Enqueue(new S.LoverUpdate { ID = player.Info.Married, Name = Info.Name, Date = player.Info.MarriedDate, Online = false, MapName = "" });
+                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "" });
+                player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
+            }
+        }
+
+        public void GetMentor(bool CheckOnline = true)
+        {
+            if (Info.Mentor == 0)
+            {
+                Enqueue(new S.MentorUpdate { Name = "", Level = 0 });
+            }
+            else
+            {
+                CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+
+                PlayerObject player = Envir.GetPlayer(Lover.Name);
+
+                //if (player == null)
+                    //Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = false, MapName = "" });
+                //else
+                //{
+                    //Enqueue(new S.LoverUpdate { ID = Info.Married, Name = Lover.Name, Date = Info.MarriedDate, Online = true, MapName = player.CurrentMap.Info.Title });
+                    //if (CheckOnline)
+                    //{
+                        //player.GetMentor(false);
+                        //player.ReceiveChat(String.Format("{0} has come online.", Info.Name), ChatType.System);
+                    //}
+                //}
+            }
+        }
+
+        public void LogoutMentor()
+        {
+            if (Info.Married == 0) return;
+            CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+            PlayerObject player = Envir.GetPlayer(Lover.Name);
+            if (player != null)
+            {
+                //player.Enqueue(new S.LoverUpdate { ID = player.Info.Married, Name = Info.Name, Date = player.Info.MarriedDate, Online = false, MapName = "" });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }

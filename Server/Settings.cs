@@ -161,6 +161,11 @@ namespace Server
         public static int MarriageLevelRequired = 10;
         public static int ReplaceWedRingCost = 125;
 
+        //Mentor Settings
+        public static byte MentorLevelGap = 5;
+        public static bool MentorSkillBoost = true;
+
+
         //Goods Settings
         public static bool GoodsOn = true;
         public static uint GoodsMaxStored = 50;

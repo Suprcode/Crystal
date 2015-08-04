@@ -41,6 +41,10 @@ namespace Server.MirDatabase
         public int Married = 0;
         public DateTime MarriedDate;
 
+        //Mentor
+        public int Mentor = 0;
+        public DateTime MentorDate;
+
         //Location
         public int CurrentMapIndex;
         public Point CurrentLocation;
@@ -318,7 +322,8 @@ namespace Server.MirDatabase
             {
                 Married = reader.ReadInt32();
                 MarriedDate = DateTime.FromBinary(reader.ReadInt64());
-
+                Mentor = reader.ReadInt32();
+                MentorDate = DateTime.FromBinary(reader.ReadInt64());
             }
 
         }
@@ -453,6 +458,8 @@ namespace Server.MirDatabase
 
             writer.Write(Married);
             writer.Write(MarriedDate.ToBinary());
+            writer.Write(Mentor);
+            writer.Write(MentorDate.ToBinary());
         }
 
         public ListViewItem CreateListView()

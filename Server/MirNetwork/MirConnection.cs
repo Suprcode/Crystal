@@ -417,6 +417,15 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.DivorceReply:
                     DivorceReply((C.DivorceReply)p);
                     return;
+                case (short)ClientPacketIds.AddMentor:
+                    AddMentor((C.AddMentor)p);
+                    return;
+                case (short)ClientPacketIds.MentorReply:
+                    MentorReply((C.MentorReply)p);
+                    return;
+                case (short)ClientPacketIds.AllowMentor:
+                    AllowMentor((C.AllowMentor)p);
+                    return;
                 case (short)ClientPacketIds.TradeRequest:
                     TradeRequest((C.TradeRequest)p);
                     return;
@@ -1214,6 +1223,31 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.DivorceReply(p.AcceptInvite);
+        }
+
+        private void AddMentor(C.AddMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.AddMentor(p.Name);
+        }
+
+        private void MentorReply(C.MentorReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MentorReply(p.AcceptInvite);
+        }
+
+        private void AllowMentor(C.AllowMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+                Player.AllowMentor = !Player.AllowMentor;
+                if (Player.AllowMentor)
+                    Player.ReceiveChat("You're now allowing mentor requests.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking mentor requests.", ChatType.Hint);
         }
 
         private void TradeRequest(C.TradeRequest p)
