@@ -113,6 +113,12 @@ public enum IntelligentCreatureType : byte
     BabySnowMan = 9,
 }
 
+//6 blank mob files
+//4 mob frames not added
+//2 blank frame sets (92, 173)
+//4 mob frames duplicate of other frame sets
+
+//TODO: add 2 missing frames in to blank frames, remove 2 duplicate frames (leaving no blanks and 2 duplicates)
 public enum Monster : ushort
 {
     Guard = 0,
