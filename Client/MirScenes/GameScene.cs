@@ -4939,6 +4939,9 @@ namespace Client.MirScenes
         {
             GameScene.Scene.MentorDialog.MentorName = p.Name;
             GameScene.Scene.MentorDialog.MentorLevel = p.Level;
+            GameScene.Scene.MentorDialog.MentorOnline = p.Online;
+            GameScene.Scene.MentorDialog.MenteeEXP = p.MenteeEXP;
+
             GameScene.Scene.MentorDialog.UpdateInterface();
         }
 
@@ -21045,7 +21048,6 @@ namespace Client.MirScenes
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 10F),
-
             };
 
             LoverDateLabel = new MirLabel
@@ -21121,9 +21123,12 @@ namespace Client.MirScenes
     {
         public MirImageControl TitleLabel;
         public MirButton CloseButton, AllowButton, AddButton, RemoveButton;
+        public MirLabel MentorNameLabel, MentorLevelLabel, MentorOnlineLabel, StudentNameLabel, StudentLevelLabel, StudentOnlineLabel, MentorLabel, StudentLabel, MenteeEXPLabel;
 
         public string MentorName;
         public byte MentorLevel;
+        public bool MentorOnline;
+        public long MenteeEXP;
 
         public MentorDialog()
         {
@@ -21141,6 +21146,8 @@ namespace Client.MirScenes
                 Location = new Point(18, 4),
                 Parent = this
             };
+
+
 
             CloseButton = new MirButton
             {
@@ -21195,7 +21202,13 @@ namespace Client.MirScenes
             };
             AddButton.Click += (o, e) =>
             {
-                string message = "Please enter the name of the person you would like to teach you.";
+                if (MentorLevel != 0)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You already have a Mentor.", ChatType.System);
+                    return;
+                }
+
+                string message = "Please enter the name of the person you would like to be your Mentor.";
 
                 MirInputBox inputBox = new MirInputBox(message);
 
@@ -21221,27 +21234,133 @@ namespace Client.MirScenes
             };
             RemoveButton.Click += (o, e) =>
             {
-                //string message = "Please enter the name of the person you would like to teach you.";
+                MirMessageBox messageBox = new MirMessageBox(string.Format("Cancelling a Mentorship early will cause a cooldown. Are you sure?"), MirMessageBoxButtons.YesNo);
 
-                //MirInputBox inputBox = new MirInputBox(message);
+                messageBox.YesButton.Click += (oo, ee) => Network.Enqueue(new C.CancelMentor { });
+                messageBox.NoButton.Click += (oo, ee) => { messageBox.Dispose(); };
 
-                //inputBox.OKButton.Click += (o1, e1) =>
-                //{
-                    //Network.Enqueue(new C.AddMentor { Name = inputBox.InputTextBox.Text });
-                    //inputBox.Dispose();
-                //};
+                messageBox.Show();
 
-                //inputBox.Show();
+            };
 
+            MentorNameLabel = new MirLabel
+            {
+                Location = new Point(20, 58),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            MentorLevelLabel = new MirLabel
+            {
+                Location = new Point(170, 58),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            MentorOnlineLabel = new MirLabel
+            {
+                Location = new Point(125, 58),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.Green,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Visible = false,
+                Text = "ONLINE",
+            };
+
+            StudentNameLabel = new MirLabel
+            {
+                Location = new Point(20, 112),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            StudentLevelLabel = new MirLabel
+            {
+                Location = new Point(170, 111),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            StudentOnlineLabel = new MirLabel
+            {
+                Location = new Point(125, 112),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.Green,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Visible = false,
+                Text = "ONLINE",
+            };
+
+            MentorLabel = new MirLabel
+            {
+                Location = new Point(15, 41),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.DimGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Text = "MENTOR",
+            };
+
+            StudentLabel = new MirLabel
+            {
+                Location = new Point(15, 94),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.DimGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Text = "MENTEE",
+            };
+
+            MenteeEXPLabel = new MirLabel
+            {
+                Location = new Point(15, 150),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.DimGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
             };
 
 
 
 
         }
-
-
-
 
         public void Hide()
         {
@@ -21256,7 +21375,54 @@ namespace Client.MirScenes
 
         public void UpdateInterface()
         {
+            if (MentorLevel == 0)
+            {
+                MentorNameLabel.Visible = false;
+                MentorLevelLabel.Visible = false;
+                MentorOnlineLabel.Visible = false;
+                StudentNameLabel.Visible = false;
+                StudentLevelLabel.Visible = false;
+                StudentOnlineLabel.Visible = false;
+                MenteeEXPLabel.Visible = false;
+                return;
+            }
 
+            MentorNameLabel.Visible = true;
+            MentorLevelLabel.Visible = true;
+            MentorOnlineLabel.Visible = true;
+            StudentNameLabel.Visible = true;
+            StudentLevelLabel.Visible = true;
+            StudentOnlineLabel.Visible = true;
+
+            if (GameScene.User.Level > MentorLevel)
+            {
+                MentorNameLabel.Text = GameScene.User.Name;
+                MentorLevelLabel.Text = "Lv " + GameScene.User.Level.ToString();
+                MentorOnlineLabel.Visible = false;
+
+                StudentNameLabel.Text = MentorName;
+                StudentLevelLabel.Text = "Lv " + MentorLevel.ToString();
+                if (MentorOnline)
+                    StudentOnlineLabel.Visible = true;
+                else
+                    StudentOnlineLabel.Visible = false;
+
+                MenteeEXPLabel.Visible = true;
+                MenteeEXPLabel.Text = "MENTEE EXP BANK: " + MenteeEXP;
+            }
+            else
+            {
+                MentorNameLabel.Text = MentorName;
+                MentorLevelLabel.Text = "Lv " + MentorLevel.ToString();
+                if (MentorOnline)
+                    MentorOnlineLabel.Visible = true;
+                else
+                    MentorOnlineLabel.Visible = false;
+
+                StudentNameLabel.Text = GameScene.User.Name;
+                StudentLevelLabel.Text = "Lv " + GameScene.User.Level.ToString();
+                StudentOnlineLabel.Visible = false;
+            }
         }
 
     }
@@ -21418,6 +21584,15 @@ namespace Client.MirScenes
                     break;
                 case BuffType.MagicWonderShield:
                     text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
+                    break;
+                case BuffType.RelationshipEXP:
+                    text = string.Format("Love is in the Air\nExpRate increased by: {0}%.\n", Values[0]);
+                    break;
+                case BuffType.Mentee:
+                    text = string.Format("In Training\nLearn skill points twice as quick.\nExpRate increased by: {0}%.\n", Values[0]);
+                    break;
+                case BuffType.Mentor:
+                    text = string.Format("Mentorship Empowerment\n+{0}% damage to monsters.\n", Values[0]);
                     break;
             }
 

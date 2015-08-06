@@ -4961,17 +4961,23 @@ namespace ServerPackets
 
         public string Name;
         public byte Level;
+        public bool Online;
+        public long MenteeEXP;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Name = reader.ReadString();
             Level = reader.ReadByte();
+            Online = reader.ReadBoolean();
+            MenteeEXP = reader.ReadInt64();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Name);
             writer.Write(Level);
+            writer.Write(Online);
+            writer.Write(MenteeEXP);
         }
     }
 }

@@ -164,6 +164,9 @@ namespace Server
         //Mentor Settings
         public static byte MentorLevelGap = 5;
         public static bool MentorSkillBoost = true;
+        public static byte MentorLength = 3;
+        public static byte MentorDamageBoost = 10;
+        public static byte MentorExpBoost = 10;
 
 
         //Goods Settings

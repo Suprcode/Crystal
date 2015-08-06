@@ -1008,6 +1008,18 @@ namespace ClientPackets
         }
     }
 
+    public sealed class CancelMentor : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.CancelMentor; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
 
     public sealed class TradeReply : Packet
     {

@@ -426,6 +426,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.AllowMentor:
                     AllowMentor((C.AllowMentor)p);
                     return;
+                case (short)ClientPacketIds.CancelMentor:
+                    CancelMentor((C.CancelMentor)p);
+                    return;
                 case (short)ClientPacketIds.TradeRequest:
                     TradeRequest((C.TradeRequest)p);
                     return;
@@ -1248,6 +1251,13 @@ namespace Server.MirNetwork
                     Player.ReceiveChat("You're now allowing mentor requests.", ChatType.Hint);
                 else
                     Player.ReceiveChat("You're now blocking mentor requests.", ChatType.Hint);
+        }
+
+        private void CancelMentor(C.CancelMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MentorBreak(true);
         }
 
         private void TradeRequest(C.TradeRequest p)

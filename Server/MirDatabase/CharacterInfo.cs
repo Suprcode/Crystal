@@ -44,6 +44,8 @@ namespace Server.MirDatabase
         //Mentor
         public int Mentor = 0;
         public DateTime MentorDate;
+        public bool isMentor;
+        public long MentorExp = 0;
 
         //Location
         public int CurrentMapIndex;
@@ -324,6 +326,8 @@ namespace Server.MirDatabase
                 MarriedDate = DateTime.FromBinary(reader.ReadInt64());
                 Mentor = reader.ReadInt32();
                 MentorDate = DateTime.FromBinary(reader.ReadInt64());
+                isMentor = reader.ReadBoolean();
+                MentorExp = reader.ReadInt64();
             }
 
         }
@@ -460,6 +464,8 @@ namespace Server.MirDatabase
             writer.Write(MarriedDate.ToBinary());
             writer.Write(Mentor);
             writer.Write(MentorDate.ToBinary());
+            writer.Write(isMentor);
+            writer.Write(MentorExp);
         }
 
         public ListViewItem CreateListView()

@@ -945,6 +945,9 @@ public enum BuffType : byte
     ManaAid,
     WonderShield,
     MagicWonderShield,
+    RelationshipEXP,
+    Mentee,
+    Mentor,
 }
 
 public enum DefenceType : byte
@@ -1253,6 +1256,7 @@ public enum ClientPacketIds : short
     AddMentor,
     MentorReply,
     AllowMentor,
+    CancelMentor,
     TradeRequest,
     TradeReply,
     TradeGold,
@@ -3983,6 +3987,8 @@ public abstract class Packet
                 return new C.MentorReply();
             case (short)ClientPacketIds.AllowMentor:
                 return new C.AllowMentor();
+            case (short)ClientPacketIds.CancelMentor:
+                return new C.CancelMentor();
             case (short)ClientPacketIds.TradeRequest:
                 return new C.TradeRequest();
             case (short)ClientPacketIds.TradeReply:

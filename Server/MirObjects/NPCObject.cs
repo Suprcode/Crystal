@@ -1219,6 +1219,14 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.CheckQuest, parts[1], parts[2]));
                     break;
+                case "CHECKRELATIONSHIP":
+                    CheckList.Add(new NPCChecks(CheckType.CheckRelationship));
+                    break;
+                case "CHECKWEDDINGRING":
+                    CheckList.Add(new NPCChecks(CheckType.CheckWeddingRing));
+                    break;
+
+
             }
 
         }
@@ -2009,7 +2017,18 @@ namespace Server.MirObjects
                             failed = !player.CompletedQuests.Contains(tempInt);
                         }
                         break;
-
+                    case CheckType.CheckRelationship:
+                        if (player.Info.Married == 0)
+                        {
+                            failed = true;
+                        }
+                        break;
+                    case CheckType.CheckWeddingRing:
+                        if ((player.Info.Equipment[(int)EquipmentSlot.RingL] == null) || (player.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1))
+                        {
+                            failed = true;
+                        }
+                        break;
                 }
 
                 if (!failed) continue;
@@ -3047,5 +3066,7 @@ namespace Server.MirObjects
         InGuild,
         CheckMap,
         CheckQuest,
+        CheckRelationship,
+        CheckWeddingRing,
     }
 }
