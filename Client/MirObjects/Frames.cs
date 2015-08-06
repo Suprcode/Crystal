@@ -592,43 +592,43 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(48, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(42, 7, -7, 120) { Reverse = true });
 
-            //41 - Dragon Statue 1
+            //41 - DragonStatue 1
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(300, 1, -1, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(300, 1, -1, 120));
             frame.Frames.Add(MirAction.Struck, new Frame(300, 1, -1, 200));
 
-            //42 - Dragon Statue 2
+            //42 - DragonStatue 2
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(301, 1, -1, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(301, 1, -1, 120));
             frame.Frames.Add(MirAction.Struck, new Frame(301, 1, -1, 200));
 
-            //43 - Dragon Statue 3
+            //43 - DragonStatue 3
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(302, 1, -1, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(302, 1, -1, 120));
             frame.Frames.Add(MirAction.Struck, new Frame(302, 1, -1, 200));
 
-            //44 - Dragon Statue 4
+            //44 - DragonStatue 4
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(320, 1, -1, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(320, 1, -1, 120));
             frame.Frames.Add(MirAction.Struck, new Frame(320, 1, -1, 200));
 
-            //45 - Dragon Statue 5
+            //45 - DragonStatue 5
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(321, 1, -1, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(321, 1, -1, 120));
             frame.Frames.Add(MirAction.Struck, new Frame(321, 1, -1, 200));
 
-            //46 - Dragon Statue 6
+            //46 - DragonStatue 6
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(322, 1, -1, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(322, 1, -1, 120));
             frame.Frames.Add(MirAction.Struck, new Frame(322, 1, -1, 200));
 
-            //47 - Archer Guard
+            //47 - ArcherGuard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 3, 100));
@@ -637,14 +637,13 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(192, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(201, 1, 9, 1000));
 
-            //48 - Taoist Guard
+            //48 - TaoistGuard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(32, 6, 0, 100));
 
-            //49 - Archer SummonVampire
+            //49 - VampireSpider (Archer SummonVampire)
             Monsters.Add(frame = new FrameSet());
-            //frame.Frames.Add(MirAction.???, new Frame(0, 3, 0, 500));// dunno what miraction to assign to this ?
             frame.Frames.Add(MirAction.Show, new Frame(24, 6, 0, 150));
             frame.Frames.Add(MirAction.Hide, new Frame(29, 6, 0, 150) { Reverse = true });
             frame.Frames.Add(MirAction.Standing, new Frame(72, 4, 0, 500));
@@ -654,7 +653,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(216, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(225, 1, 9, 1000));
 
-            //50 - Archer SummonToad
+            //50 - SpittingToad (Archer SummonToad)
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(32, 9, 0, 100));
@@ -664,7 +663,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Show, new Frame(211, 4, 0, 100) { Reverse = true });
             frame.Frames.Add(MirAction.Dead, new Frame(137, 1, 9, 1000));
 
-            //51 - Archer SummonSnakes Totem
+            //51 - SnakeTotem (Archer SummonSnakes Totem)
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(0, 2, 0, 100));
@@ -672,7 +671,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(0, 1, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(0, 1, 0, 100));
 
-            //52 - Archer SummonSnakes Snake
+            //52 - CharmedSnake (Archer SummonSnakes Snake)
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 5, 0, 200));
             frame.Frames.Add(MirAction.Walking, new Frame(0, 5, 0, 100));
@@ -681,7 +680,11 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(52, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(59, 1, 7, 1000));
 
-            //53
+            //-----------------------
+            //--ABOVE FRAMES LOCKED, NO NEED TO TEST ABOVE--
+            //-----------------------
+
+            //53 - HighAssassin
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -691,7 +694,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(155, 1, 3, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(152, 4, 0, 100) { Reverse = true });
 
-            //54 DirtPiles & TreasureChest (147, 156, 164, 165)
+            //54 - DarkDustPile, MudPile, SnowPile, Treasurebox
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 3, -3, 1000));
             frame.Frames.Add(MirAction.Struck, new Frame(3, 3, -3, 200));
@@ -699,12 +702,12 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(9, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(3, 7, -7, 150) { Reverse = true });
 
-            //55 Football (149)
+            //55 - Football
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 1, 0, 1000));
             frame.Frames.Add(MirAction.Walking, new Frame(8, 6, 0, 100));
 
-            //56
+            //56 - GingerBreadman
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -714,7 +717,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(157, 1, 5, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(152, 6, 0, 100) { Reverse = true });
 
-            //57
+            //57 - MutatedManworm, CrazyManworm
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -725,7 +728,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(151, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 8, 0, 100) { Reverse = true });
 
-            //58
+            //58 - TailedLion
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 100));
@@ -735,7 +738,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(173, 1, 5, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(168, 6, 0, 100) { Reverse = true });
 
-            //59
+            //59 - Behemoth
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -747,7 +750,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(153, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //60
+            //60 - PoisonHugger, Hugger, ManectricSlave
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -759,7 +762,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(151, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 8, 0, 100) { Reverse = true });
 
-            //61
+            //61 - DreamDevourer
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -770,7 +773,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(151, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 8, 0, 100) { Reverse = true });
 
-            //62
+            //62 - Snowman
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(16, 2, 0, 200));
@@ -778,7 +781,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(39, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(32, 8, 0, 100) { Reverse = true });
 
-            //63
+            //63 - GiantEgg, IcePillar
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 1, -1, 1000));
             frame.Frames.Add(MirAction.Struck, new Frame(1, 4, -4, 200));
@@ -786,7 +789,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(11, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(5, 7, -7, 150) { Reverse = true });
 
-            //64
+            //64 - BlueSanta
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 100));
@@ -796,14 +799,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(173, 1, 4, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(168, 5, 0, 100) { Reverse = true });
 
-            //65
+            //65 - BattleStandard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 8, -8, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(8, 3, -3, 200));
             frame.Frames.Add(MirAction.Die, new Frame(11, 8, -8, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(17, 1, -1, 1000));
 
-            //66 (Mob 184)
+            //66 - WingedTigerLord
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 10, 0, 100));
@@ -816,7 +819,7 @@ namespace Client.MirObjects
             //frame.Frames.Add(MirAction.Attack7, new Frame(496, 8, 0, 100));
             //This mob has a lot actions , I just listed the frame numbers ready for adding when coding the AI
 
-            //67 (Mob187)
+            //67 - TurtleKing
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -830,14 +833,18 @@ namespace Client.MirObjects
             //frame.Frames.Add(MirAction.Attack4, new Frame(344, 6, 0, 100));
             //frame.Frames.Add(MirAction.Attack5, new Frame(392, 8, 0, 100));
 
-            //68 (Bush)
+            //68 - Bush
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, -4, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(4, 4, -4, 200));
             frame.Frames.Add(MirAction.Die, new Frame(8, 4, -4, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(15, 1, -1, 1000));
 
-            //69 HellSlasher, HellCannibal, ManectricClub, ManectricClaw
+            //--------------------
+            //--CHECK NO FURTHER UNTIL ABOVE HAS BEEN LOCKED--
+            //--------------------
+
+            //69 - HellSlasher, HellCannibal, ManectricClub, ManectricClaw
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -848,7 +855,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(153, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //70 HellPirate, FlameSpear
+            //70 - HellPirate, FlameSpear
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -861,7 +868,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(224, 7, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //71 HellBolt, WitchDoctor
+            //71 - HellBolt, WitchDoctor
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -874,7 +881,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(256, 6, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(176, 10, 0, 100) { Reverse = true });
 
-            //72 Hellkeeper         
+            //72 - Hellkeeper         
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, -4, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(4, 8, -8, 100));
@@ -884,7 +891,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(21, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(21, 1, 0, 100) { Reverse = true });
 
-            //73 ManectricHammer
+            //73 - ManectricHammer
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -895,7 +902,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(150, 1, 6, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 7, 0, 100) { Reverse = true });
 
-            //74 ManectricStaff
+            //74 - ManectricStaff
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -906,7 +913,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(184, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(176, 9, 0, 100) { Reverse = true });
 
-            //75 ManectricBlest, NamelessGhost, DarkGhost, ChaosGhost, TrollHammer, TrollBommer, TrollStoner
+            //75 - ManectricBlest, NamelessGhost, DarkGhost, ChaosGhost, TrollHammer, TrollBommer, TrollStoner
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -918,7 +925,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange1, new Frame(80, 6, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 8, 0, 100) { Reverse = true });
 
-            //76 ManectricKing, TrollKing
+            //76 - ManectricKing, TrollKing
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -931,7 +938,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange1, new Frame(224, 8, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //77 FlameMage, FlameScythe, FlameAssassin
+            //77 - FlameMage, FlameScythe, FlameAssassin
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -944,7 +951,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(224, 6, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //78 FlameQueen
+            //78 - FlameQueen
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -957,7 +964,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(224, 9, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //79 HellKnight1~4
+            //79 - HellKnight1~4
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -970,7 +977,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(176, 6, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 4, 0, 100) { Reverse = true });
 
-            //80 HellLord
+            //80 - HellLord
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, -4, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(4, 6, -6, 100));
@@ -982,7 +989,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(10, 5, -5, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(0, 4, -4, 100) { Reverse = true });
 
-            //81 WaterGuard
+            //81 - WaterGuard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -995,7 +1002,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(208, 7, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 8, 0, 100) { Reverse = true });
 
-            //82 IceGuard
+            //82 - IceGuard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1008,9 +1015,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange2, new Frame(208, 6, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 8, 0, 100) { Reverse = true });
 
-            //stupple
-
-            // 83 DemonGuard
+            //83 - DemonGuard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1021,7 +1026,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack2, new Frame(192, 6, 0, 100));
             frame.Frames.Add(MirAction.Show, new Frame(240, 6, 0, 200));
 
-            //84 KingGuard
+            //84 - KingGuard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1034,7 +1039,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(153, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //85 Bunny
+            //85 - Bunny, Bunny2
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 5, 0, 200));
@@ -1043,8 +1048,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(144, 6, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(149, 1, 4, 1000));
 
-
-            //86 dark 
+            //86 - DarkBeast, LightBeast 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -1054,7 +1058,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(184, 1, 0, 1000) { Reverse = true });
             frame.Frames.Add(MirAction.Attack2, new Frame(248, 6, 0, 100));
 
-            //87 rhio
+            //87 - HardenRhino
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 10, 0, 200));
@@ -1064,7 +1068,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(217, 1, 0, 1000) { Reverse = true });
             frame.Frames.Add(MirAction.Attack2, new Frame(288, 7, 0, 100));
 
-            //88 AncBeinger = 272
+            //88 - AncientBringer
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 8, 0, 200));
@@ -1076,14 +1080,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange1, new Frame(384, 8, 0, 100));
             frame.Frames.Add(MirAction.AttackRange2, new Frame(448, 8, 0, 100));
 
-            // 89 jar1
+            //89 - Jar1
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(18, 4, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(50, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(59, 1, 0, 1000));
 
-            //90 SeedingsGeneral
+            //90 - SeedingsGeneral
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.SitDown, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Standing, new Frame(32, 4, 0, 500));
@@ -1098,7 +1102,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(479, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(472, 10, 0, 100) { Reverse = true });
 
-            //91 Tucson 
+            //91 - Tucson, TucsonFighter
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -1108,10 +1112,10 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(200, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(192, 10, 0, 100) { Reverse = true });
 
-            //92 BLANK
+            //92 - BLANK
             Monsters.Add(frame = new FrameSet());
 
-            //93 Tucsonmage
+            //93 - TucsonMage
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(56, 6, 0, 200));
@@ -1122,7 +1126,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(246, 1, 6, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(240, 7, 0, 100) { Reverse = true });
 
-            //94 Tucsonmage
+            //94 - TucsonWarrior
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 5, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(40, 6, 0, 200));
@@ -1133,7 +1137,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(246, 1, 6, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(240, 7, 0, 100) { Reverse = true });
 
-            //95 Armadillo
+            //95 - Armadillo
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -1146,7 +1150,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Revive, new Frame(336, 10, 0, 100) { Reverse = true });
             frame.Frames.Add(MirAction.Show, new Frame(416, 7, 0, 200));
 
-            //96 Armadillo
+            //96 - ArmadilloElder
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 5, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(40, 6, 0, 200));
@@ -1159,15 +1163,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Revive, new Frame(336, 10, 0, 100) { Reverse = true });
             frame.Frames.Add(MirAction.Show, new Frame(424, 7, 0, 200));
 
-
-            // 97  TucsonEgg
+            //97 - TucsonEgg
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 1, -1, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(1, 1, -1, 200));
             frame.Frames.Add(MirAction.Die, new Frame(10, 10, -10, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(11, 1, -1, 1000));
 
-            //98   PlaguedTucson 
+            //98 - PlaguedTucson 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -1177,7 +1180,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(191, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(184, 8, 0, 100) { Reverse = true });
 
-            //99   SandSnail 
+            //99 - SandSnail 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 200));
@@ -1189,7 +1192,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(377, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(368, 10, 0, 100) { Reverse = true });
 
-            //100   CannibalTentacles
+            //100 - CannibalTentacles
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 200));
@@ -1200,7 +1203,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(377, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(368, 10, 0, 100) { Reverse = true });
 
-            //101   TucsonGeneral  
+            //101 - TucsonGeneral  
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 8, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 0, 200));
@@ -1214,7 +1217,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(448, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(440, 8, 0, 100) { Reverse = true });
 
-            //102  GasToad 
+            //102 - GasToad 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 8, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 0, 200));
@@ -1226,8 +1229,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(369, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(360, 10, 0, 100) { Reverse = true });
 
-
-            //103 Mantis
+            //103 - Mantis
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(56, 6, 0, 200));
@@ -1238,9 +1240,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(288, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(248, 8, 0, 100) { Reverse = true });
 
-
-
-            //104 SwampWarrior 
+            //104 - SwampWarrior 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1251,7 +1251,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(321, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(312, 10, 0, 100) { Reverse = true });
 
-            //105 Mob300
+            //105 - AssassinBird
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(56, 6, 0, 200));
@@ -1263,7 +1263,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(335, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(328, 8, 0, 100) { Reverse = true });
 
-            //106 Mob301 
+            //106 - RhinoWarrior 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1274,8 +1274,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(270, 1, 6, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(264, 7, 0, 100) { Reverse = true });
 
-
-            //107   Mob302 
+            //107 - RhinoPriest 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -1287,7 +1286,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(312, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(304, 9, 0, 100) { Reverse = true });
 
-            //108 Mob303
+            //108 - SwampSlime
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1298,8 +1297,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(218, 1, 6, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(312, 7, 0, 100) { Reverse = true });
 
-
-            //109 mob 304
+            //109 - RockGuard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 200));
@@ -1310,7 +1308,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(311, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(304, 8, 0, 100) { Reverse = true });
 
-            //110 mob 305
+            //110 - MudWarrior
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 8, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 0, 200));
@@ -1325,7 +1323,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Revive, new Frame(396, 8, 0, 100) { Reverse = true });
             frame.Frames.Add(MirAction.Show, new Frame(360, 9, 0, 200));
 
-            //111 mob 306
+            //111 - SmallPot
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(12, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(84, 6, 0, 200));
@@ -1339,7 +1337,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Revive, new Frame(476, 1, 0, 100) { Reverse = true });
             frame.Frames.Add(MirAction.Show, new Frame(360, 9, 0, 200));
 
-            //112 mob 307
+            //112 - TreeQueen
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, -10, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(11, 10, -10, 100));
@@ -1348,7 +1346,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(34, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(24, 11, -11, 100) { Reverse = true });
 
-            //113 mob 308
+            //113 - ShellFighter
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 200));
@@ -1362,7 +1360,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(528, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(520, 9, 1, 100) { Reverse = true });
 
-            //114  mob 309
+            //114 - DarkBaboon
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -1374,7 +1372,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(182, 1, 6, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(176, 7, 0, 100) { Reverse = true });
 
-            //115mob 310
+            //115 - TwinHeadBeast
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 200));
@@ -1385,7 +1383,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(225, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(216, 10, 0, 100) { Reverse = true });
 
-            // 116    Mob311
+            //116 - OmaCannibal
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 200));
@@ -1396,7 +1394,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(289, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(280, 10, 0, 100) { Reverse = true });
 
-            //117 Mob313
+            //117 - OmaSlasher
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1406,7 +1404,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(240, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(232, 9, 0, 100) { Reverse = true });
 
-            //118  Mob314
+            //118 - OmaAssassin
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1416,8 +1414,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(241, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(232, 10, 0, 100) { Reverse = true });
 
-
-            //119  Mob315 //DUPE of 104
+            //119 - OmaMage //DUPE of 104
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1428,7 +1425,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(311, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(312, 10, 0, 100) { Reverse = true });
 
-            // 120   Mob316
+            //120 - OmaWitchDoctor
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 9, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 200));
@@ -1440,7 +1437,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(336, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(280, 9, 0, 100) { Reverse = true });
 
-            //121 Mob312 //DUPE of 104
+            //121 - OmaBlest //DUPE of 104
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1451,8 +1448,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(321, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(312, 10, 0, 100) { Reverse = true });
 
-
-            //122 mob 317-319
+            //122 - LightningBead, HealingBead, PowerUpBead
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, -7, 800));
             frame.Frames.Add(MirAction.Walking, new Frame(7, 7, -7, 80));
@@ -1462,7 +1458,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(23, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(34, 10, -10, 150) { Reverse = true });
 
-            //123 Mob320
+            //123 - DarkOmaKing
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 6, 0, 200));
@@ -1476,7 +1472,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(703, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(704, 10, 0, 100) { Reverse = true });
 
-            //124 mob 321
+            //124 - CaveMage
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, -2, 800));
             frame.Frames.Add(MirAction.Attack1, new Frame(0, 2, -2, 80));
@@ -1485,7 +1481,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(9, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(2, 8, -8, 150) { Reverse = true });
 
-            // 125 mob 322
+            //125 - Mandrill
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1496,7 +1492,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(193, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(184, 10, 0, 100) { Reverse = true });
 
-            // 126 mob 323
+            //126 - PlagueCrab
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1506,8 +1502,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(177, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(168, 10, 0, 100) { Reverse = true });
 
-
-            //127 mob 324
+            //127 - CreeperPlant
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(32, 7, 0, 100));
@@ -1519,8 +1514,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Show, new Frame(232, 9, -9, 150));
             frame.Frames.Add(MirAction.Hide, new Frame(241, 9, -9, 150) { Reverse = true });
 
-
-            // 128 mob 335
+            //128 - SackWarrior
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1531,7 +1525,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(252, 1, 12, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(240, 13, 0, 100) { Reverse = true });
 
-            // 129 mob 336
+            //129 - WereTiger
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -1542,7 +1536,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(263, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(264, 10, 0, 100) { Reverse = true });
 
-            // 130 mob 337
+            //130 - KingHydrax
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1554,7 +1548,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(287, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(288, 10, 0, 100) { Reverse = true });
 
-            // 131 mob 325
+            //131 - FloatingWraith
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -1564,7 +1558,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(176, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(167, 10, 0, 100) { Reverse = true });
 
-            //132  mob 326
+            //132 - ArmedPlant
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -1574,7 +1568,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(198, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(192, 8, 0, 100) { Reverse = true });
 
-            // 133 mob 327
+            //133 - AvengerPlant
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1584,7 +1578,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(167, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(160, 8, 0, 100) { Reverse = true });
 
-            // 134 mob 328 + 329
+            //134 - Nadz, AvengingSpirit
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1594,7 +1588,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(140, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            // 135 mob 330
+            //135 - AvengingWarrior
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1605,7 +1599,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(191, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(192, 10, 0, 100) { Reverse = true });
 
-            // 136 mob 331 =333
+            //136 - AxePlant, ClawBeast
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -1615,14 +1609,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(193, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(185, 8, 0, 100) { Reverse = true });
 
-            // 137  mob 332 box 2
+            //137 - WoodBox
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(1, 1, 0, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(1, 1, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(9, 11, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(19, 1, 0, 1000));
 
-            //138 Mob334
+            //138 - KillerPlant
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(80, 8, 0, 200));
@@ -1636,8 +1630,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(503, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(504, 10, 0, 100) { Reverse = true });
 
-
-            // 139 mob 338
+            //139 - Hydrax
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1647,15 +1640,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(167, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(168, 9, 0, 100) { Reverse = true });
 
-            // 140  mob 340
+            //140 - Basiloid
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 1, -1, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(0, 2, -2, 200));
             frame.Frames.Add(MirAction.Die, new Frame(2, 7, -7, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(8, 1, -1, 1000));
 
-
-            // 141 mob 339
+            //141 - HornedMage
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1667,8 +1659,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(313, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(304, 10, 0, 100) { Reverse = true });
 
-
-            // 142 mob 341 + 342
+            //142 - HornedArcher, ColdArcher
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1679,8 +1670,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(265, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(256, 10, 0, 100) { Reverse = true });
 
-
-            // 143 mob 343
+            //143 - HornedWarrior
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1692,9 +1682,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(312, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(304, 9, 0, 100) { Reverse = true });
 
-
-
-            // 144 mob 344
+            //144 - FloatingRock
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(80, 8, 0, 100));
@@ -1703,7 +1691,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(1502, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 7, -7, 100) { Reverse = true });
 
-            // 145 mob 345
+            //145 - ScalyBeast
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 10, 0, 200));
@@ -1714,8 +1702,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(270, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(272, 9, 0, 100) { Reverse = true });
 
-
-            // 146 mob 346
+            //146 - HornedSorceror
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 200));
@@ -1729,7 +1716,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(455, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(456, 10, 0, 100) { Reverse = true });
 
-            // 147  mob 347
+            //147 - BoulderSpirit
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 8, -8, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(8, 3, 0, 100));
@@ -1737,7 +1724,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(56, 8, -8, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(63, 1, -1, 1000));
 
-            // 148 mob 348
+            //148 - HornedCommander
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 200));
@@ -1754,12 +1741,11 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(692, 1, 12, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(680, 13, 0, 100) { Reverse = true });
 
-            // 149 mob 349 / 350 /351
+            //149 - MoonStone, SunStone, LightningStone
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, -2, 500));
 
-            //150 turtlegrass
-            //  use black fox ai -- 1turtlegrass
+            //150 - Turtlegrass //  use black fox ai -- 1turtlegrass
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Hide, new Frame(0, 1, 0, 500));
             frame.Frames.Add(MirAction.Show, new Frame(8, 4, 0, 200) { Reverse = true });
@@ -1772,7 +1758,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack2, new Frame(184, 9, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
-            //151 man tree
+            //151 - Mantree
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(64, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(96, 6, 0, 100));
@@ -1782,12 +1768,10 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Struck, new Frame(368, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(392, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(401, 1, 0, 1000));
-            //      frame.Frames.Add(MirAction.Standing, new Frame(1, 1, 0, 500)); neeed codeing
-            ///      frame.Frames.Add(MirAction.Walking, new Frame(8, 7, 0, 100));neeed codeing
+            //frame.Frames.Add(MirAction.Standing, new Frame(1, 1, 0, 500)); neeed codeing
+            //frame.Frames.Add(MirAction.Walking, new Frame(8, 7, 0, 100));neeed codeing
 
-
-
-            // 152 bear use AI BLACKFOX
+            //152 - Bear //AI BLACKFOX
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -1797,7 +1781,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(248, 1, 0, 1000));
             frame.Frames.Add(MirAction.Attack2, new Frame(152, 8, 0, 100));
 
-            // 153 Leopard 355
+            //153 - Leopard
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -1806,7 +1790,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(184, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(191, 1, 0, 1000));
 
-            //154 ChieftainArche
+            //154 - ChieftainArcher
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1817,7 +1801,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(248, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(240, 9, 0, 100) { Reverse = true });
 
-            // 155 ChieftainSword
+            //155 - ChieftainSword
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 200));
@@ -1831,14 +1815,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(681, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(672, 10, 0, 100) { Reverse = true });
 
-            //156 - Archer StoningSpider Snake
+            //156 - StoningSpider //Archer Summon
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, -0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(16, 4, 0, 100));
             frame.Frames.Add(MirAction.Die, new Frame(48, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(57, 1, 9, 1000));
 
-            //157 Frozensolder1
+            //157 - FrozenSoldier
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1848,7 +1832,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(175, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(176, 10, 0, 100) { Reverse = true });
 
-            //158 FrozenSpear //DUPE of 142
+            //158 - FrozenFighter //DUPE of 142
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1859,8 +1843,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(265, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(256, 10, 0, 100) { Reverse = true });
 
-
-            //159 FrozenSolder
+            //159 - FrozenArcher
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1870,8 +1853,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(193, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(184, 10, 0, 100) { Reverse = true });
 
-
-            //160 FrozenGuard
+            //160 - FrozenKnight
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 200));
@@ -1882,7 +1864,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(289, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(280, 10, 0, 100) { Reverse = true });
 
-            //161 FrozenYob
+            //161 - FrozenGolem
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1892,8 +1874,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(179, 1, 11, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(168, 11, 0, 100) { Reverse = true });
 
-
-            //162 DarkSoul
+            //162 - IcePhantom
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1904,8 +1885,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(249, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(240, 10, 0, 100) { Reverse = true });
 
-
-            //163 SnowWofl
+            //163 - SnowWolf
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -1916,8 +1896,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(254, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(256, 9, 0, 100) { Reverse = true });
 
-
-            // 164 SnowWoflKing
+            //164 - SnowWolfKing
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 200));
@@ -1930,9 +1909,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(385, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(376, 10, 0, 100) { Reverse = true });
 
-
-            //165 dragon 2
-            //  ec  ai
+            //165 - WaterDragon //ec ai
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Hide, new Frame(0, 8, 0, 500) { Reverse = true });
             frame.Frames.Add(MirAction.Standing, new Frame(64, 6, 0, 500));
@@ -1941,9 +1918,9 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Struck, new Frame(256, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(280, 15, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(294, 1, 0, 1000));
-            //  frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 100));
+            //frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 100));
 
-            // 166 mob FrozenScopier
+            //166 - BlackTortoise
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 10, 0, 200));
@@ -1956,8 +1933,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(326, 1, 5, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(312, 6, 0, 100) { Reverse = true });
 
-            // 167 hmm  mage ai needed black fox will do 4 now
-            /// Masteryoungdragon
+            //167 - Manticore //mage ai needed black fox will do 4 now
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(112, 8, 0, 100));
@@ -1967,9 +1943,9 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Struck, new Frame(352, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(376, 15, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(390, 1, 0, 1000));
-            //frame.Frames.Add(MirAction.flying, new Frame(32, 9, 0, 100));
+            //frame.Frames.Add(MirAction.Flying, new Frame(32, 9, 0, 100));
 
-            // 168 Mob374:
+            //168 - DragonWarrior:
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             //frame.Frames.Add(MirAction.Standing2, new Frame(32, 10, 0, 500));
@@ -1982,7 +1958,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(412, 1, 12, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(400, 13, 0, 100) { Reverse = true });
 
-            // 169 Mob375:
+            //169 - DragonArcher
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             //frame.Frames.Add(MirAction.Standing2, new Frame(32, 10, 0, 500));
@@ -1994,7 +1970,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(324, 1, 12, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(312, 13, 0, 100) { Reverse = true });
 
-            // 170 Mob375:
+            //170 - Kirin
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             //frame.Frames.Add(MirAction.Standing2, new Frame(32, 9, 0, 500));
@@ -2007,20 +1983,20 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(377, 1, 0, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(376, 2, 0, 100) { Reverse = true });
 
-            //171 guard2
+            //171 - Guard3
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, 0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(56, 7, 0, 100));
 
-            //172 ArcherGuard3
+            //172 - ArcherGuard3
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 4, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(80, 7, 3, 100));
 
-            //173 BLANK
+            //173 - BLANK
             Monsters.Add(frame = new FrameSet());
 
-            // 174 mob Mob380
+            //174 - FrozenMiner
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 10, 0, 200));
@@ -2032,7 +2008,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(361, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(352, 10, 0, 100) { Reverse = true });
 
-            // 175 Mob381:
+            //175 - FrozenAxeman
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             //frame.Frames.Add(MirAction.Standing2, new Frame(32, 10, 0, 500));
@@ -2045,7 +2021,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(457, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(448, 10, 0, 100) { Reverse = true });
 
-            // 176 Mob382:
+            //176 - FrozenMagician
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             //frame.Frames.Add(MirAction.Standing2, new Frame(32, 10, 0, 500));
@@ -2058,9 +2034,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(441, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(4432, 10, 0, 100) { Reverse = true });
 
-
-
-            //177Monster.Mob383:
+            //177 - SnowYeti
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, 0, 500));
             //frame.Frames.Add(MirAction.Standing2, new Frame(56, 10, 0, 500));
@@ -2073,7 +2047,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(440, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(432, 9, 0, 100) { Reverse = true });
 
-            //178 Monster.Mob384
+            //178 - IceCrystalSoldier
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 8, 0, 200));
@@ -2085,8 +2059,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(393, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(384, 10, 0, 100) { Reverse = true });
 
-
-            //179 Monster.Mob385
+            //179 - DarkWraith
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2098,7 +2071,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(289, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(280, 10, 0, 100) { Reverse = true });
 
-            //180 FrozenMob10
+            //180 - CrystalBeast
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -2113,7 +2086,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(440, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(432, 8, 0, 100) { Reverse = true });
 
-            //181 orbs
+            //181 - RedOrb, BlueOrb, YellowOrb, GreenOrb, WhiteOrb
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2124,7 +2097,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(180, 1, 4, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(176, 5, 0, 100) { Reverse = true });
 
-            //182 Mob393
+            //182 - FatalLotus
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -2135,7 +2108,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(245, 1, 5, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(240, 6, 0, 100) { Reverse = true });
 
-            //183 mon 294
+            //183 - AntCommander
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 8, 0, 200));
@@ -2147,14 +2120,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(393, 1, 5, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(320, 6, 0, 100) { Reverse = true });
 
-            //  184 CargoBoxwithlogo
+            //184 - CargoBoxwithlogo
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 1, 0, 500));
             frame.Frames.Add(MirAction.Struck, new Frame(8, 2, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(24, 6, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(29, 1, 0, 1000));
 
-            //185 Doe
+            //185 - Doe
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -2164,7 +2137,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(165, 1, 5, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(160, 6, 0, 100) { Reverse = true });
 
-            //186 AngryReindeer
+            //186 - AngryReindeer
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 7, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(56, 8, 0, 200));
@@ -2176,7 +2149,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(335, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(328, 8, 0, 100) { Reverse = true });
 
-            //187 DeathCrawler = (lib 261)
+            //187 - DeathCrawler
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 200));
@@ -2185,7 +2158,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(176, 9, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(184, 1, 8, 1000));
 
-            //188 DemonWolf = (lib 265) //Dupe of 126
+            //188 - UndeadWolf //Dupe of 126
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2194,7 +2167,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(168, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(177, 1, 9, 1000));
 
-            //189 BurningZombie //FrozenZombie
+            //189 - BurningZombie //FrozenZombie
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 8, 0, 200));
@@ -2204,7 +2177,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(185, 1, 9, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(256, 7, 0, 100));//fozzesrange
 
-            //190 MubZommbie 
+            //190 - MudZombie 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 10, 0, 200));
@@ -2214,7 +2187,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(205, 1, 5, 1000));
             frame.Frames.Add(MirAction.Attack2, new Frame(248, 1, 7, 1000));
 
-            //191 Bloodbaboon 
+            //191 - BloodBaboon 
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 200));
@@ -2223,7 +2196,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(176, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(183, 1, 7, 1000));
 
-            //192 FightingCat
+            //192 - FightingCat
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2232,7 +2205,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(144, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(151, 1, 7, 1000));
 
-            //193 FireCat
+            //193 - FireCat
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2242,7 +2215,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(184, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(191, 1, 7, 1000));
 
-            //194 CatWidow
+            //194 - CatWidow
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2252,7 +2225,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(192, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(199, 1, 7, 1000));
 
-            //195 StainHammerCat
+            //195 - StainHammerCat
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2261,7 +2234,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(160, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(169, 1, 9, 1000));
 
-            //196 StainHammerCat
+            //196 - BlackHammerCat
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 200));
@@ -2271,7 +2244,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(256, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(265, 1, 9, 1000));
 
-            //197 Straycat
+            //197 - StrayCat
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             //frame.Frames.Add(MirAction.Walking, new Frame(32, 10, 0, 200));
@@ -2283,7 +2256,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(448, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(457, 1, 9, 1000));
 
-            //198 CatShaman
+            //198 - CatShaman
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 10, 0, 200));
@@ -2294,7 +2267,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(288, 9, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(296, 1, 8, 1000));
 
-            //199 jar 2
+            //199 - Jar2
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 10, 0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(80, 6, 0, 100));
@@ -2303,7 +2276,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(232, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(241, 1, 9, 1000));
 
-            //200 Restlessjar
+            //200 - RestlessJar
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(48, 9, 0, 100));

@@ -104,7 +104,6 @@ namespace Client.MirObjects
                     break;
                 case Monster.EvilMirBody:
                     break;
-                //IntelligentCreature
                 case Monster.BabyPig:
                 case Monster.Chick:
                 case Monster.Kitten:
@@ -378,6 +377,16 @@ namespace Client.MirObjects
                 case Monster.GuardianRock:
                     Frames = FrameSet.Monsters[32];
                     break;
+        case Monster.Sanke10:
+        case Monster.Sanke11:
+        case Monster.Sanke12:
+        case Monster.Sanke13:
+        case Monster.Sanke14:
+        case Monster.Sanke15:
+        case Monster.Sanke16:
+        case Monster.Sanke17:
+            Frames = FrameSet.Monsters[32];
+            break;
                 case Monster.ThunderElement:
                 case Monster.CloudElement:
                     Frames = FrameSet.Monsters[33];
@@ -410,59 +419,59 @@ namespace Client.MirObjects
                 case Monster.SnakeTotem://SummonSnakes Totem
                     Frames = FrameSet.Monsters[51];
                     break;
-                case Monster.CharmedSnake://SummonSnakes
+                case Monster.CharmedSnake://SummonSnakes Snake
                     Frames = FrameSet.Monsters[52];
                     break;
-                case Monster.HighAssassin: //(146.lib)
+                case Monster.HighAssassin:
                     Frames = FrameSet.Monsters[53];
                     break;
-                case Monster.DarkDustPile: //(147.lib)
-                case Monster.MudPile: //(156.lib)
-                case Monster.Treasurebox: //(164.lib)
-                case Monster.SnowPile: //(165.lib)
+                case Monster.DarkDustPile:
+                case Monster.MudPile:
+                case Monster.Treasurebox:
+                case Monster.SnowPile:
                     Frames = FrameSet.Monsters[54];
                     break;
-                case Monster.Football: //(149.lib)
+                case Monster.Football:
                     Frames = FrameSet.Monsters[55];
                     break;
-                case Monster.GingerBreadman: //(150.lib)
+                case Monster.GingerBreadman:
                     Frames = FrameSet.Monsters[56];
                     break;
-                case Monster.MutatedManworm: //(154.lib)
-                case Monster.CrazyManworm: //(155.lib)
+                case Monster.MutatedManworm:
+                case Monster.CrazyManworm:
                     Frames = FrameSet.Monsters[57];
                     break;
-                case Monster.TailedLion: //(157.lib)
+                case Monster.TailedLion:
                     Frames = FrameSet.Monsters[58];
                     break;
-                case Monster.Behemoth: //(158.lib)
+                case Monster.Behemoth:
                     Frames = FrameSet.Monsters[59];
                     break;
-                case Monster.PoisonHugger: //(160.lib)
-                case Monster.Hugger: //(161.lib)
-                case Monster.ManectricSlave: //(233.lib)
+                case Monster.PoisonHugger:
+                case Monster.Hugger:
+                case Monster.ManectricSlave:
                     Frames = FrameSet.Monsters[60];
                     break;
-                case Monster.DreamDevourer: //(163.lib)
+                case Monster.DreamDevourer:
                     Frames = FrameSet.Monsters[61];
                     break;
-                case Monster.Snowman: //(166.lib)
+                case Monster.Snowman:
                     Frames = FrameSet.Monsters[62];
                     break;
-                case Monster.GiantEgg: //(168.lib)
-                case Monster.IcePillar: //(231.lib)
+                case Monster.GiantEgg:
+                case Monster.IcePillar:
                     Frames = FrameSet.Monsters[63];
                     break;
-                case Monster.BlueSanta: //(176.lib)
+                case Monster.BlueSanta:
                     Frames = FrameSet.Monsters[64];
                     break;
-                case Monster.BattleStandard: //(177.lib)
+                case Monster.BattleStandard:
                     Frames = FrameSet.Monsters[65];
                     break;
-                case Monster.WingedTigerLord: //(184.lib)
+                case Monster.WingedTigerLord:
                     Frames = FrameSet.Monsters[66];
                     break;
-                case Monster.TurtleKing: //(187.lib)
+                case Monster.TurtleKing:
                     Frames = FrameSet.Monsters[67];
                     break;
                 case Monster.Bush:
@@ -485,6 +494,12 @@ namespace Client.MirObjects
                 case Monster.HellKeeper:
                     Frames = FrameSet.Monsters[72];
                     break;
+                case Monster.ManectricHammer:
+                    Frames = FrameSet.Monsters[73];
+                    break;
+                case Monster.ManectricStaff:
+                    Frames = FrameSet.Monsters[74];
+                    break;
                 case Monster.NamelessGhost:
                 case Monster.DarkGhost:
                 case Monster.ChaosGhost:
@@ -493,12 +508,6 @@ namespace Client.MirObjects
                 case Monster.TrollBomber:
                 case Monster.TrollStoner:
                     Frames = FrameSet.Monsters[75];
-                    break;
-                case Monster.ManectricHammer:
-                    Frames = FrameSet.Monsters[73];
-                    break;
-                case Monster.ManectricStaff:
-                    Frames = FrameSet.Monsters[74];
                     break;
                 case Monster.ManectricKing:
                 case Monster.TrollKing:
@@ -525,9 +534,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[81];
                     break;
                 case Monster.IceGuard:
-                    Frames = FrameSet.Monsters[82];
-                    break;
-                 case Monster.ElementGuard:
+                case Monster.ElementGuard:
                     Frames = FrameSet.Monsters[82];
                     break;
                 case Monster.DemonGuard:
@@ -536,48 +543,16 @@ namespace Client.MirObjects
                 case Monster.KingGuard:
                     Frames = FrameSet.Monsters[84];
                     break;
-                case Monster.Sanke10:
-                case Monster.Sanke11:
-                case Monster.Sanke12:
-                case Monster.Sanke13:
-                case Monster.Sanke14:
-                case Monster.Sanke15:
-                case Monster.Sanke16:
-                case Monster.Sanke17:
-                    Frames = FrameSet.Monsters[32];
-                    break;
-                case Monster.DeathCrawler:
-                    Frames = FrameSet.Monsters[187];
-                    break;
-                case Monster.BurningZombie:
-                    Frames = FrameSet.Monsters[189];
-                    break;
-                case Monster.MubZommbie:
-                    Frames = FrameSet.Monsters[190];
-                    break;
-                case Monster.FrozenZombie:
-                    Frames = FrameSet.Monsters[189];
-                    break;
-                case Monster.UndeadWolf:
-                    Frames = FrameSet.Monsters[188];
-                    break;
-                case Monster.Demonwolf:
-                    Frames = FrameSet.Monsters[188];
-                    break;
                 case Monster.WhiteMammoth:
+                case Monster.HardenRhino:
                     Frames = FrameSet.Monsters[87];
                     break;
                 case Monster.DarkBeast:
-                    Frames = FrameSet.Monsters[86];
-                    break;
                 case Monster.LightBeast:
                     Frames = FrameSet.Monsters[86];
                     break;
                 case Monster.BloodBaboon:
                     Frames = FrameSet.Monsters[191];
-                    break;
-                case Monster.HardenRhino:
-                    Frames = FrameSet.Monsters[87];
                     break;
                 case Monster.AncientBringer:
                     Frames = FrameSet.Monsters[88];
@@ -623,7 +598,9 @@ namespace Client.MirObjects
                 case Monster.TucsonFighter:
                     Frames = FrameSet.Monsters[91];
                     break;
+
                 //92 blank
+
                 case Monster.TucsonMage:
                     Frames = FrameSet.Monsters[93];
                     break;
@@ -712,11 +689,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[120];
                     break;
                 case Monster.LightningBead:
-                    Frames = FrameSet.Monsters[122];
-                    break;
                 case Monster.HealingBead:
-                    Frames = FrameSet.Monsters[122];
-                    break;
                 case Monster.PowerUpBead:
                     Frames = FrameSet.Monsters[122];
                     break;
@@ -735,6 +708,15 @@ namespace Client.MirObjects
                 case Monster.CreeperPlant:
                     Frames = FrameSet.Monsters[127];
                     break;
+                case Monster.SackWarrior:
+                    Frames = FrameSet.Monsters[128];
+                    break;
+                case Monster.WereTiger:
+                    Frames = FrameSet.Monsters[129];
+                    break;
+                case Monster.KingHydrax:
+                    Frames = FrameSet.Monsters[130];
+                    break;
                 case Monster.FloatingWraith:
                     Frames = FrameSet.Monsters[131];
                     break;
@@ -745,8 +727,6 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[133];
                     break;
                 case Monster.Nadz:
-                    Frames = FrameSet.Monsters[134];
-                    break;
                 case Monster.AvengingSpirit:
                     Frames = FrameSet.Monsters[134];
                     break;
@@ -754,34 +734,23 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[135];
                     break;
                 case Monster.AxePlant:
+                case Monster.ClawBeast:
                     Frames = FrameSet.Monsters[136];
                     break;
                 case Monster.WoodBox:
                     Frames = FrameSet.Monsters[137];
                     break;
-                case Monster.ClawBeast:
-                    Frames = FrameSet.Monsters[136];
-                    break;
                 case Monster.KillerPlant:
                     Frames = FrameSet.Monsters[138];
-                    break;
-                case Monster.SackWarrior:
-                    Frames = FrameSet.Monsters[128];
-                    break;
-                case Monster.WereTiger:
-                    Frames = FrameSet.Monsters[129];
-                    break;
-                case Monster.KingHydrax:
-                    Frames = FrameSet.Monsters[130];
                     break;
                 case Monster.Hydrax:
                     Frames = FrameSet.Monsters[139];
                     break;
-                case Monster.HornedMage:
-                    Frames = FrameSet.Monsters[141];
-                    break;
                 case Monster.Basiloid:
                     Frames = FrameSet.Monsters[140];
+                    break;
+                case Monster.HornedMage:
+                    Frames = FrameSet.Monsters[141];
                     break;
                 case Monster.HornedArcher:
                 case Monster.ColdArcher:
@@ -806,11 +775,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[148];
                     break;
                 case Monster.MoonStone:
-                    Frames = FrameSet.Monsters[149];
-                    break;
                 case Monster.SunStone:
-                    Frames = FrameSet.Monsters[149];
-                    break;
                 case Monster.LightningStone:
                     Frames = FrameSet.Monsters[149];
                     break;
@@ -832,9 +797,10 @@ namespace Client.MirObjects
                 case Monster.ChieftainSword:
                     Frames = FrameSet.Monsters[155];
                     break;
-                case Monster.StoningSpider: //Archer Summon
+                case Monster.StoningSpider: //StoneTrap
                     Frames = FrameSet.Monsters[156];
                     break;
+                case Monster.DarkSpirit:
                 case Monster.FrozenSoldier:
                     Frames = FrameSet.Monsters[157];
                     break;
@@ -883,7 +849,9 @@ namespace Client.MirObjects
                 case Monster.ArcherGuard3:
                     Frames = FrameSet.Monsters[172];
                     break;
+
                 //173 blank
+
                 case Monster.FrozenMiner:
                     Frames = FrameSet.Monsters[174];
                     break;
@@ -902,9 +870,6 @@ namespace Client.MirObjects
                 case Monster.DarkWraith:
                     Frames = FrameSet.Monsters[179];
                     break;
-                case Monster.DarkSpirit:
-                    Frames = FrameSet.Monsters[157];
-                    break;
                 case Monster.CrystalBeast:
                     Frames = FrameSet.Monsters[180];
                     break;
@@ -922,6 +887,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[183];
                     break;
                 case Monster.CargoBoxwithlogo:
+                case Monster.CargoBox:
                     Frames = FrameSet.Monsters[184];
                     break;
                 case Monster.Doe:
@@ -930,12 +896,23 @@ namespace Client.MirObjects
                 case Monster.AngryReindeer:
                     Frames = FrameSet.Monsters[186];
                     break;
-                case Monster.CargoBox:
-                    Frames = FrameSet.Monsters[184];
+                case Monster.DeathCrawler:
+                    Frames = FrameSet.Monsters[187];
+                    break;
+                case Monster.UndeadWolf:
+                case Monster.Demonwolf:
+                    Frames = FrameSet.Monsters[188];
+                    break;
+                case Monster.BurningZombie:
+                case Monster.FrozenZombie:
+                    Frames = FrameSet.Monsters[189];
+                    break;
+                case Monster.MudZombie:
+                    Frames = FrameSet.Monsters[190];
                     break;
                
 
-                case Monster.BabyPig://IntelligentCreature
+                case Monster.BabyPig:
                 case Monster.Chick:
                 case Monster.Kitten:
                 case Monster.BabySkeleton:

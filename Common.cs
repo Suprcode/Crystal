@@ -262,7 +262,8 @@ public enum Monster : ushort
     BrownFrogSpider = 138,
     ArcherGuard = 139,
     KatanaGuard = 140,
-    //BLANK Mob141 = 141, //duplicate brownfrogspider
+    //BLANK_141 = 141,
+    //ALL ABOVE MOBS COMPLETED
     Pig = 142,
     Bull = 143,
     Bush = 144,
@@ -297,14 +298,14 @@ public enum Monster : ushort
     Catapult = 172, //not added frames //special 3 states in 1 
     SabukWallSection = 173, //not added frames
     NammandWallSection = 174, //not added frames
-    //BLANK Mob175 = 175, //npc
+    //BLANK_175 = 175,
     BlueSanta = 176,
     BattleStandard = 177,
     ArcherGuard2 = 178, //not added frames
     RedYimoogi = 179,
-    //BLANK Mob180 = 180, //duplicate whiteviper
-    //BLANK Mob181 = 181, //duplicate yellowviper
-    //BLANK Mob182 = 182, //duplicate blueviper
+    //BLANK_180 = 180,
+    //BLANK_181 = 181,
+    //BLANK_182 = 182,
     FlameTiger = 183,
     WingedTigerLord = 184,
     TowerTurtle = 185,
@@ -322,6 +323,7 @@ public enum Monster : ushort
     ViscusCrawler = 197,
     CrawlerLave = 198,
     DarkYob = 199,
+
     FlamingMutant = 200,
     StoningStatue = 201,
     FlyingStatue = 202,
@@ -372,6 +374,7 @@ public enum Monster : ushort
     HellLord = 247,
     WaterGuard = 248,
     IceGuard = 249,
+
     ElementGuard = 250,
     DemonGuard = 251,
     KingGuard = 252,
@@ -385,7 +388,7 @@ public enum Monster : ushort
     Sanke17 = 260,
     DeathCrawler = 261,
     BurningZombie = 262,
-    MubZommbie = 263,
+    MudZombie = 263,
     FrozenZombie = 264,
     UndeadWolf = 265,
     Demonwolf = 266,
@@ -422,6 +425,7 @@ public enum Monster : ushort
     GasToad = 297,
     Mantis = 298,
     SwampWarrior = 299,
+
     AssassinBird = 300,
     RhinoWarrior = 301,
     RhinoPriest = 302,
@@ -472,6 +476,7 @@ public enum Monster : ushort
     BoulderSpirit = 347,
     HornedCommander = 348,
     MoonStone = 349,
+
     SunStone = 350,
     LightningStone = 351,
     Turtlegrass = 352,
@@ -480,13 +485,11 @@ public enum Monster : ushort
     Leopard = 355,
     ChieftainArcher = 356,
     ChieftainSword = 357,
-
     StoningSpider = 358, //Archer Spell mob (not yet coded)
     VampireSpider = 359, //Archer Spell mob
     SpittingToad = 360, //Archer Spell mob
     SnakeTotem = 361, //Archer Spell mob
     CharmedSnake = 362, //Archer Spell mob
-
     FrozenSoldier = 363,
     FrozenFighter = 364,
     FrozenArcher = 365,
@@ -521,7 +524,7 @@ public enum Monster : ushort
     AntCommander = 394,
     CargoBoxwithlogo = 395,
     Doe = 396,
-    //BLANK Mob397 = 397, //npc
+    //BLANK_397 = 397,
     AngryReindeer = 398,
     CargoBox = 399,
 
