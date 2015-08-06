@@ -419,7 +419,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
             frame.Frames.Add(MirAction.SitDown, new Frame(272, 4, 0, 500));
 
-            //23
+            //23 Yimoogi, RedYimoogi, Sanke10-17
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -762,7 +762,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(151, 1, 7, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 8, 0, 100) { Reverse = true });
 
-            //61 - DreamDevourer
+            //61 - DreamDevourer, DarkDevourer
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -2251,7 +2251,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Walking, new Frame(112, 6, 0, 200));
             frame.Frames.Add(MirAction.Attack1, new Frame(160, 10, 0, 100));
             frame.Frames.Add(MirAction.Attack2, new Frame(240, 10, 0, 200));
-            frame.Frames.Add(MirAction.Attack2, new Frame(320, 13, 0, 200));
+            //frame.Frames.Add(MirAction.Attack2, new Frame(320, 13, 0, 200));
             frame.Frames.Add(MirAction.Struck, new Frame(424, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(448, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(457, 1, 9, 1000));
@@ -2262,7 +2262,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Walking, new Frame(32, 10, 0, 200));
             frame.Frames.Add(MirAction.Attack1, new Frame(112, 6, 0, 100));
             frame.Frames.Add(MirAction.Attack2, new Frame(160, 7, 0, 200));
-            frame.Frames.Add(MirAction.Attack2, new Frame(216, 7, 0, 200));
+            //frame.Frames.Add(MirAction.Attack2, new Frame(216, 7, 0, 200));
             frame.Frames.Add(MirAction.Struck, new Frame(272, 2, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(288, 9, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(296, 1, 8, 1000));

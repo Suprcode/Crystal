@@ -342,6 +342,15 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[22];
                     break;
                 case Monster.Yimoogi:
+                case Monster.RedYimoogi:
+                case Monster.Sanke10:
+                case Monster.Sanke11:
+                case Monster.Sanke12:
+                case Monster.Sanke13:
+                case Monster.Sanke14:
+                case Monster.Sanke15:
+                case Monster.Sanke16:
+                case Monster.Sanke17:
                     Frames = FrameSet.Monsters[23];
                     break;
                 case Monster.HolyDeva:
@@ -377,16 +386,6 @@ namespace Client.MirObjects
                 case Monster.GuardianRock:
                     Frames = FrameSet.Monsters[32];
                     break;
-        case Monster.Sanke10:
-        case Monster.Sanke11:
-        case Monster.Sanke12:
-        case Monster.Sanke13:
-        case Monster.Sanke14:
-        case Monster.Sanke15:
-        case Monster.Sanke16:
-        case Monster.Sanke17:
-            Frames = FrameSet.Monsters[32];
-            break;
                 case Monster.ThunderElement:
                 case Monster.CloudElement:
                     Frames = FrameSet.Monsters[33];
@@ -558,6 +557,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[88];
                     break;
                 case Monster.FightingCat:
+                case Monster.DarkDevourer:
                     Frames = FrameSet.Monsters[192];
                     break;
                 case Monster.FireCat:

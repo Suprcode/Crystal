@@ -263,7 +263,6 @@ public enum Monster : ushort
     ArcherGuard = 139,
     KatanaGuard = 140,
     //BLANK_141 = 141,
-    //ALL ABOVE MOBS COMPLETED
     Pig = 142,
     Bull = 143,
     Bush = 144,
@@ -271,7 +270,7 @@ public enum Monster : ushort
     HighAssassin = 146,
     DarkDustPile = 147,
     DarkBrownWolf = 148,
-    Football = 149,
+    Football = 149,//NEEDS SPECIAL AI
 
     GingerBreadman = 150,
     HalloweenScythe = 151,
@@ -282,13 +281,13 @@ public enum Monster : ushort
     MudPile = 156,
     TailedLion = 157,
     Behemoth = 158,
-    DarkDevourer = 159,
+    DarkDevourer = 159,//LIB BROKE??
     PoisonHugger = 160,
     Hugger = 161,
-    MutatedHugger = 162,
-    DreamDevourer = 163,
-    Treasurebox = 164,
-    SnowPile = 165,
+    MutatedHugger = 162,//BROKE
+    DreamDevourer = 163,//LIB BROKE??
+    Treasurebox = 164,//
+    SnowPile = 165,//
     Snowman = 166,
     SnowTree = 167,
     GiantEgg = 168,
@@ -299,18 +298,18 @@ public enum Monster : ushort
     SabukWallSection = 173, //not added frames
     NammandWallSection = 174, //not added frames
     //BLANK_175 = 175,
-    BlueSanta = 176,
+    BlueSanta = 176,//FRAMES BROKE
     BattleStandard = 177,
-    ArcherGuard2 = 178, //not added frames
+    ArcherGuard2 = 178, //NO FRAMES
     RedYimoogi = 179,
     //BLANK_180 = 180,
     //BLANK_181 = 181,
     //BLANK_182 = 182,
     FlameTiger = 183,
-    WingedTigerLord = 184,
+    WingedTigerLord = 184,//FRAMES BROKE
     TowerTurtle = 185,
     FinialTurtle = 186,
-    TurtleKing = 187,
+    TurtleKing = 187,//NEEDS AI
     DarkTurtle = 188,
     LightTurtle = 189,
     DarkSwordOma = 190,
@@ -527,6 +526,10 @@ public enum Monster : ushort
     //BLANK_397 = 397,
     AngryReindeer = 398,
     CargoBox = 399,
+    
+    Ram1 = 400,
+    Ram2 = 401,
+    Kite = 403,
 
     EvilMir = 900,
     EvilMirBody = 901,
