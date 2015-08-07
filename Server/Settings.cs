@@ -167,6 +167,7 @@ namespace Server
         public static byte MentorLength = 7;
         public static byte MentorDamageBoost = 10;
         public static byte MentorExpBoost = 10;
+        public static byte MenteeExpBank = 1;
 
 
         //Goods Settings
@@ -1145,6 +1146,7 @@ namespace Server
             MentorLength = reader.ReadByte("Config", "MentorshipLength", MentorLength);
             MentorDamageBoost = reader.ReadByte("Config", "MentorDamageBoost", MentorDamageBoost);
             MentorExpBoost = reader.ReadByte("Config", "MenteeExpBoost", MentorExpBoost);
+            MenteeExpBank = reader.ReadByte("Config", "PercentXPtoMentor", MenteeExpBank);
         }
         public static void SaveMentor()
         {
@@ -1155,6 +1157,7 @@ namespace Server
             reader.Write("Config", "MentorshipLength", MentorLength);
             reader.Write("Config", "MentorDamageBoost", MentorDamageBoost);
             reader.Write("Config", "MenteeExpBoost", MentorExpBoost);
+            reader.Write("Config", "PercentXPtoMentor", MenteeExpBank);
         }
 
 
