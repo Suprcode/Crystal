@@ -320,7 +320,7 @@ namespace Server.MirDatabase
                     Friends.Add(new FriendInfo(reader));
             }
 
-            if (Envir.LoadCustomVersion > 0)
+            if (Envir.LoadVersion > 59)
             {
                 Married = reader.ReadInt32();
                 MarriedDate = DateTime.FromBinary(reader.ReadInt64());

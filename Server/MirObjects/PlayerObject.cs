@@ -1774,7 +1774,7 @@ namespace Server.MirObjects
             GetFriends();
             GetRelationship();
             
-            if ((Info.Mentor != 0) && (Info.MentorDate.AddMinutes(Settings.MentorLength) < DateTime.Now))
+            if ((Info.Mentor != 0) && (Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now))
                 MentorBreak();
             else
                 GetMentor();
@@ -3041,6 +3041,28 @@ namespace Server.MirObjects
                 message = message.Remove(0, 2);
                 MyGuild.SendMessage(String.Format("{0}: {1}", Name, message));
 
+            }
+            else if (message.StartsWith("!#"))
+            {
+                //Mentor Message
+                message = message.Remove(0, 2);
+                parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length == 0) return;
+
+                if (Info.Mentor == 0) return;
+
+                CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
+                PlayerObject player = Envir.GetPlayer(Mentor.Name);
+
+                if (player == null)
+                {
+                    ReceiveChat(string.Format("{0} isn't online.", Mentor.Name), ChatType.System);
+                    return;
+                }
+
+                ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Mentor);
+                player.ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Mentor);
             }
             else if (message.StartsWith("!"))
             {
@@ -8377,7 +8399,7 @@ namespace Server.MirObjects
             if (HasSkillNecklace) exp *= 3;
             else
             {
-                if (Info.Mentor != 0 && !Info.isMentor == false)
+                if (Info.Mentor != 0 && !Info.isMentor == false && Settings.MentorSkillBoost)
                 { 
                     Buff buff = Buffs.Where(e => e.Type == BuffType.Mentee).FirstOrDefault();
                     if (buff != null)
@@ -9893,6 +9915,13 @@ namespace Server.MirObjects
                 return;
             }
 
+            Buff buff = Buffs.Where(e => e.Type == BuffType.RelationshipEXP).FirstOrDefault();
+            if (buff != null)
+            {
+                RemoveBuff(BuffType.RelationshipEXP);
+                DivorceProposal.RemoveBuff(BuffType.RelationshipEXP);
+            }
+
             DivorceProposal.Info.Married = 0;
             DivorceProposal.Info.MarriedDate = DateTime.Now;
             if (DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] != null)
@@ -9915,10 +9944,6 @@ namespace Server.MirObjects
 
             GetRelationship(false);
             DivorceProposal.GetRelationship(false);
-
-            
-            
-
             DivorceProposal = null;
         }
 
@@ -9933,6 +9958,13 @@ namespace Server.MirObjects
 
             CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
             PlayerObject Player = Envir.GetPlayer(Lover.Name);
+
+            Buff buff = Buffs.Where(e => e.Type == BuffType.RelationshipEXP).FirstOrDefault();
+            if (buff != null)
+            {
+                RemoveBuff(BuffType.RelationshipEXP);
+                Player.RemoveBuff(BuffType.RelationshipEXP);
+            }
 
             Info.Married = 0;
             Info.MarriedDate = DateTime.Now;
@@ -10178,7 +10210,7 @@ namespace Server.MirObjects
 
             if (Force)
             {
-                Info.MentorDate = DateTime.Now.AddMinutes(Settings.MentorLength);
+                Info.MentorDate = DateTime.Now.AddDays(Settings.MentorLength);
                 ReceiveChat(String.Format("You now have a {0} day cooldown on starting a new Mentorship.", Settings.MentorLength), ChatType.System);
             }
             else
@@ -10201,8 +10233,28 @@ namespace Server.MirObjects
                 }
             }
 
+            if (Info.isMentor)
+            { 
+                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentor).FirstOrDefault();
+                if (buff != null)
+                {
+                    RemoveBuff(BuffType.Mentor);
+                    Player.RemoveBuff(BuffType.Mentee);
+                }
+            }
+            else
+            {
+                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentee).FirstOrDefault();
+                if (buff != null)
+                {
+                    RemoveBuff(BuffType.Mentee);
+                    Player.RemoveBuff(BuffType.Mentor);
+                }
+            }
+
             Info.Mentor = 0;
             GetMentor(false);
+            Info.isMentor = false;
 
             if (Info.isMentor && Info.MentorExp > 0)
             {
@@ -10211,6 +10263,7 @@ namespace Server.MirObjects
             }
 
             Mentor.Mentor = 0;
+            Mentor.isMentor = false;
             
             if (Player != null)
             {
@@ -16975,7 +17028,7 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0)
             {
-                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate, MapName = "" });
+                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate, MapName = "", MarriedDays = 0 });
             }
             else
             {
@@ -16984,10 +17037,10 @@ namespace Server.MirObjects
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
 
                 if (player == null)
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "" });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
                 else
                 {
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
@@ -17003,7 +17056,7 @@ namespace Server.MirObjects
             PlayerObject player = Envir.GetPlayer(Lover.Name);
             if (player != null)
             {
-                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "" });
+                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }

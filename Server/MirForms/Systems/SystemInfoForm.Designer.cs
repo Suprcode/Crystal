@@ -81,6 +81,8 @@
             this.label15 = new System.Windows.Forms.Label();
             this.WeaponOnly_checkbox = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.ReplaceRingCost_textbox = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.RequiredLevel_textbox = new System.Windows.Forms.TextBox();
             this.LoverBonusEXP_textbox = new System.Windows.Forms.TextBox();
@@ -88,8 +90,16 @@
             this.label13 = new System.Windows.Forms.Label();
             this.MarriageCooldown_textbox = new System.Windows.Forms.TextBox();
             this.LoverRecall_checkbox = new System.Windows.Forms.CheckBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.ReplaceRingCost_textbox = new System.Windows.Forms.TextBox();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.label25 = new System.Windows.Forms.Label();
+            this.MenteeExpBoost_textbox = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.MentorDamageBoost_textbox = new System.Windows.Forms.TextBox();
+            this.MentorLevelGap_textbox = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.MentorLength_textbox = new System.Windows.Forms.TextBox();
+            this.MenteeSkillBoost_checkbox = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -98,6 +108,7 @@
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -243,6 +254,7 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -632,6 +644,23 @@
             this.tabPage5.Text = "Relationship";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(65, 143);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(96, 13);
+            this.label24.TabIndex = 14;
+            this.label24.Text = "Replace Ring Cost";
+            // 
+            // ReplaceRingCost_textbox
+            // 
+            this.ReplaceRingCost_textbox.Location = new System.Drawing.Point(167, 140);
+            this.ReplaceRingCost_textbox.Name = "ReplaceRingCost_textbox";
+            this.ReplaceRingCost_textbox.Size = new System.Drawing.Size(64, 20);
+            this.ReplaceRingCost_textbox.TabIndex = 13;
+            this.ReplaceRingCost_textbox.TextChanged += new System.EventHandler(this.ReplaceRingCost_textbox_TextChanged);
+            // 
             // label14
             // 
             this.label14.AutoSize = true;
@@ -695,22 +724,103 @@
             this.LoverRecall_checkbox.UseVisualStyleBackColor = true;
             this.LoverRecall_checkbox.CheckedChanged += new System.EventHandler(this.LoverRecall_checkbox_CheckedChanged);
             // 
-            // label24
+            // tabPage6
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(65, 143);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(96, 13);
-            this.label24.TabIndex = 14;
-            this.label24.Text = "Replace Ring Cost";
+            this.tabPage6.Controls.Add(this.label25);
+            this.tabPage6.Controls.Add(this.MenteeExpBoost_textbox);
+            this.tabPage6.Controls.Add(this.label26);
+            this.tabPage6.Controls.Add(this.MentorDamageBoost_textbox);
+            this.tabPage6.Controls.Add(this.MentorLevelGap_textbox);
+            this.tabPage6.Controls.Add(this.label27);
+            this.tabPage6.Controls.Add(this.label28);
+            this.tabPage6.Controls.Add(this.MentorLength_textbox);
+            this.tabPage6.Controls.Add(this.MenteeSkillBoost_checkbox);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(365, 229);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Mentor";
+            this.tabPage6.UseVisualStyleBackColor = true;
             // 
-            // ReplaceRingCost_textbox
+            // label25
             // 
-            this.ReplaceRingCost_textbox.Location = new System.Drawing.Point(167, 140);
-            this.ReplaceRingCost_textbox.Name = "ReplaceRingCost_textbox";
-            this.ReplaceRingCost_textbox.Size = new System.Drawing.Size(64, 20);
-            this.ReplaceRingCost_textbox.TabIndex = 13;
-            this.ReplaceRingCost_textbox.TextChanged += new System.EventHandler(this.ReplaceRingCost_textbox_TextChanged);
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(22, 135);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(164, 13);
+            this.label25.TabIndex = 23;
+            this.label25.Text = "Mentee EXP Boost (With Mentor)";
+            // 
+            // MenteeExpBoost_textbox
+            // 
+            this.MenteeExpBoost_textbox.Location = new System.Drawing.Point(194, 132);
+            this.MenteeExpBoost_textbox.Name = "MenteeExpBoost_textbox";
+            this.MenteeExpBoost_textbox.Size = new System.Drawing.Size(64, 20);
+            this.MenteeExpBoost_textbox.TabIndex = 22;
+            this.MenteeExpBoost_textbox.TextChanged += new System.EventHandler(this.MenteeExpBoost_textbox_TextChanged);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(3, 109);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(183, 13);
+            this.label26.TabIndex = 21;
+            this.label26.Text = "Mentor Damage Boost (With Mentee)";
+            // 
+            // MentorDamageBoost_textbox
+            // 
+            this.MentorDamageBoost_textbox.Location = new System.Drawing.Point(194, 106);
+            this.MentorDamageBoost_textbox.Name = "MentorDamageBoost_textbox";
+            this.MentorDamageBoost_textbox.Size = new System.Drawing.Size(64, 20);
+            this.MentorDamageBoost_textbox.TabIndex = 20;
+            this.MentorDamageBoost_textbox.TextChanged += new System.EventHandler(this.MentorDamageBoost_textbox_TextChanged);
+            // 
+            // MentorLevelGap_textbox
+            // 
+            this.MentorLevelGap_textbox.Location = new System.Drawing.Point(194, 47);
+            this.MentorLevelGap_textbox.Name = "MentorLevelGap_textbox";
+            this.MentorLevelGap_textbox.Size = new System.Drawing.Size(64, 20);
+            this.MentorLevelGap_textbox.TabIndex = 19;
+            this.MentorLevelGap_textbox.TextChanged += new System.EventHandler(this.MentorLevelGap_textbox_TextChanged);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(77, 80);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(109, 13);
+            this.label27.TabIndex = 18;
+            this.label27.Text = "Mentor Length (Days)";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(94, 50);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(92, 13);
+            this.label28.TabIndex = 17;
+            this.label28.Text = "Mentor Level Gap";
+            // 
+            // MentorLength_textbox
+            // 
+            this.MentorLength_textbox.Location = new System.Drawing.Point(194, 77);
+            this.MentorLength_textbox.Name = "MentorLength_textbox";
+            this.MentorLength_textbox.Size = new System.Drawing.Size(64, 20);
+            this.MentorLength_textbox.TabIndex = 16;
+            this.MentorLength_textbox.TextChanged += new System.EventHandler(this.MentorLength_textbox_TextChanged);
+            // 
+            // MenteeSkillBoost_checkbox
+            // 
+            this.MenteeSkillBoost_checkbox.AutoSize = true;
+            this.MenteeSkillBoost_checkbox.Location = new System.Drawing.Point(62, 15);
+            this.MenteeSkillBoost_checkbox.Name = "MenteeSkillBoost_checkbox";
+            this.MenteeSkillBoost_checkbox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.MenteeSkillBoost_checkbox.Size = new System.Drawing.Size(196, 17);
+            this.MenteeSkillBoost_checkbox.TabIndex = 15;
+            this.MenteeSkillBoost_checkbox.Text = "Mentee 2x Skill Speed (with Mentor)";
+            this.MenteeSkillBoost_checkbox.UseVisualStyleBackColor = true;
+            this.MenteeSkillBoost_checkbox.CheckedChanged += new System.EventHandler(this.MenteeSkillBoost_checkbox_CheckedChanged);
             // 
             // SystemInfoForm
             // 
@@ -740,6 +850,8 @@
             this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -808,5 +920,15 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox ReplaceRingCost_textbox;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox MenteeExpBoost_textbox;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.TextBox MentorDamageBoost_textbox;
+        private System.Windows.Forms.TextBox MentorLevelGap_textbox;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox MentorLength_textbox;
+        private System.Windows.Forms.CheckBox MenteeSkillBoost_checkbox;
     }
 }

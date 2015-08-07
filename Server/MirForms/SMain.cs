@@ -338,6 +338,13 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void mentorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(5);
+
+            form.ShowDialog();
+        }
+
         private void magicInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MagicInfoForm form = new MagicInfoForm();

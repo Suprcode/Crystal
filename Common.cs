@@ -512,6 +512,7 @@ public enum ChatType : byte
     LevelUp = 11,
     System2 = 12,
     Relationship = 13,
+    Mentor = 14,
 }
 
 public enum ItemType : byte
@@ -2649,7 +2650,7 @@ public class UserItem
         RefinedValue = (RefinedValue)reader.ReadByte();
         RefineAdded = reader.ReadByte();
 
-        if (Customversion < 1) return;
+        if (version < 60) return;
         WeddingRing = reader.ReadInt32();
 
     }

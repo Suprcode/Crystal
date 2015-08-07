@@ -83,6 +83,7 @@ namespace Server
             this.refiningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.relationshipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
+            this.mentorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -456,7 +457,8 @@ namespace Server
             this.mailToolStripMenuItem,
             this.goodsToolStripMenuItem,
             this.refiningToolStripMenuItem,
-            this.relationshipToolStripMenuItem});
+            this.relationshipToolStripMenuItem,
+            this.mentorToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
             this.systemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.systemToolStripMenuItem.Text = "System";
@@ -521,6 +523,13 @@ namespace Server
             // 
             this.InterfaceTimer.Enabled = true;
             this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
+            // 
+            // mentorToolStripMenuItem
+            // 
+            this.mentorToolStripMenuItem.Name = "mentorToolStripMenuItem";
+            this.mentorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.mentorToolStripMenuItem.Text = "Mentor";
+            this.mentorToolStripMenuItem.Click += new System.EventHandler(this.mentorToolStripMenuItem_Click);
             // 
             // SMain
             // 
@@ -606,6 +615,7 @@ namespace Server
         private ToolStripMenuItem magicInfoToolStripMenuItem;
         private ToolStripMenuItem refiningToolStripMenuItem;
         private ToolStripMenuItem relationshipToolStripMenuItem;
+        private ToolStripMenuItem mentorToolStripMenuItem;
     }
 }
 

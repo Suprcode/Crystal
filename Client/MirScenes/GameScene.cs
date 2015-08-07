@@ -1641,6 +1641,12 @@ namespace Client.MirScenes
                     return 12;
                 case BuffType.Transform:
                     return 19;
+                case BuffType.Mentor:
+                    return 30;
+                case BuffType.Mentee:
+                    return 30;
+                case BuffType.RelationshipEXP:
+                    return 61;
 
                 //Consumables
                 case BuffType.Impact:
@@ -9866,6 +9872,10 @@ namespace Client.MirScenes
                     backColour = Color.Transparent;
                     foreColour = Color.HotPink;
                     break;
+                case ChatType.Mentor:
+                    backColour = Color.White;
+                    foreColour = Color.Purple;
+                    break;
                 default:
                     backColour = Color.White;
                     foreColour = Color.Black;
@@ -10318,7 +10328,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(122, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Mentor"
+                Hint = "Group"
             };
             GroupButton.Click += (o, e) =>
             {
@@ -10395,6 +10405,11 @@ namespace Client.MirScenes
                     LoverButton.Index = 2047;
                     LoverButton.HoverIndex = 2047;
                     GameScene.Scene.ChatDialog.ChatPrefix = ":)";
+                    break;
+                case "Mentor":
+                    MentorButton.Index = 2050;
+                    MentorButton.HoverIndex = 2050;
+                    GameScene.Scene.ChatDialog.ChatPrefix = "!#";
                     break;
             }
         }
@@ -12516,7 +12531,7 @@ namespace Client.MirScenes
             LoverButton = new MirButton
             {
                 Index = 604,
-                Location = new Point(15, 15),
+                Location = new Point(17, 17),
                 Library = Libraries.Prguse,
                 Parent = this,
             };
@@ -20892,12 +20907,13 @@ namespace Client.MirScenes
     {
         public MirImageControl TitleLabel;
         public MirButton CloseButton, AllowButton, RequestButton, DivorceButton, MailButton, WhisperButton;
-        public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel, LoverMapLabel;
+        public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel, LoverLengthLabel;
 
 
         public string LoverName = "";
         public DateTime Date;
         public string MapName = "";
+        public short MarriedDays = 0;
 
 
         public RelationshipDialog()
@@ -21040,7 +21056,7 @@ namespace Client.MirScenes
 
             LoverNameLabel = new MirLabel
             {
-                Location = new Point(30, 45),
+                Location = new Point(30, 40),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
                 ForeColour = Color.LightGray,
@@ -21052,7 +21068,19 @@ namespace Client.MirScenes
 
             LoverDateLabel = new MirLabel
             {
-                Location = new Point(30, 75),
+                Location = new Point(30, 65),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            LoverLengthLabel = new MirLabel
+            {
+                Location = new Point(30, 90),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
                 ForeColour = Color.LightGray,
@@ -21064,7 +21092,7 @@ namespace Client.MirScenes
 
             LoverOnlineLabel = new MirLabel
             {
-                Location = new Point(30, 105),
+                Location = new Point(30, 115),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
                 ForeColour = Color.LightGray,
@@ -21101,16 +21129,24 @@ namespace Client.MirScenes
             if ((LoverName == "") && (Date != null))
             {
                 if (Date < new DateTime(2000))
-                    LoverDateLabel.Text = "Date:";
+                {
+                    LoverDateLabel.Text = "Date: ";
+                    LoverLengthLabel.Text = "Length: ";
+                }
                 else
-                    LoverDateLabel.Text = "Date divorced:  " + Date.ToShortDateString();
+                {
+                    LoverDateLabel.Text = "Divorced Date:  " + Date.ToShortDateString();
+                    LoverLengthLabel.Text = "Time Since: " + MarriedDays + " Days";
+                }
+                    
 
                 LoverOnlineLabel.Text = "Location: ";
                 AllowButton.Hint = "Allow/Block Marriage";
             }
             else
             {
-                LoverDateLabel.Text = "Date started:  " + Date.ToShortDateString();
+                LoverDateLabel.Text = "Marriage Date:  " + Date.ToShortDateString();
+                LoverLengthLabel.Text = "Length: " + MarriedDays.ToString() + " Days" ;
                 AllowButton.Hint = "Allow/Block Recall";
             }
                 
@@ -21347,7 +21383,7 @@ namespace Client.MirScenes
 
             MenteeEXPLabel = new MirLabel
             {
-                Location = new Point(15, 150),
+                Location = new Point(15, 147),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
                 ForeColour = Color.DimGray,
@@ -21408,7 +21444,7 @@ namespace Client.MirScenes
                     StudentOnlineLabel.Visible = false;
 
                 MenteeEXPLabel.Visible = true;
-                MenteeEXPLabel.Text = "MENTEE EXP BANK: " + MenteeEXP;
+                MenteeEXPLabel.Text = "MENTEE EXP: " + MenteeEXP;
             }
             else
             {

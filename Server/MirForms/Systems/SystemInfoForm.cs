@@ -19,7 +19,7 @@ namespace Server
             get { return SMain.EditEnvir; }
         }
 
-        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false;
+        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false;
 
         public SystemInfoForm()
         {
@@ -39,6 +39,7 @@ namespace Server
             UpdateGoods();
             UpdateRefine();
             UpdateMarriage();
+            UpdateMentor();
         }
 
         #region Update
@@ -90,6 +91,16 @@ namespace Server
 
         }
 
+        private void UpdateMentor()
+        {
+            MenteeSkillBoost_checkbox.Checked = Settings.MentorSkillBoost;
+            MentorLevelGap_textbox.Text = Settings.MentorLevelGap.ToString();
+            MentorLength_textbox.Text = Settings.MentorLength.ToString();
+            MentorDamageBoost_textbox.Text = Settings.MentorDamageBoost.ToString();
+            MenteeExpBoost_textbox.Text = Settings.MentorExpBoost.ToString();
+
+        }
+
         private void UpdateRefine()
         {
             WeaponOnly_checkbox.Checked = Settings.OnlyRefineWeapon;
@@ -122,6 +133,9 @@ namespace Server
 
             if (MarriageChanged)
                 Settings.SaveMarriage();
+
+            if (MentorChanged)
+                Settings.SaveMentor();
         }
 
         #region Fishing
@@ -496,6 +510,77 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
             Settings.ReplaceWedRingCost = temp;
             MarriageChanged = true;
+        }
+
+        private void MentorLevelGap_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorLevelGap = temp;
+            MentorChanged = true;
+        }
+
+        private void MentorLength_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorLength = temp;
+            MentorChanged = true;
+        }
+
+        private void MentorDamageBoost_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorDamageBoost = temp;
+            MentorChanged = true;
+        }
+
+        private void MenteeExpBoost_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorExpBoost = temp;
+            MentorChanged = true;
+        }
+
+        private void MenteeSkillBoost_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            Settings.MentorSkillBoost = MenteeSkillBoost_checkbox.Checked;
+            MentorChanged = true;
         }
 
         #endregion

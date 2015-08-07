@@ -162,9 +162,9 @@ namespace Server
         public static int ReplaceWedRingCost = 125;
 
         //Mentor Settings
-        public static byte MentorLevelGap = 5;
+        public static byte MentorLevelGap = 10;
         public static bool MentorSkillBoost = true;
-        public static byte MentorLength = 3;
+        public static byte MentorLength = 7;
         public static byte MentorDamageBoost = 10;
         public static byte MentorExpBoost = 10;
 
@@ -406,6 +406,7 @@ namespace Server
             LoadMail();
             LoadRefine();
             LoadMarriage();
+            LoadMentor();
             LoadGoods();
         }
         public static void Save()
@@ -1129,6 +1130,31 @@ namespace Server
             reader.Write("Config", "AllowLoverRecall", WeddingRingRecall);
             reader.Write("Config", "MinimumLevel", MarriageLevelRequired);
             reader.Write("Config", "ReplaceRingCost", ReplaceWedRingCost); 
+        }
+
+        public static void LoadMentor()
+        {
+            if (!File.Exists(ConfigPath + @".\MentorSystem.ini"))
+            {
+                SaveMarriage();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");
+            MentorLevelGap = reader.ReadByte("Config", "LevelGap", MentorLevelGap);
+            MentorSkillBoost = reader.ReadBoolean("Config", "MenteeSkillBoost", MentorSkillBoost);
+            MentorLength = reader.ReadByte("Config", "MentorshipLength", MentorLength);
+            MentorDamageBoost = reader.ReadByte("Config", "MentorDamageBoost", MentorDamageBoost);
+            MentorExpBoost = reader.ReadByte("Config", "MenteeExpBoost", MentorExpBoost);
+        }
+        public static void SaveMentor()
+        {
+            File.Delete(ConfigPath + @".\MentorSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");
+            reader.Write("Config", "LevelGap", MentorLevelGap);
+            reader.Write("Config", "MenteeSkillBoost", MentorSkillBoost);
+            reader.Write("Config", "MentorshipLength", MentorLength);
+            reader.Write("Config", "MentorDamageBoost", MentorDamageBoost);
+            reader.Write("Config", "MenteeExpBoost", MentorExpBoost);
         }
 
 

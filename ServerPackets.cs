@@ -4936,12 +4936,14 @@ namespace ServerPackets
         public string Name;
         public DateTime Date;
         public string MapName;
+        public short MarriedDays;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Name = reader.ReadString();
             Date = DateTime.FromBinary(reader.ReadInt64());
             MapName = reader.ReadString();
+            MarriedDays = reader.ReadInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -4949,6 +4951,7 @@ namespace ServerPackets
             writer.Write(Name);
             writer.Write(Date.ToBinary());
             writer.Write(MapName);
+            writer.Write(MarriedDays);
         }
     }
 
