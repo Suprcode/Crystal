@@ -21206,6 +21206,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 116,
                 Sound = SoundList.ButtonA,
+                Hint = "Allow/Disallow Mentor Requests",
             };
             AllowButton.Click += (o, e) =>
             {
@@ -21235,6 +21236,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 215,
                 Sound = SoundList.ButtonA,
+                Hint = "Add Mentor",
             };
             AddButton.Click += (o, e) =>
             {
@@ -21267,6 +21269,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 218,
                 Sound = SoundList.ButtonA,
+                Hint = "Remove Mentor/Mentee",
             };
             RemoveButton.Click += (o, e) =>
             {

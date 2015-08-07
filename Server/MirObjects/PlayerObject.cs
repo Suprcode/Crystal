@@ -1457,8 +1457,8 @@ namespace Server.MirObjects
 
             if (ExpRateOffset > 0)
                 amount += (uint)(amount * (ExpRateOffset / 100));
-            if (Info.Mentor != 0)
-                MenteeEXP += (amount / 100) * 1;
+            if (Info.Mentor != 0 && !Info.isMentor)
+                MenteeEXP += (amount / 100) * Settings.MenteeExpBank;
 
             Experience += amount;
 

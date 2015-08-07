@@ -98,7 +98,7 @@ namespace Server
             MentorLength_textbox.Text = Settings.MentorLength.ToString();
             MentorDamageBoost_textbox.Text = Settings.MentorDamageBoost.ToString();
             MenteeExpBoost_textbox.Text = Settings.MentorExpBoost.ToString();
-
+            MenteeExpBank_textbox.Text = Settings.MenteeExpBank.ToString();
         }
 
         private void UpdateRefine()
@@ -573,6 +573,22 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             Settings.MentorExpBoost = temp;
+            MentorChanged = true;
+        }
+
+        private void MenteeExpBank_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MenteeExpBank = temp;
             MentorChanged = true;
         }
 

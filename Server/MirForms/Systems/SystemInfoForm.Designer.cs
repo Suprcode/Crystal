@@ -100,6 +100,8 @@
             this.label28 = new System.Windows.Forms.Label();
             this.MentorLength_textbox = new System.Windows.Forms.TextBox();
             this.MenteeSkillBoost_checkbox = new System.Windows.Forms.CheckBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.MenteeExpBank_textbox = new System.Windows.Forms.TextBox();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -726,6 +728,8 @@
             // 
             // tabPage6
             // 
+            this.tabPage6.Controls.Add(this.label29);
+            this.tabPage6.Controls.Add(this.MenteeExpBank_textbox);
             this.tabPage6.Controls.Add(this.label25);
             this.tabPage6.Controls.Add(this.MenteeExpBoost_textbox);
             this.tabPage6.Controls.Add(this.label26);
@@ -821,6 +825,23 @@
             this.MenteeSkillBoost_checkbox.Text = "Mentee 2x Skill Speed (with Mentor)";
             this.MenteeSkillBoost_checkbox.UseVisualStyleBackColor = true;
             this.MenteeSkillBoost_checkbox.CheckedChanged += new System.EventHandler(this.MenteeSkillBoost_checkbox_CheckedChanged);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(59, 161);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(127, 13);
+            this.label29.TabIndex = 25;
+            this.label29.Text = "EXP to Mentor at End (%)";
+            // 
+            // MenteeExpBank_textbox
+            // 
+            this.MenteeExpBank_textbox.Location = new System.Drawing.Point(194, 158);
+            this.MenteeExpBank_textbox.Name = "MenteeExpBank_textbox";
+            this.MenteeExpBank_textbox.Size = new System.Drawing.Size(64, 20);
+            this.MenteeExpBank_textbox.TabIndex = 24;
+            this.MenteeExpBank_textbox.TextChanged += new System.EventHandler(this.MenteeExpBank_textbox_TextChanged);
             // 
             // SystemInfoForm
             // 
@@ -930,5 +951,7 @@
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.TextBox MentorLength_textbox;
         private System.Windows.Forms.CheckBox MenteeSkillBoost_checkbox;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox MenteeExpBank_textbox;
     }
 }
