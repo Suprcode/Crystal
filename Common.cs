@@ -122,7 +122,7 @@ public enum IntelligentCreatureType : byte
 public enum Monster : ushort
 {
     Guard = 0,
-    Guard1 = 1,
+    TaoistGuard = 1,
     Guard2 = 2,
     Hen = 3,
     Deer = 4,
@@ -286,8 +286,8 @@ public enum Monster : ushort
     Hugger = 161,
     MutatedHugger = 162,//BROKE
     DreamDevourer = 163,//LIB BROKE??
-    Treasurebox = 164,//
-    SnowPile = 165,//
+    Treasurebox = 164,
+    SnowPile = 165,
     Snowman = 166,
     SnowTree = 167,
     GiantEgg = 168,
@@ -314,7 +314,7 @@ public enum Monster : ushort
     LightTurtle = 189,
     DarkSwordOma = 190,
     DarkAxeOma = 191,
-    DarkCrossBowOma = 192,
+    DarkCrossbowOma = 192,
     DarkWingedOma = 193,
     BoneWhoo = 194,
     DarkSpider = 195,

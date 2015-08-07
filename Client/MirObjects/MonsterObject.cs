@@ -366,7 +366,7 @@ namespace Client.MirObjects
                     Frames = FrameSet.Monsters[26];
                     break;
                 case Monster.CrossbowOma:
-                case Monster.DarkCrossBowOma:
+                case Monster.DarkCrossbowOma:
                     Frames = FrameSet.Monsters[27];
                     break;
                 case Monster.YinDevilNode:
@@ -406,7 +406,7 @@ namespace Client.MirObjects
                 case Monster.ArcherGuard:
                     Frames = FrameSet.Monsters[47];
                     break;
-                case Monster.Guard1:
+                case Monster.TaoistGuard:
                     Frames = FrameSet.Monsters[48];
                     break;
                 case Monster.VampireSpider://SummonVampire
@@ -2760,11 +2760,11 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
-                case Monster.Guard1:
+                case Monster.TaoistGuard:
                     switch (CurrentAction)
                     {
                         case MirAction.Attack1:
-                            Libraries.Monsters[(ushort)Monster.Guard1].DrawBlend(80 + ((int)Direction * 3) + FrameIndex, DrawLocation, Color.White, true);
+                            Libraries.Monsters[(ushort)Monster.TaoistGuard].DrawBlend(80 + ((int)Direction * 3) + FrameIndex, DrawLocation, Color.White, true);
                             break;
                     }
                     break;
