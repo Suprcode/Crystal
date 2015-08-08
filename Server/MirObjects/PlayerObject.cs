@@ -10167,6 +10167,13 @@ namespace Server.MirObjects
 
         public void MentorReply(bool accept)
         {
+            if (!accept)
+            {
+                MentorRequest.ReceiveChat(string.Format("{0} has refused to Mentor you.", Info.Name), ChatType.System);
+                MentorRequest = null;
+                return;
+            }
+
             if (Info.Mentor != 0)
             {
                 ReceiveChat("You already have a Student.", ChatType.System);
