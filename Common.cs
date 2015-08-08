@@ -270,7 +270,7 @@ public enum Monster : ushort
     HighAssassin = 146,
     DarkDustPile = 147,
     DarkBrownWolf = 148,
-    Football = 149,//NEEDS SPECIAL AI
+    Football = 149,
 
     GingerBreadman = 150,
     HalloweenScythe = 151,

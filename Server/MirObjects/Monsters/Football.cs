@@ -7,6 +7,8 @@ namespace Server.MirObjects.Monsters
     {
         protected override bool CanAttack { get { return false; }}
 
+        private int _ballMoveDistance = 3;
+
         protected internal Football(MonsterInfo info)
             : base(info)
         {
@@ -25,9 +27,7 @@ namespace Server.MirObjects.Monsters
 
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-            //move opposite direction 2 squares
-            MirDirection reverse = Functions.ReverseDirection(attacker.Direction);
-            Point target = Functions.PointMove(CurrentLocation, reverse, 2);
+            Point target = Functions.PointMove(CurrentLocation, attacker.Direction, _ballMoveDistance);
 
             while (CurrentLocation != target)
             {
@@ -39,7 +39,9 @@ namespace Server.MirObjects.Monsters
 
                 if (!CurrentMap.GetCell(location).Valid) break;
 
-                MoveTo(location);
+                Walk(dir);
+                MoveTime = 0;
+                ActionTime = 0;
             }
 
             return 0;
