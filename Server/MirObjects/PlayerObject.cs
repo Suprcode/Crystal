@@ -10216,6 +10216,12 @@ namespace Server.MirObjects
 
         public void MentorBreak(bool Force = false)
         {
+
+            if (Info.Mentor == 0)
+            {
+                ReceiveChat("You don't have a Mentorship active.", ChatType.System);
+                return;
+            }
             CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
             PlayerObject Player = Envir.GetPlayer(Mentor.Name);
 

@@ -21270,6 +21270,12 @@ namespace Client.MirScenes
             };
             RemoveButton.Click += (o, e) =>
             {
+                if (MentorName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
+                    return;
+                }
+
                 MirMessageBox messageBox = new MirMessageBox(string.Format("Cancelling a Mentorship early will cause a cooldown. Are you sure?"), MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (oo, ee) => Network.Enqueue(new C.CancelMentor { });
