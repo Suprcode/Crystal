@@ -1518,7 +1518,7 @@ namespace Server.MirObjects
             Enqueue(new S.LevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
             Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });
 
-            if (Info.Married != 0)
+            if (Info.Mentor != 0)
             {
                 CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
                 if ((Mentor != null) && ((Info.Level + Settings.MentorLevelGap) > Mentor.Level))
@@ -10216,6 +10216,12 @@ namespace Server.MirObjects
 
         public void MentorBreak(bool Force = false)
         {
+
+            if (Info.Mentor == 0)
+            {
+                ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
+                return;
+            }
             CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
             PlayerObject Player = Envir.GetPlayer(Mentor.Name);
 
