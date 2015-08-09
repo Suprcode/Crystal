@@ -167,7 +167,7 @@ namespace Client.MirScenes
                 using (MD5 md5 = MD5.Create())
                 using (FileStream stream = File.OpenRead(Application.ExecutablePath))
                     sum = md5.ComputeHash(stream);
-                sum = new byte[] { 145, 195, 22, 189, 70, 205, 51, 51, 246, 176, 188, 211, 44, 231, 30, 57 };
+                //sum = new byte[] { 145, 195, 22, 189, 70, 205, 51, 51, 246, 176, 188, 211, 44, 231, 30, 57 };
                 p.VersionHash = sum;
                 Network.Enqueue(p);
             }

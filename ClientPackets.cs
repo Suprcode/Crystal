@@ -364,6 +364,22 @@ namespace ClientPackets
         }
     }
 
+    public sealed class ReplaceWedRing : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ReplaceWedRing; } }
+
+        public ulong UniqueID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadUInt64();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+        }
+    }
+
 
     public sealed class DepositTradeItem : Packet
     {
@@ -882,6 +898,129 @@ namespace ClientPackets
             writer.Write(AcceptInvite);
         }
     }
+
+    public sealed class MarriageRequest : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MarriageRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class MarriageReply : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MarriageReply; } }
+
+        public bool AcceptInvite;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AcceptInvite = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(AcceptInvite);
+        }
+    }
+
+    public sealed class ChangeMarriage : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ChangeMarriage; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class DivorceRequest : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DivorceRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class DivorceReply : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DivorceReply; } }
+
+        public bool AcceptInvite;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AcceptInvite = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(AcceptInvite);
+        }
+    }
+
+    public sealed class AddMentor : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AddMentor; } }
+
+        public string Name;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+        }
+    }
+
+    public sealed class MentorReply : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MentorReply; } }
+
+        public bool AcceptInvite;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AcceptInvite = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(AcceptInvite);
+        }
+    }
+
+    public sealed class AllowMentor : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AllowMentor; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class CancelMentor : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.CancelMentor; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+
     public sealed class TradeReply : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.TradeReply; } }
@@ -910,6 +1049,7 @@ namespace ClientPackets
             //writer.Write(Name);
         }
     }
+
     public sealed class TradeGold : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.TradeGold; } }

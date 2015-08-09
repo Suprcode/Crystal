@@ -31,6 +31,7 @@ namespace Server.MirObjects
             RefineKey = "[@REFINE]",
             RefineCheckKey = "[@REFINECHECK]",
             RefineCollectKey = "[@REFINECOLLECT]",
+            ReplaceWedRingKey = "[@REPLACEWEDDINGRING]",
             BuyBackKey = "[@BUYBACK]",
             StorageKey = "[@STORAGE]",
             ConsignKey = "[@CONSIGN]",
@@ -910,6 +911,9 @@ namespace Server.MirObjects
                 case RefineCollectKey:
                     player.CollectRefine();
                     break;
+                case ReplaceWedRingKey:
+                    player.Enqueue(new S.NPCReplaceWedRing { Rate = Settings.ReplaceWedRingCost });
+                    break;
                 case StorageKey:
                     player.SendStorage();
                     player.Enqueue(new S.NPCStorage());
@@ -1215,6 +1219,14 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.CheckQuest, parts[1], parts[2]));
                     break;
+                case "CHECKRELATIONSHIP":
+                    CheckList.Add(new NPCChecks(CheckType.CheckRelationship));
+                    break;
+                case "CHECKWEDDINGRING":
+                    CheckList.Add(new NPCChecks(CheckType.CheckWeddingRing));
+                    break;
+
+
             }
 
         }
@@ -1597,6 +1609,12 @@ namespace Server.MirObjects
 
                 case "ENTERMAP":
                     acts.Add(new NPCActions(ActionType.EnterMap));
+                    break;
+                case "MAKEWEDDINGRING":
+                    acts.Add(new NPCActions(ActionType.MakeWeddingRing));
+                    break;
+                case "FORCEDIVORCE":
+                    acts.Add(new NPCActions(ActionType.ForceDivorce));
                     break;
             }
 
@@ -1999,7 +2017,18 @@ namespace Server.MirObjects
                             failed = !player.CompletedQuests.Contains(tempInt);
                         }
                         break;
-
+                    case CheckType.CheckRelationship:
+                        if (player.Info.Married == 0)
+                        {
+                            failed = true;
+                        }
+                        break;
+                    case CheckType.CheckWeddingRing:
+                        if ((player.Info.Equipment[(int)EquipmentSlot.RingL] == null) || (player.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1))
+                        {
+                            failed = true;
+                        }
+                        break;
                 }
 
                 if (!failed) continue;
@@ -2697,6 +2726,12 @@ namespace Server.MirObjects
                         player.NPCMoveMap = null;
                         player.NPCMoveCoord = Point.Empty;
                         break;
+                    case ActionType.MakeWeddingRing:
+                        player.MakeWeddingRing();
+                        break;
+                    case ActionType.ForceDivorce:
+                        player.NPCDivorce();
+                        break;
                 }
             }
         }
@@ -3001,6 +3036,8 @@ namespace Server.MirObjects
         EnterMap,
         GivePearls,
         TakePearls,
+        MakeWeddingRing,
+        ForceDivorce,
     }
     public enum CheckType
     {
@@ -3029,5 +3066,7 @@ namespace Server.MirObjects
         InGuild,
         CheckMap,
         CheckQuest,
+        CheckRelationship,
+        CheckWeddingRing,
     }
 }

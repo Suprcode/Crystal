@@ -33,6 +33,7 @@ namespace Client.MirScenes
         Refine,
         CheckRefine,
         CollectRefine,
+        ReplaceWedRing,
     }
 
     public sealed class GameScene : MirScene
@@ -1097,6 +1098,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCCollectRefine:
                     NPCCollectRefine((S.NPCCollectRefine)p);
                     break;
+                case (short)ServerPacketIds.NPCReplaceWedRing:
+                    NPCReplaceWedRing((S.NPCReplaceWedRing)p);
+                    break;
                 case (short)ServerPacketIds.NPCStorage:
                     NPCStorage();
                     break;
@@ -1278,6 +1282,15 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCUpdate:
                     NPCUpdate((S.NPCUpdate)p);
                     break;
+                case (short)ServerPacketIds.MarriageRequest:
+                    MarriageRequest((S.MarriageRequest)p);
+                    break;
+                case (short)ServerPacketIds.DivorceRequest:
+                    DivorceRequest((S.DivorceRequest)p);
+                    break;
+                case (short)ServerPacketIds.MentorRequest:
+                    MentorRequest((S.MentorRequest)p);
+                    break;
                 case (short)ServerPacketIds.TradeRequest:
                     TradeRequest((S.TradeRequest)p);
                     break;
@@ -1437,6 +1450,12 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.FriendUpdate:
                     FriendUpdate((S.FriendUpdate)p);
+                    break;
+                case (short)ServerPacketIds.LoverUpdate:
+                    LoverUpdate((S.LoverUpdate)p);
+                    break;
+                case (short)ServerPacketIds.MentorUpdate:
+                    MentorUpdate((S.MentorUpdate)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -1622,6 +1641,12 @@ namespace Client.MirScenes
                     return 12;
                 case BuffType.Transform:
                     return 19;
+                case BuffType.Mentor:
+                    return 30;
+                case BuffType.Mentee:
+                    return 30;
+                case BuffType.RelationshipEXP:
+                    return 61;
 
                 //Consumables
                 case BuffType.Impact:
@@ -2391,6 +2416,7 @@ namespace Client.MirScenes
             InspectDialog.Gender = p.Gender;
             InspectDialog.Hair = p.Hair;
             InspectDialog.Level = p.Level;
+            InspectDialog.LoverName = p.LoverName;
 
             InspectDialog.RefreshInferface();
             InspectDialog.Show();
@@ -2969,13 +2995,9 @@ namespace Client.MirScenes
         private void Poisoned(S.Poisoned p)
         {
             User.Poison = p.Poison;
-            switch (p.Poison)
+            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis))
             {
-                case PoisonType.Frozen:
-                case PoisonType.Paralysis:
-                case PoisonType.Stun:
                     User.ClearMagic();
-                    break;
             }
         }
         private void ObjectPoisoned(S.ObjectPoisoned p)
@@ -3154,6 +3176,14 @@ namespace Client.MirScenes
         {
             if (!NPCDialog.Visible) return;
             NPCDialog.Hide();
+        }
+
+        private void NPCReplaceWedRing(S.NPCReplaceWedRing p)
+        {
+            if (!NPCDialog.Visible) return;
+            NPCRate = p.Rate;
+            NPCDropDialog.PType = PanelType.ReplaceWedRing;
+            NPCDropDialog.Show();
         }
 
 
@@ -4514,6 +4544,36 @@ namespace Client.MirScenes
             }
         }
 
+        private void MarriageRequest(S.MarriageRequest p)
+        {
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
+
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MarriageReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MarriageReply { AcceptInvite = false }); messageBox.Dispose(); };
+
+            messageBox.Show();
+        }
+
+        private void DivorceRequest(S.DivorceRequest p)
+        {
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has requested a divorce", p.Name), MirMessageBoxButtons.YesNo);
+
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.DivorceReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.DivorceReply { AcceptInvite = false }); messageBox.Dispose(); };
+
+            messageBox.Show();
+        }
+
+        private void MentorRequest(S.MentorRequest p)
+        {
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} (Level {1}) has requested you teach him the ways of the {2}.", p.Name, p.Level, GameScene.User.Class.ToString()), MirMessageBoxButtons.YesNo);
+
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MentorReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MentorReply { AcceptInvite = false }); messageBox.Dispose(); };
+
+            messageBox.Show();
+        }
+
         private void TradeRequest(S.TradeRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
@@ -4869,6 +4929,24 @@ namespace Client.MirScenes
             }
         }
 
+        private void LoverUpdate(S.LoverUpdate p)
+        {
+            GameScene.Scene.RelationshipDialog.LoverName = p.Name;
+            GameScene.Scene.RelationshipDialog.Date = p.Date;
+            GameScene.Scene.RelationshipDialog.MapName = p.MapName;
+            GameScene.Scene.RelationshipDialog.UpdateInterface();
+        }
+
+        private void MentorUpdate(S.MentorUpdate p)
+        {
+            GameScene.Scene.MentorDialog.MentorName = p.Name;
+            GameScene.Scene.MentorDialog.MentorLevel = p.Level;
+            GameScene.Scene.MentorDialog.MentorOnline = p.Online;
+            GameScene.Scene.MentorDialog.MenteeEXP = p.MenteeEXP;
+
+            GameScene.Scene.MentorDialog.UpdateInterface();
+        }
+
         public void AddItem(UserItem item)
         {
             Redraw();
@@ -5065,6 +5143,18 @@ namespace Client.MirScenes
                 }
             }
 
+            String WedRingName = "";
+            if (HoverItem.WeddingRing == -1)
+            {
+                WedRingName = HoverItem.Info.Type.ToString() +
+                "\n" + "W " + HoverItem.Weight + text;
+            }
+            else
+            {
+                WedRingName = "Wedding Ring" +
+                "\n" + "W " + HoverItem.Weight + text;
+            }
+
             MirLabel etcLabel = new MirLabel
             {
                 AutoSize = true,
@@ -5072,8 +5162,7 @@ namespace Client.MirScenes
                 Location = new Point(4, nameLabel.DisplayRectangle.Bottom),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Type.ToString() +
-                "\n" + "W " + HoverItem.Weight + text 
+                Text = WedRingName
             };
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
@@ -8061,6 +8150,7 @@ namespace Client.MirScenes
 
                 Objects[i].DrawChat();
                 Objects[i].DrawHealth();
+                Objects[i].DrawPoison();
             }
 
             if (!Settings.Effect) return;
@@ -8380,7 +8470,7 @@ namespace Client.MirScenes
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
             if (!CanRideAttack()) AutoHit = false;
             
-            if (CMain.Time < InputDelay || User.Poison == PoisonType.Paralysis || User.Poison == PoisonType.Frozen || User.Fishing) return;
+            if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
             
             if (User.NextMagic != null && !User.RidingMount)
             {
@@ -8626,7 +8716,7 @@ namespace Client.MirScenes
 
         private void UseMagic(ClientMagic magic)
         {
-            if (CMain.Time < GameScene.SpellTime || User.Poison == PoisonType.Stun)
+            if (CMain.Time < GameScene.SpellTime || User.Poison.HasFlag(PoisonType.Stun))
             {
                 User.ClearMagic();
                 return;
@@ -9775,6 +9865,14 @@ namespace Client.MirScenes
                     backColour = Color.FromArgb(255, 225,185, 250);
                     foreColour = Color.Blue;
                     break;
+                case ChatType.Relationship:
+                    backColour = Color.Transparent;
+                    foreColour = Color.HotPink;
+                    break;
+                case ChatType.Mentor:
+                    backColour = Color.White;
+                    foreColour = Color.Purple;
+                    break;
                 default:
                     backColour = Color.White;
                     foreColour = Color.Black;
@@ -10227,7 +10325,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(122, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Mentor"
+                Hint = "Group"
             };
             GroupButton.Click += (o, e) =>
             {
@@ -10299,6 +10397,16 @@ namespace Client.MirScenes
                     GuildButton.Index = 2056;
                     GuildButton.HoverIndex = 2056;
                     GameScene.Scene.ChatDialog.ChatPrefix = "!~";
+                    break;
+                case "Lover":
+                    LoverButton.Index = 2047;
+                    LoverButton.HoverIndex = 2047;
+                    GameScene.Scene.ChatDialog.ChatPrefix = ":)";
+                    break;
+                case "Mentor":
+                    MentorButton.Index = 2050;
+                    MentorButton.HoverIndex = 2050;
+                    GameScene.Scene.ChatDialog.ChatPrefix = "!#";
                     break;
             }
         }
@@ -12239,8 +12347,9 @@ namespace Client.MirScenes
         public MirGender Gender;
         public byte Hair;
         public byte Level;
+        public string LoverName;
 
-        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton;
+        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton, LoverButton;
         public MirImageControl CharacterPage, ClassImage;
         public MirLabel NameLabel;
         public MirLabel GuildLabel, LoverLabel;
@@ -12416,6 +12525,14 @@ namespace Client.MirScenes
                 GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart = Name.Length + 2;
 
             };
+            LoverButton = new MirButton
+            {
+                Index = 604,
+                Location = new Point(17, 17),
+                Library = Libraries.Prguse,
+                Parent = this,
+            };
+
             GuildLabel = new MirLabel
             {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
@@ -12572,6 +12689,14 @@ namespace Client.MirScenes
 
             NameLabel.Text = Name;
             GuildLabel.Text = GuildName + " " + GuildRank;
+            if (LoverName != "")
+            {
+                LoverButton.Visible = true;
+                LoverButton.Hint = LoverName;
+            }
+            else
+                LoverButton.Visible = false;
+                
 
             for (int i = 0; i < Items.Length; i++)
             {
@@ -13189,7 +13314,8 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 202),
-                Visible = false
+                Visible = true,
+                Hint = "Mentor (W)"
             };
             MentorButton.Click += (o, e) =>
             {
@@ -13207,7 +13333,8 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
-                Visible = false
+                Visible = true,
+                Hint = "Relationship (L)"
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -14143,6 +14270,17 @@ namespace Client.MirScenes
                     }
                         Network.Enqueue(new C.CheckRefine { UniqueID = TargetItem.UniqueID });
                     break;
+
+                case PanelType.ReplaceWedRing:
+
+                    if (TargetItem.Info.Type != ItemType.Ring)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(String.Format("{0} isn't a ring.", TargetItem.FriendlyName), ChatType.System);
+                        return;
+                    }
+
+                    Network.Enqueue(new C.ReplaceWedRing { UniqueID = TargetItem.UniqueID });
+                    break;
             }
 
 
@@ -14311,6 +14449,11 @@ namespace Client.MirScenes
                     HoldButton.Visible = false;
                     ConfirmButton.Visible = true;
                     break;
+                case PanelType.ReplaceWedRing:
+                    text = "Replace: ";
+                    HoldButton.Visible = false;
+                    ConfirmButton.Visible = true;
+                    break;
 
                 default: return;
 
@@ -14342,7 +14485,9 @@ namespace Client.MirScenes
                     case PanelType.Refine:
                         text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
                         break;
-
+                    case PanelType.ReplaceWedRing:
+                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
+                        break;
                     default: return;
                 }
 
@@ -20758,11 +20903,19 @@ namespace Client.MirScenes
     public sealed class RelationshipDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
-        public MirButton CloseButton;
+        public MirButton CloseButton, AllowButton, RequestButton, DivorceButton, MailButton, WhisperButton;
+        public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel, LoverLengthLabel;
+
+
+        public string LoverName = "";
+        public DateTime Date;
+        public string MapName = "";
+        public short MarriedDays = 0;
+
 
         public RelationshipDialog()
         {
-            Index = 120;
+            Index = 583;
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
@@ -20780,13 +20933,171 @@ namespace Client.MirScenes
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(206, 3),
+                Location = new Point(260, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            AllowButton = new MirButton
+            {
+                HoverIndex = 611,
+                Index = 610,
+                Location = new Point(50, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 612,
+                Sound = SoundList.ButtonA,
+                Hint = "Allow/Block Marriage"
+            };
+            AllowButton.Click += (o, e) => Network.Enqueue(new C.ChangeMarriage());
+
+            RequestButton = new MirButton
+            {
+                HoverIndex = 601,
+                Index = 600,
+                Location = new Point(85, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 602,
+                Sound = SoundList.ButtonA,
+                Hint = "Request Marriage"
+            };
+            RequestButton.Click += (o, e) =>
+            {
+                if (LoverName != "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're already married.", ChatType.System);
+                    return;
+                }
+                
+                Network.Enqueue(new C.MarriageRequest());
+            };
+
+            DivorceButton = new MirButton
+            {
+                HoverIndex = 617,
+                Index = 616,
+                Location = new Point(120, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 618,
+                Sound = SoundList.ButtonA,
+                Hint = "Request Divorce"
+            };
+            DivorceButton.Click += (o, e) =>
+            {
+                if (LoverName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    return;
+                }
+
+                Network.Enqueue(new C.DivorceRequest());
+            };
+
+            MailButton = new MirButton
+            {
+                HoverIndex = 438,
+                Index = 437,
+                Location = new Point(155, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 439,
+                Sound = SoundList.ButtonA,
+                Hint = "Mail Lover"
+            };
+            MailButton.Click += (o, e) =>
+            {
+                if (LoverName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    return;
+                }
+
+                GameScene.Scene.MailComposeLetterDialog.ComposeMail(LoverName);
+            };
+
+            WhisperButton = new MirButton
+            {
+                HoverIndex = 567,
+                Index = 566,
+                Location = new Point(190, 164),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 568,
+                Sound = SoundList.ButtonA,
+                Hint = "Whisper Lover"
+            };
+            WhisperButton.Click += (o, e) =>
+            {
+                if (LoverName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    return;
+                }
+                   
+                if (MapName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("Lover is not online", ChatType.System);
+                    return;
+                }
+                GameScene.Scene.ChatDialog.ChatTextBox.SetFocus();
+                GameScene.Scene.ChatDialog.ChatTextBox.Text = ":)";
+                GameScene.Scene.ChatDialog.ChatTextBox.Visible = true;
+                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionLength = 0;
+                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart = GameScene.Scene.ChatDialog.ChatTextBox.Text.Length;
+            };
+
+            LoverNameLabel = new MirLabel
+            {
+                Location = new Point(30, 40),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            LoverDateLabel = new MirLabel
+            {
+                Location = new Point(30, 65),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            LoverLengthLabel = new MirLabel
+            {
+                Location = new Point(30, 90),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            LoverOnlineLabel = new MirLabel
+            {
+                Location = new Point(30, 115),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
         }
 
 
@@ -20800,13 +21111,57 @@ namespace Client.MirScenes
             if (Visible) return;
             Visible = true;
         }
+
+        public void UpdateInterface()
+        {
+            LoverNameLabel.Text = "Lover:  " + LoverName;
+            
+            if (MapName != "")
+            {
+                LoverOnlineLabel.Text = "Location:  " + MapName;
+            }
+            else
+                LoverOnlineLabel.Text = "Location:  Offline";
+
+            if ((LoverName == "") && (Date != null))
+            {
+                if (Date < new DateTime(2000))
+                {
+                    LoverDateLabel.Text = "Date: ";
+                    LoverLengthLabel.Text = "Length: ";
+                }
+                else
+                {
+                    LoverDateLabel.Text = "Divorced Date:  " + Date.ToShortDateString();
+                    LoverLengthLabel.Text = "Time Since: " + MarriedDays + " Days";
+                }
+                    
+
+                LoverOnlineLabel.Text = "Location: ";
+                AllowButton.Hint = "Allow/Block Marriage";
+            }
+            else
+            {
+                LoverDateLabel.Text = "Marriage Date:  " + Date.ToShortDateString();
+                LoverLengthLabel.Text = "Length: " + MarriedDays.ToString() + " Days" ;
+                AllowButton.Hint = "Allow/Block Recall";
+            }
+                
+
+        }
     }
 
 
     public sealed class MentorDialog : MirImageControl
     {
         public MirImageControl TitleLabel;
-        public MirButton CloseButton;
+        public MirButton CloseButton, AllowButton, AddButton, RemoveButton;
+        public MirLabel MentorNameLabel, MentorLevelLabel, MentorOnlineLabel, StudentNameLabel, StudentLevelLabel, StudentOnlineLabel, MentorLabel, StudentLabel, MenteeEXPLabel;
+
+        public string MentorName;
+        public byte MentorLevel;
+        public bool MentorOnline;
+        public long MenteeEXP;
 
         public MentorDialog()
         {
@@ -20825,6 +21180,8 @@ namespace Client.MirScenes
                 Parent = this
             };
 
+
+
             CloseButton = new MirButton
             {
                 HoverIndex = 361,
@@ -20836,8 +21193,216 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
-        }
 
+            AllowButton = new MirButton
+            {
+                HoverIndex = 115,
+                Index = 114,
+                Location = new Point(30, 178),
+                Library = Libraries.Prguse,
+                Parent = this,
+                PressedIndex = 116,
+                Sound = SoundList.ButtonA,
+                Hint = "Allow/Disallow Mentor Requests",
+            };
+            AllowButton.Click += (o, e) =>
+            {
+                if (AllowButton.Index == 116)
+                {
+                    AllowButton.Index = 117;
+                    AllowButton.HoverIndex = 118;
+                    AllowButton.PressedIndex = 119;
+                }
+                else
+                {
+                    AllowButton.Index = 114;
+                    AllowButton.HoverIndex = 115;
+                    AllowButton.PressedIndex = 116;
+                }
+
+                Network.Enqueue(new C.AllowMentor());
+            };
+
+
+            AddButton = new MirButton
+            {
+                HoverIndex = 214,
+                Index = 213,
+                Location = new Point(60, 178),
+                Library = Libraries.Title,
+                Parent = this,
+                PressedIndex = 215,
+                Sound = SoundList.ButtonA,
+                Hint = "Add Mentor",
+            };
+            AddButton.Click += (o, e) =>
+            {
+                if (MentorLevel != 0)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You already have a Mentor.", ChatType.System);
+                    return;
+                }
+
+                string message = "Please enter the name of the person you would like to be your Mentor.";
+
+                MirInputBox inputBox = new MirInputBox(message);
+
+                inputBox.OKButton.Click += (o1, e1) =>
+                {
+                    Network.Enqueue(new C.AddMentor { Name = inputBox.InputTextBox.Text });
+                    inputBox.Dispose();
+                };
+
+                inputBox.Show();
+
+            };
+
+            RemoveButton = new MirButton
+            {
+                HoverIndex = 217,
+                Index = 216,
+                Location = new Point(135, 178),
+                Library = Libraries.Title,
+                Parent = this,
+                PressedIndex = 218,
+                Sound = SoundList.ButtonA,
+                Hint = "Remove Mentor/Mentee",
+            };
+            RemoveButton.Click += (o, e) =>
+            {
+                if (MentorName == "")
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
+                    return;
+                }
+
+                MirMessageBox messageBox = new MirMessageBox(string.Format("Cancelling a Mentorship early will cause a cooldown. Are you sure?"), MirMessageBoxButtons.YesNo);
+
+                messageBox.YesButton.Click += (oo, ee) => Network.Enqueue(new C.CancelMentor { });
+                messageBox.NoButton.Click += (oo, ee) => { messageBox.Dispose(); };
+
+                messageBox.Show();
+
+            };
+
+            MentorNameLabel = new MirLabel
+            {
+                Location = new Point(20, 58),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            MentorLevelLabel = new MirLabel
+            {
+                Location = new Point(170, 58),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            MentorOnlineLabel = new MirLabel
+            {
+                Location = new Point(125, 58),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.Green,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Visible = false,
+                Text = "ONLINE",
+            };
+
+            StudentNameLabel = new MirLabel
+            {
+                Location = new Point(20, 112),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            StudentLevelLabel = new MirLabel
+            {
+                Location = new Point(170, 111),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.LightGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 10F),
+            };
+
+            StudentOnlineLabel = new MirLabel
+            {
+                Location = new Point(125, 112),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.Green,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Visible = false,
+                Text = "ONLINE",
+            };
+
+            MentorLabel = new MirLabel
+            {
+                Location = new Point(15, 41),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.DimGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Text = "MENTOR",
+            };
+
+            StudentLabel = new MirLabel
+            {
+                Location = new Point(15, 94),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.DimGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+                Text = "MENTEE",
+            };
+
+            MenteeEXPLabel = new MirLabel
+            {
+                Location = new Point(15, 147),
+                Size = new Size(200, 30),
+                BackColour = Color.Empty,
+                ForeColour = Color.DimGray,
+                DrawFormat = TextFormatFlags.VerticalCenter,
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+            };
+
+
+
+
+        }
 
         public void Hide()
         {
@@ -20849,6 +21414,59 @@ namespace Client.MirScenes
             if (Visible) return;
             Visible = true;
         }
+
+        public void UpdateInterface()
+        {
+            if (MentorLevel == 0)
+            {
+                MentorNameLabel.Visible = false;
+                MentorLevelLabel.Visible = false;
+                MentorOnlineLabel.Visible = false;
+                StudentNameLabel.Visible = false;
+                StudentLevelLabel.Visible = false;
+                StudentOnlineLabel.Visible = false;
+                MenteeEXPLabel.Visible = false;
+                return;
+            }
+
+            MentorNameLabel.Visible = true;
+            MentorLevelLabel.Visible = true;
+            MentorOnlineLabel.Visible = true;
+            StudentNameLabel.Visible = true;
+            StudentLevelLabel.Visible = true;
+            StudentOnlineLabel.Visible = true;
+
+            if (GameScene.User.Level > MentorLevel)
+            {
+                MentorNameLabel.Text = GameScene.User.Name;
+                MentorLevelLabel.Text = "Lv " + GameScene.User.Level.ToString();
+                MentorOnlineLabel.Visible = false;
+
+                StudentNameLabel.Text = MentorName;
+                StudentLevelLabel.Text = "Lv " + MentorLevel.ToString();
+                if (MentorOnline)
+                    StudentOnlineLabel.Visible = true;
+                else
+                    StudentOnlineLabel.Visible = false;
+
+                MenteeEXPLabel.Visible = true;
+                MenteeEXPLabel.Text = "MENTEE EXP: " + MenteeEXP;
+            }
+            else
+            {
+                MentorNameLabel.Text = MentorName;
+                MentorLevelLabel.Text = "Lv " + MentorLevel.ToString();
+                if (MentorOnline)
+                    MentorOnlineLabel.Visible = true;
+                else
+                    MentorOnlineLabel.Visible = false;
+
+                StudentNameLabel.Text = GameScene.User.Name;
+                StudentLevelLabel.Text = "Lv " + GameScene.User.Level.ToString();
+                StudentOnlineLabel.Visible = false;
+            }
+        }
+
     }
 
     public class Buff
@@ -21008,6 +21626,15 @@ namespace Client.MirScenes
                     break;
                 case BuffType.MagicWonderShield:
                     text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
+                    break;
+                case BuffType.RelationshipEXP:
+                    text = string.Format("Love is in the Air\nExpRate increased by: {0}%.\n", Values[0]);
+                    break;
+                case BuffType.Mentee:
+                    text = string.Format("In Training\nLearn skill points twice as quick.\nExpRate increased by: {0}%.\n", Values[0]);
+                    break;
+                case BuffType.Mentor:
+                    text = string.Format("Mentorship Empowerment\n+{0}% damage to monsters.\n", Values[0]);
                     break;
             }
 

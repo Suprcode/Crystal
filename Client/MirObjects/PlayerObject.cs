@@ -39,6 +39,7 @@ namespace Client.MirObjects
         public FrameSet Frames;
         public Frame Frame, WingFrame;
         public int FrameIndex, FrameInterval, EffectFrameIndex, EffectFrameInterval, SlowFrameIndex;
+        public byte SkipFrameUpdate = 0;
 
         public bool HasClassWeapon
         {
@@ -777,36 +778,26 @@ namespace Client.MirObjects
                 Effects[i].Process();
 
             Color colour = DrawColour;
-
-            switch (Poison)
+            DrawColour = Color.White;
+            if (Poison != PoisonType.None)
             {
-                case PoisonType.None:
-                    DrawColour = Color.White;
-                    break;
-                case PoisonType.Green:
+                
+                if (Poison.HasFlag(PoisonType.Green))
                     DrawColour = Color.Green;
-                    break;
-                case PoisonType.Red:
+                if (Poison.HasFlag(PoisonType.Red))
                     DrawColour = Color.Red;
-                    break;
-                case PoisonType.Bleeding:
+                if (Poison.HasFlag(PoisonType.Bleeding))
                     DrawColour = Color.DarkRed;
-                    break;
-                case PoisonType.Slow:
+                if (Poison.HasFlag(PoisonType.Slow))
                     DrawColour = Color.Purple;
-                    break;
-                case PoisonType.Stun:
+                if (Poison.HasFlag(PoisonType.Stun))
                     DrawColour = Color.Yellow;
-                    break;
-                case PoisonType.Frozen:
+                if (Poison.HasFlag(PoisonType.Frozen))
                     DrawColour = Color.Blue;
-                    break;
-                case PoisonType.Paralysis:
+                if (Poison.HasFlag(PoisonType.Paralysis))
                     DrawColour = Color.Gray;
-                    break;
-                case PoisonType.DelayedExplosion:
+                if (Poison.HasFlag(PoisonType.DelayedExplosion))
                     DrawColour = Color.Orange;
-                    break;
             }
 
 
@@ -2191,7 +2182,7 @@ namespace Client.MirObjects
         public virtual void ProcessFrames()
         {
             if (Frame == null) return;
-
+            //thedeath2
             //slow frame speed
             //if (Poison == PoisonType.Slow)
             //{
@@ -2222,16 +2213,17 @@ namespace Client.MirObjects
                 case MirAction.Sneek:
                 case MirAction.DashAttack:
                     if (!GameScene.CanMove) return;
+                    
 
                     GameScene.Scene.MapControl.TextureValid = false;
 
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-
+                    //if (CMain.Time < NextMotion) return;
                     if (SkipFrames) UpdateFrame();
 
 
 
-                    if (UpdateFrame() >= Frame.Count)
+                    if (UpdateFrame(false) >= Frame.Count)
                     {
 
 
@@ -2245,6 +2237,7 @@ namespace Client.MirObjects
                             if (FrameIndex == 1 || FrameIndex == 4)
                                 PlayStepSound();
                         }
+                        //NextMotion += FrameInterval;
                     }
 
                     if (WingEffect > 0 && CMain.Time >= NextMotion2)
@@ -2259,7 +2252,7 @@ namespace Client.MirObjects
                             NextMotion2 += EffectFrameInterval;
                     }
                     break;
-                    case MirAction.Jump:
+                 case MirAction.Jump:
                     if (!GameScene.CanMove) return;
                     GameScene.Scene.MapControl.TextureValid = false;
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
@@ -3405,10 +3398,17 @@ namespace Client.MirObjects
             //if Revive and dead set action
 
         }
-        public int UpdateFrame()
+        public int UpdateFrame(bool skip = true)
         {
             if (Frame == null) return 0;
-
+            if (Poison.HasFlag(PoisonType.Slow) && !skip)
+            {
+                SkipFrameUpdate++;
+                if (SkipFrameUpdate == 2)
+                    SkipFrameUpdate = 0;
+                else
+                    return FrameIndex;
+            }
             if (Frame.Reverse) return Math.Abs(--FrameIndex);
 
             return ++FrameIndex;

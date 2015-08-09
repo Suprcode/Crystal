@@ -255,6 +255,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CheckRefine:
                     CheckRefine((C.CheckRefine)p);
                     break;
+                case (short)ClientPacketIds.ReplaceWedRing:
+                    ReplaceWedRing((C.ReplaceWedRing)p);
+                    break;
                 case (short)ClientPacketIds.DepositTradeItem:
                     DepositTradeItem((C.DepositTradeItem)p);
                     break;
@@ -398,6 +401,33 @@ namespace Server.MirNetwork
                     return;
                 case (short)ClientPacketIds.GuildWarReturn:
                     GuildWarReturn((C.GuildWarReturn)p);
+                    return;
+                case (short)ClientPacketIds.MarriageRequest:
+                    MarriageRequest((C.MarriageRequest)p);
+                    return;
+                case (short)ClientPacketIds.MarriageReply:
+                    MarriageReply((C.MarriageReply)p);
+                    return;
+                case (short)ClientPacketIds.ChangeMarriage:
+                    ChangeMarriage((C.ChangeMarriage)p);
+                    return;
+                case (short)ClientPacketIds.DivorceRequest:
+                    DivorceRequest((C.DivorceRequest)p);
+                    return;
+                case (short)ClientPacketIds.DivorceReply:
+                    DivorceReply((C.DivorceReply)p);
+                    return;
+                case (short)ClientPacketIds.AddMentor:
+                    AddMentor((C.AddMentor)p);
+                    return;
+                case (short)ClientPacketIds.MentorReply:
+                    MentorReply((C.MentorReply)p);
+                    return;
+                case (short)ClientPacketIds.AllowMentor:
+                    AllowMentor((C.AllowMentor)p);
+                    return;
+                case (short)ClientPacketIds.CancelMentor:
+                    CancelMentor((C.CancelMentor)p);
                     return;
                 case (short)ClientPacketIds.TradeRequest:
                     TradeRequest((C.TradeRequest)p);
@@ -819,6 +849,13 @@ namespace Server.MirNetwork
             Player.CheckRefine(p.UniqueID);
         }
 
+        private void ReplaceWedRing(C.ReplaceWedRing p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.ReplaceWeddingRing(p.UniqueID);
+        }
+
         private void DepositTradeItem(C.DepositTradeItem p)
         {
             if (Stage != GameStage.Game) return;
@@ -1139,6 +1176,90 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
             Player.GuildWarReturn(p.Name);
         }
+
+
+        private void MarriageRequest(C.MarriageRequest p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarriageRequest();
+        }
+
+        private void MarriageReply(C.MarriageReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarriageReply(p.AcceptInvite);
+        }
+
+        private void ChangeMarriage(C.ChangeMarriage p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            if (Player.Info.Married == 0)
+            {
+                Player.AllowMarriage = !Player.AllowMarriage;
+                if (Player.AllowMarriage)
+                    Player.ReceiveChat("You're now allowing marriage requests.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking marriage requests.", ChatType.Hint);
+            }
+            else
+            {
+                Player.AllowLoverRecall = !Player.AllowLoverRecall;
+                if (Player.AllowLoverRecall)
+                    Player.ReceiveChat("You're now allowing recall from lover.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking recall from lover.", ChatType.Hint);
+            }
+        }
+
+        private void DivorceRequest(C.DivorceRequest p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DivorceRequest();
+        }
+
+        private void DivorceReply(C.DivorceReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DivorceReply(p.AcceptInvite);
+        }
+
+        private void AddMentor(C.AddMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.AddMentor(p.Name);
+        }
+
+        private void MentorReply(C.MentorReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MentorReply(p.AcceptInvite);
+        }
+
+        private void AllowMentor(C.AllowMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+                Player.AllowMentor = !Player.AllowMentor;
+                if (Player.AllowMentor)
+                    Player.ReceiveChat("You're now allowing mentor requests.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking mentor requests.", ChatType.Hint);
+        }
+
+        private void CancelMentor(C.CancelMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MentorBreak(true);
+        }
+
         private void TradeRequest(C.TradeRequest p)
         {
             if (Stage != GameStage.Game) return;

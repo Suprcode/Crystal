@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 59;
+        public const int Version = 60;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -327,201 +327,209 @@ namespace Server.MirEnvir
 
         private void WorkLoop()
         {
-            Time = Stopwatch.ElapsedMilliseconds;
-
-            long conTime = Time;
-            long saveTime = Time + Settings.SaveDelay * Settings.Minute;
-            long userTime = Time + Settings.Minute * 5;
-
-            long processTime = Time + 1000;
-            long StartTime = Time;
-            int processCount = 0;
-            int processRealCount = 0;
-
-            LinkedListNode<MapObject> current = null;
-
-            if (Settings.Multithreaded)
-            {
-                for (int j = 0; j < MobThreads.Length; j++)
-                {
-                    MobThreads[j] = new MobThread();
-                    MobThreads[j].Id = j;
-                }
-            }
-
-            StartEnvir();
-            string canstartserver = CanStartEnvir();
-            if (canstartserver != "true")
-            {
-                SMain.Enqueue(canstartserver);
-                StopEnvir();
-                _thread = null;
-                Stop();                
-                return;
-            }
-
-            if (Settings.Multithreaded)
-            {
-                for (int j = 0; j < MobThreads.Length; j++)
-                {
-                    MobThread Info = MobThreads[j];
-                    if (j > 0) //dont start up 0 
-                    {
-                        MobThreading[j] = new Thread(() => ThreadLoop(Info));
-                        MobThreading[j].IsBackground = true;
-                        MobThreading[j].Start();
-                    }
-                }
-            }
-
-            StartNetwork();
-
             try
             {
+                Time = Stopwatch.ElapsedMilliseconds;
 
-                while (Running)
+                long conTime = Time;
+                long saveTime = Time + Settings.SaveDelay * Settings.Minute;
+                long userTime = Time + Settings.Minute * 5;
+
+                long processTime = Time + 1000;
+                long StartTime = Time;
+                int processCount = 0;
+                int processRealCount = 0;
+
+                LinkedListNode<MapObject> current = null;
+
+                if (Settings.Multithreaded)
                 {
-                    Time = Stopwatch.ElapsedMilliseconds;
-
-                    if (Time >= processTime)
+                    for (int j = 0; j < MobThreads.Length; j++)
                     {
-                        LastCount = processCount;
-                        LastRealCount = processRealCount;
-                        processCount = 0;
-                        processRealCount = 0;
-                        processTime = Time + 1000;
+                        MobThreads[j] = new MobThread();
+                        MobThreads[j].Id = j;
                     }
-
-                    
-                    if (conTime != Time)
-                    {
-                        conTime = Time;
-
-                        AdjustLights();
-
-
-                        lock (Connections)
-                        {
-                            for (int i = Connections.Count - 1; i >= 0; i--)
-                            {
-                                Connections[i].Process();
-                            }
-                        }
-                        lock (StatusConnections)
-                        {
-                            for (int i = StatusConnections.Count - 1; i >= 0; i--)
-                            {
-                                StatusConnections[i].Process();
-                            }
-                        }
-                    }
-                    
-
-                    if (current == null)
-                        current = Objects.First;
-
-                    if (current == Objects.First)
-                    {
-                        LastRunTime = Time - StartTime;
-                        StartTime = Time;
-                    }
-
-                    if (Settings.Multithreaded)
-                    {
-                        for (int j = 1; j < MobThreads.Length; j++)
-                        {
-                            MobThread Info = MobThreads[j];
-
-                            if (Info.Stop == true)
-                            {
-                                Info.EndTime = Time + 20;
-                                Info.Stop = false;
-                            }
-                        }
-                        lock (_locker)
-                        {
-                            Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
-                        }
-                        //run the first loop in the main thread so the main thread automaticaly 'halts' untill the other threads are finished
-                        ThreadLoop(MobThreads[0]);                        
-                    }
-                    
-                    Boolean TheEnd = false;
-                    long Start = Stopwatch.ElapsedMilliseconds;
-                    while ((!TheEnd) && (Stopwatch.ElapsedMilliseconds - Start < 20))
-                    {
-                        if (current == null)
-                        {
-                            TheEnd = true;
-                            break;
-                        }
-                        else
-                        {
-                            LinkedListNode<MapObject> next = current.Next;
-                            if (!Settings.Multithreaded || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
-                            {
-                                if (Time > current.Value.OperateTime)
-                                {
-
-                                    current.Value.Process();
-                                    current.Value.SetOperateTime();
-                                }
-                                processCount++;
-                            }
-                            current = next;
-                        }
-                    }
-                    for (int i = 0; i < MapList.Count; i++)
-                        MapList[i].Process();
-                    
-                    if (DragonSystem != null) DragonSystem.Process();
-
-                    Process();
-
-                    if (Time >= saveTime)
-                    {
-                        saveTime = Time + Settings.SaveDelay * Settings.Minute;
-                        BeginSaveAccounts();
-                        SaveGuilds();
-                        SaveGoods();
-                    }
-
-                    if (Time >= userTime)
-                    {
-                        userTime = Time + Settings.Minute * 5;
-                        Broadcast(new S.Chat
-                            {
-                                Message = string.Format("Online Players: {0}", Players.Count),
-                                Type = ChatType.Hint
-                            });
-                    }
-
-                    //   if (Players.Count == 0) Thread.Sleep(1);
-                    //   GC.Collect();
-
-                    
                 }
 
+                StartEnvir();
+                string canstartserver = CanStartEnvir();
+                if (canstartserver != "true")
+                {
+                    SMain.Enqueue(canstartserver);
+                    StopEnvir();
+                    _thread = null;
+                    Stop();
+                    return;
+                }
+
+                if (Settings.Multithreaded)
+                {
+                    for (int j = 0; j < MobThreads.Length; j++)
+                    {
+                        MobThread Info = MobThreads[j];
+                        if (j > 0) //dont start up 0 
+                        {
+                            MobThreading[j] = new Thread(() => ThreadLoop(Info));
+                            MobThreading[j].IsBackground = true;
+                            MobThreading[j].Start();
+                        }
+                    }
+                }
+
+                StartNetwork();
+
+                try
+                {
+
+                    while (Running)
+                    {
+                        Time = Stopwatch.ElapsedMilliseconds;
+
+                        if (Time >= processTime)
+                        {
+                            LastCount = processCount;
+                            LastRealCount = processRealCount;
+                            processCount = 0;
+                            processRealCount = 0;
+                            processTime = Time + 1000;
+                        }
+
+
+                        if (conTime != Time)
+                        {
+                            conTime = Time;
+
+                            AdjustLights();
+
+
+                            lock (Connections)
+                            {
+                                for (int i = Connections.Count - 1; i >= 0; i--)
+                                {
+                                    Connections[i].Process();
+                                }
+                            }
+                            lock (StatusConnections)
+                            {
+                                for (int i = StatusConnections.Count - 1; i >= 0; i--)
+                                {
+                                    StatusConnections[i].Process();
+                                }
+                            }
+                        }
+
+
+                        if (current == null)
+                            current = Objects.First;
+
+                        if (current == Objects.First)
+                        {
+                            LastRunTime = Time - StartTime;
+                            StartTime = Time;
+                        }
+
+                        if (Settings.Multithreaded)
+                        {
+                            for (int j = 1; j < MobThreads.Length; j++)
+                            {
+                                MobThread Info = MobThreads[j];
+
+                                if (Info.Stop == true)
+                                {
+                                    Info.EndTime = Time + 20;
+                                    Info.Stop = false;
+                                }
+                            }
+                            lock (_locker)
+                            {
+                                Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
+                            }
+                            //run the first loop in the main thread so the main thread automaticaly 'halts' untill the other threads are finished
+                            ThreadLoop(MobThreads[0]);
+                        }
+
+                        Boolean TheEnd = false;
+                        long Start = Stopwatch.ElapsedMilliseconds;
+                        while ((!TheEnd) && (Stopwatch.ElapsedMilliseconds - Start < 20))
+                        {
+                            if (current == null)
+                            {
+                                TheEnd = true;
+                                break;
+                            }
+                            else
+                            {
+                                LinkedListNode<MapObject> next = current.Next;
+                                if (!Settings.Multithreaded || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
+                                {
+                                    if (Time > current.Value.OperateTime)
+                                    {
+
+                                        current.Value.Process();
+                                        current.Value.SetOperateTime();
+                                    }
+                                    processCount++;
+                                }
+                                current = next;
+                            }
+                        }
+                        for (int i = 0; i < MapList.Count; i++)
+                            MapList[i].Process();
+
+                        if (DragonSystem != null) DragonSystem.Process();
+
+                        Process();
+
+                        if (Time >= saveTime)
+                        {
+                            saveTime = Time + Settings.SaveDelay * Settings.Minute;
+                            BeginSaveAccounts();
+                            SaveGuilds();
+                            SaveGoods();
+                        }
+
+                        if (Time >= userTime)
+                        {
+                            userTime = Time + Settings.Minute * 5;
+                            Broadcast(new S.Chat
+                                {
+                                    Message = string.Format("Online Players: {0}", Players.Count),
+                                    Type = ChatType.Hint
+                                });
+                        }
+
+                        //   if (Players.Count == 0) Thread.Sleep(1);
+                        //   GC.Collect();
+
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    SMain.Enqueue(ex);
+
+                    lock (Connections)
+                    {
+                        for (int i = Connections.Count - 1; i >= 0; i--)
+                            Connections[i].SendDisconnect(3);
+                    }
+
+                    File.AppendAllText(@".\Error.txt",
+                                           string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+                }
+
+                StopNetwork();
+                StopEnvir();
+                SaveAccounts();
+                SaveGuilds(true);
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
-
-                lock (Connections)
-                {
-                    for (int i = Connections.Count - 1; i >= 0; i--)
-                        Connections[i].SendDisconnect(3);
-                }
-
+                SMain.Enqueue("[outer workloop error]" + ex);
                 File.AppendAllText(@".\Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
-
-            StopNetwork();
-            StopEnvir(); 
-            SaveAccounts();
-            SaveGuilds(true);
-
             _thread = null;
         }
         
@@ -1014,7 +1022,7 @@ namespace Server.MirEnvir
                     count = reader.ReadInt32();
                     for (int i = 0; i < count; i++)
                     {
-                        AuctionInfo auction = new AuctionInfo(reader);
+                        AuctionInfo auction = new AuctionInfo(reader, LoadVersion, LoadCustomVersion);
 
                         if (!BindItem(auction.Item) || !BindCharacter(auction)) continue;
 
@@ -1041,7 +1049,7 @@ namespace Server.MirEnvir
                         count = reader.ReadInt32();
                         for (int i = 0; i < count; i++)
                         {
-                            Mail.Add(new MailInfo(reader));
+                            Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
                         }
                     }
                 }

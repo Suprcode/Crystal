@@ -960,9 +960,11 @@ namespace Server.MirObjects
                         }
                         break;
                 }
-
+                type |= poison.PType;
+                /*
                 if ((int)type < (int)poison.PType)
                     type = poison.PType;
+                 */
             }
 
             
@@ -1795,8 +1797,21 @@ namespace Server.MirObjects
 
             attacker.GatherElement();
 
-            ChangeHP(armour - damage);
+            if (attacker.Info.Mentor != 0 && attacker.Info.isMentor)
+            {
+                Buff buff = attacker.Buffs.Where(e => e.Type == BuffType.Mentor).FirstOrDefault();
+                if (buff != null)
+                {
+                    CharacterInfo Mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
+                    PlayerObject player = Envir.GetPlayer(Mentee.Name);
+                    if (player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
+                    {
+                        damage += ((damage / 100) * Settings.MentorDamageBoost);
+                    }
+                }
+            }
 
+            ChangeHP(armour - damage);
             return damage - armour;
         }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
