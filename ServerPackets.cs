@@ -1357,6 +1357,7 @@ namespace ServerPackets
         public MirGender Gender;
         public byte Hair;
         public byte Level;
+        public string LoverName;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1374,6 +1375,7 @@ namespace ServerPackets
             Gender = (MirGender)reader.ReadByte();
             Hair = reader.ReadByte();
             Level = reader.ReadByte();
+            LoverName = reader.ReadString();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1393,7 +1395,57 @@ namespace ServerPackets
             writer.Write((byte)Gender);
             writer.Write(Hair);
             writer.Write(Level);
+            writer.Write(LoverName);
 
+        }
+    }
+
+    public sealed class MarriageRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.MarriageRequest; } }
+
+        public string Name;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+        }
+    }
+
+    public sealed class DivorceRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.DivorceRequest; } }
+
+        public string Name;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+        }
+    }
+
+    public sealed class MentorRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.MentorRequest; } }
+
+        public string Name;
+        public byte Level;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+            Level = reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write(Level);
         }
     }
 
@@ -2480,6 +2532,23 @@ namespace ServerPackets
             writer.Write(Success);
         }
     }
+
+    public sealed class NPCReplaceWedRing : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.NPCReplaceWedRing; } }
+
+        public float Rate;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Rate = reader.ReadSingle();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Rate);
+        }
+    }
+
     public sealed class NPCStorage : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.NPCStorage; } }
@@ -4854,6 +4923,64 @@ namespace ServerPackets
 
             for (int i = 0; i < Friends.Count; i++)
                 Friends[i].Save(writer);
+        }
+    }
+
+    public sealed class LoverUpdate : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.LoverUpdate; }
+        }
+
+        public string Name;
+        public DateTime Date;
+        public string MapName;
+        public short MarriedDays;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+            Date = DateTime.FromBinary(reader.ReadInt64());
+            MapName = reader.ReadString();
+            MarriedDays = reader.ReadInt16();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write(Date.ToBinary());
+            writer.Write(MapName);
+            writer.Write(MarriedDays);
+        }
+    }
+
+    public sealed class MentorUpdate : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.MentorUpdate; }
+        }
+
+        public string Name;
+        public byte Level;
+        public bool Online;
+        public long MenteeEXP;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+            Level = reader.ReadByte();
+            Online = reader.ReadBoolean();
+            MenteeEXP = reader.ReadInt64();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write(Level);
+            writer.Write(Online);
+            writer.Write(MenteeEXP);
         }
     }
 }

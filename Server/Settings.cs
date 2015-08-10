@@ -144,16 +144,30 @@ namespace Server
         //Refine Settings
         public static bool OnlyRefineWeapon = true;
         public static byte RefineBaseChance = 20;
-        public static byte RefineTime = 20;
+        public static int RefineTime = 20;
         public static byte RefineIncrease = 1;
         public static byte RefineCritChance = 10;
         public static byte RefineCritIncrease = 2;
         public static byte RefineWepStatReduce = 6;
         public static byte RefineItemStatReduce = 15;
-        public static byte RefineCost = 200;
+        public static int RefineCost = 125;
 
         public static string RefineOreName = "BlackIronOre";
 
+        //Marriage Settings
+        public static int LoverEXPBonus = 5;
+        public static int MarriageCooldown = 7;
+        public static bool WeddingRingRecall = true;
+        public static int MarriageLevelRequired = 10;
+        public static int ReplaceWedRingCost = 125;
+
+        //Mentor Settings
+        public static byte MentorLevelGap = 10;
+        public static bool MentorSkillBoost = true;
+        public static byte MentorLength = 7;
+        public static byte MentorDamageBoost = 10;
+        public static byte MentorExpBoost = 10;
+        public static byte MenteeExpBank = 1;
 
 
         //Goods Settings
@@ -392,6 +406,8 @@ namespace Server
             LoadFishing();
             LoadMail();
             LoadRefine();
+            LoadMarriage();
+            LoadMentor();
             LoadGoods();
         }
         public static void Save()
@@ -1064,13 +1080,13 @@ namespace Server
             InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
             OnlyRefineWeapon = reader.ReadBoolean("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
             RefineBaseChance = reader.ReadByte("Config", "BaseChance", RefineBaseChance);
-            RefineTime = reader.ReadByte("Config", "Time", RefineTime);
+            RefineTime = reader.ReadInt32("Config", "Time", RefineTime);
             RefineIncrease = reader.ReadByte("Config", "StatIncrease", RefineIncrease);
             RefineCritChance = reader.ReadByte("Config", "CritChance", RefineCritChance);
             RefineCritIncrease = reader.ReadByte("Config", "CritIncrease", RefineCritIncrease);
             RefineWepStatReduce = reader.ReadByte("Config", "WepStatReducedChance", RefineWepStatReduce);
             RefineItemStatReduce = reader.ReadByte("Config", "ItemStatReducedChance", RefineItemStatReduce);
-            RefineCost = reader.ReadByte("Config", "RefineCost", RefineCost);
+            RefineCost = reader.ReadInt32("Config", "RefineCost", RefineCost);
 
             RefineOreName = reader.ReadString("Ore", "OreName", RefineOreName);
         }
@@ -1091,6 +1107,59 @@ namespace Server
             reader.Write("Ore", "OreName", RefineOreName);
 
         }
+
+        public static void LoadMarriage()
+        {
+            if (!File.Exists(ConfigPath + @".\MarriageSystem.ini"))
+            {
+                SaveMarriage();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\MarriageSystem.ini");
+            LoverEXPBonus = reader.ReadInt32("Config", "EXPBonus", LoverEXPBonus);
+            MarriageCooldown = reader.ReadInt32("Config", "MarriageCooldown", MarriageCooldown);
+            WeddingRingRecall = reader.ReadBoolean("Config", "AllowLoverRecall", WeddingRingRecall);
+            MarriageLevelRequired = reader.ReadInt32("Config", "MinimumLevel", MarriageLevelRequired);
+            ReplaceWedRingCost = reader.ReadInt32("Config", "ReplaceRingCost", ReplaceWedRingCost);
+        }
+        public static void SaveMarriage()
+        {
+            File.Delete(ConfigPath + @".\MarriageSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\MarriageSystem.ini");
+            reader.Write("Config", "EXPBonus", LoverEXPBonus);
+            reader.Write("Config", "MarriageCooldown", MarriageCooldown);
+            reader.Write("Config", "AllowLoverRecall", WeddingRingRecall);
+            reader.Write("Config", "MinimumLevel", MarriageLevelRequired);
+            reader.Write("Config", "ReplaceRingCost", ReplaceWedRingCost); 
+        }
+
+        public static void LoadMentor()
+        {
+            if (!File.Exists(ConfigPath + @".\MentorSystem.ini"))
+            {
+                SaveMarriage();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");
+            MentorLevelGap = reader.ReadByte("Config", "LevelGap", MentorLevelGap);
+            MentorSkillBoost = reader.ReadBoolean("Config", "MenteeSkillBoost", MentorSkillBoost);
+            MentorLength = reader.ReadByte("Config", "MentorshipLength", MentorLength);
+            MentorDamageBoost = reader.ReadByte("Config", "MentorDamageBoost", MentorDamageBoost);
+            MentorExpBoost = reader.ReadByte("Config", "MenteeExpBoost", MentorExpBoost);
+            MenteeExpBank = reader.ReadByte("Config", "PercentXPtoMentor", MenteeExpBank);
+        }
+        public static void SaveMentor()
+        {
+            File.Delete(ConfigPath + @".\MentorSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");
+            reader.Write("Config", "LevelGap", MentorLevelGap);
+            reader.Write("Config", "MenteeSkillBoost", MentorSkillBoost);
+            reader.Write("Config", "MentorshipLength", MentorLength);
+            reader.Write("Config", "MentorDamageBoost", MentorDamageBoost);
+            reader.Write("Config", "MenteeExpBoost", MentorExpBoost);
+            reader.Write("Config", "PercentXPtoMentor", MenteeExpBank);
+        }
+
 
         public static void LoadGoods()
         {
