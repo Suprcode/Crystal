@@ -202,7 +202,7 @@ namespace Server
         public static List<ItemVolume> Guild_CreationCostList = new List<ItemVolume>();
         public static List<long> Guild_ExperienceList = new List<long>();
         public static List<int> Guild_MembercapList = new List<int>();
-        public static List<GuildBuff> Guild_BuffList = new List<GuildBuff>();
+        public static List<GuildBuffInfo> Guild_BuffList = new List<GuildBuffInfo>();
 
         public static void LoadVersion()
         {
@@ -841,13 +841,7 @@ namespace Server
             byte TotalBuffs = reader.ReadByte("Guilds", "TotalBuffs", 0);
             for (i = 0; i < TotalBuffs; i++)
             {
-                Guild_BuffList.Add(new GuildBuff()
-                {
-                    Cost = reader.ReadInt32("Buff-" + i.ToString(), "Cost",0),
-                    PointsNeeded = reader.ReadByte("Buff-" + i.ToString(), "PointsNeeded", 0),
-                    RunTime = reader.ReadInt64("Buff-" + i.ToString(), "RunTime", 0),
-                    MinimumLevel = reader.ReadByte("Buff-" + i.ToString(), "MinimumLevel",0)
-                });
+                Guild_BuffList.Add(new GuildBuffInfo(reader, i));
             }
 
 
@@ -880,10 +874,7 @@ namespace Server
             }
             for (i = 0; i < Guild_BuffList.Count; i++)
             {
-                reader.Write("Buff-" + i.ToString(), "Cost", Guild_BuffList[i].Cost);
-                reader.Write("Buff-" + i.ToString(), "PointsNeeded", Guild_BuffList[i].PointsNeeded);
-                reader.Write("Buff-" + i.ToString(), "RunTime", Guild_BuffList[i].RunTime);
-                reader.Write("Buff-" + i.ToString(), "MinimumLevel", Guild_BuffList[i].MinimumLevel);
+                Guild_BuffList[i].save(reader, i);
             }
         }
         public static void LinkGuildCreationItems(List<ItemInfo> ItemList)

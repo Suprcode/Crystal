@@ -507,6 +507,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.AddMemo:
                     AddMemo((C.AddMemo)p);
                     break;
+                case (short)ClientPacketIds.GuildBuffUpdate:
+                    GuildBuffUpdate((C.GuildBuffUpdate)p);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -1410,6 +1413,11 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.AddMemo(p.CharacterIndex, p.Memo);
+        }
+        private void GuildBuffUpdate(C.GuildBuffUpdate p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.GuildBuffUpdate(p.Action,p.Id);
         }
     }
 }

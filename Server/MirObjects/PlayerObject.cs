@@ -273,6 +273,7 @@ namespace Server.MirObjects
         public bool GuildNoticeChanged = true; //set to false first time client requests notice list, set to true each time someone in guild edits notice
         public bool GuildMembersChanged = true;//same as above but for members
         public bool GuildCanRequestItems = true;
+        public bool RequestedGuildBuffInfo = false;
         public override bool Blocking
         {
             get
@@ -295,7 +296,7 @@ namespace Server.MirObjects
         public bool GameStarted { get; set; }
 
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing;
-        public bool HasMuscleRing, HasClearRing, HasParalysisRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss;
+        public bool HasMuscleRing, HasClearRing, HasParalysisRing, HasProbeNecklace, NoDuraLoss;
 
         public PlayerObject GroupInvitation;
         public PlayerObject TradeInvitation;
@@ -313,6 +314,15 @@ namespace Server.MirObjects
         {
             get { return Info.CompletedQuests; }
         }
+
+        //thedeath
+        public byte AttackBonus;
+        public byte MineRate;
+        public byte GemRate;
+        public byte FishRate;
+        public byte CraftRate;
+        public byte SkillNeckBoost;
+
 
         public PlayerObject(CharacterInfo info, MirConnection connection)
         {
@@ -336,6 +346,10 @@ namespace Server.MirObjects
 
             if (Level == 0) NewCharacter();
 
+            if (Info.GuildIndex != -1)
+            {
+                MyGuild = Envir.GetGuild(Info.GuildIndex);
+            }
             RefreshStats();
 
             if (HP == 0)
@@ -1704,7 +1718,8 @@ namespace Server.MirObjects
             ReceiveChat("Welcome to the Legend of Mir 2 C# Server.", ChatType.Hint);
             if (Info.GuildIndex != -1)
             {
-                MyGuild = Envir.GetGuild(Info.GuildIndex);
+
+                //MyGuild = Envir.GetGuild(Info.GuildIndex);
                 if (MyGuild == null)
                 {
                     Info.GuildIndex = -1;
@@ -1806,7 +1821,11 @@ namespace Server.MirObjects
             Info.Poisons.Clear();
 
             if (MyGuild != null)
+            {
                 MyGuild.PlayerLogged(this, true);
+                if (MyGuild.BuffList.Count > 0)
+                    Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
+            }
 
             Report.Connected(Connection.IPAddress);
 
@@ -2103,6 +2122,7 @@ namespace Server.MirObjects
             RefreshBuffs();
             RefreshStatCaps();
             RefreshMountStats();
+            RefreshGuildBuffs();
 
             //Location Stats ?
 
@@ -2224,7 +2244,7 @@ namespace Server.MirObjects
             HasMuscleRing = false;
             HasParalysisRing = false;
             HasProbeNecklace = false;
-            HasSkillNecklace = false;
+            SkillNeckBoost = 1;
             NoDuraLoss = false;
             FastRun = false;
 
@@ -2309,7 +2329,7 @@ namespace Server.MirObjects
                         skillsToRemove.Remove(Settings.HealRing);
                     }
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) HasSkillNecklace = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) SkillNeckBoost = 3;
                     if (RealItem.Unique.HasFlag(SpecialItemMode.NoDuraLoss)) NoDuraLoss = true;
                 }
 
@@ -2831,6 +2851,36 @@ namespace Server.MirObjects
             if (Old_TransformType != TransformType)
             {
                 Broadcast(new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType });
+            }
+        }
+
+        public void RefreshGuildBuffs()
+        {
+            if (MyGuild == null) return;
+            if (MyGuild.BuffList.Count == 0) return;
+            for (int i = 0; i < MyGuild.BuffList.Count; i++)
+            {
+                GuildBuff Buff = MyGuild.BuffList[i];
+                if ((Buff.Info == null) || (!Buff.Active)) continue;
+                MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + Buff.Info.BuffAc);
+                MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + Buff.Info.BuffMac);
+                MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + Buff.Info.BuffDc);
+                MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + Buff.Info.BuffMc);
+                MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + Buff.Info.BuffSc);
+                AttackBonus = (byte)Math.Min(byte.MaxValue, AttackBonus + Buff.Info.BuffAttack);
+                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + Buff.Info.BuffMaxHp);
+                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + Buff.Info.BuffMaxMp);
+                MineRate = (byte)Math.Min(byte.MaxValue,MineRate + Buff.Info.BuffMineRate);
+                GemRate = (byte)Math.Min(byte.MaxValue,GemRate + Buff.Info.BuffGemRate);
+                FishRate = (byte)Math.Min(byte.MaxValue,FishRate + Buff.Info.BuffFishRate);
+                ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + Buff.Info.BuffExpRate);
+                CraftRate = (byte)Math.Min(byte.MaxValue, CraftRate + Buff.Info.BuffCraftRate); //needs coding
+                SkillNeckBoost = (byte)Math.Min(byte.MaxValue, SkillNeckBoost + Buff.Info.BuffSkillRate);
+                HealthRecovery = (byte)Math.Min(byte.MaxValue,HealthRecovery + Buff.Info.BuffHpRegen);
+                SpellRecovery = (byte)Math.Min(byte.MaxValue, SpellRecovery + Buff.Info.BuffMPRegen);
+                ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + Buff.Info.BuffDropRate);
+                GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + Buff.Info.BuffGoldRate);
+
             }
         }
 
@@ -5165,7 +5215,7 @@ namespace Server.MirObjects
                         if (Rubble != null)
                             ActionList.Add(new DelayedAction(DelayedType.Mine, Envir.Time + 400, Rubble));
                         //check if we get a payout
-                        if (Envir.Random.Next(100) <= Mine.Mine.DropRate)
+                        if (Envir.Random.Next(100) <= (Mine.Mine.DropRate + (MineRate * 5)))
                         {
                             GetMinePayout(Mine.Mine);
                         }
@@ -8223,7 +8273,7 @@ namespace Server.MirObjects
         public void LevelMagic(UserMagic magic)
         {
             byte exp = (byte)(Envir.Random.Next(3) + 1);
-            if (HasSkillNecklace) exp *= 3;
+            exp *= SkillNeckBoost;
             if (Level == 255) exp = byte.MaxValue;
 
             int oldLevel = magic.Level;
@@ -8687,6 +8737,8 @@ namespace Server.MirObjects
 
             if (damageWeapon)
                 attacker.DamageWeapon();
+
+            damage += attacker.AttackBonus;
 
             if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
             {
@@ -10832,7 +10884,7 @@ namespace Server.MirObjects
                     }
 
                     int successchance = tempFrom.Info.Reflect * (int)tempTo.GemCount;
-                    successchance = successchance >= tempFrom.Info.CriticalRate ? 0 : tempFrom.Info.CriticalRate - successchance;
+                    successchance = successchance >= tempFrom.Info.CriticalRate ? 0 : (tempFrom.Info.CriticalRate - successchance) + (GemRate * 5);
 
                     //check if combine will succeed
 
@@ -14341,6 +14393,55 @@ namespace Server.MirObjects
             return true;
         }
 
+        public void GuildBuffUpdate(byte Type, int Id)
+        {
+            if (MyGuild == null) return;
+            if (MyGuildRank == null) return;
+            if (Id < 0) return;
+            switch (Type)
+            {
+                case 0://request info list
+                    if (RequestedGuildBuffInfo) return;
+                    Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
+                    break;
+                case 1://buy the buff
+                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanActivateBuff))
+                    {
+                        ReceiveChat("You do not have the correct guild rank.", ChatType.System);
+                        return;
+                    }
+                    GuildBuffInfo BuffInfo = Envir.FindGuildBuffInfo(Id);
+                    if (BuffInfo == null)
+                    {
+                        ReceiveChat("Buff does not excist.", ChatType.System);
+                        return;
+                    }
+                    if (MyGuild.GetBuff(Id) != null)
+                    {
+                        ReceiveChat("Buff already obtained.", ChatType.System);
+                        return;
+                    }
+                    if ((MyGuild.Level < BuffInfo.LevelRequirement) || (MyGuild.SparePoints < BuffInfo.PointsRequirement)) return;//client checks this so it shouldnt be possible without a moded client :p
+                    MyGuild.NewBuff(Id);
+                    break;
+                case 2://activate the buff
+                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanActivateBuff))
+                    {
+                        ReceiveChat("You do not have the correct guild rank.", ChatType.System);
+                        return;
+                    }
+                    GuildBuff Buff = MyGuild.GetBuff(Id);
+                    if (Buff == null)
+                    {
+                        ReceiveChat("Buff not obtained.", ChatType.System);
+                        return;
+                    }
+                    if ((MyGuild.Gold < Buff.Info.ActivationCost) || (Buff.Active)) return;
+                    MyGuild.ActivateBuff(Id);
+                    break;
+            }
+        }
+
         #endregion
 
 
@@ -14790,6 +14891,7 @@ namespace Server.MirObjects
 
             if (cast) FishingChance = Settings.FishingSuccessStart + (int)successStat + (FishingChanceCounter != 0 ? Envir.Random.Next(failedAddSuccessMin, failedAddSuccessMax) : 0) + (FishingChanceCounter * Settings.FishingSuccessMultiplier); //10 //10
             if (FishingChanceCounter != 0) DamagedFishingItem(FishingSlot.Finder, 1);
+            FishingChance += FishRate * 5;
 
             FishingChance = Math.Min(100, Math.Max(0, FishingChance));
             FishingNibbleChance = Math.Min(100, Math.Max(0, FishingNibbleChance));

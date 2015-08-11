@@ -143,6 +143,7 @@ namespace Client.MirObjects
             RefreshSkills();
             RefreshBuffs();
             RefreshMountStats();
+            RefreshGuildBuffs();
             //RefreshFishingStats();
 
             SetLibraries();
@@ -755,6 +756,30 @@ namespace Client.MirObjects
 
                 ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
                 Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
+            }
+        }
+
+        public void RefreshGuildBuffs()
+        {
+            if (User != this) return;
+            if (GameScene.Scene.GuildBuffDialog == null) return;
+            for (int i = 0; 1 < GameScene.Scene.GuildBuffDialog.EnabledBuffs.Count; i++)
+            {
+                GuildBuff Buff = GameScene.Scene.GuildBuffDialog.EnabledBuffs[i];
+                if (Buff == null) continue;
+                if (!Buff.Active) continue;
+                if (Buff.Info == null)
+                Buff.Info = GameScene.Scene.GuildBuffDialog.FindGuildBuffInfo(Buff.Id);
+                if (Buff.Info == null) continue;
+                MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + Buff.Info.BuffAc);
+                MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + Buff.Info.BuffMac);
+                MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + Buff.Info.BuffDc);
+                MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + Buff.Info.BuffMc);
+                MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + Buff.Info.BuffSc);
+                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + Buff.Info.BuffMaxHp);
+                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + Buff.Info.BuffMaxMp);
+                HealthRecovery = (byte)Math.Min(byte.MaxValue, HealthRecovery + Buff.Info.BuffHpRegen);
+                SpellRecovery = (byte)Math.Min(byte.MaxValue, SpellRecovery + Buff.Info.BuffMPRegen);
             }
         }
 
