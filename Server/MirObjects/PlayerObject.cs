@@ -1518,7 +1518,7 @@ namespace Server.MirObjects
             Enqueue(new S.LevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
             Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });
 
-            if (Info.Mentor != 0)
+            if (Info.Mentor != 0 && !Info.isMentor)
             {
                 CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
                 if ((Mentor != null) && ((Info.Level + Settings.MentorLevelGap) > Mentor.Level))
