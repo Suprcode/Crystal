@@ -10420,8 +10420,6 @@ namespace Client.MirScenes
         {
             Visible = false;
         }
-
-
     }
 
     public sealed class RefineDialog : MirImageControl

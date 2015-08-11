@@ -12,7 +12,6 @@ namespace Client.MirGraphics
         public static bool Loaded;
         public static int Count, Progress;
 
-
         public static readonly MLibrary
             ChrSel = new MLibrary(Settings.DataPath + "ChrSel"),
             Prguse = new MLibrary(Settings.DataPath + "Prguse"),
@@ -245,6 +244,10 @@ namespace Client.MirGraphics
 
             MiniMap.Initialize();
             Progress++;
+
+            Title.Initialize();
+            Progress++;
+
             MagIcon.Initialize();
             Progress++;
             MagIcon2.Initialize();

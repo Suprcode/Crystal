@@ -149,6 +149,8 @@ namespace Server.MirObjects
                     return new CrazyManworm(info);
                 case 67:
                     return new DarkDevourer(info);
+                case 68:
+                    return new Football(info);
                 default:
                     return new MonsterObject(info);
             }

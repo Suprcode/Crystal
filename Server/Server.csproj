@@ -233,6 +233,7 @@
     <Compile Include="MirObjects\Monsters\CharmedSnake.cs" />
     <Compile Include="MirObjects\Monsters\CrazyManworm.cs" />
     <Compile Include="MirObjects\Monsters\DarkDevourer.cs" />
+    <Compile Include="MirObjects\Monsters\Football.cs" />
     <Compile Include="MirObjects\Monsters\HumanAssassin.cs" />
     <Compile Include="MirObjects\Monsters\HumanWizard.cs" />
     <Compile Include="MirObjects\Monsters\DragonStatue.cs" />
