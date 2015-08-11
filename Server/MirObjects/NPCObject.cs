@@ -1397,14 +1397,25 @@ namespace Server.MirObjects
                     break;
 
                 //cant use stored var
-                case "LINEMESSAGE":
+                case "LOCALMESSAGE":
                     var match = regexMessage.Match(line);
                     if (match.Success)
                     {
                         var message = match.Groups[1].Captures[0].Value;
 
                         var last = parts.Count() - 1;
-                        acts.Add(new NPCActions(ActionType.LineMessage, message, parts[last]));
+                        acts.Add(new NPCActions(ActionType.LocalMessage, message, parts[last]));
+                    }
+                    break;
+
+                case "GLOBALMESSAGE":
+                    match = regexMessage.Match(line);
+                    if (match.Success)
+                    {
+                        var message = match.Groups[1].Captures[0].Value;
+
+                        var last = parts.Count() - 1;
+                        acts.Add(new NPCActions(ActionType.GlobalMessage, message, parts[last]));
                     }
                     break;
 
@@ -2056,6 +2067,7 @@ namespace Server.MirObjects
                 byte tempByte;
                 long tempLong;
                 bool tempBool;
+                Packet p;
 
                 ItemInfo info;
                 MonsterInfo monInfo;
@@ -2353,10 +2365,17 @@ namespace Server.MirObjects
                         }
                         break;
 
-                    case ActionType.LineMessage:
+                    case ActionType.LocalMessage:
                         ChatType chatType;
                         if (!Enum.TryParse(param[1], true, out chatType)) return;
                         player.ReceiveChat(param[0], chatType);
+                        break;
+
+                    case ActionType.GlobalMessage:
+                        if (!Enum.TryParse(param[1], true, out chatType)) return;
+
+                        p = new S.Chat { Message = param[0], Type = chatType };
+                        SMain.Envir.Broadcast(p);
                         break;
 
                     case ActionType.GiveSkill:
@@ -2636,7 +2655,7 @@ namespace Server.MirObjects
 
                     case ActionType.RefreshEffects:
                         player.SetLevelEffects();
-                        Packet p = new S.ObjectLevelEffects { ObjectID = player.ObjectID, LevelEffects = player.LevelEffects };
+                        p = new S.ObjectLevelEffects { ObjectID = player.ObjectID, LevelEffects = player.LevelEffects };
                         player.Enqueue(p);
                         player.Broadcast(p);
                         break;
@@ -3004,7 +3023,7 @@ namespace Server.MirObjects
         SetPkPoint,
         ChangeGender,
         ChangeClass,
-        LineMessage,
+        LocalMessage,
         Goto,
         GiveSkill,
         Set,
@@ -3038,6 +3057,7 @@ namespace Server.MirObjects
         TakePearls,
         MakeWeddingRing,
         ForceDivorce,
+        GlobalMessage
     }
     public enum CheckType
     {
