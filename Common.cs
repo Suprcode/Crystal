@@ -954,7 +954,6 @@ public enum Spell : byte
     MagicBooster = 51,
     MeteorStrike = 52,
     IceThrust = 53,
-    Blink = 54,
 
     //Taoist
     Healing = 61,
@@ -1023,7 +1022,8 @@ public enum Spell : byte
     MentalState = 141,
 
     //Custom
-    Portal = 150,
+    Blink = 151,
+    Portal = 152,
     
 
     //Map Events
