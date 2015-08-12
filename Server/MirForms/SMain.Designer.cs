@@ -545,6 +545,7 @@ namespace Server
             this.Name = "SMain";
             this.Text = "Legend of Mir Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SMain_FormClosing);
+            this.Load += new System.EventHandler(this.SMain_Load);
             this.MainTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

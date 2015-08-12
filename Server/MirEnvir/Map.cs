@@ -17,7 +17,6 @@ namespace Server.MirEnvir
         }
         
         public MapInfo Info;
-        //thedeath
         public int Thread = 0;
 
         public int Width, Height;

@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 60;
+        public const int Version = 61;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -107,7 +107,6 @@ namespace Server.MirEnvir
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
-        //thedeath2
         public List<MagicInfo> MagicInfoList = new List<MagicInfo>();
         public List<NPCInfo> NPCInfoList = new List<NPCInfo>();
         public DragonInfo DragonInfo = new DragonInfo();
@@ -165,7 +164,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        public long dayTime, warTime, mailTime;
+        public long dayTime, warTime, mailTime, GuildTime;
 
         private bool MagicExcists(Spell spell)
         {
@@ -668,6 +667,15 @@ namespace Server.MirEnvir
 
                 mailTime = Time + (Settings.Second * 10);
             }
+
+            if (Time >= GuildTime)
+            {
+                GuildTime = Time + (Settings.Minute);
+                for (int i = 0; i < GuildList.Count; i++)
+                {
+                    GuildList[i].Process();
+                }
+            }
         }
 
         public void Broadcast(Packet p)
@@ -714,7 +722,6 @@ namespace Server.MirEnvir
                     QuestInfoList[i].Save(writer);
 
                 DragonInfo.Save(writer);
-                //thedeath2
                 writer.Write(MagicInfoList.Count);
                 for (int i = 0; i < MagicInfoList.Count; i++)
                     MagicInfoList[i].Save(writer);
@@ -1351,7 +1358,7 @@ namespace Server.MirEnvir
             {
                 _StatusPort = new TcpListener(IPAddress.Parse(Settings.IPAddress), 3000);
                 _StatusPort.Start();
-                _StatusPort.BeginAcceptSocket(StatusConnection, null);
+                _StatusPort.BeginAcceptTcpClient(StatusConnection, null);
             }
             SMain.Enqueue("Network Started.");
 
@@ -2147,6 +2154,14 @@ namespace Server.MirEnvir
             {
                 info.Player.GetCompletedQuests();
             }       
+        }
+
+        public GuildBuffInfo FindGuildBuffInfo(int Id)
+        {
+            for (int i = 0; i < Settings.Guild_BuffList.Count; i++)
+                if (Settings.Guild_BuffList[i].Id == Id)
+                    return Settings.Guild_BuffList[i];
+            return null;
         }
     }
 }
