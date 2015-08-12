@@ -9862,7 +9862,7 @@ namespace Client.MirScenes
                     foreColour = Color.Green;
                     break;
                 case ChatType.LevelUp:
-                    backColour = Color.FromArgb(255, 225,185, 250);
+                    backColour = Color.FromArgb(255, 225, 185, 250);
                     foreColour = Color.Blue;
                     break;
                 case ChatType.Relationship:

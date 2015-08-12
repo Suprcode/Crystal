@@ -663,12 +663,11 @@ public enum ChatType : byte
     WhisperIn = 6,
     WhisperOut = 7,
     Guild = 8,
-    Experience = 9,
-    Trainer = 10,
-    LevelUp = 11,
-    System2 = 12,
-    Relationship = 13,
-    Mentor = 14,
+    Trainer = 9,
+    LevelUp = 10,
+    System2 = 11,
+    Relationship = 12,
+    Mentor = 13
 }
 
 public enum ItemType : byte
