@@ -65,7 +65,7 @@ namespace Server.MirObjects.Monsters
                 OutputAverage();
                 ResetStats();
             }
-
+            damage += attacker.AttackBonus;
             _currentAttacker = attacker;
             _hitCount++;
             _totalDamage += damage;

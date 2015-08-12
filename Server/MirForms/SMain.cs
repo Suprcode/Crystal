@@ -15,8 +15,6 @@ namespace Server
         public SMain()
         {
             InitializeComponent();
-            EditEnvir.LoadDB();
-            Envir.Start();
 
             AutoResize();
         }
@@ -349,6 +347,13 @@ namespace Server
         {
             MagicInfoForm form = new MagicInfoForm();
             form.ShowDialog();
+        }
+
+        private void SMain_Load(object sender, EventArgs e)
+        {
+            EditEnvir.LoadDB();
+            Envir.Start();
+            AutoResize();
         }
     }
 }
