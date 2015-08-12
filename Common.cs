@@ -113,10 +113,16 @@ public enum IntelligentCreatureType : byte
     BabySnowMan = 9,
 }
 
+//6 blank mob files
+//4 mob frames not added
+//2 blank frame sets (92, 173)
+//4 mob frames duplicate of other frame sets
+
+//TODO: add 2 missing frames in to blank frames, remove 2 duplicate frames (leaving no blanks and 2 duplicates)
 public enum Monster : ushort
 {
     Guard = 0,
-    Guard1 = 1,
+    TaoistGuard = 1,
     Guard2 = 2,
     Hen = 3,
     Deer = 4,
@@ -256,7 +262,7 @@ public enum Monster : ushort
     BrownFrogSpider = 138,
     ArcherGuard = 139,
     KatanaGuard = 140,
-    //Mob141 = 141, //duplicate brownfrogspider
+    //BLANK_141 = 141,
     Pig = 142,
     Bull = 143,
     Bush = 144,
@@ -275,11 +281,11 @@ public enum Monster : ushort
     MudPile = 156,
     TailedLion = 157,
     Behemoth = 158,
-    DarkDevourer = 159,
+    DarkDevourer = 159,//LIB BROKE??
     PoisonHugger = 160,
     Hugger = 161,
-    MutatedHugger = 162,
-    DreamDevourer = 163,
+    MutatedHugger = 162,//BROKE
+    DreamDevourer = 163,//LIB BROKE??
     Treasurebox = 164,
     SnowPile = 165,
     Snowman = 166,
@@ -288,29 +294,29 @@ public enum Monster : ushort
     RedTurtle = 169,
     GreenTurtle = 170,
     BlueTurtle = 171,
-    //Catapult = 172,
-    //SabukWallSection = 173,
-    //NammandWallSection = 174,
-    //OgreBlacksmith = 175,
-    BlueSanta = 176,
+    Catapult = 172, //not added frames //special 3 states in 1 
+    SabukWallSection = 173, //not added frames
+    NammandWallSection = 174, //not added frames
+    //BLANK_175 = 175,
+    BlueSanta = 176,//FRAMES BROKE
     BattleStandard = 177,
-    //ArcherGuard2 = 178,
+    ArcherGuard2 = 178, //NO FRAMES
     RedYimoogi = 179,
-    //Mob180 = 180, //duplicate whiteviper
-    //Mob181 = 181, //duplicate yellowviper
-    //Mob182 = 182, //duplicate blueviper
+    //BLANK_180 = 180,
+    //BLANK_181 = 181,
+    //BLANK_182 = 182,
     FlameTiger = 183,
-    WingedTigerLord = 184,
+    WingedTigerLord = 184,//FRAMES BROKE
     TowerTurtle = 185,
     FinialTurtle = 186,
-    TurtleKing = 187,
+    TurtleKing = 187,//NEEDS AI
     DarkTurtle = 188,
     LightTurtle = 189,
-    DarkSwordoma = 190,
-    DarkAxeoma = 191,
-    DarkCrossBowOma = 192,
+    DarkSwordOma = 190,
+    DarkAxeOma = 191,
+    DarkCrossbowOma = 192,
     DarkWingedOma = 193,
-    Bonewhoo = 194,
+    BoneWhoo = 194,
     DarkSpider = 195,
     ViscusWorm = 196,
     ViscusCrawler = 197,
@@ -367,17 +373,167 @@ public enum Monster : ushort
     HellLord = 247,
     WaterGuard = 248,
     IceGuard = 249,
+
+    ElementGuard = 250,
+    DemonGuard = 251,
+    KingGuard = 252,
+    Sanke10 = 253,
+    Sanke11 = 254,
+    Sanke12 = 255,
+    Sanke13 = 256,
+    Sanke14 = 257,
+    Sanke15 = 258,
+    Sanke16 = 259,
+    Sanke17 = 260,
+    DeathCrawler = 261,
+    BurningZombie = 262,
+    MudZombie = 263,
+    FrozenZombie = 264,
+    UndeadWolf = 265,
+    Demonwolf = 266,
+    WhiteMammoth = 267,
+    DarkBeast = 268,
+    LightBeast = 269,
+    BloodBaboon = 270,
+    HardenRhino = 271,
+    AncientBringer = 272,
+    FightingCat = 273,
+    FireCat = 274,
+    CatWidow = 275,
+    StainHammerCat = 276,
+    BlackHammerCat = 277,
+    StrayCat = 278,
+    CatShaman = 279,
+    Jar1 = 280,
+    Jar2 = 281,
+    SeedingsGeneral = 282,
+    RestlessJar = 283,
+    GeneralJinmYo = 284,
+    Bunny = 285,
+    Tucson = 286,
+    TucsonFighter = 287,
+    TucsonMage = 288,
+    TucsonWarrior = 289,
+    Armadillo = 290,
+    ArmadilloElder = 291,
+    TucsonEgg = 292,
+    PlaguedTucson = 293,
+    SandSnail = 294,
+    CannibalTentacles = 295,
+    TucsonGeneral = 296,
+    GasToad = 297,
+    Mantis = 298,
+    SwampWarrior = 299,
+
+    AssassinBird = 300,
+    RhinoWarrior = 301,
+    RhinoPriest = 302,
+    SwampSlime = 303,
+    RockGuard = 304,
+    MudWarrior = 305,
+    SmallPot = 306,
+    TreeQueen = 307,
+    ShellFighter = 308,
+    DarkBaboon = 309,
+    TwinHeadBeast = 310,
+    OmaCannibal = 311,
+    OmaBlest = 312,
+    OmaSlasher = 313,
+    OmaAssassin = 314,
+    OmaMage = 315,
+    OmaWitchDoctor = 316,
+    LightningBead = 317,
+    HealingBead = 318,
+    PowerUpBead = 319,
+    DarkOmaKing = 320,
+    CaveMage = 321,
+    Mandrill = 322,
+    PlagueCrab = 323,
+    CreeperPlant = 324,
+    FloatingWraith = 325,
+    ArmedPlant = 326,
+    AvengerPlant = 327,
+    Nadz = 328,
+    AvengingSpirit = 329,
+    AvengingWarrior = 330,
+    AxePlant = 331,
+    WoodBox = 332,
+    ClawBeast = 333,
+    KillerPlant = 334,
+    SackWarrior = 335,
+    WereTiger = 336,
+    KingHydrax = 337,
+    Hydrax = 338,
+    HornedMage = 339,
+    Basiloid = 340,
+    HornedArcher = 341,
+    ColdArcher = 342,
+    HornedWarrior = 343,
+    FloatingRock = 344,
+    ScalyBeast = 345,
+    HornedSorceror = 346,
+    BoulderSpirit = 347,
+    HornedCommander = 348,
+    MoonStone = 349,
+
+    SunStone = 350,
+    LightningStone = 351,
+    Turtlegrass = 352,
+    Mantree = 353,
+    Bear = 354,
+    Leopard = 355,
+    ChieftainArcher = 356,
+    ChieftainSword = 357,
+    StoningSpider = 358, //Archer Spell mob (not yet coded)
+    VampireSpider = 359, //Archer Spell mob
+    SpittingToad = 360, //Archer Spell mob
+    SnakeTotem = 361, //Archer Spell mob
+    CharmedSnake = 362, //Archer Spell mob
+    FrozenSoldier = 363,
+    FrozenFighter = 364,
+    FrozenArcher = 365,
+    FrozenKnight = 366,
+    FrozenGolem = 367,
+    IcePhantom = 368,
+    SnowWolf = 369,
+    SnowWolfKing = 370,
+    WaterDragon = 371,
+    BlackTortoise = 372,
+    Manticore = 373,
+    DragonWarrior = 374,
+    DragonArcher = 375,
+    Kirin = 376,
+    Guard3 = 377,
+    ArcherGuard3 = 378,
+    Bunny2 = 379,
+    FrozenMiner = 380,
+    FrozenAxeman = 381,
+    FrozenMagician = 382,
+    SnowYeti = 383,
+    IceCrystalSoldier = 384,
+    DarkWraith = 385,
+    DarkSpirit = 386,
+    CrystalBeast = 387,
+    RedOrb = 388,
+    BlueOrb = 389,
+    YellowOrb = 390,
+    GreenOrb = 391,
+    WhiteOrb = 392,
+    FatalLotus = 393,
+    AntCommander = 394,
+    CargoBoxwithlogo = 395,
+    Doe = 396,
+    //BLANK_397 = 397,
+    AngryReindeer = 398,
+    CargoBox = 399,
     
-    VampireSpider = 359,
-    SpittingToad = 360,
-    SnakeTotem = 361,
-    
-    CharmedSnake = 368,
-    
+    Ram1 = 400,
+    Ram2 = 401,
+    Kite = 403,
+
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
-
 
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
@@ -511,6 +667,8 @@ public enum ChatType : byte
     Trainer = 10,
     LevelUp = 11,
     System2 = 12,
+    Relationship = 13,
+    Mentor = 14,
 }
 
 public enum ItemType : byte
@@ -946,6 +1104,9 @@ public enum BuffType : byte
     ManaAid,
     WonderShield,
     MagicWonderShield,
+    RelationshipEXP,
+    Mentee,
+    Mentor,
     GuildBuff,
 }
 
@@ -1050,6 +1211,7 @@ public enum ServerPacketIds : short
     NPCRefine,
     NPCCheckRefine,
     NPCCollectRefine,
+    NPCReplaceWedRing,
     NPCStorage,
     SellItem,
     RepairItem,
@@ -1110,6 +1272,9 @@ public enum ServerPacketIds : short
     GuildRequestWar,
     DefaultNPC,
     NPCUpdate,
+    MarriageRequest,
+    DivorceRequest,
+    MentorRequest,
     TradeRequest,
     TradeAccept,
     TradeGold,
@@ -1167,6 +1332,8 @@ public enum ServerPacketIds : short
 
     TransformUpdate,
     FriendUpdate,
+    LoverUpdate,
+    MentorUpdate,
     GuildBuffList
 }
 
@@ -1200,6 +1367,7 @@ public enum ClientPacketIds : short
     RefineCancel,
     RefineItem,
     CheckRefine,
+    ReplaceWedRing,
     DepositTradeItem,
     RetrieveTradeItem,
     DropGold,
@@ -1241,6 +1409,15 @@ public enum ClientPacketIds : short
     GuildStorageGoldChange,
     GuildStorageItemChange,
     GuildWarReturn,
+    MarriageRequest,
+    MarriageReply,
+    ChangeMarriage,
+    DivorceRequest,
+    DivorceReply,
+    AddMentor,
+    MentorReply,
+    AllowMentor,
+    CancelMentor,
     TradeRequest,
     TradeReply,
     TradeGold,
@@ -2396,6 +2573,7 @@ public class ItemInfo
 
         ItemInfo info = new ItemInfo { Name = data[0] };
 
+        
 
         if (!Enum.TryParse(data[1], out info.Type)) return null;
         if (!Enum.TryParse(data[2], out info.Grade)) return null;
@@ -2459,20 +2637,18 @@ public class ItemInfo
         if (!bool.TryParse(data[52], out info.ClassBased)) return null;
         if (!bool.TryParse(data[53], out info.LevelBased)) return null;
         if (!Enum.TryParse(data[54], out info.Bind)) return null;
-        //if (!bool.TryParse(data[55], out info.BindOnEquip)) return null;
-        if (!byte.TryParse(data[56], out info.Reflect)) return null;
-        if (!byte.TryParse(data[57], out info.HpDrainRate)) return null;
-        if (!Enum.TryParse(data[58], out info.Unique)) return null;
-        //if (!bool.TryParse(data[59], out info.BindNoSRepair)) return null;
-        if (!byte.TryParse(data[60], out info.RandomStatsId)) return null;
-        if (!bool.TryParse(data[61], out info.CanMine)) return null;
-        if (!bool.TryParse(data[62], out info.CanFastRun)) return null;
-		if (!bool.TryParse(data[63], out info.CanAwakening)) return null;
-        if (data[64] == "-")
+        if (!byte.TryParse(data[55], out info.Reflect)) return null;
+        if (!byte.TryParse(data[56], out info.HpDrainRate)) return null;
+        if (!Enum.TryParse(data[57], out info.Unique)) return null;
+        if (!byte.TryParse(data[58], out info.RandomStatsId)) return null;
+        if (!bool.TryParse(data[59], out info.CanMine)) return null;
+        if (!bool.TryParse(data[60], out info.CanFastRun)) return null;
+		if (!bool.TryParse(data[61], out info.CanAwakening)) return null;
+        if (data[62] == "-")
             info.ToolTip = "";
         else
         {
-            info.ToolTip = data[64];
+            info.ToolTip = data[62];
             info.ToolTip = info.ToolTip.Replace("&^&", "\r\n");
         }
             
@@ -2496,11 +2672,11 @@ public class ItemInfo
 
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
-                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64}",
+                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62}",
             Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
-            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (byte)Bind, "", Reflect, HpDrainRate, (short)Unique, "",
+            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
             RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
     }
 
@@ -2531,6 +2707,8 @@ public class UserItem
     public int SoulBoundId = -1;
     public bool Identified = false;
     public bool Cursed = false;
+
+    public int WeddingRing = -1;
 
     public UserItem[] Slots = new UserItem[5];
 
@@ -2609,7 +2787,6 @@ public class UserItem
         Freezing = reader.ReadByte();
         PoisonAttack = reader.ReadByte();
         
-        
 
         if (version <= 31) return;
 
@@ -2633,7 +2810,8 @@ public class UserItem
 
         RefinedValue = (RefinedValue)reader.ReadByte();
         RefineAdded = reader.ReadByte();
-
+        if (version < 60) return;
+        WeddingRing = reader.ReadInt32();
 
     }
 
@@ -2692,6 +2870,8 @@ public class UserItem
 
         writer.Write((byte)RefinedValue);
         writer.Write(RefineAdded);
+
+        writer.Write(WeddingRing);
     }
 
 
@@ -2852,45 +3032,45 @@ public class UserItem
     public UserItem Clone()
     {
         UserItem item = new UserItem(Info)
-            {
-                UniqueID =  UniqueID,
-                CurrentDura = CurrentDura,
-                MaxDura = MaxDura,
-                Count = Count,
+        {
+            UniqueID = UniqueID,
+            CurrentDura = CurrentDura,
+            MaxDura = MaxDura,
+            Count = Count,
 
-                AC = AC,
-                MAC = MAC,
-                DC = DC,
-                MC = MC,
-                SC = SC,
-                Accuracy = Accuracy,
-                Agility = Agility,
-                HP = HP,
-                MP = MP,
+            AC = AC,
+            MAC = MAC,
+            DC = DC,
+            MC = MC,
+            SC = SC,
+            Accuracy = Accuracy,
+            Agility = Agility,
+            HP = HP,
+            MP = MP,
 
-                AttackSpeed = AttackSpeed,
-                Luck = Luck,
+            AttackSpeed = AttackSpeed,
+            Luck = Luck,
 
-                DuraChanged = DuraChanged,
-                SoulBoundId = SoulBoundId,
-                Identified = Identified,
-                Cursed = Cursed,
-                Strong = Strong,
-                MagicResist = MagicResist,
-                PoisonResist = PoisonResist,
-                HealthRecovery = HealthRecovery,
-                ManaRecovery = ManaRecovery,
-                PoisonRecovery = PoisonRecovery,
-                CriticalRate = CriticalRate,
-                CriticalDamage = CriticalDamage,
-                Freezing = Freezing,
-                PoisonAttack = PoisonAttack,
+            DuraChanged = DuraChanged,
+            SoulBoundId = SoulBoundId,
+            Identified = Identified,
+            Cursed = Cursed,
+            Strong = Strong,
+            MagicResist = MagicResist,
+            PoisonResist = PoisonResist,
+            HealthRecovery = HealthRecovery,
+            ManaRecovery = ManaRecovery,
+            PoisonRecovery = PoisonRecovery,
+            CriticalRate = CriticalRate,
+            CriticalDamage = CriticalDamage,
+            Freezing = Freezing,
+            PoisonAttack = PoisonAttack,
 
-                Slots = Slots,
-				Awake = Awake,
+            Slots = Slots,
+            Awake = Awake,
 
-                RefinedValue = RefinedValue,
-                RefineAdded = RefineAdded
+            RefinedValue = RefinedValue,
+            RefineAdded = RefineAdded,
             };
 
         return item;
@@ -3500,6 +3680,7 @@ public class ClientFriend
     }
 }
 
+
 public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
@@ -3867,6 +4048,8 @@ public abstract class Packet
                 return new C.RefineItem();
             case (short)ClientPacketIds.CheckRefine:
                 return new C.CheckRefine();
+            case (short)ClientPacketIds.ReplaceWedRing:
+                return new C.ReplaceWedRing();
             case (short)ClientPacketIds.DepositTradeItem:
                 return new C.DepositTradeItem();
             case (short)ClientPacketIds.RetrieveTradeItem:
@@ -3949,6 +4132,24 @@ public abstract class Packet
                 return new C.GuildStorageItemChange();
             case (short)ClientPacketIds.GuildWarReturn:
                 return new C.GuildWarReturn();
+            case (short)ClientPacketIds.MarriageRequest:
+                return new C.MarriageRequest();
+            case (short)ClientPacketIds.MarriageReply:
+                return new C.MarriageReply();
+            case (short)ClientPacketIds.ChangeMarriage:
+                return new C.ChangeMarriage();
+            case (short)ClientPacketIds.DivorceRequest:
+                return new C.DivorceRequest();
+            case (short)ClientPacketIds.DivorceReply:
+                return new C.DivorceReply();
+            case (short)ClientPacketIds.AddMentor:
+                return new C.AddMentor();
+            case (short)ClientPacketIds.MentorReply:
+                return new C.MentorReply();
+            case (short)ClientPacketIds.AllowMentor:
+                return new C.AllowMentor();
+            case (short)ClientPacketIds.CancelMentor:
+                return new C.CancelMentor();
             case (short)ClientPacketIds.TradeRequest:
                 return new C.TradeRequest();
             case (short)ClientPacketIds.TradeReply:
@@ -4204,6 +4405,8 @@ public abstract class Packet
                 return new S.NPCCheckRefine();
             case (short)ServerPacketIds.NPCCollectRefine:
                 return new S.NPCCollectRefine();
+            case (short)ServerPacketIds.NPCReplaceWedRing:
+                return new S.NPCReplaceWedRing();
             case (short)ServerPacketIds.NPCStorage:
                 return new S.NPCStorage();
             case (short)ServerPacketIds.SellItem:
@@ -4324,6 +4527,12 @@ public abstract class Packet
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:
                 return new S.NPCUpdate();
+            case (short)ServerPacketIds.MarriageRequest:
+                return new S.MarriageRequest();
+            case (short)ServerPacketIds.DivorceRequest:
+                return new S.DivorceRequest();
+            case (short)ServerPacketIds.MentorRequest:
+                return new S.MentorRequest();
             case (short)ServerPacketIds.TradeRequest:
                 return new S.TradeRequest();
             case (short)ServerPacketIds.TradeAccept:
@@ -4432,6 +4641,10 @@ public abstract class Packet
                 return new S.NPCPearlGoods();
             case (short)ServerPacketIds.FriendUpdate:
                 return new S.FriendUpdate();
+            case (short)ServerPacketIds.LoverUpdate:
+                return new S.LoverUpdate();
+            case (short)ServerPacketIds.MentorUpdate:
+                return new S.MentorUpdate();
             case (short)ServerPacketIds.GuildBuffList:
                 return new S.GuildBuffList();
             default:

@@ -26,7 +26,6 @@ namespace Server.MirObjects
         public long ExplosionInflictedTime;
         public int ExplosionInflictedStage;
 
-        //thedeath
         private int SpawnThread;
 
         //Position
@@ -295,7 +294,6 @@ namespace Server.MirObjects
             return true;
         }
 
-        //thedeath
         public virtual void Spawned()
         {
             Node = Envir.Objects.AddLast(this);
@@ -326,7 +324,6 @@ namespace Server.MirObjects
 
             Node = null;
         }
-        //thedeath end
 
         public MapObject FindObject(uint targetID, int dist)
         {

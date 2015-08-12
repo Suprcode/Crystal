@@ -99,7 +99,7 @@ namespace Server.MirObjects
                     StoredItems[j] = Guilditem;
             }
             int BuffCount = reader.ReadInt32();
-            if (version < 60)
+            if (version < 61)
             {
                 for (int j = 0; j < BuffCount; j++)
                     new GuildBuffOld(reader);
