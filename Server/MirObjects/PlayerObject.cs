@@ -1763,7 +1763,7 @@ namespace Server.MirObjects
         private void StartGameSuccess()
         {
             Connection.Stage = GameStage.Game;
-            Enqueue(new S.StartGame { Result = 4 });
+            Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
             ReceiveChat("Welcome to the Legend of Mir 2 C# Server.", ChatType.Hint);
             if (Info.GuildIndex != -1)
             {

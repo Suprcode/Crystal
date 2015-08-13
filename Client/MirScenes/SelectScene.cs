@@ -412,6 +412,11 @@ namespace Client.MirScenes
         {
             StartGameButton.Enabled = true;
 
+            if (Settings.Resolution == 0) Settings.Resolution = p.Resolution;
+            else if (p.Resolution < 1024 || Settings.Resolution < 1024) Settings.Resolution = 800;
+            else if (p.Resolution < 1280 || Settings.Resolution < 1280) Settings.Resolution = 1024;
+            else if (p.Resolution < Settings.Resolution) Settings.Resolution = p.Resolution;
+
             switch (p.Result)
             {
                 case 0:
@@ -427,8 +432,8 @@ namespace Client.MirScenes
                     MirMessageBox.Show("No active map and/or start point found.");
                     break;
                 case 4:
-                    if (Settings.HighResolution)
-                        CMain.SetResolution(1024, 768); 
+                    if (Settings.Resolution != 800)
+                        CMain.SetResolution(Settings.Resolution, (Settings.Resolution / 100) * 75); 
                     ActiveScene = new GameScene();
                     Dispose();
                     break;

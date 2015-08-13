@@ -2518,7 +2518,7 @@ namespace Client.MirScenes
                 SoundManager.StopSound(20000 + 126 * 10 + 5 + i);
 
             User = null;
-            if (Settings.HighResolution)
+            if (Settings.Resolution != 800)
                 CMain.SetResolution(800, 600);
             ActiveScene = new SelectScene(p.Characters);
 
@@ -9366,26 +9366,41 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
-        
 
-        public MirImageControl ExperienceBar, WeightBar;
+
+        public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
         public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
 
         public MainDialog()
         {
-            Index = Settings.HighResolution ? 2 : 1;
+            Index = Settings.Resolution == 800 ? 1 : 2;
             Library = Libraries.Prguse;
-            Location = new Point(0, Settings.ScreenHeight - Size.Height);
+            Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), Settings.ScreenHeight - Size.Height);
             PixelDetect = true;
+
+            LeftCap = new MirImageControl
+            {
+                Index = 12,
+                Library = Libraries.Prguse,
+                Location = new Point(-67, this.Size.Height - 96),
+                Parent = this,
+            };
+            RightCap = new MirImageControl
+            {
+                Index = 13,
+                Library = Libraries.Prguse,
+                Location = new Point(1024, this.Size.Height - 104),
+                Parent = this,
+            };
 
             InventoryButton = new MirButton
             {
                 HoverIndex = 1904,
                 Index = 1903,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 96, 76),
+                Location = new Point(this.Size.Width - 96, 76),
                 Parent = this,
                 PressedIndex = 1905,
                 Sound = SoundList.ButtonA,
@@ -9404,7 +9419,7 @@ namespace Client.MirScenes
                 HoverIndex = 1901,
                 Index = 1900,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 119, 76),
+                Location = new Point(this.Size.Width - 119, 76),
                 Parent = this,
                 PressedIndex = 1902,
                 Sound = SoundList.ButtonA,
@@ -9426,7 +9441,7 @@ namespace Client.MirScenes
                 HoverIndex = 1907,
                 Index = 1906,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 73, 76),
+                Location = new Point(this.Size.Width - 73, 76),
                 Parent = this,
                 PressedIndex = 1908,
                 Sound = SoundList.ButtonA,
@@ -9448,7 +9463,7 @@ namespace Client.MirScenes
                 HoverIndex = 1910,
                 Index = 1909,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 50, 76),
+                Location = new Point(this.Size.Width - 50, 76),
                 Parent = this,
                 PressedIndex = 1911,
                 Sound = SoundList.ButtonA,
@@ -9466,7 +9481,7 @@ namespace Client.MirScenes
                 HoverIndex = 1913,
                 Index = 1912,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 27, 76),
+                Location = new Point(this.Size.Width - 27, 76),
                 Parent = this,
                 PressedIndex = 1914,
                 Sound = SoundList.ButtonA,
@@ -9484,7 +9499,7 @@ namespace Client.MirScenes
                 HoverIndex = 1961,
                 Index = 1960,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 55, 35),
+                Location = new Point(this.Size.Width - 55, 35),
                 Parent = this,
                 PressedIndex = 1962,
                 Sound = SoundList.ButtonC,
@@ -9501,7 +9516,7 @@ namespace Client.MirScenes
                 HoverIndex = 827,
                 Index = 826,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 105, 35),
+                Location = new Point(this.Size.Width - 105, 35),
                 Parent = this,
                 PressedIndex = 828,
                 Sound = SoundList.ButtonC,
@@ -9564,14 +9579,14 @@ namespace Client.MirScenes
             {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Parent = this,
-                Location = new Point(6, 122),
+                Location = new Point(6, 120),
                 Size = new Size(90, 16)
             };
 
 
             ExperienceBar = new MirImageControl
             {
-                Index = Settings.HighResolution ? 8 : 7,
+                Index = Settings.Resolution != 800 ? 8 : 7,
                 Library = Libraries.Prguse,
                 Location = new Point(9, 143),
                 Parent = this,
@@ -9591,7 +9606,7 @@ namespace Client.MirScenes
             {
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Font = new Font(Settings.FontName, 8F),
-                Location = new Point(Settings.ScreenWidth - 105, 119),
+                Location = new Point(this.Size.Width - 105, 119),
                 Parent = this,
                 Size = new Size(99, 13),
                 Sound = SoundList.Gold,
@@ -9608,7 +9623,7 @@ namespace Client.MirScenes
             {
                 Index = 76,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.ScreenWidth - 105, 103),
+                Location = new Point(this.Size.Width - 105, 103),
                 Parent = this,
                 DrawImage = false,
                 NotControl = true,
@@ -9618,7 +9633,7 @@ namespace Client.MirScenes
             WeightLabel = new MirLabel
             {
                 Parent = this,
-                Location = new Point(Settings.ScreenWidth - 30, 101),
+                Location = new Point(this.Size.Width - 30, 101),
                 Size = new Size(26, 14),
             };
 
@@ -9628,13 +9643,13 @@ namespace Client.MirScenes
                 ForeColour = Color.Yellow,
                 OutLineColour = Color.Black,
                 Parent = this,
-                Location = new Point(Settings.HighResolution ? 899 : 675, Settings.HighResolution ? -448 : -280),
+                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -448 : -280),
             };
 
             PModeLabel = new MirLabel
             {
                 AutoSize = true,
-                ForeColour = Color.Yellow,
+                ForeColour = Color.Orange,
                 OutLineColour = Color.Black,
                 Parent = this,
                 Location = new Point(230, 125),
@@ -9647,8 +9662,9 @@ namespace Client.MirScenes
                 ForeColour = Color.LimeGreen,
                 OutLineColour = Color.Black,
                 Parent = this,
-                Location = new Point(Settings.HighResolution ? 899 : 675, Settings.HighResolution ? -463 : -295),
+                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -463 : -295),
             };
+                
         }
 
         public void Show()
@@ -9757,7 +9773,7 @@ namespace Client.MirScenes
             if (height > 80) height = 80;
 
             Rectangle r = new Rectangle(0, 80 - height, 50, height);
-            Libraries.Prguse.Draw(4, r, new Point(0, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
+            Libraries.Prguse.Draw(4, r, new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
 
             if (User.MP != User.MaxMP)
                 height = (int)(80 * User.MP / (float)User.MaxMP);
@@ -9768,7 +9784,7 @@ namespace Client.MirScenes
             if (height > 80) height = 80;
             r = new Rectangle(51, 80 - height, 50, height);
 
-            Libraries.Prguse.Draw(4, r, new Point(51, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
+            Libraries.Prguse.Draw(4, r, new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 51, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
         }
 
         private void ExperienceBar_BeforeDraw(object sender, EventArgs e)
@@ -9821,9 +9837,9 @@ namespace Client.MirScenes
 
         public ChatDialog()
         {
-            Index = Settings.HighResolution ? 2221 : 2201;
+            Index = Settings.Resolution != 800 ? 2221 : 2201;
             Library = Libraries.Prguse;
-            Location = new Point(230, Settings.ScreenHeight - 97);
+            Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Settings.ScreenHeight - 97);
             PixelDetect = true;
 
             KeyPress += ChatPanel_KeyPress;
@@ -9835,7 +9851,7 @@ namespace Client.MirScenes
                 BackColour = Color.DarkGray,
                 ForeColour = Color.Black,
                 Parent = this,
-                Size = new Size(Settings.HighResolution ? 627 : 403, 13),
+                Size = new Size(Settings.Resolution != 800 ? 627 : 403, 13),
                 Location = new Point(1, 54),
                 MaxLength = Globals.MaxChatLength,
                 Visible = false,
@@ -9850,7 +9866,7 @@ namespace Client.MirScenes
                 Index = 2018,
                 HoverIndex = 2019,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.HighResolution ? 618 : 394, 1),
+                Location = new Point(Settings.Resolution != 800 ? 618 : 394, 1),
                 Parent = this,
                 PressedIndex = 2020,
                 Sound = SoundList.ButtonA,
@@ -9868,7 +9884,7 @@ namespace Client.MirScenes
                 Index = 2021,
                 HoverIndex = 2022,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.HighResolution ? 618 : 394, 9),
+                Location = new Point(Settings.Resolution != 800 ? 618 : 394, 9),
                 Parent = this,
                 PressedIndex = 2023,
                 Sound = SoundList.ButtonA,
@@ -9886,7 +9902,7 @@ namespace Client.MirScenes
                 Index = 2027,
                 HoverIndex = 2028,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.HighResolution ? 618 : 394, 45),
+                Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45),
                 Parent = this,
                 PressedIndex = 2029,
                 Sound = SoundList.ButtonA,
@@ -9903,7 +9919,7 @@ namespace Client.MirScenes
                 Index = 2024,
                 HoverIndex = 2025,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.HighResolution ? 618 : 394, 39),
+                Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39),
                 Parent = this,
                 PressedIndex = 2026,
                 Sound = SoundList.ButtonA,
@@ -9921,7 +9937,7 @@ namespace Client.MirScenes
             {
                 Index = 2012,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.HighResolution ? 622 : 398, 16),
+                Location = new Point(Settings.Resolution != 800 ? 622 : 398, 16),
                 Parent = this,
             };
 
@@ -9930,7 +9946,7 @@ namespace Client.MirScenes
                 Index = 2015,
                 HoverIndex = 2016,
                 Library = Libraries.Prguse,
-                Location = new Point(Settings.HighResolution ? 619 : 395, 16),
+                Location = new Point(Settings.Resolution != 800 ? 619 : 395, 16),
                 Parent = this,
                 PressedIndex = 2017,
                 Movable = true,
@@ -9989,7 +10005,7 @@ namespace Client.MirScenes
 
         void PositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            int x = Settings.HighResolution ? 619 : 395;
+            int x = Settings.Resolution != 800 ? 619 : 395;
             int y = PositionBar.Location.Y;
             if (y >= 16 + CountBar.Size.Height - PositionBar.Size.Height) y = 16 + CountBar.Size.Height - PositionBar.Size.Height;
             if (y < 16) y = 16;
@@ -10067,7 +10083,7 @@ namespace Client.MirScenes
                     break;
             }
 
-            int chatWidth = Settings.HighResolution ? 614 : 390;
+            int chatWidth = Settings.Resolution != 800 ? 614 : 390;
             List<string> chat = new List<string>();
 
             int index = 0;
@@ -10133,7 +10149,7 @@ namespace Client.MirScenes
             {
                 int h = CountBar.Size.Height - PositionBar.Size.Height;
                 h = (int)((h / (float)(History.Count - 1)) * StartIndex);
-                PositionBar.Location = new Point(Settings.HighResolution ? 619 : 395, 16 + h);
+                PositionBar.Location = new Point(Settings.Resolution != 800 ? 619 : 395, 16 + h);
             }
 
             int y = 1;
@@ -10313,26 +10329,26 @@ namespace Client.MirScenes
             {
                 case 0:
                     LineCount = 4;
-                    Index = Settings.HighResolution ? 2221 : 2201;
+                    Index = Settings.Resolution != 800 ? 2221 : 2201;
                     CountBar.Index = 2012;
-                    DownButton.Location = new Point(Settings.HighResolution ? 618 : 394, 39);
-                    EndButton.Location = new Point(Settings.HighResolution ? 618 : 394, 45);
+                    DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39);
+                    EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45);
                     ChatTextBox.Location = new Point(1, 54);
                     break;
                 case 1:
                     LineCount = 7;
-                    Index = Settings.HighResolution ? 2224 : 2204;
+                    Index = Settings.Resolution != 800 ? 2224 : 2204;
                     CountBar.Index = 2013;
-                    DownButton.Location = new Point(Settings.HighResolution ? 618 : 394, 39 + 48);
-                    EndButton.Location = new Point(Settings.HighResolution ? 618 : 394, 45 + 48);
+                    DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39 + 48);
+                    EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45 + 48);
                     ChatTextBox.Location = new Point(1, 54 + 48);
                     break;
                 case 2:
                     LineCount = 11;
-                    Index = Settings.HighResolution ? 2227 : 2207;
+                    Index = Settings.Resolution != 800 ? 2227 : 2207;
                     CountBar.Index = 2014;
-                    DownButton.Location = new Point(Settings.HighResolution ? 618 : 394, 39 + 96);
-                    EndButton.Location = new Point(Settings.HighResolution ? 618 : 394, 45 + 96);
+                    DownButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 39 + 96);
+                    EndButton.Location = new Point(Settings.Resolution != 800 ? 618 : 394, 45 + 96);
                     ChatTextBox.Location = new Point(1, 54 + 96);
                     break;
             }
@@ -10351,13 +10367,13 @@ namespace Client.MirScenes
             switch (WindowSize)
             {
                 case 0:
-                    Index = Settings.HighResolution ? 2221 : 2201;
+                    Index = Settings.Resolution != 800 ? 2221 : 2201;
                     break;
                 case 1:
-                    Index = Settings.HighResolution ? 2224 : 2204;
+                    Index = Settings.Resolution != 800 ? 2224 : 2204;
                     break;
                 case 2:
-                    Index = Settings.HighResolution ? 2227 : 2207;
+                    Index = Settings.Resolution != 800 ? 2227 : 2207;
                     break;
             }
 
@@ -10377,9 +10393,9 @@ namespace Client.MirScenes
 
         public ChatControlBar()
         {
-            Index = Settings.HighResolution ? 2034 : 2035;
+            Index = Settings.Resolution != 800 ? 2034 : 2035;
             Library = Libraries.Prguse;
-            Location = new Point(230, Settings.ScreenHeight - 112);
+            Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Settings.ScreenHeight - 112);
 
             SizeButton = new MirButton
             {
@@ -10388,7 +10404,7 @@ namespace Client.MirScenes
                 PressedIndex = 2059,
                 Library = Libraries.Prguse,
                 Parent = this,
-                Location = new Point(Settings.HighResolution ? 574 : 350, 1),
+                Location = new Point(Settings.Resolution != 800 ? 574 : 350, 1),
                 Visible = true,
                 Sound = SoundList.ButtonA,
 				Hint = "Size"
@@ -10398,7 +10414,7 @@ namespace Client.MirScenes
                 GameScene.Scene.ChatDialog.ChangeSize();
                 Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
                 if (GameScene.Scene.BeltDialog.Index == 1932)
-                    GameScene.Scene.BeltDialog.Location = new Point(230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
+                    GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
             };
 
 
@@ -10409,7 +10425,7 @@ namespace Client.MirScenes
                 PressedIndex = 2062,
                 Library = Libraries.Prguse,
                 Parent = this,
-                Location = new Point(Settings.HighResolution ? 596 : 372, 1),
+                Location = new Point(Settings.Resolution != 800 ? 596 : 372, 1),
                 Sound = SoundList.ButtonA,
 				Hint = "Chat Settings"
             };
@@ -11071,7 +11087,7 @@ namespace Client.MirScenes
             Movable = true;
             Sort = true;
             Visible = true;
-            Location = new Point(230, Settings.ScreenHeight - 150);
+            Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Settings.ScreenHeight - 150);
 
             BeforeDraw += BeltPanel_BeforeDraw;
 
@@ -11172,7 +11188,7 @@ namespace Client.MirScenes
             else
             {
                 Index = 1932;
-                Location = new Point(230, Settings.ScreenHeight - 150);
+                Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Settings.ScreenHeight - 150);
 
                 for (int x = 0; x < 6; x++)
                     Grid[x].Location = new Point(x * 35 + 12, 3);
@@ -12491,11 +12507,12 @@ namespace Client.MirScenes
 
             int offset = _realBigMode ? 0 : 108 ;
 
-            GameScene.Scene.MainDialog.SModeLabel.Location = new Point(Settings.HighResolution ? 899 : 675,
-                Settings.HighResolution ? -463 - offset : -295 - offset);
-
-            GameScene.Scene.MainDialog.AModeLabel.Location = new Point(Settings.HighResolution ? 899 : 675,
-                Settings.HighResolution ? -448 - offset : -280 - offset);
+            GameScene.Scene.MainDialog.SModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+            (GameScene.Scene.MiniMapDialog.Size.Height + 150) - Settings.ScreenHeight);
+            GameScene.Scene.MainDialog.AModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+            (GameScene.Scene.MiniMapDialog.Size.Height + 165) - Settings.ScreenHeight);
+            GameScene.Scene.MainDialog.PModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+            (GameScene.Scene.MiniMapDialog.Size.Height + 180) - Settings.ScreenHeight);
 
             if (GameScene.Scene.NewMail)
             {
@@ -13328,7 +13345,7 @@ namespace Client.MirScenes
             Index = 1963;
             Parent = GameScene.Scene;
             Library = Libraries.Prguse;
-            Location = new Point(Settings.ScreenWidth - Size.Width, 180);
+            Location = new Point(Settings.ScreenWidth - Size.Width, GameScene.Scene.MainDialog.Location.Y - this.Size.Height + 15);
             Sort = true;
             Visible = false;
             Movable = true;
@@ -19452,7 +19469,7 @@ namespace Client.MirScenes
             Index = 2105;
             Library = Libraries.Prguse;
             Movable = false;
-            Location = new Point(Settings.ScreenWidth - 61, 195);
+            Location = new Point(Settings.ScreenWidth - 61, 200);
 
             GrayBackground = new MirImageControl()
             {
