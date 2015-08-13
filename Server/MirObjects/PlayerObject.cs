@@ -15374,7 +15374,6 @@ namespace Server.MirObjects
 
         #endregion
 
-
         #region Trading
 
         public void TradeRequest()
