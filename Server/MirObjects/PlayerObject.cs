@@ -321,14 +321,7 @@ namespace Server.MirObjects
             get { return Info.CompletedQuests; }
         }
 
-        //thedeath
-        public byte AttackBonus;
-        public byte MineRate;
-        public byte GemRate;
-        public byte FishRate;
-        public byte CraftRate;
-        public byte SkillNeckBoost;
-
+        public byte AttackBonus, MineRate, GemRate, FishRate, CraftRate, SkillNeckBoost;
 
         public PlayerObject(CharacterInfo info, MirConnection connection)
         {
@@ -421,7 +414,7 @@ namespace Server.MirObjects
             if (GroupMembers != null)
             {
                 GroupMembers.Remove(this);
-                RemoveFromGroup();
+                RemoveGroupBuff();
 
                 if (GroupMembers.Count > 1)
                 {
@@ -976,7 +969,6 @@ namespace Server.MirObjects
 
             CurrentPoison = type;
         }
-
         private bool ProcessDelayedExplosion(Poison poison)
         {
             if (Dead) return false;
@@ -1023,7 +1015,6 @@ namespace Server.MirObjects
             }
             return false;
         }
-
         public override void Process(DelayedAction action)
         {
             switch (action.Type)
@@ -1532,7 +1523,7 @@ namespace Server.MirObjects
             Enqueue(new S.LevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
             Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });
 
-            if (Info.Mentor != 0)
+            if (Info.Mentor != 0 && !Info.isMentor)
             {
                 CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
                 if ((Mentor != null) && ((Info.Level + Settings.MentorLevelGap) > Mentor.Level))
@@ -2908,7 +2899,6 @@ namespace Server.MirObjects
                 Broadcast(new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType });
             }
         }
-
         public void RefreshGuildBuffs()
         {
             if (MyGuild == null) return;
@@ -2938,7 +2928,6 @@ namespace Server.MirObjects
 
             }
         }
-
         public void RefreshNameColour()
         {
             Color colour = Color.White;
@@ -5792,7 +5781,6 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
         }
 
-
         #region Elemental System
         private void Concentration(UserMagic magic)
         {
@@ -8409,7 +8397,6 @@ namespace Server.MirObjects
 
             return fishingItem;
         }
-
         private void DeleteFishingItem(FishingSlot type)
         {
             UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
@@ -8422,7 +8409,6 @@ namespace Server.MirObjects
 
             Report.ItemChanged("FishingConsumable", slotItem, 1, 1);
         }
-
         private void DamagedFishingItem(FishingSlot type, int lossDura)
         {
             UserItem item = GetFishingItem(type);
@@ -8453,7 +8439,6 @@ namespace Server.MirObjects
 
             return null;
         }
-
         public void LevelMagic(UserMagic magic)
         {
             byte exp = (byte)(Envir.Random.Next(3) + 1);
@@ -8702,7 +8687,6 @@ namespace Server.MirObjects
 
             return true;
         }
-
         public bool TeleportEscape(int attempts)
         {
             Map temp = Envir.GetMap(BindMapIndex);
@@ -8781,7 +8765,6 @@ namespace Server.MirObjects
                 LevelEffects = LevelEffects
             };
         }
-
         public Packet GetInfoEx(PlayerObject player)
         {
             var p = (S.ObjectPlayer)GetInfo();
@@ -9132,7 +9115,6 @@ namespace Server.MirObjects
             ChangeHP(armour - damage);
             return damage - armour;
         }
-
         public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
         {
             int armour = 0;
@@ -9195,7 +9177,6 @@ namespace Server.MirObjects
             ChangeHP(armour - damage);
             return damage - armour;
         }
-
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
         {
             if ((Caster != null) && (!NoResist))
@@ -9264,1198 +9245,6 @@ namespace Server.MirObjects
             b.ExpireTime = b.ExpireTime + Envir.Time;
             b.Paused = false;
             Enqueue(new S.AddBuff { Type = b.Type, Caster = Name, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible });
-        }
-
-        public void DepositRefineItem(int from, int to)
-        {
-
-            S.DepositRefineItem p = new S.DepositRefineItem { From = from, To = to, Success = false };
-
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))
-            {
-                Enqueue(p);
-                return;
-            }
-            NPCObject ob = null;
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
-            {
-                if (CurrentMap.NPCs[i].ObjectID != NPCID) continue;
-                ob = CurrentMap.NPCs[i];
-                break;
-            }
-
-            if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
-            {
-                Enqueue(p);
-                return;
-            }
-
-
-            if (from < 0 || from >= Info.Inventory.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (to < 0 || to >= Info.Refine.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            UserItem temp = Info.Inventory[from];
-
-            if (temp == null)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (Info.Refine[to] == null)
-            {
-                Info.Refine[to] = temp;
-                Info.Inventory[from] = null;
-                RefreshBagWeight();
-
-                Report.ItemMoved("DepositRefineItems", temp, MirGridType.Inventory, MirGridType.Refine, from, to);
-
-                p.Success = true;
-                Enqueue(p);
-                return;
-            }
-            Enqueue(p);
-
-        }
-
-        public void RetrieveRefineItem(int from, int to)
-        {
-            S.RetrieveRefineItem p = new S.RetrieveRefineItem { From = from, To = to, Success = false };
-
-            if (from < 0 || from >= Info.Refine.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (to < 0 || to >= Info.Inventory.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            UserItem temp = Info.Refine[from];
-
-            if (temp == null)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-            if (Info.Inventory[to] == null)
-            {
-                Info.Inventory[to] = temp;
-                Info.Refine[from] = null;
-
-                Report.ItemMoved("TakeBackRefineItems", temp, MirGridType.Refine, MirGridType.Inventory, from, to);
-
-                p.Success = true;
-                RefreshBagWeight();
-                Enqueue(p);
-
-                return;
-            }
-            Enqueue(p);
-        }
-
-        public void RefineCancel()
-        {
-            for (int t = 0; t < Info.Refine.Length; t++)
-            {
-                UserItem temp = Info.Refine[t];
-
-                if (temp == null) continue;
-
-                for (int i = 0; i < Info.Inventory.Length; i++)
-                {
-                    if (Info.Inventory[i] != null) continue;
-
-                    //Put item back in inventory
-                    if (CanGainItem(temp))
-                    {
-                        RetrieveRefineItem(t, i);
-                    }
-                    else //Drop item on floor if it can no longer be stored
-                    {
-                        if (DropItem(temp, Settings.DropRange))
-                        {
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
-                        }
-                    }
-
-                    Info.Refine[t] = null;
-
-                    break;
-                }
-            }
-        }
-
-        public void RefineItem(ulong uniqueID)
-        {
-            Enqueue(new S.RepairItem { UniqueID = uniqueID }); //CHECK THIS.
-
-            if (Dead) return;
-
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))) return;
-
-            int index = -1;
-
-            for (int i = 0; i < Info.Inventory.Length; i++)
-            {
-                if (Info.Inventory[i] == null || Info.Inventory[i].UniqueID != uniqueID) continue;
-                index = i;
-                break;
-            }
-
-            if (Info.Inventory[index].RefineAdded != 0)
-            {
-                ReceiveChat(String.Format("Your {0} needs to be checked before you can attempt to refine it again.", Info.Inventory[index].FriendlyName), ChatType.System);
-                return;
-            }
-
-            if ((Info.Inventory[index].Info.Type != ItemType.Weapon) && (Settings.OnlyRefineWeapon))
-            {
-                ReceiveChat(String.Format("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
-                return;
-            }
-
-            if (Info.Inventory[index].Info.Bind.HasFlag(BindMode.DontUpgrade))
-            {
-                ReceiveChat(String.Format("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
-                return;
-            }
-
-
-
-            if (index == -1) return;
-
-
-
-
-            //CHECK GOLD HERE
-            uint cost = (uint)((Info.Inventory[index].Info.RequiredAmount * 10) * Settings.RefineCost);
-
-            if (cost > Account.Gold || cost == 0)
-            {
-                ReceiveChat(String.Format("You don't have enough gold to refine your {0}.", Info.Inventory[index].FriendlyName), ChatType.System);
-                return;
-            }
-
-            Account.Gold -= cost;
-            Enqueue(new S.LoseGold { Gold = cost });
-
-            //START OF FORMULA
-
-            Info.CurrentRefine = Info.Inventory[index];
-            Info.Inventory[index] = null;
-            Info.CollectTime = (Envir.Time + (Settings.RefineTime * Settings.Minute));
-            Enqueue(new S.RefineItem { UniqueID = uniqueID });
-
-
-            short OrePurity = 0;
-            byte OreAmount = 0;
-            byte ItemAmount = 0;
-            short TotalDC = 0;
-            short TotalMC = 0;
-            short TotalSC = 0;
-            short RequiredLevel = 0;
-            short Durability = 0;
-            short CurrentDura = 0;
-            short AddedStats = 0;
-            UserItem Ingredient;
-
-            for (int i = 0; i < Info.Refine.Length; i++)
-            {
-                Ingredient = Info.Refine[i];
-
-                if (Ingredient == null) continue;
-                if (Ingredient.Info.Type == ItemType.Weapon)
-                {
-                    Info.Refine[i] = null;
-                    continue;
-                }
-
-                if ((Ingredient.Info.MaxDC > 0) || (Ingredient.Info.MaxMC > 0) || (Ingredient.Info.MaxSC > 0))
-                {
-                    TotalDC += (short)(Ingredient.Info.MinDC + Ingredient.Info.MaxDC + Ingredient.DC);
-                    TotalMC += (short)(Ingredient.Info.MinMC + Ingredient.Info.MaxMC + Ingredient.MC);
-                    TotalSC += (short)(Ingredient.Info.MinSC + Ingredient.Info.MaxSC + Ingredient.SC);
-                    RequiredLevel += Ingredient.Info.RequiredAmount;
-                    if (Math.Round(Ingredient.MaxDura / 1000M) == Math.Round(Ingredient.Info.Durability / 1000M)) Durability++;
-                    if (Math.Round(Ingredient.CurrentDura / 1000M) == Math.Round(Ingredient.MaxDura / 1000M)) CurrentDura++;
-                    ItemAmount++;
-                }
-
-                if (Ingredient.Info.FriendlyName == Settings.RefineOreName)
-                {
-                    OrePurity += (short)Math.Round(Ingredient.CurrentDura / 1000M);
-                    OreAmount++;
-                }
-
-                Info.Refine[i] = null;
-            }
-
-            if ((TotalDC == 0) && (TotalMC == 0) && (TotalSC == 0))
-            {
-                Info.CurrentRefine.RefinedValue = RefinedValue.None;
-                Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
-                if (Settings.RefineTime == 0)
-                {
-                    CollectRefine();
-                }
-                else
-                {
-                    ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
-                }
-                return;
-            }
-
-            if (OreAmount == 0)
-            {
-                Info.CurrentRefine.RefinedValue = RefinedValue.None;
-                Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
-                if (Settings.RefineTime == 0)
-                {
-                    CollectRefine();
-                }
-                else
-                {
-                    ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
-                }
-                return;
-            }
-
-
-            short RefineStat = 0;
-
-            if ((TotalDC > TotalMC) && (TotalDC > TotalSC))
-            {
-                Info.CurrentRefine.RefinedValue = RefinedValue.DC;
-                RefineStat = TotalDC;
-            }
-
-            if ((TotalMC > TotalDC) && (TotalMC > TotalSC))
-            {
-                Info.CurrentRefine.RefinedValue = RefinedValue.MC;
-                RefineStat = TotalMC;
-            }
-
-            if ((TotalSC > TotalDC) && (TotalSC > TotalMC))
-            {
-                Info.CurrentRefine.RefinedValue = RefinedValue.SC;
-                RefineStat = TotalSC;
-            }
-
-            Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
-
-
-            int ItemSuccess = 0; //Chance out of 35%
-
-            ItemSuccess += (RefineStat * 5) - Info.CurrentRefine.Info.RequiredAmount;
-            ItemSuccess += 5;
-            if (ItemSuccess > 10) ItemSuccess = 10;
-            if (ItemSuccess < 0) ItemSuccess = 0; //10%
-
-
-            if ((RequiredLevel / ItemAmount) > (Info.CurrentRefine.Info.RequiredAmount - 5)) ItemSuccess += 10; //20%
-            if (Durability == ItemAmount) ItemSuccess += 10; //30%
-            if (CurrentDura == ItemAmount) ItemSuccess += 5; //35%
-
-            int OreSuccess = 0; //Chance out of 35%
-
-            if (OreAmount >= ItemAmount) OreSuccess += 15; //15%
-            if ((OrePurity / OreAmount) >= (RefineStat / ItemAmount)) OreSuccess += 15; //30%
-            if (OrePurity == RefineStat) OreSuccess += 5; //35%
-
-            int LuckSuccess = 0; //Chance out of 10%
-
-            LuckSuccess = (Info.CurrentRefine.Luck + 5);
-            if (LuckSuccess > 10) LuckSuccess = 10;
-            if (LuckSuccess < 0) LuckSuccess = 0;
-
-
-            int BaseSuccess = Settings.RefineBaseChance; //20% as standard
-
-            int SuccessChance = (ItemSuccess + OreSuccess + LuckSuccess + BaseSuccess);
-
-            AddedStats = (byte)(Info.CurrentRefine.DC + Info.CurrentRefine.MC + Info.CurrentRefine.SC);
-            if (Info.CurrentRefine.Info.Type == ItemType.Weapon) AddedStats = (short)(AddedStats * Settings.RefineWepStatReduce);
-            else AddedStats = (short)(AddedStats * Settings.RefineItemStatReduce);
-            if (AddedStats > 50) AddedStats = 50;
-
-            SuccessChance -= AddedStats;
-
-
-            if (Envir.Random.Next(1, 100) > SuccessChance)
-                Info.CurrentRefine.RefinedValue = RefinedValue.None;
-
-            if (Envir.Random.Next(1, 100) < Settings.RefineCritChance)
-                Info.CurrentRefine.RefineAdded = (byte)(Info.CurrentRefine.RefineAdded * Settings.RefineCritIncrease);
-
-            //END OF FORMULA (SET REFINEDVALUE TO REFINEDVALUE.NONE) REFINEADDED SHOULD BE > 0
-
-            if (Settings.RefineTime == 0)
-            {
-                CollectRefine();
-            }
-            else
-            {
-                ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
-            }
-        }
-
-        public void CollectRefine()
-        {
-            S.NPCCollectRefine p = new S.NPCCollectRefine { Success = false };
-
-            if (Info.CurrentRefine == null)
-            {
-                ReceiveChat("You aren't currently refining any items.", ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-            if (Info.CollectTime > Envir.Time)
-            {
-                ReceiveChat(String.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-
-            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > MaxBagWeight)
-            {
-                ReceiveChat(String.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-            int index = -1;
-
-            for (int i = 0; i < Info.Inventory.Length; i++)
-            {
-                if (Info.Inventory[i] != null) continue;
-                index = i;
-                break;
-            }
-
-            if (index == -1)
-            {
-                ReceiveChat(String.Format("There isn't room in your bag for your {0}, make some space and try again.", Info.CurrentRefine.FriendlyName), ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-            p.Success = true;
-            Enqueue(new S.GainedItem { Item = Info.CurrentRefine });
-            AddItem(Info.CurrentRefine);
-            RefreshBagWeight();
-            Info.CurrentRefine = null;
-            Info.CollectTime = 0;
-            Enqueue(p);
-            return;
-        }
-
-        public void CheckRefine(ulong uniqueID)
-        {
-            //Enqueue(new S.RepairItem { UniqueID = uniqueID });
-
-            if (Dead) return;
-
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineCheckKey, StringComparison.CurrentCultureIgnoreCase))) return;
-
-            UserItem temp = null;
-
-            int index = -1;
-
-            for (int i = 0; i < Info.Inventory.Length; i++)
-            {
-                temp = Info.Inventory[i];
-                if (temp == null || temp.UniqueID != uniqueID) continue;
-                index = i;
-                break;
-            }
-
-            if (Info.Inventory[index].RefineAdded == 0)
-            {
-                ReceiveChat(String.Format("{0} doesn't need to be checked as it hasn't been refined yet.", Info.Inventory[index].FriendlyName), ChatType.System);
-                return;
-            }
-
-
-            if ((Info.Inventory[index].RefinedValue == RefinedValue.DC) && (Info.Inventory[index].RefineAdded > 0))
-            {
-                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra DC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
-                Info.Inventory[index].DC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].DC + Info.Inventory[index].RefineAdded);
-                Info.Inventory[index].RefineAdded = 0;
-                Info.Inventory[index].RefinedValue = RefinedValue.None;
-            }
-            else if ((Info.Inventory[index].RefinedValue == RefinedValue.MC) && (Info.Inventory[index].RefineAdded > 0))
-            {
-                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra MC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
-                Info.Inventory[index].MC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].MC + Info.Inventory[index].RefineAdded);
-                Info.Inventory[index].RefineAdded = 0;
-                Info.Inventory[index].RefinedValue = RefinedValue.None;
-            }
-            else if ((Info.Inventory[index].RefinedValue == RefinedValue.SC) && (Info.Inventory[index].RefineAdded > 0))
-            {
-                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra SC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
-                Info.Inventory[index].SC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].SC + Info.Inventory[index].RefineAdded);
-                Info.Inventory[index].RefineAdded = 0;
-                Info.Inventory[index].RefinedValue = RefinedValue.None;
-            }
-            else if ((Info.Inventory[index].RefinedValue == RefinedValue.None) && (Info.Inventory[index].RefineAdded > 0))
-            {
-                ReceiveChat(String.Format("Your {0} smashed into a thousand pieces upon testing.", Info.Inventory[index].FriendlyName), ChatType.System);
-                Enqueue(new S.RefineItem { UniqueID = Info.Inventory[index].UniqueID });
-                Info.Inventory[index] = null;
-                return;
-            }
-
-            Enqueue(new S.ItemUpgraded { Item = Info.Inventory[index] });
-            return;
-        }
-
-        public void MarriageRequest()
-        {
-
-            if (Info.Married != 0)
-            {
-                ReceiveChat(string.Format("You're already married."), ChatType.System);
-                return;
-            }
-
-            if (Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
-            {
-                ReceiveChat(string.Format("You can't get married again yet, there is a {0} day cooldown after a divorce.", Settings.MarriageCooldown), ChatType.System);
-                return;
-            }
-
-            if (Info.Level < Settings.MarriageLevelRequired)
-            {
-                ReceiveChat(string.Format("You need to be at least level {0} to get married.", Settings.MarriageLevelRequired), ChatType.System);
-                return;
-            }
-
-            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
-            Cell cell = CurrentMap.GetCell(target);
-            PlayerObject player = null;
-
-            if (cell.Objects == null || cell.Objects.Count < 1) return;
-
-            for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                MapObject ob = cell.Objects[i];
-                if (ob.Race != ObjectType.Player) continue;
-
-                player = Envir.GetPlayer(ob.Name);
-            }
-
-            
-
-            if (player != null)
-            {
-
-
-                if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
-                {
-                    ReceiveChat(string.Format("You need to be facing each other to perform a marriage."), ChatType.System);
-                    return;
-                }
-
-                if (player.Level < Settings.MarriageLevelRequired)
-                {
-                    ReceiveChat(string.Format("Your lover needs to be at least level {0} to get married.", Settings.MarriageLevelRequired), ChatType.System);
-                    return;
-                }
-
-                if (player.Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
-                {
-                    ReceiveChat(string.Format("{0} can't get married again yet, there is a {1} day cooldown after divorce", player.Name, Settings.MarriageCooldown), ChatType.System);
-                    return;
-                }
-
-                if (!player.AllowMarriage)
-                {
-                    ReceiveChat("The person you're trying to propose to isn't allowing marriage requests.", ChatType.System);
-                    return;
-                }
-
-                if (player == this)
-                {
-                    ReceiveChat("You cant marry yourself.", ChatType.System);
-                    return;
-                }
-
-                if (player.Dead || Dead)
-                {
-                    ReceiveChat("You can't perform a marriage with a dead player.", ChatType.System);
-                    return;
-                }
-
-                if (player.MarriageProposal != null)
-                {
-                    ReceiveChat(string.Format("{0} already has a marriage invitation.", player.Info.Name), ChatType.System);
-                    return;
-                }
-
-                if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
-                {
-                    ReceiveChat(string.Format("{0} is not within marriage range.", player.Info.Name), ChatType.System);
-                    return;
-                }
-
-                if (player.Info.Married != 0)
-                {
-                    ReceiveChat(string.Format("{0} is already married.", player.Info.Name), ChatType.System);
-                    return;
-                }
-
-                player.MarriageProposal = this;
-                player.Enqueue(new S.MarriageRequest { Name = Info.Name });
-            }
-            else
-            {
-                ReceiveChat(string.Format("You need to be facing a player to request a marriage."), ChatType.System);
-                return;
-            }
-        }
-
-        public void MarriageReply(bool accept)
-        {
-            if (MarriageProposal == null || MarriageProposal.Info == null)
-            {
-                MarriageProposal = null;
-                return;
-            }
-
-            if (!accept)
-            {
-                MarriageProposal.ReceiveChat(string.Format("{0} has refused to marry you.", Info.Name), ChatType.System);
-                MarriageProposal = null;
-                return;
-            }
-
-            if (Info.Married != 0)
-            {
-                ReceiveChat("You are already married.", ChatType.System);
-                MarriageProposal = null;
-                return;
-            }
-
-            if (MarriageProposal.Info.Married != 0)
-            {
-                ReceiveChat(string.Format("{0} is already married.", TradeInvitation.Info.Name), ChatType.System);
-                MarriageProposal = null;
-                return;
-            }
-
-
-            MarriageProposal.Info.Married = Info.Index;
-            MarriageProposal.Info.MarriedDate = DateTime.Now;
-
-            Info.Married = MarriageProposal.Info.Index;
-            Info.MarriedDate = DateTime.Now;
-
-            GetRelationship(false);
-            MarriageProposal.GetRelationship(false);
-
-            MarriageProposal.ReceiveChat(string.Format("Congratulations, you're now married to {0}.", Info.Name), ChatType.System);
-            ReceiveChat(String.Format("Congratulations, you're now married to {0}.", MarriageProposal.Info.Name), ChatType.System);
-
-            MarriageProposal = null;
-        }
-
-        public void DivorceRequest()
-        {
-
-            if (Info.Married == 0)
-            {
-                ReceiveChat(string.Format("You're not married."), ChatType.System);
-                return;
-            }
-
-
-            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
-            Cell cell = CurrentMap.GetCell(target);
-            PlayerObject player = null;
-
-            if (cell.Objects == null || cell.Objects.Count < 1) return;
-
-            for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                MapObject ob = cell.Objects[i];
-                if (ob.Race != ObjectType.Player) continue;
-
-                player = Envir.GetPlayer(ob.Name);
-            }
-
-            if (player == null)
-            {
-                ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
-                return;
-            }
-
-            if (player != null)
-            {
-                if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
-                {
-                    ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
-                    return;
-                }
-
-                if (player == this)
-                {
-                    ReceiveChat("You can't divorce yourself.", ChatType.System);
-                    return;
-                }
-
-                if (player.Dead || Dead)
-                {
-                    ReceiveChat("You can't divorce a dead player.", ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
-                    return;
-                }
-
-                if (player.Info.Index != Info.Married)
-                {
-                    ReceiveChat(string.Format("You aren't married to {0}", player.Info.Name), ChatType.System);
-                    return;
-                }
-
-                if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
-                {
-                    ReceiveChat(string.Format("{0} is not within divorce range.", player.Info.Name), ChatType.System);
-                    return;
-                }
-
-                player.DivorceProposal = this;
-                player.Enqueue(new S.DivorceRequest { Name = Info.Name });
-            }
-            else
-            {
-                ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
-                return;
-            }
-        }
-
-        public void DivorceReply(bool accept)
-        {
-            if (DivorceProposal == null || DivorceProposal.Info == null)
-            {
-                DivorceProposal = null;
-                return;
-            }
-
-            if (!accept)
-            {
-                DivorceProposal.ReceiveChat(string.Format("{0} has refused to divorce you.", Info.Name), ChatType.System);
-                DivorceProposal = null;
-                return;
-            }
-
-            if (Info.Married == 0)
-            {
-                ReceiveChat("You aren't married so you don't require a divorce.", ChatType.System);
-                DivorceProposal = null;
-                return;
-            }
-
-            Buff buff = Buffs.Where(e => e.Type == BuffType.RelationshipEXP).FirstOrDefault();
-            if (buff != null)
-            {
-                RemoveBuff(BuffType.RelationshipEXP);
-                DivorceProposal.RemoveBuff(BuffType.RelationshipEXP);
-            }
-
-            DivorceProposal.Info.Married = 0;
-            DivorceProposal.Info.MarriedDate = DateTime.Now;
-            if (DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] != null)
-            {
-                DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
-                DivorceProposal.Enqueue(new S.RefreshItem { Item = DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] });
-            }
-                
-            Info.Married = 0;
-            Info.MarriedDate = DateTime.Now;
-            if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
-            {
-                Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
-                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
-            }
-                
-
-            DivorceProposal.ReceiveChat(string.Format("You're now divorced", Info.Name), ChatType.System);
-            ReceiveChat("You're now divorced", ChatType.System);
-
-            GetRelationship(false);
-            DivorceProposal.GetRelationship(false);
-            DivorceProposal = null;
-        }
-
-
-        public void NPCDivorce()
-        {
-            if (Info.Married == 0)
-            {
-                ReceiveChat(string.Format("You're not married."), ChatType.System);
-                return;
-            }
-
-            CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-            PlayerObject Player = Envir.GetPlayer(Lover.Name);
-
-            Buff buff = Buffs.Where(e => e.Type == BuffType.RelationshipEXP).FirstOrDefault();
-            if (buff != null)
-            {
-                RemoveBuff(BuffType.RelationshipEXP);
-                Player.RemoveBuff(BuffType.RelationshipEXP);
-            }
-
-            Info.Married = 0;
-            Info.MarriedDate = DateTime.Now;
-
-            if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
-            {
-                Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
-                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
-            }
-            
-            GetRelationship(false);
-
-            Lover.Married = 0;
-            Lover.MarriedDate = DateTime.Now;
-            if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
-                Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
-
-            if (Player != null)
-            {
-                Player.GetRelationship(false);
-                Player.ReceiveChat(string.Format("You've just been forcefully divorced"), ChatType.System);
-                if (Player.Info.Equipment[(int)EquipmentSlot.RingL] != null)
-                    Player.Enqueue(new S.RefreshItem { Item = Player.Info.Equipment[(int)EquipmentSlot.RingL] });
-            }
-        }
-
-        public void MakeWeddingRing()
-        {
-            if (Info.Married == 0)
-            {
-                ReceiveChat(string.Format("You need to be married to make a Wedding Ring."), ChatType.System);
-                return;
-            }
-
-            if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
-            {
-                ReceiveChat(string.Format("You need to wear a ring on your left finger to make a Wedding Ring."), ChatType.System);
-                return;
-            }
-
-            if (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1)
-            {
-                ReceiveChat(string.Format("You're already wearing a Wedding Ring."), ChatType.System);
-                return;
-            }
-
-            Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Married;
-            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
-        }
-
-        public void ReplaceWeddingRing(ulong uniqueID)
-        {
-            if (Dead) return;
-
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.ReplaceWedRingKey, StringComparison.CurrentCultureIgnoreCase))) return;
-
-            UserItem temp = null;
-            UserItem CurrentRing = Info.Equipment[(int)EquipmentSlot.RingL];
-
-            if (CurrentRing == null)
-            {
-                ReceiveChat(string.Format("You arn't wearing a  ring to upgrade."), ChatType.System);
-                return;
-            }
-
-            if (CurrentRing.WeddingRing == -1)
-            {
-                ReceiveChat(string.Format("You arn't wearing a Wedding Ring to upgrade."), ChatType.System);
-                return;
-            }
-
-            int index = -1;
-
-            for (int i = 0; i < Info.Inventory.Length; i++)
-            {
-                temp = Info.Inventory[i];
-                if (temp == null || temp.UniqueID != uniqueID) continue;
-                index = i;
-                break;
-            }
-
-            temp = Info.Inventory[index];
-
-
-            if (temp.Info.Type != ItemType.Ring)
-            {
-                ReceiveChat(string.Format("You can't replace a Wedding Ring with this item."), ChatType.System);
-                return;
-            }
-
-            if (!CanEquipItem(temp, (int)EquipmentSlot.RingL))
-            {
-                ReceiveChat(string.Format("You can't equip the item you're trying to use."), ChatType.System);
-                return;
-            }
-
-            uint cost = (uint)((Info.Inventory[index].Info.RequiredAmount * 10) * Settings.ReplaceWedRingCost);
-
-            if (cost > Account.Gold || cost == 0)
-            {
-                ReceiveChat(String.Format("You don't have enough gold to replace your Wedding Ring."), ChatType.System);
-                return;
-            }
-
-            Account.Gold -= cost;
-            Enqueue(new S.LoseGold { Gold = cost });
-
-
-            temp.WeddingRing = Info.Married;
-            CurrentRing.WeddingRing = -1;
-
-            Info.Equipment[(int)EquipmentSlot.RingL] = temp;
-            Info.Inventory[index] = CurrentRing;
-
-            Enqueue(new S.EquipItem { Grid = MirGridType.Inventory, UniqueID = temp.UniqueID, To = (int)EquipmentSlot.RingL, Success = true });
-
-            Enqueue(new S.RefreshItem { Item = Info.Inventory[index] });
-            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
-
-        }
-
-
-        public void AddMentor(string Name)
-        {
-
-            if (Info.Mentor != 0)
-            {
-                ReceiveChat("You already have a Mentor.", ChatType.System);
-                return;
-            }
-
-            if (Info.Name == Name)
-            {
-                ReceiveChat("You can't Mentor yourself.", ChatType.System);
-                return;
-            }
-
-            if (Info.MentorDate > DateTime.Now)
-            {
-                ReceiveChat("You can't start a new Mentorship yet.", ChatType.System);
-                return;
-            }
-
-            PlayerObject Mentor = Envir.GetPlayer(Name);
-
-            if (Mentor == null)
-            {
-                ReceiveChat(String.Format("Can't find anybody by the name {0}.", Name), ChatType.System);
-            }
-            else
-            {
-                Mentor.MentorRequest = null;
-
-                if (!Mentor.AllowMentor)
-                {
-                    ReceiveChat(String.Format("{0} is not allowing Mentor requests.", Mentor.Info.Name), ChatType.System);
-                    return;
-                }
-
-                if (Mentor.Info.MentorDate > DateTime.Now)
-                {
-                    ReceiveChat(String.Format("{0} can't start another Mentorship yet.", Mentor.Info.Name), ChatType.System);
-                    return;
-                }
-
-                if (Mentor.Info.Mentor != 0)
-                {
-                    ReceiveChat(String.Format("{0} is already a Mentor.", Mentor.Info.Name), ChatType.System);
-                    return;
-                }
-
-                if (Info.Class != Mentor.Info.Class)
-                {
-                    ReceiveChat("You can only be mentored by someone of the same Class.", ChatType.System);
-                    return;
-                }
-                if ((Info.Level + Settings.MentorLevelGap) > Mentor.Level)
-                {
-                    ReceiveChat(String.Format("You can only be mentored by someone who at least {0} level(s) above you.", Settings.MentorLevelGap), ChatType.System);
-                    return;
-                }
-
-                Mentor.MentorRequest = this;
-                Mentor.Enqueue(new S.MentorRequest { Name = Info.Name, Level = Info.Level });
-                ReceiveChat(String.Format("Request Sent."), ChatType.System);
-            }
-
-        }
-
-        public void MentorReply(bool accept)
-        {
-            if (!accept)
-            {
-                MentorRequest.ReceiveChat(string.Format("{0} has refused to Mentor you.", Info.Name), ChatType.System);
-                MentorRequest = null;
-                return;
-            }
-
-            if (Info.Mentor != 0)
-            {
-                ReceiveChat("You already have a Student.", ChatType.System);
-                return;
-            }
-
-            PlayerObject Student = Envir.GetPlayer(MentorRequest.Info.Name);
-            MentorRequest = null;
-
-            if (Student == null)
-            {
-                ReceiveChat(String.Format("{0} is no longer online.", Student.Name), ChatType.System);
-                return;
-            }
-            else
-            {
-                if (Student.Info.Mentor != 0)
-                {
-                    ReceiveChat(String.Format("{0} already has a Mentor.", Student.Info.Name), ChatType.System);
-                    return;
-                }
-                if (Info.Class != Student.Info.Class)
-                {
-                    ReceiveChat("You can only mentor someone of the same Class.", ChatType.System);
-                    return;
-                }
-                if ((Info.Level - Settings.MentorLevelGap) < Student.Level)
-                {
-                    ReceiveChat(String.Format("You can only mentor someone who at least {0} level(s) below you.", Settings.MentorLevelGap), ChatType.System);
-                    return;
-                }
-
-                Student.Info.Mentor = Info.Index;
-                Student.Info.isMentor = false;
-                Info.Mentor = Student.Info.Index;
-                Info.isMentor = true;
-                Student.Info.MentorDate = DateTime.Now;
-                Info.MentorDate = DateTime.Now;
-
-                ReceiveChat(String.Format("You're now the Mentor of {0}.", Student.Info.Name), ChatType.System);
-                Student.ReceiveChat(String.Format("You're now being Mentored by {0}.", Info.Name), ChatType.System);
-                GetMentor(false);
-                Student.GetMentor(false);
-            }
-        }
-
-
-        public void MentorBreak(bool Force = false)
-        {
-
-            if (Info.Mentor == 0)
-            {
-                ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
-                return;
-            }
-            CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
-            PlayerObject Player = Envir.GetPlayer(Mentor.Name);
-
-            if (Force)
-            {
-                Info.MentorDate = DateTime.Now.AddDays(Settings.MentorLength);
-                ReceiveChat(String.Format("You now have a {0} day cooldown on starting a new Mentorship.", Settings.MentorLength), ChatType.System);
-            }
-            else
-                ReceiveChat("Your Mentorship has now expired.", ChatType.System);
-
-            if (Info.isMentor)
-            {
-                if (Player != null)
-                {
-                    Info.MentorExp += Player.MenteeEXP;
-                    Player.MenteeEXP = 0;
-                }
-            }
-            else
-            {
-                if (Player != null)
-                {
-                    Mentor.MentorExp += MenteeEXP;
-                    MenteeEXP = 0;
-                }
-            }
-
-            if (Info.isMentor)
-            { 
-                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentor).FirstOrDefault();
-                if (buff != null)
-                {
-                    RemoveBuff(BuffType.Mentor);
-                    Player.RemoveBuff(BuffType.Mentee);
-                }
-            }
-            else
-            {
-                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentee).FirstOrDefault();
-                if (buff != null)
-                {
-                    RemoveBuff(BuffType.Mentee);
-                    Player.RemoveBuff(BuffType.Mentor);
-                }
-            }
-
-            Info.Mentor = 0;
-            GetMentor(false);
-            Info.isMentor = false;
-
-            if (Info.isMentor && Info.MentorExp > 0)
-            {
-                GainExp((uint)Info.MentorExp);
-                Info.MentorExp = 0;
-            }
-
-            Mentor.Mentor = 0;
-            Mentor.isMentor = false;
-            
-            if (Player != null)
-            {
-                Player.ReceiveChat("Your Mentorship has now expired.", ChatType.System);
-                Player.GetMentor(false);
-                if (Mentor.isMentor && Mentor.MentorExp > 0)
-                {
-                    Player.GainExp((uint)Mentor.MentorExp);
-                    Info.MentorExp = 0;
-                }
-            }
-            else
-            {
-                if (Mentor.isMentor && Mentor.MentorExp > 0)
-                {
-                    Mentor.Experience += Mentor.MentorExp;
-                    Mentor.MentorExp = 0;
-                }
-            }
-
-            Info.MentorExp = 0;
-            Mentor.MentorExp = 0;
-        }
-
-        public void DepositTradeItem(int from, int to)
-        {
-            S.DepositTradeItem p = new S.DepositTradeItem { From = from, To = to, Success = false };
-
-            if (from < 0 || from >= Info.Inventory.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (to < 0 || to >= Info.Trade.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            UserItem temp = Info.Inventory[from];
-
-            if (temp == null)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (temp.Info.Bind.HasFlag(BindMode.DontTrade))
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (Info.Trade[to] == null)
-            {
-                Info.Trade[to] = temp;
-                Info.Inventory[from] = null;
-                RefreshBagWeight();
-                TradeItem();
-
-                Report.ItemMoved("DepositTradeItem", temp, MirGridType.Inventory, MirGridType.Trade, from, to);
-
-                p.Success = true;
-                Enqueue(p);
-                return;
-            }
-            Enqueue(p);
-
-        }
-
-
-        public void RetrieveTradeItem(int from, int to)
-        {
-            S.RetrieveTradeItem p = new S.RetrieveTradeItem { From = from, To = to, Success = false };
-
-            if (from < 0 || from >= Info.Trade.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (to < 0 || to >= Info.Inventory.Length)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            UserItem temp = Info.Trade[from];
-
-            if (temp == null)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-            if (Info.Inventory[to] == null)
-            {
-                Info.Inventory[to] = temp;
-                Info.Trade[from] = null;
-
-                p.Success = true;
-                RefreshBagWeight();
-                TradeItem();
-
-                Report.ItemMoved("RetrieveTradeItem", temp, MirGridType.Trade, MirGridType.Inventory, from, to);
-
-                Enqueue(p);
-                return;
-            }
-            Enqueue(p);
         }
 
         public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
@@ -11399,7 +10188,6 @@ namespace Server.MirObjects
                 return;
             }
         }
-
         public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
         {
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
@@ -11532,95 +10320,6 @@ namespace Server.MirObjects
             Enqueue(p);
             RefreshStats();
         }
-        private bool ValidGemForItem(UserItem Gem, byte itemtype)
-        {
-            switch (itemtype)
-            {
-                case 1: //weapon
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Paralize))
-                        return true;
-                    break;
-                case 2: //Armour
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Teleport))
-                        return true;
-                    break;
-                case 4: //Helmet
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Clearring))
-                        return true;
-                    break;
-                case 5: //necklace
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Protection))
-                        return true;
-                    break;
-                case 6: //bracelet
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Revival))
-                        return true;
-                    break;
-                case 7: //ring
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Muscle))
-                        return true;
-                    break;
-                case 8: //amulet
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Flame))
-                        return true;
-                    break;
-                case 9://belt
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Healing))
-                        return true;
-                    break;
-                case 10: //boots
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Probe))
-                        return true;
-                    break;
-                case 11: //stone
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Skill))
-                        return true;
-                    break;
-                case 12:///torch
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.NoDuraLoss))
-                        return true;
-                    break;
-            }
-            return false;
-        }
-
-        private int GetCurrentStatCount(UserItem gem, UserItem item)
-        {
-            if ((gem.Info.MaxDC + gem.DC) > 0)
-                return item.DC;
-            else if ((gem.Info.MaxMC + gem.MC) > 0)
-                return item.MC;
-            else if ((gem.Info.MaxSC + gem.SC) > 0)
-                return item.SC;
-            else if ((gem.Info.MaxAC + gem.AC) > 0)
-                return item.AC;
-            else if ((gem.Info.MaxMAC + gem.MAC) > 0)
-                return item.MAC;
-
-            else if ((gem.Info.Durability) > 0)
-                return item.Info.Durability > item.MaxDura ? 0 : ((item.MaxDura - item.Info.Durability) / 1000);
-
-            else if ((gem.Info.AttackSpeed + gem.AttackSpeed) > 0)
-                return item.AttackSpeed;
-
-            else if ((gem.Info.Agility + gem.Agility) > 0)
-                return item.Agility;
-
-            else if ((gem.Info.Accuracy + gem.Accuracy) > 0)
-                return item.Accuracy;
-
-            else if ((gem.Info.PoisonAttack + gem.PoisonAttack) > 0)
-                return item.PoisonAttack;
-
-            else if ((gem.Info.Freezing + gem.Freezing) > 0)
-                return item.Freezing;
-            else if ((gem.Info.MagicResist + gem.MagicResist) > 0)
-                return item.MagicResist;
-            else if ((gem.Info.PoisonResist + gem.PoisonResist) > 0)
-                return item.PoisonResist;
-            return 0;
-        }
-
         public void CombineItem(ulong fromID, ulong toID)
         {
             S.CombineItem p = new S.CombineItem { IDFrom = fromID, IDTo = toID, Success = false };
@@ -11895,7 +10594,93 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
         }
+        private bool ValidGemForItem(UserItem Gem, byte itemtype)
+        {
+            switch (itemtype)
+            {
+                case 1: //weapon
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Paralize))
+                        return true;
+                    break;
+                case 2: //Armour
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Teleport))
+                        return true;
+                    break;
+                case 4: //Helmet
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Clearring))
+                        return true;
+                    break;
+                case 5: //necklace
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Protection))
+                        return true;
+                    break;
+                case 6: //bracelet
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Revival))
+                        return true;
+                    break;
+                case 7: //ring
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Muscle))
+                        return true;
+                    break;
+                case 8: //amulet
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Flame))
+                        return true;
+                    break;
+                case 9://belt
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Healing))
+                        return true;
+                    break;
+                case 10: //boots
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Probe))
+                        return true;
+                    break;
+                case 11: //stone
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Skill))
+                        return true;
+                    break;
+                case 12:///torch
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.NoDuraLoss))
+                        return true;
+                    break;
+            }
+            return false;
+        }
+        private int GetCurrentStatCount(UserItem gem, UserItem item)
+        {
+            if ((gem.Info.MaxDC + gem.DC) > 0)
+                return item.DC;
+            else if ((gem.Info.MaxMC + gem.MC) > 0)
+                return item.MC;
+            else if ((gem.Info.MaxSC + gem.SC) > 0)
+                return item.SC;
+            else if ((gem.Info.MaxAC + gem.AC) > 0)
+                return item.AC;
+            else if ((gem.Info.MaxMAC + gem.MAC) > 0)
+                return item.MAC;
 
+            else if ((gem.Info.Durability) > 0)
+                return item.Info.Durability > item.MaxDura ? 0 : ((item.MaxDura - item.Info.Durability) / 1000);
+
+            else if ((gem.Info.AttackSpeed + gem.AttackSpeed) > 0)
+                return item.AttackSpeed;
+
+            else if ((gem.Info.Agility + gem.Agility) > 0)
+                return item.Agility;
+
+            else if ((gem.Info.Accuracy + gem.Accuracy) > 0)
+                return item.Accuracy;
+
+            else if ((gem.Info.PoisonAttack + gem.PoisonAttack) > 0)
+                return item.PoisonAttack;
+
+            else if ((gem.Info.Freezing + gem.Freezing) > 0)
+                return item.Freezing;
+            else if ((gem.Info.MagicResist + gem.MagicResist) > 0)
+                return item.MagicResist;
+            else if ((gem.Info.PoisonResist + gem.PoisonResist) > 0)
+                return item.PoisonResist;
+            return 0;
+        }
         public void DropItem(ulong id, uint count)
         {
             S.DropItem p = new S.DropItem { UniqueID = id, Count = count, Success = false };
@@ -12784,607 +11569,12 @@ namespace Server.MirObjects
             return true;
         }
 
-        public void CallDefaultNPC(DefaultNPCType type, params object[] value)
-        {
-            string key = string.Empty;
-
-            switch (type)
-            {
-                case DefaultNPCType.Login:
-                    key = "Login";
-                    break;
-                case DefaultNPCType.UseItem:
-                    if (value.Length < 1) return;
-                    key = string.Format("UseItem({0})", value[0]);
-                    break;
-                case DefaultNPCType.Trigger:
-                    if (value.Length < 1) return;
-                    key = string.Format("Trigger({0})", value[0]);
-                    break;
-                case DefaultNPCType.MapCoord:
-                    if (value.Length < 3) return;
-                    key = string.Format("MapCoord({0},{1},{2})", value[0], value[1], value[2]);
-                    break;
-                case DefaultNPCType.MapEnter:
-                    if (value.Length < 1) return;
-                    key = string.Format("MapEnter({0})", value[0]);
-                    break;
-                case DefaultNPCType.Die:
-                    key = "Die";
-                    break;
-                case DefaultNPCType.LevelUp:
-                    key = "LevelUp";
-                    break;
-                case DefaultNPCType.CustomCommand:
-                    if (value.Length < 1) return;
-                    key = string.Format("CustomCommand({0})", value[0]);
-                    break;
-                case DefaultNPCType.OnAcceptQuest:
-                    if (value.Length < 1) return;
-                    key = string.Format("OnAcceptQuest({0})", value[0]);
-                    break;
-                case DefaultNPCType.OnFinishQuest:
-                    if (value.Length < 1) return;
-                    key = string.Format("OnFinishQuest({0})", value[0]);
-                    break;
-                case DefaultNPCType.Daily:
-                    key = "Daily";
-                    Info.NewDay = false;
-                    break;
-            }
-
-            key = string.Format("[@_{0}]", key);
-
-            DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, DefaultNPC.ObjectID, key);
-            ActionList.Add(action);
-
-            Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.ObjectID });
-        }
-        public void CallNPC(uint objectID, string key)
-        {
-            if (objectID == DefaultNPC.ObjectID)
-            {
-                DefaultNPC.Call(this, key.ToUpper());
-                CallNPCNextPage();
-                return;
-            }
-
-            if (Dead) return;
-
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
-            {
-                NPCObject ob = CurrentMap.NPCs[i];
-                if (ob.ObjectID != objectID) continue;
-
-                ob.Call(this, key.ToUpper());
-                break;
-            }
-
-            CallNPCNextPage();
-        }
-
-        private void CallNPCNextPage()
-        {
-            //process any new npc calls immediately
-            for (int i = 0; i < ActionList.Count; i++)
-            {
-                if (ActionList[i].Type != DelayedType.NPC || ActionList[i].Time != -1) continue;
-                var action = ActionList[i];
-
-                ActionList.RemoveAt(i);
-
-                CompleteNPC(action.Params);
-            }
-        }
-
-        public void BuyItem(ulong index, uint count)
-        {
-            if (Dead) return;
-
-            if (NPCPage == null ||
-                !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCObject.BuyBackKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCObject.BuyUsedKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCObject.PearlBuyKey, StringComparison.CurrentCultureIgnoreCase))) return;
-
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
-            {
-                NPCObject ob = CurrentMap.NPCs[i];
-                if (ob.ObjectID != NPCID) continue;
-                ob.Buy(this, index, count);
-            }
-        }
-        public void SellItem(ulong uniqueID, uint count)
-        {
-            S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };
-            if (Dead || count == 0)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.SellKey, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                Enqueue(p);
-                return;
-            }
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                UserItem temp = null;
-                int index = -1;
-
-                for (int i = 0; i < Info.Inventory.Length; i++)
-                {
-                    temp = Info.Inventory[i];
-                    if (temp == null || temp.UniqueID != uniqueID) continue;
-                    index = i;
-                    break;
-                }
-
-                if (temp == null || index == -1 || count > temp.Count)
-                {
-                    Enqueue(p);
-                    return;
-                }
-
-                if (temp.Info.Bind.HasFlag(BindMode.DontSell))
-                {
-                    Enqueue(p);
-                    return;
-                }
-
-                if (ob.Types.Count != 0 && !ob.Types.Contains(temp.Info.Type))
-                {
-                    ReceiveChat("You cannot sell this item here.", ChatType.System);
-                    Enqueue(p);
-                    return;
-                }
-
-                if (temp.Info.StackSize > 1 && count != temp.Count)
-                {
-                    UserItem item = Envir.CreateFreshItem(temp.Info);
-                    item.Count = count;
-
-                    if (item.Price() / 2 + Account.Gold > uint.MaxValue)
-                    {
-                        Enqueue(p);
-                        return;
-                    }
-
-                    temp.Count -= count;
-                    temp = item;
-                }
-                else Info.Inventory[index] = null;
-
-                ob.Sell(this, temp);
-                p.Success = true;
-                Enqueue(p);
-                GainGold(temp.Price() / 2);
-                RefreshBagWeight();
-
-                return;
-            }
-
-
-
-            Enqueue(p);
-        }
-        public void RepairItem(ulong uniqueID, bool special = false)
-        {
-            Enqueue(new S.RepairItem { UniqueID = uniqueID });
-
-            if (Dead) return;
-
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RepairKey, StringComparison.CurrentCultureIgnoreCase) && !special) || (!String.Equals(NPCPage.Key, NPCObject.SRepairKey, StringComparison.CurrentCultureIgnoreCase) && special)) return;
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                UserItem temp = null;
-                int index = -1;
-
-                for (int i = 0; i < Info.Inventory.Length; i++)
-                {
-                    temp = Info.Inventory[i];
-                    if (temp == null || temp.UniqueID != uniqueID) continue;
-                    index = i;
-                    break;
-                }
-
-                if (temp == null || index == -1) return;
-
-                if ((temp.Info.Bind.HasFlag(BindMode.DontRepair)) || (temp.Info.Bind.HasFlag(BindMode.NoSRepair) && special))
-                {
-                    ReceiveChat("You cannot Repair this item.", ChatType.System);
-                    return;
-                }
-
-                if (ob.Types.Count != 0 && !ob.Types.Contains(temp.Info.Type))
-                {
-                    ReceiveChat("You cannot Repair this item here.", ChatType.System);
-                    return;
-                }
-
-                uint cost = (uint)(temp.RepairPrice() * ob.Info.PriceRate);
-
-                if (cost > Account.Gold || cost == 0) return;
-
-                Account.Gold -= cost;
-                Enqueue(new S.LoseGold { Gold = cost });
-
-                if (!special) temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - (temp.MaxDura - temp.CurrentDura) / 30);
-
-                temp.CurrentDura = temp.MaxDura;
-                temp.DuraChanged = false;
-
-                Enqueue(new S.ItemRepaired { UniqueID = uniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
-                return;
-            }
-        }
-        public void SendStorage()
-        {
-            if (Connection.StorageSent) return;
-            Connection.StorageSent = true;
-
-            for (int i = 0; i < Account.Storage.Length; i++)
-            {
-                UserItem item = Account.Storage[i];
-                if (item == null) continue;
-                //CheckItemInfo(item.Info);
-                CheckItem(item);
-            }
-
-            Enqueue(new S.UserStorage { Storage = Account.Storage }); // Should be no alter before being sent.
-        }
-
-        public void ConsignItem(ulong uniqueID, uint price)
-        {
-            S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
-            if (price < Globals.MinConsignment || price > Globals.MaxConsignment || Dead)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ConsignKey, StringComparison.CurrentCultureIgnoreCase))
-            {
-                Enqueue(p);
-                return;
-            }
-
-            if (Account.Gold < Globals.ConsignmentCost)
-            {
-                Enqueue(p);
-                return;
-            }
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                UserItem temp = null;
-                int index = -1;
-
-                for (int i = 0; i < Info.Inventory.Length; i++)
-                {
-                    temp = Info.Inventory[i];
-                    if (temp == null || temp.UniqueID != uniqueID) continue;
-                    index = i;
-                    break;
-                }
-
-                if (temp == null || index == -1)
-                {
-                    Enqueue(p);
-                    return;
-                }
-
-                if (temp.Info.Bind.HasFlag(BindMode.DontSell))
-                {
-                    Enqueue(p);
-                    return;
-                }
-
-                //Check Max Consignment.
-
-                AuctionInfo auction = new AuctionInfo
-                {
-                    AuctionID = ++Envir.NextAuctionID,
-                    CharacterIndex = Info.Index,
-                    CharacterInfo = Info,
-                    ConsignmentDate = Envir.Now,
-                    Item = temp,
-                    Price = price
-                };
-
-                Account.Auctions.AddLast(auction);
-                Envir.Auctions.AddFirst(auction);
-
-                p.Success = true;
-                Enqueue(p);
-
-                Report.ItemChanged("ConsignItem", temp, temp.Count, 1);
-
-                Info.Inventory[index] = null;
-                Account.Gold -= Globals.ConsignmentCost;
-                Enqueue(new S.LoseGold { Gold = Globals.ConsignmentCost });
-                RefreshBagWeight();
-
-            }
-
-            Enqueue(p);
-        }
-        public bool Match(AuctionInfo info)
-        {
-            if (Envir.Now >= info.ConsignmentDate.AddDays(Globals.ConsignmentLength) && !info.Sold)
-                info.Expired = true;
-
-            return (UserMatch || !info.Expired && !info.Sold) && ((MatchType == ItemType.Nothing || info.Item.Info.Type == MatchType) &&
-                (string.IsNullOrWhiteSpace(MatchName) || info.Item.Info.Name.Replace(" ", "").IndexOf(MatchName, StringComparison.OrdinalIgnoreCase) >= 0));
-        }
-        public void MarketPage(int page)
-        {
-            if (Dead || Envir.Time < SearchTime) return;
-
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase) && !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase)) || page <= PageSent) return;
-
-            SearchTime = Envir.Time + Globals.SearchDelay;
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                List<ClientAuction> listings = new List<ClientAuction>();
-
-                for (int i = 0; i < 10; i++)
-                {
-                    if (i + page * 10 >= Search.Count) break;
-                    listings.Add(Search[i + page * 10].CreateClientAuction(UserMatch));
-                }
-
-                for (int i = 0; i < listings.Count; i++)
-                {
-                    //CheckItemInfo(listings[i].Item.Info);
-                    CheckItem(listings[i].Item);
-                }
-
-                PageSent = page;
-                Enqueue(new S.NPCMarketPage { Listings = listings });
-            }
-        }
-        public void GetMarket(string name, ItemType type)
-        {
-            Search.Clear();
-            MatchName = name.Replace(" ", "");
-            MatchType = type;
-            PageSent = 0;
-
-            long start = Envir.Stopwatch.ElapsedMilliseconds;
-
-            LinkedListNode<AuctionInfo> current = UserMatch ? Account.Auctions.First : Envir.Auctions.First;
-
-            while (current != null)
-            {
-                if (Match(current.Value)) Search.Add(current.Value);
-                current = current.Next;
-            }
-
-            List<ClientAuction> listings = new List<ClientAuction>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                if (i >= Search.Count) break;
-                listings.Add(Search[i].CreateClientAuction(UserMatch));
-            }
-
-            for (int i = 0; i < listings.Count; i++)
-            {
-                //CheckItemInfo(listings[i].Item.Info);
-                CheckItem(listings[i].Item);
-            }
-
-            Enqueue(new S.NPCMarket { Listings = listings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
-
-            SMain.EnqueueDebugging(string.Format("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, UserMatch ? Account.Auctions.Count : Envir.Auctions.Count));
-        }
-        public void MarketSearch(string match)
-        {
-            if (Dead || Envir.Time < SearchTime) return;
-
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase) && !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase))) return;
-
-            SearchTime = Envir.Time + Globals.SearchDelay;
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                GetMarket(match, ItemType.Nothing);
-            }
-        }
-        public void MarketRefresh()
-        {
-            if (Dead || Envir.Time < SearchTime) return;
-
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase) && !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase))) return;
-
-            SearchTime = Envir.Time + Globals.SearchDelay;
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                GetMarket(string.Empty, MatchType);
-            }
-        }
-        public void MarketBuy(ulong auctionID)
-        {
-            if (Dead)
-            {
-                Enqueue(new S.MarketFail { Reason = 0 });
-                return;
-
-            }
-
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase))
-            {
-                Enqueue(new S.MarketFail { Reason = 1 });
-                return;
-            }
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                foreach (AuctionInfo auction in Search)
-                {
-                    if (auction.AuctionID != auctionID) continue;
-
-
-                    if (auction.Sold)
-                    {
-                        Enqueue(new S.MarketFail { Reason = 2 });
-                        return;
-                    }
-
-                    if (auction.Expired)
-                    {
-                        Enqueue(new S.MarketFail { Reason = 3 });
-                        return;
-                    }
-
-                    if (auction.Price > Account.Gold)
-                    {
-                        Enqueue(new S.MarketFail { Reason = 4 });
-                        return;
-                    }
-
-                    if (!CanGainItem(auction.Item))
-                    {
-                        Enqueue(new S.MarketFail { Reason = 5 });
-                        return;
-                    }
-
-                    if (Account.Auctions.Contains(auction))
-                    {
-                        Enqueue(new S.MarketFail { Reason = 6 });
-                        return;
-                    }
-
-                    auction.Sold = true;
-                    Account.Gold -= auction.Price;
-                    Enqueue(new S.LoseGold { Gold = auction.Price });
-                    GainItem(auction.Item);
-
-                    Report.ItemChanged("BuyMarketItem", auction.Item, auction.Item.Count, 2);
-
-                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price), ChatType.Hint);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price) });
-                    MarketSearch(MatchName);
-                    return;
-                }
-            }
-
-            Enqueue(new S.MarketFail { Reason = 7 });
-        }
-        public void MarketGetBack(ulong auctionID)
-        {
-            if (Dead)
-            {
-                Enqueue(new S.MarketFail { Reason = 0 });
-                return;
-
-            }
-
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase))
-            {
-                Enqueue(new S.MarketFail { Reason = 1 });
-                return;
-            }
-
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
-            {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCID) continue;
-
-                foreach (AuctionInfo auction in Account.Auctions)
-                {
-                    if (auction.AuctionID != auctionID) continue;
-
-                    if (auction.Sold && auction.Expired)
-                    {
-                        SMain.Enqueue(string.Format("Auction both sold and Expired {0}", Account.AccountID));
-                        return;
-                    }
-
-
-                    if (!auction.Sold || auction.Expired)
-                    {
-                        if (!CanGainItem(auction.Item))
-                        {
-                            Enqueue(new S.MarketFail { Reason = 5 });
-                            return;
-                        }
-
-                        Account.Auctions.Remove(auction);
-                        Envir.Auctions.Remove(auction);
-                        GainItem(auction.Item);
-                        MarketSearch(MatchName);
-
-                        Report.ItemChanged("GetBackMarketItem", auction.Item, auction.Item.Count, 2);
-
-                        return;
-                    }
-
-                    uint gold = (uint)Math.Max(0, auction.Price - auction.Price * Globals.Commission);
-                    if (!CanGainGold(gold))
-                    {
-                        Enqueue(new S.MarketFail { Reason = 8 });
-                        return;
-                    }
-
-                    Account.Auctions.Remove(auction);
-                    Envir.Auctions.Remove(auction);
-                    GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.Name, auction.Price, gold, auction.Price - gold) });
-                    MarketSearch(MatchName);
-                    return;
-                }
-
-            }
-
-            Enqueue(new S.MarketFail { Reason = 7 });
-        }
         public void RequestUserName(uint id)
         {
             CharacterInfo Character = Envir.GetCharacterInfo((int)id);
             if (Character != null)
                 Enqueue(new S.UserName { Id = (uint)Character.Index, Name = Character.Name });
-
-            /*
-            for (int i = 0; i < Envir.Players.Count; i++)
-            {
-                if (Envir.Players[i].Info.Index == id)
-                {
-                    Enqueue(new S.UserName { Id = (uint)Envir.Players[i].Info.Index, Name = Envir.Players[i].Name });
-                    return;
-                }
-            }
-            */
         }
-
         public void RequestChatItem(ulong id)
         {
             //Enqueue(new S.ChatItemStats { ChatItemId = id, Stats = whatever });
@@ -14159,6 +12349,597 @@ namespace Server.MirObjects
             }
         }
 
+        #region NPC
+
+        public void CallDefaultNPC(DefaultNPCType type, params object[] value)
+        {
+            string key = string.Empty;
+
+            switch (type)
+            {
+                case DefaultNPCType.Login:
+                    key = "Login";
+                    break;
+                case DefaultNPCType.UseItem:
+                    if (value.Length < 1) return;
+                    key = string.Format("UseItem({0})", value[0]);
+                    break;
+                case DefaultNPCType.Trigger:
+                    if (value.Length < 1) return;
+                    key = string.Format("Trigger({0})", value[0]);
+                    break;
+                case DefaultNPCType.MapCoord:
+                    if (value.Length < 3) return;
+                    key = string.Format("MapCoord({0},{1},{2})", value[0], value[1], value[2]);
+                    break;
+                case DefaultNPCType.MapEnter:
+                    if (value.Length < 1) return;
+                    key = string.Format("MapEnter({0})", value[0]);
+                    break;
+                case DefaultNPCType.Die:
+                    key = "Die";
+                    break;
+                case DefaultNPCType.LevelUp:
+                    key = "LevelUp";
+                    break;
+                case DefaultNPCType.CustomCommand:
+                    if (value.Length < 1) return;
+                    key = string.Format("CustomCommand({0})", value[0]);
+                    break;
+                case DefaultNPCType.OnAcceptQuest:
+                    if (value.Length < 1) return;
+                    key = string.Format("OnAcceptQuest({0})", value[0]);
+                    break;
+                case DefaultNPCType.OnFinishQuest:
+                    if (value.Length < 1) return;
+                    key = string.Format("OnFinishQuest({0})", value[0]);
+                    break;
+                case DefaultNPCType.Daily:
+                    key = "Daily";
+                    Info.NewDay = false;
+                    break;
+            }
+
+            key = string.Format("[@_{0}]", key);
+
+            DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, DefaultNPC.ObjectID, key);
+            ActionList.Add(action);
+
+            Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.ObjectID });
+        }
+        public void CallNPC(uint objectID, string key)
+        {
+            if (objectID == DefaultNPC.ObjectID)
+            {
+                DefaultNPC.Call(this, key.ToUpper());
+                CallNPCNextPage();
+                return;
+            }
+
+            if (Dead) return;
+
+            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            {
+                NPCObject ob = CurrentMap.NPCs[i];
+                if (ob.ObjectID != objectID) continue;
+
+                ob.Call(this, key.ToUpper());
+                break;
+            }
+
+            CallNPCNextPage();
+        }
+        private void CallNPCNextPage()
+        {
+            //process any new npc calls immediately
+            for (int i = 0; i < ActionList.Count; i++)
+            {
+                if (ActionList[i].Type != DelayedType.NPC || ActionList[i].Time != -1) continue;
+                var action = ActionList[i];
+
+                ActionList.RemoveAt(i);
+
+                CompleteNPC(action.Params);
+            }
+        }
+
+        public void BuyItem(ulong index, uint count)
+        {
+            if (Dead) return;
+
+            if (NPCPage == null ||
+                !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NPCPage.Key, NPCObject.BuyKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NPCPage.Key, NPCObject.BuyBackKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NPCPage.Key, NPCObject.BuyUsedKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NPCPage.Key, NPCObject.PearlBuyKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            {
+                NPCObject ob = CurrentMap.NPCs[i];
+                if (ob.ObjectID != NPCID) continue;
+                ob.Buy(this, index, count);
+            }
+        }
+        public void SellItem(ulong uniqueID, uint count)
+        {
+            S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };
+            if (Dead || count == 0)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCObject.SellKey, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                UserItem temp = null;
+                int index = -1;
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != uniqueID) continue;
+                    index = i;
+                    break;
+                }
+
+                if (temp == null || index == -1 || count > temp.Count)
+                {
+                    Enqueue(p);
+                    return;
+                }
+
+                if (temp.Info.Bind.HasFlag(BindMode.DontSell))
+                {
+                    Enqueue(p);
+                    return;
+                }
+
+                if (ob.Types.Count != 0 && !ob.Types.Contains(temp.Info.Type))
+                {
+                    ReceiveChat("You cannot sell this item here.", ChatType.System);
+                    Enqueue(p);
+                    return;
+                }
+
+                if (temp.Info.StackSize > 1 && count != temp.Count)
+                {
+                    UserItem item = Envir.CreateFreshItem(temp.Info);
+                    item.Count = count;
+
+                    if (item.Price() / 2 + Account.Gold > uint.MaxValue)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+
+                    temp.Count -= count;
+                    temp = item;
+                }
+                else Info.Inventory[index] = null;
+
+                ob.Sell(this, temp);
+                p.Success = true;
+                Enqueue(p);
+                GainGold(temp.Price() / 2);
+                RefreshBagWeight();
+
+                return;
+            }
+
+
+
+            Enqueue(p);
+        }
+        public void RepairItem(ulong uniqueID, bool special = false)
+        {
+            Enqueue(new S.RepairItem { UniqueID = uniqueID });
+
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RepairKey, StringComparison.CurrentCultureIgnoreCase) && !special) || (!String.Equals(NPCPage.Key, NPCObject.SRepairKey, StringComparison.CurrentCultureIgnoreCase) && special)) return;
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                UserItem temp = null;
+                int index = -1;
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != uniqueID) continue;
+                    index = i;
+                    break;
+                }
+
+                if (temp == null || index == -1) return;
+
+                if ((temp.Info.Bind.HasFlag(BindMode.DontRepair)) || (temp.Info.Bind.HasFlag(BindMode.NoSRepair) && special))
+                {
+                    ReceiveChat("You cannot Repair this item.", ChatType.System);
+                    return;
+                }
+
+                if (ob.Types.Count != 0 && !ob.Types.Contains(temp.Info.Type))
+                {
+                    ReceiveChat("You cannot Repair this item here.", ChatType.System);
+                    return;
+                }
+
+                uint cost = (uint)(temp.RepairPrice() * ob.Info.PriceRate);
+
+                if (cost > Account.Gold || cost == 0) return;
+
+                Account.Gold -= cost;
+                Enqueue(new S.LoseGold { Gold = cost });
+
+                if (!special) temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - (temp.MaxDura - temp.CurrentDura) / 30);
+
+                temp.CurrentDura = temp.MaxDura;
+                temp.DuraChanged = false;
+
+                Enqueue(new S.ItemRepaired { UniqueID = uniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                return;
+            }
+        }
+        public void SendStorage()
+        {
+            if (Connection.StorageSent) return;
+            Connection.StorageSent = true;
+
+            for (int i = 0; i < Account.Storage.Length; i++)
+            {
+                UserItem item = Account.Storage[i];
+                if (item == null) continue;
+                //CheckItemInfo(item.Info);
+                CheckItem(item);
+            }
+
+            Enqueue(new S.UserStorage { Storage = Account.Storage }); // Should be no alter before being sent.
+        }
+
+        #endregion
+
+        #region Consignment
+
+        public void ConsignItem(ulong uniqueID, uint price)
+        {
+            S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
+            if (price < Globals.MinConsignment || price > Globals.MaxConsignment || Dead)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ConsignKey, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (Account.Gold < Globals.ConsignmentCost)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                UserItem temp = null;
+                int index = -1;
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != uniqueID) continue;
+                    index = i;
+                    break;
+                }
+
+                if (temp == null || index == -1)
+                {
+                    Enqueue(p);
+                    return;
+                }
+
+                if (temp.Info.Bind.HasFlag(BindMode.DontSell))
+                {
+                    Enqueue(p);
+                    return;
+                }
+
+                //Check Max Consignment.
+
+                AuctionInfo auction = new AuctionInfo
+                {
+                    AuctionID = ++Envir.NextAuctionID,
+                    CharacterIndex = Info.Index,
+                    CharacterInfo = Info,
+                    ConsignmentDate = Envir.Now,
+                    Item = temp,
+                    Price = price
+                };
+
+                Account.Auctions.AddLast(auction);
+                Envir.Auctions.AddFirst(auction);
+
+                p.Success = true;
+                Enqueue(p);
+
+                Report.ItemChanged("ConsignItem", temp, temp.Count, 1);
+
+                Info.Inventory[index] = null;
+                Account.Gold -= Globals.ConsignmentCost;
+                Enqueue(new S.LoseGold { Gold = Globals.ConsignmentCost });
+                RefreshBagWeight();
+
+            }
+
+            Enqueue(p);
+        }
+        public bool Match(AuctionInfo info)
+        {
+            if (Envir.Now >= info.ConsignmentDate.AddDays(Globals.ConsignmentLength) && !info.Sold)
+                info.Expired = true;
+
+            return (UserMatch || !info.Expired && !info.Sold) && ((MatchType == ItemType.Nothing || info.Item.Info.Type == MatchType) &&
+                (string.IsNullOrWhiteSpace(MatchName) || info.Item.Info.Name.Replace(" ", "").IndexOf(MatchName, StringComparison.OrdinalIgnoreCase) >= 0));
+        }
+        public void MarketPage(int page)
+        {
+            if (Dead || Envir.Time < SearchTime) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase) && !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase)) || page <= PageSent) return;
+
+            SearchTime = Envir.Time + Globals.SearchDelay;
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                List<ClientAuction> listings = new List<ClientAuction>();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i + page * 10 >= Search.Count) break;
+                    listings.Add(Search[i + page * 10].CreateClientAuction(UserMatch));
+                }
+
+                for (int i = 0; i < listings.Count; i++)
+                {
+                    //CheckItemInfo(listings[i].Item.Info);
+                    CheckItem(listings[i].Item);
+                }
+
+                PageSent = page;
+                Enqueue(new S.NPCMarketPage { Listings = listings });
+            }
+        }
+        public void GetMarket(string name, ItemType type)
+        {
+            Search.Clear();
+            MatchName = name.Replace(" ", "");
+            MatchType = type;
+            PageSent = 0;
+
+            long start = Envir.Stopwatch.ElapsedMilliseconds;
+
+            LinkedListNode<AuctionInfo> current = UserMatch ? Account.Auctions.First : Envir.Auctions.First;
+
+            while (current != null)
+            {
+                if (Match(current.Value)) Search.Add(current.Value);
+                current = current.Next;
+            }
+
+            List<ClientAuction> listings = new List<ClientAuction>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (i >= Search.Count) break;
+                listings.Add(Search[i].CreateClientAuction(UserMatch));
+            }
+
+            for (int i = 0; i < listings.Count; i++)
+            {
+                //CheckItemInfo(listings[i].Item.Info);
+                CheckItem(listings[i].Item);
+            }
+
+            Enqueue(new S.NPCMarket { Listings = listings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
+
+            SMain.EnqueueDebugging(string.Format("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, UserMatch ? Account.Auctions.Count : Envir.Auctions.Count));
+        }
+        public void MarketSearch(string match)
+        {
+            if (Dead || Envir.Time < SearchTime) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase) && !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+            SearchTime = Envir.Time + Globals.SearchDelay;
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                GetMarket(match, ItemType.Nothing);
+            }
+        }
+        public void MarketRefresh()
+        {
+            if (Dead || Envir.Time < SearchTime) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase) && !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+            SearchTime = Envir.Time + Globals.SearchDelay;
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                GetMarket(string.Empty, MatchType);
+            }
+        }
+        public void MarketBuy(ulong auctionID)
+        {
+            if (Dead)
+            {
+                Enqueue(new S.MarketFail { Reason = 0 });
+                return;
+
+            }
+
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Enqueue(new S.MarketFail { Reason = 1 });
+                return;
+            }
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                foreach (AuctionInfo auction in Search)
+                {
+                    if (auction.AuctionID != auctionID) continue;
+
+
+                    if (auction.Sold)
+                    {
+                        Enqueue(new S.MarketFail { Reason = 2 });
+                        return;
+                    }
+
+                    if (auction.Expired)
+                    {
+                        Enqueue(new S.MarketFail { Reason = 3 });
+                        return;
+                    }
+
+                    if (auction.Price > Account.Gold)
+                    {
+                        Enqueue(new S.MarketFail { Reason = 4 });
+                        return;
+                    }
+
+                    if (!CanGainItem(auction.Item))
+                    {
+                        Enqueue(new S.MarketFail { Reason = 5 });
+                        return;
+                    }
+
+                    if (Account.Auctions.Contains(auction))
+                    {
+                        Enqueue(new S.MarketFail { Reason = 6 });
+                        return;
+                    }
+
+                    auction.Sold = true;
+                    Account.Gold -= auction.Price;
+                    Enqueue(new S.LoseGold { Gold = auction.Price });
+                    GainItem(auction.Item);
+
+                    Report.ItemChanged("BuyMarketItem", auction.Item, auction.Item.Count, 2);
+
+                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price), ChatType.Hint);
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price) });
+                    MarketSearch(MatchName);
+                    return;
+                }
+            }
+
+            Enqueue(new S.MarketFail { Reason = 7 });
+        }
+        public void MarketGetBack(ulong auctionID)
+        {
+            if (Dead)
+            {
+                Enqueue(new S.MarketFail { Reason = 0 });
+                return;
+
+            }
+
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Enqueue(new S.MarketFail { Reason = 1 });
+                return;
+            }
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCID) continue;
+
+                foreach (AuctionInfo auction in Account.Auctions)
+                {
+                    if (auction.AuctionID != auctionID) continue;
+
+                    if (auction.Sold && auction.Expired)
+                    {
+                        SMain.Enqueue(string.Format("Auction both sold and Expired {0}", Account.AccountID));
+                        return;
+                    }
+
+
+                    if (!auction.Sold || auction.Expired)
+                    {
+                        if (!CanGainItem(auction.Item))
+                        {
+                            Enqueue(new S.MarketFail { Reason = 5 });
+                            return;
+                        }
+
+                        Account.Auctions.Remove(auction);
+                        Envir.Auctions.Remove(auction);
+                        GainItem(auction.Item);
+                        MarketSearch(MatchName);
+
+                        Report.ItemChanged("GetBackMarketItem", auction.Item, auction.Item.Count, 2);
+
+                        return;
+                    }
+
+                    uint gold = (uint)Math.Max(0, auction.Price - auction.Price * Globals.Commission);
+                    if (!CanGainGold(gold))
+                    {
+                        Enqueue(new S.MarketFail { Reason = 8 });
+                        return;
+                    }
+
+                    Account.Auctions.Remove(auction);
+                    Envir.Auctions.Remove(auction);
+                    GainGold(gold);
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.Name, auction.Price, gold, auction.Price - gold) });
+                    MarketSearch(MatchName);
+                    return;
+                }
+
+            }
+
+            Enqueue(new S.MarketFail { Reason = 7 });
+        }
+
+        #endregion
+
         #region Awakening
         public void Awakening(ulong UniqueID, AwakeType type)
         {
@@ -14510,7 +13291,7 @@ namespace Server.MirObjects
 
             if (AllowGroup || GroupMembers == null) return;
 
-            RemoveFromGroup();
+            RemoveGroupBuff();
 
             GroupMembers.Remove(this);
             Enqueue(new S.DeleteGroup());
@@ -14530,33 +13311,26 @@ namespace Server.MirObjects
             GroupMembers = null;
         }
 
-        public void RemoveFromGroup()
+        public void RemoveGroupBuff()
         {
-            Buff buff = Buffs.Where(e => e.Type == BuffType.RelationshipEXP).FirstOrDefault();
-            if (buff != null)
+            for (int i = 0; i < Buffs.Count; i++)
             {
-                CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-                PlayerObject LoverP = Envir.GetPlayer(Lover.Name);
-                RemoveBuff(BuffType.RelationshipEXP);
-                LoverP.RemoveBuff(BuffType.RelationshipEXP);
-            }
+                Buff buff = Buffs[i];
 
-            Buff buffMentee = Buffs.Where(e => e.Type == BuffType.Mentee).FirstOrDefault();
-            if (buffMentee != null)
-            {
-                CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
-                PlayerObject MentorP = Envir.GetPlayer(Mentor.Name);
-                RemoveBuff(BuffType.Mentee);
-                MentorP.RemoveBuff(BuffType.Mentor);
-            }
-
-            Buff buffMentor = Buffs.Where(e => e.Type == BuffType.Mentor).FirstOrDefault();
-            if (buffMentor != null)
-            {
-                CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
-                PlayerObject MentorP = Envir.GetPlayer(Mentor.Name);
-                RemoveBuff(BuffType.Mentor);
-                MentorP.RemoveBuff(BuffType.Mentee);
+                if (buff.Type == BuffType.RelationshipEXP)
+                {
+                    CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+                    PlayerObject LoverP = Envir.GetPlayer(Lover.Name);
+                    RemoveBuff(BuffType.RelationshipEXP);
+                    LoverP.RemoveBuff(BuffType.RelationshipEXP);
+                }
+                else if (buff.Type == BuffType.Mentee || buff.Type == BuffType.Mentor)
+                {
+                    CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
+                    PlayerObject MentorP = Envir.GetPlayer(Mentor.Name);
+                    RemoveBuff(buff.Type);
+                    MentorP.RemoveBuff(buff.Type == BuffType.Mentee ? BuffType.Mentor : BuffType.Mentee);
+                }
             }
         }
         public void AddMember(string name)
@@ -14638,7 +13412,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            player.RemoveFromGroup();
+            player.RemoveGroupBuff();
 
             GroupMembers.Remove(player);
             player.Enqueue(new S.DeleteGroup());
@@ -15375,6 +14149,100 @@ namespace Server.MirObjects
         #endregion
 
         #region Trading
+
+        public void DepositTradeItem(int from, int to)
+        {
+            S.DepositTradeItem p = new S.DepositTradeItem { From = from, To = to, Success = false };
+
+            if (from < 0 || from >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Trade.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Inventory[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.Info.Bind.HasFlag(BindMode.DontTrade))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Trade[to] == null)
+            {
+                Info.Trade[to] = temp;
+                Info.Inventory[from] = null;
+                RefreshBagWeight();
+                TradeItem();
+
+                Report.ItemMoved("DepositTradeItem", temp, MirGridType.Inventory, MirGridType.Trade, from, to);
+
+                p.Success = true;
+                Enqueue(p);
+                return;
+            }
+            Enqueue(p);
+
+        }
+        public void RetrieveTradeItem(int from, int to)
+        {
+            S.RetrieveTradeItem p = new S.RetrieveTradeItem { From = from, To = to, Success = false };
+
+            if (from < 0 || from >= Info.Trade.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Trade[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat("Too heavy to get back.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Inventory[to] == null)
+            {
+                Info.Inventory[to] = temp;
+                Info.Trade[from] = null;
+
+                p.Success = true;
+                RefreshBagWeight();
+                TradeItem();
+
+                Report.ItemMoved("RetrieveTradeItem", temp, MirGridType.Trade, MirGridType.Inventory, from, to);
+
+                Enqueue(p);
+                return;
+            }
+            Enqueue(p);
+        }
 
         public void TradeRequest()
         {
@@ -17133,8 +16001,6 @@ namespace Server.MirObjects
             GetFriends();
         }
 
-        #endregion
-
         public void GetFriends()
         {
             List<ClientFriend> friends = new List<ClientFriend>();
@@ -17145,6 +16011,889 @@ namespace Server.MirObjects
             }
 
             Enqueue(new S.FriendUpdate { Friends = friends });
+        }
+
+        #endregion
+
+        #region Refining
+
+        public void DepositRefineItem(int from, int to)
+        {
+
+            S.DepositRefineItem p = new S.DepositRefineItem { From = from, To = to, Success = false };
+
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Enqueue(p);
+                return;
+            }
+            NPCObject ob = null;
+            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            {
+                if (CurrentMap.NPCs[i].ObjectID != NPCID) continue;
+                ob = CurrentMap.NPCs[i];
+                break;
+            }
+
+            if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+            {
+                Enqueue(p);
+                return;
+            }
+
+
+            if (from < 0 || from >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Refine.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Inventory[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Refine[to] == null)
+            {
+                Info.Refine[to] = temp;
+                Info.Inventory[from] = null;
+                RefreshBagWeight();
+
+                Report.ItemMoved("DepositRefineItems", temp, MirGridType.Inventory, MirGridType.Refine, from, to);
+
+                p.Success = true;
+                Enqueue(p);
+                return;
+            }
+            Enqueue(p);
+
+        }
+        public void RetrieveRefineItem(int from, int to)
+        {
+            S.RetrieveRefineItem p = new S.RetrieveRefineItem { From = from, To = to, Success = false };
+
+            if (from < 0 || from >= Info.Refine.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Refine[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat("Too heavy to get back.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Inventory[to] == null)
+            {
+                Info.Inventory[to] = temp;
+                Info.Refine[from] = null;
+
+                Report.ItemMoved("TakeBackRefineItems", temp, MirGridType.Refine, MirGridType.Inventory, from, to);
+
+                p.Success = true;
+                RefreshBagWeight();
+                Enqueue(p);
+
+                return;
+            }
+            Enqueue(p);
+        }
+        public void RefineCancel()
+        {
+            for (int t = 0; t < Info.Refine.Length; t++)
+            {
+                UserItem temp = Info.Refine[t];
+
+                if (temp == null) continue;
+
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    if (Info.Inventory[i] != null) continue;
+
+                    //Put item back in inventory
+                    if (CanGainItem(temp))
+                    {
+                        RetrieveRefineItem(t, i);
+                    }
+                    else //Drop item on floor if it can no longer be stored
+                    {
+                        if (DropItem(temp, Settings.DropRange))
+                        {
+                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                        }
+                    }
+
+                    Info.Refine[t] = null;
+
+                    break;
+                }
+            }
+        }
+        public void RefineItem(ulong uniqueID)
+        {
+            Enqueue(new S.RepairItem { UniqueID = uniqueID }); //CHECK THIS.
+
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+            int index = -1;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                if (Info.Inventory[i] == null || Info.Inventory[i].UniqueID != uniqueID) continue;
+                index = i;
+                break;
+            }
+
+            if (Info.Inventory[index].RefineAdded != 0)
+            {
+                ReceiveChat(String.Format("Your {0} needs to be checked before you can attempt to refine it again.", Info.Inventory[index].FriendlyName), ChatType.System);
+                return;
+            }
+
+            if ((Info.Inventory[index].Info.Type != ItemType.Weapon) && (Settings.OnlyRefineWeapon))
+            {
+                ReceiveChat(String.Format("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
+                return;
+            }
+
+            if (Info.Inventory[index].Info.Bind.HasFlag(BindMode.DontUpgrade))
+            {
+                ReceiveChat(String.Format("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
+                return;
+            }
+
+
+
+            if (index == -1) return;
+
+
+
+
+            //CHECK GOLD HERE
+            uint cost = (uint)((Info.Inventory[index].Info.RequiredAmount * 10) * Settings.RefineCost);
+
+            if (cost > Account.Gold || cost == 0)
+            {
+                ReceiveChat(String.Format("You don't have enough gold to refine your {0}.", Info.Inventory[index].FriendlyName), ChatType.System);
+                return;
+            }
+
+            Account.Gold -= cost;
+            Enqueue(new S.LoseGold { Gold = cost });
+
+            //START OF FORMULA
+
+            Info.CurrentRefine = Info.Inventory[index];
+            Info.Inventory[index] = null;
+            Info.CollectTime = (Envir.Time + (Settings.RefineTime * Settings.Minute));
+            Enqueue(new S.RefineItem { UniqueID = uniqueID });
+
+
+            short OrePurity = 0;
+            byte OreAmount = 0;
+            byte ItemAmount = 0;
+            short TotalDC = 0;
+            short TotalMC = 0;
+            short TotalSC = 0;
+            short RequiredLevel = 0;
+            short Durability = 0;
+            short CurrentDura = 0;
+            short AddedStats = 0;
+            UserItem Ingredient;
+
+            for (int i = 0; i < Info.Refine.Length; i++)
+            {
+                Ingredient = Info.Refine[i];
+
+                if (Ingredient == null) continue;
+                if (Ingredient.Info.Type == ItemType.Weapon)
+                {
+                    Info.Refine[i] = null;
+                    continue;
+                }
+
+                if ((Ingredient.Info.MaxDC > 0) || (Ingredient.Info.MaxMC > 0) || (Ingredient.Info.MaxSC > 0))
+                {
+                    TotalDC += (short)(Ingredient.Info.MinDC + Ingredient.Info.MaxDC + Ingredient.DC);
+                    TotalMC += (short)(Ingredient.Info.MinMC + Ingredient.Info.MaxMC + Ingredient.MC);
+                    TotalSC += (short)(Ingredient.Info.MinSC + Ingredient.Info.MaxSC + Ingredient.SC);
+                    RequiredLevel += Ingredient.Info.RequiredAmount;
+                    if (Math.Round(Ingredient.MaxDura / 1000M) == Math.Round(Ingredient.Info.Durability / 1000M)) Durability++;
+                    if (Math.Round(Ingredient.CurrentDura / 1000M) == Math.Round(Ingredient.MaxDura / 1000M)) CurrentDura++;
+                    ItemAmount++;
+                }
+
+                if (Ingredient.Info.FriendlyName == Settings.RefineOreName)
+                {
+                    OrePurity += (short)Math.Round(Ingredient.CurrentDura / 1000M);
+                    OreAmount++;
+                }
+
+                Info.Refine[i] = null;
+            }
+
+            if ((TotalDC == 0) && (TotalMC == 0) && (TotalSC == 0))
+            {
+                Info.CurrentRefine.RefinedValue = RefinedValue.None;
+                Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
+                if (Settings.RefineTime == 0)
+                {
+                    CollectRefine();
+                }
+                else
+                {
+                    ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                }
+                return;
+            }
+
+            if (OreAmount == 0)
+            {
+                Info.CurrentRefine.RefinedValue = RefinedValue.None;
+                Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
+                if (Settings.RefineTime == 0)
+                {
+                    CollectRefine();
+                }
+                else
+                {
+                    ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                }
+                return;
+            }
+
+
+            short RefineStat = 0;
+
+            if ((TotalDC > TotalMC) && (TotalDC > TotalSC))
+            {
+                Info.CurrentRefine.RefinedValue = RefinedValue.DC;
+                RefineStat = TotalDC;
+            }
+
+            if ((TotalMC > TotalDC) && (TotalMC > TotalSC))
+            {
+                Info.CurrentRefine.RefinedValue = RefinedValue.MC;
+                RefineStat = TotalMC;
+            }
+
+            if ((TotalSC > TotalDC) && (TotalSC > TotalMC))
+            {
+                Info.CurrentRefine.RefinedValue = RefinedValue.SC;
+                RefineStat = TotalSC;
+            }
+
+            Info.CurrentRefine.RefineAdded = Settings.RefineIncrease;
+
+
+            int ItemSuccess = 0; //Chance out of 35%
+
+            ItemSuccess += (RefineStat * 5) - Info.CurrentRefine.Info.RequiredAmount;
+            ItemSuccess += 5;
+            if (ItemSuccess > 10) ItemSuccess = 10;
+            if (ItemSuccess < 0) ItemSuccess = 0; //10%
+
+
+            if ((RequiredLevel / ItemAmount) > (Info.CurrentRefine.Info.RequiredAmount - 5)) ItemSuccess += 10; //20%
+            if (Durability == ItemAmount) ItemSuccess += 10; //30%
+            if (CurrentDura == ItemAmount) ItemSuccess += 5; //35%
+
+            int OreSuccess = 0; //Chance out of 35%
+
+            if (OreAmount >= ItemAmount) OreSuccess += 15; //15%
+            if ((OrePurity / OreAmount) >= (RefineStat / ItemAmount)) OreSuccess += 15; //30%
+            if (OrePurity == RefineStat) OreSuccess += 5; //35%
+
+            int LuckSuccess = 0; //Chance out of 10%
+
+            LuckSuccess = (Info.CurrentRefine.Luck + 5);
+            if (LuckSuccess > 10) LuckSuccess = 10;
+            if (LuckSuccess < 0) LuckSuccess = 0;
+
+
+            int BaseSuccess = Settings.RefineBaseChance; //20% as standard
+
+            int SuccessChance = (ItemSuccess + OreSuccess + LuckSuccess + BaseSuccess);
+
+            AddedStats = (byte)(Info.CurrentRefine.DC + Info.CurrentRefine.MC + Info.CurrentRefine.SC);
+            if (Info.CurrentRefine.Info.Type == ItemType.Weapon) AddedStats = (short)(AddedStats * Settings.RefineWepStatReduce);
+            else AddedStats = (short)(AddedStats * Settings.RefineItemStatReduce);
+            if (AddedStats > 50) AddedStats = 50;
+
+            SuccessChance -= AddedStats;
+
+
+            if (Envir.Random.Next(1, 100) > SuccessChance)
+                Info.CurrentRefine.RefinedValue = RefinedValue.None;
+
+            if (Envir.Random.Next(1, 100) < Settings.RefineCritChance)
+                Info.CurrentRefine.RefineAdded = (byte)(Info.CurrentRefine.RefineAdded * Settings.RefineCritIncrease);
+
+            //END OF FORMULA (SET REFINEDVALUE TO REFINEDVALUE.NONE) REFINEADDED SHOULD BE > 0
+
+            if (Settings.RefineTime == 0)
+            {
+                CollectRefine();
+            }
+            else
+            {
+                ReceiveChat(String.Format("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+            }
+        }
+        public void CollectRefine()
+        {
+            S.NPCCollectRefine p = new S.NPCCollectRefine { Success = false };
+
+            if (Info.CurrentRefine == null)
+            {
+                ReceiveChat("You aren't currently refining any items.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.CollectTime > Envir.Time)
+            {
+                ReceiveChat(String.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+
+            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat(String.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            int index = -1;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                if (Info.Inventory[i] != null) continue;
+                index = i;
+                break;
+            }
+
+            if (index == -1)
+            {
+                ReceiveChat(String.Format("There isn't room in your bag for your {0}, make some space and try again.", Info.CurrentRefine.FriendlyName), ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            p.Success = true;
+            Enqueue(new S.GainedItem { Item = Info.CurrentRefine });
+            AddItem(Info.CurrentRefine);
+            RefreshBagWeight();
+            Info.CurrentRefine = null;
+            Info.CollectTime = 0;
+            Enqueue(p);
+            return;
+        }
+        public void CheckRefine(ulong uniqueID)
+        {
+            //Enqueue(new S.RepairItem { UniqueID = uniqueID });
+
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.RefineCheckKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+            UserItem temp = null;
+
+            int index = -1;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                temp = Info.Inventory[i];
+                if (temp == null || temp.UniqueID != uniqueID) continue;
+                index = i;
+                break;
+            }
+
+            if (Info.Inventory[index].RefineAdded == 0)
+            {
+                ReceiveChat(String.Format("{0} doesn't need to be checked as it hasn't been refined yet.", Info.Inventory[index].FriendlyName), ChatType.System);
+                return;
+            }
+
+
+            if ((Info.Inventory[index].RefinedValue == RefinedValue.DC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra DC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                Info.Inventory[index].DC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].DC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.MC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra MC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                Info.Inventory[index].MC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].MC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.SC) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Congratulations, your {0} now has +{1} extra SC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                Info.Inventory[index].SC = (byte)Math.Min(byte.MaxValue, Info.Inventory[index].SC + Info.Inventory[index].RefineAdded);
+                Info.Inventory[index].RefineAdded = 0;
+                Info.Inventory[index].RefinedValue = RefinedValue.None;
+            }
+            else if ((Info.Inventory[index].RefinedValue == RefinedValue.None) && (Info.Inventory[index].RefineAdded > 0))
+            {
+                ReceiveChat(String.Format("Your {0} smashed into a thousand pieces upon testing.", Info.Inventory[index].FriendlyName), ChatType.System);
+                Enqueue(new S.RefineItem { UniqueID = Info.Inventory[index].UniqueID });
+                Info.Inventory[index] = null;
+                return;
+            }
+
+            Enqueue(new S.ItemUpgraded { Item = Info.Inventory[index] });
+            return;
+        }
+
+        #endregion
+
+        #region Relationship
+
+        public void NPCDivorce()
+        {
+            if (Info.Married == 0)
+            {
+                ReceiveChat(string.Format("You're not married."), ChatType.System);
+                return;
+            }
+
+            CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+            PlayerObject Player = Envir.GetPlayer(Lover.Name);
+
+            Buff buff = Buffs.Where(e => e.Type == BuffType.RelationshipEXP).FirstOrDefault();
+            if (buff != null)
+            {
+                RemoveBuff(BuffType.RelationshipEXP);
+                Player.RemoveBuff(BuffType.RelationshipEXP);
+            }
+
+            Info.Married = 0;
+            Info.MarriedDate = DateTime.Now;
+
+            if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
+            {
+                Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+            }
+
+            GetRelationship(false);
+
+            Lover.Married = 0;
+            Lover.MarriedDate = DateTime.Now;
+            if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
+                Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+
+            if (Player != null)
+            {
+                Player.GetRelationship(false);
+                Player.ReceiveChat(string.Format("You've just been forcefully divorced"), ChatType.System);
+                if (Player.Info.Equipment[(int)EquipmentSlot.RingL] != null)
+                    Player.Enqueue(new S.RefreshItem { Item = Player.Info.Equipment[(int)EquipmentSlot.RingL] });
+            }
+        }
+
+        public void MakeWeddingRing()
+        {
+            if (Info.Married == 0)
+            {
+                ReceiveChat(string.Format("You need to be married to make a Wedding Ring."), ChatType.System);
+                return;
+            }
+
+            if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
+            {
+                ReceiveChat(string.Format("You need to wear a ring on your left finger to make a Wedding Ring."), ChatType.System);
+                return;
+            }
+
+            if (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1)
+            {
+                ReceiveChat(string.Format("You're already wearing a Wedding Ring."), ChatType.System);
+                return;
+            }
+
+            Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Married;
+            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+        }
+
+        public void ReplaceWeddingRing(ulong uniqueID)
+        {
+            if (Dead) return;
+
+            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCObject.ReplaceWedRingKey, StringComparison.CurrentCultureIgnoreCase))) return;
+
+            UserItem temp = null;
+            UserItem CurrentRing = Info.Equipment[(int)EquipmentSlot.RingL];
+
+            if (CurrentRing == null)
+            {
+                ReceiveChat(string.Format("You arn't wearing a  ring to upgrade."), ChatType.System);
+                return;
+            }
+
+            if (CurrentRing.WeddingRing == -1)
+            {
+                ReceiveChat(string.Format("You arn't wearing a Wedding Ring to upgrade."), ChatType.System);
+                return;
+            }
+
+            int index = -1;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                temp = Info.Inventory[i];
+                if (temp == null || temp.UniqueID != uniqueID) continue;
+                index = i;
+                break;
+            }
+
+            temp = Info.Inventory[index];
+
+
+            if (temp.Info.Type != ItemType.Ring)
+            {
+                ReceiveChat(string.Format("You can't replace a Wedding Ring with this item."), ChatType.System);
+                return;
+            }
+
+            if (!CanEquipItem(temp, (int)EquipmentSlot.RingL))
+            {
+                ReceiveChat(string.Format("You can't equip the item you're trying to use."), ChatType.System);
+                return;
+            }
+
+            uint cost = (uint)((Info.Inventory[index].Info.RequiredAmount * 10) * Settings.ReplaceWedRingCost);
+
+            if (cost > Account.Gold || cost == 0)
+            {
+                ReceiveChat(String.Format("You don't have enough gold to replace your Wedding Ring."), ChatType.System);
+                return;
+            }
+
+            Account.Gold -= cost;
+            Enqueue(new S.LoseGold { Gold = cost });
+
+
+            temp.WeddingRing = Info.Married;
+            CurrentRing.WeddingRing = -1;
+
+            Info.Equipment[(int)EquipmentSlot.RingL] = temp;
+            Info.Inventory[index] = CurrentRing;
+
+            Enqueue(new S.EquipItem { Grid = MirGridType.Inventory, UniqueID = temp.UniqueID, To = (int)EquipmentSlot.RingL, Success = true });
+
+            Enqueue(new S.RefreshItem { Item = Info.Inventory[index] });
+            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+
+        }
+
+        public void MarriageRequest()
+        {
+
+            if (Info.Married != 0)
+            {
+                ReceiveChat(string.Format("You're already married."), ChatType.System);
+                return;
+            }
+
+            if (Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+            {
+                ReceiveChat(string.Format("You can't get married again yet, there is a {0} day cooldown after a divorce.", Settings.MarriageCooldown), ChatType.System);
+                return;
+            }
+
+            if (Info.Level < Settings.MarriageLevelRequired)
+            {
+                ReceiveChat(string.Format("You need to be at least level {0} to get married.", Settings.MarriageLevelRequired), ChatType.System);
+                return;
+            }
+
+            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+            Cell cell = CurrentMap.GetCell(target);
+            PlayerObject player = null;
+
+            if (cell.Objects == null || cell.Objects.Count < 1) return;
+
+            for (int i = 0; i < cell.Objects.Count; i++)
+            {
+                MapObject ob = cell.Objects[i];
+                if (ob.Race != ObjectType.Player) continue;
+
+                player = Envir.GetPlayer(ob.Name);
+            }
+
+
+
+            if (player != null)
+            {
+
+
+                if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
+                {
+                    ReceiveChat(string.Format("You need to be facing each other to perform a marriage."), ChatType.System);
+                    return;
+                }
+
+                if (player.Level < Settings.MarriageLevelRequired)
+                {
+                    ReceiveChat(string.Format("Your lover needs to be at least level {0} to get married.", Settings.MarriageLevelRequired), ChatType.System);
+                    return;
+                }
+
+                if (player.Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+                {
+                    ReceiveChat(string.Format("{0} can't get married again yet, there is a {1} day cooldown after divorce", player.Name, Settings.MarriageCooldown), ChatType.System);
+                    return;
+                }
+
+                if (!player.AllowMarriage)
+                {
+                    ReceiveChat("The person you're trying to propose to isn't allowing marriage requests.", ChatType.System);
+                    return;
+                }
+
+                if (player == this)
+                {
+                    ReceiveChat("You cant marry yourself.", ChatType.System);
+                    return;
+                }
+
+                if (player.Dead || Dead)
+                {
+                    ReceiveChat("You can't perform a marriage with a dead player.", ChatType.System);
+                    return;
+                }
+
+                if (player.MarriageProposal != null)
+                {
+                    ReceiveChat(string.Format("{0} already has a marriage invitation.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
+                {
+                    ReceiveChat(string.Format("{0} is not within marriage range.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (player.Info.Married != 0)
+                {
+                    ReceiveChat(string.Format("{0} is already married.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                player.MarriageProposal = this;
+                player.Enqueue(new S.MarriageRequest { Name = Info.Name });
+            }
+            else
+            {
+                ReceiveChat(string.Format("You need to be facing a player to request a marriage."), ChatType.System);
+                return;
+            }
+        }
+
+        public void MarriageReply(bool accept)
+        {
+            if (MarriageProposal == null || MarriageProposal.Info == null)
+            {
+                MarriageProposal = null;
+                return;
+            }
+
+            if (!accept)
+            {
+                MarriageProposal.ReceiveChat(string.Format("{0} has refused to marry you.", Info.Name), ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
+
+            if (Info.Married != 0)
+            {
+                ReceiveChat("You are already married.", ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
+
+            if (MarriageProposal.Info.Married != 0)
+            {
+                ReceiveChat(string.Format("{0} is already married.", TradeInvitation.Info.Name), ChatType.System);
+                MarriageProposal = null;
+                return;
+            }
+
+
+            MarriageProposal.Info.Married = Info.Index;
+            MarriageProposal.Info.MarriedDate = DateTime.Now;
+
+            Info.Married = MarriageProposal.Info.Index;
+            Info.MarriedDate = DateTime.Now;
+
+            GetRelationship(false);
+            MarriageProposal.GetRelationship(false);
+
+            MarriageProposal.ReceiveChat(string.Format("Congratulations, you're now married to {0}.", Info.Name), ChatType.System);
+            ReceiveChat(String.Format("Congratulations, you're now married to {0}.", MarriageProposal.Info.Name), ChatType.System);
+
+            MarriageProposal = null;
+        }
+
+        public void DivorceRequest()
+        {
+
+            if (Info.Married == 0)
+            {
+                ReceiveChat(string.Format("You're not married."), ChatType.System);
+                return;
+            }
+
+
+            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+            Cell cell = CurrentMap.GetCell(target);
+            PlayerObject player = null;
+
+            if (cell.Objects == null || cell.Objects.Count < 1) return;
+
+            for (int i = 0; i < cell.Objects.Count; i++)
+            {
+                MapObject ob = cell.Objects[i];
+                if (ob.Race != ObjectType.Player) continue;
+
+                player = Envir.GetPlayer(ob.Name);
+            }
+
+            if (player == null)
+            {
+                ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
+                return;
+            }
+
+            if (player != null)
+            {
+                if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
+                {
+                    ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
+                    return;
+                }
+
+                if (player == this)
+                {
+                    ReceiveChat("You can't divorce yourself.", ChatType.System);
+                    return;
+                }
+
+                if (player.Dead || Dead)
+                {
+                    ReceiveChat("You can't divorce a dead player.", ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
+                    return;
+                }
+
+                if (player.Info.Index != Info.Married)
+                {
+                    ReceiveChat(string.Format("You aren't married to {0}", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
+                {
+                    ReceiveChat(string.Format("{0} is not within divorce range.", player.Info.Name), ChatType.System);
+                    return;
+                }
+
+                player.DivorceProposal = this;
+                player.Enqueue(new S.DivorceRequest { Name = Info.Name });
+            }
+            else
+            {
+                ReceiveChat(string.Format("You need to be facing your lover to divorce them."), ChatType.System);
+                return;
+            }
+        }
+
+        public void DivorceReply(bool accept)
+        {
+            if (DivorceProposal == null || DivorceProposal.Info == null)
+            {
+                DivorceProposal = null;
+                return;
+            }
+
+            if (!accept)
+            {
+                DivorceProposal.ReceiveChat(string.Format("{0} has refused to divorce you.", Info.Name), ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+            if (Info.Married == 0)
+            {
+                ReceiveChat("You aren't married so you don't require a divorce.", ChatType.System);
+                DivorceProposal = null;
+                return;
+            }
+
+            Buff buff = Buffs.Where(e => e.Type == BuffType.RelationshipEXP).FirstOrDefault();
+            if (buff != null)
+            {
+                RemoveBuff(BuffType.RelationshipEXP);
+                DivorceProposal.RemoveBuff(BuffType.RelationshipEXP);
+            }
+
+            DivorceProposal.Info.Married = 0;
+            DivorceProposal.Info.MarriedDate = DateTime.Now;
+            if (DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] != null)
+            {
+                DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+                DivorceProposal.Enqueue(new S.RefreshItem { Item = DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] });
+            }
+
+            Info.Married = 0;
+            Info.MarriedDate = DateTime.Now;
+            if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
+            {
+                Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+            }
+
+
+            DivorceProposal.ReceiveChat(string.Format("You're now divorced", Info.Name), ChatType.System);
+            ReceiveChat("You're now divorced", ChatType.System);
+
+            GetRelationship(false);
+            DivorceProposal.GetRelationship(false);
+            DivorceProposal = null;
         }
 
         public void GetRelationship(bool CheckOnline = true)
@@ -17167,8 +16916,8 @@ namespace Server.MirObjects
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
-                        player.ReceiveChat(String.Format("{0} has come online.", Info.Name ), ChatType.System);
-                    }     
+                        player.ReceiveChat(String.Format("{0} has come online.", Info.Name), ChatType.System);
+                    }
                 }
             }
         }
@@ -17181,6 +16930,223 @@ namespace Server.MirObjects
             {
                 player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
+            }
+        }
+
+        #endregion
+
+        #region Mentorship
+
+        public void MentorBreak(bool Force = false)
+        {
+
+            if (Info.Mentor == 0)
+            {
+                ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
+                return;
+            }
+            CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
+            PlayerObject Player = Envir.GetPlayer(Mentor.Name);
+
+            if (Force)
+            {
+                Info.MentorDate = DateTime.Now.AddDays(Settings.MentorLength);
+                ReceiveChat(String.Format("You now have a {0} day cooldown on starting a new Mentorship.", Settings.MentorLength), ChatType.System);
+            }
+            else
+                ReceiveChat("Your Mentorship has now expired.", ChatType.System);
+
+            if (Info.isMentor)
+            {
+                if (Player != null)
+                {
+                    Info.MentorExp += Player.MenteeEXP;
+                    Player.MenteeEXP = 0;
+                }
+            }
+            else
+            {
+                if (Player != null)
+                {
+                    Mentor.MentorExp += MenteeEXP;
+                    MenteeEXP = 0;
+                }
+            }
+
+            if (Info.isMentor)
+            {
+                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentor).FirstOrDefault();
+                if (buff != null)
+                {
+                    RemoveBuff(BuffType.Mentor);
+                    Player.RemoveBuff(BuffType.Mentee);
+                }
+            }
+            else
+            {
+                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentee).FirstOrDefault();
+                if (buff != null)
+                {
+                    RemoveBuff(BuffType.Mentee);
+                    Player.RemoveBuff(BuffType.Mentor);
+                }
+            }
+
+            Info.Mentor = 0;
+            GetMentor(false);
+            Info.isMentor = false;
+
+            if (Info.isMentor && Info.MentorExp > 0)
+            {
+                GainExp((uint)Info.MentorExp);
+                Info.MentorExp = 0;
+            }
+
+            Mentor.Mentor = 0;
+            Mentor.isMentor = false;
+
+            if (Player != null)
+            {
+                Player.ReceiveChat("Your Mentorship has now expired.", ChatType.System);
+                Player.GetMentor(false);
+                if (Mentor.isMentor && Mentor.MentorExp > 0)
+                {
+                    Player.GainExp((uint)Mentor.MentorExp);
+                    Info.MentorExp = 0;
+                }
+            }
+            else
+            {
+                if (Mentor.isMentor && Mentor.MentorExp > 0)
+                {
+                    Mentor.Experience += Mentor.MentorExp;
+                    Mentor.MentorExp = 0;
+                }
+            }
+
+            Info.MentorExp = 0;
+            Mentor.MentorExp = 0;
+        }
+
+        public void AddMentor(string Name)
+        {
+
+            if (Info.Mentor != 0)
+            {
+                ReceiveChat("You already have a Mentor.", ChatType.System);
+                return;
+            }
+
+            if (Info.Name == Name)
+            {
+                ReceiveChat("You can't Mentor yourself.", ChatType.System);
+                return;
+            }
+
+            if (Info.MentorDate > DateTime.Now)
+            {
+                ReceiveChat("You can't start a new Mentorship yet.", ChatType.System);
+                return;
+            }
+
+            PlayerObject Mentor = Envir.GetPlayer(Name);
+
+            if (Mentor == null)
+            {
+                ReceiveChat(String.Format("Can't find anybody by the name {0}.", Name), ChatType.System);
+            }
+            else
+            {
+                Mentor.MentorRequest = null;
+
+                if (!Mentor.AllowMentor)
+                {
+                    ReceiveChat(String.Format("{0} is not allowing Mentor requests.", Mentor.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (Mentor.Info.MentorDate > DateTime.Now)
+                {
+                    ReceiveChat(String.Format("{0} can't start another Mentorship yet.", Mentor.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (Mentor.Info.Mentor != 0)
+                {
+                    ReceiveChat(String.Format("{0} is already a Mentor.", Mentor.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (Info.Class != Mentor.Info.Class)
+                {
+                    ReceiveChat("You can only be mentored by someone of the same Class.", ChatType.System);
+                    return;
+                }
+                if ((Info.Level + Settings.MentorLevelGap) > Mentor.Level)
+                {
+                    ReceiveChat(String.Format("You can only be mentored by someone who at least {0} level(s) above you.", Settings.MentorLevelGap), ChatType.System);
+                    return;
+                }
+
+                Mentor.MentorRequest = this;
+                Mentor.Enqueue(new S.MentorRequest { Name = Info.Name, Level = Info.Level });
+                ReceiveChat(String.Format("Request Sent."), ChatType.System);
+            }
+
+        }
+
+        public void MentorReply(bool accept)
+        {
+            if (!accept)
+            {
+                MentorRequest.ReceiveChat(string.Format("{0} has refused to Mentor you.", Info.Name), ChatType.System);
+                MentorRequest = null;
+                return;
+            }
+
+            if (Info.Mentor != 0)
+            {
+                ReceiveChat("You already have a Student.", ChatType.System);
+                return;
+            }
+
+            PlayerObject Student = Envir.GetPlayer(MentorRequest.Info.Name);
+            MentorRequest = null;
+
+            if (Student == null)
+            {
+                ReceiveChat(String.Format("{0} is no longer online.", Student.Name), ChatType.System);
+                return;
+            }
+            else
+            {
+                if (Student.Info.Mentor != 0)
+                {
+                    ReceiveChat(String.Format("{0} already has a Mentor.", Student.Info.Name), ChatType.System);
+                    return;
+                }
+                if (Info.Class != Student.Info.Class)
+                {
+                    ReceiveChat("You can only mentor someone of the same Class.", ChatType.System);
+                    return;
+                }
+                if ((Info.Level - Settings.MentorLevelGap) < Student.Level)
+                {
+                    ReceiveChat(String.Format("You can only mentor someone who at least {0} level(s) below you.", Settings.MentorLevelGap), ChatType.System);
+                    return;
+                }
+
+                Student.Info.Mentor = Info.Index;
+                Student.Info.isMentor = false;
+                Info.Mentor = Student.Info.Index;
+                Info.isMentor = true;
+                Student.Info.MentorDate = DateTime.Now;
+                Info.MentorDate = DateTime.Now;
+
+                ReceiveChat(String.Format("You're now the Mentor of {0}.", Student.Info.Name), ChatType.System);
+                Student.ReceiveChat(String.Format("You're now being Mentored by {0}.", Info.Name), ChatType.System);
+                GetMentor(false);
+                Student.GetMentor(false);
             }
         }
 
@@ -17209,7 +17175,6 @@ namespace Server.MirObjects
                 }
             }
         }
-
         public void LogoutMentor()
         {
             if (Info.Mentor == 0) return;
@@ -17224,6 +17189,7 @@ namespace Server.MirObjects
             }
         }
 
+        #endregion
 
     }
 }

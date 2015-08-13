@@ -45,7 +45,10 @@ namespace Server.MirForms.DropBuilder
             Finder = new List<DropItem>(),
             Reel = new List<DropItem>(),
             Fish = new List<DropItem>(),
-            Quest = new List<DropItem>();
+            Quest = new List<DropItem>(),
+            Awakening = new List<DropItem>(),
+            Pets = new List<DropItem>(),
+            Transform = new List<DropItem>();
 
         List<DropItem>[] ItemLists;
         ListBox[] ItemListBoxes;
@@ -55,7 +58,7 @@ namespace Server.MirForms.DropBuilder
             InitializeComponent();
 
             // Array of items
-            ItemLists = new List<DropItem>[34]
+            ItemLists = new List<DropItem>[37]
             {
                 Weapon,
                 Armour,
@@ -90,11 +93,14 @@ namespace Server.MirForms.DropBuilder
                 Finder,
                 Reel,
                 Fish,
-                Quest
+                Quest,
+                Awakening,
+                Pets,
+                Transform
             };
 
             // Array of item list boxes
-            ItemListBoxes = new ListBox[34]
+            ItemListBoxes = new ListBox[37]
             {
                 listBoxWeapon,
                 listBoxArmour,
@@ -129,7 +135,10 @@ namespace Server.MirForms.DropBuilder
                 listBoxFinder,
                 listBoxReel,
                 listBoxFish,
-                listBoxQuest
+                listBoxQuest,
+                listBoxAwakening,
+                listBoxPets,
+                listBoxTransform
             };
 
             // Add monsters to list
@@ -301,6 +310,18 @@ namespace Server.MirForms.DropBuilder
             for (int i = 0; i < Quest.Count; i++)
                 textBoxDropList.Text += string.Format("{0} {1} {2}{3}", Quest[i].Odds, Quest[i].Name, Quest[i].Quest, Environment.NewLine);
 
+            textBoxDropList.Text += string.Format("{0};Awakening{0}", Environment.NewLine);
+            for (int i = 0; i < Awakening.Count; i++)
+                textBoxDropList.Text += string.Format("{0} {1} {2}{3}", Awakening[i].Odds, Awakening[i].Name, Awakening[i].Quest, Environment.NewLine);
+
+            textBoxDropList.Text += string.Format("{0};Pets{0}", Environment.NewLine);
+            for (int i = 0; i < Pets.Count; i++)
+                textBoxDropList.Text += string.Format("{0} {1} {2}{3}", Pets[i].Odds, Pets[i].Name, Pets[i].Quest, Environment.NewLine);
+
+            textBoxDropList.Text += string.Format("{0};Transform{0}", Environment.NewLine);
+            for (int i = 0; i < Transform.Count; i++)
+                textBoxDropList.Text += string.Format("{0} {1} {2}{3}", Transform[i].Odds, Transform[i].Name, Transform[i].Quest, Environment.NewLine);
+
             SaveDropFile();
         }
 
@@ -437,6 +458,15 @@ namespace Server.MirForms.DropBuilder
                 case "Quest":
                     listBoxQuest.Items.AddRange(TempListBox.Items);
                     break;
+                case "Awakening":
+                    listBoxAwakening.Items.AddRange(TempListBox.Items);
+                    break;
+                case "Pets":
+                    listBoxPets.Items.AddRange(TempListBox.Items);
+                    break;
+                case "Transform":
+                    listBoxTransform.Items.AddRange(TempListBox.Items);
+                    break;
             }
         }
         
@@ -563,6 +593,15 @@ namespace Server.MirForms.DropBuilder
                     case "Quest":
                         Quest.Add(new DropItem { Name = listBoxQuest.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
                         break;
+                    case "Awakening":
+                        Awakening.Add(new DropItem { Name = listBoxAwakening.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        break;
+                    case "Pets":
+                        Pets.Add(new DropItem { Name = listBoxPets.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        break;
+                    case "Transform":
+                        Transform.Add(new DropItem { Name = listBoxTransform.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        break;
                 }
 
                 UpdateDropFile();
@@ -587,7 +626,7 @@ namespace Server.MirForms.DropBuilder
             textBoxMaxLevel.Text = string.Empty;
             checkBoxCap.Checked = false;
 
-            labelMobLevel.Text = String.Format("Currently editing: {0} - Level: {1}", listBoxMonsters.SelectedItem, Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level);
+            labelMobLevel.Text = String.Format("Currently Editing: {0} - Level: {1}", listBoxMonsters.SelectedItem, Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level);
         }
 
         // Load the monster.txt drop file.
@@ -614,7 +653,7 @@ namespace Server.MirForms.DropBuilder
                 }
             }
 
-            string[] Headers = new string[34]
+            string[] Headers = new string[37]
             {
             ";Weapons",
             ";Armours",
@@ -649,7 +688,10 @@ namespace Server.MirForms.DropBuilder
             ";Finder",
             ";Reel",
             ";Fish",
-            ";Quest"
+            ";Quest",
+            ";Awakening",
+            ";Pets",
+            ";Transform"
             };
 
             for (int i = 0; i < Headers.Length; i++)
@@ -776,6 +818,15 @@ namespace Server.MirForms.DropBuilder
                                     break;
                                 case 33:
                                     Quest.Add(newDropItem);
+                                    break;
+                                case 34:
+                                    Awakening.Add(newDropItem);
+                                    break;
+                                case 35:
+                                    Pets.Add(newDropItem);
+                                    break;
+                                case 36:
+                                    Transform.Add(newDropItem);
                                     break;
                                 default:
                                     break;
