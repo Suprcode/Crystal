@@ -28,6 +28,7 @@ namespace Server
             StartGameCheckBox.Checked = Settings.AllowStartGame;
             AllowAssassinCheckBox.Checked = Settings.AllowCreateAssassin;
             AllowArcherCheckBox.Checked = Settings.AllowCreateArcher;
+            Resolution_textbox.Text = Settings.AllowedResolution.ToString();
 
             SafeZoneBorderCheckBox.Checked = Settings.SafeZoneBorder;
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
@@ -57,6 +58,8 @@ namespace Server
                 Settings.IPAddress = tempIP.ToString();
 
             ushort tempshort;
+            int tempint;
+
             if (ushort.TryParse(PortTextBox.Text, out tempshort))
                 Settings.Port = tempshort;
 
@@ -80,6 +83,9 @@ namespace Server
             Settings.AllowStartGame = StartGameCheckBox.Checked;
             Settings.AllowCreateAssassin = AllowAssassinCheckBox.Checked;
             Settings.AllowCreateArcher = AllowArcherCheckBox.Checked;
+
+            if (int.TryParse(Resolution_textbox.Text, out tempint))
+                Settings.AllowedResolution = tempint;
 
             Settings.SafeZoneBorder = SafeZoneBorderCheckBox.Checked;
             Settings.SafeZoneHealing = SafeZoneHealingCheckBox.Checked;
@@ -109,5 +115,19 @@ namespace Server
                 VPathTextBox.Text = VPathDialog.FileName;
         }
 
+        private void Resolution_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            ActiveControl.BackColor = !int.TryParse(ActiveControl.Text, out temp) ? Color.Red : SystemColors.Window;
+
+        }
+
+        private void tabPage3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

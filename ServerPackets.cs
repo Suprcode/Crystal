@@ -320,6 +320,7 @@ namespace ServerPackets
         }
 
         public byte Result;
+        public int Resolution;
 
         /*
          * 0: Disabled.
@@ -331,11 +332,13 @@ namespace ServerPackets
         protected override void ReadPacket(BinaryReader reader)
         {
             Result = reader.ReadByte();
+            Resolution = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Result);
+            writer.Write(Resolution);
         }
     }
     public sealed class StartGameBanned : Packet

@@ -62,6 +62,9 @@
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
+            this.Resolution_textbox = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -257,6 +260,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label9);
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Controls.Add(this.Resolution_textbox);
             this.tabPage3.Controls.Add(this.AllowArcherCheckBox);
             this.tabPage3.Controls.Add(this.AllowAssassinCheckBox);
             this.tabPage3.Controls.Add(this.StartGameCheckBox);
@@ -272,6 +278,7 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Permissions";
             this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
             // 
             // AllowArcherCheckBox
             // 
@@ -420,6 +427,32 @@
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
             // 
+            // Resolution_textbox
+            // 
+            this.Resolution_textbox.Location = new System.Drawing.Point(147, 230);
+            this.Resolution_textbox.Name = "Resolution_textbox";
+            this.Resolution_textbox.Size = new System.Drawing.Size(80, 20);
+            this.Resolution_textbox.TabIndex = 14;
+            this.Resolution_textbox.TextChanged += new System.EventHandler(this.Resolution_textbox_TextChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(0, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(35, 13);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "label8";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(21, 233);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(120, 13);
+            this.label9.TabIndex = 16;
+            this.label9.Text = "Max Resolution Allowed";
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -481,5 +514,8 @@
         private System.Windows.Forms.CheckBox SafeZoneHealingCheckBox;
         private System.Windows.Forms.CheckBox AllowArcherCheckBox;
         private System.Windows.Forms.CheckBox AllowAssassinCheckBox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox Resolution_textbox;
     }
 }
