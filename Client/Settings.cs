@@ -44,7 +44,7 @@ namespace Client
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
-        public static bool HighResolution = false;
+        public static int Resolution = 1024;
         public static bool DebugMode = false;
 
         //Network
@@ -135,7 +135,7 @@ namespace Client
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
             FPSCap = Reader.ReadBoolean("Graphics", "FPSCap", FPSCap);
-            HighResolution = Reader.ReadBoolean("Graphics", "HighResolution", HighResolution);
+            Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
             DebugMode = Reader.ReadBoolean("Graphics", "DebugMode", DebugMode);
 
             //Network
@@ -196,7 +196,7 @@ namespace Client
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "AlwaysOnTop", TopMost);
             Reader.Write("Graphics", "FPSCap", FPSCap);
-            Reader.Write("Graphics", "HighResolution", HighResolution);
+            Reader.Write("Graphics", "Resolution", Resolution);
             Reader.Write("Graphics", "DebugMode", DebugMode);
 
             //Sound

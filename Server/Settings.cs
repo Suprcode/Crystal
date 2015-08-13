@@ -61,6 +61,8 @@ namespace Server
                            AllowCreateAssassin = true,
                            AllowCreateArcher = true;
 
+        public static int AllowedResolution = 1024;
+
         //Optional
         public static bool SafeZoneBorder = false,
                            SafeZoneHealing = false,
@@ -258,6 +260,7 @@ namespace Server
             AllowStartGame = Reader.ReadBoolean("Permission", "AllowStartGame", AllowStartGame);
             AllowCreateAssassin = Reader.ReadBoolean("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             AllowCreateArcher = Reader.ReadBoolean("Permission", "AllowCreateArcher", AllowCreateArcher);
+            AllowedResolution = Reader.ReadInt32("Permission", "MaxResolution", AllowedResolution);
 
             //Optional
             SafeZoneBorder = Reader.ReadBoolean("Optional", "SafeZoneBorder", SafeZoneBorder);
@@ -434,6 +437,7 @@ namespace Server
             Reader.Write("Permission", "AllowStartGame", AllowStartGame);
             Reader.Write("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             Reader.Write("Permission", "AllowCreateArcher", AllowCreateArcher);
+            Reader.Write("Permission", "MaxResolution", AllowedResolution);
 
             //Optional
             Reader.Write("Optional", "SafeZoneBorder", SafeZoneBorder);
