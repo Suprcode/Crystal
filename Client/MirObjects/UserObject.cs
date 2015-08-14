@@ -763,7 +763,7 @@ namespace Client.MirObjects
         {
             if (User != this) return;
             if (GameScene.Scene.GuildBuffDialog == null) return;
-            for (int i = 0; 1 < GameScene.Scene.GuildBuffDialog.EnabledBuffs.Count; i++)
+            for (int i = 0; i < GameScene.Scene.GuildBuffDialog.EnabledBuffs.Count; i++)
             {
                 GuildBuff Buff = GameScene.Scene.GuildBuffDialog.EnabledBuffs[i];
                 if (Buff == null) continue;
