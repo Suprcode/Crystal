@@ -600,13 +600,6 @@ namespace Client
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("Cannot leave game for " + (GameScene.LogTime - CMain.Time) / 1000 + " seconds.", ChatType.System);
                 e.Cancel = true;
-
-                //if (MessageBox.Show("Are you sure you want to quit the game?", "Mir 2 Quit",
-                //     MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                //{
-                //    // Cancel the Closing event
-                //    e.Cancel = true;
-                //}
             }
         }
     }

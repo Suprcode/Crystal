@@ -19,8 +19,7 @@ namespace Server
             get { return SMain.EditEnvir; }
         }
 
-        public bool FishingChanged = false;
-        public bool MailChanged = false;
+        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false;
 
         public SystemInfoForm()
         {
@@ -37,6 +36,10 @@ namespace Server
 
             UpdateFishing();
             UpdateMail();
+            UpdateGoods();
+            UpdateRefine();
+            UpdateMarriage();
+            UpdateMentor();
         }
 
         #region Update
@@ -70,6 +73,48 @@ namespace Server
             MailInsurancePercentageTextBox.Text = Settings.MailItemInsurancePercentage.ToString();
         }
 
+        private void UpdateGoods()
+        {
+            GoodsOnCheckBox.Checked = Settings.GoodsOn;
+            GoodsMaxStoredTextBox.Text = Settings.GoodsMaxStored.ToString();
+            GoodsBuyBackTimeTextBox.Text = Settings.GoodsBuyBackTime.ToString();
+            GoodsBuyBackMaxStoredTextBox.Text = Settings.GoodsBuyBackMaxStored.ToString();
+        }
+
+        private void UpdateMarriage()
+        {
+            LoverRecall_checkbox.Checked = Settings.WeddingRingRecall;
+            LoverBonusEXP_textbox.Text = Settings.LoverEXPBonus.ToString();
+            MarriageCooldown_textbox.Text = Settings.MarriageCooldown.ToString();
+            RequiredLevel_textbox.Text = Settings.MarriageLevelRequired.ToString();
+            ReplaceRingCost_textbox.Text = Settings.ReplaceWedRingCost.ToString();
+
+        }
+
+        private void UpdateMentor()
+        {
+            MenteeSkillBoost_checkbox.Checked = Settings.MentorSkillBoost;
+            MentorLevelGap_textbox.Text = Settings.MentorLevelGap.ToString();
+            MentorLength_textbox.Text = Settings.MentorLength.ToString();
+            MentorDamageBoost_textbox.Text = Settings.MentorDamageBoost.ToString();
+            MenteeExpBoost_textbox.Text = Settings.MentorExpBoost.ToString();
+            MenteeExpBank_textbox.Text = Settings.MenteeExpBank.ToString();
+        }
+
+        private void UpdateRefine()
+        {
+            WeaponOnly_checkbox.Checked = Settings.OnlyRefineWeapon;
+            BaseChance_textbox.Text = Settings.RefineBaseChance.ToString();
+            RefineTime_textbox.Text = Settings.RefineTime.ToString();
+            NormalStat_textbox.Text = Settings.RefineIncrease.ToString();
+            CritChance_textbox.Text = Settings.RefineCritChance.ToString();
+            CritMultiplier_textbox.Text = Settings.RefineCritIncrease.ToString();
+            WepDimReturn_textbox.Text = Settings.RefineWepStatReduce.ToString();
+            ItemDimReturn_textbox.Text = Settings.RefineItemStatReduce.ToString();
+            RefineCost_textbox.Text = Settings.RefineCost.ToString();
+            OreName_textbox.Text = Settings.RefineOreName.ToString();
+        }
+
         #endregion
 
         private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -79,6 +124,18 @@ namespace Server
 
             if (MailChanged)
                 Settings.SaveMail();
+
+            if (GoodsChanged)
+                Settings.SaveGoods();
+
+            if (RefineChanged)
+                Settings.SaveRefine();
+
+            if (MarriageChanged)
+                Settings.SaveMarriage();
+
+            if (MentorChanged)
+                Settings.SaveMentor();
         }
 
         #region Fishing
@@ -234,6 +291,372 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
             Settings.MailItemInsurancePercentage = temp;
             MailChanged = true;
+        }
+
+        private void LoverRecall_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            Settings.WeddingRingRecall = LoverRecall_checkbox.Checked;
+            MarriageChanged = true;
+        }
+
+        private void LoverBonusEXP_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.LoverEXPBonus = temp;
+            MarriageChanged = true;
+        }
+
+        private void MarriageCooldown_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 365 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MarriageCooldown = temp;
+            MarriageChanged = true;
+        }
+
+        private void RequiredLevel_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MarriageLevelRequired = temp;
+            MarriageChanged = true;
+        }
+
+        private void SystemInfoForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void WeaponOnly_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.OnlyRefineWeapon = WeaponOnly_checkbox.Checked;
+            RefineChanged = true;
+        }
+
+        private void BaseChance_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineBaseChance = temp;
+            RefineChanged = true;
+        }
+
+        private void RefineTime_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 1000 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineTime = temp;
+            RefineChanged = true;
+        }
+
+        private void NormalStat_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineIncrease = temp;
+            RefineChanged = true;
+        }
+
+        private void CritChance_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineCritChance = temp;
+            RefineChanged = true;
+        }
+
+        private void CritMultiplier_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineCritIncrease = temp;
+            RefineChanged = true;
+        }
+
+        private void WepDimReturn_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineWepStatReduce = temp;
+            RefineChanged = true;
+        }
+
+        private void ItemDimReturn_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineItemStatReduce = temp;
+            RefineChanged = true;
+        }
+
+        private void RefineCost_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 2000 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.RefineCost = temp;
+            RefineChanged = true;
+        }
+
+        private void OreName_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            Settings.RefineOreName = ActiveControl.Text;
+            RefineChanged = true;
+        }
+
+        private void ReplaceRingCost_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 2000 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.ReplaceWedRingCost = temp;
+            MarriageChanged = true;
+        }
+
+        private void MentorLevelGap_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorLevelGap = temp;
+            MentorChanged = true;
+        }
+
+        private void MentorLength_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorLength = temp;
+            MentorChanged = true;
+        }
+
+        private void MentorDamageBoost_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorDamageBoost = temp;
+            MentorChanged = true;
+        }
+
+        private void MenteeExpBoost_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MentorExpBoost = temp;
+            MentorChanged = true;
+        }
+
+        private void MenteeExpBank_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MenteeExpBank = temp;
+            MentorChanged = true;
+        }
+
+        private void MenteeSkillBoost_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            Settings.MentorSkillBoost = MenteeSkillBoost_checkbox.Checked;
+            MentorChanged = true;
+        }
+
+        #endregion
+
+        #region Goods
+
+        private void GoodsOnCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.GoodsOn = GoodsOnCheckBox.Checked;
+            GoodsChanged = true;
+        }
+
+        private void GoodsMaxStoredTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            uint temp;
+
+            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.GoodsMaxStored = temp;
+            GoodsChanged = true;
+        }
+
+        private void GoodsBuyBackTimeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            uint temp;
+
+            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 1440 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.GoodsBuyBackTime = temp;
+            GoodsChanged = true;
+        }
+
+        private void GoodsBuyBackMaxStoredTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            uint temp;
+
+            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.GoodsBuyBackMaxStored = temp;
+            GoodsChanged = true;
         }
 
         #endregion

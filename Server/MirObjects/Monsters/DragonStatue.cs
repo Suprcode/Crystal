@@ -19,6 +19,14 @@ namespace Server.MirObjects.Monsters
             Direction = (MirDirection)Math.Min((byte)5, (byte)Direction);
         }
 
+        public override void Spawned()
+        {
+            if (Respawn != null)
+                Direction = (MirDirection)Math.Min((byte)5, (byte)Respawn.Info.Direction);
+
+            base.Spawned();
+        }
+
         public override void Turn(MirDirection dir)
         {
         }
@@ -97,6 +105,11 @@ namespace Server.MirObjects.Monsters
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             return Sleeping ? 0 : base.Attacked(attacker, damage, type, damageWeapon);
+        }
+
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
         }
 
         public override void Die()

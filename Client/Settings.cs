@@ -27,7 +27,12 @@ namespace Client
                             AHumEffectPath = @".\Data\AHumEffect\",
                             ARHumEffectPath = @".\Data\ARHumEffect\",
                             MountPath = @".\Data\Mount\",
-                            FishingPath = @".\Data\Fishing\";
+                            FishingPath = @".\Data\Fishing\",
+                            PetsPath = @".\Data\Pet\",
+                            TransformPath = @".\Data\Transform\",
+                            TransformMountsPath = @".\Data\TransformRide2\",
+                            TransformEffectPath = @".\Data\TransformEffect\",
+                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\";
 
         //Logs
         public static bool LogErrors = true;
@@ -39,7 +44,7 @@ namespace Client
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
-        public static bool HighResolution = false;
+        public static int Resolution = 1024;
         public static bool DebugMode = false;
 
         //Network
@@ -64,6 +69,23 @@ namespace Client
                     SoundManager.Vol = -10000;
                 else 
                     SoundManager.Vol = (int)(-3000 + (3000 * (_volume / 100M)));
+            }
+        }
+
+        private static byte _musicVolume = 100;
+        public static byte MusicVolume
+        {
+            get { return _musicVolume; }
+            set
+            {
+                if (_musicVolume == value) return;
+
+                _musicVolume = (byte)(value > 100 ? 100 : value);
+
+                if (_musicVolume == 0)
+                    SoundManager.MusicVol = -10000;
+                else
+                    SoundManager.MusicVol = (int)(-3000 + (3000 * (_musicVolume / 100M)));
             }
         }
 
@@ -113,7 +135,7 @@ namespace Client
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
             FPSCap = Reader.ReadBoolean("Graphics", "FPSCap", FPSCap);
-            HighResolution = Reader.ReadBoolean("Graphics", "HighResolution", HighResolution);
+            Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
             DebugMode = Reader.ReadBoolean("Graphics", "DebugMode", DebugMode);
 
             //Network
@@ -131,6 +153,7 @@ namespace Client
             //Sound
             Volume = Reader.ReadByte("Sound", "Volume", Volume);
             SoundOverLap = Reader.ReadInt32("Sound", "SoundOverLap", SoundOverLap);
+            MusicVolume = Reader.ReadByte("Sound", "Music", MusicVolume);
 
             //Game
             AccountID = Reader.ReadString("Game", "AccountID", AccountID);
@@ -173,11 +196,12 @@ namespace Client
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "AlwaysOnTop", TopMost);
             Reader.Write("Graphics", "FPSCap", FPSCap);
-            Reader.Write("Graphics", "HighResolution", HighResolution);
+            Reader.Write("Graphics", "Resolution", Resolution);
             Reader.Write("Graphics", "DebugMode", DebugMode);
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);
+            Reader.Write("Sound", "Music", MusicVolume);
 
             //Game
             Reader.Write("Game", "SkillMode", SkillMode);

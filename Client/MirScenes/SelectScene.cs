@@ -405,12 +405,16 @@ namespace Client.MirScenes
             StartGameButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiaryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
+            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         public void StartGame(S.StartGame p)
         {
             StartGameButton.Enabled = true;
+
+            if (p.Resolution < Settings.Resolution || Settings.Resolution == 0) Settings.Resolution = p.Resolution;
+            else if (p.Resolution < 1024 || Settings.Resolution < 1024) Settings.Resolution = 800;
+            else if (p.Resolution < 1280 || Settings.Resolution < 1280) Settings.Resolution = 1024;
 
             switch (p.Result)
             {
@@ -427,8 +431,8 @@ namespace Client.MirScenes
                     MirMessageBox.Show("No active map and/or start point found.");
                     break;
                 case 4:
-                    if (Settings.HighResolution)
-                        CMain.SetResolution(1024, 768); 
+                    if (Settings.Resolution != 800)
+                        CMain.SetResolution(Settings.Resolution, (Settings.Resolution / 100) * 75); 
                     ActiveScene = new GameScene();
                     Dispose();
                     break;

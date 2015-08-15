@@ -370,6 +370,7 @@ namespace Server.MirObjects.Monsters
                 Effect = SpellEffect.None,
                 WingEffect = wing,
                 Extra = false,
+                TransformType = -1
             };
         }
     }

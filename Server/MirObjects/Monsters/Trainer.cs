@@ -65,7 +65,7 @@ namespace Server.MirObjects.Monsters
                 OutputAverage();
                 ResetStats();
             }
-
+            damage += attacker.AttackBonus;
             _currentAttacker = attacker;
             _hitCount++;
             _totalDamage += damage;
@@ -129,6 +129,11 @@ namespace Server.MirObjects.Monsters
             }
 
             return 1;
+        }
+
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
         }
 
         private void ResetStats()

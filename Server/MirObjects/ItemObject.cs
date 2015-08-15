@@ -340,7 +340,7 @@ namespace Server.MirObjects
                         Name = Item.Count > 1 ? string.Format("{0} ({1})", Name, Item.Count) : Name,
                         NameColour = NameColour,
                         Location = CurrentLocation,
-                        Image = Item.Info.Image
+                        Image = Item.Image
                     };
 
             return new S.ObjectGold
@@ -370,6 +370,10 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            throw new NotSupportedException();
+        }
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
         {
             throw new NotSupportedException();
         }

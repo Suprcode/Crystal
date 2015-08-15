@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ManagedSquish;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
-using ManagedSquish;
 using System.Windows.Forms;
 
 namespace LibraryEditor
@@ -44,7 +44,7 @@ namespace LibraryEditor
             CurrentVersion = _reader.ReadInt32();
             if (CurrentVersion != LibVersion)
             {
-                MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() +  ".", "Failed to open", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", "Failed to open", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             Count = _reader.ReadInt32();
@@ -79,12 +79,10 @@ namespace LibraryEditor
             Count = Images.Count;
             IndexList.Clear();
 
-
-
-            int offSet = 8 + Count*4;
+            int offSet = 8 + Count * 4;
             for (int i = 0; i < Count; i++)
             {
-                IndexList.Add((int) stream.Length + offSet);
+                IndexList.Add((int)stream.Length + offSet);
                 Images[i].Save(writer);
             }
 
@@ -119,7 +117,7 @@ namespace LibraryEditor
                 _stream.Position = IndexList[index];
                 Images[index] = new MImage(_reader);
             }
-            
+
             if (!Load) return;
 
             MImage mi = Images[index];
@@ -187,7 +185,6 @@ namespace LibraryEditor
             return image.Preview;
         }
 
-
         public void AddImage(Bitmap image, short x, short y)
         {
             MImage mImage = new MImage(image) { X = x, Y = y };
@@ -196,6 +193,12 @@ namespace LibraryEditor
             Images.Add(mImage);
         }
 
+        public void ReplaceImage(int Index, Bitmap image, short x, short y)
+        {
+            MImage mImage = new MImage(image) { X = x, Y = y };
+
+            Images[Index] = mImage;
+        }
 
         public void InsertImage(int index, Bitmap image, short x, short y)
         {
@@ -214,7 +217,6 @@ namespace LibraryEditor
                 return;
             }
             Count--;
-
 
             Images.RemoveAt(index);
         }
@@ -242,7 +244,6 @@ namespace LibraryEditor
                         RemoveImage(i);
                 }
             }
-
         }
 
         public sealed class MImage
@@ -253,14 +254,14 @@ namespace LibraryEditor
             public byte[] FBytes;
             public bool TextureValid;
             public Bitmap Image, Preview;
+
             //layer 2:
             public short MaskWidth, MaskHeight, MaskX, MaskY;
+
             public int MaskLength;
             public byte[] MaskFBytes;
             public Bitmap MaskImage;
             public Boolean HasMask;
-            
-            
 
             public MImage(BinaryReader reader)
             {
@@ -302,12 +303,11 @@ namespace LibraryEditor
                     return;
                 }
 
-                Width = (short) image.Width;
-                Height = (short) image.Height;
+                Width = (short)image.Width;
+                Height = (short)image.Height;
 
                 Image = FixImageSize(image);
-                FBytes = ConvertBitmapToArray(Image);  
-
+                FBytes = ConvertBitmapToArray(Image);
             }
 
             public MImage(Bitmap image, Bitmap Maskimage)
@@ -332,15 +332,12 @@ namespace LibraryEditor
                 MaskHeight = (short)Maskimage.Height;
                 MaskImage = FixImageSize(Maskimage);
                 MaskFBytes = ConvertBitmapToArray(MaskImage);
-
-
             }
 
             private Bitmap FixImageSize(Bitmap input)
             {
                 int w = input.Width + (4 - input.Width % 4) % 4;
                 int h = input.Height + (4 - input.Height % 4) % 4;
-
 
                 if (input.Width != w || input.Height != h)
                 {
@@ -361,13 +358,11 @@ namespace LibraryEditor
             private unsafe byte[] ConvertBitmapToArray(Bitmap input)
             {
                 byte[] output;
-                
 
                 BitmapData data = input.LockBits(new Rectangle(0, 0, input.Width, input.Height), ImageLockMode.ReadOnly,
                                                  PixelFormat.Format32bppArgb);
 
                 byte[] pixels = new byte[input.Width * input.Height * 4];
-
 
                 Marshal.Copy(data.Scan0, pixels, 0, pixels.Length);
                 input.UnlockBits(data);
@@ -381,7 +376,6 @@ namespace LibraryEditor
 
                     if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0)
                         pixels[i + 3] = 0; //Make Transparent
-
                 }
 
                 int count = Squish.GetStorageRequirements(input.Width, input.Height, SquishFlags.Dxt1);
@@ -403,7 +397,7 @@ namespace LibraryEditor
                 writer.Write(Y);
                 writer.Write(ShadowX);
                 writer.Write(ShadowY);
-                writer.Write(HasMask? (byte)(Shadow | 0x80): (byte)Shadow);
+                writer.Write(HasMask ? (byte)(Shadow | 0x80) : (byte)Shadow);
                 writer.Write(FBytes.Length);
                 writer.Write(FBytes);
                 if (HasMask)
@@ -432,19 +426,18 @@ namespace LibraryEditor
                 BitmapData data = Image.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite,
                                                  PixelFormat.Format32bppArgb);
 
-                fixed (byte* source = FBytes) 
-                    Squish.DecompressImage(data.Scan0, w, h, (IntPtr) source, SquishFlags.Dxt1);
+                fixed (byte* source = FBytes)
+                    Squish.DecompressImage(data.Scan0, w, h, (IntPtr)source, SquishFlags.Dxt1);
 
-                byte* dest = (byte*) data.Scan0;
+                byte* dest = (byte*)data.Scan0;
 
-                for (int i = 0; i < h*w*4; i += 4)
+                for (int i = 0; i < h * w * 4; i += 4)
                 {
                     //Reverse Red/Blue
                     byte b = dest[i];
                     dest[i] = dest[i + 2];
                     dest[i + 2] = b;
                 }
-
 
                 Image.UnlockBits(data);
 
@@ -475,7 +468,6 @@ namespace LibraryEditor
                         dest[i + 2] = b;
                     }
 
-
                     MaskImage.UnlockBits(data);
                 }
             }
@@ -494,16 +486,13 @@ namespace LibraryEditor
                 {
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     g.Clear(Color.Transparent);
-                    int w = Math.Min((int) Width, 64);
-                    int h = Math.Min((int) Height, 64);
-                    g.DrawImage(Image, new Rectangle((64 - w)/2, (64 - h)/2, w, h), new Rectangle(0, 0, Width, Height), GraphicsUnit.Pixel);
-                    
+                    int w = Math.Min((int)Width, 64);
+                    int h = Math.Min((int)Height, 64);
+                    g.DrawImage(Image, new Rectangle((64 - w) / 2, (64 - h) / 2, w, h), new Rectangle(0, 0, Width, Height), GraphicsUnit.Pixel);
+
                     g.Save();
                 }
             }
-
-
         }
-
     }
 }

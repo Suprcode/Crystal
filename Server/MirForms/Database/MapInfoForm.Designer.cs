@@ -50,6 +50,7 @@ namespace Server
             this.FileNameTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.NoFightCheckbox = new System.Windows.Forms.CheckBox();
             this.NeedBridleCheckbox = new System.Windows.Forms.CheckBox();
             this.NoMountCheckbox = new System.Windows.Forms.CheckBox();
             this.label19 = new System.Windows.Forms.Label();
@@ -110,6 +111,7 @@ namespace Server
             this.RemoveMButton = new System.Windows.Forms.Button();
             this.AddMButton = new System.Windows.Forms.Button();
             this.MovementInfoPanel = new System.Windows.Forms.Panel();
+            this.NeedMoveMCheckBox = new System.Windows.Forms.CheckBox();
             this.NeedHoleMCheckBox = new System.Windows.Forms.CheckBox();
             this.label22 = new System.Windows.Forms.Label();
             this.DestMapComboBox = new System.Windows.Forms.ComboBox();
@@ -145,7 +147,8 @@ namespace Server
             this.ImportMongenButton = new System.Windows.Forms.Button();
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
-            this.NoFightCheckbox = new System.Windows.Forms.CheckBox();
+            this.MusicTextBox = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -178,6 +181,8 @@ namespace Server
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.MusicTextBox);
             this.tabPage1.Controls.Add(this.label33);
             this.tabPage1.Controls.Add(this.MineComboBox);
             this.tabPage1.Controls.Add(this.label15);
@@ -356,6 +361,17 @@ namespace Server
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Attributes";
             this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // NoFightCheckbox
+            // 
+            this.NoFightCheckbox.AutoSize = true;
+            this.NoFightCheckbox.Location = new System.Drawing.Point(174, 137);
+            this.NoFightCheckbox.Name = "NoFightCheckbox";
+            this.NoFightCheckbox.Size = new System.Drawing.Size(66, 17);
+            this.NoFightCheckbox.TabIndex = 43;
+            this.NoFightCheckbox.Text = "No Fight";
+            this.NoFightCheckbox.UseVisualStyleBackColor = true;
+            this.NoFightCheckbox.CheckedChanged += new System.EventHandler(this.NoFightCheckbox_CheckedChanged);
             // 
             // NeedBridleCheckbox
             // 
@@ -980,6 +996,7 @@ namespace Server
             this.MovementInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.MovementInfoPanel.Controls.Add(this.NeedMoveMCheckBox);
             this.MovementInfoPanel.Controls.Add(this.NeedHoleMCheckBox);
             this.MovementInfoPanel.Controls.Add(this.label22);
             this.MovementInfoPanel.Controls.Add(this.DestMapComboBox);
@@ -994,13 +1011,24 @@ namespace Server
             this.MovementInfoPanel.Enabled = false;
             this.MovementInfoPanel.Location = new System.Drawing.Point(239, 35);
             this.MovementInfoPanel.Name = "MovementInfoPanel";
-            this.MovementInfoPanel.Size = new System.Drawing.Size(256, 139);
+            this.MovementInfoPanel.Size = new System.Drawing.Size(256, 175);
             this.MovementInfoPanel.TabIndex = 14;
+            // 
+            // NeedMoveMCheckBox
+            // 
+            this.NeedMoveMCheckBox.AutoSize = true;
+            this.NeedMoveMCheckBox.Location = new System.Drawing.Point(14, 145);
+            this.NeedMoveMCheckBox.Name = "NeedMoveMCheckBox";
+            this.NeedMoveMCheckBox.Size = new System.Drawing.Size(82, 17);
+            this.NeedMoveMCheckBox.TabIndex = 18;
+            this.NeedMoveMCheckBox.Text = "Need Move";
+            this.NeedMoveMCheckBox.UseVisualStyleBackColor = true;
+            this.NeedMoveMCheckBox.CheckedChanged += new System.EventHandler(this.NeedScriptMCheckBox_CheckedChanged);
             // 
             // NeedHoleMCheckBox
             // 
             this.NeedHoleMCheckBox.AutoSize = true;
-            this.NeedHoleMCheckBox.Location = new System.Drawing.Point(157, 6);
+            this.NeedHoleMCheckBox.Location = new System.Drawing.Point(14, 122);
             this.NeedHoleMCheckBox.Name = "NeedHoleMCheckBox";
             this.NeedHoleMCheckBox.Size = new System.Drawing.Size(77, 17);
             this.NeedHoleMCheckBox.TabIndex = 17;
@@ -1108,7 +1136,7 @@ namespace Server
             this.MovementInfoListBox.Location = new System.Drawing.Point(6, 35);
             this.MovementInfoListBox.Name = "MovementInfoListBox";
             this.MovementInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MovementInfoListBox.Size = new System.Drawing.Size(227, 134);
+            this.MovementInfoListBox.Size = new System.Drawing.Size(227, 173);
             this.MovementInfoListBox.TabIndex = 13;
             this.MovementInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MovementInfoListBox_SelectedIndexChanged);
             // 
@@ -1351,16 +1379,22 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
-            // NoFightCheckbox
+            // MusicTextBox
             // 
-            this.NoFightCheckbox.AutoSize = true;
-            this.NoFightCheckbox.Location = new System.Drawing.Point(174, 137);
-            this.NoFightCheckbox.Name = "NoFightCheckbox";
-            this.NoFightCheckbox.Size = new System.Drawing.Size(66, 17);
-            this.NoFightCheckbox.TabIndex = 43;
-            this.NoFightCheckbox.Text = "No Fight";
-            this.NoFightCheckbox.UseVisualStyleBackColor = true;
-            this.NoFightCheckbox.CheckedChanged += new System.EventHandler(this.NoFightCheckbox_CheckedChanged);
+            this.MusicTextBox.Location = new System.Drawing.Point(82, 178);
+            this.MusicTextBox.Name = "MusicTextBox";
+            this.MusicTextBox.Size = new System.Drawing.Size(92, 20);
+            this.MusicTextBox.TabIndex = 17;
+            this.MusicTextBox.TextChanged += new System.EventHandler(this.MusicTextBox_TextChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(38, 181);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(38, 13);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "Music:";
             // 
             // MapInfoForm
             // 
@@ -1517,6 +1551,9 @@ namespace Server
         private Label label34;
         private TextBox RoutePathTextBox;
         private CheckBox NoFightCheckbox;
+        private CheckBox NeedMoveMCheckBox;
+        private Label label11;
+        private TextBox MusicTextBox;
 
     }
 }

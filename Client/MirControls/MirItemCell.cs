@@ -72,6 +72,8 @@ namespace Client.MirControls
                         return NPCAwakeDialog.Items;
                     case MirGridType.Mail:
                         return MailComposeParcelDialog.Items;
+                    case MirGridType.Refine:
+                        return GameScene.Refine;
                     default:
                         throw new NotImplementedException();
                 }
@@ -204,7 +206,7 @@ namespace Client.MirControls
 
                                 if (Item.Count > 1)
                                 {
-                                    MirAmountBox amountBox = new MirAmountBox("Split Amount:", Item.GetRealItemImage(), Item.Count - 1);
+                                    MirAmountBox amountBox = new MirAmountBox("Split Amount:", Item.Image, Item.Count - 1);
 
                                     amountBox.OKButton.Click += (o, a) =>
                                     {
@@ -244,7 +246,7 @@ namespace Client.MirControls
             MirAmountBox amountBox;
             if (Item.Count > 1)
             {
-                amountBox = new MirAmountBox("Purchase Amount:", Item.GetRealItemImage(), Item.Count);
+                amountBox = new MirAmountBox("Purchase Amount:", Item.Image, Item.Count);
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
@@ -254,7 +256,7 @@ namespace Client.MirControls
             }
             else
             {
-                amountBox = new MirAmountBox("Purchase", Item.GetRealItemImage(), string.Format("Value: {0:#,##0} Gold", Item.Price()));
+                amountBox = new MirAmountBox("Purchase", Item.Image, string.Format("Value: {0:#,##0} Gold", Item.Price()));
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
@@ -411,18 +413,20 @@ namespace Client.MirControls
                 case ItemType.Book:
                 case ItemType.Food:
                 case ItemType.Script:
+                case ItemType.Pets:
+                case ItemType.Transform:
                     if (CanUseItem() && GridType == MirGridType.Inventory)
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;
                         Network.Enqueue(new C.UseItem { UniqueID = Item.UniqueID });
 
-                        if (Item.Count == 1 && ItemSlot >= 40)
+                        if (Item.Count == 1 && ItemSlot < 6)
                         {
-                            for (int i = 0; i < 40; i++)
+                            for (int i = 6; i < GameScene.User.Inventory.Length; i++)
                                 if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
                                 {
                                     Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = i, To = ItemSlot });
-                                    GameScene.Scene.InventoryDialog.Grid[i].Locked = true;
+                                    GameScene.Scene.InventoryDialog.Grid[i - 6].Locked = true;
                                     break;
                                 }
                         }
@@ -610,7 +614,7 @@ namespace Client.MirControls
 
                 if (itemCell.Item != null) continue;
 
-                Network.Enqueue(new C.RemoveItem { Grid = MirGridType.Inventory, UniqueID = Item.UniqueID, To = i });
+                Network.Enqueue(new C.RemoveItem { Grid = MirGridType.Inventory, UniqueID = Item.UniqueID, To = itemCell.ItemSlot });
 
                 Locked = true;
 
@@ -624,15 +628,9 @@ namespace Client.MirControls
         {
             if (GridType == MirGridType.BuyBack || GridType == MirGridType.DropPanel || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant) return;
 
-            if (GameScene.SelectedCell == this)
-            {
-                GameScene.SelectedCell = null;
-                return;
-            }
-
             if (GameScene.SelectedCell != null)
             {
-                if (GameScene.SelectedCell.Item == null)
+                if (GameScene.SelectedCell.Item == null || GameScene.SelectedCell == this)
                 {
                     GameScene.SelectedCell = null;
                     return;
@@ -713,12 +711,12 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 0; x < ItemArray.Length; x++)
+                                for (int x = 6; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RemoveItem { Grid = GridType, UniqueID = GameScene.SelectedCell.Item.UniqueID, To = x });
 
-                                        MirItemCell temp = x < 40 ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - 40];
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
 
                                         if (temp != null) temp.Locked = true;
                                         GameScene.SelectedCell.Locked = true;
@@ -773,14 +771,12 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 0; x < ItemArray.Length; x++)
+                                for (int x = 6; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.TakeBackItem { From = GameScene.SelectedCell.ItemSlot, To = x });
 
-                                        MirItemCell temp = x < 40 ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - 40];
-                                       // MirItemCell Temp = GameScene.Scene.BagDialog.Grid.FirstOrDefault(A => A.ItemSlot == X) ??
-                                        //                   GameScene.Scene.BeltDialog.Grid.FirstOrDefault(A => A.ItemSlot == X);
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
 
                                         if (temp != null) temp.Locked = true;
                                         GameScene.SelectedCell.Locked = true;
@@ -853,14 +849,12 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 0; x < ItemArray.Length; x++)
+                                for (int x = 6; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RetrieveTradeItem { From = GameScene.SelectedCell.ItemSlot, To = x });
 
-                                        MirItemCell temp = x < 48 ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - 48];
-                                        // MirItemCell Temp = GameScene.Scene.BagDialog.Grid.FirstOrDefault(A => A.ItemSlot == X) ??
-                                        //                   GameScene.Scene.BeltDialog.Grid.FirstOrDefault(A => A.ItemSlot == X);
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
 
                                         if (temp != null) temp.Locked = true;
                                         GameScene.SelectedCell.Locked = true;
@@ -878,7 +872,70 @@ namespace Client.MirControls
                                     GameScene.Scene.NPCAwakeDialog.ItemCell_Click();
                                 GameScene.SelectedCell = null;
                                 break;
+                             #endregion
+
+                            #region From Refine
+                            case MirGridType.Refine: //From AwakenItem
+                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
+                                {
+                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
+                                    {
+                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
+
+                                        Locked = true;
+                                        GameScene.SelectedCell.Locked = true;
+                                        GameScene.SelectedCell = null;
+                                        return;
+                                    }
+                                }
+
+                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
+                                {
+                                    GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
+                                    GameScene.SelectedCell = null;
+                                    return;
+                                }
+
+                                if (Item != null)
+                                {
+                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
+                                    {
+                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
+
+                                        Locked = true;
+                                        GameScene.SelectedCell.Locked = true;
+                                        GameScene.SelectedCell = null;
+                                        return;
+                                    }
+                                }
+
+
+                                if (Item == null)
+                                {
+                                    Network.Enqueue(new C.RetrieveRefineItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+
+                                    Locked = true;
+                                    GameScene.SelectedCell.Locked = true;
+                                    GameScene.SelectedCell = null;
+                                    return;
+                                }
+
+                                for (int x = 6; x < ItemArray.Length; x++)
+                                    if (ItemArray[x] == null)
+                                    {
+                                        Network.Enqueue(new C.RetrieveRefineItem { From = GameScene.SelectedCell.ItemSlot, To = x });
+
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
+
+                                        if (temp != null) temp.Locked = true;
+                                        GameScene.SelectedCell.Locked = true;
+                                        GameScene.SelectedCell = null;
+                                        return;
+                                    }
+                                break;
                             #endregion
+
+
                         }
                         break;
                     #endregion
@@ -1084,7 +1141,7 @@ namespace Client.MirControls
                             #endregion
 
                             #region From Inventory
-                            case MirGridType.Inventory: //From Invenotry
+                            case MirGridType.Inventory: //From Inventory
                                 if (Item != null)
                                 {
                                     if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
@@ -1125,6 +1182,64 @@ namespace Client.MirControls
                         break;
 
                     #endregion
+
+                    #region To Refine 
+                  
+                    case MirGridType.Refine:
+
+                        switch (GameScene.SelectedCell.GridType)
+                        {
+                            #region From Refine
+                            case MirGridType.Refine: //From Refine
+                                if (Item != null)
+                                {
+                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
+                                    {
+                                        //Merge.
+                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
+
+                                        Locked = true;
+                                        GameScene.SelectedCell.Locked = true;
+                                        GameScene.SelectedCell = null;
+                                        return;
+                                    }
+                                }
+
+                                Network.Enqueue(new C.MoveItem { Grid = GridType, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                Locked = true;
+                                GameScene.SelectedCell.Locked = true;
+                                GameScene.SelectedCell = null;
+                                return;
+                            #endregion
+
+                            #region From Inventory
+                            case MirGridType.Inventory: //From Inventory
+                                if (Item != null)
+                                {
+                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
+                                    {
+                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
+
+                                        Locked = true;
+                                        GameScene.SelectedCell.Locked = true;
+                                        GameScene.SelectedCell = null;
+                                        return;
+                                    }
+                                }
+
+                                Network.Enqueue(new C.DepositRefineItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                Locked = true;
+                                GameScene.SelectedCell.Locked = true;
+                                GameScene.SelectedCell = null;
+                                return;
+                            #endregion
+                        }
+                        break;
+
+                    #endregion
+
+
+
                     #region To Awakening
                     case MirGridType.AwakenItem:
                         {
@@ -1664,7 +1779,7 @@ namespace Client.MirControls
 
                 if (Library != null)
                 {
-                    ushort image = Item.GetRealItemImage();
+                    ushort image = Item.Image;
 
                     Size imgSize = Library.GetTrueSize(image);
 
@@ -1679,7 +1794,7 @@ namespace Client.MirControls
 
                 if (Library != null)
                 {
-                    ushort image = Item.GetRealItemImage();
+                    ushort image = Item.Image;
 
                     Size imgSize = Library.GetTrueSize(image);
 

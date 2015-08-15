@@ -48,6 +48,14 @@ namespace Client.MirObjects
             if (CellObjects.Count == 0) CellObjects = null;
             else Sort();
         }
+        public MapObject FindObject(uint ObjectID)
+        {
+            return CellObjects.Find(
+                delegate(MapObject mo)
+            {
+                return mo.ObjectID == ObjectID;
+            });
+        }
         public void DrawObjects()
         {
             if (CellObjects == null) return;
@@ -195,6 +203,9 @@ namespace Client.MirObjects
                         MapCells[x, y].Light = Bytes[offset++];
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
+
+                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                            MapCells[x, y].FishingCell = true;
                     }
             }
             catch (Exception ex)
@@ -281,6 +292,9 @@ namespace Client.MirObjects
                         MapCells[x, y].MiddleIndex = (short)(Bytes[offset++] + 110);
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
+
+                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                            MapCells[x, y].FishingCell = true;
                     }
             }
             catch (Exception ex)
@@ -325,6 +339,9 @@ namespace Client.MirObjects
                         offset += 14; //tons of light, blending, .. related options i hope
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
+
+                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                            MapCells[x, y].FishingCell = true;
                     }
 
             }
@@ -368,6 +385,9 @@ namespace Client.MirObjects
                         MapCells[x, y].Light = Bytes[offset++];
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
+
+                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                            MapCells[x, y].FishingCell = true;
                     }
             }
             catch (Exception ex)
@@ -432,6 +452,7 @@ namespace Client.MirObjects
                         offset += 2;
                         if ((flag & 0x01) != 1) MapCells[x, y].BackImage |= 0x20000000;
                         if ((flag & 0x02) != 2) MapCells[x, y].FrontImage = (short)((UInt16)MapCells[x, y].FrontImage | 0x8000);
+
                     }
             }
             catch (Exception ex)
@@ -525,6 +546,9 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
                         offset++;
+
+                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                            MapCells[x, y].FishingCell = true;
                     }
             }
             catch (Exception ex)
@@ -572,6 +596,9 @@ namespace Client.MirObjects
                         offset += 2;
                         MapCells[x, y].TileAnimationFrames = Bytes[offset++];
                         MapCells[x, y].Light = Bytes[offset++];
+
+                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                            MapCells[x, y].FishingCell = true;
                     }
             }
             catch (Exception ex)

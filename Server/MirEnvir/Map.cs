@@ -17,12 +17,13 @@ namespace Server.MirEnvir
         }
         
         public MapInfo Info;
+        public int Thread = 0;
 
         public int Width, Height;
         public Cell[,] Cells;
         public MineSpot[,] Mine;
-        public long LightningTime, FireTime;
-        public int MonsterCount;
+        public long LightningTime, FireTime, InactiveTime;
+        public int MonsterCount, InactiveCount;
 
         public List<NPCObject> NPCs = new List<NPCObject>();
         public List<PlayerObject> Players = new List<PlayerObject>();
@@ -32,6 +33,7 @@ namespace Server.MirEnvir
         public Map(MapInfo info)
         {
             Info = info;
+            Thread = Envir.Random.Next(Settings.ThreadLimit);
         }
 
         private byte FindType(byte[] input)
@@ -55,7 +57,7 @@ namespace Server.MirEnvir
             //wemades 2010 map format i guess title starts with: Map 2010 Ver 1.0
             if ((input[0] == 0x10) && (input[2] == 0x61) && (input[7] == 0x31) && (input[14] == 0x31))
                 return 1;
-            
+
             //shanda's 2012 format and one of shandas(wemades) older formats share same header info, only difference is the filesize
             if ((input[4] == 0x0F) && (input[18] == 0x0D) && (input[19] == 0x0A))
             {
@@ -504,22 +506,68 @@ namespace Server.MirEnvir
 
             if ((Info.Lightning) && Envir.Time > LightningTime)
             {
-                LightningTime = Envir.Time + Envir.Random.Next(5000, 60000);
+                LightningTime = Envir.Time + Envir.Random.Next(3000, 15000);
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
+                    Point Location;
+                    if (Envir.Random.Next(4) == 0)
+                    {
+                        Location = player.CurrentLocation;
+                        
+                    }
+                    else
+                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
 
-                    Broadcast(new S.ObjectEffect { ObjectID = player.ObjectID, Effect = SpellEffect.MapLightning }, player.CurrentLocation);
+                    if (!ValidPoint(Location)) continue;
+
+                    SpellObject Lightning = null;
+                    Lightning = new SpellObject
+                    {
+                        Spell = Spell.MapLightning,
+                        Value = Envir.Random.Next(Info.LightningDamage),
+                        ExpireTime = Envir.Time + (1000),
+                        TickSpeed = 500,
+                        Caster = null,
+                        CurrentLocation = Location,
+                        CurrentMap = this,
+                        Direction = MirDirection.Up
+                    };
+                    AddObject(Lightning);
+                    Lightning.Spawned();
                 }
             }
             if ((Info.Fire) && Envir.Time > FireTime)
             {
-                FireTime = Envir.Time + Envir.Random.Next(5000, 60000);
+                FireTime = Envir.Time + Envir.Random.Next(3000, 15000);
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
+                    Point Location;
+                    if (Envir.Random.Next(4) == 0)
+                    {
+                        Location = player.CurrentLocation;
 
-                    Broadcast(new S.ObjectEffect { ObjectID = player.ObjectID, Effect = SpellEffect.MapFire }, player.CurrentLocation);
+                    }
+                    else
+                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
+
+                    if (!ValidPoint(Location)) continue;
+
+                    SpellObject Lightning = null;
+                    Lightning = new SpellObject
+                    {
+                        Spell = Spell.MapLava,
+                        Value = Envir.Random.Next(Info.FireDamage),
+                        ExpireTime = Envir.Time + (1000),
+                        TickSpeed = 500,
+                        Caster = null,
+                        CurrentLocation = Location,
+                        CurrentMap = this,
+                        Direction = MirDirection.Up
+                    };
+                    AddObject(Lightning);
+                    Lightning.Spawned();
                 }
             }
 
@@ -528,6 +576,19 @@ namespace Server.MirEnvir
                 if (Envir.Time < ActionList[i].Time) continue;
                 Process(ActionList[i]);
                 ActionList.RemoveAt(i);
+            }
+
+            if (InactiveTime < Envir.Time)
+            {
+                if (!Players.Any())
+                {
+                    InactiveTime = Envir.Time + Settings.Minute;
+                    InactiveCount++;
+                }
+                else
+                {
+                    InactiveCount = 0;
+                }
             }
 
         }
@@ -541,8 +602,8 @@ namespace Server.MirEnvir
                 if (Envir.Time < respawn.RespawnTime) continue;
                 if (respawn.Count < respawn.Info.Count)
                 {
-                    int count = respawn.Info.Count - respawn.Count;
-
+                    int count = (respawn.Info.Count * Envir.spawnmultiplyer) - respawn.Count;
+                    
                     for (int c = 0; c < count; c++)
                         Success = respawn.Spawn();
                 }
@@ -580,7 +641,7 @@ namespace Server.MirEnvir
                 case DelayedType.Magic:
                     CompleteMagic(action.Params);
                     break;
-                    case DelayedType.Spawn:
+                case DelayedType.Spawn:
                     MonsterObject mob = (MonsterObject) action.Params[0];
                     mob.Spawn(this, (Point) action.Params[1]);
                     if (action.Params.Length > 2) ((MonsterObject) action.Params[2]).SlaveList.Add(mob);
@@ -785,7 +846,7 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Value = target.Level / 7 + 4 });
+                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ target.Level / 7 + 4 } });
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -999,7 +1060,7 @@ namespace Server.MirEnvir
 
                 case Spell.ThunderStorm:
                 case Spell.FlameField:
-                case Spell.NapalmShot://ArcherSpells - NapalmShot
+                case Spell.NapalmShot:
                     value = (int)data[2];
                     location = (Point)data[3];
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)
@@ -1152,44 +1213,84 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region BladeAvalanche
+                #region IceThrust
 
-                case Spell.BladeAvalanche:
-                    value = (int)data[2];
-                    dir = (MirDirection)data[4];
-                    location = Functions.PointMove((Point)data[3], dir, 1);
-                    count = (int)data[5] - 1;
-
-                    if (!ValidPoint(location)) return;
-
-                    if (count > 0)
+                case Spell.IceThrust:
                     {
-                        DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 100, player, magic, value, location, dir, count);
-                        ActionList.Add(action);
-                    }
+                        location = (Point)data[2];
+                        MirDirection direction = (MirDirection)data[3];
 
-                    cell = GetCell(location);
+                        int criticalDamage = (int)data[4];
+                        int nearDamage = (int)data[5];
+                        int farDamage = (int)data[6];
 
-                    if (cell.Objects == null) return;
+                        int col = 3;
+                        int row = 3;
 
+                        Point[] loc = new Point[col]; //0 = left 1 = center 2 = right
+                        loc[0] = Functions.PointMove(location, Functions.PreviousDir(direction), 1);
+                        loc[1] = Functions.PointMove(location, direction, 1);
+                        loc[2] = Functions.PointMove(location, Functions.NextDir(direction), 1);
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
-                        MapObject target = cell.Objects[i];
-                        switch (target.Race)
+                        for (int i = 0; i < col; i++)
                         {
-                            case ObjectType.Monster:
-                            case ObjectType.Player:
-                                //Only targets
-                                if (target.IsAttackTarget(player))
+                            Point startPoint = loc[i];
+                            for (int j = 0; j < row; j++)
+                            {
+                                Point hitPoint = Functions.PointMove(startPoint, direction, j);
+
+                                if (!ValidPoint(hitPoint)) continue;
+
+                                cell = GetCell(hitPoint);
+
+                                if (cell.Objects == null) continue;
+
+                                for (int k = 0; k < cell.Objects.Count; k++)
                                 {
-                                    if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
-                                        player.LevelMagic(magic);
-                                    return;
+                                    MapObject target = cell.Objects[k];
+                                    switch (target.Race)
+                                    {
+                                        case ObjectType.Monster:
+                                        case ObjectType.Player:
+                                            if (target.IsAttackTarget(player))
+                                            {
+                                                //Only targets
+                                                if (target.Attacked(player, j <= 1 ? nearDamage : farDamage, DefenceType.MAC, false) > 0)
+                                                {
+                                                    if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 20) <= magic.Level)
+                                                    {
+                                                        target.ApplyPoison(new Poison
+                                                        {
+                                                            Owner = player,
+                                                            Duration = target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
+                                                            PType = PoisonType.Slow,
+                                                            TickSpeed = 1000,
+                                                        }, player);
+                                                        target.OperateTime = 0;
+                                                    }
+
+                                                    if (player.Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 40) <= magic.Level)
+                                                    {
+                                                        target.ApplyPoison(new Poison
+                                                        {
+                                                            Owner = player,
+                                                            Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(player.Freezing),
+                                                            PType = PoisonType.Frozen,
+                                                            TickSpeed = 1000,
+                                                        }, player);
+                                                        target.OperateTime = 0;
+                                                    }
+
+                                                    train = true;
+                                                }
+                                            }
+                                            break;
+                                    }
                                 }
-                                break;
+                            }
                         }
                     }
+
                     break;
 
                 #endregion
@@ -1504,7 +1605,7 @@ namespace Server.MirEnvir
                                         if (target.IsAttackTarget(player))
                                         {
                                             target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = value, TickSpeed = 1000, Value = value2 }, player);
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Value = value2 });
+                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ value2 } });
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1520,7 +1621,7 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region ExplosiveTrap           ArcherSpells - Explosive Trap
+                #region ExplosiveTrap
 
                 case Spell.ExplosiveTrap:
                     value = (int)data[2];
@@ -1622,12 +1723,22 @@ namespace Server.MirEnvir
                                                     break;
                                             }
 
-                                            int tempValue = value + (magic.Level + 1) * 2;
+                                            int tempValue = 0;
 
                                             if (poison == PoisonType.Green)
+                                            {
                                                 tempValue = value / 15 + magic.Level + 1;
+                                            }
+                                            else
+                                            {
+                                                tempValue = value + (magic.Level + 1) * 2;
+                                            }
+
                                             if (poison != PoisonType.None)
-                                                target.ApplyPoison(new Poison { PType = poison, Duration = value + (magic.Level + 1) * 5, TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                            {
+                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                            }
+                                            
                                             if (target.Race == ObjectType.Player)
                                             {
                                                 PlayerObject tempOb = (PlayerObject)target;
@@ -1700,7 +1811,7 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region OneWithNature           ArcherSpells - OneWithNature
+                #region OneWithNature
 
                 case Spell.OneWithNature:
                     value = (int)data[2];
@@ -1769,12 +1880,12 @@ namespace Server.MirEnvir
                     if (hasVampBuff)//Vampire Effect
                     {
                         //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Value = value, Visible = true, ObjectID = player.ObjectID });
+                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
                     }
                     if (hasPoisonBuff)//Poison Effect
                     {
                         //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Value = value, Visible = true, ObjectID = player.ObjectID });
+                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
                     }
                     break;
 
@@ -1795,6 +1906,89 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
+
+                #region Portal
+
+                case Spell.Portal:                  
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    spellOb = new SpellObject
+                    {
+                        Spell = Spell.Portal,
+                        Value = 0,
+                        ExpireTime = Envir.Time + value * 1000,
+                        TickSpeed = 2000,
+                        Caster = player,
+                        CurrentLocation = location,
+                        CurrentMap = this,
+                    };
+
+                    if (player.PortalObjectsArray[0] == null)
+                    {
+                        player.PortalObjectsArray[0] = spellOb;
+                    }
+                    else
+                    {
+                        player.PortalObjectsArray[1] = spellOb;
+                        player.PortalObjectsArray[1].ExitMap = player.PortalObjectsArray[0].CurrentMap;
+                        player.PortalObjectsArray[1].ExitCoord = player.PortalObjectsArray[0].CurrentLocation;
+
+                        player.PortalObjectsArray[0].ExitMap = player.PortalObjectsArray[1].CurrentMap;
+                        player.PortalObjectsArray[0].ExitCoord = player.PortalObjectsArray[1].CurrentLocation;
+                    }
+
+                    AddObject(spellOb);
+                    spellOb.Spawned();
+                    train = true;
+                    break;
+
+                #endregion
+
+                #region DelayedExplosion
+
+                case Spell.DelayedExplosion:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    for (int y = location.Y - 1; y <= location.Y + 1; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 1; x <= location.X + 1; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        //Only targets
+                                        if (target.IsAttackTarget(player))
+                                        {
+                                            if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
+                                                train = false;//wouldnt want to make the skill give twice the points
+                                        }
+                                        break;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    break;
+
+                #endregion
             }
 
             if (train)
@@ -1804,7 +1998,11 @@ namespace Server.MirEnvir
 
         public void AddObject(MapObject ob)
         {
-            if (ob.Race == ObjectType.Player) Players.Add((PlayerObject)ob);
+            if (ob.Race == ObjectType.Player)
+            {
+                Players.Add((PlayerObject)ob);
+                InactiveTime = Envir.Time;
+            }
             if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
@@ -1843,6 +2041,13 @@ namespace Server.MirEnvir
             }
         }
 
+        public bool Inactive(int count = 5)
+        {
+            //temporary test for server speed. Stop certain processes if no players.
+            if (InactiveCount > count) return true;
+
+            return false;
+        }
     }
     public class Cell
     {
@@ -1915,7 +2120,5 @@ namespace Server.MirEnvir
                 Route.Add(info);
             }
         }
-
-
     }
 }

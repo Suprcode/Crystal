@@ -155,7 +155,7 @@ namespace Server.MirNetwork
         {
             if (_client == null || !_client.Connected)
             {
-                Disconnect();
+                Disconnect(20);
                 return;
             }
 
@@ -172,7 +172,7 @@ namespace Server.MirNetwork
 
             if (SMain.Envir.Time > TimeOutTime)
             {
-                Disconnect();
+                Disconnect(21);
                 return;
             }
 
@@ -197,7 +197,7 @@ namespace Server.MirNetwork
                     ClientVersion((C.ClientVersion) p);
                     break;
                 case (short)ClientPacketIds.Disconnect:
-                    Disconnect();
+                    Disconnect(22);
                     break;
                 case (short)ClientPacketIds.KeepAlive: // Keep Alive
                     return;
@@ -239,6 +239,24 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.StoreItem:
                     StoreItem((C.StoreItem) p);
+                    break;
+                case (short)ClientPacketIds.DepositRefineItem:
+                    DepositRefineItem((C.DepositRefineItem)p);
+                    break;
+                case (short)ClientPacketIds.RetrieveRefineItem:
+                    RetrieveRefineItem((C.RetrieveRefineItem)p);
+                    break;
+                case (short)ClientPacketIds.RefineCancel:
+                    RefineCancel((C.RefineCancel)p);
+                    break;
+                case (short)ClientPacketIds.RefineItem:
+                    RefineItem((C.RefineItem)p);
+                    break;
+                case (short)ClientPacketIds.CheckRefine:
+                    CheckRefine((C.CheckRefine)p);
+                    break;
+                case (short)ClientPacketIds.ReplaceWedRing:
+                    ReplaceWedRing((C.ReplaceWedRing)p);
                     break;
                 case (short)ClientPacketIds.DepositTradeItem:
                     DepositTradeItem((C.DepositTradeItem)p);
@@ -384,6 +402,33 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GuildWarReturn:
                     GuildWarReturn((C.GuildWarReturn)p);
                     return;
+                case (short)ClientPacketIds.MarriageRequest:
+                    MarriageRequest((C.MarriageRequest)p);
+                    return;
+                case (short)ClientPacketIds.MarriageReply:
+                    MarriageReply((C.MarriageReply)p);
+                    return;
+                case (short)ClientPacketIds.ChangeMarriage:
+                    ChangeMarriage((C.ChangeMarriage)p);
+                    return;
+                case (short)ClientPacketIds.DivorceRequest:
+                    DivorceRequest((C.DivorceRequest)p);
+                    return;
+                case (short)ClientPacketIds.DivorceReply:
+                    DivorceReply((C.DivorceReply)p);
+                    return;
+                case (short)ClientPacketIds.AddMentor:
+                    AddMentor((C.AddMentor)p);
+                    return;
+                case (short)ClientPacketIds.MentorReply:
+                    MentorReply((C.MentorReply)p);
+                    return;
+                case (short)ClientPacketIds.AllowMentor:
+                    AllowMentor((C.AllowMentor)p);
+                    return;
+                case (short)ClientPacketIds.CancelMentor:
+                    CancelMentor((C.CancelMentor)p);
+                    return;
                 case (short)ClientPacketIds.TradeRequest:
                     TradeRequest((C.TradeRequest)p);
                     return;
@@ -421,12 +466,15 @@ namespace Server.MirNetwork
                     ShareQuest((C.ShareQuest)p);
                     break;
                 case (short)ClientPacketIds.AcceptReincarnation:
-                    Revive();
+                    AcceptReincarnation();
+                    break;
+                case (short)ClientPacketIds.CancelReincarnation:
+                     CancelReincarnation();
                     break;
                 case (short)ClientPacketIds.CombineItem:
                     CombineItem((C.CombineItem)p);
                     break;
-                case (short)ClientPacketIds.SetConcentration://ArcherSpells - Elemental system
+                case (short)ClientPacketIds.SetConcentration:
                     SetConcentration((C.SetConcentration)p);
                     break;
                 case (short)ClientPacketIds.AwakeningNeedMaterials:
@@ -468,12 +516,36 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MailCost:
                     MailCost((C.MailCost)p);
                     break;
+                case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
+                    UpdateIntelligentCreature((C.UpdateIntelligentCreature)p);
+                    break;
+                case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
+                    IntelligentCreaturePickup((C.IntelligentCreaturePickup)p);
+                    break;
+                case (short)ClientPacketIds.AddFriend:
+                    AddFriend((C.AddFriend)p);
+                    break;
+                case (short)ClientPacketIds.RemoveFriend:
+                    RemoveFriend((C.RemoveFriend)p);
+                    break;
+                case (short)ClientPacketIds.RefreshFriends:
+                    {
+                        if (Stage != GameStage.Game) return;
+                        Player.GetFriends();
+                        break;
+                    }
+                case (short)ClientPacketIds.AddMemo:
+                    AddMemo((C.AddMemo)p);
+                    break;
+                case (short)ClientPacketIds.GuildBuffUpdate:
+                    GuildBuffUpdate((C.GuildBuffUpdate)p);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        public void SoftDisconnect()
+        public void SoftDisconnect(byte reason)
         {
             Stage = GameStage.Disconnected;
             TimeDisconnected = SMain.Envir.Time;
@@ -481,7 +553,7 @@ namespace Server.MirNetwork
             lock (Envir.AccountLock)
             {
                 if (Player != null)
-                    Player.StopGame();
+                    Player.StopGame(reason);
 
                 if (Account != null && Account.Connection == this)
                     Account.Connection = null;
@@ -489,7 +561,7 @@ namespace Server.MirNetwork
 
             Account = null;
         }
-        public void Disconnect()
+        public void Disconnect(byte reason)
         {
             if (!Connected) return;
 
@@ -503,7 +575,7 @@ namespace Server.MirNetwork
             lock (Envir.AccountLock)
             {
                 if (Player != null)
-                    Player.StopGame();
+                    Player.StopGame(reason);
 
                 if (Account != null && Account.Connection == this)
                     Account.Connection = null;
@@ -525,7 +597,7 @@ namespace Server.MirNetwork
             if (!Connected)
             {
                 Disconnecting = true;
-                SoftDisconnect();
+                SoftDisconnect(reason);
                 return;
             }
             
@@ -536,7 +608,7 @@ namespace Server.MirNetwork
             data.AddRange(new S.Disconnect { Reason = reason }.GetPacketBytes());
 
             BeginSend(data);
-            SoftDisconnect();
+            SoftDisconnect(reason);
         }
 
         private void ClientVersion(C.ClientVersion p)
@@ -553,7 +625,7 @@ namespace Server.MirNetwork
                     data.AddRange(new S.ClientVersion {Result = 0}.GetPacketBytes());
 
                     BeginSend(data);
-                    SoftDisconnect();
+                    SoftDisconnect(10);
                     SMain.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
@@ -620,7 +692,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Select) return;
 
-            if (!Settings.AllowStartGame)
+            if (!Settings.AllowStartGame && (Account == null || (Account != null && !Account.AdminAccount)))
             {
                 Enqueue(new S.StartGame { Result = 0 });
                 return;
@@ -683,7 +755,7 @@ namespace Server.MirNetwork
                 return;
             }
 
-            Player.StopGame();
+            Player.StopGame(23);
 
             Stage = GameStage.Select;
             Player = null;
@@ -744,12 +816,56 @@ namespace Server.MirNetwork
 
             Player.StoreItem(p.From, p.To);
         }
+
+        private void DepositRefineItem(C.DepositRefineItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DepositRefineItem(p.From, p.To);
+        }
+
+        private void RetrieveRefineItem(C.RetrieveRefineItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RetrieveRefineItem(p.From, p.To);
+        }
+
+        private void RefineCancel(C.RefineCancel p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RefineCancel();
+        }
+
+        private void RefineItem(C.RefineItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RefineItem(p.UniqueID);
+        }
+
+        private void CheckRefine(C.CheckRefine p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.CheckRefine(p.UniqueID);
+        }
+
+        private void ReplaceWedRing(C.ReplaceWedRing p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.ReplaceWeddingRing(p.UniqueID);
+        }
+
         private void DepositTradeItem(C.DepositTradeItem p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.DepositTradeItem(p.From, p.To);
         }
+        
         private void RetrieveTradeItem(C.RetrieveTradeItem p)
         {
             if (Stage != GameStage.Game) return;
@@ -850,7 +966,7 @@ namespace Server.MirNetwork
             else
                 Player.Attack(p.Direction, p.Spell);
         }
-        private void RangeAttack(C.RangeAttack p) //ArcherTest
+        private void RangeAttack(C.RangeAttack p)
         {
             if (Stage != GameStage.Game) return;
 
@@ -1063,6 +1179,90 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
             Player.GuildWarReturn(p.Name);
         }
+
+
+        private void MarriageRequest(C.MarriageRequest p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarriageRequest();
+        }
+
+        private void MarriageReply(C.MarriageReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarriageReply(p.AcceptInvite);
+        }
+
+        private void ChangeMarriage(C.ChangeMarriage p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            if (Player.Info.Married == 0)
+            {
+                Player.AllowMarriage = !Player.AllowMarriage;
+                if (Player.AllowMarriage)
+                    Player.ReceiveChat("You're now allowing marriage requests.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking marriage requests.", ChatType.Hint);
+            }
+            else
+            {
+                Player.AllowLoverRecall = !Player.AllowLoverRecall;
+                if (Player.AllowLoverRecall)
+                    Player.ReceiveChat("You're now allowing recall from lover.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking recall from lover.", ChatType.Hint);
+            }
+        }
+
+        private void DivorceRequest(C.DivorceRequest p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DivorceRequest();
+        }
+
+        private void DivorceReply(C.DivorceReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DivorceReply(p.AcceptInvite);
+        }
+
+        private void AddMentor(C.AddMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.AddMentor(p.Name);
+        }
+
+        private void MentorReply(C.MentorReply p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MentorReply(p.AcceptInvite);
+        }
+
+        private void AllowMentor(C.AllowMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+                Player.AllowMentor = !Player.AllowMentor;
+                if (Player.AllowMentor)
+                    Player.ReceiveChat("You're now allowing mentor requests.", ChatType.Hint);
+                else
+                    Player.ReceiveChat("You're now blocking mentor requests.", ChatType.Hint);
+        }
+
+        private void CancelMentor(C.CancelMentor p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MentorBreak(true);
+        }
+
         private void TradeRequest(C.TradeRequest p)
         {
             if (Stage != GameStage.Game) return;
@@ -1142,11 +1342,25 @@ namespace Server.MirNetwork
             Player.ShareQuest(p.QuestIndex);
         }
 
-        private void Revive()
+        private void AcceptReincarnation()
         {
             if (Stage != GameStage.Game) return;
 
-            Player.Revive((uint)Player.MaxHP / 2, true);
+            if (Player.ReincarnationHost != null && Player.ReincarnationHost.ReincarnationReady)
+            {
+                Player.Revive((uint)Player.MaxHP / 2, true);
+                Player.ReincarnationHost = null;
+                return;
+            }
+
+            Player.ReceiveChat("Reincarnation failed", ChatType.System);
+        }
+
+        private void CancelReincarnation()
+        {
+            if (Stage != GameStage.Game) return;
+            Player.ReincarnationExpireTime = SMain.Envir.Time;
+
         }
 
         private void CombineItem(C.CombineItem p)
@@ -1156,7 +1370,7 @@ namespace Server.MirNetwork
             Player.CombineItem(p.IDFrom, p.IDTo);
         }
 
-        private void SetConcentration(C.SetConcentration p)//ArcherSpells - Elemental system
+        private void SetConcentration(C.SetConcentration p)
         {
             if (Stage != GameStage.Game) return;
 
@@ -1247,6 +1461,84 @@ namespace Server.MirNetwork
             uint cost = Player.GetMailCost(p.ItemsIdx, p.Gold, p.Stamped);
 
             Enqueue(new S.MailCost { Cost = cost });
+        }
+
+        private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)//IntelligentCreature
+        {
+            if (Stage != GameStage.Game) return;
+
+            ClientIntelligentCreature petUpdate = p.Creature;
+            if (petUpdate == null) return;
+
+            if (p.ReleaseMe)
+            {
+                Player.ReleaseIntelligentCreature(petUpdate.PetType);
+                return;
+            }
+            else if (p.SummonMe)
+            {
+                Player.SummonIntelligentCreature(petUpdate.PetType);
+                return;
+            }
+            else if (p.UnSummonMe)
+            {
+                Player.UnSummonIntelligentCreature(petUpdate.PetType);
+                return;
+            }
+            else
+            {
+                //Update the creature info
+                for (int i = 0; i < Player.Info.IntelligentCreatures.Count; i++)
+                {
+                    if (Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
+                    {
+                        Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName;
+                        Player.Info.IntelligentCreatures[i].SlotIndex = petUpdate.SlotIndex;
+                        Player.Info.IntelligentCreatures[i].Filter = petUpdate.Filter;
+                        Player.Info.IntelligentCreatures[i].petMode = petUpdate.petMode;
+                    }
+                    else continue;
+                }
+
+                if (Player.CreatureSummoned)
+                {
+                    if (Player.SummonedCreatureType == petUpdate.PetType)
+                        Player.UpdateSummonedCreature(petUpdate.PetType);
+                }
+            }
+        }
+
+        private void IntelligentCreaturePickup(C.IntelligentCreaturePickup p)//IntelligentCreature
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.IntelligentCreaturePickup(p.MouseMode, p.Location);
+        }
+
+        private void AddFriend(C.AddFriend p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.AddFriend(p.Name, p.Blocked);
+        }
+
+        private void RemoveFriend(C.RemoveFriend p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RemoveFriend(p.CharacterIndex);
+        }
+
+        private void AddMemo(C.AddMemo p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.AddMemo(p.CharacterIndex, p.Memo);
+        }
+        private void GuildBuffUpdate(C.GuildBuffUpdate p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.GuildBuffUpdate(p.Action,p.Id);
         }
     }
 }

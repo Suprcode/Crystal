@@ -15,8 +15,6 @@ namespace Server
         public SMain()
         {
             InitializeComponent();
-            EditEnvir.LoadDB();
-            Envir.Start();
 
             AutoResize();
         }
@@ -67,10 +65,22 @@ namespace Server
             try
             {
                 Text = string.Format("Total: {0}, Real: {1}", Envir.LastCount, Envir.LastRealCount);
-
                 PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
                 MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
                 ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
+
+                if (Settings.Multithreaded && (Envir.MobThreads != null))
+                {
+                    CycleDelayLabel.Text = string.Format("CycleDelays: {0:0000}", Envir.LastRunTime);
+                    for (int i = 0; i < Envir.MobThreads.Length; i++)
+                    {
+                        if (Envir.MobThreads[i] == null) break;
+                        CycleDelayLabel.Text = CycleDelayLabel.Text + string.Format("|{0:0000}", Envir.MobThreads[i].LastRunTime);
+
+                    }
+                }
+                else
+                    CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
 
                 while (!MessageLog.IsEmpty)
                 {
@@ -303,6 +313,47 @@ namespace Server
             SystemInfoForm form = new SystemInfoForm(1);
 
             form.ShowDialog();
+        }
+
+        private void goodsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(2);
+
+            form.ShowDialog();
+        }
+
+        private void relationshipToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(4);
+
+            form.ShowDialog();
+        }
+
+        private void refiningToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(3);
+
+            form.ShowDialog();
+        }
+
+        private void mentorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(5);
+
+            form.ShowDialog();
+        }
+
+        private void magicInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MagicInfoForm form = new MagicInfoForm();
+            form.ShowDialog();
+        }
+
+        private void SMain_Load(object sender, EventArgs e)
+        {
+            EditEnvir.LoadDB();
+            Envir.Start();
+            AutoResize();
         }
     }
 }

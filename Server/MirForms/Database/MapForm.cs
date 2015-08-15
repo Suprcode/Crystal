@@ -56,7 +56,7 @@ namespace Server.MirForms
                     int bmi = mapAttributes.FindIndex(x => x.StartsWith("BIGMAP(".ToUpper())); // BIGMAP() placement in list of parameters
                     int mli = mapAttributes.FindIndex(x => x.StartsWith("MAPLIGHT(".ToUpper())); // MAPLIGHT() placement in list of parameters
                     int minei = mapAttributes.FindIndex(x => x.StartsWith("MINE(".ToUpper())); // MINE() placement in list of parameters
-
+                    int musici = mapAttributes.FindIndex(x => x.StartsWith("MUSIC(".ToUpper()));
                     newMapInfo.NoTeleport = mapAttributes.Any(s => s.Contains("NOTELEPORT".ToUpper()));
                     newMapInfo.NoReconnect = mapAttributes.Any(x => x.StartsWith("NORECONNECT(".ToUpper()));
                     newMapInfo.NoRandom = mapAttributes.Any(s => s.Contains("NORANDOMMOVE".ToUpper()));
@@ -76,6 +76,7 @@ namespace Server.MirForms
                     newMapInfo.BigMap = mapAttributes.Any(x => x.StartsWith("BIGMAP(".ToUpper()));
                     newMapInfo.Mine = mapAttributes.Any(s => s.Contains("MINE(".ToUpper()));
                     newMapInfo.MapLight = mapAttributes.Any(s => s.Contains("MAPLIGHT(".ToUpper()));
+                    newMapInfo.Music = mapAttributes.Any(s => s.Contains("MUSIC(".ToUpper()));
                     newMapInfo.Light = LightSetting.Normal;
 
 
@@ -100,6 +101,9 @@ namespace Server.MirForms
                         newMapInfo.MiniMapNumber = Convert.ToUInt16(mapAttributes[mmi].TrimStart("MINIMAP(".ToCharArray()).TrimEnd(')'));
                     if (newMapInfo.BigMap == true) // If there is a BIGMAP attribute get its value
                         newMapInfo.BigMapNumber = Convert.ToUInt16(mapAttributes[bmi].TrimStart("BIGMAP(".ToCharArray()).TrimEnd(')'));
+
+                    if (newMapInfo.Music == true)
+                        newMapInfo.MusicNumber = Convert.ToUInt16(mapAttributes[musici].TrimStart("MUSIC(".ToCharArray()).TrimEnd(')'));
 
                     if (lighti != -1) // Check if there is a LIGHT attribute and get its value
                     {
@@ -257,7 +261,8 @@ namespace Server.MirForms
 
         public ushort
             MiniMapNumber = 0,
-            BigMapNumber = 0;
+            BigMapNumber = 0,
+            MusicNumber = 0;
 
         public string
             MapFile = string.Empty,
@@ -286,6 +291,7 @@ namespace Server.MirForms
             MiniMap = false,
             BigMap = false,
             MapLight = false,
+            Music = false,
             Mine = false;
 
         public List<MapMovements>

@@ -77,7 +77,14 @@ namespace Server.MirObjects.Monsters
 
             ChangeHP(-1);
             return 1;
+        
         }
+
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
+        }
+
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             int armour = 0;
@@ -121,7 +128,7 @@ namespace Server.MirObjects.Monsters
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
-            attacker.GatherElement();//ArcherSpells - Elemental system
+            attacker.GatherElement();
             ChangeHP(-1);
 
             return 1;

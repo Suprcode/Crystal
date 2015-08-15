@@ -16,10 +16,12 @@ namespace Server
                             ExportPath = @".\Exports\",
                             GuildPath = @".\Guilds\",
                             NPCPath = EnvirPath + @".\NPCs\",
+                            GoodsPath = EnvirPath + @".\Goods\",
                             QuestPath = EnvirPath + @".\Quests\",
                             DropPath = EnvirPath + @".\Drops\",
                             RoutePath = EnvirPath + @".\Routes\",
-                            NameListPath = EnvirPath + @".\NameLists\";
+                            NameListPath = EnvirPath + @".\NameLists\",
+                            ReportPath = @".\Reports\";
 
 
 
@@ -31,9 +33,14 @@ namespace Server
         public static bool CheckVersion = true;
         public static byte[] VersionHash;
         public static string GMPassword = "C#Mir 4.0";
+        public static bool Multithreaded = true;
+        public static int ThreadLimit = 2;
+
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
 	    public static string AwakeningDropFilename = "00Awakening";
+        public static string StrongboxDropFilename = "00Strongbox";
+        public static string BlackstoneDropFilename = "00Blackstone";
 
         //Network
         public static string IPAddress = "127.0.0.1";
@@ -54,10 +61,13 @@ namespace Server
                            AllowCreateAssassin = true,
                            AllowCreateArcher = true;
 
+        public static int AllowedResolution = 1024;
+
         //Optional
         public static bool SafeZoneBorder = false,
                            SafeZoneHealing = false,
-                           GatherOrbsPerLevel = true;
+                           GatherOrbsPerLevel = true,
+                           ExpMobLevelDifference = true;
 
         //Database
         public static int SaveDelay = 5;
@@ -74,6 +84,9 @@ namespace Server
                           DropRange = 4,
                           DropStackSize = 5,
                           PKDelay = 12;
+
+        public static long PetTimeOut = 5;
+        public static bool PetSave = false;
 
         public static string SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
@@ -94,17 +107,28 @@ namespace Server
                              BombSpiderName = "BombSpider",
                              CloneName = "Clone",
                              AssassinCloneName = "AssassinClone",
-                             VampireName = "VampireSpider",//SummonVampire
-                             ToadName = "SpittingToad",//SummonToad
-                             SnakeTotemName = "SnakeTotem",//SummonSnakes Totem
-                             SnakesName = "CharmedSnake";//SummonSnakes
+                             VampireName = "VampireSpider",
+                             ToadName = "SpittingToad",
+                             SnakeTotemName = "SnakeTotem",
+                             SnakesName = "CharmedSnake";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
                              ParalysisRing = "Paralysis";
 
-        
-        //Fishing settings
+        public static string PKTownMapName = "3";
+        public static int PKTownPositionX = 848,
+                          PKTownPositionY = 677;
+
+        public static uint MaxDropGold = 2000;
+        public static bool DropGold = true;
+
+
+        //IntelligentCreature
+        public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan" };
+        public static string CreatureBlackStoneName = "BlackCreatureStone";
+
+        //Fishing Settings
         public static int FishingAttempts = 30;
         public static int FishingSuccessStart = 10;
         public static int FishingSuccessMultiplier = 10;
@@ -118,6 +142,42 @@ namespace Server
         public static bool MailFreeWithStamp = true;
         public static uint MailCostPer1KGold = 100;
         public static uint MailItemInsurancePercentage = 5;
+
+        //Refine Settings
+        public static bool OnlyRefineWeapon = true;
+        public static byte RefineBaseChance = 20;
+        public static int RefineTime = 20;
+        public static byte RefineIncrease = 1;
+        public static byte RefineCritChance = 10;
+        public static byte RefineCritIncrease = 2;
+        public static byte RefineWepStatReduce = 6;
+        public static byte RefineItemStatReduce = 15;
+        public static int RefineCost = 125;
+
+        public static string RefineOreName = "BlackIronOre";
+
+        //Marriage Settings
+        public static int LoverEXPBonus = 5;
+        public static int MarriageCooldown = 7;
+        public static bool WeddingRingRecall = true;
+        public static int MarriageLevelRequired = 10;
+        public static int ReplaceWedRingCost = 125;
+
+        //Mentor Settings
+        public static byte MentorLevelGap = 10;
+        public static bool MentorSkillBoost = true;
+        public static byte MentorLength = 7;
+        public static byte MentorDamageBoost = 10;
+        public static byte MentorExpBoost = 10;
+        public static byte MenteeExpBank = 1;
+
+
+        //Goods Settings
+        public static bool GoodsOn = true;
+        public static uint GoodsMaxStored = 50;
+        public static uint GoodsBuyBackTime = 60;
+        public static uint GoodsBuyBackMaxStored = 20;
+
 
         //character settings
         private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
@@ -142,13 +202,14 @@ namespace Server
                     HealthRegenWeight = 10,
                     MaxManaRegen = 8,
                     ManaRegenWeight = 10,
-                    MaxPoisonRecovery = 6;
+                    MaxPoisonRecovery = 6,
+                    MaxLuck = 10;
 
         public static Boolean PvpCanResistMagic = false,
                               PvpCanResistPoison = false,
                               PvpCanFreeze = false;
 
-        //guild related settings
+        //Guild related settings
         public static byte Guild_RequiredLevel = 22, Guild_PointPerLevel = 0;
         public static float Guild_ExpRate = 0.01f;
         public static uint Guild_WarCost = 3000;
@@ -157,7 +218,7 @@ namespace Server
         public static List<ItemVolume> Guild_CreationCostList = new List<ItemVolume>();
         public static List<long> Guild_ExperienceList = new List<long>();
         public static List<int> Guild_MembercapList = new List<int>();
-        public static List<GuildBuff> Guild_BuffList = new List<GuildBuff>();
+        public static List<GuildBuffInfo> Guild_BuffList = new List<GuildBuffInfo>();
 
         public static void LoadVersion()
         {
@@ -181,6 +242,8 @@ namespace Server
             CheckVersion = Reader.ReadBoolean("General", "CheckVersion", CheckVersion);
             RelogDelay = Reader.ReadUInt16("General", "RelogDelay", RelogDelay);
             GMPassword = Reader.ReadString("General", "GMPassword", GMPassword);
+            Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
+            ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -197,11 +260,13 @@ namespace Server
             AllowStartGame = Reader.ReadBoolean("Permission", "AllowStartGame", AllowStartGame);
             AllowCreateAssassin = Reader.ReadBoolean("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             AllowCreateArcher = Reader.ReadBoolean("Permission", "AllowCreateArcher", AllowCreateArcher);
+            AllowedResolution = Reader.ReadInt32("Permission", "MaxResolution", AllowedResolution);
 
             //Optional
             SafeZoneBorder = Reader.ReadBoolean("Optional", "SafeZoneBorder", SafeZoneBorder);
             SafeZoneHealing = Reader.ReadBoolean("Optional", "SafeZoneHealing", SafeZoneHealing);
             GatherOrbsPerLevel = Reader.ReadBoolean("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
+            ExpMobLevelDifference = Reader.ReadBoolean("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
 
             //Database
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
@@ -210,7 +275,9 @@ namespace Server
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
             ExpRate = Reader.ReadSingle("Game", "ExpRate", ExpRate);
             ItemTimeOut = Reader.ReadInt32("Game", "ItemTimeOut", ItemTimeOut);
-            ItemTimeOut = Reader.ReadInt32("Game", "PKDelay", PKDelay);
+            PetTimeOut = Reader.ReadInt64("Game", "PetTimeOut", PetTimeOut);
+            PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
+            PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
             SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName);
             BugBatName = Reader.ReadString("Game", "BugBatName", BugBatName);
             ShinsuName = Reader.ReadString("Game", "ShinsuName", ShinsuName);
@@ -231,14 +298,22 @@ namespace Server
             CloneName = Reader.ReadString("Game", "CloneName", CloneName);
             FishingMonster = Reader.ReadString("Game", "FishMonster", FishingMonster);
             AssassinCloneName = Reader.ReadString("Game", "AssassinCloneName", AssassinCloneName);
-            VampireName = Reader.ReadString("Game", "VampireName", VampireName);//SummonVampire
-            ToadName = Reader.ReadString("Game", "ToadName", ToadName);//SummonToad
-            SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);//SummonSnakes Totem
-            SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);//SummonSnakes
+            VampireName = Reader.ReadString("Game", "VampireName", VampireName);
+            ToadName = Reader.ReadString("Game", "ToadName", ToadName);
+            SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);
+            SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);
 
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
             FireRing = Reader.ReadString("Items", "FireRing", FireRing);
+
+            //PKTown
+            PKTownMapName = Reader.ReadString("PKTown", "PKTownMapName", PKTownMapName);
+            PKTownPositionX = Reader.ReadInt32("PKTown", "PKTownPositionX", PKTownPositionX);
+            PKTownPositionY = Reader.ReadInt32("PKTown", "PKTownPositionY", PKTownPositionY);
+
+            DropGold = Reader.ReadBoolean("DropGold", "DropGold", DropGold);
+            MaxDropGold = Reader.ReadUInt32("DropGold", "MaxDropGold", MaxDropGold);
 
             for (int i = 0; i < ClassBaseStats.Length; i++)
             {
@@ -283,10 +358,16 @@ namespace Server
             MaxManaRegen = Reader.ReadByte("Items", "MaxManaRegen", MaxManaRegen);
             ManaRegenWeight = Reader.ReadByte("Items", "ManaRegenWeight", ManaRegenWeight);
             MaxPoisonRecovery = Reader.ReadByte("Items", "MaxPoisonRecovery", MaxPoisonRecovery);
+            MaxLuck = Reader.ReadByte("Items", "MaxLuck", MaxLuck);
 
             PvpCanResistMagic = Reader.ReadBoolean("Items","PvpCanResistMagic",PvpCanResistMagic);
             PvpCanResistPoison = Reader.ReadBoolean("Items", "PvpCanResistPoison", PvpCanResistPoison);
             PvpCanFreeze = Reader.ReadBoolean("Items", "PvpCanFreeze", PvpCanFreeze);
+
+            //IntelligentCreature
+            for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
+                IntelligentCreatureNameList[i] = Reader.ReadString("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
+            CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             if (!Directory.Exists(EnvirPath))
                 Directory.CreateDirectory(EnvirPath);
@@ -297,6 +378,8 @@ namespace Server
                 Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(NPCPath))
                 Directory.CreateDirectory(NPCPath);
+            if (!Directory.Exists(GoodsPath))
+                Directory.CreateDirectory(GoodsPath);
             if (!Directory.Exists(QuestPath))
                 Directory.CreateDirectory(QuestPath);
             if (!Directory.Exists(DropPath))
@@ -325,6 +408,10 @@ namespace Server
 			LoadAwakeAttribute();
             LoadFishing();
             LoadMail();
+            LoadRefine();
+            LoadMarriage();
+            LoadMentor();
+            LoadGoods();
         }
         public static void Save()
         {
@@ -332,6 +419,8 @@ namespace Server
             Reader.Write("General", "VersionPath", VersionPath);
             Reader.Write("General", "CheckVersion", CheckVersion);
             Reader.Write("General", "RelogDelay", RelogDelay);
+            Reader.Write("General", "Multithreaded", Multithreaded);
+            Reader.Write("General", "ThreadLimit", ThreadLimit);
 
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
@@ -348,11 +437,13 @@ namespace Server
             Reader.Write("Permission", "AllowStartGame", AllowStartGame);
             Reader.Write("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             Reader.Write("Permission", "AllowCreateArcher", AllowCreateArcher);
+            Reader.Write("Permission", "MaxResolution", AllowedResolution);
 
             //Optional
             Reader.Write("Optional", "SafeZoneBorder", SafeZoneBorder);
             Reader.Write("Optional", "SafeZoneHealing", SafeZoneHealing);
             Reader.Write("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
+            Reader.Write("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
 
             //Database
             Reader.Write("Database", "SaveDelay", SaveDelay);
@@ -361,6 +452,8 @@ namespace Server
             Reader.Write("Game", "DropRate", DropRate);
             Reader.Write("Game", "ExpRate", ExpRate);
             Reader.Write("Game", "ItemTimeOut", ItemTimeOut);
+            Reader.Write("Game", "PetTimeOut", PetTimeOut);
+            Reader.Write("Game", "PetSave", PetSave);
             Reader.Write("Game", "PKDelay", PKDelay);
             Reader.Write("Game", "SkeletonName", SkeletonName);
             Reader.Write("Game", "BugBatName", BugBatName);
@@ -392,6 +485,13 @@ namespace Server
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);
+
+            Reader.Write("PKTown", "PKTownMapName", PKTownMapName);
+            Reader.Write("PKTown", "PKTownPositionX", PKTownPositionX);
+            Reader.Write("PKTown", "PKTownPositionY", PKTownPositionY);
+
+            Reader.Write("DropGold", "DropGold", DropGold);
+            Reader.Write("DropGold", "MaxDropGold", MaxDropGold);
 
             for (int i = 0; i < ClassBaseStats.Length; i++)
             {
@@ -436,9 +536,17 @@ namespace Server
             Reader.Write("Items", "MaxManaRegen", MaxManaRegen);
             Reader.Write("Items", "ManaRegenWeight", ManaRegenWeight);
             Reader.Write("Items", "MaxPoisonRecovery", MaxPoisonRecovery);
+            Reader.Write("Items", "MaxLuck", MaxLuck);
+
             Reader.Write("Items", "PvpCanResistMagic", PvpCanResistMagic);
             Reader.Write("Items", "PvpCanResistPoison", PvpCanResistPoison);
             Reader.Write("Items", "PvpCanFreeze", PvpCanFreeze);
+
+            //IntelligentCreature
+            for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
+                Reader.Write("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
+            Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
+
             SaveAwakeAttribute();
         }
 
@@ -753,13 +861,7 @@ namespace Server
             byte TotalBuffs = reader.ReadByte("Guilds", "TotalBuffs", 0);
             for (i = 0; i < TotalBuffs; i++)
             {
-                Guild_BuffList.Add(new GuildBuff()
-                {
-                    Cost = reader.ReadInt32("Buff-" + i.ToString(), "Cost",0),
-                    PointsNeeded = reader.ReadByte("Buff-" + i.ToString(), "PointsNeeded", 0),
-                    RunTime = reader.ReadInt64("Buff-" + i.ToString(), "RunTime", 0),
-                    MinimumLevel = reader.ReadByte("Buff-" + i.ToString(), "MinimumLevel",0)
-                });
+                Guild_BuffList.Add(new GuildBuffInfo(reader, i));
             }
 
 
@@ -792,10 +894,7 @@ namespace Server
             }
             for (i = 0; i < Guild_BuffList.Count; i++)
             {
-                reader.Write("Buff-" + i.ToString(), "Cost", Guild_BuffList[i].Cost);
-                reader.Write("Buff-" + i.ToString(), "PointsNeeded", Guild_BuffList[i].PointsNeeded);
-                reader.Write("Buff-" + i.ToString(), "RunTime", Guild_BuffList[i].RunTime);
-                reader.Write("Buff-" + i.ToString(), "MinimumLevel", Guild_BuffList[i].MinimumLevel);
+                Guild_BuffList[i].save(reader, i);
             }
         }
         public static void LinkGuildCreationItems(List<ItemInfo> ItemList)
@@ -965,6 +1064,121 @@ namespace Server
             reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
         }
 
+        public static void LoadRefine()
+        {
+            if (!File.Exists(ConfigPath + @".\RefineSystem.ini"))
+            {
+                SaveRefine();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
+            OnlyRefineWeapon = reader.ReadBoolean("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
+            RefineBaseChance = reader.ReadByte("Config", "BaseChance", RefineBaseChance);
+            RefineTime = reader.ReadInt32("Config", "Time", RefineTime);
+            RefineIncrease = reader.ReadByte("Config", "StatIncrease", RefineIncrease);
+            RefineCritChance = reader.ReadByte("Config", "CritChance", RefineCritChance);
+            RefineCritIncrease = reader.ReadByte("Config", "CritIncrease", RefineCritIncrease);
+            RefineWepStatReduce = reader.ReadByte("Config", "WepStatReducedChance", RefineWepStatReduce);
+            RefineItemStatReduce = reader.ReadByte("Config", "ItemStatReducedChance", RefineItemStatReduce);
+            RefineCost = reader.ReadInt32("Config", "RefineCost", RefineCost);
+
+            RefineOreName = reader.ReadString("Ore", "OreName", RefineOreName);
+        }
+        public static void SaveRefine()
+        {
+            File.Delete(ConfigPath + @".\RefineSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\RefineSystem.ini");
+            reader.Write("Config", "OnlyRefineWeapon", OnlyRefineWeapon);
+            reader.Write("Config", "BaseChance", RefineBaseChance);
+            reader.Write("Config", "Time", RefineTime);
+            reader.Write("Config", "StatIncrease", RefineIncrease);
+            reader.Write("Config", "CritChance", RefineCritChance);
+            reader.Write("Config", "CritIncrease", RefineCritIncrease);
+            reader.Write("Config", "WepStatReducedChance", RefineWepStatReduce);
+            reader.Write("Config", "ItemStatReducedChance", RefineItemStatReduce);
+            reader.Write("Config", "RefineCost", RefineCost);
+
+            reader.Write("Ore", "OreName", RefineOreName);
+
+        }
+
+        public static void LoadMarriage()
+        {
+            if (!File.Exists(ConfigPath + @".\MarriageSystem.ini"))
+            {
+                SaveMarriage();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\MarriageSystem.ini");
+            LoverEXPBonus = reader.ReadInt32("Config", "EXPBonus", LoverEXPBonus);
+            MarriageCooldown = reader.ReadInt32("Config", "MarriageCooldown", MarriageCooldown);
+            WeddingRingRecall = reader.ReadBoolean("Config", "AllowLoverRecall", WeddingRingRecall);
+            MarriageLevelRequired = reader.ReadInt32("Config", "MinimumLevel", MarriageLevelRequired);
+            ReplaceWedRingCost = reader.ReadInt32("Config", "ReplaceRingCost", ReplaceWedRingCost);
+        }
+        public static void SaveMarriage()
+        {
+            File.Delete(ConfigPath + @".\MarriageSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\MarriageSystem.ini");
+            reader.Write("Config", "EXPBonus", LoverEXPBonus);
+            reader.Write("Config", "MarriageCooldown", MarriageCooldown);
+            reader.Write("Config", "AllowLoverRecall", WeddingRingRecall);
+            reader.Write("Config", "MinimumLevel", MarriageLevelRequired);
+            reader.Write("Config", "ReplaceRingCost", ReplaceWedRingCost); 
+        }
+
+        public static void LoadMentor()
+        {
+            if (!File.Exists(ConfigPath + @".\MentorSystem.ini"))
+            {
+                SaveMarriage();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");
+            MentorLevelGap = reader.ReadByte("Config", "LevelGap", MentorLevelGap);
+            MentorSkillBoost = reader.ReadBoolean("Config", "MenteeSkillBoost", MentorSkillBoost);
+            MentorLength = reader.ReadByte("Config", "MentorshipLength", MentorLength);
+            MentorDamageBoost = reader.ReadByte("Config", "MentorDamageBoost", MentorDamageBoost);
+            MentorExpBoost = reader.ReadByte("Config", "MenteeExpBoost", MentorExpBoost);
+            MenteeExpBank = reader.ReadByte("Config", "PercentXPtoMentor", MenteeExpBank);
+        }
+        public static void SaveMentor()
+        {
+            File.Delete(ConfigPath + @".\MentorSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");
+            reader.Write("Config", "LevelGap", MentorLevelGap);
+            reader.Write("Config", "MenteeSkillBoost", MentorSkillBoost);
+            reader.Write("Config", "MentorshipLength", MentorLength);
+            reader.Write("Config", "MentorDamageBoost", MentorDamageBoost);
+            reader.Write("Config", "MenteeExpBoost", MentorExpBoost);
+            reader.Write("Config", "PercentXPtoMentor", MenteeExpBank);
+        }
+
+
+        public static void LoadGoods()
+        {
+            if (!File.Exists(ConfigPath + @".\GoodsSystem.ini"))
+            {
+                SaveGoods();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\GoodsSystem.ini");
+            GoodsOn = reader.ReadBoolean("Goods", "On", GoodsOn);
+            GoodsMaxStored = reader.ReadUInt32("Goods", "MaxStored", GoodsMaxStored);
+            GoodsBuyBackTime = reader.ReadUInt32("Goods", "BuyBackTime", GoodsBuyBackTime);
+            GoodsBuyBackMaxStored = reader.ReadUInt32("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
+        }
+        public static void SaveGoods()
+        {
+            File.Delete(ConfigPath + @".\GoodsSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\GoodsSystem.ini");
+            reader.Write("Goods", "On", GoodsOn);
+            reader.Write("Goods", "MaxStored", GoodsMaxStored);
+            reader.Write("Goods", "BuyBackTime", GoodsBuyBackTime);
+            reader.Write("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
+        }
 
     }
 }

@@ -111,7 +111,7 @@ namespace Client.MirObjects
                     Blend = true;
                     Repeat = true;
                     break;
-                case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
+                case Spell.ExplosiveTrap:
                     BodyLibrary = Libraries.Magic3;
                     if (info.Param)
                     {
@@ -132,6 +132,23 @@ namespace Client.MirObjects
                     Blend = true;
                     break;
                 case Spell.Trap:
+                    BodyLibrary = Libraries.Magic2;
+                    DrawFrame = 2360;
+                    FrameInterval = 100;
+                    FrameCount = 8;
+                    Blend = true;
+                    break;
+                case Spell.MapLightning:
+                    MapControl.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 600, CurrentLocation));
+                    MirSounds.SoundManager.PlaySound(8301);
+                    break;
+                case Spell.MapLava:
+                    MapControl.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, CurrentLocation) { Blend = false });
+                    MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, CurrentLocation));
+                    MirSounds.SoundManager.PlaySound(8302);
+                    break;
+
+                case Spell.Portal:
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 2360;
                     FrameInterval = 100;

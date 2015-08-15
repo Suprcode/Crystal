@@ -219,7 +219,7 @@ namespace Client.MirObjects
 
     }
 
-    public class InterruptionEffect : Effect//ArcherSpells - Elemental system
+    public class InterruptionEffect : Effect
     {
         public static List<InterruptionEffect> effectlist = new List<InterruptionEffect>();
         bool noProcess = false;
@@ -267,7 +267,7 @@ namespace Client.MirObjects
         }
     }
 
-    public class ElementsEffect : Effect//ArcherSpells - Elemental system
+    public class ElementsEffect : Effect
     {
         int myType;//1 = green orb, 2 = blue orb, 3 = red orb, 4 = mixed orbs
         long killAt;//holds the exp value for 4 orbs : kills all orbs when myType 4 is reached
@@ -319,7 +319,7 @@ namespace Client.MirObjects
         }
     }
 
-    public class DelayedExplosionEffect : Effect//ArcherSpells - DelayedExplosion
+    public class DelayedExplosionEffect : Effect
     {
         public static List<DelayedExplosionEffect> effectlist = new List<DelayedExplosionEffect>();
         public int stage;
@@ -408,7 +408,7 @@ namespace Client.MirObjects
         }
     }
 
-    public class TrackableEffect : Effect//ArcherSpells - BindingShot
+    public class TrackableEffect : Effect
     {
         public static List<TrackableEffect> effectlist = new List<TrackableEffect>();
         public string EffectName = "default";

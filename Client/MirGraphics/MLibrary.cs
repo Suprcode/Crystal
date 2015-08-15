@@ -12,11 +12,11 @@ namespace Client.MirGraphics
         public static bool Loaded;
         public static int Count, Progress;
 
-
         public static readonly MLibrary
             ChrSel = new MLibrary(Settings.DataPath + "ChrSel"),
             Prguse = new MLibrary(Settings.DataPath + "Prguse"),
             Prguse2 = new MLibrary(Settings.DataPath + "Prguse2"),
+            BuffIcon = new MLibrary(Settings.DataPath + "BuffIcon"),
             Help = new MLibrary(Settings.DataPath + "Help"),
             MiniMap = new MLibrary(Settings.DataPath + "MMap"),
             Title = new MLibrary(Settings.DataPath + "Title"),
@@ -62,9 +62,14 @@ namespace Client.MirGraphics
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
                                           Monsters = new MLibrary[369],
-                                          NPCs = new MLibrary[186],
                                           Mounts = new MLibrary[12],
-                                          Fishing = new MLibrary[2];
+                                          NPCs = new MLibrary[200],
+                                          Fishing = new MLibrary[2],
+                                          Pets = new MLibrary[10],
+                                          Transform = new MLibrary[27],
+                                          TransformMounts = new MLibrary[26],
+                                          TransformEffect = new MLibrary[2],
+                                          TransformWeaponEffect = new MLibrary[1];
 
         static Libraries()
         {
@@ -120,12 +125,26 @@ namespace Client.MirGraphics
             for (int i = 0; i < NPCs.Length; i++)
                 NPCs[i] = new MLibrary(Settings.NPCPath + i.ToString("00"));
 
-
             for (int i = 0; i < Mounts.Length; i++)
                 Mounts[i] = new MLibrary(Settings.MountPath + i.ToString("00"));
 
             for (int i = 0; i < Fishing.Length; i++)
                 Fishing[i] = new MLibrary(Settings.FishingPath + i.ToString("00"));
+
+            for (int i = 0; i < Pets.Length; i++)
+                Pets[i] = new MLibrary(Settings.PetsPath + i.ToString("00"));
+
+            for (int i = 0; i < Transform.Length; i++)
+                Transform[i] = new MLibrary(Settings.TransformPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformMounts.Length; i++)
+                TransformMounts[i] = new MLibrary(Settings.TransformMountsPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformEffect.Length; i++)
+                TransformEffect[i] = new MLibrary(Settings.TransformEffectPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformWeaponEffect.Length; i++)
+                TransformWeaponEffect[i] = new MLibrary(Settings.TransformWeaponEffectPath + i.ToString("00"));
 
             #region Maplibs
             //wemade mir2 (allowed from 0-99)
@@ -199,20 +218,36 @@ namespace Client.MirGraphics
 
         static void LoadLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length + 
+            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
-                CHumEffect.Length + 15;
+                ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
+                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 20;
 
             Dragon.Initialize();
             Progress++;
 
+            ChrSel.Initialize();
+            Progress++;
+
+            Prguse.Initialize();
+            Progress++;
+
             Prguse2.Initialize();
             Progress++;
+
+            BuffIcon.Initialize();
+            Progress++;
+
             Help.Initialize();
             Progress++;
 
             MiniMap.Initialize();
             Progress++;
+
+            Title.Initialize();
+            Progress++;
+
             MagIcon.Initialize();
             Progress++;
             MagIcon2.Initialize();
@@ -226,6 +261,7 @@ namespace Client.MirGraphics
             Progress++;
             MagicC.Initialize();
             Progress++;
+
             Effect.Initialize();
             Progress++;
             CustomEffects.Initialize();
@@ -300,7 +336,31 @@ namespace Client.MirGraphics
 
             for (int i = 0; i < AWeaponsR.Length; i++)
             {
-               AWeaponsR[i].Initialize();
+                AWeaponsR[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARArmours.Length; i++)
+            {
+                ARArmours[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARHair.Length; i++)
+            {
+                ARHair[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARWeapons.Length; i++)
+            {
+                ARWeapons[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARWeaponsS.Length; i++)
+            {
+                ARWeaponsS[i].Initialize();
                 Progress++;
             }
 
@@ -310,9 +370,52 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
+            for (int i = 0; i < AHumEffect.Length; i++)
+            {
+                AHumEffect[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < ARHumEffect.Length; i++)
+            {
+                ARHumEffect[i].Initialize();
+                Progress++;
+            }
+
             for (int i = 0; i < Mounts.Length; i++)
             {
                 Mounts[i].Initialize();
+                Progress++;
+            }
+
+
+            for (int i = 0; i < Fishing.Length; i++)
+            {
+                Fishing[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < Pets.Length; i++)
+            {
+                Pets[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < Transform.Length; i++)
+            {
+                Transform[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < TransformEffect.Length; i++)
+            {
+                TransformEffect[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < TransformWeaponEffect.Length; i++)
+            {
+                TransformWeaponEffect[i].Initialize();
                 Progress++;
             }
 
@@ -437,7 +540,6 @@ namespace Client.MirGraphics
             if (_images == null || index < 0 || index >= _images.Length)
                 return Size.Empty;
 
-
             if (_images[index] == null)
             {
                 _fStream.Position = _indexList[index];
@@ -448,6 +550,9 @@ namespace Client.MirGraphics
             {
                 if (!mi.TextureValid)
                 {
+                    if ((mi.Width == 0) || (mi.Height == 0))
+                        return Size.Empty;
+
                     _fStream.Seek(_indexList[index] + 17, SeekOrigin.Begin);
                     mi.CreateTexture(_reader);
                 }

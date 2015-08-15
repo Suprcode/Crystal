@@ -144,6 +144,11 @@ namespace Server.MirObjects.Monsters
             return base.Attacked(attacker, damage, type, damageWeapon);
         }
 
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            return 0;
+        }
+
         public override void ChangeHP(int amount)
         {
             if (ChildRock) return;
