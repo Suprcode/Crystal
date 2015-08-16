@@ -1813,6 +1813,9 @@ namespace Server.MirObjects
 
             Enqueue(new S.DefaultNPC { ObjectID = DefaultNPC.ObjectID });
 
+            Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
+            RequestedGuildBuffInfo = true;
+
             if (Info.Thrusting) Enqueue(new S.SpellToggle { Spell = Spell.Thrusting, CanUse = true });
             if (Info.HalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.HalfMoon, CanUse = true });
             if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.CrossHalfMoon, CanUse = true });
@@ -2925,7 +2928,6 @@ namespace Server.MirObjects
                 SpellRecovery = (byte)Math.Min(byte.MaxValue, SpellRecovery + Buff.Info.BuffMPRegen);
                 ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + Buff.Info.BuffDropRate);
                 GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + Buff.Info.BuffGoldRate);
-
             }
         }
         public void RefreshNameColour()

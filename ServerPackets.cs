@@ -4955,7 +4955,7 @@ namespace ServerPackets
                 ActiveBuffs[i].Save(writer);
             writer.Write(GuildBuffs.Count);
             for (int i = 0; i < GuildBuffs.Count; i++)
-                GuildBuffs[i].save(writer);
+                GuildBuffs[i].Save(writer);
         }
     }
     public sealed class LoverUpdate : Packet

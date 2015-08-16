@@ -117,7 +117,7 @@ namespace Server
                 BufftxtPointsReq.Text = SelectedBuff.PointsRequirement.ToString();
                 BufftxtTimeLimit.Text = SelectedBuff.TimeLimit.ToString();
                 BufftxtActivationCost.Text = SelectedBuff.ActivationCost.ToString();
-                bufftxtIcon.Text = SelectedBuff.ActivationCost.ToString();
+                bufftxtIcon.Text = SelectedBuff.Icon.ToString();
                 BufftxtAc.Text = SelectedBuff.BuffAc.ToString();
                 BufftxtMac.Text = SelectedBuff.BuffMac.ToString();
                 BufftxtDc.Text = SelectedBuff.BuffDc.ToString();
