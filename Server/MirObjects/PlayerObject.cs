@@ -11585,7 +11585,7 @@ namespace Server.MirObjects
 
             PlayerObject player = CurrentMap.Players.SingleOrDefault(x => x.ObjectID == id || x.Pets.Count(y => y.ObjectID == id && y is Monsters.HumanWizard) > 0);
 
-            if (player == null || player.Info == null) return;
+            if (player == null) return;
 
             CharacterInfo Lover = null;
             string loverName = "";
@@ -11593,8 +11593,6 @@ namespace Server.MirObjects
 
             if (Lover != null)
                 loverName = Lover.Name;
-
-            if (player == null) return;
 
             for (int i = 0; i < player.Info.Equipment.Length; i++)
             {
