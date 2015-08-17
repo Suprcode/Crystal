@@ -11583,15 +11583,16 @@ namespace Server.MirObjects
         {
             if (ObjectID == id) return;
 
-
             PlayerObject player = CurrentMap.Players.SingleOrDefault(x => x.ObjectID == id || x.Pets.Count(y => y.ObjectID == id && y is Monsters.HumanWizard) > 0);
 
+            if (player == null || player.Info == null) return;
+
             CharacterInfo Lover = null;
-            String LoverName = "";
+            string loverName = "";
             if (player.Info.Married != 0) Lover = Envir.GetCharacterInfo(player.Info.Married);
 
             if (Lover != null)
-                LoverName = Lover.Name;
+                loverName = Lover.Name;
 
             if (player == null) return;
 
@@ -11600,7 +11601,6 @@ namespace Server.MirObjects
                 UserItem u = player.Info.Equipment[i];
                 if (u == null) continue;
 
-                //CheckItemInfo(u.Info);
                 CheckItem(u);
             }
             string guildname = "";
@@ -11620,7 +11620,7 @@ namespace Server.MirObjects
                 Gender = player.Gender,
                 Class = player.Class,
                 Level = player.Level,
-                LoverName = LoverName
+                LoverName = loverName
             });
         }
         public void RemoveObjects(MirDirection dir, int count)
