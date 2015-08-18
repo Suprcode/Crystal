@@ -166,6 +166,10 @@ namespace AutoPatcher
         public void Download(FileInformation info)
         {
             string fileName = info.FileName.Replace(@"\", "/");
+
+            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
+                fileName += Path.GetExtension(fileName);
+
             try
             {
                 using (WebClient client = new WebClient())
@@ -209,6 +213,10 @@ namespace AutoPatcher
         public byte[] Download(string fileName)
         {
             fileName = fileName.Replace(@"\", "/");
+
+            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
+                fileName += Path.GetExtension(fileName);
+
             try
             {
                 using (WebClient client = new WebClient())
