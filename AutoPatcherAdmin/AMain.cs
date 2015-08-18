@@ -168,7 +168,7 @@ namespace AutoPatcherAdmin
         }
         public void CheckFiles()
         {
-            string[] files = Directory.GetFiles(Settings.Client, "*.*", SearchOption.AllDirectories);
+            string[] files = Directory.GetFiles(Settings.Client, "*.*" ,SearchOption.AllDirectories);
 
             for (int i = 0; i < files.Length; i++)
                 NewList.Add(GetFileInformation(files[i]));
@@ -225,6 +225,9 @@ namespace AutoPatcherAdmin
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
+            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
+                fileName += Path.GetExtension(fileName);
+
             using (WebClient client = new WebClient())
             {
                 client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
@@ -267,36 +270,42 @@ namespace AutoPatcherAdmin
 
                 _stopwatch = Stopwatch.StartNew();
 
-
                 client.UploadDataAsync(new Uri(Settings.Host  + Path.ChangeExtension(fileName, ".gz")), data);
             }
         }
 
         public void CheckDirectory(string directory)
         {
+            string Directory = "";
+            char[] splitChar = { '\\' };
+            string[] DirectoryList = directory.Split(splitChar);
+
+            foreach (string directoryCheck in DirectoryList)
+            {
+                Directory += "\\" + directoryCheck;
             try
-            {
+              {
+                        if (string.IsNullOrEmpty(Directory)) return;
 
-                if (string.IsNullOrEmpty(directory)) return;
+                        FtpWebRequest request = (FtpWebRequest)WebRequest.Create(Settings.Host + Directory + "/");
+                        request.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
+                        request.Method = WebRequestMethods.Ftp.MakeDirectory;
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(Settings.Host + directory + "/");
-                request.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
-                request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                        request.UsePassive = true;
+                        request.UseBinary = true;
+                        request.KeepAlive = false;
+                        FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                        Stream ftpStream = response.GetResponseStream();
 
-                request.UsePassive = true;
-                request.UseBinary = true;
-                request.KeepAlive = false;
-                FtpWebResponse response = (FtpWebResponse) request.GetResponse();
-                Stream ftpStream = response.GetResponseStream();
+                        if (ftpStream != null) ftpStream.Close();
+                        response.Close();
 
-                if (ftpStream != null) ftpStream.Close();
-                response.Close();
-            }
-            catch (WebException ex)
-            {
-                FtpWebResponse response = (FtpWebResponse) ex.Response;
-                response.Close();
-
+              }
+                    catch (WebException ex)
+                    {
+                        FtpWebResponse response = (FtpWebResponse)ex.Response;
+                        response.Close();
+                    }
             }
         }
 
