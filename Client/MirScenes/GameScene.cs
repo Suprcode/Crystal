@@ -16469,7 +16469,6 @@ namespace Client.MirScenes
             };
             CloseButton.Click += (o, e) => Hide();
 
-
             SwitchButton = new MirButton
             {
                 HoverIndex = 115,
@@ -18697,7 +18696,7 @@ namespace Client.MirScenes
 
                 string text = "";
 
-                if (activeBuff != null)
+                if (activeBuff != null && activeBuff.Active)
                 {
                     text = string.Format("Time remaining: {0} minutes", activeBuff.ActiveTimeRemaining);
                 }
