@@ -294,7 +294,6 @@ namespace Server.MirObjects
         }
 
 
-
         public bool GameStarted { get; set; }
 
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing;
@@ -1813,6 +1812,9 @@ namespace Server.MirObjects
 
             Enqueue(new S.DefaultNPC { ObjectID = DefaultNPC.ObjectID });
 
+            Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
+            RequestedGuildBuffInfo = true;
+
             if (Info.Thrusting) Enqueue(new S.SpellToggle { Spell = Spell.Thrusting, CanUse = true });
             if (Info.HalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.HalfMoon, CanUse = true });
             if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.CrossHalfMoon, CanUse = true });
@@ -2925,7 +2927,6 @@ namespace Server.MirObjects
                 SpellRecovery = (byte)Math.Min(byte.MaxValue, SpellRecovery + Buff.Info.BuffMPRegen);
                 ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + Buff.Info.BuffDropRate);
                 GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + Buff.Info.BuffGoldRate);
-
             }
         }
         public void RefreshNameColour()
@@ -16937,7 +16938,6 @@ namespace Server.MirObjects
 
         public void MentorBreak(bool Force = false)
         {
-
             if (Info.Mentor == 0)
             {
                 ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
@@ -16956,36 +16956,23 @@ namespace Server.MirObjects
 
             if (Info.isMentor)
             {
+                RemoveBuff(BuffType.Mentor);
+
                 if (Player != null)
                 {
                     Info.MentorExp += Player.MenteeEXP;
                     Player.MenteeEXP = 0;
-                }
-            }
-            else
-            {
-                if (Player != null)
-                {
-                    Mentor.MentorExp += MenteeEXP;
-                    MenteeEXP = 0;
-                }
-            }
-
-            if (Info.isMentor)
-            {
-                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentor).FirstOrDefault();
-                if (buff != null)
-                {
-                    RemoveBuff(BuffType.Mentor);
                     Player.RemoveBuff(BuffType.Mentee);
                 }
             }
             else
             {
-                Buff buff = Buffs.Where(e => e.Type == BuffType.Mentee).FirstOrDefault();
-                if (buff != null)
+                RemoveBuff(BuffType.Mentee);
+
+                if (Player != null)
                 {
-                    RemoveBuff(BuffType.Mentee);
+                    Mentor.MentorExp += MenteeEXP;
+                    MenteeEXP = 0;
                     Player.RemoveBuff(BuffType.Mentor);
                 }
             }
@@ -17173,13 +17160,19 @@ namespace Server.MirObjects
                 }
             }
         }
+
         public void LogoutMentor()
         {
             if (Info.Mentor == 0) return;
+
             CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
             PlayerObject player = Envir.GetPlayer(Mentor.Name);
+
             if (!Info.isMentor)
+            {
                 Mentor.MentorExp += MenteeEXP;
+            }
+
             if (player != null)
             {
                 player.Enqueue(new S.MentorUpdate { Name = Info.Name, Level = Info.Level, Online = false, MenteeEXP = Mentor.MentorExp });
@@ -17188,7 +17181,6 @@ namespace Server.MirObjects
         }
 
         #endregion
-
     }
 }
 

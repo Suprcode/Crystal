@@ -27,6 +27,7 @@ namespace Client.MirGraphics
             Magic3 = new MLibrary(Settings.DataPath + "Magic3"),
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
+            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill"),
 
             CustomEffects = new MLibrary(Settings.DataPath + "CustomEffects");
         
@@ -222,7 +223,7 @@ namespace Client.MirGraphics
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
-                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 20;
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 21;
 
             Dragon.Initialize();
             Progress++;
@@ -264,6 +265,10 @@ namespace Client.MirGraphics
 
             Effect.Initialize();
             Progress++;
+
+            GuildSkill.Initialize();
+            Progress++;
+
             CustomEffects.Initialize();
             Progress++;
 

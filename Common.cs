@@ -5260,19 +5260,6 @@ public class ItemVolume
     public uint Amount;
 }
 
-//outdated but cant delete it or old db's wont load
-public class GuildBuffOld
-{
-    public GuildBuffOld()
-    { }
-    public GuildBuffOld(BinaryReader reader)
-    {
-        reader.ReadByte();
-        reader.ReadInt64();
-    }
-}
-
-
 public class Rank
 {
     public List<GuildMember> Members = new List<GuildMember>();
@@ -5401,7 +5388,6 @@ public class GuildBuffInfo
 
     }
 
-
     public GuildBuffInfo(BinaryReader reader)
     {
         Id = reader.ReadInt32();
@@ -5460,7 +5446,7 @@ public class GuildBuffInfo
         BuffGoldRate = reader.ReadByte("Buff-" + i.ToString(), "BuffGoldRate",0);
     }
 
-    public void save (InIReader reader, int i)
+    public void Save(InIReader reader, int i)
     {
         reader.Write("Buff-" + i.ToString(), "Id", Id);
         reader.Write("Buff-" + i.ToString(), "Icon", Icon);
@@ -5489,7 +5475,7 @@ public class GuildBuffInfo
         reader.Write("Buff-" + i.ToString(), "BuffGoldRate", BuffGoldRate); ;
     }
 
-    public void save(BinaryWriter writer)
+    public void Save(BinaryWriter writer)
     {
         writer.Write(Id);
         writer.Write(Icon);
@@ -5631,8 +5617,14 @@ public class GuildBuff
     public bool Active = false;
     public int ActiveTimeRemaining;
 
+    public bool UsingGuildSkillIcon
+    {
+        get { return Info != null && Info.Icon < 1000; }
+    }
+
     public GuildBuff()
-    { }
+    {
+    }
 
     public GuildBuff(BinaryReader reader)
     {
@@ -5674,4 +5666,17 @@ public class GuildBuff
     }
 
 }
+
+//outdated but cant delete it or old db's wont load
+public class GuildBuffOld
+{
+    public GuildBuffOld()
+    { }
+    public GuildBuffOld(BinaryReader reader)
+    {
+        reader.ReadByte();
+        reader.ReadInt64();
+    }
+}
+
 #endregion
