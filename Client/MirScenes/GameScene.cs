@@ -9366,8 +9366,6 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
-
-
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;

@@ -432,7 +432,7 @@ namespace Client.MirScenes
                     break;
                 case 4:
                     if (Settings.Resolution != 800)
-                        CMain.SetResolution(Settings.Resolution, (Settings.Resolution / 100) * 75); 
+                        CMain.SetResolution(Settings.Resolution, (int)(Settings.Resolution * 0.75)); 
                     ActiveScene = new GameScene();
                     Dispose();
                     break;
