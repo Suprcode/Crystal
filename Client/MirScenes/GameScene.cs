@@ -9386,6 +9386,7 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Location = new Point(-67, this.Size.Height - 96),
                 Parent = this,
+                Visible = false
             };
             RightCap = new MirImageControl
             {
@@ -9393,7 +9394,14 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Location = new Point(1024, this.Size.Height - 104),
                 Parent = this,
+                Visible = false
             };
+
+            if (Settings.Resolution > 1024)
+            {
+                LeftCap.Visible = true;
+                RightCap.Visible = true;
+            }
 
             InventoryButton = new MirButton
             {
