@@ -4653,7 +4653,7 @@ namespace Client.MirScenes
 
             Buff buff = Buffs.FirstOrDefault(e => e.Type == BuffType.GuildBuff);
 
-            if (p.ActiveBuffs.Any(e => e.Active))
+            if (GuildBuffDialog.EnabledBuffs.Any(e => e.Active))
             {
                 if (buff == null)
                 {

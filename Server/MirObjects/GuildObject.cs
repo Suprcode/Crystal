@@ -692,7 +692,7 @@ namespace Server.MirObjects
         {
             GuildBuff Buff = GetBuff(Id);
             if (Buff == null) return;
-            if (Buff.Active || (Buff.Info.TimeLimit == 0)) return;//no point activating buffs if they have no time limit anyway
+            if (Buff.Active) return;//no point activating buffs if they have no time limit anyway
             if (Gold < Buff.Info.ActivationCost) return;
             Buff.Active = true;
             Buff.ActiveTimeRemaining = Buff.Info.TimeLimit;
