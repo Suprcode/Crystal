@@ -251,8 +251,8 @@ namespace Server.MirObjects
             get
             {
                 return !Dead && Envir.Time > MoveTime && Envir.Time > ActionTime && Envir.Time > ShockTime &&
-                       (Master == null || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.Both) && CurrentPoison != PoisonType.Paralysis
-                      && CurrentPoison != PoisonType.Stun && CurrentPoison != PoisonType.Frozen;
+                       (Master == null || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.Both) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
+                      && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
         protected virtual bool CanAttack
@@ -260,8 +260,8 @@ namespace Server.MirObjects
             get
             {
                 return !Dead && Envir.Time > AttackTime && Envir.Time > ActionTime &&
-                     (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both) && CurrentPoison != PoisonType.Paralysis
-                      && CurrentPoison != PoisonType.Stun && CurrentPoison != PoisonType.Frozen;
+                     (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
+                      && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
 

@@ -169,7 +169,7 @@ namespace Server.MirObjects
         {
             get
             {
-                return !Dead && Envir.Time >= ActionTime && Envir.Time >= AttackTime && CurrentPoison != PoisonType.Paralysis && CurrentPoison != PoisonType.Frozen && Mount.CanAttack && !Fishing;
+                return !Dead && Envir.Time >= ActionTime && Envir.Time >= AttackTime && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
             }
         }
 
@@ -181,8 +181,8 @@ namespace Server.MirObjects
         {
             get
             {
-                return !Dead && Envir.Time >= ActionTime && Envir.Time >= SpellTime && CurrentPoison != PoisonType.Stun &&
-                    CurrentPoison != PoisonType.Paralysis && CurrentPoison != PoisonType.Frozen && Mount.CanAttack && !Fishing;
+                return !Dead && Envir.Time >= ActionTime && Envir.Time >= SpellTime && !CurrentPoison.HasFlag(PoisonType.Stun) &&
+                    !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
             }
         }
 
