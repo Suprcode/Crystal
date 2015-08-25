@@ -51,12 +51,21 @@
     <Compile Include="AMain.Designer.cs">
       <DependentUpon>AMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Config.Designer.cs">
+      <DependentUpon>Config.cs</DependentUpon>
+    </Compile>
     <Compile Include="InIReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <EmbeddedResource Include="AMain.resx">
       <DependentUpon>AMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config.resx">
+      <DependentUpon>Config.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,6 +90,75 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\C#Mir.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Launch_Base.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Launcher_Base.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Green Progress.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NEW Progress End %28Green%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Blue Progress.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NEW Progress End %28Blue%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross Base2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Launch_Hovernew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Launch_Pressednew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross Hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross Pressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross_Base.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross_Hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Config_Hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross_Hover1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross_Pressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cross_Pressed1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Config_Base.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Config_Pressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Config_cON.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ConfigForNow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Radio_On.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Radio_Unactive.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

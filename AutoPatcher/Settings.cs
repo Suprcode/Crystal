@@ -7,6 +7,7 @@ namespace AutoPatcher
     {
         private static readonly InIReader Reader = new InIReader(@".\Mir2Config.ini");
 
+
         public static string Host = @""; //ftp://212.67.209.184
         public static string PatchFileName = @"PList.gz";
 
@@ -14,8 +15,16 @@ namespace AutoPatcher
         public static string Login = string.Empty;
         public static string Password = string.Empty;
         public static bool AllowCleanUp = true;
+        public static string ServerName = string.Empty;
+        public static string BrowserAddress = string.Empty;
+
+        public static string AccountLogin = string.Empty;
+        public static string AccountPassword = string.Empty;
+        public static int Resolution = 1024;
 
         public static string Client;
+        
+
         public static bool AutoStart;
 
         public static void Load()
@@ -30,6 +39,13 @@ namespace AutoPatcher
 
             AllowCleanUp = Reader.ReadBoolean("AutoPatcher", "AllowCleanUp", AllowCleanUp);
             AutoStart = Reader.ReadBoolean("AutoPatcher", "AutoStart", AutoStart);
+
+            ServerName = Reader.ReadString("AutoPatcher", "ServerName", ServerName);
+            BrowserAddress = Reader.ReadString("AutoPatcher", "Website", BrowserAddress);
+
+            AccountLogin = Reader.ReadString("Game", "AccountID", AccountLogin);
+            AccountPassword = Reader.ReadString("Game", "Password", AccountPassword);
+            Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
 
             Client = Application.StartupPath + "\\";
             if (!Host.EndsWith("/")) Host += "/";

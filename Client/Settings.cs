@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System;
 using Client.MirSounds;
+using System.Windows.Forms;
 
 namespace Client
 {
@@ -125,6 +127,20 @@ namespace Client
             FilterGroupChat = false,
             FilterGuildChat = false;
 
+
+        //AutoPatcher
+        public static bool P_Patcher = true;
+        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_PatchFileName = @"PList.gz";
+        public static bool P_NeedLogin = false;
+        public static string P_Login = string.Empty;
+        public static string P_Password = string.Empty;
+        public static string P_ServerName = string.Empty;
+        public static string P_BrowserAddress = string.Empty;
+        public static string P_Client = Application.StartupPath + "\\";
+        public static bool P_AutoStart = false;
+
+
         public static void Load()
         {
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
@@ -188,6 +204,20 @@ namespace Client
             FilterMentorChat = Reader.ReadBoolean("Filter", "FilterMentorChat", FilterMentorChat);
             FilterGroupChat = Reader.ReadBoolean("Filter", "FilterGroupChat", FilterGroupChat);
             FilterGuildChat = Reader.ReadBoolean("Filter", "FilterGuildChat", FilterGuildChat);
+
+            //AutoPatcher
+            P_Patcher = Reader.ReadBoolean("Launcher", "Enabled", P_Patcher);
+            P_Host = Reader.ReadString("Launcher", "Host", P_Host);
+            P_PatchFileName = Reader.ReadString("Launcher", "PatchFile", P_PatchFileName);
+            P_NeedLogin = Reader.ReadBoolean("Launcher", "NeedLogin", P_NeedLogin);
+            P_Login = Reader.ReadString("Launcher", "Login", P_Login);
+            P_Password = Reader.ReadString("Launcher", "Password", P_Password);
+            P_AutoStart = Reader.ReadBoolean("Launcher", "AutoStart", P_AutoStart);
+            P_ServerName = Reader.ReadString("Launcher", "ServerName", P_ServerName);
+            P_BrowserAddress = Reader.ReadString("Launcher", "Browser", P_BrowserAddress);
+
+            if (!P_Host.EndsWith("/")) P_Host += "/";
+            if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
         }
 
         public static void Save()
@@ -204,6 +234,8 @@ namespace Client
             Reader.Write("Sound", "Music", MusicVolume);
 
             //Game
+            Reader.Write("Game", "AccountID", AccountID);
+            Reader.Write("Game", "Password", Password);
             Reader.Write("Game", "SkillMode", SkillMode);
             Reader.Write("Game", "SkillBar", SkillBar);
             Reader.Write("Game", "SkillSet", SkillSet);
@@ -233,6 +265,17 @@ namespace Client
             Reader.Write("Filter", "FilterMentorChat", FilterMentorChat);
             Reader.Write("Filter", "FilterGroupChat", FilterGroupChat);
             Reader.Write("Filter", "FilterGuildChat", FilterGuildChat);
+
+            //AutoPatcher
+            Reader.Write("Launcher", "Enabled", P_Patcher);
+            Reader.Write("Launcher", "Host", P_Host);
+            Reader.Write("Launcher", "PatchFile", P_PatchFileName);
+            Reader.Write("Launcher", "NeedLogin", P_NeedLogin);
+            Reader.Write("Launcher", "Login", P_Login);
+            Reader.Write("Launcher", "Password", P_Password);
+            Reader.Write("Launcher", "ServerName", P_ServerName);
+            Reader.Write("Launcher", "Browser", P_BrowserAddress);
+            Reader.Write("Launcher", "AutoStart", P_AutoStart);
         }
     }
 }

@@ -6,6 +6,8 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace AutoPatcher
 {
@@ -23,6 +25,14 @@ namespace AutoPatcher
         private Stopwatch _stopwatch = Stopwatch.StartNew();
 
         private Thread _workThread;
+
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
+
+        Config ConfigForm = new Config();
+        bool configVisible = false;
+        public bool Restart = false;
 
         public AMain()
         {
@@ -153,11 +163,17 @@ namespace AutoPatcher
 
         public void CheckFile(FileInformation old)
         {
-            FileInformation info = GetFileInformation(Settings.Client + (old.FileName == "AutoPatcher.gz" ? "AutoPatcher.exe" : old.FileName));
+            FileInformation info = GetFileInformation(Settings.Client + old.FileName);
             _currentCount++;
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
+                if (old.FileName == System.AppDomain.CurrentDomain.FriendlyName)
+                {
+                    File.Move(Settings.Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.Client + "OldPatcher.exe");
+                    Restart = true;
+                }
+
                 DownloadList.Enqueue(old);
                 _totalBytes += old.Compressed;
             }
@@ -167,7 +183,7 @@ namespace AutoPatcher
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
-            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
+            if (fileName != "PList.gz")
                 fileName += Path.GetExtension(fileName);
 
             try
@@ -214,7 +230,7 @@ namespace AutoPatcher
         {
             fileName = fileName.Replace(@"\", "/");
 
-            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
+            if (fileName != "PList.gz")
                 fileName += Path.GetExtension(fileName);
 
             try
@@ -278,17 +294,172 @@ namespace AutoPatcher
             };
         }
 
-        private void ImageLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ImageLinkLabel.LinkVisited = true;
-            Process.Start("http://www.lomcn.org/forum/member.php?5330-DevilsKnight");
-        }
-
         private void AMain_Load(object sender, EventArgs e)
         {
-            PlayButton.Enabled = false;
+            ConfigForm.Show(this);
+            ConfigForm.Visible = false;
+            if (Settings.BrowserAddress != string.Empty) Main_browser.Url = new Uri(Settings.BrowserAddress);
+
+            if (File.Exists(Settings.Client + "OldPatcher.exe")) File.Delete(Settings.Client + "OldPatcher.exe");
+            Launch_pb.Enabled = false;
+            Version_label.Text = Application.ProductVersion;
+            Name_label.Text = Settings.ServerName;
             _workThread = new Thread(Start) { IsBackground = true };
             _workThread.Start();
+        }
+
+        private void Play_picturebox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pBar1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Check_button_Click(object sender, EventArgs e)
+        {
+            //PlayButton.Enabled = false;
+            //Check_button.Enabled = false;
+            _workThread = new Thread(Start) { IsBackground = true };
+            _workThread.Start();
+        }
+
+        private void Launch_pb_Click(object sender, EventArgs e)
+        {
+            Play();
+        }
+
+        private void Close_pb_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void Movement_panel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void Movement_panel_MouseClick(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void Movement_panel_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
+
+        private void Movement_panel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+               
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new Size(dif));
+                if (configVisible) ConfigForm.Location = new Point(Location.X + Config_pb.Location.X - 73, Location.Y + 35);
+            }
+        }
+
+        private void pictureBox2_Paint(object sender, PaintEventArgs e)
+        {
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Launch_pb_MouseEnter(object sender, EventArgs e)
+        {
+            Launch_pb.Image = Properties.Resources.Launch_Hovernew;
+        }
+
+        private void Launch_pb_MouseLeave(object sender, EventArgs e)
+        {
+            Launch_pb.Image = Properties.Resources.Launch_Base;
+        }
+
+        private void Close_pb_MouseEnter(object sender, EventArgs e)
+        {
+            Close_pb.Image = Properties.Resources.Cross_Hover1;
+        }
+
+        private void Close_pb_MouseLeave(object sender, EventArgs e)
+        {
+            Close_pb.Image = Properties.Resources.Cross_Base;
+        }
+
+        private void Launch_pb_MouseDown(object sender, MouseEventArgs e)
+        {
+            Launch_pb.Image = Properties.Resources.Launch_Pressednew;
+        }
+
+        private void Launch_pb_MouseUp(object sender, MouseEventArgs e)
+        {
+            Launch_pb.Image = Properties.Resources.Launch_Base;
+        }
+
+        private void Close_pb_MouseDown(object sender, MouseEventArgs e)
+        {
+            Close_pb.Image = Properties.Resources.Cross_Pressed1;
+        }
+
+        private void Close_pb_MouseUp(object sender, MouseEventArgs e)
+        {
+            Close_pb.Image = Properties.Resources.Cross_Base;
+        }
+
+        private void ProgressCurrent_pb_SizeChanged(object sender, EventArgs e)
+        {
+            ProgEnd_pb.Location = new Point((ProgressCurrent_pb.Location.X + ProgressCurrent_pb.Width), 490);
+            if (ProgressCurrent_pb.Width == 0) ProgEnd_pb.Visible = false;
+            else ProgEnd_pb.Visible = true;
+        }
+
+        private void Config_pb_MouseDown(object sender, MouseEventArgs e)
+        {
+            Config_pb.Image = Properties.Resources.Config_Pressed;
+        }
+
+        private void Config_pb_MouseEnter(object sender, EventArgs e)
+        {
+            Config_pb.Image = Properties.Resources.Config_Hover;
+        }
+
+        private void Config_pb_MouseLeave(object sender, EventArgs e)
+        {
+            Config_pb.Image = Properties.Resources.Config_Base;
+        }
+
+        private void Config_pb_MouseUp(object sender, MouseEventArgs e)
+        {
+            Config_pb.Image = Properties.Resources.Config_Base;
+        }
+
+        private void Config_pb_Click(object sender, EventArgs e)
+        {
+            if (configVisible == true) configVisible = false; 
+            else configVisible = true;
+
+            ConfigForm.Visible = configVisible;
+            ConfigForm.Location = new Point(Location.X + Config_pb.Location.X - 181, Location.Y + 29);
+
+        }
+
+        private void TotalProg_pb_SizeChanged(object sender, EventArgs e)
+        {
+            ProgTotalEnd_pb.Location = new Point((TotalProg_pb.Location.X + TotalProg_pb.Width), 508);
+            if (TotalProg_pb.Width == 0) ProgTotalEnd_pb.Visible = false;
+            else ProgTotalEnd_pb.Visible = true;
+        }
+
+        private void Main_browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            Main_browser.Visible = true;
         }
 
         private void InterfaceTimer_Tick(object sender, EventArgs e)
@@ -302,27 +473,38 @@ namespace AutoPatcher
                         Play();
                         return;
                     }
-                    ActionLabel.Text = "Completed.";
-                    SizeLabel.Text = "Completed.";
-                    FileLabel.Text = "Completed.";
-                    SpeedLabel.Text = "Completed.";
-                    progressBar1.Value = 100;
-                    progressBar2.Value = 100;
-                    PlayButton.Enabled = true;
+                    ActionLabel.Text = "";
+                    CurrentFile_label.Text = "Up to date."; //testing
+                    SpeedLabel.Text = "";
+                    ProgressCurrent_pb.Width = 550;
+                    TotalProg_pb.Width = 550;
+                    CurrentPercent_label.Text = "100%";
+                    TotalPercent_label.Text = "100%";
                     InterfaceTimer.Enabled = false;
+                    Launch_pb.Enabled = true;
+                    if (Restart)
+                    {
+                        if (!File.Exists(Settings.Client + System.AppDomain.CurrentDomain.FriendlyName)) File.Move(Settings.Client + "OldPatcher.exe", Settings.Client + System.AppDomain.CurrentDomain.FriendlyName);
+                        Application.Restart();
+                    }
                     return;
                 }
 
-                ActionLabel.Text = !Checked ? string.Format("Checking Files... {0}/{1}", _currentCount, _fileCount) : string.Format("Downloading... {0}/{1}", _currentCount, _fileCount);
-                SizeLabel.Text = string.Format("{0:#,##0} MB / {1:#,##0} MB", (_completedBytes + _currentBytes) / 1024 / 1024, _totalBytes / 1024 / 1024);
+                //ActionLabel.Text = !Checked ? string.Format("Checking Files... {0}/{1}", _currentCount, _fileCount) : string.Format(" {0}/{1}", _currentCount, _fileCount);
+                ActionLabel.Text = string.Format("{0:#,##0} MB / {1:#,##0} MB", (_completedBytes + _currentBytes) / 1024 / 1024, _totalBytes / 1024 / 1024);
+                //pBar1.LabelText = string.Format("{0:#,##0} MB / {1:#,##0} MB", (_completedBytes + _currentBytes) / 1024 / 1024, _totalBytes / 1024 / 1024);
 
                 if (_currentFile != null)
                 {
-                    FileLabel.Text = string.Format("{0}, ({1:#,##0} MB) / ({2:#,##0} MB)", _currentFile.FileName, _currentBytes / 1024 / 1024, _currentFile.Compressed / 1024 / 1024);
+                    //FileLabel.Text = string.Format("{0}, ({1:#,##0} MB) / ({2:#,##0} MB)", _currentFile.FileName, _currentBytes / 1024 / 1024, _currentFile.Compressed / 1024 / 1024);
+                    //CurrentFile_label.Text = string.Format("{0}, ({1:#,##0} MB) / ({2:#,##0} MB)", _currentFile.FileName, _currentBytes / 1024 / 1024, _currentFile.Compressed / 1024 / 1024);
+                    CurrentFile_label.Text = string.Format("{0}", _currentFile.FileName);
                     SpeedLabel.Text = (_currentBytes / 1024F / _stopwatch.Elapsed.TotalSeconds).ToString("#,##0.##") + "KB/s";
-                    progressBar2.Value = (int)(100 * _currentBytes / _currentFile.Compressed);
+                    CurrentPercent_label.Text = ((int)(100 * _currentBytes / _currentFile.Compressed)).ToString() + "%";
+                    ProgressCurrent_pb.Width = (int)( 5.5 * (100 * _currentBytes / _currentFile.Compressed));
                 }
-                progressBar1.Value = (int)(100 * (_completedBytes + _currentBytes) / _totalBytes);
+                TotalPercent_label.Text = ((int)(100 * (_completedBytes + _currentBytes) / _totalBytes)).ToString() + "%";
+                TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + _currentBytes) / _totalBytes));
             }
             catch
 
@@ -332,15 +514,6 @@ namespace AutoPatcher
 
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void PlayButton_Click(object sender, EventArgs e)
-        {
-            Play();
-        }
         public void Play()
         {
             if (File.Exists(Settings.Client + "Client.exe"))
@@ -353,14 +526,6 @@ namespace AutoPatcher
             Close();
 
         }
-
-        private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            SourceLinkLabel.LinkVisited = true;
-            Process.Start("http://www.lomcn.org/forum/member.php?141-Jamie-Hello");
-        }
-
-
     }
 
     public class FileInformation
