@@ -242,6 +242,7 @@
             this.AllowCleanCheckBox.TabIndex = 22;
             this.AllowCleanCheckBox.Text = "Allow Clean Up";
             this.AllowCleanCheckBox.UseVisualStyleBackColor = true;
+            this.AllowCleanCheckBox.CheckedChanged += new System.EventHandler(this.AllowCleanCheckBox_CheckedChanged);
             // 
             // AMain
             // 
