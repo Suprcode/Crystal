@@ -7,7 +7,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace AutoPatcher
+namespace Launcher
 {
     partial class AMain
     {

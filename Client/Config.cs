@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Threading;
 using Client;
 
-namespace AutoPatcher
+namespace Launcher
 {
 
     public partial class Config : Form

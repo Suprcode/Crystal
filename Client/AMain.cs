@@ -11,7 +11,7 @@ using System.Drawing.Drawing2D;
 using Client;
 
 
-namespace AutoPatcher
+namespace Launcher
 {
     public partial class AMain : Form
     {

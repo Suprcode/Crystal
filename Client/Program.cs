@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Forms;
-using AutoPatcher;
+using Launcher;
 
 namespace Client
 {
@@ -25,7 +25,7 @@ namespace Client
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                if (Settings.P_Patcher) Application.Run(PForm = new AutoPatcher.AMain());
+                if (Settings.P_Patcher) Application.Run(PForm = new Launcher.AMain());
                 else Application.Run(Form = new CMain());
 
                 Settings.Save();

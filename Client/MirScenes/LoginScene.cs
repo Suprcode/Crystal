@@ -529,7 +529,11 @@ namespace Client.MirScenes
                 if (Visible) return;
                 Visible = true;
                 AccountIDTextBox.SetFocus();
-                if (Settings.Password != string.Empty && Settings.AccountID != string.Empty) Login();
+
+                if (Settings.Password != string.Empty && Settings.AccountID != string.Empty && Settings.P_AutoStart)
+                {
+                    Login();
+                }
             }
             public void Clear()
             {

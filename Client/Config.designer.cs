@@ -1,4 +1,4 @@
-﻿namespace AutoPatcher
+﻿namespace Launcher
 {
     partial class Config
     {

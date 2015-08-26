@@ -59,7 +59,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icon3.ico</ApplicationIcon>
+    <ApplicationIcon>Client.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>9E5B013900C639479A5BE07D94C6D9183B921CCA</ManifestCertificateThumbprint>
@@ -212,7 +212,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icon3.ico" />
+    <Content Include="Client.ico" />
     <None Include="Resources\CheckF_Pressed.png" />
     <None Include="Resources\CheckF_Hover.png" />
     <None Include="Resources\server_base.png" />

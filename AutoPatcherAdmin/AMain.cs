@@ -108,8 +108,7 @@ namespace AutoPatcherAdmin
             progressBar1.Value = (int) (_completedBytes*100/_totalBytes) > 100 ? 100 : (int) (_completedBytes*100/_totalBytes);
 
             FileInformation info = UploadList.Dequeue();
-            //Upload(info, File.ReadAllBytes(Settings.Client + (info.FileName == "AutoPatcher.gz" ? "AutoPatcher.exe" : info.FileName)));
-            Upload(info, File.ReadAllBytes(Settings.Client + (info.FileName)));
+            Upload(info, File.ReadAllBytes(Settings.Client + (info.FileName == "AutoPatcher.gz" ? "AutoPatcher.exe" : info.FileName)));
         }
 
         private void CleanUp()
@@ -119,8 +118,6 @@ namespace AutoPatcherAdmin
             for (int i = 0; i < OldList.Count; i++)
             {
                 if (NeedFile(OldList[i].FileName)) continue;
-                
-                OldList[i].FileName += Path.GetExtension(OldList[i].FileName);
 
                 try
                 {
@@ -174,11 +171,7 @@ namespace AutoPatcherAdmin
             string[] files = Directory.GetFiles(Settings.Client, "*.*" ,SearchOption.AllDirectories);
 
             for (int i = 0; i < files.Length; i++)
-            {
-                if (Path.GetFileName(files[i]) == "Mir2Config.ini") continue;
                 NewList.Add(GetFileInformation(files[i]));
-            }
-                
         }
         public bool NeedUpdate(FileInformation info)
         {
@@ -206,8 +199,8 @@ namespace AutoPatcherAdmin
                     Creation = info.LastWriteTime
                 };
 
-            //if (file.FileName == "AutoPatcher.exe")
-                //file.FileName = "AutoPatcher.gz";
+            if (file.FileName == "AutoPatcher.exe")
+                file.FileName = "AutoPatcher.gz";
 
             return file;
         }
@@ -232,10 +225,7 @@ namespace AutoPatcherAdmin
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
-            //if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
-                //fileName += Path.GetExtension(fileName);
-
-            if (fileName != "PList.gz")
+            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
                 fileName += Path.GetExtension(fileName);
 
             using (WebClient client = new WebClient())
@@ -383,6 +373,7 @@ namespace AutoPatcherAdmin
                     break;
                 }
             }
+
             Upload(new FileInformation { FileName = PatchFileName }, CreateNew());
         }
 
@@ -390,11 +381,6 @@ namespace AutoPatcherAdmin
         {
             SourceLinkLabel.LinkVisited = true;
             Process.Start("http://www.lomcn.org/forum/member.php?141-Jamie-Hello");
-        }
-
-        private void AllowCleanCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
     }
