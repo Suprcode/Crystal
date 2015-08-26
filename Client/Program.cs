@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Forms;
+using AutoPatcher;
 
 namespace Client
 {
     internal static class Program
     {
         public static CMain Form;
+        public static AMain PForm;
 
         [STAThread]
         private static void Main()
@@ -22,8 +24,9 @@ namespace Client
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                
-                Application.Run(Form = new CMain());
+
+                if (Settings.P_Patcher) Application.Run(PForm = new AutoPatcher.AMain());
+                else Application.Run(Form = new CMain());
 
                 Settings.Save();
             }
