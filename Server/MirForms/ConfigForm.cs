@@ -34,6 +34,9 @@ namespace Server
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
+
+            ServerVersionLabel.Text = Application.ProductVersion;
+            DBVersionLabel.Text = Server.MirEnvir.Envir.Version.ToString();
         }
 
         private void ConfigForm_FormClosed(object sender, FormClosedEventArgs e)

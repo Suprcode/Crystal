@@ -326,6 +326,7 @@ namespace Launcher
                 this.Location = Point.Add(dragFormPoint, new Size(dif));
             }
         }
+
         private void Launch_pb_MouseEnter(object sender, EventArgs e)
         {
             Launch_pb.Image = Client.Properties.Resources.Launch_Hover;
