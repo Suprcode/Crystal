@@ -243,29 +243,9 @@ namespace Client.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Launch_Hovernew {
-            get {
-                object obj = ResourceManager.GetObject("Launch_Hovernew", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Launch_Pressed {
             get {
                 object obj = ResourceManager.GetObject("Launch_Pressed", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Launch_Pressednew {
-            get {
-                object obj = ResourceManager.GetObject("Launch_Pressednew", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

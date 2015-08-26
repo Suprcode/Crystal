@@ -59,7 +59,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ico_Nmq_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Icon3.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>9E5B013900C639479A5BE07D94C6D9183B921CCA</ManifestCertificateThumbprint>
@@ -212,7 +212,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ico_Nmq_icon.ico" />
+    <Content Include="Icon3.ico" />
     <None Include="Resources\CheckF_Pressed.png" />
     <None Include="Resources\CheckF_Hover.png" />
     <None Include="Resources\server_base.png" />
@@ -231,8 +231,6 @@
     <None Include="Resources\Config_Hover.png" />
     <None Include="Resources\Cross_Pressed.png" />
     <None Include="Resources\Cross_Hover.png" />
-    <None Include="Resources\Launch_Pressednew.png" />
-    <None Include="Resources\Launch_Hovernew.png" />
     <None Include="Resources\Config_Base.png" />
     <None Include="Resources\Cross_Base.png" />
     <None Include="Resources\NEW Progress End %28Blue%29.png" />

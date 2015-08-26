@@ -136,7 +136,7 @@ namespace Client
         public static string P_Login = string.Empty;
         public static string P_Password = string.Empty;
         public static string P_ServerName = string.Empty;
-        public static string P_BrowserAddress = string.Empty;
+        public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 
@@ -218,6 +218,7 @@ namespace Client
 
             if (!P_Host.EndsWith("/")) P_Host += "/";
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
+            if (P_BrowserAddress.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_BrowserAddress = P_BrowserAddress.Insert(0, "http://");
         }
 
         public static void Save()

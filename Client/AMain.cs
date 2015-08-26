@@ -15,6 +15,7 @@ namespace AutoPatcher
 {
     public partial class AMain : Form
     {
+
         long _totalBytes, _completedBytes, _currentBytes;
         private int _fileCount, _currentCount;
 
@@ -32,13 +33,15 @@ namespace AutoPatcher
         private Point dragCursorPoint;
         private Point dragFormPoint;
 
-        Config ConfigForm = new Config();
+        private Config ConfigForm = new Config();
 
         public bool Restart = false;
 
         public AMain()
         {
             InitializeComponent();
+            BackColor = Color.FromArgb(1, 0, 0);
+            TransparencyKey = Color.FromArgb(1, 0, 0);
         }
 
 
@@ -167,7 +170,7 @@ namespace AutoPatcher
                             if (e.Error != null)
                             {
                                 File.AppendAllText(@".\Error.txt",
-                                       string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " could not be downloaded.", Environment.NewLine));
+                                       string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " could not be downloaded. (" + e.Error.Message + ")", Environment.NewLine));
                                 ErrorFound = true;
                             }
                             else
@@ -269,9 +272,8 @@ namespace AutoPatcher
 
         private void AMain_Load(object sender, EventArgs e)
         {
-
-            if (Settings.P_BrowserAddress != string.Empty) Main_browser.Url = new Uri(Settings.P_BrowserAddress);
-
+            if (Settings.P_BrowserAddress != "") Main_browser.Navigate(new Uri(Settings.P_BrowserAddress));
+            
             if (File.Exists(Settings.P_Client + "OldPatcher.exe")) File.Delete(Settings.P_Client + "OldPatcher.exe");
 
             Launch_pb.Enabled = false;
@@ -284,7 +286,6 @@ namespace AutoPatcher
                 Name_label.Visible = true;
                 Name_label.Text = Settings.P_ServerName;
             }
-
             _workThread = new Thread(Start) { IsBackground = true };
             _workThread.Start();
         }
@@ -394,7 +395,8 @@ namespace AutoPatcher
 
         private void Config_pb_Click(object sender, EventArgs e)
         {
-            ConfigForm.Visible = !ConfigForm.Visible;
+            if (ConfigForm.Visible) ConfigForm.Hide();
+            else ConfigForm.Show(Program.PForm);
             ConfigForm.Location = new Point(Location.X + Config_pb.Location.X - 183, Location.Y + 36);
         }
 
@@ -407,7 +409,7 @@ namespace AutoPatcher
 
         private void Main_browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            Main_browser.Visible = true;
+            if (Main_browser.Url.AbsolutePath != "blank") Main_browser.Visible = true;
         }
 
         private void InterfaceTimer_Tick(object sender, EventArgs e)
@@ -484,6 +486,12 @@ namespace AutoPatcher
         private void ActionLabel_Click(object sender, EventArgs e)
         {
             LabelSwitch = !LabelSwitch;
+        }
+
+        private void Credit_label_Click(object sender, EventArgs e)
+        {
+            if (Credit_label.Text == "Powered by Crystal M2") Credit_label.Text = "Designed by Breezer";
+            else Credit_label.Text = "Powered by Crystal M2";
         }
 
     }

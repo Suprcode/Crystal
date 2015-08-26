@@ -1,4 +1,13 @@
-﻿namespace AutoPatcher
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Net;
+using System.Windows.Forms;
+using System.Drawing;
+
+namespace AutoPatcher
 {
     partial class AMain
     {
@@ -7,6 +16,7 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -43,7 +53,7 @@
             this.CurrentFile_label = new System.Windows.Forms.Label();
             this.CurrentPercent_label = new System.Windows.Forms.Label();
             this.TotalPercent_label = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.Credit_label = new System.Windows.Forms.Label();
             this.ProgTotalEnd_pb = new System.Windows.Forms.PictureBox();
             this.ProgEnd_pb = new System.Windows.Forms.PictureBox();
             this.ProgressCurrent_pb = new System.Windows.Forms.PictureBox();
@@ -182,7 +192,6 @@
             // 
             // Main_browser
             // 
-            this.Main_browser.AllowNavigation = false;
             this.Main_browser.AllowWebBrowserDrop = false;
             this.Main_browser.IsWebBrowserContextMenuEnabled = false;
             this.Main_browser.Location = new System.Drawing.Point(8, 46);
@@ -190,7 +199,7 @@
             this.Main_browser.Name = "Main_browser";
             this.Main_browser.ScriptErrorsSuppressed = true;
             this.Main_browser.ScrollBarsEnabled = false;
-            this.Main_browser.Size = new System.Drawing.Size(784, 410);
+            this.Main_browser.Size = new System.Drawing.Size(784, 411);
             this.Main_browser.TabIndex = 24;
             this.Main_browser.Url = new System.Uri("", System.UriKind.Relative);
             this.Main_browser.Visible = false;
@@ -239,17 +248,18 @@
             this.TotalPercent_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.TotalPercent_label.Visible = false;
             // 
-            // label2
+            // Credit_label
             // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Gray;
-            this.label2.Location = new System.Drawing.Point(9, 529);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(114, 13);
-            this.label2.TabIndex = 30;
-            this.label2.Text = "Powered by Crystal M2";
+            this.Credit_label.AutoSize = true;
+            this.Credit_label.BackColor = System.Drawing.Color.Transparent;
+            this.Credit_label.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Credit_label.ForeColor = System.Drawing.Color.Gray;
+            this.Credit_label.Location = new System.Drawing.Point(9, 529);
+            this.Credit_label.Name = "Credit_label";
+            this.Credit_label.Size = new System.Drawing.Size(114, 13);
+            this.Credit_label.TabIndex = 30;
+            this.Credit_label.Text = "Powered by Crystal M2";
+            this.Credit_label.Click += new System.EventHandler(this.Credit_label_Click);
             // 
             // ProgTotalEnd_pb
             // 
@@ -318,11 +328,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Black;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.BackgroundImage = global::Client.Properties.Resources.pfffft;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(800, 548);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.Credit_label);
             this.Controls.Add(this.Version_label);
             this.Controls.Add(this.TotalPercent_label);
             this.Controls.Add(this.CurrentPercent_label);
@@ -337,6 +347,7 @@
             this.Controls.Add(this.ActionLabel);
             this.Controls.Add(this.Movement_panel);
             this.DoubleBuffered = true;
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -377,7 +388,7 @@
         private System.Windows.Forms.Label CurrentFile_label;
         private System.Windows.Forms.Label CurrentPercent_label;
         private System.Windows.Forms.Label TotalPercent_label;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label Credit_label;
         private System.Windows.Forms.Label Version_label;
         private System.Windows.Forms.PictureBox Config_pb;
         private System.Windows.Forms.PictureBox pictureBox1;
