@@ -107,7 +107,7 @@ namespace Launcher
             {
 
                 fileName = Path.GetFileName(fileNames[i]);
-                if (fileName == "Mir2Config.ini" || fileName == System.AppDomain.CurrentDomain.FriendlyName) continue;
+                if (fileName == "Mir2Config.ini" || fileName == System.AppDomain.CurrentDomain.FriendlyName || fileName == System.AppDomain.CurrentDomain.FriendlyName + ".config") continue;
                 if (!NeedFile(fileNames[i]))
                     File.Delete(fileNames[i]);
             }
@@ -292,9 +292,14 @@ namespace Launcher
 
         private void Launch_pb_Click(object sender, EventArgs e)
         {
+            Launch();
+        }
+
+        private void Launch()
+        {
             if (ConfigForm.Visible) ConfigForm.Visible = false;
             Program.Form = new CMain();
-            Program.Form.Closed += (s, args) => this.Close(); 
+            Program.Form.Closed += (s, args) => this.Close();
             Program.Form.Show();
             Program.PForm.Hide();
         }
@@ -445,6 +450,11 @@ namespace Launcher
                     {
                         if (!File.Exists(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName)) File.Move(Settings.P_Client + "OldPatcher.exe", Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName);
                         Application.Restart();
+                    }
+
+                    if (Settings.P_AutoStart)
+                    {
+                        Launch();
                     }
                     return;
                 }
