@@ -34,6 +34,7 @@ namespace Server
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SMain));
             this.MainTabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
@@ -82,8 +83,8 @@ namespace Server
             this.goodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refiningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.relationshipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
             this.mentorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
             this.MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -519,17 +520,17 @@ namespace Server
             this.relationshipToolStripMenuItem.Text = "Relationship";
             this.relationshipToolStripMenuItem.Click += new System.EventHandler(this.relationshipToolStripMenuItem_Click);
             // 
-            // InterfaceTimer
-            // 
-            this.InterfaceTimer.Enabled = true;
-            this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
-            // 
             // mentorToolStripMenuItem
             // 
             this.mentorToolStripMenuItem.Name = "mentorToolStripMenuItem";
             this.mentorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.mentorToolStripMenuItem.Text = "Mentor";
             this.mentorToolStripMenuItem.Click += new System.EventHandler(this.mentorToolStripMenuItem_Click);
+            // 
+            // InterfaceTimer
+            // 
+            this.InterfaceTimer.Enabled = true;
+            this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
             // 
             // SMain
             // 
@@ -541,6 +542,7 @@ namespace Server
             this.Controls.Add(this.StatusBar);
             this.Controls.Add(this.MainMenu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "SMain";
             this.Text = "Legend of Mir Server";
