@@ -105,11 +105,18 @@ namespace Launcher
             string fileName;
             for (int i = 0; i < fileNames.Length; i++)
             {
+                if (fileNames[i].StartsWith(".\\Screenshots\\")) continue;
 
                 fileName = Path.GetFileName(fileNames[i]);
-                if (fileName == "Mir2Config.ini" || fileName == System.AppDomain.CurrentDomain.FriendlyName || fileName == System.AppDomain.CurrentDomain.FriendlyName + ".config") continue;
-                if (!NeedFile(fileNames[i]))
-                    File.Delete(fileNames[i]);
+
+                if (fileName == "Mir2Config.ini" || fileName == System.AppDomain.CurrentDomain.FriendlyName) continue;
+
+                try
+                {
+                    if (!NeedFile(fileNames[i]))
+                        File.Delete(fileNames[i]);
+                }
+                catch{}
             }
         }
         public bool NeedFile(string fileName)
