@@ -15,7 +15,7 @@ namespace AutoPatcher
         private int _fileCount, _currentCount;
 
         private FileInformation _currentFile;
-        public bool Completed, Checked;
+        public bool Completed, Checked, ErrorFound;
         
         public List<FileInformation> OldList;
         public Queue<FileInformation> DownloadList;
@@ -31,10 +31,10 @@ namespace AutoPatcher
 
 
 
-        private void Start()
+        public void Start()
         {
             OldList = new List<FileInformation>();
-            DownloadList= new Queue<FileInformation>();
+            DownloadList = new Queue<FileInformation>();
 
             byte[] data = Download(Settings.PatchFileName);
 
@@ -167,7 +167,7 @@ namespace AutoPatcher
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
-            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
+            if (fileName != "PList.gz")
                 fileName += Path.GetExtension(fileName);
 
             try
@@ -175,14 +175,19 @@ namespace AutoPatcher
                 using (WebClient client = new WebClient())
                 {
                     client.DownloadProgressChanged += (o, e) =>
-                        {
-                            _currentBytes = e.BytesReceived;
-                        };
+                    {
+                        _currentBytes = e.BytesReceived;
+                    };
                     client.DownloadDataCompleted += (o, e) =>
+                    {
+                        if (e.Error != null)
                         {
-                            if (e.Error != null)
-                                throw e.Error;
-
+                            File.AppendAllText(@".\Error.txt",
+                                   string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " could not be downloaded. (" + e.Error.Message + ")", Environment.NewLine));
+                            ErrorFound = true;
+                        }
+                        else
+                        {
                             _currentCount++;
                             _completedBytes += _currentBytes;
                             _currentBytes = 0;
@@ -193,9 +198,9 @@ namespace AutoPatcher
 
                             File.WriteAllBytes(Settings.Client + info.FileName, Decompress(e.Result));
                             File.SetLastWriteTime(Settings.Client + info.FileName, info.Creation);
-
-                            BeginDownload();
-                        };
+                        }
+                        BeginDownload();
+                    };
 
                     if (Settings.NeedLogin) client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
 
@@ -234,6 +239,7 @@ namespace AutoPatcher
                 return null;
             }
         }
+
         public static byte[] Decompress(byte[] raw)
         {
             using (GZipStream gStream = new GZipStream(new MemoryStream(raw), CompressionMode.Decompress))
@@ -310,6 +316,9 @@ namespace AutoPatcher
                     progressBar2.Value = 100;
                     PlayButton.Enabled = true;
                     InterfaceTimer.Enabled = false;
+
+                    if (ErrorFound) MessageBox.Show("One or more files failed to download, check Error.txt for details.", "Failed to Download.");
+                    ErrorFound = false;
                     return;
                 }
 
@@ -341,6 +350,7 @@ namespace AutoPatcher
         {
             Play();
         }
+
         public void Play()
         {
             if (File.Exists(Settings.Client + "Client.exe"))

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -41,6 +41,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -57,9 +58,10 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <LangVersion>4</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>MIR2.ICO</ApplicationIcon>
+    <ApplicationIcon>Client.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>9E5B013900C639479A5BE07D94C6D9183B921CCA</ManifestCertificateThumbprint>
@@ -84,19 +86,19 @@
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
+      <HintPath>..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.Direct3D.dll</HintPath>
+      <HintPath>..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.Direct3D.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
+      <HintPath>..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.DirectSound, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectSound.dll</HintPath>
+      <HintPath>..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectSound.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -119,11 +121,23 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
+    <Compile Include="AMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AMain.Designer.cs">
+      <DependentUpon>AMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="CMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CMain.Designer.cs">
       <DependentUpon>CMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Config.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Config.designer.cs">
+      <DependentUpon>Config.cs</DependentUpon>
     </Compile>
     <Compile Include="MirControls\MirAmountBox.cs" />
     <Compile Include="MirControls\MirAnimatedButton.cs" />
@@ -168,20 +182,26 @@
     <Compile Include="MirSounds\SoundManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
+    <EmbeddedResource Include="AMain.resx">
+      <DependentUpon>AMain.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CMain.resx">
       <DependentUpon>CMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Config.resx">
+      <DependentUpon>Config.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -194,7 +214,32 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MIR2.ICO" />
+    <Content Include="Client.ico" />
+    <None Include="Resources\CheckF_Pressed.png" />
+    <None Include="Resources\CheckF_Hover.png" />
+    <None Include="Resources\server_base.png" />
+    <None Include="Resources\pfffft.png" />
+    <None Include="Resources\textboxes.png" />
+    <None Include="Resources\Config_Base1.png" />
+    <None Include="Resources\CheckF_Base2.png" />
+    <None Include="Resources\Config_Check_On.png" />
+    <None Include="Resources\Config_Check_Off1.png" />
+    <None Include="Resources\Config_Radio_On.png" />
+    <None Include="Resources\Launch_Base1.png" />
+    <None Include="Resources\Launch_Pressed.png" />
+    <None Include="Resources\Launch_Hover.png" />
+    <None Include="Resources\Radio_Unactive.png" />
+    <None Include="Resources\Config_Pressed.png" />
+    <None Include="Resources\Config_Hover.png" />
+    <None Include="Resources\Cross_Pressed.png" />
+    <None Include="Resources\Cross_Hover.png" />
+    <None Include="Resources\Config_Base.png" />
+    <None Include="Resources\Cross_Base.png" />
+    <None Include="Resources\NEW Progress End %28Blue%29.png" />
+    <None Include="Resources\Blue Progress.png" />
+    <None Include="Resources\NEW Progress End %28Green%29.png" />
+    <None Include="Resources\Green Progress.png" />
+    <None Include="Resources\Launch_Base.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
