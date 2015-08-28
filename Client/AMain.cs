@@ -37,7 +37,7 @@ namespace Launcher
 
         private Config ConfigForm = new Config();
 
-        public bool Restart = false;
+        private bool Restart = false;
 
         public AMain()
         {
@@ -45,8 +45,6 @@ namespace Launcher
             BackColor = Color.FromArgb(1, 0, 0);
             TransparencyKey = Color.FromArgb(1, 0, 0);
         }
-
-
 
         public void Start()
         {
@@ -457,8 +455,11 @@ namespace Launcher
 
                     if (Restart)
                     {
-                        if (!File.Exists(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName)) File.Move(Settings.P_Client + oldClientName, Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName);
-                        Application.Restart();
+                        Program.Restart = true;
+
+                        MoveOldClientToCurrent();
+
+                        Close();
                     }
 
                     if (Settings.P_AutoStart)
@@ -515,6 +516,11 @@ namespace Launcher
         }
 
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MoveOldClientToCurrent();
+        }
+
+        private void MoveOldClientToCurrent()
         {
             string oldClient = Settings.P_Client + oldClientName;
             string currentClient = Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName;

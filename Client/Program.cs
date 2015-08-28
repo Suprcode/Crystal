@@ -14,6 +14,8 @@ namespace Client
         public static CMain Form;
         public static AMain PForm;
 
+        public static bool Restart;
+
         [STAThread]
         private static void Main()
         {
@@ -33,6 +35,11 @@ namespace Client
                 else Application.Run(Form = new CMain());
 
                 Settings.Save();
+
+                if (Restart)
+                {
+                    Application.Restart();
+                }
             }
             catch (Exception ex)
             {

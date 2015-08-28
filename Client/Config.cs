@@ -77,7 +77,7 @@ namespace Launcher
                 this.ActiveControl = label4;
             }
             else
-            {
+            {             
                 Settings.AccountID = AccountLogin_txt.Text;
                 Settings.Password = AccountPass_txt.Text;
                 Settings.Save();
