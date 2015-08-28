@@ -1328,7 +1328,10 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
 
                     fileName = Path.Combine(Settings.NameListPath, parts[1] + ".txt");
-                    if (!File.Exists(fileName))
+                    string sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if(!File.Exists(fileName))
                         File.Create(fileName);
 
                     acts.Add(new NPCActions(ActionType.AddNameList, fileName));
@@ -1626,6 +1629,32 @@ namespace Server.MirObjects
                     break;
                 case "FORCEDIVORCE":
                     acts.Add(new NPCActions(ActionType.ForceDivorce));
+                    break;
+
+                case "LOADVALUE":
+                    if (parts.Length < 5) return;
+
+                    fileName = Path.Combine(Settings.ValuePath, parts[2] + ".txt");
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if (!File.Exists(fileName))
+                        File.Create(fileName);
+
+                    acts.Add(new NPCActions(ActionType.LoadValue, parts[1], fileName, parts[3], parts[4]));
+                    break;
+
+                case "SAVEVALUE":
+                    if (parts.Length < 5) return;
+
+                    fileName = Path.Combine(Settings.ValuePath, parts[2] + ".txt");
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if (!File.Exists(fileName))
+                        File.Create(fileName);
+
+                    acts.Add(new NPCActions(ActionType.SaveValue, fileName, parts[2], parts[3], parts[4]));
                     break;
             }
 
@@ -2745,11 +2774,36 @@ namespace Server.MirObjects
                         player.NPCMoveMap = null;
                         player.NPCMoveCoord = Point.Empty;
                         break;
+
                     case ActionType.MakeWeddingRing:
                         player.MakeWeddingRing();
                         break;
+
                     case ActionType.ForceDivorce:
                         player.NPCDivorce();
+                        break;
+
+                    case ActionType.LoadValue:
+                        string val = param[0];
+                        string filePath = param[1];
+                        string header = param[2];
+                        string key = param[3];
+
+                        InIReader reader = new InIReader(filePath);
+                        string loadedString = reader.ReadString(header, key, "");
+
+                        if (loadedString == "") return;
+                        AddVariable(player, val, loadedString);
+                        break;
+
+                    case ActionType.SaveValue:
+                        filePath = param[0];
+                        header = param[1];
+                        key = param[2];
+                        val = param[3];
+
+                        reader = new InIReader(filePath);
+                        reader.Write(header, key, val);
                         break;
                 }
             }
@@ -3057,7 +3111,9 @@ namespace Server.MirObjects
         TakePearls,
         MakeWeddingRing,
         ForceDivorce,
-        GlobalMessage
+        GlobalMessage,
+        LoadValue,
+        SaveValue,
     }
     public enum CheckType
     {

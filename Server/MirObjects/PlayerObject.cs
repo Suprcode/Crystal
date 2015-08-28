@@ -1826,6 +1826,8 @@ namespace Server.MirObjects
 
                 MonsterObject monster = MonsterObject.GetMonster(Envir.GetMonsterInfo(info.MonsterIndex));
 
+                if (monster == null) continue;
+
                 monster.PetLevel = info.Level;
                 monster.MaxPetLevel = info.MaxPetLevel;
                 monster.PetExperience = info.Experience;

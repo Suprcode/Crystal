@@ -356,6 +356,7 @@ namespace Launcher
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Launcher";
             this.TransparencyKey = System.Drawing.Color.Black;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AMain_FormClosed);
             this.Load += new System.EventHandler(this.AMain_Load);
             this.Click += new System.EventHandler(this.AMain_Click);
             this.Movement_panel.ResumeLayout(false);

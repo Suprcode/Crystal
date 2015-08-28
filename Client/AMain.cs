@@ -33,6 +33,8 @@ namespace Launcher
         private Point dragCursorPoint;
         private Point dragFormPoint;
 
+        private string oldClientName = "OldClient.exe";
+
         private Config ConfigForm = new Config();
 
         public bool Restart = false;
@@ -148,7 +150,7 @@ namespace Launcher
             {
                 if (old.FileName == System.AppDomain.CurrentDomain.FriendlyName)
                 {
-                    File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + "OldPatcher.exe");
+                    File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + oldClientName);
                     Restart = true;
                 }
 
@@ -280,8 +282,8 @@ namespace Launcher
         private void AMain_Load(object sender, EventArgs e)
         {
             if (Settings.P_BrowserAddress != "") Main_browser.Navigate(new Uri(Settings.P_BrowserAddress));
-            
-            if (File.Exists(Settings.P_Client + "OldPatcher.exe")) File.Delete(Settings.P_Client + "OldPatcher.exe");
+
+            if (File.Exists(Settings.P_Client + oldClientName)) File.Delete(Settings.P_Client + oldClientName);
 
             Launch_pb.Enabled = false;
             ProgressCurrent_pb.Width = 5;
@@ -455,7 +457,7 @@ namespace Launcher
 
                     if (Restart)
                     {
-                        if (!File.Exists(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName)) File.Move(Settings.P_Client + "OldPatcher.exe", Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName);
+                        if (!File.Exists(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName)) File.Move(Settings.P_Client + oldClientName, Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName);
                         Application.Restart();
                     }
 
@@ -510,6 +512,12 @@ namespace Launcher
         {
             if (Credit_label.Text == "Powered by Crystal M2") Credit_label.Text = "Designed by Breezer";
             else Credit_label.Text = "Powered by Crystal M2";
+        }
+
+        private void AMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (File.Exists(Settings.P_Client + oldClientName))
+                File.Move(Settings.P_Client + oldClientName, Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName);
         }
 
     }

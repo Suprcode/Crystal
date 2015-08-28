@@ -21,6 +21,7 @@ namespace Server
                             DropPath = EnvirPath + @".\Drops\",
                             RoutePath = EnvirPath + @".\Routes\",
                             NameListPath = EnvirPath + @".\NameLists\",
+                            ValuePath = EnvirPath + @".\Values\",
                             ReportPath = @".\Reports\";
 
 
