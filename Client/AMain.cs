@@ -516,8 +516,11 @@ namespace Launcher
 
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (File.Exists(Settings.P_Client + oldClientName))
-                File.Move(Settings.P_Client + oldClientName, Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName);
+            string oldClient = Settings.P_Client + oldClientName;
+            string currentClient = Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName;
+
+            if (!File.Exists(currentClient) && File.Exists(oldClient))
+                File.Move(oldClient, currentClient);
         }
 
     }
