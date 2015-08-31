@@ -1754,10 +1754,15 @@ namespace Server.MirObjects
         {
             Connection.Stage = GameStage.Game;
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-            ReceiveChat("Welcome to the Legend of Mir 2 C# Server.", ChatType.Hint);
+            ReceiveChat("Welcome to the Legend of Mir 2 Crystal Server.", ChatType.Hint);
+
+            if (Settings.TestServer)
+            {
+                ReceiveChat("Game is currently in test mode.", ChatType.Hint);
+            }
+
             if (Info.GuildIndex != -1)
             {
-
                 //MyGuild = Envir.GetGuild(Info.GuildIndex);
                 if (MyGuild == null)
                 {
@@ -3258,7 +3263,7 @@ namespace Server.MirObjects
                         break;
 
                     case "CHANGEGENDER":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
 
                         data = parts.Length < 2 ? Info : Envir.GetCharacterInfo(parts[1]);
 
@@ -3283,12 +3288,14 @@ namespace Server.MirObjects
                         break;
 
                     case "LEVEL":
-                        if (!IsGM || parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         byte level;
                         byte old;
                         if (parts.Length >= 3)
                         {
+                            if (!IsGM) return;
+
                             if (byte.TryParse(parts[2], out level))
                             {
                                 if (level == 0) return;
@@ -3322,7 +3329,7 @@ namespace Server.MirObjects
                         return;
 
                     case "MAKE":
-                        if (!IsGM || parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         ItemInfo iInfo = Envir.GetItemInfo(parts[1]);
                         if (iInfo == null) return;
@@ -3357,7 +3364,7 @@ namespace Server.MirObjects
                         break;
 
                     case "CLEARBAG":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
                         player = this;
 
                         if (parts.Length >= 2)
@@ -3376,7 +3383,7 @@ namespace Server.MirObjects
                         break;
 
                     case "SUPERMAN":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
 
                         GMNeverDie = !GMNeverDie;
 
@@ -3386,7 +3393,7 @@ namespace Server.MirObjects
                         break;
 
                     case "GAMEMASTER":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
 
                         GMGameMaster = !GMGameMaster;
 
@@ -3396,7 +3403,7 @@ namespace Server.MirObjects
                         break;
 
                     case "OBSERVER":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
                         Observer = !Observer;
 
                         hintstring = Observer ? "Observer Mode." : "Normal Mode.";
@@ -3507,7 +3514,6 @@ namespace Server.MirObjects
                         break;
 
                     case "RECALLLOVER":
-
                         if (Info.Married == 0)
                         {
                             ReceiveChat("You're not married.", ChatType.System);
@@ -3613,7 +3619,7 @@ namespace Server.MirObjects
                         break;
 
                     case "MOVE":
-                        if (!IsGM && !HasTeleportRing) return;
+                        if (!IsGM && !HasTeleportRing && !Settings.TestServer) return;
                         if (!IsGM && CurrentMap.Info.NoPosition)
                         {
                             ReceiveChat(("You cannot position move on this map"), ChatType.System);
@@ -3640,8 +3646,7 @@ namespace Server.MirObjects
                         break;
 
                     case "MAPMOVE":
-                        if (!IsGM) return;
-                        if (parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
                         var instanceID = 1; x = 0; y = 0;
 
                         if (parts.Length == 3 || parts.Length == 5)
@@ -3695,7 +3700,7 @@ namespace Server.MirObjects
                         break;
 
                     case "MOB":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
                         if (parts.Length < 2)
                         {
                             ReceiveChat("Not enough parameters to spawn monster", ChatType.System);
@@ -3710,7 +3715,7 @@ namespace Server.MirObjects
                         }
 
                         count = 1;
-                        if (parts.Length >= 3)
+                        if (parts.Length >= 3 && IsGM)
                             if (!uint.TryParse(parts[2], out count)) count = 1;
 
                         for (int i = 0; i < count; i++)
@@ -3724,8 +3729,7 @@ namespace Server.MirObjects
                         break;
 
                     case "RECALLMOB":
-                        if (!IsGM) return;
-                        if (parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         MonsterInfo mInfo2 = Envir.GetMonsterInfo(parts[1]);
                         if (mInfo2 == null) return;
@@ -3738,6 +3742,8 @@ namespace Server.MirObjects
 
                         if (parts.Length > 3)
                             if (!byte.TryParse(parts[3], out petlevel) || petlevel > 7) petlevel = 0;
+
+                        if (!IsGM && Pets.Count > 4) return;
 
                         for (int i = 0; i < count; i++)
                         {
@@ -3776,8 +3782,7 @@ namespace Server.MirObjects
                         break;
 
                     case "GIVEGOLD":
-                        if (!IsGM) return;
-                        if (parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         player = this;
 
@@ -3803,8 +3808,7 @@ namespace Server.MirObjects
                         break;
 
                     case "GIVEPEARLS":
-                        if (!IsGM) return;
-                        if (parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         player = this;
 
@@ -3833,8 +3837,7 @@ namespace Server.MirObjects
                         break;
 
                     case "GIVESKILL":
-                        if (!IsGM) return;
-                        if (parts.Length < 3) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
                         byte spellLevel = 0;
 
@@ -3849,6 +3852,8 @@ namespace Server.MirObjects
 
                         if (parts.Length > 3)
                         {
+                            if (!IsGM) return;
+
                             player = Envir.GetPlayer(parts[1]);
 
                             if (player == null)
@@ -3909,9 +3914,12 @@ namespace Server.MirObjects
                         break;
 
                     case "CREATEGUILD":
-                        if (!IsGM) return;
-                        if (parts.Length < 3) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
+
                         player = Envir.GetPlayer(parts[1]);
+
+                        if (!IsGM && player != this) return;
+
                         if (player == null)
                         {
                             ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
@@ -3987,7 +3995,7 @@ namespace Server.MirObjects
 
                         break;
                     case "SETFLAG":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
 
                         if (parts.Length < 2) return;
 
@@ -4002,6 +4010,8 @@ namespace Server.MirObjects
                         break;
 
                     case "LISTFLAGS":
+                        if (!IsGM && !Settings.TestServer) return;
+
                         for (int i = 0; i < Info.Flags.Length; i++)
                         {
                             if (Info.Flags[i] == false) continue;
@@ -4011,9 +4021,9 @@ namespace Server.MirObjects
                         break;
 
                     case "CLEARFLAGS":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
 
-                        player = parts.Length > 1 ? Envir.GetPlayer(parts[1]) : this;
+                        player = parts.Length > 1 && IsGM ? Envir.GetPlayer(parts[1]) : this;
 
                         if (player == null)
                         {
@@ -4058,9 +4068,9 @@ namespace Server.MirObjects
                         break;
 
                     case "CHANGECLASS": //@changeclass [Player] [Class]
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
 
-                        data = parts.Length <= 2 ? Info : Envir.GetCharacterInfo(parts[1]);
+                        data = parts.Length <= 2 || !IsGM ? Info : Envir.GetCharacterInfo(parts[1]);
 
                         if (data == null) return;
 
@@ -4083,9 +4093,12 @@ namespace Server.MirObjects
                         break;
 
                     case "HAIR":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
+
                         if (parts.Length < 2)
+                        {
                             Info.Hair = (byte)SMain.Envir.Random.Next(0, 9);
+                        }
                         else
                         {
                             byte tempByte = 0;
@@ -4097,8 +4110,7 @@ namespace Server.MirObjects
                         break;
 
                     case "DECO":
-                        if (!IsGM) return;
-                        if (parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         ushort tempShort = 0;
 
@@ -4118,11 +4130,12 @@ namespace Server.MirObjects
                         break;
 
                     case "ADJUSTPKPOINT":
-                        if (!IsGM) return;
-                        if (parts.Length < 2) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         if (parts.Length > 2)
                         {
+                            if (!IsGM) return;
+
                             player = Envir.GetPlayer(parts[1]);
 
                             if (player == null) return;
@@ -4142,8 +4155,7 @@ namespace Server.MirObjects
 
                     case "AWAKENING":
                         {
-                            if (!IsGM) return;
-                            if (parts.Length < 3) return;
+                            if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
                             ItemType type;
 
@@ -4186,8 +4198,7 @@ namespace Server.MirObjects
                         break;
                     case "REMOVEAWAKENING":
                         {
-                            if (!IsGM) return;
-                            if (parts.Length < 2) return;
+                            if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                             ItemType type;
 
@@ -4283,7 +4294,7 @@ namespace Server.MirObjects
 
                     case "INFO":
                         {
-                            if (!IsGM) return;
+                            if (!IsGM && !Settings.TestServer) return;
 
                             MapObject ob = null;
 
@@ -4328,9 +4339,9 @@ namespace Server.MirObjects
                         break;
 
                     case "CLEARQUESTS":
-                        if (!IsGM) return;
+                        if (!IsGM && !Settings.TestServer) return;
 
-                        player = parts.Length > 1 ? Envir.GetPlayer(parts[1]) : this;
+                        player = parts.Length > 1 && IsGM ? Envir.GetPlayer(parts[1]) : this;
 
                         if (player == null)
                         {
@@ -4351,11 +4362,9 @@ namespace Server.MirObjects
                         break;
 
                     case "SETQUEST":
-                        if (!IsGM) return;
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
-                        if (parts.Length < 3) return;
-
-                        player = parts.Length > 3 ? Envir.GetPlayer(parts[3]) : this;
+                        player = parts.Length > 3 && IsGM ? Envir.GetPlayer(parts[3]) : this;
 
                         if (player == null)
                         {
