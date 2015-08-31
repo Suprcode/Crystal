@@ -1496,7 +1496,7 @@ namespace Server.MirObjects
             //Calculate increased levels
             var experience = Experience;
 
-            while (experience > MaxExperience)
+            while (experience >= MaxExperience)
             {
                 Level++;
                 experience -= MaxExperience;
