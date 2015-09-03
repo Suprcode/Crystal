@@ -2287,7 +2287,7 @@ public class SelectInfo
         {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
-            Level = reader.ReadByte();
+            Level = reader.ReadUInt16();
             Class = (MirClass)reader.ReadByte();
             Gender = (MirGender)reader.ReadByte();
             LastAccess = DateTime.FromBinary(reader.ReadInt64());

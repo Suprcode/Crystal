@@ -3317,7 +3317,7 @@ namespace Server.MirObjects
                         {
                             if (!IsGM) return;
 
-                            if (byte.TryParse(parts[2], out level))
+                            if (ushort.TryParse(parts[2], out level))
                             {
                                 parts[2] = ushort.MaxValue.ToString();
                             }
