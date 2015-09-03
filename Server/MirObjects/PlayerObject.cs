@@ -338,7 +338,7 @@ namespace Server.MirObjects
 
             Report = new Reporting(this);
 
-            if (Level == 65535 || Account.AdminAccount)
+            if (Account.AdminAccount)
             {
                 IsGM = true;
                 SMain.Enqueue(string.Format("{0} is now a GM", Name));
