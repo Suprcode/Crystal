@@ -173,7 +173,7 @@ namespace Server.MirObjects
         public override int CurrentMapIndex { get; set; }
         public override Point CurrentLocation { get; set; }
         public override sealed MirDirection Direction { get; set; }
-        public override byte Level
+        public override ushort Level
         {
             get { return Info.Level; }
             set { throw new NotSupportedException(); }
@@ -360,12 +360,12 @@ namespace Server.MirObjects
             RefreshBase();
             
                 MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + PetLevel * 20);
-                MinAC = (byte)Math.Min(byte.MaxValue, MinAC + PetLevel * 2);
-                MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + PetLevel * 2);
-                MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + PetLevel * 2);
-                MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + PetLevel * 2);
-                MinDC = (byte)Math.Min(byte.MaxValue, MinDC + PetLevel);
-                MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + PetLevel);
+                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + PetLevel * 2);
+                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + PetLevel * 2);
+                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + PetLevel * 2);
+                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + PetLevel * 2);
+                MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + PetLevel);
+                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + PetLevel);
 
             if (Info.Name == Settings.SkeletonName ||Info.Name == Settings.ShinsuName ||Info.Name == Settings.AngelName) 
             {
@@ -398,33 +398,33 @@ namespace Server.MirObjects
                         Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Values[0]);
                         break;
                     case BuffType.SoulShield:
-                        MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + buff.Values[0]);
+                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.BlessedArmour:
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[0]);
+                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
+                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
                         break;
                     case BuffType.Curse:
-                        byte rMaxDC = (byte)(((int)MaxDC / 100) * buff.Values[0]);
-                        byte rMaxMC = (byte)(((int)MaxMC / 100) * buff.Values[0]);
-                        byte rMaxSC = (byte)(((int)MaxSC / 100) * buff.Values[0]);
+                        ushort rMaxDC = (ushort)(((int)MaxDC / 100) * buff.Values[0]);
+                        ushort rMaxMC = (ushort)(((int)MaxMC / 100) * buff.Values[0]);
+                        ushort rMaxSC = (ushort)(((int)MaxSC / 100) * buff.Values[0]);
                         sbyte rASpeed = (sbyte)(((int)ASpeed / 100) * buff.Values[0]);
                         ushort rMSpeed = (ushort)((MoveSpeed / 100) * buff.Values[0]);
 
-                        MaxDC = (byte)Math.Max(byte.MinValue, MaxDC - rMaxDC);
-                        MaxMC = (byte)Math.Max(byte.MinValue, MaxMC - rMaxMC);
-                        MaxSC = (byte)Math.Max(byte.MinValue, MaxSC - rMaxSC);
+                        MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - rMaxDC);
+                        MaxMC = (ushort)Math.Max(ushort.MinValue, MaxMC - rMaxMC);
+                        MaxSC = (ushort)Math.Max(ushort.MinValue, MaxSC - rMaxSC);
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed - rMSpeed);
                         break;
 
                     case BuffType.PetEnhancer:
-                        MinDC = (byte)Math.Min(byte.MaxValue, MinDC + buff.Values[0]);
-                        MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + buff.Values[0]);
-                        MinAC = (byte)Math.Min(byte.MaxValue, MinAC + buff.Values[1]);
-                        MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + buff.Values[1]);
+                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + buff.Values[0]);
+                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
+                        MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[1]);
+                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[1]);
                         break;
                 }
 
@@ -1765,7 +1765,7 @@ namespace Server.MirObjects
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
-            byte LevelOffset = (byte)(Level > attacker.Level ? 0 : Math.Min(10, attacker.Level - Level));
+            ushort LevelOffset = (ushort)(Level > attacker.Level ? 0 : Math.Min(10, attacker.Level - Level));
 
             if (attacker.HasParalysisRing && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
             {
