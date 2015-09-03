@@ -28,7 +28,7 @@ namespace Client.MirObjects
         public MirGender Gender;
         public MirClass Class;
         public byte Hair;
-        public byte Level;
+        public ushort Level;
 
         public MLibrary WeaponLibrary1, WeaponLibrary2, HairLibrary, WingLibrary, MountLibrary;
         public int Armour, Weapon, ArmourOffSet, HairOffSet, WeaponOffSet, WingOffset, MountOffset;
