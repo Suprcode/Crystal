@@ -1647,7 +1647,7 @@ namespace Server.MirObjects
                 case "SAVEVALUE":
                     if (parts.Length < 5) return;
 
-                    fileName = Path.Combine(Settings.ValuePath, parts[2] + ".txt");
+                    fileName = Path.Combine(Settings.ValuePath, parts[1] + ".txt");
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
@@ -2792,7 +2792,7 @@ namespace Server.MirObjects
                         InIReader reader = new InIReader(filePath);
                         string loadedString = reader.ReadString(header, key, "");
 
-                        if (loadedString == "") return;
+                        if (loadedString == "") break;
                         AddVariable(player, val, loadedString);
                         break;
 
@@ -2904,6 +2904,15 @@ namespace Server.MirObjects
                     break;
                 case "LEVEL":
                     newValue = player.Level.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "MAP":
+                    newValue = player.CurrentMap.Info.FileName;
+                    break;
+                case "X_COORD":
+                    newValue = player.CurrentLocation.X.ToString();
+                    break;
+                case "Y_COORD":
+                    newValue = player.CurrentLocation.Y.ToString();
                     break;
                 case "HP":
                     newValue = player.HP.ToString(CultureInfo.InvariantCulture);

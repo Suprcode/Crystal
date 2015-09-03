@@ -187,7 +187,9 @@ namespace Server.MirObjects
         }
 
         public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime;
+
+        public byte ChatTick;
 
         public bool MagicShield;
         public byte MagicShieldLv;
@@ -3006,8 +3008,8 @@ namespace Server.MirObjects
         public void Chat(string message)
         {
             if (string.IsNullOrEmpty(message)) return;
-            SMain.EnqueueChat(string.Format("{0}: {1}", Name, message));
 
+            SMain.EnqueueChat(string.Format("{0}: {1}", Name, message));
 
             if (GMLogin)
             {
@@ -3035,6 +3037,25 @@ namespace Server.MirObjects
                 }
 
                 Info.ChatBanned = false;
+            }
+            else
+            {
+                if (ChatTime > Envir.Time)
+                {
+                    if (ChatTick >= 5)
+                    {
+                        Info.ChatBanned = true;
+                        Info.ChatBanExpiryDate = DateTime.Now.AddMinutes(5);
+                        ReceiveChat("You have been banned from chatting for 5 minutes.", ChatType.System);
+                        return;
+                    }
+
+                    ChatTick++;
+                }
+                else
+                    ChatTick = 0;
+
+                ChatTime = Envir.Time + 2000;
             }
 
             string[] parts;

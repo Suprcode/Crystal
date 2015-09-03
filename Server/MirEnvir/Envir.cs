@@ -2164,19 +2164,5 @@ namespace Server.MirEnvir
             return null;
         }
     }
-
-    public class TestServer
-    {
-        public bool Active { get; set; }
-
-        public bool AllowedCommand()
-        {
-            if(!Active) return false;
-
-            //read from allowed list of commands
-
-            return true;
-        }
-    }
 }
 
