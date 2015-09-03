@@ -29,7 +29,7 @@ namespace Server.MirObjects
             get { throw new NotSupportedException(); }
             set { throw new NotSupportedException(); }
         }
-        public override byte Level
+        public override ushort Level
         {
             get { throw new NotSupportedException(); }
             set { throw new NotSupportedException(); }

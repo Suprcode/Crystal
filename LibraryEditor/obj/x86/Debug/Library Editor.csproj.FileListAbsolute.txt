@@ -1,0 +1,4 @@
+C:\Users\Ashley\Desktop\LoM\Project\mir2\LibraryEditor\obj\x86\Debug\Library Editor.csprojResolveAssemblyReference.cache
+C:\Users\Ashley\Desktop\LoM\Project\mir2\LibraryEditor\obj\x86\Debug\LibraryEditor.LMain.resources
+C:\Users\Ashley\Desktop\LoM\Project\mir2\LibraryEditor\obj\x86\Debug\Library_Editor.Properties.Resources.resources
+C:\Users\Ashley\Desktop\LoM\Project\mir2\LibraryEditor\obj\x86\Debug\Library Editor.csproj.GenerateResource.Cache
