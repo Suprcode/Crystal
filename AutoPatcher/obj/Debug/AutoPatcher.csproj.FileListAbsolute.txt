@@ -1,9 +1,0 @@
-C:\Users\Ashley\Desktop\LoM\Project\Mir 2\AutoPatcher\AutoPatcher.exe.config
-C:\Users\Ashley\Desktop\LoM\Project\Mir 2\AutoPatcher\AutoPatcher.exe
-C:\Users\Ashley\Desktop\LoM\Project\Mir 2\AutoPatcher\AutoPatcher.pdb
-C:\Users\Ashley\Desktop\LoM\Project\mir2\AutoPatcher\obj\Debug\AutoPatcher.csprojResolveAssemblyReference.cache
-C:\Users\Ashley\Desktop\LoM\Project\mir2\AutoPatcher\obj\Debug\AutoPatcher.AMain.resources
-C:\Users\Ashley\Desktop\LoM\Project\mir2\AutoPatcher\obj\Debug\AutoPatcher.Properties.Resources.resources
-C:\Users\Ashley\Desktop\LoM\Project\mir2\AutoPatcher\obj\Debug\AutoPatcher.csproj.GenerateResource.Cache
-C:\Users\Ashley\Desktop\LoM\Project\mir2\AutoPatcher\obj\Debug\AutoPatcher.exe
-C:\Users\Ashley\Desktop\LoM\Project\mir2\AutoPatcher\obj\Debug\AutoPatcher.pdb
