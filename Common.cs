@@ -2200,7 +2200,7 @@ public static class Functions
                 return dir;
         }
     }
-    public static ItemInfo GetRealItem(ItemInfo Origin, byte Level, MirClass job, List<ItemInfo> ItemList)
+    public static ItemInfo GetRealItem(ItemInfo Origin, ushort Level, MirClass job, List<ItemInfo> ItemList)
     {
         if (Origin.ClassBased && Origin.LevelBased)
             return GetClassAndLevelBasedItem(Origin, job, Level, ItemList);
@@ -2210,7 +2210,7 @@ public static class Functions
             return GetLevelBasedItem(Origin, Level, ItemList);
         return Origin;
     }
-    public static ItemInfo GetLevelBasedItem(ItemInfo Origin, byte level, List<ItemInfo> ItemList)
+    public static ItemInfo GetLevelBasedItem(ItemInfo Origin, ushort level, List<ItemInfo> ItemList)
     {
         ItemInfo output = Origin;
         for (int i = 0; i < ItemList.Count; i++)
@@ -2234,7 +2234,7 @@ public static class Functions
         return Origin;
     }
 
-    public static ItemInfo GetClassAndLevelBasedItem(ItemInfo Origin, MirClass job, byte level, List<ItemInfo> ItemList)
+    public static ItemInfo GetClassAndLevelBasedItem(ItemInfo Origin, MirClass job, ushort level, List<ItemInfo> ItemList)
     {
         ItemInfo output = Origin;
         for (int i = 0; i < ItemList.Count; i++)
@@ -2276,7 +2276,7 @@ public class SelectInfo
 {
     public int Index;
     public string Name = string.Empty;
-    public byte Level;
+    public ushort Level;
     public MirClass Class;
     public MirGender Gender;
     public DateTime LastAccess;
@@ -2287,7 +2287,7 @@ public class SelectInfo
         {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
-            Level = reader.ReadByte();
+            Level = reader.ReadUInt16();
             Class = (MirClass)reader.ReadByte();
             Gender = (MirGender)reader.ReadByte();
             LastAccess = DateTime.FromBinary(reader.ReadInt64());

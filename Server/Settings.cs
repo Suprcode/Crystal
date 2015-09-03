@@ -36,6 +36,7 @@ namespace Server
         public static string GMPassword = "C#Mir 4.0";
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
+        public static bool TestServer = false;
 
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
@@ -245,6 +246,7 @@ namespace Server
             GMPassword = Reader.ReadString("General", "GMPassword", GMPassword);
             Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
             ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
+            TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -422,6 +424,7 @@ namespace Server
             Reader.Write("General", "RelogDelay", RelogDelay);
             Reader.Write("General", "Multithreaded", Multithreaded);
             Reader.Write("General", "ThreadLimit", ThreadLimit);
+            Reader.Write("TestServer", "TestServer", TestServer);
 
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
@@ -556,7 +559,7 @@ namespace Server
             long exp = 100;
             InIReader reader = new InIReader(ConfigPath + @".\ExpList.ini");
 
-            for (int i = 1; i <= byte.MaxValue - 1; i++)
+            for (int i = 1; i <= 500; i++)
             {
                 exp = reader.ReadInt64("Exp", "Level" + i, exp);
                 ExperienceList.Add(exp);

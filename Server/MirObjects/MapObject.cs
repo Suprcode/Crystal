@@ -44,7 +44,7 @@ namespace Server.MirObjects
         public abstract Point CurrentLocation { get; set; }
         public abstract MirDirection Direction { get; set; }
         
-        public abstract byte Level { get; set; }
+        public abstract ushort Level { get; set; }
 
         public abstract uint Health { get; }
         public abstract uint MaxHealth { get; }
@@ -54,14 +54,14 @@ namespace Server.MirObjects
 
         }
 
-        public byte MinAC, MaxAC, MinMAC, MaxMAC;
-        public byte MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
+        public ushort MinAC, MaxAC, MinMAC, MaxMAC;
+        public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
 
         public byte Accuracy, Agility, Light;
         public sbyte ASpeed, Luck;
         public int AttackSpeed;
 
-        public byte CurrentHandWeight,
+        public ushort CurrentHandWeight,
                    MaxHandWeight,
                    CurrentWearWeight,
                    MaxWearWeight;
