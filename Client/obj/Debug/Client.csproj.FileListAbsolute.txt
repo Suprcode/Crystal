@@ -1,0 +1,11 @@
+C:\Users\Ashley\Desktop\Client\Client.exe.config
+C:\Users\Ashley\Desktop\Client\Client.exe
+C:\Users\Ashley\Desktop\Client\Client.pdb
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Launcher.AMain.resources
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Client.CMain.resources
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Launcher.Config.resources
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Client.Properties.Resources.resources
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Client.exe
+C:\Users\Ashley\Desktop\LoM\Project\mir2\Client\obj\Debug\Client.pdb
