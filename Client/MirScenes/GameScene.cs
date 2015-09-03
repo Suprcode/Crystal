@@ -11603,7 +11603,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Weapon,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(124, 7),
+                Location = new Point(123, 7),
             };
 
 
@@ -11621,7 +11621,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Helmet,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(202, 7),
+                Location = new Point(203, 7),
             };
 
 
@@ -12650,20 +12650,20 @@ namespace Client.MirScenes
 
                         int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
 
-                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, new Point(DisplayLocation.X + 0, DisplayLocation.Y + -20), Color.White, true, 1F);
+                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                     }
                 }
 
                 if (WeaponCell.Item != null)
                 {
                     RealItem = Functions.GetRealItem(WeaponCell.Item.Info, Level, Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, new Point(DisplayLocation.X + 0, DisplayLocation.Y + - 20),
+                    Libraries.StateItems.Draw(RealItem.Image, new Point(DisplayLocation.X, DisplayLocation.Y - 20),
                     Color.White, true, 1F);
 
                 }
 
                 if (HelmetCell.Item != null)
-                    Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, new Point(DisplayLocation.X + 0, DisplayLocation.Y + -20), Color.White, true, 1F);
+                    Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                 else
                 {
                     int hair = 441 + Hair + (Class == MirClass.Assassin ? 20 : 0) + (Gender == MirGender.Male ? 0 : 40);
@@ -12805,7 +12805,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Weapon,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(124, 7),
+                Location = new Point(123, 7),
             };
 
             ArmorCell = new MirItemCell
@@ -12821,7 +12821,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Helmet,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(202, 7),
+                Location = new Point(203, 7),
             };
 
 
