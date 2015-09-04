@@ -4140,7 +4140,7 @@ namespace Server.MirObjects
                         }
                         break;
 
-                    case "DECO":
+                    case "DECO": //TEST CODE
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         ushort tempShort = 0;
@@ -4452,6 +4452,22 @@ namespace Server.MirObjects
 
                         hintstring = b.Paused ? "Transform Disabled." : "Transform Enabled.";
                         ReceiveChat(hintstring, ChatType.Hint);
+                        break;
+
+                    case "CREATEMAPINSTANCE": //TEST CODE
+                        if (!IsGM || parts.Length < 2) return;
+
+                        map = SMain.Envir.GetMapByNameAndInstance(parts[1]);
+
+                        if (map == null)
+                        {
+                            ReceiveChat(string.Format("Map {0} does not exist", parts[1]), ChatType.System);
+                            return;
+                        }
+
+                        MapInfo mapInfo = map.Info;
+                        mapInfo.CreateMap();
+                        ReceiveChat(string.Format("Map instance created for map {0}", mapInfo.FileName), ChatType.System);
                         break;
 
                     default:

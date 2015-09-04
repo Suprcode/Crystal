@@ -17,8 +17,16 @@ namespace Client
         public static bool Restart;
 
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
+            if (args.Length > 0)
+            {
+                foreach (var arg in args)
+                {
+                    if (arg.ToLower() == "-tc") Settings.UseTestConfig = true;
+                }
+            }
+
             if (UpdatePatcher()) return;
 
             if (RuntimePolicyHelper.LegacyV2RuntimeEnabledSuccessfully == true) { }

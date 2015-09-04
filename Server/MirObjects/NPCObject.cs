@@ -3122,7 +3122,7 @@ namespace Server.MirObjects
         ForceDivorce,
         GlobalMessage,
         LoadValue,
-        SaveValue,
+        SaveValue
     }
     public enum CheckType
     {
