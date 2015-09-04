@@ -13,7 +13,7 @@ namespace Server.MirDatabase
     {
         public int Index;
         public string Name;
-        public byte Level;
+        public ushort Level;
         public MirClass Class;
         public MirGender Gender;
         public byte Hair;
@@ -114,7 +114,15 @@ namespace Server.MirDatabase
             Index = reader.ReadInt32();
             Name = reader.ReadString();
 
-            Level = reader.ReadByte();
+             if (Envir.LoadVersion < 62)
+             {
+                 Level = (ushort)reader.ReadByte();
+             }
+             else
+             {
+                 Level = reader.ReadUInt16();
+             }
+ 
             Class = (MirClass) reader.ReadByte();
             Gender = (MirGender) reader.ReadByte();
             Hair = reader.ReadByte();

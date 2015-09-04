@@ -14,10 +14,12 @@ namespace Server.MirDatabase
         public string Name = string.Empty;
 
         public Monster Image;
-        public byte AI, Effect, Level, ViewRange = 7, CoolEye;
+        public byte AI, Effect, ViewRange = 7, CoolEye;
+        public ushort Level;
 
         public uint HP;
-        public byte MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, Light;
+        public byte Accuracy, Agility, Light;
+        public ushort MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
 
         public ushort AttackSpeed = 2500, MoveSpeed = 1800;
         public uint Experience;
@@ -37,21 +39,46 @@ namespace Server.MirDatabase
             Image = (Monster) reader.ReadUInt16();
             AI = reader.ReadByte();
             Effect = reader.ReadByte();
-            Level = reader.ReadByte();
+            if (Envir.LoadVersion < 62)
+            {
+                Level = (ushort)reader.ReadByte();
+            }
+            else
+            {
+                Level = reader.ReadUInt16();
+            }
+
             ViewRange = reader.ReadByte();
             if (Envir.LoadVersion >= 3) CoolEye = reader.ReadByte();
 
             HP = reader.ReadUInt32();
-            MinAC = reader.ReadByte();
-            MaxAC = reader.ReadByte();
-            MinMAC = reader.ReadByte();
-            MaxMAC = reader.ReadByte();
-            MinDC = reader.ReadByte();
-            MaxDC = reader.ReadByte();
-            MinMC = reader.ReadByte();
-            MaxMC = reader.ReadByte();
-            MinSC = reader.ReadByte();
-            MaxSC = reader.ReadByte();
+
+            if (Envir.LoadVersion < 62)
+            {
+                MinAC = (ushort)reader.ReadByte();
+                MaxAC = (ushort)reader.ReadByte();
+                MinMAC = (ushort)reader.ReadByte();
+                MaxMAC = (ushort)reader.ReadByte();
+                MinDC = (ushort)reader.ReadByte();
+                MaxDC = (ushort)reader.ReadByte();
+                MinMC = (ushort)reader.ReadByte();
+                MaxMC = (ushort)reader.ReadByte();
+                MinSC = (ushort)reader.ReadByte();
+                MaxSC = (ushort)reader.ReadByte();
+            }
+            else
+            {
+                MinAC = reader.ReadUInt16();
+                MaxAC = reader.ReadUInt16();
+                MinMAC = reader.ReadUInt16();
+                MaxMAC = reader.ReadUInt16();
+                MinDC = reader.ReadUInt16();
+                MaxDC = reader.ReadUInt16();
+                MinMC = reader.ReadUInt16();
+                MaxMC = reader.ReadUInt16();
+                MinSC = reader.ReadUInt16();
+                MaxSC = reader.ReadUInt16();
+            }
 
             Accuracy = reader.ReadByte();
             Agility = reader.ReadByte();
@@ -187,21 +214,21 @@ namespace Server.MirDatabase
 
             if (!byte.TryParse(data[2], out info.AI)) return;
             if (!byte.TryParse(data[3], out info.Effect)) return;
-            if (!byte.TryParse(data[4], out info.Level)) return;
+            if (!ushort.TryParse(data[4], out info.Level)) return;
             if (!byte.TryParse(data[5], out info.ViewRange)) return;
 
             if (!uint.TryParse(data[6], out info.HP)) return;
 
-            if (!byte.TryParse(data[7], out info.MinAC)) return;
-            if (!byte.TryParse(data[8], out info.MaxAC)) return;
-            if (!byte.TryParse(data[9], out info.MinMAC)) return;
-            if (!byte.TryParse(data[10], out info.MaxMAC)) return;
-            if (!byte.TryParse(data[11], out info.MinDC)) return;
-            if (!byte.TryParse(data[12], out info.MaxDC)) return;
-            if (!byte.TryParse(data[13], out info.MinMC)) return;
-            if (!byte.TryParse(data[14], out info.MaxMC)) return;
-            if (!byte.TryParse(data[15], out info.MinSC)) return;
-            if (!byte.TryParse(data[16], out info.MaxSC)) return;
+            if (!ushort.TryParse(data[7], out info.MinAC)) return;
+            if (!ushort.TryParse(data[8], out info.MaxAC)) return;
+            if (!ushort.TryParse(data[9], out info.MinMAC)) return;
+            if (!ushort.TryParse(data[10], out info.MaxMAC)) return;
+            if (!ushort.TryParse(data[11], out info.MinDC)) return;
+            if (!ushort.TryParse(data[12], out info.MaxDC)) return;
+            if (!ushort.TryParse(data[13], out info.MinMC)) return;
+            if (!ushort.TryParse(data[14], out info.MaxMC)) return;
+            if (!ushort.TryParse(data[15], out info.MinSC)) return;
+            if (!ushort.TryParse(data[16], out info.MaxSC)) return;
             if (!byte.TryParse(data[17], out info.Accuracy)) return;
             if (!byte.TryParse(data[18], out info.Agility)) return;
             if (!byte.TryParse(data[19], out info.Light)) return;

@@ -5179,7 +5179,7 @@ namespace Client.MirScenes
 
         public MirControl NameInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -5291,7 +5291,7 @@ namespace Client.MirScenes
         }
         public MirControl AttackInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -5528,14 +5528,16 @@ namespace Client.MirScenes
             maxValue = 0;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.AttackSpeed : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
                 string plus = (addValue + minValue < 0) ? "" : "+";
 
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
                 {
-                    text = string.Format(addValue > 0 ? "A.Speed: " + plus + "{0} (+{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue);
+                    string negative = "+";
+                    if (addValue < 0) negative = "";
+                    text = string.Format(addValue != 0 ? "A.Speed: " + plus + "{0} ({2}{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue, negative);
                     //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
                 }
                 else
@@ -5752,7 +5754,7 @@ namespace Client.MirScenes
         }
         public MirControl DefenseInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -6243,7 +6245,7 @@ namespace Client.MirScenes
         }
         public MirControl WeightInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -6426,7 +6428,7 @@ namespace Client.MirScenes
         }
         public MirControl AwakeInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -6526,7 +6528,7 @@ namespace Client.MirScenes
         }
         public MirControl NeedInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -6668,7 +6670,7 @@ namespace Client.MirScenes
         }
         public MirControl BindInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -7229,7 +7231,7 @@ namespace Client.MirScenes
         }
         public MirControl OverlapInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -7324,7 +7326,7 @@ namespace Client.MirScenes
         }
         public MirControl StoryInfoLabel(UserItem item, bool Inspect = false)
         {
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -7423,7 +7425,7 @@ namespace Client.MirScenes
             }
 
             if (item == HoverItem && ItemLabel != null && !ItemLabel.IsDisposed) return;
-            byte level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
@@ -11386,7 +11388,9 @@ namespace Client.MirScenes
         public MirImageControl CharacterPage, StatusPage, StatePage, SkillPage, ClassImage;
 
         public MirLabel NameLabel, GuildLabel, LoverLabel;
-        public MirLabel ACLabel, MACLabel, DCLabel, MCLabel, SCLabel, HealthLabel, ManaLabel, StatuspageHeaderLabel, StatuspageDataLabel;
+        public MirLabel ACLabel, MACLabel, DCLabel, MCLabel, SCLabel, HealthLabel, ManaLabel;
+        public MirLabel CritRLabel, CritDLabel, LuckLabel, AttkSpdLabel, AccLabel, AgilLabel;
+        public MirLabel ExpPLabel, BagWLabel, WearWLabel, HandWLabel, MagicRLabel, PoisonRecLabel, HealthRLabel, ManaRLabel, PoisonResLabel, HolyTLabel, FreezeLabel, PoisonAtkLabel;
         public MirLabel HeadingLabel, StatLabel;
         public MirButton NextButton, BackButton;
 
@@ -11435,6 +11439,7 @@ namespace Client.MirScenes
                 {
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Weapon].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
                     Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
+                    
                 }
 
                 if (Grid[(int)EquipmentSlot.Helmet].Item != null)
@@ -11467,7 +11472,12 @@ namespace Client.MirScenes
                 SCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinSC, MapObject.User.MaxSC);
                 HealthLabel.Text = string.Format("{0}/{1}", MapObject.User.HP, MapObject.User.MaxHP);
                 ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.MaxMP);
-                StatuspageDataLabel.Text = string.Format("{0}\n{1}", MapObject.User.CriticalRate, MapObject.User.CriticalDamage);
+                CritRLabel.Text = string.Format("{0}%", MapObject.User.CriticalRate);
+                CritDLabel.Text = string.Format("{0}", MapObject.User.CriticalDamage);
+                AttkSpdLabel.Text = string.Format("{0}", MapObject.User.ASpeed);
+                AccLabel.Text = string.Format("+{0}", MapObject.User.Accuracy);
+                AgilLabel.Text = string.Format("+{0}", MapObject.User.Agility);
+                LuckLabel.Text = string.Format("+{0}", MapObject.User.Luck);
             };
 
             StatePage = new MirImageControl
@@ -11480,16 +11490,18 @@ namespace Client.MirScenes
             };
             StatePage.BeforeDraw += (o, e) =>
             {
-                StatLabel.Text = string.Format("{0:#0.##%}\n{1}/{2}\n{3}/{4}\n{5}/{6}\n{7}\n{8}\n+{9}\n+{10}\n+{11}\n+{12}\n+{13}\n+{14}\n+{15}\n+{16}\n+{17}\n+{18}",
-                                               MapObject.User.Experience / (double)MapObject.User.MaxExperience,
-                                               MapObject.User.CurrentBagWeight, MapObject.User.MaxBagWeight,
-                                               MapObject.User.CurrentWearWeight, MapObject.User.MaxWearWeight,
-                                               MapObject.User.CurrentHandWeight, MapObject.User.MaxHandWeight,
-                                               MapObject.User.Accuracy, MapObject.User.Agility,
-                                               MapObject.User.Luck, MapObject.User.ASpeed,
-                                               MapObject.User.MagicResist, MapObject.User.PoisonResist,
-                                               MapObject.User.HealthRecovery, MapObject.User.SpellRecovery, MapObject.User.PoisonRecovery,
-                                               MapObject.User.Holy, MapObject.User.Freezing, MapObject.User.PoisonAttack);
+                    ExpPLabel.Text = string.Format("{0:0.##%}", MapObject.User.Experience / (double)MapObject.User.MaxExperience);
+                    BagWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentBagWeight, MapObject.User.MaxBagWeight);
+                    WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.MaxWearWeight);
+                    HandWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentHandWeight, MapObject.User.MaxHandWeight);
+                    MagicRLabel.Text = string.Format("+{0}", MapObject.User.MagicResist);
+                    PoisonResLabel.Text = string.Format("+{0}", MapObject.User.PoisonResist);
+                    HealthRLabel.Text = string.Format("+{0}", MapObject.User.HealthRecovery);
+                    ManaRLabel.Text = string.Format("+{0}", MapObject.User.SpellRecovery);
+                    PoisonRecLabel.Text = string.Format("+{0}", MapObject.User.PoisonRecovery);
+                    HolyTLabel.Text = string.Format("+{0}", MapObject.User.Holy);
+                    FreezeLabel.Text = string.Format("+{0}", MapObject.User.Freezing);
+                    PoisonAtkLabel.Text = string.Format("+{0}", MapObject.User.PoisonAttack);
             };
 
 
@@ -11591,7 +11603,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Weapon,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(125, 7),
+                Location = new Point(123, 7),
             };
 
 
@@ -11600,7 +11612,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Armour,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(164, 7),
+                Location = new Point(163, 7),
             };
 
 
@@ -11670,7 +11682,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Amulet,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(8, 241),
+                Location = new Point(8, 242),
             };
 
 
@@ -11679,7 +11691,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Boots,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(47, 241),
+                Location = new Point(48, 242),
             };
 
             Grid[(int)EquipmentSlot.Belt] = new MirItemCell
@@ -11687,7 +11699,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Belt,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(86, 241),
+                Location = new Point(88, 242),
             };
 
 
@@ -11696,7 +11708,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Stone,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(125, 241),
+                Location = new Point(128, 242),
             };
 
             Grid[(int)EquipmentSlot.Mount] = new MirItemCell
@@ -11707,102 +11719,210 @@ namespace Client.MirScenes
                 Location = new Point(203, 62),
             };
 
+            // STATS I
+            HealthLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 20),
+                NotControl = true,
+                Text = "0-0",
+            };
+
+            ManaLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 38),
+                NotControl = true,
+                Text = "0-0",
+            };
 
             ACLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(105, 63),
+                Location = new Point(126, 56),
                 NotControl = true,
-                Text = "0-0"
+                Text = "0-0",
             };
 
             MACLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(105, 90),
+                Location = new Point(126, 74),
                 NotControl = true,
-                Text = "0-0"
+                Text = "0-0",
             };
-
             DCLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(105, 117),
+                Location = new Point(126, 92),
                 NotControl = true,
                 Text = "0-0"
             };
-
             MCLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(105, 144),
+                Location = new Point(126, 110),
                 NotControl = true,
-                Text = "0-0"
+                Text = "0/0"
             };
             SCLabel = new MirLabel
             {
                 AutoSize = true,
                 Parent = StatusPage,
-                Location = new Point(105, 171),
+                Location = new Point(126, 128),
+                NotControl = true,
+                Text = "0/0"
+            };
+            //Breezer - New Labels
+            CritRLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 146),
+                NotControl = true
+            };
+            CritDLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 164),
+                NotControl = true
+            };
+            AttkSpdLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 182),
+                NotControl = true
+            };
+            AccLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 200),
+                NotControl = true
+            };
+            AgilLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 218),
+                NotControl = true
+            };
+            LuckLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 236),
+                NotControl = true
+            };
+            // STATS II 
+            ExpPLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 20),
+                NotControl = true,
+                Text = "0-0",
+            };
+
+            BagWLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 38),
+                NotControl = true,
+                Text = "0-0",
+            };
+
+            WearWLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 56),
+                NotControl = true,
+                Text = "0-0",
+            };
+
+            HandWLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 74),
+                NotControl = true,
+                Text = "0-0",
+            };
+            MagicRLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 92),
                 NotControl = true,
                 Text = "0-0"
             };
-            HealthLabel = new MirLabel
+            PoisonResLabel = new MirLabel
             {
                 AutoSize = true,
-                Parent = StatusPage,
-                Location = new Point(105, 198),
+                Parent = StatePage,
+                Location = new Point(126, 110),
                 NotControl = true,
                 Text = "0/0"
             };
-            ManaLabel = new MirLabel
+            HealthRLabel = new MirLabel
             {
                 AutoSize = true,
-                Parent = StatusPage,
-                Location = new Point(105, 222),
+                Parent = StatePage,
+                Location = new Point(126, 128),
                 NotControl = true,
                 Text = "0/0"
             };
-            StatuspageHeaderLabel = new MirLabel
+            //Breezer
+            ManaRLabel = new MirLabel
             {
                 AutoSize = true,
-                Parent = StatusPage,
-                Location = new Point(20, 238),
-                NotControl = true,
-                Text = "Critical Rate\nCritical Damage"
+                Parent = StatePage,
+                Location = new Point(126, 146),
+                NotControl = true
             };
-            StatuspageDataLabel = new MirLabel
+            PoisonRecLabel = new MirLabel
             {
                 AutoSize = true,
-                Parent = StatusPage,
-                Location = new Point(105, 238),
+                Parent = StatePage,
+                Location = new Point(126, 164),
+                NotControl = true
+            };
+            HolyTLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 182),
+                NotControl = true
+            };
+            FreezeLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 200),
+                NotControl = true
+            };
+            PoisonAtkLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatePage,
+                Location = new Point(126, 218),
                 NotControl = true
             };
 
-            HeadingLabel = new MirLabel
-            {
-                AutoSize = true,
-                Parent = StatePage,
-                Location = new Point(10, 59),
-                NotControl = true,
-                Text = "Experience\nBag Weight\nWear Weight\nHand Weight\nAccuracy\nAgility\nLuck\nAttack Speed\nMagicResist\nPoisonResist\nHealthRecovery\nManaRecovery\nPoisonRecovery\nHoly\nFreezing\nPoisonAttack"
-            };
-            StatLabel = new MirLabel
-            {
-                AutoSize = true,
-                Parent = StatePage,
-                Location = new Point(120, 59),
-                NotControl = true,
-            };
-
-            Magics = new MagicButton[6];
+            Magics = new MagicButton[7];
 
             for (int i = 0; i < Magics.Length; i++)
-                Magics[i] = new MagicButton { Parent = SkillPage, Visible = false, Location = new Point(8, 40 + i * 33) };
+                Magics[i] = new MagicButton { Parent = SkillPage, Visible = false, Location = new Point(8, 8 + i * 33) };
 
             NextButton = new MirButton
             {
@@ -11815,9 +11935,9 @@ namespace Client.MirScenes
             };
             NextButton.Click += (o, e) =>
             {
-                if (StartIndex + 6 >= MapObject.User.Magics.Count) return;
+                if (StartIndex + 7 >= MapObject.User.Magics.Count) return;
 
-                StartIndex += 6;
+                StartIndex += 7;
                 RefreshInterface();
 
                 ClearCoolDowns();
@@ -12472,7 +12592,7 @@ namespace Client.MirScenes
         public MirClass Class;
         public MirGender Gender;
         public byte Hair;
-        public byte Level;
+        public ushort Level;
         public string LoverName;
 
         public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton, LoverButton;
@@ -12498,9 +12618,9 @@ namespace Client.MirScenes
             StoneCell,
             MountCell;
 
-        public InspectDialog()
+        public InspectDialog() 
         {
-            Index = 430;
+            Index =430;
             Library = Libraries.Prguse;
             Location = new Point(536, 0);
             Movable = true;
@@ -12508,10 +12628,10 @@ namespace Client.MirScenes
 
             CharacterPage = new MirImageControl
             {
-                Index = 345,
+                Index = 340,
                 Parent = this,
                 Library = Libraries.Prguse,
-                Location = new Point(8, 90),
+                Location = new Point(8, 70),
             };
             CharacterPage.AfterDraw += (o, e) =>
             {
@@ -12522,7 +12642,7 @@ namespace Client.MirScenes
                 if (ArmorCell.Item != null)
                 {
                     RealItem = Functions.GetRealItem(ArmorCell.Item.Info, Level, Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
+                    Libraries.StateItems.Draw(RealItem.Image, new Point(DisplayLocation.X  + 0, DisplayLocation.Y +  -20), Color.White, true, 1F);
 
                     if (RealItem.Effect > 0)
                     {
@@ -12530,18 +12650,20 @@ namespace Client.MirScenes
 
                         int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
 
-                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
+                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                     }
                 }
 
                 if (WeaponCell.Item != null)
                 {
                     RealItem = Functions.GetRealItem(WeaponCell.Item.Info, Level, Class, GameScene.ItemInfoList);
-                    Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
+                    Libraries.StateItems.Draw(RealItem.Image, new Point(DisplayLocation.X, DisplayLocation.Y - 20),
+                    Color.White, true, 1F);
+
                 }
 
                 if (HelmetCell.Item != null)
-                    Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, DisplayLocation, Color.White, true, 1F);
+                    Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                 else
                 {
                     int hair = 441 + Hair + (Class == MirClass.Assassin ? 20 : 0) + (Gender == MirGender.Male ? 0 : 40);
@@ -12572,7 +12694,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 432,
                 Index = 431,
-                Location = new Point(85, 379),
+                Location = new Point(75, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 433,
@@ -12590,17 +12712,17 @@ namespace Client.MirScenes
                 {
 
                     GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
-                    return;
                 }
 
                 Network.Enqueue(new C.AddMember { Name = Name });
+                    return;
             };
 
             FriendButton = new MirButton
             {
                 HoverIndex = 435,
                 Index = 434,
-                Location = new Point(115, 379),
+                Location = new Point(105, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 436,
@@ -12615,7 +12737,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 438,
                 Index = 437,
-                Location = new Point(145, 379),
+                Location = new Point(135, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 439,
@@ -12627,7 +12749,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 524,
                 Index = 523,
-                Location = new Point(175, 379),
+                Location = new Point(165, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 525,
@@ -12683,7 +12805,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Weapon,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(125, 7),
+                Location = new Point(123, 7),
             };
 
             ArmorCell = new MirItemCell
@@ -12691,7 +12813,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Armour,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(164, 7),
+                Location = new Point(163, 7),
             };
 
             HelmetCell = new MirItemCell
@@ -12753,7 +12875,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Amulet,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(8, 241),
+                Location = new Point(8, 242),
             };
 
             BootsCell = new MirItemCell
@@ -12761,14 +12883,14 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Boots,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(47, 241),
+                Location = new Point(48, 242),
             };
             BeltCell = new MirItemCell
             {
                 ItemSlot = (int)EquipmentSlot.Belt,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(86, 241),
+                Location = new Point(88, 242),
             };
 
             StoneCell = new MirItemCell
@@ -12776,7 +12898,7 @@ namespace Client.MirScenes
                 ItemSlot = (int)EquipmentSlot.Stone,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
-                Location = new Point(125, 241),
+                Location = new Point(128, 242),
             };
 
             MountCell = new MirItemCell
@@ -21975,7 +22097,7 @@ namespace Client.MirScenes
         public MirLabel MentorNameLabel, MentorLevelLabel, MentorOnlineLabel, StudentNameLabel, StudentLevelLabel, StudentOnlineLabel, MentorLabel, StudentLabel, MenteeEXPLabel;
 
         public string MentorName;
-        public byte MentorLevel;
+        public ushort MentorLevel;
         public bool MentorOnline;
         public long MenteeEXP;
 
