@@ -131,7 +131,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(54, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "1280x960";
+            this.label3.Text = "1366x768";
             this.label3.Click += new System.EventHandler(this.Res3_pb_Click);
             // 
             // Res3_pb
