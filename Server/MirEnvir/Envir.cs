@@ -318,8 +318,7 @@ namespace Server.MirEnvir
             if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "Cannot start server without mob: " + Settings.FishingMonster;
             if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
 
-            //add intleligent creature checks?
-
+            //add intelligent creature checks?
 
             return "true";
         }
@@ -530,6 +529,7 @@ namespace Server.MirEnvir
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
             _thread = null;
+
         }
         
         private void ThreadLoop(MobThread Info)
