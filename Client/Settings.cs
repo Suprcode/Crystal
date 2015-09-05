@@ -9,7 +9,18 @@ namespace Client
     {
         public const long CleanDelay = 600000;
         public static int ScreenWidth = 800, ScreenHeight = 600;
-        private static readonly InIReader Reader = new InIReader(@".\Mir2Config.ini");
+        private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
+
+        public static bool UseTestConfig
+        {
+            set 
+            {
+                if (value == true)
+                {
+                    Reader = new InIReader(@".\Mir2Test.ini");
+                }
+            }
+        }
 
         public const string DataPath = @".\Data\",
                             MapPath = @".\Map\",
@@ -139,7 +150,6 @@ namespace Client
         public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
-
 
         public static void Load()
         {

@@ -213,7 +213,7 @@ namespace AutoPatcherAdmin
                 using (WebClient client = new WebClient())
                 {
                     client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
-                    return Decompress(client.DownloadData(Settings.Host + Path.ChangeExtension(fileName, ".gz")));
+                    return Decompress(client.DownloadData(Settings.Host + "/" + Path.ChangeExtension(fileName, ".gz")));
                 }
             }
             catch
