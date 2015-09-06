@@ -12763,6 +12763,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(50, 12),
                 Size = new Size(190, 20),
+                NotControl = true
             };
             NameLabel.Click += (o, e) =>
             {
@@ -12779,6 +12780,7 @@ namespace Client.MirScenes
                 Location = new Point(17, 17),
                 Library = Libraries.Prguse,
                 Parent = this,
+                Sound = SoundList.None
             };
 
             GuildLabel = new MirLabel
