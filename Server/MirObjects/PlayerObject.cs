@@ -4024,6 +4024,7 @@ namespace Server.MirObjects
                         else
                             ReceiveChat("You haven't a mount...", ChatType.System);
 
+                        ChatTime = 0;
                         break;
                     case "SETFLAG":
                         if (!IsGM && !Settings.TestServer) return;
@@ -4309,7 +4310,6 @@ namespace Server.MirObjects
                     case "ADDINVENTORY":
                         int openLevel = (int)((Info.Inventory.Length - 46) / 4);
                         uint openGold = (uint)(1000000 + openLevel * 1000000);
-
                         if (Account.Gold >= openGold)
                         {
                             Account.Gold -= openGold;
@@ -4321,6 +4321,7 @@ namespace Server.MirObjects
                         {
                             ReceiveChat("Not enough gold.", ChatType.System);
                         }
+                        ChatTime = 0;
                         break;
 
                     case "INFO":
@@ -13377,6 +13378,9 @@ namespace Server.MirObjects
                 if (buff.Type == BuffType.RelationshipEXP)
                 {
                     CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+
+                    if (Lover == null) continue; //circumventing an error elsewhere?? shouldn't ever be null.
+
                     PlayerObject LoverP = Envir.GetPlayer(Lover.Name);
                     RemoveBuff(BuffType.RelationshipEXP);
                     LoverP.RemoveBuff(BuffType.RelationshipEXP);
@@ -13384,7 +13388,13 @@ namespace Server.MirObjects
                 else if (buff.Type == BuffType.Mentee || buff.Type == BuffType.Mentor)
                 {
                     CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
+
+                    if (Mentor == null) continue; //circumventing an error elsewhere?? shouldn't ever be null.
+
                     PlayerObject MentorP = Envir.GetPlayer(Mentor.Name);
+
+                    if (MentorP == null) continue; //circumventing an error elsewhere?? shouldn't ever be null.
+
                     RemoveBuff(buff.Type);
                     MentorP.RemoveBuff(buff.Type == BuffType.Mentee ? BuffType.Mentor : BuffType.Mentee);
                 }
@@ -17224,6 +17234,9 @@ namespace Server.MirObjects
             if (Info.Mentor == 0) return;
 
             CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
+
+            if (Mentor == null) return; //circumventing an error elsewhere?? shouldn't ever be null.
+
             PlayerObject player = Envir.GetPlayer(Mentor.Name);
 
             if (!Info.isMentor)
