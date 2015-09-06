@@ -4979,6 +4979,10 @@ namespace Server.MirObjects
         }
         public void Attack(MirDirection dir, Spell spell)
         {
+            var t = CurrentMap;
+            t = null;
+            var tt = t.Info.BigMap;
+
             LogTime = Envir.Time + Globals.LogDelay;
 
             bool Mined = false;

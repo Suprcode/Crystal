@@ -18,11 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-<<<<<<< HEAD
     <OutputPath>..\..\AutoPatcherAdmin\</OutputPath>
-=======
-    <OutputPath>..\..\AutoPatcher\AutoPatcherAdmin\</OutputPath>
->>>>>>> 5fe961d440392a63b4b09d366fda0a54735b0a2c
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

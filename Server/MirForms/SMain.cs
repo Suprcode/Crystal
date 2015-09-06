@@ -14,9 +14,9 @@ namespace Server
 
         public SMain()
         {
-            InitializeComponent();
+                InitializeComponent();
 
-            AutoResize();
+                AutoResize();
         }
 
         private void AutoResize()
@@ -351,9 +351,16 @@ namespace Server
 
         private void SMain_Load(object sender, EventArgs e)
         {
-            EditEnvir.LoadDB();
-            Envir.Start();
-            AutoResize();
+            try
+            {
+                EditEnvir.LoadDB();
+                Envir.Start();
+                AutoResize();
+            }
+            catch
+            {
+                Application.Restart();
+            }
         }
     }
 }
