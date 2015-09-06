@@ -210,6 +210,7 @@ namespace LibraryEditor
 
                 _library.AddImage(image, x, y);
                 toolStripProgressBar.Value++;
+                image.Dispose();
             }
 
             PreviewListView.VirtualListSize = _library.Images.Count;
@@ -492,7 +493,7 @@ namespace LibraryEditor
                 }
 
                 _library.InsertImage(index, image, x, y);
-
+                image.Dispose();
                 toolStripProgressBar.Value++;
             }
 
@@ -615,6 +616,11 @@ namespace LibraryEditor
                     _exportImage = _library.GetMImage(i);
                     _exportImage.Image.Save(_folder + i.ToString() + ".bmp", ImageFormat.Bmp);
                     toolStripProgressBar.Value++;
+
+                    if(!Directory.Exists(_folder + "/Placements/"))
+                        Directory.CreateDirectory(_folder + "/Placements/");
+
+                    File.WriteAllLines(_folder + "/Placements/" + i.ToString() + ".txt", new string[] { _exportImage.X.ToString(), _exportImage.Y.ToString()});
                 }
 
                 toolStripProgressBar.Value = 0;

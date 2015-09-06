@@ -8127,6 +8127,16 @@ namespace Client.MirScenes
         {
             for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
             {
+                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= Width) break;
+                    M2CellInfo[x, y].DrawDeadObjects();
+                }
+            }
+
+            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
+            {
                 if (y <= 0) continue;
                 if (y >= Height) break;
                 int drawY = (y - User.Movement.Y + OffSetY + 1) * CellHeight + User.OffSetMove.Y;
@@ -11954,9 +11964,9 @@ namespace Client.MirScenes
             };
             BackButton.Click += (o, e) =>
             {
-                if (StartIndex - 6 < 0) return;
+                if (StartIndex - 7 < 0) return;
 
-                StartIndex -= 6;
+                StartIndex -= 7;
                 RefreshInterface();
 
                 ClearCoolDowns();
@@ -12671,7 +12681,7 @@ namespace Client.MirScenes
                     int offSetX = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 6 : 4) : 0;
                     int offSetY = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 25 : 18) : 0;
 
-                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X + offSetX, DisplayLocation.Y + offSetY), Color.White, true, 1F);
+                    Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X + offSetX, DisplayLocation.Y + offSetY - 20), Color.White, true, 1F);
                 }
             };
 
@@ -12763,6 +12773,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(50, 12),
                 Size = new Size(190, 20),
+                NotControl = true
             };
             NameLabel.Click += (o, e) =>
             {
@@ -12779,6 +12790,7 @@ namespace Client.MirScenes
                 Location = new Point(17, 17),
                 Library = Libraries.Prguse,
                 Parent = this,
+                Sound = SoundList.None
             };
 
             GuildLabel = new MirLabel
