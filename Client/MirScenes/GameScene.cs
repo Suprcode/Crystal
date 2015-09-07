@@ -8127,6 +8127,8 @@ namespace Client.MirScenes
         {
             for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
             {
+            	if (y <= 0) continue;
+                if (y >= Height) break;
                 for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
