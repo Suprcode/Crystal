@@ -1283,7 +1283,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack3, new Frame(208, 9, 0, 100));
             frame.Frames.Add(MirAction.Struck, new Frame(280, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(304, 9, 0, 100));
-            frame.Frames.Add(MirAction.Dead, new Frame(312, 1, 7, 1000));
+            frame.Frames.Add(MirAction.Dead, new Frame(312, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(304, 9, 0, 100) { Reverse = true });
 
             //108 - SwampSlime
