@@ -37,7 +37,7 @@ namespace Launcher
 
             if (res == 800) Res1_pb.Image = Client.Properties.Resources.Config_Radio_On;
             else if (res == 1024) Res2_pb.Image = Client.Properties.Resources.Config_Radio_On;
-            else if (res == 1280) Res3_pb.Image = Client.Properties.Resources.Config_Radio_On;
+            else if (res == 1366) Res3_pb.Image = Client.Properties.Resources.Config_Radio_On;
 
             Settings.Resolution = res;
 
@@ -51,7 +51,7 @@ namespace Launcher
 
         private void Res3_pb_Click(object sender, EventArgs e)
         {
-            resolutionChoice(1280);
+            resolutionChoice(1366);
         }
 
         private void Config_VisibleChanged(object sender, EventArgs e)

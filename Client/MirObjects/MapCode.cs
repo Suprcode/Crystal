@@ -60,7 +60,20 @@ namespace Client.MirObjects
         {
             if (CellObjects == null) return;
             for (int i = 0; i < CellObjects.Count; i++)
+            {
+                if (CellObjects[i].Dead) continue;
                 CellObjects[i].Draw();
+            }
+        }
+
+        public void DrawDeadObjects()
+        {
+            if (CellObjects == null) return;
+            for (int i = 0; i < CellObjects.Count; i++)
+            {
+                if (!CellObjects[i].Dead) continue;
+                CellObjects[i].Draw();
+            }
         }
 
         public void Sort()
