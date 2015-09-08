@@ -4980,6 +4980,10 @@ namespace Server.MirObjects
         }
         public void Attack(MirDirection dir, Spell spell)
         {
+            var t = CurrentMap;
+            t = null;
+            var tt = t.Info.BigMap;
+
             LogTime = Envir.Time + Globals.LogDelay;
 
             bool Mined = false;
@@ -16576,8 +16580,9 @@ namespace Server.MirObjects
                 Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
             }
 
-            GetRelationship(false);
 
+            GetRelationship(false);
+            
             Lover.Married = 0;
             Lover.MarriedDate = DateTime.Now;
             if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)

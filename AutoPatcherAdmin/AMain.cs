@@ -383,6 +383,11 @@ namespace AutoPatcherAdmin
             Process.Start("http://www.lomcn.org/forum/member.php?141-Jamie-Hello");
         }
 
+        private void AMain_Load(object sender, EventArgs e)
+        {
+
+        }
+
     }
 
     public class FileInformation
