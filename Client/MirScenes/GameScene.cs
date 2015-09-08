@@ -106,6 +106,7 @@ namespace Client.MirScenes
         public MemoDialog MemoDialog;
         public RelationshipDialog RelationshipDialog;
         public MentorDialog MentorDialog;
+        public GameShopDialog GameShopDialog;
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -114,12 +115,14 @@ namespace Client.MirScenes
         public static List<UserId> UserIdList = new List<UserId>();
         public static List<ChatItem> ChatItemList = new List<ChatItem>();
         public static List<ClientQuestInfo> QuestInfoList = new List<ClientQuestInfo>();
+        public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
 
         public List<Buff> Buffs = new List<Buff>();
 
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
         public static UserItem[] Refine = new UserItem[16];
+        public static GameShopItem[] GameShopGrid = new GameShopItem[8];
         public static UserItem HoverItem;
         public static MirItemCell SelectedCell;
 
@@ -231,14 +234,17 @@ namespace Client.MirScenes
             IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
 
             RefineDialog = new RefineDialog { Parent = this, Visible = false };
-
-            //not added yet
-            KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
             RelationshipDialog = new RelationshipDialog { Parent = this, Visible = false };
             FriendDialog = new FriendDialog { Parent = this, Visible = false };
             MemoDialog = new MemoDialog { Parent = this, Visible = false };
-
             MentorDialog = new MentorDialog { Parent = this, Visible = false };
+            GameShopDialog = new GameShopDialog { Parent = this, Visible = false };
+
+            //not added yet
+            KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
+            
+
+            
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -1477,6 +1483,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.GuildBuffList:
                     GuildBuffList((S.GuildBuffList)p);
+                    break;
+                case (short)ServerPacketIds.GameShopInfo:
+                    GameShopUpdate((S.GameShopInfo)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -5045,6 +5054,12 @@ namespace Client.MirScenes
 
             GameScene.Scene.MentorDialog.UpdateInterface();
         }
+
+        private void GameShopUpdate(S.GameShopInfo p)
+        {
+            GameShopInfoList.Add(p.Info);
+        }
+        
 
         public void AddItem(UserItem item)
         {
@@ -9459,7 +9474,8 @@ namespace Client.MirScenes
             };
             GameShopButton.Click += (o, e) =>
             {
-
+                if (!GameScene.Scene.GameShopDialog.Visible) GameScene.Scene.GameShopDialog.Show();
+                else GameScene.Scene.GameShopDialog.Hide();
             };
 
             HealthOrb = new MirControl
@@ -22417,6 +22433,77 @@ namespace Client.MirScenes
             }
         }
 
+    }
+
+    public sealed class GameShopDialog : MirImageControl
+    {
+        public MirImageControl TitleLabel;
+        public MirButton CloseButton;
+        public MirItemCell[] Grid;
+
+
+        public GameShopDialog()
+        {
+            Index = 641;
+            Library = Libraries.Title;
+            Movable = true;
+            Sort = true;
+            Location = Center;
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 52,
+                Library = Libraries.Title,
+                Location = new Point(18, 4),
+                Parent = this
+            };
+
+            CloseButton = new MirButton
+            {
+                HoverIndex = 361,
+                Index = 360,
+                Location = new Point(260, 3),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                PressedIndex = 362,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+            Grid = new MirItemCell[4 * 2];
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    int idx = 4 * y + x;
+                    Grid[idx] = new MirItemCell
+                    {
+                        ItemSlot = idx,
+                        GridType = MirGridType.BuyBack,
+                        Library = Libraries.Items,
+                        Parent = this,
+                        Size = new Size(34, 32),
+                        Location = new Point(x * 34 + 12 + x, y * 32 + 37 + y),
+                    };
+                }
+            }
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+        public void Show()
+        {
+            if (Visible) return;
+            Visible = true;
+        }
+
+        public void UpdateInterface()
+        {
+
+        }
     }
 
     public class Buff

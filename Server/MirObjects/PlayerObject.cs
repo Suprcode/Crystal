@@ -1802,6 +1802,7 @@ namespace Server.MirObjects
             else
                 GetMentor();
 
+            GetGameShop();
 
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
@@ -17252,6 +17253,18 @@ namespace Server.MirObjects
             {
                 player.Enqueue(new S.MentorUpdate { Name = Info.Name, Level = Info.Level, Online = false, MenteeEXP = Mentor.MentorExp });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
+            }
+        }
+
+        #endregion
+
+        #region Gameshop
+
+        public void GetGameShop()
+        {
+            for (int i = 0; i < Envir.GameShopList.Count; i++)
+            {
+                Enqueue(new S.GameShopInfo { Info = Envir.GameShopList[i] });
             }
         }
 

@@ -4138,6 +4138,26 @@ namespace ServerPackets
         }
     }
 
+    public sealed class GameShopInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.GameShopInfo; }
+        }
+
+        public GameShopItem Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Info = new GameShopItem(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Info.Save(writer);
+        }
+    }
+
     public sealed class CancelReincarnation : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.CancelReincarnation; } }

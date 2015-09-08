@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 62;
+        public const int Version = 63;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -111,6 +111,7 @@ namespace Server.MirEnvir
         public List<NPCInfo> NPCInfoList = new List<NPCInfo>();
         public DragonInfo DragonInfo = new DragonInfo();
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
+        public List<GameShopItem> GameShopList = new List<GameShopItem>();
 
         //User DB
         public int NextAccountID, NextCharacterID;
@@ -725,6 +726,10 @@ namespace Server.MirEnvir
                 writer.Write(MagicInfoList.Count);
                 for (int i = 0; i < MagicInfoList.Count; i++)
                     MagicInfoList[i].Save(writer);
+
+                writer.Write(GameShopList.Count);
+                for (int i = 0; i < GameShopList.Count; i++)
+                    GameShopList[i].Save(writer);
             }
         }
         public void SaveAccounts()
@@ -980,6 +985,20 @@ namespace Server.MirEnvir
                             MagicInfoList.Add(new MagicInfo(reader));
                     }
                     FillMagicInfoList();
+
+                    if (LoadVersion >= 63)
+                    {
+                        count = reader.ReadInt32();
+                        GameShopList.Clear();
+                        for (int i = 0; i < count; i++)
+                        {
+                            GameShopItem item = new GameShopItem(reader, LoadVersion, LoadCustomVersion);
+                            if (SMain.Envir.BindGameShop(item))
+                            {
+                                GameShopList.Add(item);
+                            }
+                        }
+                    }
                 }
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
@@ -1817,6 +1836,11 @@ namespace Server.MirEnvir
             QuestInfoList.Add(new QuestInfo { Index = ++QuestIndex });
         }
 
+        public void AddToGameShop(int ItemIndex = 0, ItemInfo Info = null)
+        {
+            GameShopList.Add(new GameShopItem { GoldPrice = 100, GPPrice = 100, ItemIndex = ItemIndex, Info = Info, Name = Info.FriendlyName });
+        }
+
         public void Remove(MapInfo info)
         {
             MapInfoList.Remove(info);
@@ -1839,6 +1863,12 @@ namespace Server.MirEnvir
         public void Remove(QuestInfo info)
         {
             QuestInfoList.Remove(info);
+            //Desync all objects\
+        }
+
+        public void Remove(GameShopItem info)
+        {
+            GameShopList.Remove(info);
             //Desync all objects\
         }
 
@@ -1920,6 +1950,19 @@ namespace Server.MirEnvir
                 item.Info = info;
 
                 return BindSlotItems(item);
+            }
+            return false;
+        }
+
+        public bool BindGameShop(GameShopItem item, bool EditEnvir = true)
+        {
+            for (int i = 0; i < SMain.EditEnvir.ItemInfoList.Count; i++)
+            {
+                ItemInfo info = SMain.EditEnvir.ItemInfoList[i];
+                if (info.Index != item.ItemIndex) continue;
+                item.Info = info;
+                item.Name = info.FriendlyName;
+                return true;
             }
             return false;
         }
