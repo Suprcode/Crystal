@@ -1315,8 +1315,10 @@ namespace Server.MirEnvir
             SMain.Enqueue(string.Format("{0} Maps Loaded.", MapInfoList.Count));
 
             for (int i = 0; i < ItemInfoList.Count; i++)
+            {
                 if (ItemInfoList[i].StartItem)
                     StartItems.Add(ItemInfoList[i]);
+            }
 
             for (int i = 0; i < MonsterInfoList.Count; i++)
                 MonsterInfoList[i].LoadDrops();

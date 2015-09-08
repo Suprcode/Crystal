@@ -22,7 +22,8 @@ namespace Server
                             RoutePath = EnvirPath + @".\Routes\",
                             NameListPath = EnvirPath + @".\NameLists\",
                             ValuePath = EnvirPath + @".\Values\",
-                            ReportPath = @".\Reports\";
+                            ReportPath = @".\Reports\",
+                            LogPath = @".\Logs\";
 
 
 
@@ -394,6 +395,8 @@ namespace Server
             
             if (!Directory.Exists(NameListPath))
                 Directory.CreateDirectory(NameListPath);
+            if (!Directory.Exists(LogPath))
+                Directory.CreateDirectory(LogPath);
 
             string fileName = Path.Combine(Settings.NPCPath, DefaultNPCFilename + ".txt");
 

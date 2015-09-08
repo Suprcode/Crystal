@@ -667,6 +667,7 @@ namespace Server.MirNetwork
             }
 
             CharacterInfo temp = null;
+            
 
             for (int i = 0; i < Account.Characters.Count; i++)
 			{
@@ -684,8 +685,6 @@ namespace Server.MirNetwork
 
             temp.Deleted = true;
             temp.DeleteDate = SMain.Envir.Now;
-
-
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
         private void StartGame(C.StartGame p)
