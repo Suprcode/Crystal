@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Windows.Forms;
 using Server.MirEnvir;
+using System.IO;
 
 namespace Server
 {
@@ -31,28 +32,35 @@ namespace Server
             indexHeader.Width = 2;
         }
 
-
-
         public static void Enqueue(Exception ex)
         {
             if (MessageLog.Count < 100)
             MessageLog.Enqueue(String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
+            File.AppendAllText(@".\Logs\Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                               String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
         }
 
         public static void EnqueueDebugging(string msg)
         {
             if (DebugLog.Count < 100)
             DebugLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+            File.AppendAllText(@".\Logs\DebugLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
         public static void EnqueueChat(string msg)
         {
             if (ChatLog.Count < 100)
             ChatLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+            File.AppendAllText(@".\Logs\ChatLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
+
         public static void Enqueue(string msg)
         {
             if (MessageLog.Count < 100)
             MessageLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+            File.AppendAllText(@".\Logs\Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
 
         private void configToolStripMenuItem_Click(object sender, EventArgs e)

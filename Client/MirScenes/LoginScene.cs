@@ -40,7 +40,7 @@ namespace Client.MirScenes
             _background = new MirAnimatedControl
                 {
                     Animated = false,
-                    AnimationCount = 19,
+                    AnimationCount = 17,
                     AnimationDelay = 100,
                     Index = 0,
                     Library = Libraries.ChrSel,

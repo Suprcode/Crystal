@@ -667,6 +667,7 @@ namespace Server.MirNetwork
             }
 
             CharacterInfo temp = null;
+            
 
             for (int i = 0; i < Account.Characters.Count; i++)
 			{
@@ -682,10 +683,14 @@ namespace Server.MirNetwork
                 return;
             }
 
+
+            PlayerObject DelPlayer = new PlayerObject(temp, this);
+            if (temp.Married != 0) DelPlayer.NPCDivorce();
+            if (temp.Mentor != 0) DelPlayer.MentorBreak();
+
+
             temp.Deleted = true;
             temp.DeleteDate = SMain.Envir.Now;
-
-
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
         private void StartGame(C.StartGame p)
