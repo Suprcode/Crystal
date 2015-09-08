@@ -263,8 +263,14 @@ namespace Server.MirObjects
 
             List<string> currentSay = say, currentButtons = buttons;
 
-            //Used to fake page name
+            //Cleans arguments out of search page name
             string tempSectionName = ArgumentParse(sectionName);
+
+            //Modifies real page name to stop direct navigation
+            if(sectionName.StartsWith("@@"))
+            {
+                sectionName = "PASS" + sectionName;
+            }
 
             for (int i = 0; i < lines.Count; i++)
             {
@@ -763,9 +769,16 @@ namespace Server.MirObjects
                 player.NPCDelayed = false;
             }
 
+            if (key.StartsWith("@@")) //needs moving to top?
+            {
+                //send off packet to request password
+                return;
+            }
+
             for (int i = 0; i < NPCSections.Count; i++)
             {
                 NPCPage page = NPCSections[i];
+
                 if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
                 ProcessPage(player, page);
             }
