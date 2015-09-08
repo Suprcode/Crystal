@@ -2879,6 +2879,7 @@ namespace Client.MirObjects
                                     case Spell.HellFire:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
 
+                                        
                                         Point dest = CurrentLocation;
                                         for (int i = 0; i < 4; i++)
                                         {

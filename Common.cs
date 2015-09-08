@@ -4652,7 +4652,7 @@ public abstract class Packet
                 return new S.MentorUpdate();
             case (short)ServerPacketIds.GuildBuffList:
                 return new S.GuildBuffList();
-            case (short)ServerPacketIds.RequestNPCPassword:
+            case (short)ServerPacketIds.NPCRequestInput:
                 return new S.NPCRequestInput();
             default:
                 throw new NotImplementedException();

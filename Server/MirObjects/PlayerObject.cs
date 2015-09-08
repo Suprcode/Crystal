@@ -12483,7 +12483,6 @@ namespace Server.MirObjects
                 if (ob.ObjectID != objectID) continue;
 
                 ob.Call(this, key.ToUpper());
-                NPCInputStr = string.Empty;
                 break;
             }
 

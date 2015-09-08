@@ -1122,8 +1122,8 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCStorage:
                     NPCStorage();
                     break;
-                case (short)ServerPacketIds.NPCRequestPassword:
-                    NPCRequestPassword((S.NPCRequestInput)p);
+                case (short)ServerPacketIds.NPCRequestInput:
+                    NPCRequestInput((S.NPCRequestInput)p);
                     break;
                 case (short)ServerPacketIds.SellItem:
                     SellItem((S.SellItem)p);
@@ -3173,7 +3173,7 @@ namespace Client.MirScenes
             if (NPCDialog.Visible)
                 StorageDialog.Show();
         }
-        private void NPCRequestPassword(S.NPCRequestInput p)
+        private void NPCRequestInput(S.NPCRequestInput p)
         {
             MirInputBox inputBox = new MirInputBox("Please enter the required information.");
 

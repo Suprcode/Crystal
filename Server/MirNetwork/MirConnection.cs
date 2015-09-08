@@ -1548,7 +1548,7 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.NPCInputStr = p.Value;
-            Player.CallNPC(Player.NPCID, "PASS" + p.PageName);
+            Player.CallNPC(Player.NPCID, p.PageName);
         }
     }
 }
