@@ -683,12 +683,6 @@ namespace Server.MirNetwork
                 return;
             }
 
-
-            PlayerObject DelPlayer = new PlayerObject(temp, this);
-            if (temp.Married != 0) DelPlayer.NPCDivorce();
-            if (temp.Mentor != 0) DelPlayer.MentorBreak();
-
-
             temp.Deleted = true;
             temp.DeleteDate = SMain.Envir.Now;
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });

@@ -4980,10 +4980,6 @@ namespace Server.MirObjects
         }
         public void Attack(MirDirection dir, Spell spell)
         {
-            var t = CurrentMap;
-            t = null;
-            var tt = t.Info.BigMap;
-
             LogTime = Envir.Time + Globals.LogDelay;
 
             bool Mined = false;
@@ -17052,16 +17048,18 @@ namespace Server.MirObjects
 
             Info.Mentor = 0;
             GetMentor(false);
-            Info.isMentor = false;
+            
 
             if (Info.isMentor && Info.MentorExp > 0)
             {
                 GainExp((uint)Info.MentorExp);
                 Info.MentorExp = 0;
+                Info.isMentor = false;
             }
+            
 
             Mentor.Mentor = 0;
-            Mentor.isMentor = false;
+            
 
             if (Player != null)
             {
@@ -17071,6 +17069,7 @@ namespace Server.MirObjects
                 {
                     Player.GainExp((uint)Mentor.MentorExp);
                     Info.MentorExp = 0;
+                    Mentor.isMentor = false;
                 }
             }
             else
@@ -17079,6 +17078,7 @@ namespace Server.MirObjects
                 {
                     Mentor.Experience += Mentor.MentorExp;
                     Mentor.MentorExp = 0;
+                    Mentor.isMentor = false;
                 }
             }
 

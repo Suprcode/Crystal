@@ -36,7 +36,7 @@ namespace Server
         {
             if (MessageLog.Count < 100)
             MessageLog.Enqueue(String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
-            File.AppendAllText(@".\Logs\Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                                String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
         }
 
@@ -44,14 +44,14 @@ namespace Server
         {
             if (DebugLog.Count < 100)
             DebugLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
-            File.AppendAllText(@".\Logs\DebugLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Settings.LogPath + "DebugLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
         public static void EnqueueChat(string msg)
         {
             if (ChatLog.Count < 100)
             ChatLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
-            File.AppendAllText(@".\Logs\ChatLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Settings.LogPath + "ChatLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
 
@@ -59,7 +59,7 @@ namespace Server
         {
             if (MessageLog.Count < 100)
             MessageLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
-            File.AppendAllText(@".\Logs\Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
 
@@ -359,16 +359,9 @@ namespace Server
 
         private void SMain_Load(object sender, EventArgs e)
         {
-            try
-            {
-                EditEnvir.LoadDB();
-                Envir.Start();
-                AutoResize();
-            }
-            catch
-            {
-                Application.Restart();
-            }
+            EditEnvir.LoadDB();
+            Envir.Start();
+            AutoResize();
         }
     }
 }
