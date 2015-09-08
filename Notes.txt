@@ -1,0 +1,6 @@
+In development features - may need revisiting / refactoring / finishing
+
+-NPC $INPUTSTR, method it sets page names and calls (would be better in ProcessPage? bool AwaitingInput at top)
+-MONSTER AI 69, runaway mob
+-Character deletion code after x days, or under x level after y days
+-Add requirement for quotes on npc command paths - save/loadvalue etc

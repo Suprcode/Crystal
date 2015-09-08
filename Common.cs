@@ -1333,7 +1333,9 @@ public enum ServerPacketIds : short
     FriendUpdate,
     LoverUpdate,
     MentorUpdate,
-    GuildBuffList
+    GuildBuffList,
+
+    NPCRequestInput
 }
 
 public enum ClientPacketIds : short
@@ -1457,7 +1459,9 @@ public enum ClientPacketIds : short
     RemoveFriend,
     RefreshFriends,
     AddMemo,
-    GuildBuffUpdate
+    GuildBuffUpdate,
+
+    NPCConfirmInput
 }
 
 public class InIReader
@@ -4221,6 +4225,8 @@ public abstract class Packet
                 return new C.AddMemo();
             case (short)ClientPacketIds.GuildBuffUpdate:
                 return new C.GuildBuffUpdate();
+            case (short)ClientPacketIds.NPCConfirmInput:
+                return new C.NPCConfirmInput();
             default:
                 throw new NotImplementedException();
         }
@@ -4646,6 +4652,8 @@ public abstract class Packet
                 return new S.MentorUpdate();
             case (short)ServerPacketIds.GuildBuffList:
                 return new S.GuildBuffList();
+            case (short)ServerPacketIds.RequestNPCPassword:
+                return new S.NPCRequestInput();
             default:
                 throw new NotImplementedException();
         }

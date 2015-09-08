@@ -246,6 +246,7 @@ namespace Server.MirObjects
 
         public Map NPCMoveMap;
         public Point NPCMoveCoord;
+        public string NPCInputStr;
 
         public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
 
@@ -12482,8 +12483,10 @@ namespace Server.MirObjects
                 if (ob.ObjectID != objectID) continue;
 
                 ob.Call(this, key.ToUpper());
+                NPCInputStr = string.Empty;
                 break;
             }
+
 
             CallNPCNextPage();
         }

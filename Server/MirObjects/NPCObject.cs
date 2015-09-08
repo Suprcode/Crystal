@@ -772,6 +772,7 @@ namespace Server.MirObjects
             if (key.StartsWith("@@")) //needs moving to top?
             {
                 //send off packet to request password
+                player.Enqueue(new S.NPCRequestInput { NPCID = ObjectID, PageName = key });
                 return;
             }
 
@@ -2890,6 +2891,8 @@ namespace Server.MirObjects
         {
             var regex = new Regex(@"\<\$(.*?)\>");
             var varRegex = new Regex(@"(.*?)\(([A-Z][0-9])\)");
+
+            param.Replace("$INPUTSTR", player.NPCInputStr);
 
             var match = regex.Match(param);
 

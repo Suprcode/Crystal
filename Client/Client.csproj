@@ -37,7 +37,7 @@
     <OutputPath>..\..\Client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
