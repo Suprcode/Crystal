@@ -1374,6 +1374,9 @@ namespace Server.MirEnvir
             StartItems.Clear();
             Objects.Clear();
             Players.Clear();
+
+            CleanUp();
+
             GC.Collect();
 
             SMain.Enqueue("Envir Stopped.");
@@ -1423,6 +1426,55 @@ namespace Server.MirEnvir
 
             StatusConnections.Clear();
             SMain.Enqueue("Network Stopped.");
+        }
+
+        private void CleanUp()
+        {
+            for (int i = 0; i < CharacterList.Count; i++)
+            {
+                CharacterInfo info = CharacterList[i];
+
+                if (info.Deleted)
+                {
+                    #region Mentor Cleanup
+                    if (info.Mentor > 0)
+                    {
+                        CharacterInfo Mentor = GetCharacterInfo(info.Mentor);
+
+                        if (Mentor != null)
+                        {
+                            Mentor.Mentor = 0;
+                            Mentor.MentorExp = 0;
+                            Mentor.isMentor = false;
+                        }
+
+                        info.Mentor = 0;
+                        info.MentorExp = 0;
+                        info.isMentor = false;
+                    }
+                    #endregion
+
+                    #region Marriage Cleanup
+                    if (info.Married > 0)
+                    {
+                        CharacterInfo Lover = GetCharacterInfo(info.Married);
+
+                        info.Married = 0;
+                        info.MarriedDate = DateTime.Now;
+
+                        Lover.Married = 0;
+                        Lover.MarriedDate = DateTime.Now;
+                        if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
+                            Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+                    }
+                    #endregion
+
+                    if (info.DeleteDate < DateTime.Now.AddDays(-7))
+                    {
+                        //delete char from db
+                    }
+                }
+            }
         }
 
         private void Connection(IAsyncResult result)
