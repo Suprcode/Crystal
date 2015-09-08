@@ -17054,7 +17054,6 @@ namespace Server.MirObjects
             {
                 GainExp((uint)Info.MentorExp);
                 Info.MentorExp = 0;
-                Info.isMentor = false;
             }
             
 
@@ -17069,7 +17068,6 @@ namespace Server.MirObjects
                 {
                     Player.GainExp((uint)Mentor.MentorExp);
                     Info.MentorExp = 0;
-                    Mentor.isMentor = false;
                 }
             }
             else
@@ -17078,10 +17076,11 @@ namespace Server.MirObjects
                 {
                     Mentor.Experience += Mentor.MentorExp;
                     Mentor.MentorExp = 0;
-                    Mentor.isMentor = false;
                 }
             }
 
+            Info.isMentor = false;
+            Mentor.isMentor = false;
             Info.MentorExp = 0;
             Mentor.MentorExp = 0;
         }
