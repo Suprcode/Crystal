@@ -16576,8 +16576,9 @@ namespace Server.MirObjects
                 Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
             }
 
-            GetRelationship(false);
 
+            GetRelationship(false);
+            
             Lover.Married = 0;
             Lover.MarriedDate = DateTime.Now;
             if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
@@ -17047,16 +17048,18 @@ namespace Server.MirObjects
 
             Info.Mentor = 0;
             GetMentor(false);
-            Info.isMentor = false;
+            
 
             if (Info.isMentor && Info.MentorExp > 0)
             {
                 GainExp((uint)Info.MentorExp);
                 Info.MentorExp = 0;
+                Info.isMentor = false;
             }
+            
 
             Mentor.Mentor = 0;
-            Mentor.isMentor = false;
+            
 
             if (Player != null)
             {
@@ -17066,6 +17069,7 @@ namespace Server.MirObjects
                 {
                     Player.GainExp((uint)Mentor.MentorExp);
                     Info.MentorExp = 0;
+                    Mentor.isMentor = false;
                 }
             }
             else
@@ -17074,6 +17078,7 @@ namespace Server.MirObjects
                 {
                     Mentor.Experience += Mentor.MentorExp;
                     Mentor.MentorExp = 0;
+                    Mentor.isMentor = false;
                 }
             }
 
