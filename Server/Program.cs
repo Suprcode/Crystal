@@ -11,17 +11,16 @@ namespace Server
         [STAThread]
         static void Main()
         {
-            Packet.IsServer = true;
+                Packet.IsServer = true;
 
-            Settings.Load();
-            //Resource.Load();
+                Settings.Load();
+                //Resource.Load();
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SMain());
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new SMain());
 
-            Settings.Save();
-
+                Settings.Save();
         }
     }
 }
