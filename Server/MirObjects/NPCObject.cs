@@ -2128,6 +2128,8 @@ namespace Server.MirObjects
                     {
                         param[j] = param[j].Replace(part, ReplaceValue(player, part));
                     }
+
+                    param[j] = param[j].Replace("%INPUTSTR", player.NPCInputStr);
                 }
 
                 switch (act.Type)
@@ -2891,8 +2893,6 @@ namespace Server.MirObjects
         {
             var regex = new Regex(@"\<\$(.*?)\>");
             var varRegex = new Regex(@"(.*?)\(([A-Z][0-9])\)");
-
-            param.Replace("$INPUTSTR", player.NPCInputStr);
 
             var match = regex.Match(param);
 
