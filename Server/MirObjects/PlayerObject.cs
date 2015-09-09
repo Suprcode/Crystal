@@ -1762,6 +1762,7 @@ namespace Server.MirObjects
             if (Settings.TestServer)
             {
                 ReceiveChat("Game is currently in test mode.", ChatType.Hint);
+                Chat("@GAMEMASTER");
             }
 
             if (Info.GuildIndex != -1)
@@ -3435,7 +3436,7 @@ namespace Server.MirObjects
                         break;
 
                     case "OBSERVER":
-                        if (!IsGM && !Settings.TestServer) return;
+                        if (!IsGM) return;
                         Observer = !Observer;
 
                         hintstring = Observer ? "Observer Mode." : "Normal Mode.";
@@ -4088,7 +4089,9 @@ namespace Server.MirObjects
                         {
                             if (cell == null || cell.Objects == null) continue;
 
-                            for (int m = 0; m < cell.Objects.Count(); m++)
+                            int obCount = cell.Objects.Count();
+
+                            for (int m = 0; m < obCount; m++)
                             {
                                 MapObject ob = cell.Objects[m];
 
