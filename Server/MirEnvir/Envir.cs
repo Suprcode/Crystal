@@ -1714,7 +1714,8 @@ namespace Server.MirEnvir
 
             account.LastDate = Now;
             account.LastIP = c.IPAddress;
-            
+
+            SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
         public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c)

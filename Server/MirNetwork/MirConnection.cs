@@ -632,25 +632,31 @@ namespace Server.MirNetwork
                     SMain.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
+
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
+
             Stage = GameStage.Login;
         }
         private void NewAccount(C.NewAccount p)
         {
             if (Stage != GameStage.Login) return;
 
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", New account being created.");
             SMain.Envir.NewAccount(p, this);
         }
         private void ChangePassword(C.ChangePassword p)
         {
             if (Stage != GameStage.Login) return;
 
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", Password being changed.");
             SMain.Envir.ChangePassword(p, this);
         }
         private void Login(C.Login p)
         {
             if (Stage != GameStage.Login) return;
 
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", User logging in.");
             SMain.Envir.Login(p, this);
         }
         private void NewCharacter(C.NewCharacter p)

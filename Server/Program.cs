@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Server
@@ -11,8 +12,10 @@ namespace Server
         [STAThread]
         static void Main()
         {
-                Packet.IsServer = true;
+            Packet.IsServer = true;
 
+            try
+            {
                 Settings.Load();
                 //Resource.Load();
 
@@ -21,6 +24,12 @@ namespace Server
                 Application.Run(new SMain());
 
                 Settings.Save();
+            }
+            catch(Exception ex)
+            {
+                File.AppendAllText(Settings.LogPath + "Main Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+            }
         }
     }
 }
