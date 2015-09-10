@@ -135,6 +135,7 @@ namespace Server.MirEnvir
         public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
         private Thread[] MobThreading = new Thread[Settings.ThreadLimit];
         public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
+        public bool HandledError = false;
 
         public List<string> CustomCommands = new List<string>();
         public Dragon DragonSystem;
@@ -164,7 +165,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        public long dayTime, warTime, mailTime, GuildTime;
+        private long dayTime, warTime, mailTime, guildTime;
 
         private bool MagicExists(Spell spell)
         {
@@ -515,6 +516,8 @@ namespace Server.MirEnvir
 
                     File.AppendAllText(@".\Error.txt",
                                            string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+
+                    HandledError = true;
                 }
 
                 StopNetwork();
@@ -527,6 +530,8 @@ namespace Server.MirEnvir
                 SMain.Enqueue("[outer workloop error]" + ex);
                 File.AppendAllText(@".\Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+
+                HandledError = true;
             }
             _thread = null;
 
@@ -668,9 +673,9 @@ namespace Server.MirEnvir
                 mailTime = Time + (Settings.Second * 10);
             }
 
-            if (Time >= GuildTime)
+            if (Time >= guildTime)
             {
-                GuildTime = Time + (Settings.Minute);
+                guildTime = Time + (Settings.Minute);
                 for (int i = 0; i < GuildList.Count; i++)
                 {
                     GuildList[i].Process();
@@ -1272,6 +1277,12 @@ namespace Server.MirEnvir
 
             _thread = new Thread(WorkLoop) {IsBackground = true};
             _thread.Start();
+
+            if(HandledError && Settings.TestServer)
+            {
+                HandledError = false;
+                Start();
+            }
         }
         public void Stop()
         {
