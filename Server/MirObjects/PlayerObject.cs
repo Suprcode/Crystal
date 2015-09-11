@@ -622,7 +622,10 @@ namespace Server.MirObjects
             for (int i = Pets.Count() - 1; i >= 0; i--)
             {
                 if (Pets[i].Dead)
+                {
                     Pets.Remove(Pets[i]);
+                    SMain.EnqueueDebugging("Dead pet removed through player process :" + Pets[i].Name);
+                }
             }
 
             ProcessBuffs();
@@ -1143,6 +1146,8 @@ namespace Server.MirObjects
                     }
                 }
             }
+
+            UnSummonIntelligentCreature(SummonedCreatureType);
 
             for (int i = Pets.Count - 1; i >= 0; i--)
                 Pets[i].Die();
@@ -3904,15 +3909,18 @@ namespace Server.MirObjects
                             player.ReceiveChat(string.Format("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
                             return;
                         }
-
-                        player.ReceiveChat(string.Format("You have learned {0} at level {1}", skill.ToString(), spellLevel), ChatType.Hint);
-
-                        if (player != this)
+                        else
                         {
-                            ReceiveChat(string.Format("{0} has learned {1} at level {2}", player.Name, skill.ToString(), spellLevel), ChatType.Hint);
+                            player.ReceiveChat(string.Format("You have learned {0} at level {1}", skill.ToString(), spellLevel), ChatType.Hint);
+
+                            if (player != this)
+                            {
+                                ReceiveChat(string.Format("{0} has learned {1} at level {2}", player.Name, skill.ToString(), spellLevel), ChatType.Hint);
+                            }
+
+                            player.Info.Magics.Add(magic);
                         }
 
-                        player.Info.Magics.Add(magic);
                         player.Enqueue(magic.GetInfo());
                         player.RefreshStats();
                         break;
