@@ -1313,7 +1313,7 @@ namespace Server
 
             MirForms.ConvertMapInfo.Path = ofd.FileName;
 
-            MirForms.ConvertMapInfo.Start(Envir.MapIndex);
+            MirForms.ConvertMapInfo.Start(Envir);
 
             for (int i = 0; i < MirForms.ConvertMapInfo.MapInfo.Count; i++)
             {
@@ -1377,7 +1377,7 @@ namespace Server
                     newmoveinfo.NeedHole = false;
                     newmoveinfo.NeedMove = false;
 
-                    Envir.MapInfoList[Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].fromIndex) - 1].Movements.Add(newmoveinfo);
+                    Envir.MapInfoList[Envir.MapInfoList.FindIndex(a => a.Index == (MirForms.ConvertMapInfo.MapMovements[j].fromIndex))].Movements.Add(newmoveinfo);
                 }
                 catch (Exception)
                 {
@@ -1454,6 +1454,8 @@ namespace Server
                         attributes += " NONAMES";
                     if (_selectedMapInfos[i].NoFight)
                         attributes += " NOFIGHT";
+                    if (_selectedMapInfos[i].Fight)
+                        attributes += " FIGHT";
                     if (_selectedMapInfos[i].Fire)
                         attributes += " FIRE(" + _selectedMapInfos[i].FireDamage + ")";
                     if (_selectedMapInfos[i].Lightning)
@@ -1563,7 +1565,7 @@ namespace Server
                 {
                     for (int j = 0; j < _selectedMapInfos[i].Respawns.Count; j++)
                     {
-                        MonsterInfo mob = SMain.Envir.GetMonsterInfo(_selectedMapInfos[i].Respawns[j].MonsterIndex);
+                        MonsterInfo mob = Envir.GetMonsterInfo(_selectedMapInfos[i].Respawns[j].MonsterIndex);
 
                         if (mob == null) continue;
                         
