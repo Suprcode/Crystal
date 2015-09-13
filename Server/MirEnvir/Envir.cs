@@ -860,18 +860,25 @@ namespace Server.MirEnvir
         }
         private void EndSaveGoodsAsync(IAsyncResult result)
         {
-            FileStream fStream = result.AsyncState as FileStream;
-            if (fStream != null)
+            try
             {
-                string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                string newfilename = fStream.Name;
-                fStream.EndWrite(result);
-                fStream.Dispose();
-                if (File.Exists(oldfilename))
-                    File.Move(oldfilename, oldfilename + "o");
-                File.Move(newfilename, oldfilename);
-                if (File.Exists(oldfilename + "o"))
-                    File.Delete(oldfilename + "o");
+                FileStream fStream = result.AsyncState as FileStream;
+                if (fStream != null)
+                {
+                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                    string newfilename = fStream.Name;
+                    fStream.EndWrite(result);
+                    fStream.Dispose();
+                    if (File.Exists(oldfilename))
+                        File.Move(oldfilename, oldfilename + "o");
+                    File.Move(newfilename, oldfilename);
+                    if (File.Exists(oldfilename + "o"))
+                        File.Delete(oldfilename + "o");
+                }
+            }
+            catch (Exception ex)
+            {
+                SMain.EnqueueDebugging("Error saving goods: " + ex.Message);
             }
 
         }

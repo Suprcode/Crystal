@@ -22,7 +22,7 @@ namespace Client
     public partial class CMain : Form
     {
         public static MirControl DebugBaseLabel, HintBaseLabel;
-        public static MirLabel DebugTextLabel, HintTextLabel;
+        public static MirLabel DebugTextLabel, HintTextLabel, ScreenshotTextLabel;
         public static Graphics Graphics;
         public static Point MPoint;
 
@@ -465,19 +465,24 @@ namespace Client
 
             location = new Point(-location.X, -location.Y);
 
-            string text = string.Format("Date: {0}{1}", Now.ToShortDateString(), Environment.NewLine);
-            text += string.Format("Time: {0:hh\\:mm\\:ss}{1}", Now.TimeOfDay, Environment.NewLine);
-            if (MapControl.User != null)
-                text += string.Format("Player: {0}{1}", MapControl.User.Name, Environment.NewLine);
+            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}", 
+                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal", 
+                MapControl.User != null ? MapControl.User.Name : "", 
+                Now.ToShortDateString(), 
+                Now.TimeOfDay);
 
             using (Bitmap image = GetImage(Handle, new Rectangle(location, ClientSize)))
             using (Graphics graphics = Graphics.FromImage(image))
             {
-                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 3, 50);
-                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 4, 49);
-                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 5, 50);
-                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 4, 51);
-                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.White, 4, 50);
+                StringFormat sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+
+                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
+                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
+                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
+                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
+                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown               
 
                 string path = Path.Combine(Application.StartupPath, @"Screenshots\");
                 if (!Directory.Exists(path))

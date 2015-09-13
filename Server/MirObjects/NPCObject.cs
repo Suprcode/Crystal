@@ -391,6 +391,8 @@ namespace Server.MirObjects
                 lines.AddRange(newLines);
             }
 
+            lines.RemoveAll(str => str.ToUpper().StartsWith("#INSERT"));
+
             return lines;
         }
 
@@ -2504,6 +2506,8 @@ namespace Server.MirObjects
 
                         var magic = new UserMagic(skill) { Level = spellLevel };
 
+                        if (magic.Info == null) return;
+
                         player.Info.Magics.Add(magic);
                         player.Enqueue(magic.GetInfo());
                         break;
@@ -2719,7 +2723,7 @@ namespace Server.MirObjects
 
                         Buff buff = new Buff
                         {
-                            Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]),
+                            Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
                             Caster = player,
                             ExpireTime = SMain.Envir.Time + tempLong * 1000,
                             Values = intValues,
