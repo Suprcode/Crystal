@@ -27,7 +27,7 @@ namespace Server
             }
             catch(Exception ex)
             {
-                File.AppendAllText(Settings.LogPath + "Main Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
             }
         }

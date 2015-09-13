@@ -222,6 +222,9 @@ namespace Client.MirControls
                 case 4:
                     MirMessageBox.Show("Disconnected: Kicked by Admin.", true);
                     break;
+                case 5:
+                    MirMessageBox.Show("Disconnected: Second client connection attempted.", true);
+                    break;
             }
 
             GameScene.LogTime = 0;

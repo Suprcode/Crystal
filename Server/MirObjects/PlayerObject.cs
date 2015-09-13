@@ -482,6 +482,8 @@ namespace Server.MirObjects
                     return string.Format("{0} Has logged out. Reason: Server crashed", Name);
                 case 4:
                     return string.Format("{0} Has logged out. Reason: Kicked by admin", Name);
+                case 5:
+                    return string.Format("{0} Has logged out. Reason: Second client attempt", Name);
                 case 10:
                     return string.Format("{0} Has logged out. Reason: Wrong client version", Name);
                 case 20:
@@ -621,10 +623,11 @@ namespace Server.MirObjects
 
             for (int i = Pets.Count() - 1; i >= 0; i--)
             {
-                if (Pets[i].Dead)
+                MonsterObject pet = Pets[i];
+                if (pet.Dead)
                 {
-                    Pets.Remove(Pets[i]);
-                    SMain.EnqueueDebugging("Dead pet removed through player process :" + Pets[i].Name);
+                    Pets.Remove(pet);
+                    SMain.EnqueueDebugging("Dead pet removed through player process :" + pet.Name);
                 }
             }
 
@@ -9852,11 +9855,6 @@ namespace Server.MirObjects
         public void UseItem(ulong id)
         {
             S.UseItem p = new S.UseItem { UniqueID = id, Success = false };
-            if (Dead)
-            {
-                Enqueue(p);
-                return;
-            }
 
             UserItem item = null;
             int index = -1;
@@ -9867,6 +9865,12 @@ namespace Server.MirObjects
                 if (item == null || item.UniqueID != id) continue;
                 index = i;
                 break;
+            }
+
+            if (Dead && item.Info.Type != ItemType.Scroll && item.Info.Shape != 6)
+            {
+                Enqueue(p);
+                return;
             }
 
             if (item == null || index == -1 || !CanUseItem(item))
@@ -9991,6 +9995,18 @@ namespace Server.MirObjects
 
                             ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            break;
+                        case 6: //ResurrectionScroll
+                            if (Dead)
+                            {
+                                MP = MaxMP;
+                                Revive(MaxHealth, true);
+                            }
+                            else
+                            {
+                                ReceiveChat("Can only be used when dead", ChatType.Hint);
+                                return;
+                            }
                             break;
                     }
                     break;

@@ -52,6 +52,15 @@ namespace Server.MirNetwork
             SessionID = sessionID;
             IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
 
+            for (int i = 0; i < SMain.Envir.Connections.Count; i++)
+            {
+                MirConnection conn = SMain.Envir.Connections[i];
+                if (conn.IPAddress == IPAddress && conn.Connected)
+                {
+                    SMain.Enqueue(IPAddress + ", Attempted multiple connection.");
+                    conn.SendDisconnect(5);
+                }
+            }
 
             SMain.Enqueue(IPAddress + ", Connected.");
 

@@ -11602,16 +11602,16 @@ namespace Client.MirScenes
             {
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
-                Location = new Point(50, 12),
-                Size = new Size(190, 20),
+                Location = new Point(0, 12),
+                Size = new Size(264, 20),
                 NotControl = true,
             };
             GuildLabel = new MirLabel
             {
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
-                Location = new Point(50, 33),
-                Size = new Size(190, 30),
+                Location = new Point(0, 33),
+                Size = new Size(264, 30),
                 NotControl = true,
             };
             ClassImage = new MirImageControl
@@ -14031,17 +14031,15 @@ namespace Client.MirScenes
             GameScene.Scene.NPCDropDialog.Hide();
             GameScene.Scene.NPCAwakeDialog.Hide();
             GameScene.Scene.RefineDialog.Hide();
-
-            /*
-            GameScene.Scene.BuyBackDialog.Hide();*/
-            //GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
             GameScene.Scene.StorageDialog.Hide();
             GameScene.Scene.TrustMerchantDialog.Hide();
+
+            GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
 
         public void Show()
         {
-            GameScene.Scene.InventoryDialog.Location = new Point(Settings.ScreenWidth - GameScene.Scene.InventoryDialog.Size.Width, 0);
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
             Visible = true;
 
             CheckQuestButtonDisplay();
