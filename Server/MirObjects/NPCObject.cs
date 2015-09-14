@@ -1437,6 +1437,18 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.SetPkPoint, parts[1]));
                     break;
 
+                case "REDUCEPKPOINT":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.ReducePkPoint, parts[1]));
+                    break;
+
+                case "INCREASEPKPOINT":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.IncreasePkPoint, parts[1]));
+                    break;
+
                 case "CHANGEGENDER":
                     acts.Add(new NPCActions(ActionType.ChangeGender));
                     break;
@@ -2425,6 +2437,20 @@ namespace Server.MirObjects
                         player.PKPoints = tempInt;
                         break;
 
+                    case ActionType.ReducePkPoint:
+
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        player.PKPoints -= tempInt;
+                        if (player.PKPoints < 0) player.PKPoints = 0;
+
+                        break;
+
+                    case ActionType.IncreasePkPoint:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+                        player.PKPoints += tempInt;
+                        break;
+
                     case ActionType.ChangeGender:
 
                         switch (player.Info.Gender)
@@ -3172,6 +3198,8 @@ namespace Server.MirObjects
         GiveMP,
         ChangeLevel,
         SetPkPoint,
+        ReducePkPoint,
+        IncreasePkPoint,
         ChangeGender,
         ChangeClass,
         LocalMessage,

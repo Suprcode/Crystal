@@ -223,7 +223,7 @@ namespace Client.MirControls
                     MirMessageBox.Show("Disconnected: Kicked by Admin.", true);
                     break;
                 case 5:
-                    MirMessageBox.Show("Disconnected: Second client connection attempted.", true);
+                    MirMessageBox.Show("Disconnected: Maximum connections reached.", true);
                     break;
             }
 

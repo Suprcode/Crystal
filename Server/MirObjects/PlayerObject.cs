@@ -483,7 +483,7 @@ namespace Server.MirObjects
                 case 4:
                     return string.Format("{0} Has logged out. Reason: Kicked by admin", Name);
                 case 5:
-                    return string.Format("{0} Has logged out. Reason: Second client attempt", Name);
+                    return string.Format("{0} Has logged out. Reason: Maximum connections reached", Name);
                 case 10:
                     return string.Format("{0} Has logged out. Reason: Wrong client version", Name);
                 case 20:
@@ -6207,10 +6207,10 @@ namespace Server.MirObjects
         }
         private void TurnUndead(MapObject target, UserMagic magic)
         {
-            if (target == null || !target.Undead || !target.IsAttackTarget(this)) return;
+            if (target == null || target.Race != ObjectType.Monster || !target.Undead || !target.IsAttackTarget(this)) return;
             if (Envir.Random.Next(2) + Level - 1 <= target.Level)
             {
-                if (target.Race == ObjectType.Monster) target.Target = this;
+                target.Target = this;
                 return;
             }
 
@@ -6218,13 +6218,12 @@ namespace Server.MirObjects
 
             if (Envir.Random.Next(100) >= (magic.Level + 1 << 3) + dif)
             {
-                if (target.Race == ObjectType.Monster) target.Target = this;
+                target.Target = this;
                 return;
             }
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, target);
             ActionList.Add(action);
-
         }
         private void FlameDisruptor(MapObject target, UserMagic magic)
         {
@@ -6634,7 +6633,7 @@ namespace Server.MirObjects
         }
         private void Hallucination(MapObject target, UserMagic magic)
         {
-            if (target == null || !target.IsAttackTarget(this)) return;
+            if (target == null || target.Race != ObjectType.Monster || !target.IsAttackTarget(this)) return;
 
             int damage = 0;
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
@@ -15587,6 +15586,8 @@ namespace Server.MirObjects
         public void SummonIntelligentCreature(IntelligentCreatureType pType)
         {
             if (pType == IntelligentCreatureType.None) return;
+
+            if (CreatureSummoned == true || SummonedCreatureType != IntelligentCreatureType.None) return;
 
             for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
             {
