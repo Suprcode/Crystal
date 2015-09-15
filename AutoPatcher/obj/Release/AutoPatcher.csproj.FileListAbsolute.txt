@@ -1,0 +1,8 @@
+D:\Mir 2\AutoPatcher\AutoPatcher.exe.config
+D:\Mir 2\AutoPatcher\AutoPatcher.exe
+D:\Mir 2\AutoPatcher\AutoPatcher.pdb
+D:\Mir2-Source\AutoPatcher\obj\Release\AutoPatcher.AMain.resources
+D:\Mir2-Source\AutoPatcher\obj\Release\AutoPatcher.Properties.Resources.resources
+D:\Mir2-Source\AutoPatcher\obj\Release\AutoPatcher.csproj.GenerateResource.Cache
+D:\Mir2-Source\AutoPatcher\obj\Release\AutoPatcher.exe
+D:\Mir2-Source\AutoPatcher\obj\Release\AutoPatcher.pdb

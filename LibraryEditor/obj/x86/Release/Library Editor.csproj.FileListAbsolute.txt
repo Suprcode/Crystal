@@ -1,0 +1,9 @@
+D:\Mir 2\LibraryEditor\LibraryEditor.exe.config
+D:\Mir 2\LibraryEditor\LibraryEditor.exe
+D:\Mir 2\LibraryEditor\LibraryEditor.pdb
+D:\Mir2-Source\LibraryEditor\obj\x86\Release\Library Editor.csprojResolveAssemblyReference.cache
+D:\Mir2-Source\LibraryEditor\obj\x86\Release\LibraryEditor.LMain.resources
+D:\Mir2-Source\LibraryEditor\obj\x86\Release\Library_Editor.Properties.Resources.resources
+D:\Mir2-Source\LibraryEditor\obj\x86\Release\Library Editor.csproj.GenerateResource.Cache
+D:\Mir2-Source\LibraryEditor\obj\x86\Release\LibraryEditor.exe
+D:\Mir2-Source\LibraryEditor\obj\x86\Release\LibraryEditor.pdb

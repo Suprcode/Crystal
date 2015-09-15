@@ -1,0 +1,8 @@
+D:\Mir 2\AutoPatcherAdmin\AutoPatcherAdmin.exe.config
+D:\Mir 2\AutoPatcherAdmin\AutoPatcherAdmin.exe
+D:\Mir 2\AutoPatcherAdmin\AutoPatcherAdmin.pdb
+D:\Mir2-Source\AutoPatcherAdmin\obj\Release\AutoPatcherAdmin.AMain.resources
+D:\Mir2-Source\AutoPatcherAdmin\obj\Release\AutoPatcherAdmin.Properties.Resources.resources
+D:\Mir2-Source\AutoPatcherAdmin\obj\Release\AutoPatcherAdmin.csproj.GenerateResource.Cache
+D:\Mir2-Source\AutoPatcherAdmin\obj\Release\AutoPatcherAdmin.exe
+D:\Mir2-Source\AutoPatcherAdmin\obj\Release\AutoPatcherAdmin.pdb

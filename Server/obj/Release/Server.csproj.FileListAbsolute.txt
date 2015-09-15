@@ -1,0 +1,27 @@
+D:\Mir 2\Server\Server.exe
+D:\Mir 2\Server\Server.pdb
+D:\Mir2-Source\Server\obj\Release\Server.AccountInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.PlayerInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.BalanceConfigForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.ConfigForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MagicInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.DragonInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.ItemInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MapInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MirForms.DropBuilder.DropGenForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.GuildInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MiningInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.SystemInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MirForms.VisualMapInfo.Control.Forms.MiningDetailForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MirForms.VisualMapInfo.Control.Forms.RespawnsDetailForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MirForms.VisualMapInfo.Control.MineEntry.resources
+D:\Mir2-Source\Server\obj\Release\Server.MirForms.VisualMapInfo.Control.RespawnEntry.resources
+D:\Mir2-Source\Server\obj\Release\Server.MirForms.VisualMapInfo.VForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.QuestInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.NPCInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.MonsterInfoForm.resources
+D:\Mir2-Source\Server\obj\Release\Server.SMain.resources
+D:\Mir2-Source\Server\obj\Release\Server.Properties.Resources.resources
+D:\Mir2-Source\Server\obj\Release\Server.csproj.GenerateResource.Cache
+D:\Mir2-Source\Server\obj\Release\Server.exe
+D:\Mir2-Source\Server\obj\Release\Server.pdb
