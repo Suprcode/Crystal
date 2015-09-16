@@ -2186,6 +2186,7 @@ namespace Server.MirObjects
                 uint gold;
                 uint Pearls;
                 uint count;
+                ushort tempuShort;
                 string tempString = string.Empty;
                 int x, y;
                 int tempInt;
@@ -2425,10 +2426,10 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.ChangeLevel:
-                        if (!byte.TryParse(param[0], out tempByte)) return;
-                        tempByte = Math.Min(byte.MaxValue, tempByte);
+                        if (!ushort.TryParse(param[0], out tempuShort)) return;
+                        tempuShort = Math.Min(ushort.MaxValue, tempuShort);
 
-                        player.Level = tempByte;
+                        player.Level = tempuShort;
                         player.LevelUp();
                         break;
 
