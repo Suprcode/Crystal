@@ -1972,4 +1972,23 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(Id);
         }
     }
+
+    public sealed class GameshopBuy : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.GameshopBuy; } }
+
+        public int ItemIndex;
+        public byte Quantity;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ItemIndex = reader.ReadInt32();
+            Quantity = reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ItemIndex);
+            writer.Write(Quantity);
+        }
+    }
 }

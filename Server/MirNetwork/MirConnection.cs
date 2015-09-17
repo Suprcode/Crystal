@@ -540,6 +540,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GuildBuffUpdate:
                     GuildBuffUpdate((C.GuildBuffUpdate)p);
                     break;
+                case (short)ClientPacketIds.GameshopBuy:
+                    GameshopBuy((C.GameshopBuy)p);
+                    return;
                 default:
                     throw new NotImplementedException();
             }
@@ -1538,6 +1541,11 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
             Player.GuildBuffUpdate(p.Action,p.Id);
+        }
+        private void GameshopBuy(C.GameshopBuy p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.GameshopBuy(p.ItemIndex, p.Quantity);
         }
     }
 }

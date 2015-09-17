@@ -1719,8 +1719,7 @@ namespace Server
         private void Gameshop_button_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                Envir.AddToGameShop(_selectedItemInfos[i].Index, _selectedItemInfos[i]);
-
+                Envir.AddToGameShop(_selectedItemInfos[i]);
             Envir.SaveDB();
         }
     }

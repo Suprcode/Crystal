@@ -2042,6 +2042,7 @@ namespace Server.MirObjects
                 Equipment = new UserItem[Info.Equipment.Length],
                 QuestInventory = new UserItem[Info.QuestInventory.Length],
                 Gold = Account.Gold,
+                Credit = Account.Credit,
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -3866,6 +3867,31 @@ namespace Server.MirObjects
                             SMain.Enqueue(string.Format("Player {0} has been given {1} pearls", player.Name, count));
                         else
                             SMain.Enqueue(string.Format("Player {0} has been given {1} pearl", player.Name, count));
+                        break;
+                    case "GIVECREDIT":
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+
+                        player = this;
+
+                        if (parts.Length > 2)
+                        {
+                            if (!uint.TryParse(parts[2], out count)) return;
+                            player = Envir.GetPlayer(parts[1]);
+
+                            if (player == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+
+                        else if (!uint.TryParse(parts[1], out count)) return;
+
+                        if (count + player.Account.Credit >= uint.MaxValue)
+                            count = uint.MaxValue - player.Account.Credit;
+
+                        player.GainCredit(count);
+                        SMain.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
                         break;
 
                     case "GIVESKILL":
@@ -9981,6 +10007,13 @@ namespace Server.MirObjects
                             ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
+                        case 6: //Credit Scroll
+                            if (item.Info.Price > 0)
+                            {
+                                GainCredit(item.Info.Price);
+                                ReceiveChat(String.Format("{0} Credits have been added to your Account.", item.Info.Price), ChatType.Hint);
+                            }
+                            break;
                     }
                     break;
                 case ItemType.Book:
@@ -10927,6 +10960,17 @@ namespace Server.MirObjects
             Account.Gold += gold;
 
             Enqueue(new S.GainedGold { Gold = gold });
+        }
+        public void GainCredit(uint credit)
+        {
+            if (credit == 0) return;
+
+            if (((UInt64)Account.Credit + credit) > uint.MaxValue)
+                credit = uint.MaxValue - Account.Credit;
+
+            Account.Credit += credit;
+
+            Enqueue(new S.GainedCredit { Credit = credit });
         }
 
         public bool CanGainItem(UserItem item, bool useWeight = true)
@@ -15108,6 +15152,7 @@ namespace Server.MirObjects
 
             GainGold(quest.Info.GoldReward);
             GainExp(quest.Info.ExpReward);
+            GainCredit(quest.Info.CreditReward);
 
             CallDefaultNPC(DefaultNPCType.OnFinishQuest, questIndex);
         }
@@ -17260,11 +17305,263 @@ namespace Server.MirObjects
 
         #region Gameshop
 
+
+        public void GameShopStock(GameShopItem item)
+        {
+            int purchased;
+            int StockLevel;
+
+            if (item.iStock) //Invididual Stock
+            {
+                Info.GSpurchases.TryGetValue(item.Info.Index, out purchased);
+                if (item.Stock - purchased >= 0)
+                {
+                    StockLevel = item.Stock - purchased;
+                    Enqueue(new S.GameShopStock { ItemIndex = item.Info.Index, StockLevel = StockLevel });
+                }
+            }
+            else //Server Stock
+            {
+                Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
+                if (item.Stock - purchased >= 0)
+                {
+                    StockLevel = item.Stock - purchased;
+                    Enqueue(new S.GameShopStock { ItemIndex = item.Info.Index, StockLevel = StockLevel });
+                }
+            }
+              
+        }
+
+        public void GameshopBuy(int ItemIndex, byte Quantity)
+        {
+            List<GameShopItem> shopList = Envir.GameShopList;
+            GameShopItem Product = null;
+            
+            int purchased;
+            bool stockAvailable = false;
+            bool canAfford = false;
+            uint CreditCost =0;
+            uint GoldCost = 0;
+
+            List<UserItem> mailItems = new List<UserItem>();
+
+            for (int i = 0; i < shopList.Count; i++)
+            {
+                if (shopList[i].Info.Index == ItemIndex)
+                {
+                    Product = shopList[i];
+                    break;
+                }
+            }
+
+            if (Product == null)
+            {
+                ReceiveChat("You're trying to buy an item that isn't in the shop.", ChatType.System);
+                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Item isn't in the shop.");
+                return;
+            }
+
+            if (Product.Stock != 0)
+            {
+                if (Product.iStock)
+                {
+                    Info.GSpurchases.TryGetValue(Product.Info.Index, out purchased);
+                    if (Product.Stock - purchased - Quantity >= 0)
+                    {
+                        stockAvailable = true;
+                    }
+                    else
+                    {
+                        ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
+                        GameShopStock(Product);
+                        SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
+                        return;
+                    }
+
+                }
+                else
+                {
+                    Envir.GameshopLog.TryGetValue(Product.Info.Index, out purchased);
+                    if (Product.Stock - purchased - Quantity >= 0)
+                    {
+                        stockAvailable = true;
+                    }
+                    else
+                    {
+                        ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
+                        GameShopStock(Product);
+                        SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                stockAvailable = true;
+            }
+            
+            if (stockAvailable)
+            {
+                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
+                if (Product.CreditPrice * Quantity < Account.Credit)
+                {
+                    canAfford = true;
+                    CreditCost = (Product.CreditPrice * Quantity);
+                }
+                else
+                { //Needs to attempt to pay with gold and credits
+                    if (Account.Gold >= (((Product.GoldPrice * Quantity) / (Product.CreditPrice * Quantity)) * ((Product.CreditPrice * Quantity) - Account.Credit)))
+                    {
+                        GoldCost = ((Product.GoldPrice * Quantity) / (Product.CreditPrice * Quantity)) * ((Product.CreditPrice * Quantity) - Account.Credit);
+                        CreditCost = Account.Credit;
+                        canAfford = true;
+                    }
+                    else
+                    {
+
+                        ReceiveChat("You don't have enough currency for your purchase.", ChatType.System);
+                        SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
+                        return;
+                    }
+                }
+            }
+            else
+            {
+
+                ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
+                GameShopStock(Product);
+                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
+                return;
+            }
+
+            if (canAfford)
+            {
+                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Has enough currency.");
+                Account.Gold -= GoldCost;
+                Account.Credit -= CreditCost;
+
+                Report.GoldChanged("GameShop", GoldCost, true, Product.Info.FriendlyName);
+                Report.CreditChanged("GameShop", CreditCost, true, Product.Info.FriendlyName);
+
+                if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
+                if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
+
+
+                int Purchased;
+
+                if (Product.iStock && Product.Stock != 0)
+                {
+                    Info.GSpurchases.TryGetValue(Product.Info.Index, out Purchased);
+                    if (Purchased == 0)
+                    {
+                        Info.GSpurchases[Product.Info.Index] = Quantity;
+                    }
+                    else
+                    {
+                        Info.GSpurchases[Product.Info.Index] += Quantity;
+                    }
+                }
+
+                Purchased = 0;
+
+                Envir.GameshopLog.TryGetValue(Product.Info.Index, out Purchased);
+                if (Purchased == 0)
+                {
+                   Envir.GameshopLog[Product.Info.Index] = Quantity;
+                }
+                else
+                {
+                   Envir.GameshopLog[Product.Info.Index] += Quantity;
+                }
+
+                if (Product.Stock != 0) GameShopStock(Product);
+            }
+            else
+            {
+                ReceiveChat("You can't afford to buy this item.", ChatType.System);
+                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Doesn't have enough currency");
+                return;
+            }
+
+            Report.ItemGSBought("GameShop", Product, Quantity, CreditCost, GoldCost);
+
+            UserItem MailItem = new UserItem(Envir.GetItemInfo(ItemIndex));
+
+            if (Product.Info.StackSize <= 1 || Quantity == 1)
+                for (int i = 0; i < Quantity; i++)
+                    mailItems.Add(MailItem);
+            else
+            {
+                while (Quantity > 0)
+                {
+                    
+                    MailItem = new UserItem(Envir.GetItemInfo(ItemIndex));
+                    MailItem.Count = 0;
+                    for (int i = 0; i < MailItem.Info.StackSize; i++)
+                    {
+                        MailItem.Count++;
+                        Quantity--;
+                        if (Quantity == 0) break;
+                    }
+                    if (MailItem.Count == 0) break;
+
+                    mailItems.Add(MailItem);
+
+                }
+            }
+
+            MailInfo mail = new MailInfo(Info.Index, true)
+                {
+                    MailID = ++Envir.NextMailID,
+                    Sender = "Gameshop",
+                    Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
+                    Items = mailItems,
+                };
+                mail.Send();
+
+            SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
+            ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
+        }
+            
+
+
+
         public void GetGameShop()
         {
+
+            int purchased;
+            GameShopItem item = new GameShopItem();
+            int StockLevel;
+
             for (int i = 0; i < Envir.GameShopList.Count; i++)
             {
-                Enqueue(new S.GameShopInfo { Info = Envir.GameShopList[i] });
+                item = Envir.GameShopList[i];
+
+                if (item.Stock != 0)
+                {
+                    if (item.iStock) //Invididual Stock
+                    {
+                        Info.GSpurchases.TryGetValue(item.Info.Index, out purchased);
+                        if (item.Stock - purchased > 0)
+                        {
+                            StockLevel = item.Stock - purchased;
+                            Enqueue(new S.GameShopInfo { Item = item, StockLevel = StockLevel });
+                        }
+                    }
+                    else //Server Stock
+                    {
+                       Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
+                        if (item.Stock - purchased > 0)
+                        {
+                            StockLevel = item.Stock - purchased;
+                            Enqueue(new S.GameShopInfo { Item = item, StockLevel = StockLevel });
+                        }
+                    }
+                }
+                else
+                {
+                    Enqueue(new S.GameShopInfo { Item = item, StockLevel = item.Stock });
+                }  
             }
         }
 

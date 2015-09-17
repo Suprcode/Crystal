@@ -112,6 +112,7 @@ namespace Server.MirEnvir
         public DragonInfo DragonInfo = new DragonInfo();
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
+        public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
 
         //User DB
         public int NextAccountID, NextCharacterID;
@@ -121,6 +122,7 @@ namespace Server.MirEnvir
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
         public int GuildCount, NextGuildID;
         public List<GuildObject> GuildList = new List<GuildObject>();
+        
 
         //Live Info
         public List<Map> MapList = new List<Map>();
@@ -485,6 +487,7 @@ namespace Server.MirEnvir
                             BeginSaveAccounts();
                             SaveGuilds();
                             SaveGoods();
+
                         }
 
                         if (Time >= userTime)
@@ -522,6 +525,7 @@ namespace Server.MirEnvir
                 StopEnvir();
                 SaveAccounts();
                 SaveGuilds(true);
+
             }
             catch (Exception ex)
             {
@@ -778,6 +782,13 @@ namespace Server.MirEnvir
                 writer.Write(Mail.Count);
                 foreach (MailInfo mail in Mail)
                         mail.Save(writer);
+
+                writer.Write(GameshopLog.Count);
+                foreach (var item in GameshopLog)
+                {
+                    writer.Write(item.Key);
+                    writer.Write(item.Value);
+                }
             }
         }
 
@@ -1076,6 +1087,15 @@ namespace Server.MirEnvir
                         for (int i = 0; i < count; i++)
                         {
                             Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
+                        }
+                    }
+
+                    if(LoadVersion >= 63)
+                    {
+                        int logCount = reader.ReadInt32();
+                        for (int i = 0; i < logCount; i++)
+                        {
+                            GameshopLog.Add(reader.ReadInt32(), reader.ReadInt32());
                         }
                     }
                 }
@@ -1836,9 +1856,13 @@ namespace Server.MirEnvir
             QuestInfoList.Add(new QuestInfo { Index = ++QuestIndex });
         }
 
-        public void AddToGameShop(int ItemIndex = 0, ItemInfo Info = null)
+        public void AddToGameShop(ItemInfo Info)
         {
-            GameShopList.Add(new GameShopItem { GoldPrice = 100, GPPrice = 100, ItemIndex = ItemIndex, Info = Info, Name = Info.FriendlyName });
+            for (int i = 0; i < GameShopList.Count; i++)
+            {
+                if (GameShopList[i].Info.Index == Info.Index) return;
+            }
+                GameShopList.Add(new GameShopItem { GoldPrice = (uint)(1000*Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Catagory = Info.Type.ToString() });
         }
 
         public void Remove(MapInfo info)
@@ -1961,7 +1985,7 @@ namespace Server.MirEnvir
                 ItemInfo info = SMain.EditEnvir.ItemInfoList[i];
                 if (info.Index != item.ItemIndex) continue;
                 item.Info = info;
-                item.Name = info.FriendlyName;
+
                 return true;
             }
             return false;

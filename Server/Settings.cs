@@ -74,6 +74,7 @@ namespace Server
 
         //Database
         public static int SaveDelay = 5;
+        public static short CredxGold = 30;
 
         //Game
         public static List<long> ExperienceList = new List<long>();
@@ -274,6 +275,7 @@ namespace Server
 
             //Database
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
+            CredxGold = Reader.ReadInt16("Database", "CredxGold", CredxGold);
 
             //Game
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
@@ -454,6 +456,7 @@ namespace Server
 
             //Database
             Reader.Write("Database", "SaveDelay", SaveDelay);
+            Reader.Write("Database", "CredxGold", CredxGold);
 
             //Game
             Reader.Write("Game", "DropRate", DropRate);
