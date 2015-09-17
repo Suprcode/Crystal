@@ -151,6 +151,8 @@ namespace Server.MirObjects
                     return new DarkDevourer(info);
                 case 68:
                     return new Football(info);
+                case 69:
+                    return new Runaway(info);
                 default:
                     return new MonsterObject(info);
             }

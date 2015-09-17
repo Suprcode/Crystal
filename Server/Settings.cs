@@ -429,7 +429,7 @@ namespace Server
             Reader.Write("General", "RelogDelay", RelogDelay);
             Reader.Write("General", "Multithreaded", Multithreaded);
             Reader.Write("General", "ThreadLimit", ThreadLimit);
-            Reader.Write("TestServer", "TestServer", TestServer);
+            Reader.Write("General", "TestServer", TestServer);
 
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);

@@ -1336,6 +1336,7 @@ public enum ServerPacketIds : short
     LoverUpdate,
     MentorUpdate,
     GuildBuffList,
+    NPCRequestInput,
     GameShopInfo,
     GameShopStock,
 }
@@ -1462,9 +1463,8 @@ public enum ClientPacketIds : short
     RefreshFriends,
     AddMemo,
     GuildBuffUpdate,
-
-
-    GameshopBuy
+    NPCConfirmInput,
+    GameshopBuy,
 }
 
 public class InIReader
@@ -4302,6 +4302,8 @@ public abstract class Packet
                 return new C.GuildBuffUpdate();
             case (short)ClientPacketIds.GameshopBuy:
                 return new C.GameshopBuy();
+            case (short)ClientPacketIds.NPCConfirmInput:
+                return new C.NPCConfirmInput();
             default:
                 throw new NotImplementedException();
         }
@@ -4735,6 +4737,8 @@ public abstract class Packet
                 return new S.GameShopInfo();
             case (short)ServerPacketIds.GameShopStock:
                 return new S.GameShopStock();
+            case (short)ServerPacketIds.NPCRequestInput:
+                return new S.NPCRequestInput();
             default:
                 throw new NotImplementedException();
         }

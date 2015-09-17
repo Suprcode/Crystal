@@ -251,6 +251,7 @@
     <Compile Include="MirObjects\Monsters\HedgeKekTal.cs" />
     <Compile Include="MirObjects\Monsters\GreatFoxSpirit.cs" />
     <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
+    <Compile Include="MirObjects\Monsters\Runaway.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
     <Compile Include="MirObjects\Monsters\ThunderElement.cs" />

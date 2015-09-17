@@ -1991,4 +1991,26 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(Quantity);
         }
     }
+
+    public sealed class NPCConfirmInput : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.NPCConfirmInput; } }
+
+        public uint NPCID;
+        public string PageName;
+        public string Value;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            NPCID = reader.ReadUInt32();
+            PageName = reader.ReadString();
+            Value = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(NPCID);
+            writer.Write(PageName);
+            writer.Write(Value);
+        }
+    }
 }

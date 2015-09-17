@@ -6,15 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Server.MirNetwork
 {
     public class MirStatusConnection
     {
         public readonly string IPAddress;
-
-        public GameStage Stage;
-
         private TcpClient _client;
         //private ConcurrentQueue<Packet> _receiveList;
         //private Queue<Packet> _sendList, _retryList;
@@ -40,16 +38,24 @@ namespace Server.MirNetwork
 
         public MirStatusConnection( TcpClient client)
         {
-            IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
+            try
+            {
+                IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
 
-            _client = client;
-            _client.NoDelay = true;
+                _client = client;
+                _client.NoDelay = true;
 
-            TimeConnected = SMain.Envir.Time;
-            TimeOutTime = TimeConnected + Settings.TimeOut;
-            LastSendTime = SMain.Envir.Time;
-            Connected = true;
-            BeginReceive();
+                TimeConnected = SMain.Envir.Time;
+                TimeOutTime = TimeConnected + Settings.TimeOut;
+                LastSendTime = SMain.Envir.Time;
+                Connected = true;
+                BeginReceive();
+            }
+            catch(Exception ex)
+            {
+                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+            }
         }
 
         private void BeginReceive()
@@ -117,47 +123,62 @@ namespace Server.MirNetwork
 
         public void Process()
         {
-            if (_client == null || !_client.Connected)
+            try
             {
-                Disconnect();
-                return;
-            }
-            TimeOutTime = SMain.Envir.Time + Settings.TimeOut;
-            if ((SMain.Envir.Time > TimeOutTime) || Disconnecting)
-            {
-                Disconnect();
-                return;
-            }
+                if (_client == null || !_client.Connected)
+                {
+                    Disconnect();
+                    return;
+                }
+                TimeOutTime = SMain.Envir.Time + Settings.TimeOut;
+                if ((SMain.Envir.Time > TimeOutTime) || Disconnecting)
+                {
+                    Disconnect();
+                    return;
+                }
 
-            //if (_sendList == null || _sendList.Count <= 0) return;
+                //if (_sendList == null || _sendList.Count <= 0) return;
 
-            if (SMain.Envir.Time - LastSendTime > 10 * 1000)
+                if (SMain.Envir.Time - LastSendTime > 10 * 1000)
+                {
+                    LastSendTime = SMain.Envir.Time;
+                    string output = string.Format("c;/{0}/{1}/{2}/{3}//;", "NoName", SMain.Envir.PlayerCount, "CrystalM2", Application.ProductVersion);
+                    byte[] data = Encoding.ASCII.GetBytes(output);
+                    BeginSend(data);
+                }
+            }
+            catch(Exception ex)
             {
-                LastSendTime = SMain.Envir.Time;
-                string output = string.Format("c;/{0}/{1}/{2}/{3}//;", "NoName",SMain.Envir.PlayerCount,"CrystalM2", Application.ProductVersion);
-                byte[] data = Encoding.ASCII.GetBytes(output);
-                BeginSend(data);
+                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
             }
         }
         public void Disconnect()
         {
-            if (!Connected) return;
+            try
+            {
+                if (!Connected) return;
 
-            Connected = false;
-            Stage = GameStage.Disconnected;
-            TimeDisconnected = SMain.Envir.Time;
+                Connected = false;
+                TimeDisconnected = SMain.Envir.Time;
 
-            lock (SMain.Envir.StatusConnections)
-                SMain.Envir.StatusConnections.Remove(this);
-            /*
-            _sendList = null;
-            _receiveList = null;
-            _retryList = null;
-            */
-            _rawData = null;
+                lock (SMain.Envir.StatusConnections)
+                    SMain.Envir.StatusConnections.Remove(this);
+                /*
+                _sendList = null;
+                _receiveList = null;
+                _retryList = null;
+                */
+                _rawData = null;
 
-            if (_client != null) _client.Client.Dispose();
-            _client = null;
+                if (_client != null) _client.Client.Dispose();
+                _client = null;
+            }
+            catch (Exception ex)
+            {
+                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+            }
         }
         public void SendDisconnect()
         {

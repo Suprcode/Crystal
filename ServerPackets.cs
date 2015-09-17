@@ -5104,4 +5104,23 @@ namespace ServerPackets
             writer.Write(MenteeEXP);
         }
     }
+
+    public sealed class NPCRequestInput : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.NPCRequestInput; } }
+
+        public uint NPCID;
+        public string PageName;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            NPCID = reader.ReadUInt32();
+            PageName = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(NPCID);
+            writer.Write(PageName);
+        }
+    }
 }

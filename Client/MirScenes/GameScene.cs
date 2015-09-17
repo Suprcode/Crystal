@@ -1135,6 +1135,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCStorage:
                     NPCStorage();
                     break;
+                case (short)ServerPacketIds.NPCRequestInput:
+                    NPCRequestInput((S.NPCRequestInput)p);
+                    break;
                 case (short)ServerPacketIds.SellItem:
                     SellItem((S.SellItem)p);
                     break;
@@ -3203,6 +3206,18 @@ namespace Client.MirScenes
             if (NPCDialog.Visible)
                 StorageDialog.Show();
         }
+        private void NPCRequestInput(S.NPCRequestInput p)
+        {
+            MirInputBox inputBox = new MirInputBox("Please enter the required information.");
+
+            inputBox.OKButton.Click += (o1, e1) =>
+            {
+                Network.Enqueue(new C.NPCConfirmInput { Value = inputBox.InputTextBox.Text, NPCID = p.NPCID, PageName = p.PageName });
+                inputBox.Dispose();
+            };
+            inputBox.Show();
+        }
+
         private void NPCSRepair(S.NPCSRepair p)
         {
             NPCRate = p.Rate;
@@ -8189,6 +8204,8 @@ namespace Client.MirScenes
         {
             for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
             {
+            	if (y <= 0) continue;
+                if (y >= Height) break;
                 for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
@@ -11648,16 +11665,16 @@ namespace Client.MirScenes
             {
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
-                Location = new Point(50, 12),
-                Size = new Size(190, 20),
+                Location = new Point(0, 12),
+                Size = new Size(264, 20),
                 NotControl = true,
             };
             GuildLabel = new MirLabel
             {
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
-                Location = new Point(50, 33),
-                Size = new Size(190, 30),
+                Location = new Point(0, 33),
+                Size = new Size(264, 30),
                 NotControl = true,
             };
             ClassImage = new MirImageControl
@@ -14077,17 +14094,15 @@ namespace Client.MirScenes
             GameScene.Scene.NPCDropDialog.Hide();
             GameScene.Scene.NPCAwakeDialog.Hide();
             GameScene.Scene.RefineDialog.Hide();
-
-            /*
-            GameScene.Scene.BuyBackDialog.Hide();*/
-            //GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
             GameScene.Scene.StorageDialog.Hide();
             GameScene.Scene.TrustMerchantDialog.Hide();
+
+            GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
 
         public void Show()
         {
-            GameScene.Scene.InventoryDialog.Location = new Point(Settings.ScreenWidth - GameScene.Scene.InventoryDialog.Size.Width, 0);
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
             Visible = true;
 
             CheckQuestButtonDisplay();

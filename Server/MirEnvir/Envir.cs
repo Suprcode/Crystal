@@ -138,6 +138,7 @@ namespace Server.MirEnvir
         public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
         private Thread[] MobThreading = new Thread[Settings.ThreadLimit];
         public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
+        public bool HandledError = false;
 
         public List<string> CustomCommands = new List<string>();
         public Dragon DragonSystem;
@@ -167,7 +168,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        public long dayTime, warTime, mailTime, GuildTime;
+        private long dayTime, warTime, mailTime, guildTime;
 
         private bool MagicExists(Spell spell)
         {
@@ -519,6 +520,8 @@ namespace Server.MirEnvir
 
                     File.AppendAllText(@".\Error.txt",
                                            string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+
+                    HandledError = true;
                 }
 
                 StopNetwork();
@@ -532,6 +535,8 @@ namespace Server.MirEnvir
                 SMain.Enqueue("[outer workloop error]" + ex);
                 File.AppendAllText(@".\Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+
+                HandledError = true;
             }
             _thread = null;
 
@@ -673,9 +678,9 @@ namespace Server.MirEnvir
                 mailTime = Time + (Settings.Second * 10);
             }
 
-            if (Time >= GuildTime)
+            if (Time >= guildTime)
             {
-                GuildTime = Time + (Settings.Minute);
+                guildTime = Time + (Settings.Minute);
                 for (int i = 0; i < GuildList.Count; i++)
                 {
                     GuildList[i].Process();
@@ -812,19 +817,25 @@ namespace Server.MirEnvir
         private void EndSaveGuildsAsync(IAsyncResult result)
         {
             FileStream fStream = result.AsyncState as FileStream;
-            if (fStream != null)
+            try
             {
-                string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                string newfilename = fStream.Name;
-                fStream.EndWrite(result);
-                fStream.Dispose();
-                if (File.Exists(oldfilename))
-                    File.Move(oldfilename, oldfilename + "o");
-                File.Move(newfilename, oldfilename);
-                if (File.Exists(oldfilename + "o"))
-                    File.Delete(oldfilename + "o");
+                if (fStream != null)
+                {
+                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                    string newfilename = fStream.Name;
+                    fStream.EndWrite(result);
+                    fStream.Dispose();
+                    if (File.Exists(oldfilename))
+                        File.Move(oldfilename, oldfilename + "o");
+                    File.Move(newfilename, oldfilename);
+                    if (File.Exists(oldfilename + "o"))
+                        File.Delete(oldfilename + "o");
+                }
             }
-
+            catch (Exception ex)
+            {
+                SMain.EnqueueDebugging("Error saving guilds: " + ex.Message);
+            }
         }
 
         private void SaveGoods(bool forced = false)
@@ -871,18 +882,25 @@ namespace Server.MirEnvir
         }
         private void EndSaveGoodsAsync(IAsyncResult result)
         {
-            FileStream fStream = result.AsyncState as FileStream;
-            if (fStream != null)
+            try
             {
-                string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                string newfilename = fStream.Name;
-                fStream.EndWrite(result);
-                fStream.Dispose();
-                if (File.Exists(oldfilename))
-                    File.Move(oldfilename, oldfilename + "o");
-                File.Move(newfilename, oldfilename);
-                if (File.Exists(oldfilename + "o"))
-                    File.Delete(oldfilename + "o");
+                FileStream fStream = result.AsyncState as FileStream;
+                if (fStream != null)
+                {
+                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                    string newfilename = fStream.Name;
+                    fStream.EndWrite(result);
+                    fStream.Dispose();
+                    if (File.Exists(oldfilename))
+                        File.Move(oldfilename, oldfilename + "o");
+                    File.Move(newfilename, oldfilename);
+                    if (File.Exists(oldfilename + "o"))
+                        File.Delete(oldfilename + "o");
+                }
+            }
+            catch (Exception ex)
+            {
+                SMain.EnqueueDebugging("Error saving goods: " + ex.Message);
             }
 
         }
@@ -915,18 +933,24 @@ namespace Server.MirEnvir
         private void EndSaveAccounts(IAsyncResult result)
         {
             FileStream fStream = result.AsyncState as FileStream;
-
-            if (fStream != null)
+            try
             {
-                string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                string newfilename = fStream.Name;
-                fStream.EndWrite(result);
-                fStream.Dispose();
-                if (File.Exists(oldfilename))
-                    File.Move(oldfilename, oldfilename + "o");
-                File.Move(newfilename, oldfilename);
-                if (File.Exists(oldfilename + "o"))
-                    File.Delete(oldfilename + "o");
+                if (fStream != null)
+                {
+                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                    string newfilename = fStream.Name;
+                    fStream.EndWrite(result);
+                    fStream.Dispose();
+                    if (File.Exists(oldfilename))
+                        File.Move(oldfilename, oldfilename + "o");
+                    File.Move(newfilename, oldfilename);
+                    if (File.Exists(oldfilename + "o"))
+                        File.Delete(oldfilename + "o");
+                }
+            }
+            catch (Exception ex)
+            {
+                SMain.EnqueueDebugging("Error saving accounts: " + ex.Message);
             }
 
             Saving = false;
@@ -1311,6 +1335,12 @@ namespace Server.MirEnvir
 
             _thread = new Thread(WorkLoop) {IsBackground = true};
             _thread.Start();
+
+            if(HandledError && Settings.TestServer)
+            {
+                HandledError = false;
+                Start();
+            }
         }
         public void Stop()
         {
@@ -1415,6 +1445,9 @@ namespace Server.MirEnvir
             StartItems.Clear();
             Objects.Clear();
             Players.Clear();
+
+            CleanUp();
+
             GC.Collect();
 
             SMain.Enqueue("Envir Stopped.");
@@ -1464,6 +1497,55 @@ namespace Server.MirEnvir
 
             StatusConnections.Clear();
             SMain.Enqueue("Network Stopped.");
+        }
+
+        private void CleanUp()
+        {
+            for (int i = 0; i < CharacterList.Count; i++)
+            {
+                CharacterInfo info = CharacterList[i];
+
+                if (info.Deleted)
+                {
+                    #region Mentor Cleanup
+                    if (info.Mentor > 0)
+                    {
+                        CharacterInfo Mentor = GetCharacterInfo(info.Mentor);
+
+                        if (Mentor != null)
+                        {
+                            Mentor.Mentor = 0;
+                            Mentor.MentorExp = 0;
+                            Mentor.isMentor = false;
+                        }
+
+                        info.Mentor = 0;
+                        info.MentorExp = 0;
+                        info.isMentor = false;
+                    }
+                    #endregion
+
+                    #region Marriage Cleanup
+                    if (info.Married > 0)
+                    {
+                        CharacterInfo Lover = GetCharacterInfo(info.Married);
+
+                        info.Married = 0;
+                        info.MarriedDate = DateTime.Now;
+
+                        Lover.Married = 0;
+                        Lover.MarriedDate = DateTime.Now;
+                        if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
+                            Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+                    }
+                    #endregion
+
+                    if (info.DeleteDate < DateTime.Now.AddDays(-7))
+                    {
+                        //delete char from db
+                    }
+                }
+            }
         }
 
         private void Connection(IAsyncResult result)
@@ -1690,7 +1772,8 @@ namespace Server.MirEnvir
 
             account.LastDate = Now;
             account.LastIP = c.IPAddress;
-            
+
+            SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
         public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c)

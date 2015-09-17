@@ -246,6 +246,7 @@ namespace Server.MirObjects
 
         public Map NPCMoveMap;
         public Point NPCMoveCoord;
+        public string NPCInputStr;
 
         public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
 
@@ -481,6 +482,8 @@ namespace Server.MirObjects
                     return string.Format("{0} Has logged out. Reason: Server crashed", Name);
                 case 4:
                     return string.Format("{0} Has logged out. Reason: Kicked by admin", Name);
+                case 5:
+                    return string.Format("{0} Has logged out. Reason: Maximum connections reached", Name);
                 case 10:
                     return string.Format("{0} Has logged out. Reason: Wrong client version", Name);
                 case 20:
@@ -620,8 +623,12 @@ namespace Server.MirObjects
 
             for (int i = Pets.Count() - 1; i >= 0; i--)
             {
-                if (Pets[i].Dead)
-                    Pets.Remove(Pets[i]);
+                MonsterObject pet = Pets[i];
+                if (pet.Dead)
+                {
+                    Pets.Remove(pet);
+                    SMain.EnqueueDebugging("Dead pet removed through player process :" + pet.Name);
+                }
             }
 
             ProcessBuffs();
@@ -1142,6 +1149,8 @@ namespace Server.MirObjects
                     }
                 }
             }
+
+            UnSummonIntelligentCreature(SummonedCreatureType);
 
             for (int i = Pets.Count - 1; i >= 0; i--)
                 Pets[i].Die();
@@ -1761,6 +1770,7 @@ namespace Server.MirObjects
             if (Settings.TestServer)
             {
                 ReceiveChat("Game is currently in test mode.", ChatType.Hint);
+                Chat("@GAMEMASTER");
             }
 
             if (Info.GuildIndex != -1)
@@ -3436,7 +3446,7 @@ namespace Server.MirObjects
                         break;
 
                     case "OBSERVER":
-                        if (!IsGM && !Settings.TestServer) return;
+                        if (!IsGM) return;
                         Observer = !Observer;
 
                         hintstring = Observer ? "Observer Mode." : "Normal Mode.";
@@ -3929,15 +3939,18 @@ namespace Server.MirObjects
                             player.ReceiveChat(string.Format("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
                             return;
                         }
-
-                        player.ReceiveChat(string.Format("You have learned {0} at level {1}", skill.ToString(), spellLevel), ChatType.Hint);
-
-                        if (player != this)
+                        else
                         {
-                            ReceiveChat(string.Format("{0} has learned {1} at level {2}", player.Name, skill.ToString(), spellLevel), ChatType.Hint);
+                            player.ReceiveChat(string.Format("You have learned {0} at level {1}", skill.ToString(), spellLevel), ChatType.Hint);
+
+                            if (player != this)
+                            {
+                                ReceiveChat(string.Format("{0} has learned {1} at level {2}", player.Name, skill.ToString(), spellLevel), ChatType.Hint);
+                            }
+
+                            player.Info.Magics.Add(magic);
                         }
 
-                        player.Info.Magics.Add(magic);
                         player.Enqueue(magic.GetInfo());
                         player.RefreshStats();
                         break;
@@ -4114,7 +4127,9 @@ namespace Server.MirObjects
                         {
                             if (cell == null || cell.Objects == null) continue;
 
-                            for (int m = 0; m < cell.Objects.Count(); m++)
+                            int obCount = cell.Objects.Count();
+
+                            for (int m = 0; m < obCount; m++)
                             {
                                 MapObject ob = cell.Objects[m];
 
@@ -6219,10 +6234,10 @@ namespace Server.MirObjects
         }
         private void TurnUndead(MapObject target, UserMagic magic)
         {
-            if (target == null || !target.Undead || !target.IsAttackTarget(this)) return;
+            if (target == null || target.Race != ObjectType.Monster || !target.Undead || !target.IsAttackTarget(this)) return;
             if (Envir.Random.Next(2) + Level - 1 <= target.Level)
             {
-                if (target.Race == ObjectType.Monster) target.Target = this;
+                target.Target = this;
                 return;
             }
 
@@ -6230,13 +6245,12 @@ namespace Server.MirObjects
 
             if (Envir.Random.Next(100) >= (magic.Level + 1 << 3) + dif)
             {
-                if (target.Race == ObjectType.Monster) target.Target = this;
+                target.Target = this;
                 return;
             }
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, target);
             ActionList.Add(action);
-
         }
         private void FlameDisruptor(MapObject target, UserMagic magic)
         {
@@ -6646,7 +6660,7 @@ namespace Server.MirObjects
         }
         private void Hallucination(MapObject target, UserMagic magic)
         {
-            if (target == null || !target.IsAttackTarget(this)) return;
+            if (target == null || target.Race != ObjectType.Monster || !target.IsAttackTarget(this)) return;
 
             int damage = 0;
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
@@ -9867,11 +9881,6 @@ namespace Server.MirObjects
         public void UseItem(ulong id)
         {
             S.UseItem p = new S.UseItem { UniqueID = id, Success = false };
-            if (Dead)
-            {
-                Enqueue(p);
-                return;
-            }
 
             UserItem item = null;
             int index = -1;
@@ -9882,6 +9891,12 @@ namespace Server.MirObjects
                 if (item == null || item.UniqueID != id) continue;
                 index = i;
                 break;
+            }
+
+            if (Dead && item.Info.Type != ItemType.Scroll && item.Info.Shape != 6)
+            {
+                Enqueue(p);
+                return;
             }
 
             if (item == null || index == -1 || !CanUseItem(item))
@@ -10007,7 +10022,19 @@ namespace Server.MirObjects
                             ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
-                        case 6: //Credit Scroll
+                        case 6: //ResurrectionScroll
+                            if (Dead)
+                            {
+                                MP = MaxMP;
+                                Revive(MaxHealth, true);
+                            }
+                            else
+                            {
+                                ReceiveChat("Can only be used when dead", ChatType.Hint);
+                                return;
+                            }
+                            break;
+                        case 7: //Credit Scroll
                             if (item.Info.Price > 0)
                             {
                                 GainCredit(item.Info.Price);
@@ -12530,6 +12557,7 @@ namespace Server.MirObjects
                 break;
             }
 
+
             CallNPCNextPage();
         }
         private void CallNPCNextPage()
@@ -12867,7 +12895,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.NPCMarket { Listings = listings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
 
-            SMain.EnqueueDebugging(string.Format("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, UserMatch ? Account.Auctions.Count : Envir.Auctions.Count));
+            //SMain.EnqueueDebugging(string.Format("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, UserMatch ? Account.Auctions.Count : Envir.Auctions.Count));
         }
         public void MarketSearch(string match)
         {
@@ -15604,6 +15632,8 @@ namespace Server.MirObjects
         public void SummonIntelligentCreature(IntelligentCreatureType pType)
         {
             if (pType == IntelligentCreatureType.None) return;
+
+            if (CreatureSummoned == true || SummonedCreatureType != IntelligentCreatureType.None) return;
 
             for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
             {

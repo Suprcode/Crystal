@@ -263,7 +263,7 @@ namespace Server.MirObjects
 
             List<string> currentSay = say, currentButtons = buttons;
 
-            //Used to fake page name
+            //Cleans arguments out of search page name
             string tempSectionName = ArgumentParse(sectionName);
 
             for (int i = 0; i < lines.Count; i++)
@@ -390,6 +390,8 @@ namespace Server.MirObjects
 
                 lines.AddRange(newLines);
             }
+
+            lines.RemoveAll(str => str.ToUpper().StartsWith("#INSERT"));
 
             return lines;
         }
@@ -763,12 +765,23 @@ namespace Server.MirObjects
                 player.NPCDelayed = false;
             }
 
+            if (key.StartsWith("[@@") && player.NPCInputStr == string.Empty)
+            {
+                //send off packet to request input
+                player.Enqueue(new S.NPCRequestInput { NPCID = ObjectID, PageName = key });
+                return;
+            }
+
             for (int i = 0; i < NPCSections.Count; i++)
             {
                 NPCPage page = NPCSections[i];
+
                 if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
                 ProcessPage(player, page);
             }
+
+
+            player.NPCInputStr = string.Empty;
         }
 
         public void Buy(PlayerObject player, ulong index, uint count)
@@ -1057,6 +1070,9 @@ namespace Server.MirObjects
             string tempString, tempString2;
 
             var regexFlag = new Regex(@"\[(.*?)\]");
+            var regexQuote = new Regex("\"([^\"]*)\"");
+
+            Match quoteMatch = null;
 
             switch (parts[0].ToUpper())
             {
@@ -1118,9 +1134,20 @@ namespace Server.MirObjects
                 case "CHECKNAMELIST":
                     if (parts.Length < 2) return;
 
-                    var fileName = Path.Combine(Settings.NameListPath, parts[1] + ".txt");
+                    quoteMatch = regexQuote.Match(line);
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckNameList, fileName));
+                    string listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    var fileName = Settings.NameListPath + listPath;
+
+                    string sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if (File.Exists(fileName))
+                        CheckList.Add(new NPCChecks(CheckType.CheckNameList, fileName));
                     break;
 
                 case "ISADMIN":
@@ -1243,8 +1270,10 @@ namespace Server.MirObjects
             if (parts.Length == 0) return;
 
             string fileName;
-            var regexMessage = new Regex("\"([^\"]*)\"");
+            var regexQuote = new Regex("\"([^\"]*)\"");
             var regexFlag = new Regex(@"\[(.*?)\]");
+
+            Match quoteMatch = null;
 
             switch (parts[0].ToUpper())
             {
@@ -1342,11 +1371,19 @@ namespace Server.MirObjects
                 case "ADDNAMELIST":
                     if (parts.Length < 2) return;
 
-                    fileName = Path.Combine(Settings.NameListPath, parts[1] + ".txt");
+                    quoteMatch = regexQuote.Match(line);
+
+                    string listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Settings.NameListPath + listPath;
+
                     string sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
-                    if(!File.Exists(fileName))
+                    if (!File.Exists(fileName))
                         File.Create(fileName);
 
                     acts.Add(new NPCActions(ActionType.AddNameList, fileName));
@@ -1356,7 +1393,18 @@ namespace Server.MirObjects
                 case "DELNAMELIST":
                     if (parts.Length < 2) return;
 
-                    fileName = Path.Combine(Settings.NameListPath, parts[1] + ".txt");
+                    quoteMatch = regexQuote.Match(line);
+
+                    listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Settings.NameListPath + listPath;
+
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
                     if (File.Exists(fileName))
                         acts.Add(new NPCActions(ActionType.DelNameList, fileName));
                     break;
@@ -1364,8 +1412,19 @@ namespace Server.MirObjects
                 //cant use stored var
                 case "CLEARNAMELIST":
                     if (parts.Length < 2) return;
+                    
+                    quoteMatch = regexQuote.Match(line);
 
-                    fileName = Path.Combine(Settings.NameListPath, parts[1] + ".txt");
+                    listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Settings.NameListPath + listPath;
+
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
                     if (File.Exists(fileName))
                         acts.Add(new NPCActions(ActionType.ClearNameList, fileName));
                     break;
@@ -1393,6 +1452,18 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.SetPkPoint, parts[1]));
                     break;
 
+                case "REDUCEPKPOINT":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.ReducePkPoint, parts[1]));
+                    break;
+
+                case "INCREASEPKPOINT":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.IncreasePkPoint, parts[1]));
+                    break;
+
                 case "CHANGEGENDER":
                     acts.Add(new NPCActions(ActionType.ChangeGender));
                     break;
@@ -1414,9 +1485,8 @@ namespace Server.MirObjects
                     }
                     break;
 
-                //cant use stored var
                 case "LOCALMESSAGE":
-                    var match = regexMessage.Match(line);
+                    var match = regexQuote.Match(line);
                     if (match.Success)
                     {
                         var message = match.Groups[1].Captures[0].Value;
@@ -1427,7 +1497,7 @@ namespace Server.MirObjects
                     break;
 
                 case "GLOBALMESSAGE":
-                    match = regexMessage.Match(line);
+                    match = regexQuote.Match(line);
                     if (match.Success)
                     {
                         var message = match.Groups[1].Captures[0].Value;
@@ -1542,12 +1612,13 @@ namespace Server.MirObjects
                 case "MOV":
                     if (parts.Length < 3) return;
                     match = Regex.Match(parts[1], @"[A-Z][0-9]", RegexOptions.IgnoreCase);
-                    Match msgMatch = regexMessage.Match(line);
+
+                    quoteMatch = regexQuote.Match(line);
 
                     string valueToStore = parts[2];
 
-                    if (msgMatch.Success)
-                        valueToStore = msgMatch.Groups[1].Captures[0].Value;
+                    if (quoteMatch.Success)
+                        valueToStore = quoteMatch.Groups[1].Captures[0].Value;
 
                     if (match.Success)
                         acts.Add(new NPCActions(ActionType.Mov, parts[1], valueToStore));
@@ -1558,12 +1629,12 @@ namespace Server.MirObjects
 
                     match = Regex.Match(parts[1], @"[A-Z][0-9]", RegexOptions.IgnoreCase);
 
-                    msgMatch = regexMessage.Match(line);
+                    quoteMatch = regexQuote.Match(line);
 
                     valueToStore = parts[3];
 
-                    if (msgMatch.Success)
-                        valueToStore = msgMatch.Groups[1].Captures[0].Value;
+                    if (quoteMatch.Success)
+                        valueToStore = quoteMatch.Groups[1].Captures[0].Value;
 
                     if (match.Success)
                         acts.Add(new NPCActions(ActionType.Calc, "%" + parts[1], parts[2], valueToStore, parts[1].Insert(1, "-")));
@@ -1607,7 +1678,7 @@ namespace Server.MirObjects
                     break;
 
                 case "COMPOSEMAIL":
-                    match = regexMessage.Match(line);
+                    match = regexQuote.Match(line);
                     if (match.Success)
                     {
                         var message = match.Groups[1].Captures[0].Value;
@@ -1649,27 +1720,52 @@ namespace Server.MirObjects
                 case "LOADVALUE":
                     if (parts.Length < 5) return;
 
-                    fileName = Path.Combine(Settings.ValuePath, parts[2] + ".txt");
-                    sDirectory = Path.GetDirectoryName(fileName);
-                    Directory.CreateDirectory(sDirectory);
+                    quoteMatch = regexQuote.Match(line);
 
-                    if (!File.Exists(fileName))
-                        File.Create(fileName);
+                    if (quoteMatch.Success)
+                    {
+                        fileName = Settings.ValuePath + quoteMatch.Groups[1].Captures[0].Value;
 
-                    acts.Add(new NPCActions(ActionType.LoadValue, parts[1], fileName, parts[3], parts[4]));
+                        string group = parts[parts.Length - 2];
+                        string key = parts[parts.Length - 1];
+
+                        sDirectory = Path.GetDirectoryName(fileName);
+                        Directory.CreateDirectory(sDirectory);
+
+                        if (!File.Exists(fileName))
+                            File.Create(fileName);
+
+                        acts.Add(new NPCActions(ActionType.LoadValue, parts[1], fileName, group, key));
+                    }
                     break;
 
                 case "SAVEVALUE":
                     if (parts.Length < 5) return;
 
-                    fileName = Path.Combine(Settings.ValuePath, parts[1] + ".txt");
-                    sDirectory = Path.GetDirectoryName(fileName);
-                    Directory.CreateDirectory(sDirectory);
+                    MatchCollection matchCol = regexQuote.Matches(line);
 
-                    if (!File.Exists(fileName))
-                        File.Create(fileName);
+                    if (matchCol.Count > 0 && matchCol[0].Success)
+                    {
+                        fileName = Settings.ValuePath + matchCol[0].Groups[1].Captures[0].Value;
 
-                    acts.Add(new NPCActions(ActionType.SaveValue, fileName, parts[2], parts[3], parts[4]));
+                        string value = parts[parts.Length - 1];
+
+                        if (matchCol.Count > 1 && matchCol[1].Success)
+                            value = matchCol[1].Groups[1].Captures[0].Value;
+
+                        string[] newParts = line.Replace(value, string.Empty).Replace("\"", "").Trim().Split(' ');
+
+                        string group = newParts[newParts.Length - 2];
+                        string key = newParts[newParts.Length - 1];
+
+                        sDirectory = Path.GetDirectoryName(fileName);
+                        Directory.CreateDirectory(sDirectory);
+
+                        if (!File.Exists(fileName))
+                            File.Create(fileName);
+
+                        acts.Add(new NPCActions(ActionType.SaveValue, fileName, group, key, value));
+                    }
                     break;
             }
 
@@ -2123,6 +2219,7 @@ namespace Server.MirObjects
                 uint credit;
                 uint Pearls;
                 uint count;
+                ushort tempuShort;
                 string tempString = string.Empty;
                 int x, y;
                 int tempInt;
@@ -2147,6 +2244,8 @@ namespace Server.MirObjects
                     {
                         param[j] = param[j].Replace(part, ReplaceValue(player, part));
                     }
+
+                    param[j] = param[j].Replace("%INPUTSTR", player.NPCInputStr);
                 }
 
                 switch (act.Type)
@@ -2377,16 +2476,30 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.ChangeLevel:
-                        if (!byte.TryParse(param[0], out tempByte)) return;
-                        tempByte = Math.Min(byte.MaxValue, tempByte);
+                        if (!ushort.TryParse(param[0], out tempuShort)) return;
+                        tempuShort = Math.Min(ushort.MaxValue, tempuShort);
 
-                        player.Level = tempByte;
+                        player.Level = tempuShort;
                         player.LevelUp();
                         break;
 
                     case ActionType.SetPkPoint:
                         if (!int.TryParse(param[0], out tempInt)) return;
                         player.PKPoints = tempInt;
+                        break;
+
+                    case ActionType.ReducePkPoint:
+
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        player.PKPoints -= tempInt;
+                        if (player.PKPoints < 0) player.PKPoints = 0;
+
+                        break;
+
+                    case ActionType.IncreasePkPoint:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+                        player.PKPoints += tempInt;
                         break;
 
                     case ActionType.ChangeGender:
@@ -2469,6 +2582,8 @@ namespace Server.MirObjects
                             spellLevel = byte.TryParse(param[1], out spellLevel) ? Math.Min((byte)3, spellLevel) : (byte)0;
 
                         var magic = new UserMagic(skill) { Level = spellLevel };
+
+                        if (magic.Info == null) return;
 
                         player.Info.Magics.Add(magic);
                         player.Enqueue(magic.GetInfo());
@@ -2685,7 +2800,7 @@ namespace Server.MirObjects
 
                         Buff buff = new Buff
                         {
-                            Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]),
+                            Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
                             Caster = player,
                             ExpireTime = SMain.Envir.Time + tempLong * 1000,
                             Values = intValues,
@@ -3136,6 +3251,8 @@ namespace Server.MirObjects
         GiveMP,
         ChangeLevel,
         SetPkPoint,
+        ReducePkPoint,
+        IncreasePkPoint,
         ChangeGender,
         ChangeClass,
         LocalMessage,

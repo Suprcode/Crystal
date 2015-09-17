@@ -52,6 +52,21 @@ namespace Server.MirNetwork
             SessionID = sessionID;
             IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
 
+            int connCount = 0;
+            for (int i = 0; i < SMain.Envir.Connections.Count; i++)
+            {
+                MirConnection conn = SMain.Envir.Connections[i];
+                if (conn.IPAddress == IPAddress && conn.Connected)
+                {
+                    connCount++;
+
+                    if (connCount >= 5)
+                    {
+                        SMain.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
+                        conn.SendDisconnect(5);
+                    }
+                }
+            }
 
             SMain.Enqueue(IPAddress + ", Connected.");
 
@@ -543,6 +558,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GameshopBuy:
                     GameshopBuy((C.GameshopBuy)p);
                     return;
+                case (short)ClientPacketIds.NPCConfirmInput:
+                    NPCConfirmInput((C.NPCConfirmInput)p);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -632,25 +650,31 @@ namespace Server.MirNetwork
                     SMain.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
+
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
+
             Stage = GameStage.Login;
         }
         private void NewAccount(C.NewAccount p)
         {
             if (Stage != GameStage.Login) return;
 
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", New account being created.");
             SMain.Envir.NewAccount(p, this);
         }
         private void ChangePassword(C.ChangePassword p)
         {
             if (Stage != GameStage.Login) return;
 
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", Password being changed.");
             SMain.Envir.ChangePassword(p, this);
         }
         private void Login(C.Login p)
         {
             if (Stage != GameStage.Login) return;
 
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", User logging in.");
             SMain.Envir.Login(p, this);
         }
         private void NewCharacter(C.NewCharacter p)
@@ -1546,6 +1570,14 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
             Player.GameshopBuy(p.ItemIndex, p.Quantity);
+        }
+
+        private void NPCConfirmInput(C.NPCConfirmInput p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.NPCInputStr = p.Value;
+            Player.CallNPC(Player.NPCID, p.PageName);
         }
     }
 }
