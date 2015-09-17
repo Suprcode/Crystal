@@ -14,7 +14,6 @@ namespace Client.MirObjects
 
         public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
 
-
         static FrameSet()
         {
             FrameSet frame;

@@ -1087,7 +1087,11 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.CheckGold, parts[1], parts[2]));
                     break;
+                case "CHECKCREDIT":
+                    if (parts.Length < 3) return;
 
+                    CheckList.Add(new NPCChecks(CheckType.CheckCredit, parts[1], parts[2]));
+                    break;
                 case "CHECKITEM":
                     if (parts.Length < 2) return;
 
@@ -1298,6 +1302,17 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
 
                     acts.Add(new NPCActions(ActionType.TakeGold, parts[1]));
+                    break;
+                case "GIVECREDIT":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.GiveCredit, parts[1]));
+                    break;
+
+                case "TAKECREDIT":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.TakeCredit, parts[1]));
                     break;
 
                 case "GIVEPEARLS":
@@ -1839,6 +1854,23 @@ namespace Server.MirObjects
                             return true;
                         }
                         break;
+                    case CheckType.CheckCredit:
+                        if (!uint.TryParse(param[1], out tempUint))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        try
+                        {
+                            failed = !Compare(param[0], player.Account.Credit, tempUint);
+                        }
+                        catch (ArgumentException)
+                        {
+                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            return true;
+                        }
+                        break;
 
                     case CheckType.CheckItem:
                         uint count;
@@ -2184,6 +2216,7 @@ namespace Server.MirObjects
             for (var i = 0; i < acts.Count; i++)
             {
                 uint gold;
+                uint credit;
                 uint Pearls;
                 uint count;
                 ushort tempuShort;
@@ -2257,6 +2290,23 @@ namespace Server.MirObjects
 
                         player.Account.Gold -= gold;
                         player.Enqueue(new S.LoseGold { Gold = gold });
+                        break;
+                    case ActionType.GiveCredit:
+                        if (!uint.TryParse(param[0], out credit)) return;
+
+                        if (credit + player.Account.Credit >= uint.MaxValue)
+                            credit = uint.MaxValue - player.Account.Credit;
+
+                        player.GainCredit(credit);
+                        break;
+
+                    case ActionType.TakeCredit:
+                        if (!uint.TryParse(param[0], out credit)) return;
+
+                        if (credit >= player.Account.Credit) credit = player.Account.Credit;
+
+                        player.Account.Credit -= credit;
+                        player.Enqueue(new S.LoseCredit { Credit = credit });
                         break;
 
                     case ActionType.GivePearls:
@@ -3187,6 +3237,8 @@ namespace Server.MirObjects
         InstanceMove,
         GiveGold,
         TakeGold,
+        GiveCredit,
+        TakeCredit,
         GiveItem,
         TakeItem,
         GiveExp,
@@ -3247,6 +3299,7 @@ namespace Server.MirObjects
         Level,
         CheckItem,
         CheckGold,
+        CheckCredit,
         CheckGender,
         CheckClass,
         CheckDay,

@@ -363,5 +363,11 @@ namespace Server
             Envir.Start();
             AutoResize();
         }
+
+        private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GameShop form = new GameShop();
+            form.ShowDialog();
+        }
     }
 }

@@ -51,6 +51,7 @@ namespace Server.MirDatabase
 
         public uint GoldReward;
         public uint ExpReward;
+        public uint CreditReward;
         public List<QuestItemReward> FixedRewards = new List<QuestItemReward>();
         public List<QuestItemReward> SelectRewards = new List<QuestItemReward>();
 
@@ -129,6 +130,7 @@ namespace Server.MirDatabase
             SelectRewards = new List<QuestItemReward>();
             ExpReward = 0;
             GoldReward = 0;
+            CreditReward = 0;
         }
 
         public void ParseFile(List<string> lines)
@@ -144,13 +146,14 @@ namespace Server.MirDatabase
                 fixedRewardsKey = "[@FIXEDREWARDS]",
                 selectRewardsKey = "[@SELECTREWARDS]",
                 expRewardKey = "[@EXPREWARD]",
-                goldRewardKey = "[@GOLDREWARD]";
+                goldRewardKey = "[@GOLDREWARD]",
+                creditRewardKey = "[@CREDITREWARD]";
 
             List<string> headers = new List<string> 
             { 
                 descriptionCollectKey, descriptionTaskKey, descriptionCompletionKey,
                 carryItemsKey, killTasksKey, itemTasksKey, flagTasksKey,
-                fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey
+                fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey, creditRewardKey
             };
 
             int currentHeader = 0;
@@ -212,6 +215,9 @@ namespace Server.MirDatabase
                                 break;
                             case goldRewardKey:
                                 uint.TryParse(innerLine, out GoldReward);
+                                break;
+                            case creditRewardKey:
+                                uint.TryParse(innerLine, out CreditReward);
                                 break;
                         }
                     }
@@ -366,6 +372,7 @@ namespace Server.MirDatabase
                 Type = Type,
                 RewardGold = GoldReward,
                 RewardExp = ExpReward,
+                RewardCredit = CreditReward,
                 RewardsFixedItem = FixedRewards,
                 RewardsSelectItem = SelectRewards
             };

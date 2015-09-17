@@ -186,6 +186,7 @@
             this.ExportAllButton = new System.Windows.Forms.Button();
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
+            this.Gameshop_button = new System.Windows.Forms.Button();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -1752,9 +1753,9 @@
             // 
             // RemoveButton
             // 
-            this.RemoveButton.Location = new System.Drawing.Point(255, 12);
+            this.RemoveButton.Location = new System.Drawing.Point(235, 12);
             this.RemoveButton.Name = "RemoveButton";
-            this.RemoveButton.Size = new System.Drawing.Size(75, 23);
+            this.RemoveButton.Size = new System.Drawing.Size(65, 23);
             this.RemoveButton.TabIndex = 9;
             this.RemoveButton.Text = "Remove";
             this.RemoveButton.UseVisualStyleBackColor = true;
@@ -1764,7 +1765,7 @@
             // 
             this.AddButton.Location = new System.Drawing.Point(174, 12);
             this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(75, 23);
+            this.AddButton.Size = new System.Drawing.Size(55, 23);
             this.AddButton.TabIndex = 8;
             this.AddButton.Text = "Add";
             this.AddButton.UseVisualStyleBackColor = true;
@@ -1784,9 +1785,9 @@
             // 
             // PasteButton
             // 
-            this.PasteButton.Location = new System.Drawing.Point(417, 12);
+            this.PasteButton.Location = new System.Drawing.Point(363, 12);
             this.PasteButton.Name = "PasteButton";
-            this.PasteButton.Size = new System.Drawing.Size(75, 23);
+            this.PasteButton.Size = new System.Drawing.Size(53, 23);
             this.PasteButton.TabIndex = 24;
             this.PasteButton.Text = "Paste";
             this.PasteButton.UseVisualStyleBackColor = true;
@@ -1794,9 +1795,9 @@
             // 
             // CopyMButton
             // 
-            this.CopyMButton.Location = new System.Drawing.Point(336, 12);
+            this.CopyMButton.Location = new System.Drawing.Point(306, 12);
             this.CopyMButton.Name = "CopyMButton";
-            this.CopyMButton.Size = new System.Drawing.Size(75, 23);
+            this.CopyMButton.Size = new System.Drawing.Size(51, 23);
             this.CopyMButton.TabIndex = 23;
             this.CopyMButton.Text = "Copy";
             this.CopyMButton.UseVisualStyleBackColor = true;
@@ -1842,11 +1843,22 @@
             this.ImportButton.UseVisualStyleBackColor = true;
             this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
             // 
+            // Gameshop_button
+            // 
+            this.Gameshop_button.Location = new System.Drawing.Point(422, 12);
+            this.Gameshop_button.Name = "Gameshop_button";
+            this.Gameshop_button.Size = new System.Drawing.Size(83, 23);
+            this.Gameshop_button.TabIndex = 29;
+            this.Gameshop_button.Text = "+ Gameshop";
+            this.Gameshop_button.UseVisualStyleBackColor = true;
+            this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
+            // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 479);
+            this.Controls.Add(this.Gameshop_button);
             this.Controls.Add(this.ImportButton);
             this.Controls.Add(this.ExportSelectedButton);
             this.Controls.Add(this.ExportAllButton);
@@ -2037,6 +2049,7 @@
         private System.Windows.Forms.TextBox TooltipTextBox;
         private System.Windows.Forms.CheckBox CanAwaken;
         private System.Windows.Forms.CheckBox BreakOnDeathcheckbox;
+        private System.Windows.Forms.Button Gameshop_button;
 
     }
 }

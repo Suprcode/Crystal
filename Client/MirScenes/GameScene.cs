@@ -106,6 +106,7 @@ namespace Client.MirScenes
         public MemoDialog MemoDialog;
         public RelationshipDialog RelationshipDialog;
         public MentorDialog MentorDialog;
+        public GameShopDialog GameShopDialog;
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -114,6 +115,7 @@ namespace Client.MirScenes
         public static List<UserId> UserIdList = new List<UserId>();
         public static List<ChatItem> ChatItemList = new List<ChatItem>();
         public static List<ClientQuestInfo> QuestInfoList = new List<ClientQuestInfo>();
+        public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
 
         public List<Buff> Buffs = new List<Buff>();
 
@@ -126,7 +128,7 @@ namespace Client.MirScenes
         public static bool PickedUpGold;
         public MirControl ItemLabel, MailLabel, MemoLabel, GuildBuffLabel;
         public static long UseItemTime, PickUpTime;
-        public static uint Gold;
+        public static uint Gold, Credit;
         public static long InspectTime;
         public bool ShowReviveMessage;
 
@@ -231,14 +233,17 @@ namespace Client.MirScenes
             IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
 
             RefineDialog = new RefineDialog { Parent = this, Visible = false };
-
-            //not added yet
-            KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
             RelationshipDialog = new RelationshipDialog { Parent = this, Visible = false };
             FriendDialog = new FriendDialog { Parent = this, Visible = false };
             MemoDialog = new MemoDialog { Parent = this, Visible = false };
-
             MentorDialog = new MentorDialog { Parent = this, Visible = false };
+            GameShopDialog = new GameShopDialog { Parent = this, Visible = false };
+
+            //not added yet
+            KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
+            
+
+            
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -424,6 +429,7 @@ namespace Client.MirScenes
                     FriendDialog.Hide();
                     RelationshipDialog.Hide();
                     MentorDialog.Hide();
+                    GameShopDialog.Hide();
                     GroupDialog.Hide();
                     GuildDialog.Hide();
                     GuildBuffDialog.Hide();
@@ -879,6 +885,7 @@ namespace Client.MirScenes
             MapControl.Process();
             MainDialog.Process();
             InventoryDialog.Process();
+            GameShopDialog.Process();
             MiniMapDialog.Process();
             SkillBarDialog.Process();
 
@@ -1016,6 +1023,12 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.LoseGold:
                     LoseGold((S.LoseGold)p);
+                    break;
+                case (short)ServerPacketIds.GainedCredit:
+                    GainedCredit((S.GainedCredit)p);
+                    break;
+                case (short)ServerPacketIds.LoseCredit:
+                    LoseCredit((S.LoseCredit)p);
                     break;
                 case (short)ServerPacketIds.ObjectMonster:
                     ObjectMonster((S.ObjectMonster)p);
@@ -1481,6 +1494,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.GuildBuffList:
                     GuildBuffList((S.GuildBuffList)p);
                     break;
+                case (short)ServerPacketIds.GameShopInfo:
+                    GameShopUpdate((S.GameShopInfo)p);
+                    break;
+                case (short)ServerPacketIds.GameShopStock:
+                    GameShopStock((S.GameShopStock)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -1711,6 +1730,7 @@ namespace Client.MirScenes
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
+            Credit = p.Credit;
 
             InventoryDialog.RefreshInventory();
         }
@@ -2575,6 +2595,19 @@ namespace Client.MirScenes
         private void LoseGold(S.LoseGold p)
         {
             Gold -= p.Gold;
+            SoundManager.PlaySound(SoundList.Gold);
+        }
+        private void GainedCredit(S.GainedCredit p)
+        {
+            if (p.Credit == 0) return;
+
+            Credit += p.Credit;
+            SoundManager.PlaySound(SoundList.Gold);
+            OutputMessage(string.Format("You gained {0:###,###,###} Credit.", p.Credit));
+        }
+        private void LoseCredit(S.LoseCredit p)
+        {
+            Credit -= p.Credit;
             SoundManager.PlaySound(SoundList.Gold);
         }
         private void ObjectMonster(S.ObjectMonster p)
@@ -5061,6 +5094,26 @@ namespace Client.MirScenes
             GameScene.Scene.MentorDialog.UpdateInterface();
         }
 
+        private void GameShopUpdate(S.GameShopInfo p)
+        {
+            p.Item.Stock = p.StockLevel;
+            GameShopInfoList.Add(p.Item);
+            if (p.Item.Date > DateTime.Now.AddDays(-7)) GameShopDialog.New.Visible = true;
+        }
+
+        private void GameShopStock(S.GameShopStock p)
+        {
+            for (int i = 0; i < GameShopInfoList.Count; i++)
+            {
+                if (GameShopInfoList[i].Info.Index == p.ItemIndex)
+                    {
+                    if (p.StockLevel == 0) GameShopInfoList.Remove(GameShopInfoList[i]);
+                    else GameShopInfoList[i].Stock = p.StockLevel;
+
+                    if (GameShopDialog.Visible) GameShopDialog.UpdateShop();
+                    }
+            }
+        }
         public void AddItem(UserItem item)
         {
             Redraw();
@@ -5150,7 +5203,7 @@ namespace Client.MirScenes
             }
         }
 
-        private Color GradeNameColor(ItemGrade grade)
+        public Color GradeNameColor(ItemGrade grade)
         {
             switch (grade)
             {
@@ -7384,8 +7437,13 @@ namespace Client.MirScenes
                 }
             }
 
+            if (realItem.Type == ItemType.Scroll && realItem.Shape == 6)//Credit Scroll
+            {
+                HoverItem.Info.ToolTip = string.Format("Adds {0} Credits to your Account.", HoverItem.Info.Price);
+            }
 
-            if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
+
+                if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
             {
                 count++;
                 MirLabel TOOLTIPLabel = new MirLabel
@@ -7641,7 +7699,11 @@ namespace Client.MirScenes
                 QuestListDialog = null;
                 QuestLogDialog = null;
                 QuestTrackingDialog = null;
+                GameShopDialog.Search.Dispose(); //Got to be a better way surely?
+                GameShopDialog = null;
+                MentorDialog = null;
 
+                RelationshipDialog = null;
                 CharacterDuraPanel = null;
                 DuraStatusPanel = null;
 
@@ -9476,7 +9538,8 @@ namespace Client.MirScenes
             };
             GameShopButton.Click += (o, e) =>
             {
-
+                if (!GameScene.Scene.GameShopDialog.Visible) GameScene.Scene.GameShopDialog.Show();
+                else GameScene.Scene.GameShopDialog.Hide();
             };
 
             HealthOrb = new MirControl
@@ -22430,6 +22493,654 @@ namespace Client.MirScenes
                 StudentLevelLabel.Text = "Lv " + GameScene.User.Level.ToString();
                 StudentOnlineLabel.Visible = false;
             }
+        }
+
+    }
+
+    public sealed class GameShopDialog : MirImageControl
+    {
+        
+        public MirLabel PageNumberLabel, totalGold, totalCredits;
+        public MirButton ALL, War, Sin, Tao, Wiz, Arch;
+        public MirButton allItems, topItems, Deals, New;
+        public MirButton CloseButton, PreviousButton, NextButton;
+        public MirButton UpButton, DownButton, PositionBar;
+
+
+        public GameShopCell[] Grid;
+        public MirLabel[] Filters = new MirLabel[22];
+        List<String> CatagoryList = new List<String>();
+        List<GameShopItem> filteredShop = new List<GameShopItem>();
+        List<GameShopItem> SearchResult = new List<GameShopItem>();
+        public MirTextBox Search;
+        public MirImageControl FilterBackground;
+        
+
+        public string ClassFilter = "Show All";
+        public string TypeFilter = "Show All";
+        public string SectionFilter = "Show All";
+
+        public int StartIndex = 0;
+        public int Page = 0;
+        public int CStartIndex = 0;
+
+        public GameShopDialog()
+        {
+            GameScene.GameShopInfoList.Clear();
+            Index = 749;
+            Library = Libraries.Title;
+            Movable = true;
+            Location = Center;
+            Sort = true;
+
+
+            Grid = new GameShopCell[4 * 2];
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    int idx = 4 * y + x;
+                    Grid[idx] = new GameShopCell
+                    {
+                        Size = new Size(125, 146),
+                        Visible = true,
+                        Parent = this,
+                    };
+                }
+            }
+
+            CloseButton = new MirButton
+            {
+                HoverIndex = 361,
+                Index = 360,
+                Location = new Point(671, 4),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                PressedIndex = 362,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+            totalGold = new MirLabel
+            {
+                Size = new Size(100, 20),
+                DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
+                Location = new Point(5, 449),
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 8F)
+            };
+            totalCredits = new MirLabel
+            {
+                Size = new Size(100, 20),
+                DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
+                Location = new Point(123, 449),
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 8F)
+            };
+
+            UpButton = new MirButton
+            {
+                Index = 197,
+                HoverIndex = 198,
+                PressedIndex = 199,
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Size = new Size(16, 14),
+                Location = new Point(120, 103),
+                Sound = SoundList.ButtonA,
+                Visible = true
+            };
+            UpButton.Click += (o, e) =>
+            {
+                if (CStartIndex <= 0) return;
+
+                CStartIndex--;
+
+                SetCatagories();
+                UpdatePositionBar();
+            };
+
+            DownButton = new MirButton
+            {
+                Index = 207,
+                HoverIndex = 208,
+                Library = Libraries.Prguse2,
+                PressedIndex = 209,
+                Parent = this,
+                Size = new Size(16, 14),
+                Location = new Point(120, 421),
+                Sound = SoundList.ButtonA,
+                Visible = true
+            };
+            DownButton.Click += (o, e) =>
+            {
+                if (CStartIndex + 22 >= CatagoryList.Count) return;
+
+                CStartIndex++;
+
+                SetCatagories();
+                UpdatePositionBar();
+            };
+
+            PositionBar = new MirButton
+            {
+                Index = 205,
+                HoverIndex = 206,
+                PressedIndex = 206,
+                Library = Libraries.Prguse2,
+                Location = new Point(120, 117),
+                Parent = this,
+                Movable = true,
+                Sound = SoundList.None,
+                Visible = true
+            };
+            PositionBar.OnMoving += PositionBar_OnMoving;
+
+
+
+
+            FilterBackground = new MirImageControl
+            {
+                Index = 769,
+                Library = Libraries.Title,
+                Location = new Point(11, 102),
+                Parent = this,
+            };
+            FilterBackground.MouseWheel += FilterScrolling;
+
+            Search = new MirTextBox
+            {
+                BackColour = Color.FromArgb(4, 4, 4),
+                ForeColour = Color.White,
+                Parent = this,
+                Size = new Size(140, 16),
+                Location = new Point(540, 69),
+                Font = new Font(Settings.FontName, 9F),
+                MaxLength = 23,
+                CanLoseFocus = true,
+            };
+            Search.TextBox.KeyUp += (o, e) =>
+            {
+                GetCatagories();
+            };
+
+            allItems = new MirButton
+            {
+                Index = 770,
+                Library = Libraries.Title,
+                Location = new Point(138, 68),
+                Visible = true,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+
+            };
+            allItems.Click += (o, e) =>
+            {
+                SectionFilter = "Show All";
+                ResetTabs();
+                GetCatagories();
+            };
+            topItems = new MirButton
+            {
+                Index = 776,
+                Library = Libraries.Title,
+                Location = new Point(209, 68),
+                Visible = true,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            topItems.Click += (o, e) =>
+            {
+                SectionFilter = "TopItems";
+                ResetTabs();
+                GetCatagories();
+            };
+            Deals = new MirButton
+            {
+                Index = 772,
+                Library = Libraries.Title,
+                Location = new Point(280, 68),
+                Visible = true,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            Deals.Click += (o, e) =>
+            {
+                SectionFilter = "DealItems";
+                ResetTabs();
+                GetCatagories();
+            };
+            New = new MirButton
+            {
+                Index = 774,
+                Library = Libraries.Title,
+                Location = new Point(351, 68),
+                Visible = false,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            New.Click += (o, e) =>
+            {
+                SectionFilter = "NewItems";
+                ResetTabs();
+                New.Index = 775;
+                GetCatagories();
+            };
+
+
+            ALL = new MirButton
+            {
+                Index = 751,
+                HoverIndex = 752,
+                PressedIndex = 753,
+                Library = Libraries.Title,
+                Location = new Point(539, 37),
+                Visible = true,
+                Parent = this,
+            };
+            ALL.Click += (o, e) =>
+            {
+                ClassFilter = "Show All";
+                TypeFilter = "Show All";
+                GetCatagories();
+                ResetClass();
+            };
+            War = new MirButton
+            {
+                Index = 754,
+                HoverIndex = 755,
+                PressedIndex = 756,
+                Library = Libraries.Title,
+                Location = new Point(568, 38),
+                Visible = true,
+                Parent = this,
+            };
+            War.Click += (o, e) =>
+            {
+                ClassFilter = "Warrior";
+                TypeFilter = "Show All";
+                GetCatagories();
+                ResetClass();
+            };
+            Sin = new MirButton
+            {
+                Index = 757,
+                HoverIndex = 758,
+                PressedIndex = 759,
+                Library = Libraries.Title,
+                Location = new Point(591, 38),
+                Visible = true,
+                Parent = this,
+            };
+            Sin.Click += (o, e) =>
+            {
+                ClassFilter = "Assassin";
+                TypeFilter = "Show All";
+                GetCatagories();
+                ResetClass();
+            };
+            Tao = new MirButton
+            {
+                Index = 760,
+                HoverIndex = 761,
+                PressedIndex = 762,
+                Library = Libraries.Title,
+                Location = new Point(614, 38),
+                Visible = true,
+                Parent = this,
+            };
+            Tao.Click += (o, e) =>
+            {
+                ClassFilter = "Taoist";
+                TypeFilter = "Show All";
+                GetCatagories();
+                ResetClass();
+            };
+            Wiz = new MirButton
+            {
+                Index = 763,
+                HoverIndex = 764,
+                PressedIndex = 765,
+                Library = Libraries.Title,
+                Location = new Point(637, 38),
+                Visible = true,
+                Parent = this,
+            };
+            Wiz.Click += (o, e) =>
+            {
+                ClassFilter = "Wizard";
+                TypeFilter = "Show All";
+                GetCatagories();
+                ResetClass();
+            };
+            Arch = new MirButton
+            {
+                Index = 766,
+                HoverIndex = 767,
+                PressedIndex = 768,
+                Library = Libraries.Title,
+                Location = new Point(660, 38),
+                Visible = true,
+                Parent = this,
+            };
+            Arch.Click += (o, e) =>
+            {
+                ClassFilter = "Archer";
+                TypeFilter = "Show All";
+                GetCatagories();
+                ResetClass();
+            };
+
+            PageNumberLabel = new MirLabel
+            {
+                Text = "",
+                Parent = this,
+                Size = new Size(83, 17),
+                Location = new Point(597, 446),
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                Font = new Font(Settings.FontName, 7F),
+            };
+
+            PreviousButton = new MirButton
+            {
+                Index = 240,
+                HoverIndex = 241,
+                PressedIndex = 242,
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Location = new Point(600, 448),
+                Sound = SoundList.ButtonA,
+            };
+            PreviousButton.Click += (o, e) =>
+            {
+                Page--;
+                if (Page < 0) Page = 0;
+                StartIndex = Grid.Length * Page;
+
+                UpdateShop();
+            };
+
+            NextButton = new MirButton
+            {
+                Index = 243,
+                HoverIndex = 244,
+                PressedIndex = 245,
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Location = new Point(660, 448),
+                Sound = SoundList.ButtonA,
+            };
+            NextButton.Click += (o, e) =>
+            {
+                Page++;
+                if (Page > filteredShop.Count() / 8) Page = filteredShop.Count() / 8;
+                StartIndex = Grid.Length * Page;
+                UpdateShop();
+            };
+
+            for (int i = 0; i < Filters.Length; i++)
+            {
+                Filters[i] = new MirLabel
+                {
+                    Parent = this,
+                    Size = new Size(90, 20),
+                    Location = new Point(15, 103 + (15 * i)),
+                    Text = "Testing - " + i.ToString(),
+                    ForeColour = Color.Gray,
+                    Font = new Font(Settings.FontName, 7F),
+                };
+                Filters[i].Click += (o, e) =>
+                {
+                    MirLabel lab = (MirLabel)o;
+                    TypeFilter = lab.Text;
+                    Page = 0;
+                    StartIndex = 0;
+                    UpdateShop();
+                    for (int p = 0; p < Filters.Length; p++)
+                    {
+                        if (Filters[p].Text == lab.Text) Filters[p].ForeColour = Color.FromArgb(230, 200, 160);
+                        else Filters[p].ForeColour = Color.Gray;
+                    }
+
+                };
+                Filters[i].MouseEnter += (o, e) =>
+                {
+                    MirLabel lab = (MirLabel)o;
+                    for (int p = 0; p < Filters.Length; p++)
+                    {
+                        if (Filters[p].Text == lab.Text && Filters[p].ForeColour != Color.FromArgb(230, 200, 160)) Filters[p].ForeColour = Color.FromArgb(160, 140, 110);
+                    }
+                };
+                Filters[i].MouseLeave += (o, e) =>
+                {
+                    MirLabel lab = (MirLabel)o;
+                    for (int p = 0; p < Filters.Length; p++)
+                    {
+                        if (Filters[p].Text == lab.Text && Filters[p].ForeColour != Color.FromArgb(230, 200, 160)) Filters[p].ForeColour = Color.Gray;
+                    }
+                };
+                Filters[i].MouseWheel += FilterScrolling;
+            }
+
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+        public void Show()
+        {
+            if (Visible) return;
+            Visible = true;
+            ClassFilter = GameScene.User.Class.ToString();
+            SectionFilter = "Show All";
+            ResetTabs();
+            ResetClass();
+            GetCatagories();
+        }
+
+        public void Process()
+        {
+            totalCredits.Text = GameScene.Credit.ToString("###,###,##0");
+            totalGold.Text = GameScene.Gold.ToString("###,###,##0");
+        }
+
+        public void FilterScrolling(object sender, MouseEventArgs e)
+        {
+            int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
+
+            if (CStartIndex == 0 && count >= 0) return;
+            if (CStartIndex == CatagoryList.Count - 1 && count <= 0) return;
+            if (CatagoryList.Count <= 22) return;
+
+            CStartIndex -= count;
+
+            if (CStartIndex < 0) CStartIndex = 0;
+            if (CStartIndex + 22 > CatagoryList.Count - 1) CStartIndex = CatagoryList.Count - 22;
+
+            SetCatagories();
+
+            UpdatePositionBar();
+
+        }
+
+        private void UpdatePositionBar()
+        {
+            if (CatagoryList.Count <= 22) return;
+
+            int interval = 290 / (CatagoryList.Count - 22);
+
+            int x = 120;
+            int y = 117 + (CStartIndex * interval);
+
+            if (y >= 401) y = 401;
+            if (y <= 117) y = 117;
+
+            PositionBar.Location = new Point(x, y);
+        }
+
+        void PositionBar_OnMoving(object sender, MouseEventArgs e)
+        {
+            int x = 120;
+            int y = PositionBar.Location.Y;
+
+            if (y >= 401) y = 401;
+            if (y <= 117) y = 117;
+
+            int location = y - 117;
+            int interval = 200 / (CatagoryList.Count - 22);
+
+            double yPoint = location / interval;
+
+            CStartIndex = Convert.ToInt16(Math.Floor(yPoint));
+
+            SetCatagories();
+
+            PositionBar.Location = new Point(x, y);
+
+        }
+
+        public void ResetTabs()
+        {
+            allItems.Index = 770;
+            topItems.Index = 776;
+            Deals.Index = 772;
+            New.Index = 774;
+
+            if (SectionFilter == "Show All") allItems.Index = 771;
+            if (SectionFilter == "TopItems") topItems.Index = 777;
+            if (SectionFilter == "DealItems") Deals.Index = 773;
+            if (SectionFilter == "NewItems") New.Index = 775;
+        }
+
+        public void ResetClass()
+        {
+            ALL.Index = 751;
+            War.Index = 754;
+            Sin.Index = 757;
+            Tao.Index = 760;
+            Wiz.Index = 763;
+            Arch.Index = 766;
+
+            if (ClassFilter == "Show All") ALL.Index = 752;
+            if (ClassFilter == "Warrior") War.Index = 755;
+            if (ClassFilter == "Assassin") Sin.Index = 758;
+            if (ClassFilter == "Taoist") Tao.Index = 761;
+            if (ClassFilter == "Wizard") Wiz.Index = 764;
+            if (ClassFilter == "Archer") Arch.Index = 767;
+        }
+
+        public void GetCatagories()
+        {
+            TypeFilter = "Show All";
+            Page = 0;
+            StartIndex = 0;
+            List<GameShopItem> shopList;
+
+            if (Search.TextBox.Text != "")
+                shopList = GameScene.GameShopInfoList.Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
+            else
+                shopList = GameScene.GameShopInfoList;
+
+            CatagoryList.Clear();
+            PositionBar.Location = new Point(120, 117);
+            CatagoryList.Add("Show All");
+
+            for (int i = 0; i < shopList.Count; i++)
+            {
+                if (!CatagoryList.Contains(shopList[i].Catagory) && shopList[i].Catagory != "")
+                {
+                    if (shopList[i].Class == ClassFilter || shopList[i].Class == "All" || ClassFilter == "Show All")
+                    {
+                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && shopList[i].TopItem || SectionFilter == "DealItems" && shopList[i].Deal || SectionFilter == "NewItems" && shopList[i].Date > DateTime.Now.AddDays(-7))
+                        CatagoryList.Add(shopList[i].Catagory);
+                    }
+                    
+                }
+            }
+            Filters[0].ForeColour = Color.FromArgb(230, 200, 160);
+            CStartIndex = 0;
+            SetCatagories();
+            UpdateShop();
+        }
+
+        public void SetCatagories()
+        {
+            for (int i = 0; i < Filters.Length; i++)
+            {
+                if (i < CatagoryList.Count + CStartIndex)
+                {
+                    Filters[i].Text = CatagoryList[i + CStartIndex];
+                    Filters[i].ForeColour = Filters[i].Text == TypeFilter ? Color.FromArgb(230, 200, 160) : Color.Gray;
+                    Filters[i].NotControl = false;
+                }
+                else
+                {
+                    Filters[i].Text = "";
+                    Filters[i].NotControl = true;
+                }
+            }
+
+        }
+        public void UpdateShop()
+        {
+            List<GameShopItem> ShopList;
+
+            if (Search.TextBox.Text != "")
+                ShopList = GameScene.GameShopInfoList.Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
+            else
+                ShopList = GameScene.GameShopInfoList;
+
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i] != null) Grid[i].Dispose();
+                Grid[i].Item = null;
+            };
+
+
+            filteredShop.Clear();
+
+            for (int i = 0; i < ShopList.Count; i++)
+            { 
+                if (ShopList[i].Class == ClassFilter || ShopList[i].Class == "All" || ClassFilter == "Show All")
+                    if (ShopList[i].Catagory == TypeFilter || TypeFilter == "Show All")
+                    {
+                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && ShopList[i].TopItem || SectionFilter == "DealItems" && ShopList[i].Deal || SectionFilter == "NewItems" && ShopList[i].Date > DateTime.Now.AddDays(-7))
+                            filteredShop.Add(ShopList[i]);
+                    }
+            }
+
+                int maxPage = filteredShop.Count / Grid.Length + 1;
+            if (maxPage < 1) maxPage = 1;
+
+            PageNumberLabel.Text = (Page + 1) + " / " + maxPage;
+
+            int maxIndex = filteredShop.Count - 1;
+
+            if (StartIndex > maxIndex) StartIndex = maxIndex;
+            if (StartIndex < 0) StartIndex = 0;
+
+            filteredShop = filteredShop.OrderBy(e => e.Info.FriendlyName).ToList();
+
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (i + StartIndex >= filteredShop.Count) break;
+
+                if (Grid[i] != null) Grid[i].Dispose();
+
+                Grid[i] = new GameShopCell
+                {
+                    Visible = true,
+                    Item = filteredShop[i + StartIndex],
+                    Size = new Size(125, 146),
+                    Location = i < 4 ? new Point(152 + (i * 132), 115) : new Point(152 + ((i - 4) * 132), 275),
+                    Parent = this,
+                };
+            }
+           
         }
 
     }
