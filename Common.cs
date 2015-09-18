@@ -1177,6 +1177,8 @@ public enum ServerPacketIds : short
     GainedItem,
     GainedGold,
     LoseGold,
+    GainedCredit,
+    LoseCredit,
     ObjectMonster,
     ObjectAttack,
     Struck,
@@ -1334,8 +1336,9 @@ public enum ServerPacketIds : short
     LoverUpdate,
     MentorUpdate,
     GuildBuffList,
-
-    NPCRequestInput
+    NPCRequestInput,
+    GameShopInfo,
+    GameShopStock,
 }
 
 public enum ClientPacketIds : short
@@ -1460,8 +1463,8 @@ public enum ClientPacketIds : short
     RefreshFriends,
     AddMemo,
     GuildBuffUpdate,
-
-    NPCConfirmInput
+    NPCConfirmInput,
+    GameshopBuy,
 }
 
 public class InIReader
@@ -3080,6 +3083,75 @@ public class UserItem
     }
 }
 
+public class GameShopItem
+{
+    public int ItemIndex;
+    public ItemInfo Info;
+    public uint GoldPrice = 0;
+    public uint CreditPrice = 0;
+    public string Class = "";
+    public string Catagory = "";
+    public int Stock = 0;
+    public bool iStock = false;
+    public bool Deal = false;
+    public bool TopItem = false;
+    public DateTime Date;
+    
+    public GameShopItem()
+    {
+    }
+
+    public GameShopItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    {
+        ItemIndex = reader.ReadInt32();
+        GoldPrice = reader.ReadUInt32();
+        CreditPrice = reader.ReadUInt32();
+        Class = reader.ReadString();
+        Catagory = reader.ReadString();
+        Stock = reader.ReadInt32();
+        iStock = reader.ReadBoolean();
+        Deal = reader.ReadBoolean();
+        TopItem = reader.ReadBoolean();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public GameShopItem(BinaryReader reader, bool packet = false)
+    {
+        ItemIndex = reader.ReadInt32();
+        Info = new ItemInfo(reader);
+        GoldPrice = reader.ReadUInt32();
+        CreditPrice = reader.ReadUInt32();
+        Class = reader.ReadString();
+        Catagory = reader.ReadString();
+        Stock = reader.ReadInt32();
+        iStock = reader.ReadBoolean();
+        Deal = reader.ReadBoolean();
+        TopItem = reader.ReadBoolean();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer, bool packet = false)
+    {
+        writer.Write(ItemIndex);
+        if (packet) Info.Save(writer);
+        writer.Write(GoldPrice);
+        writer.Write(CreditPrice);
+        writer.Write(Class);
+        writer.Write(Catagory);
+        writer.Write(Stock);
+        writer.Write(iStock);
+        writer.Write(Deal);
+        writer.Write(TopItem);
+        writer.Write(Date.ToBinary());
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}", Info.FriendlyName);
+    }
+
+}
+
 public class Awake
 {
     //Awake Option
@@ -3407,6 +3479,7 @@ public class ClientQuestInfo
 
     public uint RewardGold;
     public uint RewardExp;
+    public uint RewardCredit;
     public List<QuestItemReward> RewardsFixedItem = new List<QuestItemReward>();
     public List<QuestItemReward> RewardsSelectItem = new List<QuestItemReward>();
 
@@ -3445,6 +3518,7 @@ public class ClientQuestInfo
         Type = (QuestType)reader.ReadByte();
         RewardGold = reader.ReadUInt32();
         RewardExp = reader.ReadUInt32();
+        RewardCredit = reader.ReadUInt32();
 
         count = reader.ReadInt32();
 
@@ -3484,6 +3558,7 @@ public class ClientQuestInfo
         writer.Write((byte)Type);
         writer.Write(RewardGold);
         writer.Write(RewardExp);
+        writer.Write(RewardCredit);
 
         writer.Write(RewardsFixedItem.Count);
 
@@ -4225,6 +4300,8 @@ public abstract class Packet
                 return new C.AddMemo();
             case (short)ClientPacketIds.GuildBuffUpdate:
                 return new C.GuildBuffUpdate();
+            case (short)ClientPacketIds.GameshopBuy:
+                return new C.GameshopBuy();
             case (short)ClientPacketIds.NPCConfirmInput:
                 return new C.NPCConfirmInput();
             default:
@@ -4344,6 +4421,10 @@ public abstract class Packet
                 return new S.GainedGold();
             case (short)ServerPacketIds.LoseGold:
                 return new S.LoseGold();
+            case (short)ServerPacketIds.GainedCredit:
+                return new S.GainedCredit();
+            case (short)ServerPacketIds.LoseCredit:
+                return new S.LoseCredit();
             case (short)ServerPacketIds.ObjectMonster:
                 return new S.ObjectMonster();
             case (short)ServerPacketIds.ObjectAttack:
@@ -4652,6 +4733,10 @@ public abstract class Packet
                 return new S.MentorUpdate();
             case (short)ServerPacketIds.GuildBuffList:
                 return new S.GuildBuffList();
+            case (short)ServerPacketIds.GameShopInfo:
+                return new S.GameShopInfo();
+            case (short)ServerPacketIds.GameShopStock:
+                return new S.GameShopStock();
             case (short)ServerPacketIds.NPCRequestInput:
                 return new S.NPCRequestInput();
             default:

@@ -121,9 +121,33 @@ namespace Server.MirEnvir
             RecordAction(action);
         }
 
+        public void ItemGSBought(string source, GameShopItem item, uint amount, uint CreditCost, uint GoldCost)
+        {
+            string type = string.Empty;
+            string task = string.Empty;
+
+            if (item != null)
+            {
+                task = string.Format("Purchased {1} x {0} for {2} Credits and {3} Gold.", item.Info.FriendlyName, amount, CreditCost, GoldCost );
+            }
+
+            Action action = new Action { Source = source, Task = task };
+
+            RecordAction(action);
+        }
+
         public void GoldChanged(string source, uint amount, bool lost = true, string info = "")
         {
             string task = string.Format("Gold{0} - x{1}", lost ? "Lost" : "Gained", amount);
+
+            Action action = new Action { Source = source, Task = task, AddedInfo = info };
+
+            RecordAction(action);
+        }
+
+        public void CreditChanged(string source, uint amount, bool lost = true, string info = "")
+        {
+            string task = string.Format("Credit{0} - x{1}", lost ? "Lost" : "Gained", amount);
 
             Action action = new Action { Source = source, Task = task, AddedInfo = info };
 
