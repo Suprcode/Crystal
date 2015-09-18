@@ -1374,7 +1374,7 @@ namespace Server.MirEnvir
             StartPoints.Clear();
             StartItems.Clear();
             MapList.Clear();
-
+            GameshopLog.Clear();
             CustomCommands.Clear();
 
             LoadDB();

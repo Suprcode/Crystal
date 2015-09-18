@@ -8290,6 +8290,7 @@ namespace Client.MirScenes
                     else
                         blend = false;
 
+                    
                     if (animation > 0)
                     {
                         byte animationTick = M2CellInfo[x, y].FrontAnimationTick;
@@ -8298,7 +8299,8 @@ namespace Client.MirScenes
                     s = Libraries.MapLibs[fileIndex].GetSize(index);
                     if (s.Width == CellWidth && s.Height == CellHeight && animation == 0) continue;
                     if ((s.Width == CellWidth * 2) && (s.Height == CellHeight * 2) && (animation == 0))
-                        continue;
+
+                    return;
                     if (blend)
                     {
                         if ((fileIndex > 99) & (fileIndex < 199))
@@ -8324,6 +8326,7 @@ namespace Client.MirScenes
             DXManager.SetOpacity(0.4F);
 
             //MapObject.User.DrawMount();
+
             MapObject.User.DrawBody();
             MapObject.User.DrawHead();
             MapObject.User.DrawWings();
@@ -22499,7 +22502,7 @@ namespace Client.MirScenes
 
     public sealed class GameShopDialog : MirImageControl
     {
-        
+        public GameShopViewer Viewer;
         public MirLabel PageNumberLabel, totalGold, totalCredits;
         public MirButton ALL, War, Sin, Tao, Wiz, Arch;
         public MirButton allItems, topItems, Deals, New;
@@ -22565,7 +22568,8 @@ namespace Client.MirScenes
             {
                 Size = new Size(100, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
-                Location = new Point(5, 449),
+                
+                Location = new Point(123, 449),
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 8F)
@@ -22574,7 +22578,7 @@ namespace Client.MirScenes
             {
                 Size = new Size(100, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
-                Location = new Point(123, 449),
+                Location = new Point(5, 449),
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 8F)
@@ -22924,11 +22928,18 @@ namespace Client.MirScenes
                 Filters[i].MouseWheel += FilterScrolling;
             }
 
+            Viewer = new GameShopViewer
+            {
+                Visible = false,
+                Parent = this,
+            };
+
         }
 
         public void Hide()
         {
             if (!Visible) return;
+            Viewer.Visible = false;
             Visible = false;
         }
         public void Show()
@@ -22940,6 +22951,7 @@ namespace Client.MirScenes
             ResetTabs();
             ResetClass();
             GetCatagories();
+            
         }
 
         public void Process()
