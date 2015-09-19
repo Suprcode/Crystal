@@ -17344,25 +17344,21 @@ namespace Server.MirObjects
             if (item.iStock) //Invididual Stock
             {
                 Info.GSpurchases.TryGetValue(item.Info.Index, out purchased);
-                if (item.Stock - purchased >= 0)
-                {
-                    StockLevel = item.Stock - purchased;
-                    Enqueue(new S.GameShopStock { ItemIndex = item.Info.Index, StockLevel = StockLevel });
-                }
             }
             else //Server Stock
             {
                 Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
-                if (item.Stock - purchased >= 0)
-                {
-                    StockLevel = item.Stock - purchased;
-                    Enqueue(new S.GameShopStock { ItemIndex = item.Info.Index, StockLevel = StockLevel });
-                }
+            }
+
+            if (item.Stock - purchased >= 0)
+            {
+                StockLevel = item.Stock - purchased;
+                Enqueue(new S.GameShopStock { GIndex = item.Info.Index, StockLevel = StockLevel });
             }
               
         }
 
-        public void GameshopBuy(int ItemIndex, byte Quantity)
+        public void GameshopBuy(int GIndex, byte Quantity)
         {
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
@@ -17377,7 +17373,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < shopList.Count; i++)
             {
-                if (shopList[i].Info.Index == ItemIndex)
+                if (shopList[i].GIndex == GIndex)
                 {
                     Product = shopList[i];
                     break;
@@ -17393,36 +17389,26 @@ namespace Server.MirObjects
 
             if (Product.Stock != 0)
             {
-                if (Product.iStock)
+
+                if (Product.iStock) //Invididual Stock
                 {
                     Info.GSpurchases.TryGetValue(Product.Info.Index, out purchased);
-                    if (Product.Stock - purchased - Quantity >= 0)
-                    {
-                        stockAvailable = true;
-                    }
-                    else
-                    {
-                        ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
-                        GameShopStock(Product);
-                        SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
-                        return;
-                    }
+                }
+                else //Server Stock
+                {
+                    Envir.GameshopLog.TryGetValue(Product.Info.Index, out purchased);
+                }
 
+                if (Product.Stock - purchased - Quantity >= 0)
+                {
+                    stockAvailable = true;
                 }
                 else
                 {
-                    Envir.GameshopLog.TryGetValue(Product.Info.Index, out purchased);
-                    if (Product.Stock - purchased - Quantity >= 0)
-                    {
-                        stockAvailable = true;
-                    }
-                    else
-                    {
-                        ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
-                        GameShopStock(Product);
-                        SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
-                        return;
-                    }
+                    ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
+                    GameShopStock(Product);
+                    SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
+                    return;
                 }
             }
             else
@@ -17457,10 +17443,6 @@ namespace Server.MirObjects
             }
             else
             {
-
-                ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
-                GameShopStock(Product);
-                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
                 return;
             }
 
@@ -17476,62 +17458,39 @@ namespace Server.MirObjects
                 if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
                 if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
 
-
-                int Purchased;
-
                 if (Product.iStock && Product.Stock != 0)
-                {
-                    Info.GSpurchases.TryGetValue(Product.Info.Index, out Purchased);
-                    if (Purchased == 0)
-                    {
-                        Info.GSpurchases[Product.Info.Index] = Quantity;
-                    }
-                    else
-                    {
-                        Info.GSpurchases[Product.Info.Index] += Quantity;
-                    }
-                }
+                    Info.GSpurchases[Product.GIndex] += Quantity;
 
-                Purchased = 0;
-
-                Envir.GameshopLog.TryGetValue(Product.Info.Index, out Purchased);
-                if (Purchased == 0)
-                {
-                   Envir.GameshopLog[Product.Info.Index] = Quantity;
-                }
-                else
-                {
-                   Envir.GameshopLog[Product.Info.Index] += Quantity;
-                }
+                Envir.GameshopLog[Product.GIndex] += Quantity;
 
                 if (Product.Stock != 0) GameShopStock(Product);
             }
             else
             {
-                ReceiveChat("You can't afford to buy this item.", ChatType.System);
-                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Doesn't have enough currency");
                 return;
             }
 
             Report.ItemGSBought("GameShop", Product, Quantity, CreditCost, GoldCost);
 
-            UserItem MailItem = new UserItem(Envir.GetItemInfo(ItemIndex));
+            uint quantity = (Quantity * Product.Count);
 
-            if (Product.Info.StackSize <= 1 || Quantity == 1)
+            UserItem MailItem = Envir.CreateFreshItem(Envir.GetItemInfo(Product.Info.Index));
+
+            if (Product.Info.StackSize <= 1 || quantity == 1)
                 for (int i = 0; i < Quantity; i++)
                     mailItems.Add(MailItem);
             else
             {
-                while (Quantity > 0)
+                while (quantity > 0)
                 {
                     
-                    MailItem = new UserItem(Envir.GetItemInfo(ItemIndex));
+                    MailItem = new UserItem(Envir.GetItemInfo(Product.Info.Index));
                     MailItem.Count = 0;
                     for (int i = 0; i < MailItem.Info.StackSize; i++)
                     {
                         MailItem.Count++;
-                        Quantity--;
-                        if (Quantity == 0) break;
+                        quantity--;
+                        if (quantity == 0) break;
                     }
                     if (MailItem.Count == 0) break;
 
@@ -17540,7 +17499,7 @@ namespace Server.MirObjects
                 }
             }
 
-            MailInfo mail = new MailInfo(Info.Index, true)
+            MailInfo mail = new MailInfo(Info.Index)
                 {
                     MailID = ++Envir.NextMailID,
                     Sender = "Gameshop",
@@ -17572,20 +17531,16 @@ namespace Server.MirObjects
                     if (item.iStock) //Invididual Stock
                     {
                         Info.GSpurchases.TryGetValue(item.Info.Index, out purchased);
-                        if (item.Stock - purchased > 0)
-                        {
-                            StockLevel = item.Stock - purchased;
-                            Enqueue(new S.GameShopInfo { Item = item, StockLevel = StockLevel });
-                        }
                     }
                     else //Server Stock
                     {
-                       Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
-                        if (item.Stock - purchased > 0)
-                        {
-                            StockLevel = item.Stock - purchased;
-                            Enqueue(new S.GameShopInfo { Item = item, StockLevel = StockLevel });
-                        }
+                        Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
+                    }
+
+                    if (item.Stock - purchased >= 0)
+                    {
+                        StockLevel = item.Stock - purchased;
+                        Enqueue(new S.GameShopInfo { Item = item, StockLevel = StockLevel });
                     }
                 }
                 else

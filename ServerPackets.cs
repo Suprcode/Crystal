@@ -4211,18 +4211,18 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.GameShopStock; }
         }
 
-        public int ItemIndex;
+        public int GIndex;
         public int StockLevel;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            ItemIndex = reader.ReadInt32();
+            GIndex = reader.ReadInt32();
             StockLevel = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(ItemIndex);
+            writer.Write(GIndex);
             writer.Write(StockLevel);
         }
     }

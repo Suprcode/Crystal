@@ -103,7 +103,7 @@ namespace Server.MirEnvir
         
 
         //Server DB
-        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex;
+        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
@@ -710,6 +710,7 @@ namespace Server.MirEnvir
                 writer.Write(MonsterIndex);
                 writer.Write(NPCIndex);
                 writer.Write(QuestIndex);
+                writer.Write(GameshopIndex);
 
                 writer.Write(MapInfoList.Count);
                 for (int i = 0; i < MapInfoList.Count; i++)
@@ -976,6 +977,10 @@ namespace Server.MirEnvir
                     {
                         NPCIndex = reader.ReadInt32();
                         QuestIndex = reader.ReadInt32();
+                    }
+                    if (LoadVersion >= 63)
+                    {
+                        GameshopIndex = reader.ReadInt32();
                     }
 
                     int count = reader.ReadInt32();
@@ -1941,11 +1946,7 @@ namespace Server.MirEnvir
 
         public void AddToGameShop(ItemInfo Info)
         {
-            for (int i = 0; i < GameShopList.Count; i++)
-            {
-                if (GameShopList[i].Info.Index == Info.Index) return;
-            }
-                GameShopList.Add(new GameShopItem { GoldPrice = (uint)(1000*Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Catagory = Info.Type.ToString() });
+                GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000*Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Catagory = Info.Type.ToString() });
         }
 
         public void Remove(MapInfo info)
