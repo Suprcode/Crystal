@@ -23082,7 +23082,6 @@ namespace Client.MirScenes
 
         public void SetCatagories()
         {
-            GameScene.Scene.ChatDialog.ReceiveChat(CStartIndex.ToString(), ChatType.Hint);
 
             for (int i = 0; i < Filters.Length; i++)
             {
