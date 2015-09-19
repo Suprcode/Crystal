@@ -44,7 +44,7 @@
             this.Individual_checkbox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Stock_textbox = new System.Windows.Forms.TextBox();
-            this.Catagory_textbox = new System.Windows.Forms.TextBox();
+            this.Category_textbox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.Class_combo = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -125,7 +125,7 @@
             this.ItemDetails_gb.Controls.Add(this.GoldPrice_textbox);
             this.ItemDetails_gb.Controls.Add(this.label14);
             this.ItemDetails_gb.Controls.Add(this.label21);
-            this.ItemDetails_gb.Controls.Add(this.Catagory_textbox);
+            this.ItemDetails_gb.Controls.Add(this.Category_textbox);
             this.ItemDetails_gb.Controls.Add(this.GPPrice_textbox);
             this.ItemDetails_gb.Controls.Add(this.label4);
             this.ItemDetails_gb.Controls.Add(this.label29);
@@ -228,14 +228,14 @@
             this.Stock_textbox.TabIndex = 109;
             this.Stock_textbox.TextChanged += new System.EventHandler(this.Stock_textbox_TextChanged);
             // 
-            // Catagory_textbox
+            // Category_textbox
             // 
-            this.Catagory_textbox.Location = new System.Drawing.Point(86, 155);
-            this.Catagory_textbox.MaxLength = 0;
-            this.Catagory_textbox.Name = "Catagory_textbox";
-            this.Catagory_textbox.Size = new System.Drawing.Size(173, 20);
-            this.Catagory_textbox.TabIndex = 108;
-            this.Catagory_textbox.TextChanged += new System.EventHandler(this.Catagory_textbox_TextChanged);
+            this.Category_textbox.Location = new System.Drawing.Point(86, 155);
+            this.Category_textbox.MaxLength = 0;
+            this.Category_textbox.Name = "Category_textbox";
+            this.Category_textbox.Size = new System.Drawing.Size(173, 20);
+            this.Category_textbox.TabIndex = 108;
+            this.Category_textbox.TextChanged += new System.EventHandler(this.Category_textbox_TextChanged);
             // 
             // label4
             // 
@@ -244,7 +244,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 13);
             this.label4.TabIndex = 106;
-            this.label4.Text = "Catagory:";
+            this.label4.Text = "Category:";
             // 
             // Class_combo
             // 
@@ -339,7 +339,7 @@
         private System.Windows.Forms.CheckBox DealofDay_checkbox;
         private System.Windows.Forms.CheckBox TopItem_checkbox;
         private System.Windows.Forms.Button Remove_button;
-        private System.Windows.Forms.TextBox Catagory_textbox;
+        private System.Windows.Forms.TextBox Category_textbox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox Individual_checkbox;
         private System.Windows.Forms.TextBox Stock_textbox;

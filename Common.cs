@@ -3090,7 +3090,7 @@ public class GameShopItem
     public uint GoldPrice = 0;
     public uint CreditPrice = 0;
     public string Class = "";
-    public string Catagory = "";
+    public string Category = "";
     public int Stock = 0;
     public bool iStock = false;
     public bool Deal = false;
@@ -3107,7 +3107,7 @@ public class GameShopItem
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
         Class = reader.ReadString();
-        Catagory = reader.ReadString();
+        Category = reader.ReadString();
         Stock = reader.ReadInt32();
         iStock = reader.ReadBoolean();
         Deal = reader.ReadBoolean();
@@ -3122,7 +3122,7 @@ public class GameShopItem
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
         Class = reader.ReadString();
-        Catagory = reader.ReadString();
+        Category = reader.ReadString();
         Stock = reader.ReadInt32();
         iStock = reader.ReadBoolean();
         Deal = reader.ReadBoolean();
@@ -3137,7 +3137,7 @@ public class GameShopItem
         writer.Write(GoldPrice);
         writer.Write(CreditPrice);
         writer.Write(Class);
-        writer.Write(Catagory);
+        writer.Write(Category);
         writer.Write(Stock);
         writer.Write(iStock);
         writer.Write(Deal);

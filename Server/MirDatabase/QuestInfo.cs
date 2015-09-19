@@ -71,7 +71,7 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion >= 38)
             {
                 RequiredMaxLevel = reader.ReadInt32();
-                if (RequiredMaxLevel == 0) RequiredMaxLevel = byte.MaxValue;
+                if (RequiredMaxLevel == 0) RequiredMaxLevel = ushort.MaxValue;
             }
 
             RequiredQuest = reader.ReadInt32();

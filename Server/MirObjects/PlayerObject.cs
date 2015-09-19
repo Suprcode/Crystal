@@ -11086,6 +11086,8 @@ namespace Server.MirObjects
 
             UserItem clonedItem = item.Clone();
 
+            SMain.EnqueueDebugging("Gained item, item index : " + clonedItem.ItemIndex);
+
             Enqueue(new S.GainedItem { Item = clonedItem }); //Cloned because we are probably going to change the amount.
 
             AddItem(item);
@@ -17515,7 +17517,7 @@ namespace Server.MirObjects
 
             Report.ItemGSBought("GameShop", Product, Quantity, CreditCost, GoldCost);
 
-            UserItem MailItem = new UserItem(Envir.GetItemInfo(ItemIndex));
+            UserItem MailItem = Envir.CreateFreshItem(Envir.GetItemInfo(ItemIndex));
 
             if (Product.Info.StackSize <= 1 || Quantity == 1)
                 for (int i = 0; i < Quantity; i++)

@@ -70,7 +70,7 @@ namespace Server
             Stock_textbox.Text = String.Empty;
             Individual_checkbox.Checked = false;
             Class_combo.Text = "All";
-            Catagory_textbox.Text = "";
+            Category_textbox.Text = "";
             TopItem_checkbox.Checked = false;
             DealofDay_checkbox.Checked = false;
             CredxGold_textbox.Text = Settings.CredxGold.ToString();
@@ -87,7 +87,7 @@ namespace Server
             Stock_textbox.Text = SelectedItem.Stock.ToString();
             Individual_checkbox.Checked = SelectedItem.iStock;
             Class_combo.Text = SelectedItem.Class;
-            Catagory_textbox.Text = SelectedItem.Catagory;
+            Category_textbox.Text = SelectedItem.Category;
             TopItem_checkbox.Checked = SelectedItem.TopItem;
             DealofDay_checkbox.Checked = SelectedItem.Deal;
 
@@ -183,12 +183,12 @@ namespace Server
             SelectedItem.Deal= DealofDay_checkbox.Checked;
         }
 
-        private void Catagory_textbox_TextChanged(object sender, EventArgs e)
+        private void Category_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             string temp = ActiveControl.Text;
 
-            SelectedItem.Catagory = temp;
+            SelectedItem.Category = temp;
         }
 
         private void Stock_textbox_TextChanged(object sender, EventArgs e)

@@ -276,8 +276,8 @@ namespace Client.MirControls
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+
             Item = null;
-            GameScene.Scene.DisposeItemLabel();
             GameScene.HoverItem = null;
             ShowItem = null;
         }

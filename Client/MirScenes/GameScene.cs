@@ -7699,7 +7699,6 @@ namespace Client.MirScenes
                 QuestListDialog = null;
                 QuestLogDialog = null;
                 QuestTrackingDialog = null;
-                GameShopDialog.Search.Dispose(); //Got to be a better way surely?
                 GameShopDialog = null;
                 MentorDialog = null;
 
@@ -22512,12 +22511,11 @@ namespace Client.MirScenes
 
         public GameShopCell[] Grid;
         public MirLabel[] Filters = new MirLabel[22];
-        List<String> CatagoryList = new List<String>();
+        List<String> CategoryList = new List<String>();
         List<GameShopItem> filteredShop = new List<GameShopItem>();
         List<GameShopItem> SearchResult = new List<GameShopItem>();
         public MirTextBox Search;
         public MirImageControl FilterBackground;
-        
 
         public string ClassFilter = "Show All";
         public string TypeFilter = "Show All";
@@ -22602,7 +22600,7 @@ namespace Client.MirScenes
 
                 CStartIndex--;
 
-                SetCatagories();
+                SetCategories();
                 UpdatePositionBar();
             };
 
@@ -22620,11 +22618,11 @@ namespace Client.MirScenes
             };
             DownButton.Click += (o, e) =>
             {
-                if (CStartIndex + 22 >= CatagoryList.Count) return;
+                if (CStartIndex + 22 >= CategoryList.Count) return;
 
                 CStartIndex++;
 
-                SetCatagories();
+                SetCategories();
                 UpdatePositionBar();
             };
 
@@ -22667,7 +22665,7 @@ namespace Client.MirScenes
             };
             Search.TextBox.KeyUp += (o, e) =>
             {
-                GetCatagories();
+                GetCategories();
             };
 
             allItems = new MirButton
@@ -22684,7 +22682,7 @@ namespace Client.MirScenes
             {
                 SectionFilter = "Show All";
                 ResetTabs();
-                GetCatagories();
+                GetCategories();
             };
             topItems = new MirButton
             {
@@ -22699,7 +22697,7 @@ namespace Client.MirScenes
             {
                 SectionFilter = "TopItems";
                 ResetTabs();
-                GetCatagories();
+                GetCategories();
             };
             Deals = new MirButton
             {
@@ -22714,7 +22712,7 @@ namespace Client.MirScenes
             {
                 SectionFilter = "DealItems";
                 ResetTabs();
-                GetCatagories();
+                GetCategories();
             };
             New = new MirButton
             {
@@ -22730,7 +22728,7 @@ namespace Client.MirScenes
                 SectionFilter = "NewItems";
                 ResetTabs();
                 New.Index = 775;
-                GetCatagories();
+                GetCategories();
             };
 
 
@@ -22748,7 +22746,7 @@ namespace Client.MirScenes
             {
                 ClassFilter = "Show All";
                 TypeFilter = "Show All";
-                GetCatagories();
+                GetCategories();
                 ResetClass();
             };
             War = new MirButton
@@ -22765,7 +22763,7 @@ namespace Client.MirScenes
             {
                 ClassFilter = "Warrior";
                 TypeFilter = "Show All";
-                GetCatagories();
+                GetCategories();
                 ResetClass();
             };
             Sin = new MirButton
@@ -22782,7 +22780,7 @@ namespace Client.MirScenes
             {
                 ClassFilter = "Assassin";
                 TypeFilter = "Show All";
-                GetCatagories();
+                GetCategories();
                 ResetClass();
             };
             Tao = new MirButton
@@ -22799,7 +22797,7 @@ namespace Client.MirScenes
             {
                 ClassFilter = "Taoist";
                 TypeFilter = "Show All";
-                GetCatagories();
+                GetCategories();
                 ResetClass();
             };
             Wiz = new MirButton
@@ -22816,7 +22814,7 @@ namespace Client.MirScenes
             {
                 ClassFilter = "Wizard";
                 TypeFilter = "Show All";
-                GetCatagories();
+                GetCategories();
                 ResetClass();
             };
             Arch = new MirButton
@@ -22833,7 +22831,7 @@ namespace Client.MirScenes
             {
                 ClassFilter = "Archer";
                 TypeFilter = "Show All";
-                GetCatagories();
+                GetCategories();
                 ResetClass();
             };
 
@@ -22950,8 +22948,47 @@ namespace Client.MirScenes
             SectionFilter = "Show All";
             ResetTabs();
             ResetClass();
-            GetCatagories();
-            
+            GetCategories();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            Search.Dispose();
+            Search = null;
+
+            PageNumberLabel = null;
+            totalGold = null;
+            totalCredits = null;
+            ALL = null;
+            War = null;
+            Sin = null;
+            Tao = null;
+            Wiz = null;
+            Arch = null;
+            allItems = null;
+            topItems = null;
+            Deals = null;
+            New = null;
+
+            CloseButton = null;
+            PreviousButton = null;
+            NextButton = null;
+
+            UpButton = null;
+            DownButton = null;
+            PositionBar = null;
+
+            Grid = null;
+            Filters = null;
+            FilterBackground = null;
+
+            Viewer.Dispose();
+
+            CategoryList.Clear();
+            filteredShop.Clear();
+            SearchResult.Clear();
         }
 
         public void Process()
@@ -22965,15 +23002,15 @@ namespace Client.MirScenes
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
 
             if (CStartIndex == 0 && count >= 0) return;
-            if (CStartIndex == CatagoryList.Count - 1 && count <= 0) return;
-            if (CatagoryList.Count <= 22) return;
+            if (CStartIndex == CategoryList.Count - 1 && count <= 0) return;
+            if (CategoryList.Count <= 22) return;
 
             CStartIndex -= count;
 
             if (CStartIndex < 0) CStartIndex = 0;
-            if (CStartIndex + 22 > CatagoryList.Count - 1) CStartIndex = CatagoryList.Count - 22;
+            if (CStartIndex + 22 > CategoryList.Count - 1) CStartIndex = CategoryList.Count - 22;
 
-            SetCatagories();
+            SetCategories();
 
             UpdatePositionBar();
 
@@ -22981,9 +23018,9 @@ namespace Client.MirScenes
 
         private void UpdatePositionBar()
         {
-            if (CatagoryList.Count <= 22) return;
+            if (CategoryList.Count <= 22) return;
 
-            int interval = 290 / (CatagoryList.Count - 22);
+            int interval = 290 / (CategoryList.Count - 22);
 
             int x = 120;
             int y = 117 + (CStartIndex * interval);
@@ -22998,21 +23035,23 @@ namespace Client.MirScenes
         {
             int x = 120;
             int y = PositionBar.Location.Y;
-
+            
             if (y >= 401) y = 401;
             if (y <= 117) y = 117;
 
-            int location = y - 117;
-            int interval = 200 / (CatagoryList.Count - 22);
+            if (CategoryList.Count > 22)
+            {
+                int location = y - 117;
+                int interval = 200 / (CategoryList.Count - 22);
 
-            double yPoint = location / interval;
+                double yPoint = location / interval;
 
-            CStartIndex = Convert.ToInt16(Math.Floor(yPoint));
+                CStartIndex = Convert.ToInt16(Math.Floor(yPoint));
 
-            SetCatagories();
+                SetCategories();
+            }
 
             PositionBar.Location = new Point(x, y);
-
         }
 
         public void ResetTabs()
@@ -23045,7 +23084,7 @@ namespace Client.MirScenes
             if (ClassFilter == "Archer") Arch.Index = 767;
         }
 
-        public void GetCatagories()
+        public void GetCategories()
         {
             TypeFilter = "Show All";
             Page = 0;
@@ -23057,35 +23096,35 @@ namespace Client.MirScenes
             else
                 shopList = GameScene.GameShopInfoList;
 
-            CatagoryList.Clear();
+            CategoryList.Clear();
             PositionBar.Location = new Point(120, 117);
-            CatagoryList.Add("Show All");
+            CategoryList.Add("Show All");
 
             for (int i = 0; i < shopList.Count; i++)
             {
-                if (!CatagoryList.Contains(shopList[i].Catagory) && shopList[i].Catagory != "")
+                if (!CategoryList.Contains(shopList[i].Category) && shopList[i].Category != "")
                 {
                     if (shopList[i].Class == ClassFilter || shopList[i].Class == "All" || ClassFilter == "Show All")
                     {
                         if (SectionFilter == "Show All" || SectionFilter == "TopItems" && shopList[i].TopItem || SectionFilter == "DealItems" && shopList[i].Deal || SectionFilter == "NewItems" && shopList[i].Date > DateTime.Now.AddDays(-7))
-                        CatagoryList.Add(shopList[i].Catagory);
+                        CategoryList.Add(shopList[i].Category);
                     }
                     
                 }
             }
             Filters[0].ForeColour = Color.FromArgb(230, 200, 160);
             CStartIndex = 0;
-            SetCatagories();
+            SetCategories();
             UpdateShop();
         }
 
-        public void SetCatagories()
+        public void SetCategories()
         {
             for (int i = 0; i < Filters.Length; i++)
             {
-                if (i < CatagoryList.Count + CStartIndex)
+                if (i < CategoryList.Count)
                 {
-                    Filters[i].Text = CatagoryList[i + CStartIndex];
+                    Filters[i].Text = CategoryList[i + CStartIndex];
                     Filters[i].ForeColour = Filters[i].Text == TypeFilter ? Color.FromArgb(230, 200, 160) : Color.Gray;
                     Filters[i].NotControl = false;
                 }
@@ -23118,7 +23157,7 @@ namespace Client.MirScenes
             for (int i = 0; i < ShopList.Count; i++)
             { 
                 if (ShopList[i].Class == ClassFilter || ShopList[i].Class == "All" || ClassFilter == "Show All")
-                    if (ShopList[i].Catagory == TypeFilter || TypeFilter == "Show All")
+                    if (ShopList[i].Category == TypeFilter || TypeFilter == "Show All")
                     {
                         if (SectionFilter == "Show All" || SectionFilter == "TopItems" && ShopList[i].TopItem || SectionFilter == "DealItems" && ShopList[i].Deal || SectionFilter == "NewItems" && ShopList[i].Date > DateTime.Now.AddDays(-7))
                             filteredShop.Add(ShopList[i]);

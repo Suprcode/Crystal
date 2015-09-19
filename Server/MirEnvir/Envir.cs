@@ -1945,7 +1945,7 @@ namespace Server.MirEnvir
             {
                 if (GameShopList[i].Info.Index == Info.Index) return;
             }
-                GameShopList.Add(new GameShopItem { GoldPrice = (uint)(1000*Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Catagory = Info.Type.ToString() });
+            GameShopList.Add(new GameShopItem { GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
         }
 
         public void Remove(MapInfo info)

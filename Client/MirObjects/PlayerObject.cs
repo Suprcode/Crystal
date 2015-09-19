@@ -1218,7 +1218,7 @@ namespace Client.MirObjects
                 }
 
                 //ArcherTest - Need to check for bow weapon only
-                if (Class == MirClass.Archer && HasClassWeapon)
+                if (Class == MirClass.Archer && HasClassWeapon && TransformType < 0)
                 {
                     switch (CurrentAction)
                     {
