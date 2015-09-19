@@ -134,7 +134,7 @@ namespace Server
         {
             int purchased;
 
-            SMain.Envir.GameshopLog.TryGetValue(SelectedItems[0].Info.Index, out purchased);
+            SMain.Envir.GameshopLog.TryGetValue(SelectedItems[0].GIndex, out purchased);
             TotalSold_label.Text = purchased.ToString();
 
             if (!Individual_checkbox.Checked && SelectedItems[0].Stock != 0)

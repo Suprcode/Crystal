@@ -17458,10 +17458,32 @@ namespace Server.MirObjects
                 if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
                 if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
 
-                if (Product.iStock && Product.Stock != 0)
-                    Info.GSpurchases[Product.GIndex] += Quantity;
+                int Purchased;
 
-                Envir.GameshopLog[Product.GIndex] += Quantity;
+                if (Product.iStock && Product.Stock != 0)
+                {
+                    Info.GSpurchases.TryGetValue(Product.Info.Index, out Purchased);
+                    if (Purchased == 0)
+                    {
+                        Info.GSpurchases[Product.GIndex] = Quantity;
+                    }
+                    else
+                    {
+                        Info.GSpurchases[Product.GIndex] += Quantity;
+                    }
+                }
+
+                Purchased = 0;
+
+                Envir.GameshopLog.TryGetValue(Product.Info.Index, out Purchased);
+                if (Purchased == 0)
+                {
+                    Envir.GameshopLog[Product.GIndex] = Quantity;
+                }
+                else
+                {
+                    Envir.GameshopLog[Product.GIndex] += Quantity;
+                }
 
                 if (Product.Stock != 0) GameShopStock(Product);
             }
