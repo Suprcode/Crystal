@@ -13,7 +13,7 @@ namespace Server
     public partial class GameShop : Form
     {
 
-        GameShopItem SelectedItem;
+        private List<GameShopItem> SelectedItems;
 
         public Envir Envir
         {
@@ -50,11 +50,39 @@ namespace Server
 
         private void LoadGameShopItems()
         {
+
+
+            ClassFilter_lb.Items.Clear();
+            CategoryFilter_lb.Items.Clear();
+            GameShopListBox.Items.Clear();
+
+            ClassFilter_lb.Items.Add("All Classes");
+            CategoryFilter_lb.Items.Add("All Categories");
+
+
+            for (int i = 0; i < SMain.EditEnvir.GameShopList.Count; i++)
+            {
+                if (!ClassFilter_lb.Items.Contains(SMain.EditEnvir.GameShopList[i].Class)) ClassFilter_lb.Items.Add(SMain.EditEnvir.GameShopList[i].Class);
+                if (!CategoryFilter_lb.Items.Contains(SMain.EditEnvir.GameShopList[i].Catagory)) CategoryFilter_lb.Items.Add(SMain.EditEnvir.GameShopList[i].Catagory);
+
+                GameShopListBox.Items.Add(SMain.EditEnvir.GameShopList[i]);
+            }
+
+            ClassFilter_lb.Text = "All Classes";
+            CategoryFilter_lb.Text = "All Categories";
+            SectionFilter_lb.Text = "All Items";
+        }
+
+        private void UpdateGameShopList()
+        {
+
             GameShopListBox.Items.Clear();
             for (int i = 0; i < SMain.EditEnvir.GameShopList.Count; i++)
             {
-                //GameShopItems_listbox.Items.Add(Envir.GameShopInfoList[i]);
-                GameShopListBox.Items.Add(SMain.EditEnvir.GameShopList[i]);
+                if (ClassFilter_lb.Text == "All Classes" || SMain.EditEnvir.GameShopList[i].Class == ClassFilter_lb.Text)
+                    if (SectionFilter_lb.Text == "All Items" || SMain.EditEnvir.GameShopList[i].TopItem && SectionFilter_lb.Text == "Top Items" || SMain.EditEnvir.GameShopList[i].Deal && SectionFilter_lb.Text == "Sale Items" || SMain.EditEnvir.GameShopList[i].Date > DateTime.Now.AddDays(-7) && SectionFilter_lb.Text == "New Items")
+                        if (CategoryFilter_lb.Text == "All Categories" || SMain.EditEnvir.GameShopList[i].Catagory == CategoryFilter_lb.Text)
+                            GameShopListBox.Items.Add(SMain.EditEnvir.GameShopList[i]);
             }
         }
 
@@ -65,50 +93,58 @@ namespace Server
 
         public void UpdateInterface(bool refreshList = false)
         {
-            GoldPrice_textbox.Text = String.Empty;
-            GPPrice_textbox.Text = String.Empty;
-            Stock_textbox.Text = String.Empty;
-            Individual_checkbox.Checked = false;
-            Class_combo.Text = "All";
-            Catagory_textbox.Text = "";
-            TopItem_checkbox.Checked = false;
-            DealofDay_checkbox.Checked = false;
-            CredxGold_textbox.Text = Settings.CredxGold.ToString();
-            SelectedItem = (GameShopItem)GameShopListBox.SelectedItem;
-            ItemDetails_gb.Visible = false;
-            TotalSold_label.Text = "0";
-            LeftinStock_label.Text = "";
+            SelectedItems = GameShopListBox.SelectedItems.Cast<GameShopItem>().ToList();
 
-            if (SelectedItem == null) return;
+
+            if (SelectedItems.Count == 0)
+            {
+                GoldPrice_textbox.Text = String.Empty;
+                GPPrice_textbox.Text = String.Empty;
+                Stock_textbox.Text = String.Empty;
+                Individual_checkbox.Checked = false;
+                Class_combo.Text = "All";
+                Catagory_textbox.Text = "";
+                TopItem_checkbox.Checked = false;
+                DealofDay_checkbox.Checked = false;
+                CredxGold_textbox.Text = Settings.CredxGold.ToString();
+                ItemDetails_gb.Visible = false;
+                TotalSold_label.Text = "0";
+                LeftinStock_label.Text = "";
+                Count_textbox.Text = String.Empty;
+                return;
+            }
 
             ItemDetails_gb.Visible = true;
-            GoldPrice_textbox.Text = SelectedItem.GoldPrice.ToString();
-            GPPrice_textbox.Text = SelectedItem.CreditPrice.ToString();
-            Stock_textbox.Text = SelectedItem.Stock.ToString();
-            Individual_checkbox.Checked = SelectedItem.iStock;
-            Class_combo.Text = SelectedItem.Class;
-            Catagory_textbox.Text = SelectedItem.Catagory;
-            TopItem_checkbox.Checked = SelectedItem.TopItem;
-            DealofDay_checkbox.Checked = SelectedItem.Deal;
+
+            GoldPrice_textbox.Text = SelectedItems[0].GoldPrice.ToString();
+            GPPrice_textbox.Text = SelectedItems[0].CreditPrice.ToString();
+            Stock_textbox.Text = SelectedItems[0].Stock.ToString();
+            Individual_checkbox.Checked = SelectedItems[0].iStock;
+            Class_combo.Text = SelectedItems[0].Class;
+            Catagory_textbox.Text = SelectedItems[0].Catagory;
+            TopItem_checkbox.Checked = SelectedItems[0].TopItem;
+            DealofDay_checkbox.Checked = SelectedItems[0].Deal;
+            Count_textbox.Text = SelectedItems[0].Count.ToString();
 
             GetStats();
+
         }
 
         private void GetStats()
         {
             int purchased;
 
-            SMain.Envir.GameshopLog.TryGetValue(SelectedItem.Info.Index, out purchased);
+            SMain.Envir.GameshopLog.TryGetValue(SelectedItems[0].Info.Index, out purchased);
             TotalSold_label.Text = purchased.ToString();
 
-            if (!Individual_checkbox.Checked && SelectedItem.Stock != 0)
+            if (!Individual_checkbox.Checked && SelectedItems[0].Stock != 0)
             {
-                if (SelectedItem.Stock - purchased >= 0)
-                    LeftinStock_label.Text = (SelectedItem.Stock - purchased).ToString();
+                if (SelectedItems[0].Stock - purchased >= 0)
+                    LeftinStock_label.Text = (SelectedItems[0].Stock - purchased).ToString();
                 else
                     LeftinStock_label.Text = "";
             }
-            else if (SelectedItem.Stock == 0)
+            else if (SelectedItems[0].Stock == 0)
             {
                 LeftinStock_label.Text = "Infinite";
             }
@@ -130,7 +166,9 @@ namespace Server
             }
 
             GoldPrice_textbox.BackColor = SystemColors.Window;
-            SelectedItem.GoldPrice = temp;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].GoldPrice = temp;
         }
 
         private void GPPrice_textbox_TextChanged(object sender, EventArgs e)
@@ -146,7 +184,9 @@ namespace Server
             }
 
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedItem.CreditPrice = temp;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CreditPrice = temp;
 
             if (ActiveControl.Text != "") GoldPrice_textbox.Text = (temp * Settings.CredxGold).ToString();
         }
@@ -156,21 +196,26 @@ namespace Server
             if (ActiveControl != sender) return;
             string temp = ActiveControl.Text;
 
-            SelectedItem.Class = temp;
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].Class = temp;
         }
 
         private void TopItem_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            SelectedItem.TopItem = TopItem_checkbox.Checked;
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].TopItem = TopItem_checkbox.Checked;
         }
 
         private void Remove_button_Click(object sender, EventArgs e)
         {
-            if (SelectedItem == null) return;
 
-            Envir.Remove(SelectedItem);
+            if (SelectedItems.Count == 0) return;
+
+            if (MessageBox.Show("Are you sure you want to remove the selected Items?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+
+            for (int i = 0; i < SelectedItems.Count; i++) Envir.Remove(SelectedItems[i]);
 
             LoadGameShopItems();
             UpdateInterface();
@@ -180,7 +225,8 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            SelectedItem.Deal= DealofDay_checkbox.Checked;
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].Deal = DealofDay_checkbox.Checked;
         }
 
         private void Catagory_textbox_TextChanged(object sender, EventArgs e)
@@ -188,7 +234,8 @@ namespace Server
             if (ActiveControl != sender) return;
             string temp = ActiveControl.Text;
 
-            SelectedItem.Catagory = temp;
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].Catagory = temp;
         }
 
         private void Stock_textbox_TextChanged(object sender, EventArgs e)
@@ -204,7 +251,9 @@ namespace Server
             }
 
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedItem.Stock = temp;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].Stock = temp;
 
             GetStats();
         }
@@ -213,7 +262,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            SelectedItem.iStock = Individual_checkbox.Checked;
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].iStock = Individual_checkbox.Checked;
+
         }
 
         private void CredxGold_textbox_TextChanged(object sender, EventArgs e)
@@ -230,6 +281,57 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             Settings.CredxGold = temp;
+        }
+
+        private void Count_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            uint temp;
+
+            if (!uint.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            if (temp < 1)
+            {
+                temp = 1;
+                ActiveControl.Text = "1";
+            }
+            else if (temp > SelectedItems[0].Info.StackSize)
+            {
+                temp = SelectedItems[0].Info.StackSize;
+                ActiveControl.Text = SelectedItems[0].Info.StackSize.ToString();
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            SelectedItems[0].Count = temp;
+        }
+
+        private void ClassFilter_lb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateGameShopList();
+        }
+
+        private void SectionFilter_lb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateGameShopList();
+        }
+
+        private void CategoryFilter_lb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateGameShopList();
+        }
+
+        private void ResetFilter_button_Click(object sender, EventArgs e)
+        {
+            ClassFilter_lb.Text = "All Classes";
+            CategoryFilter_lb.Text = "All Categories";
+            SectionFilter_lb.Text = "All Items";
+            UpdateGameShopList();
+
         }
     }
 }

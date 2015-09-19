@@ -5105,7 +5105,7 @@ namespace Client.MirScenes
         {
             for (int i = 0; i < GameShopInfoList.Count; i++)
             {
-                if (GameShopInfoList[i].Info.Index == p.ItemIndex)
+                if (GameShopInfoList[i].GIndex == p.GIndex)
                     {
                     if (p.StockLevel == 0) GameShopInfoList.Remove(GameShopInfoList[i]);
                     else GameShopInfoList[i].Stock = p.StockLevel;
@@ -7699,7 +7699,6 @@ namespace Client.MirScenes
                 QuestListDialog = null;
                 QuestLogDialog = null;
                 QuestTrackingDialog = null;
-                GameShopDialog.Search.Dispose(); //Got to be a better way surely?
                 GameShopDialog = null;
                 MentorDialog = null;
 
@@ -22572,7 +22571,7 @@ namespace Client.MirScenes
                 Location = new Point(123, 449),
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 8F)
+                Font = new Font(Settings.FontName, 8F),
             };
             totalCredits = new MirLabel
             {
@@ -22930,8 +22929,7 @@ namespace Client.MirScenes
 
             Viewer = new GameShopViewer
             {
-                Visible = false,
-                Parent = this,
+
             };
 
         }
@@ -23002,16 +23000,19 @@ namespace Client.MirScenes
             if (y >= 401) y = 401;
             if (y <= 117) y = 117;
 
-            int location = y - 117;
-            int interval = 200 / (CatagoryList.Count - 22);
+            //if (CatagoryList.Count > 22)
+            //{
+                int location = y - 117;
+                int interval = 284 / (CatagoryList.Count - 22);
 
-            double yPoint = location / interval;
+                double yPoint = location / interval;
 
-            CStartIndex = Convert.ToInt16(Math.Floor(yPoint));
+                CStartIndex = Convert.ToInt16(Math.Floor(yPoint));
+                SetCatagories();
+            //}
 
-            SetCatagories();
-
-            PositionBar.Location = new Point(x, y);
+           PositionBar.Location = new Point(x, y);
+            
 
         }
 
@@ -23081,6 +23082,8 @@ namespace Client.MirScenes
 
         public void SetCatagories()
         {
+            GameScene.Scene.ChatDialog.ReceiveChat(CStartIndex.ToString(), ChatType.Hint);
+
             for (int i = 0; i < Filters.Length; i++)
             {
                 if (i < CatagoryList.Count + CStartIndex)
