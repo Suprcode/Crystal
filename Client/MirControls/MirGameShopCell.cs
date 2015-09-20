@@ -131,7 +131,7 @@ namespace Client.MirControls
                     {
                         Parent = GameScene.Scene.GameShopDialog,
                         Visible = true,
-                        Location = this.Location.X < 350 ? new Point(405, 108) : new Point(145, 108),
+                        Location = this.Location.X < 350 ? new Point(416, 115) : new Point(151, 115),
                     };
                     GameScene.Scene.GameShopDialog.Viewer.ViewerItem = Item;
                     GameScene.Scene.GameShopDialog.Viewer.UpdateViewer();
@@ -257,7 +257,7 @@ namespace Client.MirControls
         public void UpdateText()
         {
             nameLabel.Text = (Item.Info.Type == ItemType.Pets && Item.Info.Shape == 26 && Item.Info.Effect != 7) ? "WonderDrug" : Item.Info.FriendlyName;
-            nameLabel.Text = Item.Info.Name.Length > 17 ? Item.Info.Name.Substring(0, 17) : Item.Info.Name;
+            nameLabel.Text = nameLabel.Text.Length > 17 ? nameLabel.Text.Substring(0, 17) : nameLabel.Text;
             nameLabel.ForeColour = GameScene.Scene.GradeNameColor(Item.Info.Grade);
             quantity.Text = Quantity.ToString();
             goldLabel.Text = (Item.GoldPrice * Quantity).ToString("###,###,##0");
@@ -272,8 +272,6 @@ namespace Client.MirControls
                 PreviewItem.Visible = true;
                 BuyItem.Location = new Point(75, 122);
             }
-
-            if (GameScene.Scene.GameShopDialog.Viewer.Visible == true) { }
         }
 
         protected internal override void DrawControl()
@@ -317,8 +315,8 @@ namespace Client.MirControls
 
         public GameShopViewer()
         {
-            Index = 314;
-            Library = Libraries.Prguse2;
+            Index = 785;// 314;
+            Library = Libraries.Title;// Libraries.Prguse2;
             Location = new Point(405, 108);
             BeforeDraw += GameShopViewer_BeforeDraw;
             //Click += (o, e) =>
@@ -328,12 +326,12 @@ namespace Client.MirControls
 
             CloseButton = new MirButton
             {
-                HoverIndex = 361,
-                Index = 360,
-                Location = new Point(251, 3),
-                Library = Libraries.Prguse2,
+                HoverIndex = 362,
+                Index = 361,
+                Location = new Point(230, 8),
+                Library = Libraries.Prguse,
                 Parent = this,
-                PressedIndex = 362,
+                PressedIndex = 363,
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) =>
@@ -384,7 +382,7 @@ namespace Client.MirControls
             PreviewImage = new MirAnimatedControl
             {
                 Animated = false,
-                Location = new Point(110, 140),
+                Location = new Point(105, 160),
                 AnimationCount = 6,
                 AnimationDelay = 150,
                 Index = 0,
@@ -402,7 +400,7 @@ namespace Client.MirControls
                 PressedIndex = 245,
                 Library = Libraries.Prguse2,
                 Parent = this,
-                Location = new Point(163, 292),
+                Location = new Point(160, 282),
                 Sound = SoundList.ButtonA,
             };
             RightDirection.Click += (o, e) =>
@@ -420,7 +418,7 @@ namespace Client.MirControls
                 PressedIndex = 242,
                 Library = Libraries.Prguse2,
                 Parent = this,
-                Location = new Point(94, 292),
+                Location = new Point(81, 282),
                 Sound = SoundList.ButtonA,
             };
             LeftDirection.Click += (o, e) =>
@@ -554,8 +552,8 @@ namespace Client.MirControls
         private void DrawArmour()
         {
             WeaponImage.Visible = false;
-            MountImage.Visible = false;
             WeaponImage2.Visible = false;
+            MountImage.Visible = false;
 
             if (ViewerItem.Info.RequiredGender == RequiredGender.Male)
                 PreviewImage.Index = 32 + (6 * (Direction - 1));
@@ -571,6 +569,7 @@ namespace Client.MirControls
         private void DrawTransform()
         {
             WeaponImage.Visible = false;
+            WeaponImage2.Visible = false;
             MountImage.Visible = false;
 
             PreviewImage.Index = 32 + (6 * (Direction - 1));

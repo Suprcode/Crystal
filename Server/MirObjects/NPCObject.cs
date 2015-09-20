@@ -3094,6 +3094,9 @@ namespace Server.MirObjects
                 case "GAMEGOLD":
                     newValue = player.Account.Gold.ToString(CultureInfo.InvariantCulture);
                     break;
+                case "CREDIT":
+                    newValue = player.Account.Credit.ToString(CultureInfo.InvariantCulture);
+                    break;
                 case "ARMOUR":
                     newValue = player.Info.Equipment[(int)EquipmentSlot.Armour] != null ?
                         player.Info.Equipment[(int)EquipmentSlot.Armour].Info.Name : "No Armour";

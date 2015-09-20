@@ -726,6 +726,9 @@ namespace Server.MirObjects
         public int[] Values;
         public bool Infinite;
 
+        public bool RealTime;
+        public DateTime RealTimeExpire;
+
         public bool Paused;
 
         public Buff() { }

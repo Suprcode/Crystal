@@ -1606,7 +1606,7 @@ namespace Client.MirScenes
                     buffLibrary = Libraries.Prguse2;
                 }
 
-                image.Location = new Point((Settings.ScreenWidth - 150) - i * 23, 2);
+                image.Location = new Point((Settings.ScreenWidth - 150) - i * 23 + ((10 * 23) * (i / 10)), 2 + ((i / 10) * 25));
                 image.Hint = buff.ToString();
                 image.Index = buffImage;
                 image.Library = buffLibrary;
@@ -22927,10 +22927,7 @@ namespace Client.MirScenes
                 Filters[i].MouseWheel += FilterScrolling;
             }
 
-            Viewer = new GameShopViewer
-            {
-
-            };
+            Viewer = new GameShopViewer();
 
         }
 
@@ -23194,6 +23191,8 @@ namespace Client.MirScenes
                     Parent = this,
                 };
             }
+
+            GameScene.Scene.GameShopDialog.Viewer.Visible = false;
            
         }
 
@@ -23391,9 +23390,13 @@ namespace Client.MirScenes
             {
                 answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
             }
-            else // more than 1 hour
+            else if (t.TotalDays < 1.0)
             {
                 answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
+            }
+            else // more than 1 day
+            {
+                answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.TotalHours, t.Minutes, t.Seconds);
             }
 
             return answer;

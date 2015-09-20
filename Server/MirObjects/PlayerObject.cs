@@ -3831,6 +3831,8 @@ namespace Server.MirObjects
 
                         if (parts.Length > 2)
                         {
+                            if (!IsGM) return;
+
                             if (!uint.TryParse(parts[2], out count)) return;
                             player = Envir.GetPlayer(parts[1]);
 
@@ -3857,6 +3859,8 @@ namespace Server.MirObjects
 
                         if (parts.Length > 2)
                         {
+                            if (!IsGM) return;
+
                             if (!uint.TryParse(parts[2], out count)) return;
                             player = Envir.GetPlayer(parts[1]);
 
@@ -3885,6 +3889,8 @@ namespace Server.MirObjects
 
                         if (parts.Length > 2)
                         {
+                            if (!IsGM) return;
+
                             if (!uint.TryParse(parts[2], out count)) return;
                             player = Envir.GetPlayer(parts[1]);
 
