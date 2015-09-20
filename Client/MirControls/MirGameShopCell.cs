@@ -13,7 +13,7 @@ namespace Client.MirControls
 {
     public sealed class GameShopCell : MirImageControl
     {
-        public MirLabel nameLabel, typeLabel, goldLabel, gpLabel, stockLabel, StockLabel;
+        public MirLabel nameLabel, typeLabel, goldLabel, gpLabel, stockLabel, StockLabel, countLabel;
         public GameShopItem Item;
         public UserItem ShowItem;
         Rectangle ItemDisplayArea;
@@ -22,6 +22,7 @@ namespace Client.MirControls
         public byte Quantity = 1;
         public MirButton quantityUp, quantityDown;
         public MirLabel quantity;
+        public GameShopViewer Viewer;
 
         public GameShopCell()
         {
@@ -86,6 +87,16 @@ namespace Client.MirControls
                 Font = new Font(Settings.FontName, 7F),
             };
 
+            countLabel = new MirLabel
+            {
+                Size = new Size(30, 20),
+                DrawFormat = TextFormatFlags.Right,
+                Location = new Point(16, 60),
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 7F),
+            };
+
 
             BuyItem = new MirButton
             {
@@ -115,9 +126,15 @@ namespace Client.MirControls
             };
             PreviewItem.Click += (o, e) =>
                 {
+                    GameScene.Scene.GameShopDialog.Viewer.Dispose();
+                    GameScene.Scene.GameShopDialog.Viewer = new GameShopViewer
+                    {
+                        Parent = GameScene.Scene.GameShopDialog,
+                        Visible = true,
+                        Location = this.Location.X < 350 ? new Point(405, 108) : new Point(145, 108),
+                    };
                     GameScene.Scene.GameShopDialog.Viewer.ViewerItem = Item;
-                    GameScene.Scene.GameShopDialog.Viewer.Visible = true;
-                    GameScene.Scene.GameShopDialog.Viewer.BringToFront();
+                    GameScene.Scene.GameShopDialog.Viewer.UpdateViewer();
                 };
 
 
@@ -136,7 +153,7 @@ namespace Client.MirControls
                 if (CMain.Shift) Quantity += 10;
                 else Quantity++;
 
-                if ((Quantity / Item.Info.StackSize) > 5) Quantity = (5 * Item.Info.StackSize) > 99 ? Quantity = 99 : Quantity = (byte)(5 * Item.Info.StackSize);
+                if (((decimal)(Quantity * Item.Count) / Item.Info.StackSize) > 5) Quantity = ((5 * Item.Info.StackSize) / Item.Count) > 99 ? Quantity = 99 : Quantity = (byte)((5 * Item.Info.StackSize) / Item.Count);
                 if (Quantity >= 99) Quantity = 99;
                 if (Item.Stock != 0 && Quantity > Item.Stock) Quantity = (byte)Item.Stock;
             };
@@ -183,7 +200,7 @@ namespace Client.MirControls
             if (Item.CreditPrice * Quantity < GameScene.Credit)
             {
                 CreditCost = Item.CreditPrice * Quantity;
-                messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0} for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost), MirMessageBoxButtons.YesNo);
+                messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
             }
             else
             { //Needs to attempt to pay with gold and credits
@@ -193,11 +210,11 @@ namespace Client.MirControls
                     CreditCost = GameScene.Credit;
                     if (CreditCost == 0)
                     {
-                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0} for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost), MirMessageBoxButtons.YesNo);
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
                     }
                     else
                     {
-                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0} for {2} Credit and {3} Gold?", Item.Info.FriendlyName, Quantity, CreditCost, GoldCost), MirMessageBoxButtons.YesNo);
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({4}) for {2} Credit and {3} Gold?", Item.Info.FriendlyName, Quantity, CreditCost, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
                     }
                 }
                 else
@@ -208,7 +225,7 @@ namespace Client.MirControls
 
             }
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { ItemIndex = Item.Info.Index, Quantity = Quantity });
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity });
             messageBox.NoButton.Click += (o, e) => { };
             messageBox.Show();
         }
@@ -226,7 +243,7 @@ namespace Client.MirControls
 
             if (ShowItem == null && ItemDisplayArea != null && ItemDisplayArea.Contains(CMain.MPoint))
             {
-                ShowItem = new UserItem(Item.Info) { MaxDura = Item.Info.Durability, CurrentDura = Item.Info.Durability };
+                ShowItem = new UserItem(Item.Info) { MaxDura = Item.Info.Durability, CurrentDura = Item.Info.Durability, Count = Item.Count };
                 GameScene.Scene.CreateItemLabel(ShowItem);
             }
             else if (ShowItem != null && ItemDisplayArea != null && !ItemDisplayArea.Contains(CMain.MPoint))
@@ -240,6 +257,7 @@ namespace Client.MirControls
         public void UpdateText()
         {
             nameLabel.Text = (Item.Info.Type == ItemType.Pets && Item.Info.Shape == 26 && Item.Info.Effect != 7) ? "WonderDrug" : Item.Info.FriendlyName;
+            nameLabel.Text = Item.Info.Name.Length > 17 ? Item.Info.Name.Substring(0, 17) : Item.Info.Name;
             nameLabel.ForeColour = GameScene.Scene.GradeNameColor(Item.Info.Grade);
             quantity.Text = Quantity.ToString();
             goldLabel.Text = (Item.GoldPrice * Quantity).ToString("###,###,##0");
@@ -247,6 +265,7 @@ namespace Client.MirControls
             if (Item.Stock >= 99) stockLabel.Text = "99+";
             if (Item.Stock == 0) stockLabel.Text = "∞";
             else stockLabel.Text = Item.Stock.ToString();
+            countLabel.Text = Item.Count.ToString();
 
             if (Item.Info.Type == ItemType.Mount || Item.Info.Type == ItemType.Weapon || Item.Info.Type == ItemType.Armour || Item.Info.Type == ItemType.Transform)
             {
@@ -287,7 +306,7 @@ namespace Client.MirControls
     public sealed class GameShopViewer : MirImageControl
     {
 
-        public MirAnimatedControl PreviewImage, WeaponImage, MountImage;
+        public MirAnimatedControl PreviewImage, WeaponImage, WeaponImage2, MountImage;
 
         public int StartIndex = 0;
         public int Direction = 6;
@@ -302,7 +321,6 @@ namespace Client.MirControls
             Library = Libraries.Prguse2;
             Location = new Point(405, 108);
             BeforeDraw += GameShopViewer_BeforeDraw;
-            
             //Click += (o, e) =>
             //{
             //Visible = false;
@@ -318,9 +336,25 @@ namespace Client.MirControls
                 PressedIndex = 362,
                 Sound = SoundList.ButtonA,
             };
-            CloseButton.Click += (o, e) => Visible = false;
+            CloseButton.Click += (o, e) =>
+            {
+                Visible = false;
+            };
 
             WeaponImage = new MirAnimatedControl
+            {
+                Animated = false,
+                Location = new Point(110, 140),
+                AnimationCount = 6,
+                AnimationDelay = 150,
+                Index = 0,
+                Library = Libraries.Prguse,
+                Loop = true,
+                Parent = this,
+                UseOffSet = true,
+                NotControl = true,
+            };
+            WeaponImage2 = new MirAnimatedControl
             {
                 Animated = false,
                 Location = new Point(110, 140),
@@ -375,6 +409,8 @@ namespace Client.MirControls
             {
                 Direction++;
                 if (Direction > 8) Direction = 1;
+
+                UpdateViewer();
             };
 
             LeftDirection = new MirButton
@@ -391,23 +427,30 @@ namespace Client.MirControls
             {
                 Direction--;
                 if (Direction == 0) Direction = 8;
+
+                UpdateViewer();
             };
 
         }
 
-        private void GameShopViewer_BeforeDraw(object sender, EventArgs e)
+        public void UpdateViewer()
         {
-            BringToFront();
+            this.Visible = true;
             if (ViewerItem.Info.Type == ItemType.Weapon) DrawWeapon();
             if (ViewerItem.Info.Type == ItemType.Armour) DrawArmour();
             if (ViewerItem.Info.Type == ItemType.Mount) DrawMount();
             if (ViewerItem.Info.Type == ItemType.Transform) DrawTransform();
         }
 
+        private void GameShopViewer_BeforeDraw(object sender, EventArgs e)
+        {
+            BringToFront();
+        }
+
         private void DrawMount()
         {
             WeaponImage.Visible = false;
-
+            WeaponImage2.Visible = false;
             if (GameScene.User.Equipment[(int)EquipmentSlot.Armour] != null)
                 PreviewImage.Library = Libraries.CArmours[GameScene.User.Equipment[(int)EquipmentSlot.Armour].Info.Shape];
             else
@@ -419,10 +462,12 @@ namespace Client.MirControls
                 PreviewImage.Index = 1256 + (8 * (Direction - 1));
 
             PreviewImage.AnimationCount = 8;
-            PreviewImage.Animated = true;
+            
 
             MountImage.Library = Libraries.Mounts[ViewerItem.Info.Shape];
             MountImage.Index = 32 + (8 * (Direction - 1));
+
+            PreviewImage.Animated = true;
             MountImage.Animated = true;
 
             MountImage.Visible = true;
@@ -442,11 +487,65 @@ namespace Client.MirControls
             else
                 PreviewImage.Index = 840 + (6 * (Direction - 1));
 
+
+
+
+            if (Direction > 1 && Direction < 5)
+                WeaponImage.BringToFront();
+            else
+                PreviewImage.BringToFront();
+
+
+            if (ViewerItem.Info.Shape >= 100 && ViewerItem.Info.Shape <= 199)
+            {
+                WeaponImage.Library = Libraries.AWeaponsR[ViewerItem.Info.Shape - 100];
+                WeaponImage2.Library = Libraries.AWeaponsL[ViewerItem.Info.Shape - 100];
+                WeaponImage2.Visible = true;
+                WeaponImage2.Index = 32 + (6 * (Direction - 1));
+
+                if (Direction >= 2 && Direction <= 3)
+                {
+                    WeaponImage2.BringToFront();
+                    PreviewImage.BringToFront();
+                    WeaponImage.BringToFront();
+                }
+                else if (Direction == 8 || Direction == 7)
+                {
+                    WeaponImage.BringToFront();
+                    PreviewImage.BringToFront();
+                    WeaponImage2.BringToFront();
+                }
+                else
+                {
+                    WeaponImage.BringToFront();
+                    PreviewImage.BringToFront();
+                }
+
+            }
+            else
+            {
+                WeaponImage2.Visible = false;
+
+            }
+            if (ViewerItem.Info.Shape >= 200)
+            {
+                WeaponImage.Library = Libraries.ARWeapons[ViewerItem.Info.Shape - 200];
+                if (Direction >= 6 && Direction <= 8)
+                {
+                    PreviewImage.BringToFront();
+                    WeaponImage.BringToFront();
+                }
+                    
+            }
+            
+            if (ViewerItem.Info.Shape < 100) WeaponImage.Library = Libraries.CWeapons[ViewerItem.Info.Shape];
+
+
+            WeaponImage.Index = 32 + (6 * (Direction - 1));
+
             PreviewImage.AnimationCount = 6;
             PreviewImage.Animated = true;
-
-            WeaponImage.Library = Libraries.CWeapons[ViewerItem.Info.Shape];
-            WeaponImage.Index = 32 + (6 * (Direction - 1));
+            WeaponImage2.Animated = true;
             WeaponImage.Animated = true;
 
             WeaponImage.Visible = true;
@@ -456,6 +555,7 @@ namespace Client.MirControls
         {
             WeaponImage.Visible = false;
             MountImage.Visible = false;
+            WeaponImage2.Visible = false;
 
             if (ViewerItem.Info.RequiredGender == RequiredGender.Male)
                 PreviewImage.Index = 32 + (6 * (Direction - 1));

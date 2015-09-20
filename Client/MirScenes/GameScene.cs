@@ -5105,7 +5105,7 @@ namespace Client.MirScenes
         {
             for (int i = 0; i < GameShopInfoList.Count; i++)
             {
-                if (GameShopInfoList[i].Info.Index == p.ItemIndex)
+                if (GameShopInfoList[i].GIndex == p.GIndex)
                     {
                     if (p.StockLevel == 0) GameShopInfoList.Remove(GameShopInfoList[i]);
                     else GameShopInfoList[i].Stock = p.StockLevel;
@@ -22570,7 +22570,7 @@ namespace Client.MirScenes
                 Location = new Point(123, 449),
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 8F)
+                Font = new Font(Settings.FontName, 8F),
             };
             totalCredits = new MirLabel
             {
@@ -22928,8 +22928,7 @@ namespace Client.MirScenes
 
             Viewer = new GameShopViewer
             {
-                Visible = false,
-                Parent = this,
+
             };
 
         }
@@ -23035,23 +23034,24 @@ namespace Client.MirScenes
         {
             int x = 120;
             int y = PositionBar.Location.Y;
-            
+
             if (y >= 401) y = 401;
             if (y <= 117) y = 117;
 
             if (CategoryList.Count > 22)
             {
                 int location = y - 117;
-                int interval = 200 / (CategoryList.Count - 22);
+                int interval = 284 / (CategoryList.Count - 22);
 
                 double yPoint = location / interval;
 
                 CStartIndex = Convert.ToInt16(Math.Floor(yPoint));
-
                 SetCategories();
             }
 
-            PositionBar.Location = new Point(x, y);
+           PositionBar.Location = new Point(x, y);
+            
+
         }
 
         public void ResetTabs()
