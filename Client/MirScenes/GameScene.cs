@@ -22524,6 +22524,7 @@ namespace Client.MirScenes
         public int StartIndex = 0;
         public int Page = 0;
         public int CStartIndex = 0;
+        public decimal maxPage;
 
         public GameShopDialog()
         {
@@ -22877,7 +22878,7 @@ namespace Client.MirScenes
             NextButton.Click += (o, e) =>
             {
                 Page++;
-                if (Page > filteredShop.Count() / 8) Page = filteredShop.Count() / 8;
+                if ((Page + 1) > maxPage) Page --;
                 StartIndex = Grid.Length * Page;
                 UpdateShop();
             };
@@ -23164,7 +23165,9 @@ namespace Client.MirScenes
                     }
             }
 
-                int maxPage = filteredShop.Count / Grid.Length + 1;
+
+            maxPage = ((decimal)filteredShop.Count / 8);
+            maxPage = Math.Ceiling(maxPage);
             if (maxPage < 1) maxPage = 1;
 
             PageNumberLabel.Text = (Page + 1) + " / " + maxPage;
