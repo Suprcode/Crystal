@@ -7,6 +7,12 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 
+public enum DamageType : byte
+{
+    Hit = 0,
+    Miss = 1,
+}
+
 [Flags]
 public enum GMOptions : byte
 {
@@ -1183,6 +1189,7 @@ public enum ServerPacketIds : short
     ObjectAttack,
     Struck,
     ObjectStruck,
+    DamageIndicator,
     DuraChanged,
     HealthChanged,
     DeleteItem,
@@ -4439,6 +4446,8 @@ public abstract class Packet
                 return new S.ObjectAttack();
             case (short)ServerPacketIds.Struck:
                 return new S.Struck();
+            case (short)ServerPacketIds.DamageIndicator:
+                return new S.DamageIndicator();
             case (short)ServerPacketIds.ObjectStruck:
                 return new S.ObjectStruck();
             case (short)ServerPacketIds.DuraChanged:

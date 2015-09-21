@@ -1920,7 +1920,7 @@ namespace Server.MirObjects
                     case CheckType.CheckClass:
                         MirClass mirClass;
 
-                        if (!MirClass.TryParse(param[0], false, out mirClass))
+                        if (!MirClass.TryParse(param[0], true, out mirClass))
                         {
                             failed = true;
                             break;

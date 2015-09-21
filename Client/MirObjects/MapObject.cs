@@ -16,6 +16,9 @@ namespace Client.MirObjects
         public static Font ChatFont = new Font(Settings.FontName, 10F);
         public static List<MirLabel> LabelList = new List<MirLabel>();
 
+        public List<DamageInfo> Damages = new List<DamageInfo>();
+        public static Dictionary<string, MirLabel> DamageLabelList = new Dictionary<string, MirLabel>();
+
         public static UserObject User;
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
@@ -276,6 +279,21 @@ namespace Client.MirObjects
             Draw();
             DXManager.SetBlend(false);
         }
+        public void DrawDamages()
+        {
+            for (int i = Damages.Count - 1; i >= 0; i--)
+            {
+                DamageInfo info = Damages[i];
+                if (CMain.Time > info.ExpireTime)
+                {
+                    Damages.RemoveAt(i);
+                }
+                else
+                {
+                    info.Draw(DisplayRectangle.Location);
+                }
+            }
+        }
         public void DrawHealth()
         {
             string name = Name;
@@ -370,4 +388,5 @@ namespace Client.MirObjects
         public abstract void DrawEffects();
 
     }
+
 }

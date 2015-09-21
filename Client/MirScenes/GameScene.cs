@@ -1039,6 +1039,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.Struck:
                     Struck((S.Struck)p);
                     break;
+                case (short)ServerPacketIds.DamageIndicator:
+                    DamageIndicator((S.DamageIndicator)p);
+                    break;
                 case (short)ServerPacketIds.ObjectStruck:
                     ObjectStruck((S.ObjectStruck)p);
                     break;
@@ -2776,6 +2779,30 @@ namespace Client.MirScenes
                 return;
             }
         }
+
+        private void DamageIndicator(S.DamageIndicator p)
+        {
+            if (Settings.DisplayDamage)
+            {
+                for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+                {
+                    MapObject obj = MapControl.Objects[i];
+                    if (obj.ObjectID != p.ObjectID) continue;
+
+                    switch (p.Type)
+                    {
+                        case DamageType.Hit:
+                            obj.Damages.Add(new DamageInfo(p.Damage.ToString("#,##0"), 1000, Color.Red, 50));
+                            break;
+                        case DamageType.Miss:
+                            obj.Damages.Add(new DamageInfo("Miss", 1200, Color.Red, 50));
+                            break;
+                    }
+
+                }
+            }
+        }
+
         private void DuraChanged(S.DuraChanged p)
         {
             UserItem item = null;
@@ -8349,6 +8376,8 @@ namespace Client.MirScenes
                 Objects[i].DrawChat();
                 Objects[i].DrawHealth();
                 Objects[i].DrawPoison();
+
+                Objects[i].DrawDamages();
             }
 
             if (!Settings.Effect) return;
@@ -20816,6 +20845,14 @@ namespace Client.MirScenes
         public void Show()
         {
             if (Visible) return;
+
+            if (!GameScene.User.IntelligentCreatures.Any())
+            {
+                MirMessageBox messageBox = new MirMessageBox("You do not own any creatures.", MirMessageBoxButtons.OK);
+                messageBox.Show();
+                return;
+            }
+
             Visible = true;
             showing = true;
             SwitchAnimTime = CMain.Time + 8000;
@@ -23396,7 +23433,7 @@ namespace Client.MirScenes
             }
             else // more than 1 day
             {
-                answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.TotalHours, t.Minutes, t.Seconds);
+                answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
             }
 
             return answer;

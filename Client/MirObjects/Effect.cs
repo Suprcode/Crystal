@@ -369,7 +369,6 @@ namespace Client.MirObjects
         }
     }
 
-
     public class SpecialEffect : Effect
     {
         public uint EffectType = 0;

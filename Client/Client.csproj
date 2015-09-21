@@ -42,6 +42,9 @@
     <DocumentationFile>
     </DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -158,6 +161,7 @@
     <Compile Include="MirControls\MirTextBox.cs" />
     <Compile Include="MirGraphics\DXManager.cs" />
     <Compile Include="MirGraphics\MLibrary.cs" />
+    <Compile Include="MirObjects\Damage.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\Effect.cs" />
     <Compile Include="MirObjects\Frames.cs" />
