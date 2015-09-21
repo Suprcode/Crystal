@@ -1074,6 +1074,12 @@ namespace Server.MirEnvir
                     {
                         AccountList.Add(new AccountInfo(reader));
                         CharacterList.AddRange(AccountList[i].Characters);
+
+                        if (Properties.Settings.Default.ResetLog)
+                            for (int f = 0; f < AccountList[i].Characters.Count; f++)
+                            {
+                                AccountList[i].Characters[f].GSpurchases.Clear();
+                            }
                     }
 
                     if (LoadVersion < 7) return;
@@ -1125,6 +1131,12 @@ namespace Server.MirEnvir
                         for (int i = 0; i < logCount; i++)
                         {
                             GameshopLog.Add(reader.ReadInt32(), reader.ReadInt32());
+                        }
+                        if (Properties.Settings.Default.ResetLog)
+                        {
+                            GameshopLog.Clear();
+                            Properties.Settings.Default.ResetLog = false;
+                            Properties.Settings.Default.Save();
                         }
                     }
                 }
@@ -1977,6 +1989,14 @@ namespace Server.MirEnvir
         public void Remove(GameShopItem info)
         {
             GameShopList.Remove(info);
+
+            if (GameShopList.Count == 0)
+            {
+                GameshopIndex = 0;
+                Properties.Settings.Default.ResetLog = true;
+                Properties.Settings.Default.Save();
+            }
+                
             //Desync all objects\
         }
 

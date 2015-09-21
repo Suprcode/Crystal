@@ -50,6 +50,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.Class_combo = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.ServerLog_button = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.CredxGold_textbox = new System.Windows.Forms.TextBox();
             this.Remove_button = new System.Windows.Forms.Button();
@@ -302,6 +303,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Gameshop Settings";
             // 
+            // ServerLog_button
+            // 
+            this.ServerLog_button.Location = new System.Drawing.Point(220, 407);
+            this.ServerLog_button.Name = "ServerLog_button";
+            this.ServerLog_button.Size = new System.Drawing.Size(266, 23);
+            this.ServerLog_button.TabIndex = 112;
+            this.ServerLog_button.Text = "Reset Purchase Logs (Stock Levels will reset)";
+            this.ServerLog_button.UseVisualStyleBackColor = true;
+            this.ServerLog_button.Click += new System.EventHandler(this.ServerLog_button_Click);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -380,6 +391,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(498, 436);
+            this.Controls.Add(this.ServerLog_button);
             this.Controls.Add(this.ResetFilter_button);
             this.Controls.Add(this.CategoryFilter_lb);
             this.Controls.Add(this.SectionFilter_lb);
@@ -431,5 +443,6 @@
         private System.Windows.Forms.ComboBox SectionFilter_lb;
         private System.Windows.Forms.ComboBox CategoryFilter_lb;
         private System.Windows.Forms.Button ResetFilter_button;
+        private System.Windows.Forms.Button ServerLog_button;
     }
 }

@@ -210,7 +210,6 @@ namespace Server
 
         private void Remove_button_Click(object sender, EventArgs e)
         {
-
             if (SelectedItems.Count == 0) return;
 
             if (MessageBox.Show("Are you sure you want to remove the selected Items?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
@@ -332,6 +331,14 @@ namespace Server
             SectionFilter_lb.Text = "All Items";
             UpdateGameShopList();
 
+        }
+
+        private void ServerLog_button_Click(object sender, EventArgs e)
+        {
+                if (MessageBox.Show("Are you sure you want to reset the Purchase Log, this cannot be recovered?", "Remove Log?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                Properties.Settings.Default.ResetLog = true;
+                Properties.Settings.Default.Save();
+                MessageBox.Show("Stop and start the server to reset the purchase logs.");
         }
     }
 }
