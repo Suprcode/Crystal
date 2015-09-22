@@ -59,6 +59,7 @@ namespace Server.MirEnvir
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
+        public bool ResetGS = false;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
 
@@ -1074,12 +1075,6 @@ namespace Server.MirEnvir
                     {
                         AccountList.Add(new AccountInfo(reader));
                         CharacterList.AddRange(AccountList[i].Characters);
-
-                        if (Properties.Settings.Default.ResetLog)
-                            for (int f = 0; f < AccountList[i].Characters.Count; f++)
-                            {
-                                AccountList[i].Characters[f].GSpurchases.Clear();
-                            }
                     }
 
                     if (LoadVersion < 7) return;
@@ -1132,12 +1127,8 @@ namespace Server.MirEnvir
                         {
                             GameshopLog.Add(reader.ReadInt32(), reader.ReadInt32());
                         }
-                        if (Properties.Settings.Default.ResetLog)
-                        {
-                            GameshopLog.Clear();
-                            Properties.Settings.Default.ResetLog = false;
-                            Properties.Settings.Default.Save();
-                        }
+
+                        if (ResetGS) ClearGameshopLog();
                     }
                 }
             }
@@ -1993,8 +1984,6 @@ namespace Server.MirEnvir
             if (GameShopList.Count == 0)
             {
                 GameshopIndex = 0;
-                Properties.Settings.Default.ResetLog = true;
-                Properties.Settings.Default.Save();
             }
                 
             //Desync all objects\
@@ -2335,6 +2324,23 @@ namespace Server.MirEnvir
                 if (Settings.Guild_BuffList[i].Id == Id)
                     return Settings.Guild_BuffList[i];
             return null;
+        }
+
+        public void ClearGameshopLog()
+        {
+            SMain.Envir.GameshopLog.Clear();
+
+            for (int i = 0; i < AccountList.Count; i++)
+            {
+                for (int f = 0; f < AccountList[i].Characters.Count; f++)
+                {
+                    AccountList[i].Characters[f].GSpurchases.Clear();
+                }
+            }
+
+            ResetGS = false;
+            SMain.Enqueue("Gameshop Purchase Logs Cleared.");
+
         }
     }
 }

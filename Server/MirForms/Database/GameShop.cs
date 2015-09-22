@@ -335,10 +335,16 @@ namespace Server
 
         private void ServerLog_button_Click(object sender, EventArgs e)
         {
-                if (MessageBox.Show("Are you sure you want to reset the Purchase Log, this cannot be recovered?", "Remove Log?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
-                Properties.Settings.Default.ResetLog = true;
-                Properties.Settings.Default.Save();
-                MessageBox.Show("Stop and start the server to reset the purchase logs.");
+            if (SMain.Envir.Running)
+            {
+                if (MessageBox.Show("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect instantly.", "Remove Logs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                SMain.Envir.ClearGameshopLog();
+            }
+            else
+            {
+                if (MessageBox.Show("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect when you start the server", "Remove Logs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                SMain.Envir.ResetGS = true;
+            }
         }
     }
 }
