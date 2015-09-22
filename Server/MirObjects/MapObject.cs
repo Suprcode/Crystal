@@ -676,6 +676,8 @@ namespace Server.MirObjects
 
                     if (checklocation.X < 0) continue;
                     if (checklocation.X >= CurrentMap.Width) continue;
+                    if (checklocation.Y < 0) continue;
+                    if (checklocation.Y >= CurrentMap.Height) continue;
 
                     Cell cell = CurrentMap.GetCell(checklocation.X, checklocation.Y);
                     if (!cell.Valid || cell.Objects == null) continue;

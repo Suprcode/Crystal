@@ -16,9 +16,6 @@ namespace Client.MirObjects
         public static Font ChatFont = new Font(Settings.FontName, 10F);
         public static List<MirLabel> LabelList = new List<MirLabel>();
 
-        public List<DamageInfo> Damages = new List<DamageInfo>();
-        public static Dictionary<string, MirLabel> DamageLabelList = new Dictionary<string, MirLabel>();
-
         public static UserObject User;
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
@@ -66,6 +63,9 @@ namespace Client.MirObjects
         public int StruckWeapon;
 
         public MirLabel TempLabel;
+
+        public static List<MirLabel> DamageLabelList = new List<MirLabel>();
+        public List<Damage> Damages = new List<Damage>();
 
         protected MapObject(uint objectID)
         {
@@ -283,7 +283,7 @@ namespace Client.MirObjects
         {
             for (int i = Damages.Count - 1; i >= 0; i--)
             {
-                DamageInfo info = Damages[i];
+                Damage info = Damages[i];
                 if (CMain.Time > info.ExpireTime)
                 {
                     Damages.RemoveAt(i);
