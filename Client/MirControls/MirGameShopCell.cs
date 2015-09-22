@@ -342,7 +342,7 @@ namespace Client.MirControls
             WeaponImage = new MirAnimatedControl
             {
                 Animated = false,
-                Location = new Point(110, 140),
+                Location = new Point(105, 160),
                 AnimationCount = 6,
                 AnimationDelay = 150,
                 Index = 0,
@@ -355,7 +355,7 @@ namespace Client.MirControls
             WeaponImage2 = new MirAnimatedControl
             {
                 Animated = false,
-                Location = new Point(110, 140),
+                Location = new Point(105, 160),
                 AnimationCount = 6,
                 AnimationDelay = 150,
                 Index = 0,
@@ -368,7 +368,7 @@ namespace Client.MirControls
             MountImage = new MirAnimatedControl
             {
                 Animated = false,
-                Location = new Point(110, 140),
+                Location = new Point(105, 160),
                 AnimationCount = 8,
                 AnimationDelay = 150,
                 Index = 0,

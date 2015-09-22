@@ -59,6 +59,7 @@ namespace Server.MirEnvir
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
         public const string BackUpPath = @".\Back Up\";
+        public bool ResetGS = false;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
 
@@ -1126,6 +1127,8 @@ namespace Server.MirEnvir
                         {
                             GameshopLog.Add(reader.ReadInt32(), reader.ReadInt32());
                         }
+
+                        if (ResetGS) ClearGameshopLog();
                     }
                 }
             }
@@ -1977,6 +1980,12 @@ namespace Server.MirEnvir
         public void Remove(GameShopItem info)
         {
             GameShopList.Remove(info);
+
+            if (GameShopList.Count == 0)
+            {
+                GameshopIndex = 0;
+            }
+                
             //Desync all objects\
         }
 
@@ -2315,6 +2324,23 @@ namespace Server.MirEnvir
                 if (Settings.Guild_BuffList[i].Id == Id)
                     return Settings.Guild_BuffList[i];
             return null;
+        }
+
+        public void ClearGameshopLog()
+        {
+            SMain.Envir.GameshopLog.Clear();
+
+            for (int i = 0; i < AccountList.Count; i++)
+            {
+                for (int f = 0; f < AccountList[i].Characters.Count; f++)
+                {
+                    AccountList[i].Characters[f].GSpurchases.Clear();
+                }
+            }
+
+            ResetGS = false;
+            SMain.Enqueue("Gameshop Purchase Logs Cleared.");
+
         }
     }
 }

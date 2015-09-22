@@ -210,7 +210,6 @@ namespace Server
 
         private void Remove_button_Click(object sender, EventArgs e)
         {
-
             if (SelectedItems.Count == 0) return;
 
             if (MessageBox.Show("Are you sure you want to remove the selected Items?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
@@ -332,6 +331,20 @@ namespace Server
             SectionFilter_lb.Text = "All Items";
             UpdateGameShopList();
 
+        }
+
+        private void ServerLog_button_Click(object sender, EventArgs e)
+        {
+            if (SMain.Envir.Running)
+            {
+                if (MessageBox.Show("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect instantly.", "Remove Logs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                SMain.Envir.ClearGameshopLog();
+            }
+            else
+            {
+                if (MessageBox.Show("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect when you start the server", "Remove Logs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                SMain.Envir.ResetGS = true;
+            }
         }
     }
 }
