@@ -1308,7 +1308,6 @@ namespace Server.MirObjects
 
                     acts.Add(new NPCActions(ActionType.GiveCredit, parts[1]));
                     break;
-
                 case "TAKECREDIT":
                     if (parts.Length < 2) return;
 
