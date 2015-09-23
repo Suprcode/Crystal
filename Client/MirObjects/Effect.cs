@@ -23,6 +23,8 @@ namespace Client.MirObjects
         public MapObject Owner;
 
         public int Light = 6;
+        public Color LightColour = Color.White;
+
         public bool Blend = true;
         public float Rate = 1F;
         public Point DrawLocation;
@@ -34,8 +36,6 @@ namespace Client.MirObjects
         public long CurrentDelay;
         public long Delay;
 
-        //public BuffType LinkedToBuff;
-        
         public event EventHandler Complete;
         public event EventHandler Played;
 
@@ -168,6 +168,8 @@ namespace Client.MirObjects
             Destination = target;
 
             Direction = MapControl.Direction16(Source, Destination);
+
+
         }
 
         public override void Process()

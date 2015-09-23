@@ -8326,7 +8326,7 @@ namespace Client.MirScenes
                     if (s.Width == CellWidth && s.Height == CellHeight && animation == 0) continue;
                     if ((s.Width == CellWidth * 2) && (s.Height == CellHeight * 2) && (animation == 0))
 
-                    return;
+                    continue;
                     if (blend)
                     {
                         if ((fileIndex > 99) & (fileIndex < 199))
@@ -8485,7 +8485,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
+                        DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, effect.LightColour);
                     }
 
                 }

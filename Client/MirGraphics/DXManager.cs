@@ -121,7 +121,7 @@ namespace Client.MirGraphics
             }
             CreateLights();
         }
-        //FAR - createlights
+
         private unsafe static void CreateLights()
         {
             

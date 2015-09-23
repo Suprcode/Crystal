@@ -10,7 +10,7 @@ namespace Client.MirObjects
 {
     public class Damage
     {
-        public string Damage;
+        public string Text;
         public Color Colour;
         public int Distance;
         public long ExpireTime;
@@ -18,10 +18,10 @@ namespace Client.MirObjects
 
         MirLabel DamageLabel;
 
-        public Damage(string damage, int duration, Color colour, int distance = 50)
+        public Damage(string text, int duration, Color colour, int distance = 50)
         {
             ExpireTime = (long)(CMain.Time + duration);
-            Damage = damage;
+            Text = text;
             Distance = distance;
             Factor = duration / this.Distance;
             Colour = colour;
@@ -40,7 +40,7 @@ namespace Client.MirObjects
                     ForeColour = Colour,
                     OutLine = true,
                     OutLineColour = Color.Black,
-                    Text = Damage,
+                    Text = Text,
                     Font = new Font(Settings.FontName, 10F, FontStyle.Bold)
                 };
                 DamageLabel.Disposing += label_Disposing;
@@ -48,7 +48,7 @@ namespace Client.MirObjects
                 MapObject.DamageLabelList.Add(DamageLabel);
             }
 
-            displayLocation.Offset((int)(15 - (Damage.Length * 3)), (int)(((int)((double)timeRemaining / Factor)) - Distance) - 75);
+            displayLocation.Offset((int)(15 - (Text.Length * 3)), (int)(((int)((double)timeRemaining / Factor)) - Distance) - 75);
 
             DamageLabel.Location = displayLocation;
             DamageLabel.Draw();
