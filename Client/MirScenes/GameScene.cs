@@ -593,7 +593,7 @@ namespace Client.MirScenes
 
             if(!User.HasClassWeapon && User.Weapon >= 0)
             {
-                ChatDialog.ReceiveChat("You must be wearing a suitable weapon to perform this skill", ChatType.System);
+                ChatDialog.ReceiveChat("您必须装备合适的武器来使用这个技能", ChatType.System);
                 return;
             }
 
@@ -724,13 +724,13 @@ namespace Client.MirScenes
             if (CMain.Time >= LogTime)
             {
                 //If Last Combat < 10 CANCEL
-                MirMessageBox messageBox = new MirMessageBox("Do you want to quit Legend of Mir?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox("您确定要结束游戏吗？", MirMessageBoxButtons.YesNo);
                 messageBox.YesButton.Click += (o, e) => Program.Form.Close();
                 messageBox.Show();
             }
             else
             {
-                ChatDialog.ReceiveChat("Cannot leave game for " + (LogTime - CMain.Time) / 1000 + " seconds.", ChatType.System);
+                ChatDialog.ReceiveChat("不能在 " + (LogTime - CMain.Time) / 1000 + " 秒内结束游戏.", ChatType.System);
             }
         }
         public void LogOut()
@@ -738,7 +738,7 @@ namespace Client.MirScenes
             if (CMain.Time >= LogTime)
             {
                 //If Last Combat < 10 CANCEL
-                MirMessageBox messageBox = new MirMessageBox("Do you want to log out of Legend of Mir?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox("您确定要离开游戏吗？", MirMessageBoxButtons.YesNo);
                 messageBox.YesButton.Click += (o, e) =>
                 {
                     Network.Enqueue(new C.LogOut());
@@ -748,7 +748,7 @@ namespace Client.MirScenes
             }
             else
             {
-                ChatDialog.ReceiveChat("Cannot leave game for " + (LogTime - CMain.Time) / 1000 + " seconds.", ChatType.System);
+                ChatDialog.ReceiveChat("不能在 " + (LogTime - CMain.Time) / 1000 + " 秒内离开游戏.", ChatType.System);
             }
         }
 
@@ -859,7 +859,7 @@ namespace Client.MirScenes
             if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
             {
                 ShowReviveMessage = false;
-                MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox("您的角色已死亡， 要返回城镇吗？", MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (o, e) =>
                 {
@@ -2356,7 +2356,7 @@ namespace Client.MirScenes
             
             if (quest == null) return;
 
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} would like to share a quest with you. Do you accept?", p.SharerName), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} 想要共享任务给您。您接受吗？", p.SharerName), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptQuest { NPCIndex = 0, QuestIndex = quest.Index });
 
@@ -2489,22 +2489,22 @@ namespace Client.MirScenes
             switch (p.Mode)
             {
                 case AttackMode.Peace:
-                    ChatDialog.ReceiveChat("[Attack Mode: Peaceful]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[攻击模式: 和平]", ChatType.Hint);
                     break;
                 case AttackMode.Group:
-                    ChatDialog.ReceiveChat("[Attack Mode: Group]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[攻击模式: 组队]", ChatType.Hint);
                     break;
                 case AttackMode.Guild:
-                    ChatDialog.ReceiveChat("[Attack Mode: Guild]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[攻击模式: 行会]", ChatType.Hint);
                     break;
                 case AttackMode.EnemyGuild:
-                    ChatDialog.ReceiveChat("[Attack Mode: Enemy Guild]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[攻击模式: 敌对]", ChatType.Hint);
                     break;
                 case AttackMode.RedBrown:
-                    ChatDialog.ReceiveChat("[Attack Mode: Red+Brown]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[攻击模式: 善恶]", ChatType.Hint);
                     break;
                 case AttackMode.All:
-                    ChatDialog.ReceiveChat("[Attack Mode: All]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[攻击模式: 全体]", ChatType.Hint);
                     break;
             }
         }
@@ -2515,16 +2515,16 @@ namespace Client.MirScenes
             switch (p.Mode)
             {
                 case PetMode.Both:
-                    ChatDialog.ReceiveChat("[Pet Mode: Attack and Move]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[宠物模式: 辅助]", ChatType.Hint);
                     break;
                 case PetMode.MoveOnly:
-                    ChatDialog.ReceiveChat("[Pet Mode: Do Not Attack]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[宠物模式: 跟随]", ChatType.Hint);
                     break;
                 case PetMode.AttackOnly:
-                    ChatDialog.ReceiveChat("[Pet Mode: Do Not Move]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[宠物模式: 站立]", ChatType.Hint);
                     break;
                 case PetMode.None:
-                    ChatDialog.ReceiveChat("[Pet Mode: Do Not Attack or Move]", ChatType.Hint);
+                    ChatDialog.ReceiveChat("[宠物模式: 静止]", ChatType.Hint);
                     break;
             }
 
@@ -2553,7 +2553,7 @@ namespace Client.MirScenes
             AddItem(p.Item);
             User.RefreshStats();
 
-            OutputMessage(string.Format("You gained {0}.", p.Item.FriendlyName));
+            OutputMessage(string.Format("您获得了 {0}.", p.Item.FriendlyName));
         }
         private void GainedQuestItem(S.GainedQuestItem p)
         {
@@ -2567,7 +2567,7 @@ namespace Client.MirScenes
 
             Gold += p.Gold;
             SoundManager.PlaySound(SoundList.Gold);
-            OutputMessage(string.Format("You gained {0:###,###,###} Gold.", p.Gold));
+            OutputMessage(string.Format("您获得了 {0:###,###,###} 个金币.", p.Gold));
         }
         private void LoseGold(S.LoseGold p)
         {
@@ -2784,10 +2784,10 @@ namespace Client.MirScenes
                 switch (item.Info.Type)
                 {
                     case ItemType.Mount:
-                        ChatDialog.ReceiveChat(string.Format("{0} is no longer loyal to you.", item.Info.Name), ChatType.System);
+                        ChatDialog.ReceiveChat(string.Format("{0} 不再对您忠诚了.", item.Info.Name), ChatType.System);
                         break;
                     default:
-                        ChatDialog.ReceiveChat(string.Format("{0}'s dura has dropped to 0.", item.Info.Name), ChatType.System);
+                        ChatDialog.ReceiveChat(string.Format("{0} 的忠诚度已降为0.", item.Info.Name), ChatType.System);
                         break;
                 }
                 
@@ -2924,7 +2924,7 @@ namespace Client.MirScenes
         }
         private void GainExperience(S.GainExperience p)
         {
-            OutputMessage(string.Format("Experience Gained {0}.", p.Amount));
+            OutputMessage(string.Format("获得了 {0} 经验.", p.Amount));
             MapObject.User.Experience += p.Amount;
         }
         private void LevelChanged(S.LevelChanged p)
@@ -2933,10 +2933,10 @@ namespace Client.MirScenes
             User.Experience = p.Experience;
             User.MaxExperience = p.MaxExperience;
             User.RefreshStats();
-            OutputMessage("Level Increased!");
+            OutputMessage("升级啦！");
             User.Effects.Add(new Effect(Libraries.Magic2, 1200, 20, 2000, User));
             SoundManager.PlaySound(SoundList.LevelUp);
-            ChatDialog.ReceiveChat("Congratulations! You have leveled up. Your HP and MP have been restored.", ChatType.LevelUp); 
+            ChatDialog.ReceiveChat("恭喜！您升级啦。 您的生命和魔法值获得恢复。", ChatType.LevelUp); 
         }
         private void ObjectLeveled(S.ObjectLeveled p)
         {
@@ -3617,16 +3617,16 @@ namespace Client.MirScenes
         private void DeleteGroup()
         {
             GroupDialog.GroupList.Clear();
-            ChatDialog.ReceiveChat("You have left the group.", ChatType.Group);
+            ChatDialog.ReceiveChat("您已经离开了队伍。", ChatType.Group);
         }
         private void DeleteMember(S.DeleteMember p)
         {
             GroupDialog.GroupList.Remove(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has left the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format("-{0} 离开了队伍。", p.Name), ChatType.Group);
         }
         private void GroupInvite(S.GroupInvite p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to group with {0}?", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("您想和 {0} 组队吗？", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = false });
@@ -3636,7 +3636,7 @@ namespace Client.MirScenes
         private void AddMember(S.AddMember p)
         {
             GroupDialog.GroupList.Add(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has joined the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format("-{0} 加入了队伍。", p.Name), ChatType.Group);
         }
         private void Revived()
         {
@@ -3672,11 +3672,11 @@ namespace Client.MirScenes
                     break;
                 case Spell.Thrusting:
                     Thrusting = p.CanUse;
-                    ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(Thrusting ? "使用刺杀." : "关闭刺杀.", ChatType.Hint);
                     break;
                 case Spell.HalfMoon:
                     HalfMoon = p.CanUse;
-                    ChatDialog.ReceiveChat(HalfMoon ? "Use HalfMoon." : "Do not use HalfMoon.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(HalfMoon ? "使用半月弯刀." : "关闭半月弯刀.", ChatType.Hint);
                     break;
                 case Spell.CrossHalfMoon:
                     CrossHalfMoon = p.CanUse;
@@ -3689,9 +3689,9 @@ namespace Client.MirScenes
                 case Spell.FlamingSword:
                     FlamingSword = p.CanUse;
                     if (FlamingSword)
-                        ChatDialog.ReceiveChat("Your weapon is glowed by spirit of fire.", ChatType.Hint);
+                        ChatDialog.ReceiveChat("您的武器已被附上精神火焰.", ChatType.Hint);
                     else
-                        ChatDialog.ReceiveChat("The spirits of fire disappeared.", ChatType.System);
+                        ChatDialog.ReceiveChat("精神火焰消散了.", ChatType.System);
                     break;
             }
         }
@@ -4345,7 +4345,7 @@ namespace Client.MirScenes
 
         private void GuildInvite(S.GuildInvite p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to join the {0} guild?", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("您确定加入 {0} 行会吗？", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = false });
@@ -4355,7 +4355,7 @@ namespace Client.MirScenes
 
         private void GuildNameRequest(S.GuildNameRequest p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter a guild name, length must be 3~20 characters.");
+            MirInputBox inputBox = new MirInputBox("请输入行会名称， 长度限制为3-20个字符。");
             inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
             {
                 string Allowed = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -9341,7 +9341,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 1905,
                 Sound = SoundList.ButtonA,
-                Hint = "Inventory (I)"
+                Hint = "包裹 (I)"
             };
             InventoryButton.Click += (o, e) =>
             {
@@ -9360,7 +9360,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 1902,
                 Sound = SoundList.ButtonA,
-                Hint = "Character (C)"
+                Hint = "角色信息 (C)"
             };
             CharacterButton.Click += (o, e) =>
             {
@@ -9382,7 +9382,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 1908,
                 Sound = SoundList.ButtonA,
-                Hint = "Skills (S)"
+                Hint = "技能 (S)"
             };
             SkillButton.Click += (o, e) =>
             {
@@ -9404,7 +9404,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 1911,
                 Sound = SoundList.ButtonA,
-                Hint = "Quests (Q)"
+                Hint = "任务 (Q)"
             };
             QuestButton.Click += (o, e) =>
             {
@@ -9422,7 +9422,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 1914,
                 Sound = SoundList.ButtonA,
-                Hint = "Options (O)"
+                Hint = "选项 (O)"
             };
             OptionButton.Click += (o, e) =>
             {
@@ -9440,7 +9440,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 1962,
                 Sound = SoundList.ButtonC,
-                Hint = "Menu"
+                Hint = "菜单"
             };
             MenuButton.Click += (o, e) =>
             {
@@ -9457,7 +9457,7 @@ namespace Client.MirScenes
                 Parent = this,
                 PressedIndex = 828,
                 Sound = SoundList.ButtonC,
-                Hint = "Game Shop"
+                Hint = "商城"
             };
             GameShopButton.Click += (o, e) =>
             {
@@ -9619,48 +9619,48 @@ namespace Client.MirScenes
             switch (GameScene.Scene.AMode)
             {
                 case AttackMode.Peace:
-                    AModeLabel.Text = "[Mode: Peaceful]";
+                    AModeLabel.Text = "[攻击模式: 和平]";
                     break;
                 case AttackMode.Group:
-                    AModeLabel.Text = "[Mode: Group]";
+                    AModeLabel.Text = "[攻击模式: 队伍]";
                     break;
                 case AttackMode.Guild:
-                    AModeLabel.Text = "[Mode: Guild]";
+                    AModeLabel.Text = "[攻击模式: 行会]";
                     break;
                 case AttackMode.EnemyGuild:
-                    AModeLabel.Text = "[Mode: Enemy Guild]";
+                    AModeLabel.Text = "[攻击模式: 敌对]";
                     break;
                 case AttackMode.RedBrown:
-                    AModeLabel.Text = "[Mode: Red/Brown]";
+                    AModeLabel.Text = "[攻击模式: 善恶]";
                     break;
                 case AttackMode.All:
-                    AModeLabel.Text = "[Mode: Attack All]";
+                    AModeLabel.Text = "[攻击模式: 全体]";
                     break;
             }
 
             switch (GameScene.Scene.PMode)
             {
                 case PetMode.Both:
-                    PModeLabel.Text = "[Pet: Attack and Move]";
+                    PModeLabel.Text = "[宠物模式: 辅助]";
                     break;
                 case PetMode.MoveOnly:
-                    PModeLabel.Text = "[Pet: Do Not Attack]";
+                    PModeLabel.Text = "[宠物模式: 跟随]";
                     break;
                 case PetMode.AttackOnly:
-                    PModeLabel.Text = "[Pet: Do Not Move]";
+                    PModeLabel.Text = "[宠物模式: 站立]";
                     break;
                 case PetMode.None:
-                    PModeLabel.Text = "[Pet: Do Not Attack or Move]";
+                    PModeLabel.Text = "[宠物模式: 静止]";
                     break;
             }
 
             switch(Settings.SkillMode)
             {
                 case true:
-                    SModeLabel.Text = "[Skill Mode: `]";
+                    SModeLabel.Text = "[技能模式: `]";
                     break;
                 case false:
-                    SModeLabel.Text = "[Skill Mode: Ctrl]";
+                    SModeLabel.Text = "[技能模式: Ctrl]";
                     break;
             }
 
@@ -10344,7 +10344,7 @@ namespace Client.MirScenes
                 Location = new Point(Settings.Resolution != 800 ? 574 : 350, 1),
                 Visible = true,
                 Sound = SoundList.ButtonA,
-				Hint = "Size"
+				Hint = "调整大小"
             };
             SizeButton.Click += (o, e) =>
             {
@@ -10364,7 +10364,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 596 : 372, 1),
                 Sound = SoundList.ButtonA,
-				Hint = "Chat Settings"
+				Hint = "聊天窗口设置"
             };
             SettingsButton.Click += (o, e) =>
                 {
@@ -10386,7 +10386,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(12, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "All"
+                Hint = "普通"
             };
             NormalButton.Click += (o, e) =>
             {
@@ -10402,7 +10402,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(34, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Shout"
+                Hint = "喊话"
             };
             ShoutButton.Click += (o, e) =>
             {
@@ -10418,7 +10418,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(56, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Whisper"
+                Hint = "密语"
             };
             WhisperButton.Click += (o, e) =>
             {
@@ -10434,7 +10434,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(78, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Lover"
+                Hint = "夫妻"
             };
             LoverButton.Click += (o, e) =>
             {
@@ -10450,7 +10450,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(100, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Mentor"
+                Hint = "师徒"
             };
             MentorButton.Click += (o, e) =>
             {
@@ -10466,7 +10466,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(122, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Group"
+                Hint = "队伍"
             };
             GroupButton.Click += (o, e) =>
             {
@@ -10482,7 +10482,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(144, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Guild"
+                Hint = "行会"
             };
             GuildButton.Click += (o, e) =>
             {
@@ -10716,8 +10716,8 @@ namespace Client.MirScenes
             {
                 int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
-                MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you would like to unlock 4 extra slots for {0:###,###} gold ?\n" +
-                                                    "This will take your inventory space up to {1} slots in total.", openGold, GameScene.User.Inventory.Length+4), MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(string.Format("您确定要用 {0:###,###} 个金币解锁4个包裹空格吗？\n\n" +
+                                                    "此操作后将使您的包裹拥有 {1} 个空格。", openGold, GameScene.User.Inventory.Length+4), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -10819,8 +10819,8 @@ namespace Client.MirScenes
         {
             if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
-                MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
-                    "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.", MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox("您确定要使用 1,000,000 个金币解锁8个额外包裹空格吗？\n\n" +
+                    "此操作后你可以继续使用金币解锁更多的包裹空格。", MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -12283,7 +12283,7 @@ namespace Client.MirScenes
                 Location = new Point(4, 131),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "Mail"
+                Hint = "邮箱"
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailListDialog.Toggle();
 
@@ -12306,7 +12306,7 @@ namespace Client.MirScenes
                 Location = new Point(25, 131),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "BigMap (B)"
+                Hint = "大地图 (B)"
             };
             BigMapButton.Click += (o, e) => GameScene.Scene.BigMapDialog.Toggle();
 
@@ -12319,7 +12319,7 @@ namespace Client.MirScenes
                 Location = new Point(109, 3),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "MiniMap (V)"
+                Hint = "缩放地图 (V)"
             };
             ToggleButton.Click += (o, e) => Toggle();
 
@@ -13417,7 +13417,7 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Location = new Point(3, 12),
                 PressedIndex = 1966,
-                Hint = "Exit (Alt + Q)"
+                Hint = "退出 (Alt + Q)"
             };
             ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
@@ -13429,7 +13429,7 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Location = new Point(3, 31),
                 PressedIndex = 1969,
-                Hint = "Log Out (Alt + X)"
+                Hint = "注销 (Alt + X)"
             };
             LogOutButton.Click += (o, e) => GameScene.Scene.LogOut();
 
@@ -13442,7 +13442,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 50),
-                Hint = "Help (H)"
+                Hint = "帮助 (H)"
             };
             HelpButton.Click += (o, e) =>
             {
@@ -13508,7 +13508,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse2,
                 Location = new Point(3, 126),
-                Hint = "Creatures (E)"
+                Hint = "宠物 (E)"
             };
             IntelligentCreatureButton.Click += (o, e) =>
             {
@@ -13524,7 +13524,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 145),
-                Hint = "Mount (J)"
+                Hint = "坐骑 (J)"
             };
             RideButton.Click += (o, e) =>
             {
@@ -13541,7 +13541,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 164),
-                Hint = "Fishing (N)"
+                Hint = "钓鱼 (N)"
             };
             FishingButton.Click += (o, e) =>
             {
@@ -13559,7 +13559,7 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
                 Visible = true,
-                Hint = "Friends (F)"
+                Hint = "朋友 (F)"
             };
             FriendButton.Click += (o, e) =>
             {
@@ -13577,7 +13577,7 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Location = new Point(3, 202),
                 Visible = true,
-                Hint = "Mentor (W)"
+                Hint = "师徒 (W)"
             };
             MentorButton.Click += (o, e) =>
             {
@@ -13596,7 +13596,7 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
                 Visible = true,
-                Hint = "Relationship (L)"
+                Hint = "婚姻 (L)"
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -13613,7 +13613,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 240),
-                Hint = "Groups (P)"
+                Hint = "队伍 (P)"
             };
             GroupButton.Click += (o, e) =>
             {
@@ -13630,7 +13630,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 259),
-                Hint = "Guild (G)"
+                Hint = "行会 (G)"
             };
             GuildButton.Click += (o, e) =>
             {
@@ -14221,19 +14221,19 @@ namespace Client.MirScenes
             {
                 if (SelectedItem.Price() > GameScene.User.PearlCount)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你没有足够的珍珠.", ChatType.System);
                     return;
                 }
             }
             else if (SelectedItem.Price() > GameScene.Gold)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("你没有足够的金币.", ChatType.System);
                 return;
             }
 
             if (SelectedItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("Your bag is over weight.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("已超出包裹的容量限制.", ChatType.System);
                 return;
             }
 
@@ -14242,7 +14242,7 @@ namespace Client.MirScenes
                 if (MapObject.User.Inventory[i] == null) break;
                 if (i == MapObject.User.Inventory.Length - 1)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Not enough space in your inventory.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("包裹中已没有多余的空间.", ChatType.System);
                     return;
                 }
             }
@@ -14434,7 +14434,7 @@ namespace Client.MirScenes
                 case PanelType.Sell:
                     if (TargetItem.Info.Bind.HasFlag(BindMode.DontSell))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot sell this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("不能交易这件物品.", ChatType.System);
                         return;
                     }
                     if (GameScene.Gold + TargetItem.Price() / 2 <= uint.MaxValue)
@@ -14443,12 +14443,12 @@ namespace Client.MirScenes
                         TargetItem = null;
                         return;
                     }
-                    GameScene.Scene.ChatDialog.ReceiveChat("Cannot carry anymore gold.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("无法携带更多的金币.", ChatType.System);
                     break;
                 case PanelType.Repair:
                     if (TargetItem.Info.Bind.HasFlag(BindMode.DontRepair))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot repair this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("无法修复此物品.", ChatType.System);
                         return;
                     }
                     if (GameScene.Gold >= TargetItem.RepairPrice() * GameScene.NPCRate)
@@ -14457,12 +14457,12 @@ namespace Client.MirScenes
                         TargetItem = null;
                         return;
                     }
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你没有足够的金币.", ChatType.System);
                     break;
                 case PanelType.SpecialRepair:
                     if ((TargetItem.Info.Bind.HasFlag(BindMode.DontRepair)) || (TargetItem.Info.Bind.HasFlag(BindMode.NoSRepair)))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot repair this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("不能修复此物品.", ChatType.System);
                         return;
                     }
                     if (GameScene.Gold >= (TargetItem.RepairPrice() * 3) * GameScene.NPCRate)
@@ -14471,15 +14471,15 @@ namespace Client.MirScenes
                         TargetItem = null;
                         return;
                     }
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你没有足够的金币.", ChatType.System);
                     break;
                 case PanelType.Consign:
                     if (TargetItem.Info.Bind.HasFlag(BindMode.DontStore))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot store this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("不能保存这件物品.", ChatType.System);
                         return;
                     }
-                    MirAmountBox box = new MirAmountBox("Consignment Price:", TargetItem.Image, Globals.MaxConsignment, Globals.MinConsignment)
+                    MirAmountBox box = new MirAmountBox("托运价格:", TargetItem.Image, Globals.MaxConsignment, Globals.MinConsignment)
                     {
                         InputTextBox = { Text = string.Empty },
                         Amount = 0
@@ -14956,7 +14956,7 @@ namespace Client.MirScenes
 
             if (Items[0] == null)
             {
-                SelectAwakeType.Items.Add("Select Upgrade Item.");
+                SelectAwakeType.Items.Add("选择升级物品.");
                 SelectAwakeType.SelectedIndex = SelectAwakeType.Items.Count-1;
                 CurrentAwakeType = AwakeType.None;
             }
@@ -19641,7 +19641,7 @@ namespace Client.MirScenes
                 HoverIndex = 2111,
                 PressedIndex = 2112,
                 Sound = SoundList.ButtonA,
-                Hint = "Dura Panel"
+                Hint = "装备耗损"
             };
             Character.Click += (o, e) =>
             {

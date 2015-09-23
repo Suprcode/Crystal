@@ -1,6 +1,5 @@
 D:\Mir 2\Client\Client.exe.config
 D:\Mir 2\Client\Client.exe
-D:\Mir2-Source\Client\obj\Release\Client.csprojResolveAssemblyReference.cache
 D:\Mir2-Source\Client\obj\Release\Launcher.AMain.resources
 D:\Mir2-Source\Client\obj\Release\Client.CMain.resources
 D:\Mir2-Source\Client\obj\Release\Launcher.Config.resources

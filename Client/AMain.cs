@@ -61,7 +61,7 @@ namespace Launcher
             }
             else
             {
-                MessageBox.Show("Could not get Patch Information.");
+                MessageBox.Show("无法获取更新信息...");
                 Completed = true;
                 return;
             }

@@ -208,19 +208,19 @@ namespace Client.MirControls
             switch (p.Reason)
             {
                 case 0:
-                    MirMessageBox.Show("Disconnected: Server is shutting down.", true);
+                    MirMessageBox.Show("失去连接: 服务器关闭.", true);
                     break;
                 case 1:
-                    MirMessageBox.Show("Disconnected: Another user logged onto your account.", true);
+                    MirMessageBox.Show("失去连接: 您的账户在其它地方登陆.", true);
                     break;
                 case 2:
-                    MirMessageBox.Show("Disconnected: Packet Error.", true);
+                    MirMessageBox.Show("失去连接: 发送数据包错误.", true);
                     break;
                 case 3:
-                    MirMessageBox.Show("Disconnected: Server Crashed.", true);
+                    MirMessageBox.Show("失去连接: 服务器宕机.", true);
                     break;
                 case 4:
-                    MirMessageBox.Show("Disconnected: Kicked by Admin.", true);
+                    MirMessageBox.Show("失去连接: 被管理员强制下线.", true);
                     break;
             }
 

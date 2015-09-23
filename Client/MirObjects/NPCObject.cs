@@ -218,6 +218,8 @@ namespace Client.MirObjects
                 case 150:
                 case 156:
                 case 157:
+                case 195:
+                case 196:
                     Frames = FrameSet.NPCs[6];
                     CanChangeDir = false;
                     break;

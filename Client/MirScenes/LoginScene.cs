@@ -40,7 +40,7 @@ namespace Client.MirScenes
             _background = new MirAnimatedControl
                 {
                     Animated = false,
-                    AnimationCount = 19,
+                    AnimationCount = 10,
                     AnimationDelay = 100,
                     Index = 0,
                     Library = Libraries.ChrSel,
@@ -79,7 +79,7 @@ namespace Client.MirScenes
                     BorderColour = Color.Black,
                     Location = new Point(5, 580),
                     Parent = _background,
-                    Text = string.Format("Version: {0}", Application.ProductVersion),
+                    Text = string.Format("版本号: {0}", Application.ProductVersion),
                 };
 
 
@@ -158,7 +158,7 @@ namespace Client.MirScenes
 
         private  void SendVersion()
         {
-            _connectBox.Label.Text = "Sending Client Version.";
+            _connectBox.Label.Text = "正在发送客户端版本...";
 
             C.ClientVersion p = new C.ClientVersion();
             try
@@ -180,7 +180,7 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show("Wrong version, please update your game.\nGame will now Close", true);
+                    MirMessageBox.Show("错误的客户端版本, 请更新您的游戏.\n游戏即将关闭", true);
 
                     Network.Disconnect();
                     break;
@@ -196,40 +196,40 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show("Account creation is currently disabled.");
+                    MirMessageBox.Show("服务器当前禁止创建新账户.");
                     _account.Dispose();
                     break;
                 case 1:
-                    MirMessageBox.Show("Your AccountID is not acceptable.");
+                    MirMessageBox.Show("请按要求输入用户名.");
                     _account.AccountIDTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show("Your Password is not acceptable.");
+                    MirMessageBox.Show("请按要求设置密码.");
                     _account.Password1TextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show("Your E-Mail Address is not acceptable.");
+                    MirMessageBox.Show("请按要求输入邮箱地址.");
                     _account.EMailTextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show("Your User Name is not acceptable.");
+                    MirMessageBox.Show("您输入的姓名不符合规则.");
                     _account.UserNameTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show("Your Secret Question is not acceptable.");
+                    MirMessageBox.Show("请按要求输入密码提示问题.");
                     _account.QuestionTextBox.SetFocus();
                     break;
                 case 6:
-                    MirMessageBox.Show("Your Secret Answer is not acceptable.");
+                    MirMessageBox.Show("请按要求输入密码提示答案.");
                     _account.AnswerTextBox.SetFocus();
                     break;
                 case 7:
-                    MirMessageBox.Show("An Account with this ID already exists.");
+                    MirMessageBox.Show("您输入的用户名已经存在.");
                     _account.AccountIDTextBox.Text = string.Empty;
                     _account.AccountIDTextBox.SetFocus();
                     break;
                 case 8:
-                    MirMessageBox.Show("Your account was created successfully.");
+                    MirMessageBox.Show("您的账户创建成功.");
                     _account.Dispose();
                     break;
             }

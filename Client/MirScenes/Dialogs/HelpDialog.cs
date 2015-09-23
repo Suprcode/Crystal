@@ -246,9 +246,9 @@ namespace Client.MirScenes.Dialogs
         public ShortcutPage2()
         {
             Shortcuts = new List<ShortcutInfo>();
-            Shortcuts.Add(new ShortcutInfo("Ctrl + A", "Tooggle pet attack pet"));
+            Shortcuts.Add(new ShortcutInfo("Ctrl + A", "切换宠物攻击模式"));
             Shortcuts.Add(new ShortcutInfo("Ctrl + F", "Change the font in the chat box"));
-            Shortcuts.Add(new ShortcutInfo("Ctrl + H", "Toggle player attack mode"));
+            Shortcuts.Add(new ShortcutInfo("Ctrl + H", "切换玩家攻击模式"));
             Shortcuts.Add(new ShortcutInfo("", "Peace Mode - Attack monsters only"));
             Shortcuts.Add(new ShortcutInfo("", "Group Mode - Attack all subjects except your group members"));
             Shortcuts.Add(new ShortcutInfo("", "Guild Mode - Attack all subjects except your guild members"));

@@ -25,3 +25,4 @@ D:\Mir2-Source\Server\obj\Release\Server.Properties.Resources.resources
 D:\Mir2-Source\Server\obj\Release\Server.csproj.GenerateResource.Cache
 D:\Mir2-Source\Server\obj\Release\Server.exe
 D:\Mir2-Source\Server\obj\Release\Server.pdb
+D:\Mir2-Source\Server\obj\Release\Server.csprojResolveAssemblyReference.cache

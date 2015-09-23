@@ -130,7 +130,7 @@ namespace Client.MirScenes.Dialogs
             };
             SendButton.Click += (o, e) =>
                 {
-                    MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to mail.");
+                    MirInputBox inputBox = new MirInputBox("您想要发送邮件给谁?");
 
                     inputBox.OKButton.Click += (o1, e1) =>
                     {
@@ -203,7 +203,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (SelectedMail.Items.Count > 0 || SelectedMail.Gold > 0)
                 {
-                    MirMessageBox messageBox = new MirMessageBox("This parcel contains items or gold. Are you sure you want to delete it?", MirMessageBoxButtons.YesNo);
+                    MirMessageBox messageBox = new MirMessageBox("这封邮件包含金币或者物品. 您确定要删除吗?", MirMessageBoxButtons.YesNo);
 
                     messageBox.YesButton.Click += (o1, e1) =>
                     {

@@ -1756,7 +1756,7 @@ namespace Server.MirObjects
         {
             Connection.Stage = GameStage.Game;
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-            ReceiveChat("Welcome to the Legend of Mir 2 Crystal Server.", ChatType.Hint);
+            ReceiveChat("欢迎进入怀旧传奇服务器.", ChatType.Hint);
 
             if (Settings.TestServer)
             {
