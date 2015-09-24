@@ -1045,6 +1045,9 @@ namespace Server.MirObjects
                 case DelayedType.Poison:
                     CompletePoison(action.Params);
                     break;
+                case DelayedType.DamageIndicator:
+                    CompleteDamageIndicator(action.Params);
+                    break;
             }
         }
 
@@ -5022,6 +5025,13 @@ namespace Server.MirObjects
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, target, damage, DefenceType.ACAgility, true);
                     ActionList.Add(action);
                 }
+                else
+                {
+                    int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500 + 50; //50 MS per Step
+
+                    DelayedAction action = new DelayedAction(DelayedType.DamageIndicator, Envir.Time + delay, target, DamageType.Miss);
+                    ActionList.Add(action);
+                }
             }
             else
                 targetID = 0;
@@ -8425,6 +8435,16 @@ namespace Server.MirObjects
                 }
             }
         }
+        private void CompleteDamageIndicator(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            DamageType type = (DamageType)data[1];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.BroadcastDamageIndicator(type);
+        }
+
         private void CompleteNPC(IList<object> data)
         {
             uint npcid = (uint)data[0];
@@ -9026,23 +9046,43 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)) return 0;
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist))
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)) return 0;
+                    if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist))
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     break;
             }
 
@@ -9078,7 +9118,11 @@ namespace Server.MirObjects
             if (ElementalBarrier)
                 damage -= damage * (ElementalBarrierLv + 1) / 10;
 
-            if (armour >= damage) return 0;
+            if (armour >= damage)
+            {
+                BroadcastDamageIndicator(DamageType.Miss);
+                return 0;
+            }
 
             MagicShieldTime -= (damage - armour) * 60;
 
@@ -9136,6 +9180,8 @@ namespace Server.MirObjects
             Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
+            BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+
             ChangeHP(armour - damage);
             return damage - armour;
         }
@@ -9172,23 +9218,42 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist) return 0;
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        return 0;
+                    }
                     armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist) return 0;
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     break;
             }
 
@@ -9208,7 +9273,11 @@ namespace Server.MirObjects
             if (ElementalBarrier)
                 damage -= damage * (ElementalBarrierLv + 1) / 10;
 
-            if (armour >= damage) return 0;
+            if (armour >= damage)
+            {
+                BroadcastDamageIndicator(DamageType.Miss);
+                return 0;
+            }
 
             MagicShieldTime -= (damage - armour) * 60;
 
@@ -9227,7 +9296,9 @@ namespace Server.MirObjects
 
             Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
-            //
+
+            BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+
             ChangeHP(armour - damage);
             return damage - armour;
         }

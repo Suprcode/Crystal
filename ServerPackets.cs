@@ -1970,6 +1970,33 @@ namespace ServerPackets
             writer.Write((byte)Direction);
         }
     }
+
+    public sealed class DamageIndicator : Packet
+    {
+        public int Damage;
+        public DamageType Type;
+        public uint ObjectID;
+
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.DamageIndicator; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Damage = reader.ReadInt32();
+            Type = (DamageType)reader.ReadByte();
+            ObjectID = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Damage);
+            writer.Write((byte)Type);
+            writer.Write(ObjectID);
+        }
+    }
+
     public sealed class DuraChanged : Packet
     {
         public override short Index

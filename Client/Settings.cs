@@ -114,7 +114,8 @@ namespace Client
             DropView = true,
             NameView = true,
             HPView = true,
-            TransparentChat = false;
+            TransparentChat = false,
+            DisplayDamage = true;
 
 
         //Chat
@@ -195,6 +196,7 @@ namespace Client
             HPView = Reader.ReadBoolean("Game", "HPMPView", HPView);
             FontName = Reader.ReadString("Game", "FontName", FontName);
             TransparentChat = Reader.ReadBoolean("Game", "TransparentChat", TransparentChat);
+            DisplayDamage = Reader.ReadBoolean("Game", "DisplayDamage", DisplayDamage);
 
             //Chat
             ShowNormalChat = Reader.ReadBoolean("Chat", "ShowNormalChat", ShowNormalChat);
@@ -257,6 +259,7 @@ namespace Client
             Reader.Write("Game", "HPMPView", HPView);
             Reader.Write("Game", "FontName", FontName);
             Reader.Write("Game", "TransparentChat", TransparentChat);
+            Reader.Write("Game", "DisplayDamage", DisplayDamage);
 
             //Chat
             Reader.Write("Chat", "ShowNormalChat", ShowNormalChat);

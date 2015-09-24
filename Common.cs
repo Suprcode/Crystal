@@ -7,6 +7,12 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 
+public enum DamageType : byte
+{
+    Hit = 0,
+    Miss = 1,
+}
+
 [Flags]
 public enum GMOptions : byte
 {
@@ -1183,6 +1189,7 @@ public enum ServerPacketIds : short
     ObjectAttack,
     Struck,
     ObjectStruck,
+    DamageIndicator,
     DuraChanged,
     HealthChanged,
     DeleteItem,
@@ -2720,6 +2727,8 @@ public class UserItem
 
     public DateTime BuybackExpiryDate;
 
+    public ExpiryInfo ExpiryInfo;
+
 	public Awake Awake = new Awake();
     public bool IsAdded
     {
@@ -3080,6 +3089,36 @@ public class UserItem
             };
 
         return item;
+    }
+
+}
+
+public class ExpiryInfo
+{
+    public DateTime ExpiryDate;
+    public int PlayerReturnIndex = -1;
+
+    public ExpiryInfo(string itemName)
+    {
+        //regex the item name in square brackets to get the expiry date when set
+        //Can override date if needed
+
+        /*
+         * 7h
+         * 5d
+         * 2m
+         * 1y
+         * 
+        */
+
+        Regex r = new Regex(@"\[(.*?)\]");
+
+        Match match = r.Match(itemName);
+
+        if (match.Success)
+        {
+            string expiryMatch = match.Groups[1].Captures[0].Value;
+        }
     }
 }
 
@@ -4439,6 +4478,8 @@ public abstract class Packet
                 return new S.ObjectAttack();
             case (short)ServerPacketIds.Struck:
                 return new S.Struck();
+            case (short)ServerPacketIds.DamageIndicator:
+                return new S.DamageIndicator();
             case (short)ServerPacketIds.ObjectStruck:
                 return new S.ObjectStruck();
             case (short)ServerPacketIds.DuraChanged:

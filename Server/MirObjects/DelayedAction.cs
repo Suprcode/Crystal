@@ -15,6 +15,7 @@ namespace Server.MirObjects
         Mine,
         NPC,
         Poison,
+        DamageIndicator
     }
 
     public class DelayedAction

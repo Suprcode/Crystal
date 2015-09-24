@@ -3425,7 +3425,7 @@ namespace Client.MirObjects
         }
 
 
-        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip)
+        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, Color? lightColour = null)
         {
             MapObject ob = MapControl.GetObject(TargetID);
 
@@ -3434,13 +3434,15 @@ namespace Client.MirObjects
             int duration = Functions.MaxDistance(CurrentLocation, TargetPoint) * 50;
 
 
-            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, TargetPoint)
+            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, TargetPoint, true)
             {
                 Target = ob,
                 Interval = interval,
                 FrameCount = count,
                 Blend = blend,
-                Skip = skip
+                Skip = skip,
+                Light = lightDistance,
+                LightColour = lightColour == null ? Color.White : (Color)lightColour
             };
 
             Effects.Add(missile);
