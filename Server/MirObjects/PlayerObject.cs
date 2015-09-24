@@ -2162,6 +2162,12 @@ namespace Server.MirObjects
                             if ((obSpell.Spell != Spell.ExplosiveTrap) || (IsFriendlyTarget(obSpell.Caster)))
                                 Enqueue(ob.GetInfo());
                         }
+                        else if (ob.Race == ObjectType.Merchant)
+                        {
+                            NPCObject NPC = (NPCObject)ob;
+
+                            if (NPC.Visible) Enqueue(ob.GetInfo());
+                        }
                         else
                         {
                             Enqueue(ob.GetInfo());
@@ -3216,6 +3222,7 @@ namespace Server.MirObjects
             }
             else if (message.StartsWith("@"))
             {
+                
                 //Command
                 message = message.Remove(0, 1);
                 parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -3909,7 +3916,9 @@ namespace Server.MirObjects
                         player.GainCredit(count);
                         SMain.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
                         break;
-
+                    case "NPCHIDE":
+                        SMain.Envir.TestNPC = !SMain.Envir.TestNPC;
+                        break;
                     case "GIVESKILL":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
@@ -4799,8 +4808,8 @@ namespace Server.MirObjects
                     for (int i = 0; i < cell.Objects.Count; i++)
                     {
                         MapObject ob = cell.Objects[i];
-                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
+                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
                         Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                         return;
                     }

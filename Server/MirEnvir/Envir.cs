@@ -66,6 +66,8 @@ namespace Server.MirEnvir
         public static int LoadVersion;
         public static int LoadCustomVersion;
 
+        public bool TestNPC = false;
+
         private readonly DateTime _startTime = DateTime.Now;
         public readonly Stopwatch Stopwatch = Stopwatch.StartNew();
 
@@ -169,7 +171,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long dayTime, warTime, mailTime, guildTime;
+        private long dayTime, warTime, mailTime, guildTime, npcTime;
 
         private bool MagicExists(Spell spell)
         {
@@ -687,6 +689,26 @@ namespace Server.MirEnvir
                     GuildList[i].Process();
                 }
             }
+
+            //if (Time >= npcTime)
+            //{
+                //npcTime = Time + (Settings.Minute);
+                for (int i = 0; i < MapList.Count; i++)
+                {
+                    for (int f = 0; f < MapList[i].NPCs.Count; f++)
+                    {
+                        //if (MapList[i].NPCs[f].Info.Image == 7 && DateTime.Now.Minute >= 45 && DateTime.Now.Minute <= 47 && MapList[i].NPCs[f].Visible)
+                        //{
+                            if (TestNPC && MapList[i].NPCs[f].Visible) MapList[i].NPCs[f].Hide(MapList[i].NPCs[f], i);
+                            else if (!TestNPC && !MapList[i].NPCs[f].Visible) MapList[i].NPCs[f].Show(MapList[i].NPCs[f], i);
+                       //}
+                        //else if (MapList[i].NPCs[f].Info.Image == 7 && DateTime.Now.Minute >= 48 && DateTime.Now.Minute <= 44 && !MapList[i].NPCs[f].Visible)
+                        //{
+                            //MapList[i].NPCs[f].Show(MapList[i].NPCs[f], i);
+                        //}
+                    }
+                }
+            //}
         }
 
         public void Broadcast(Packet p)

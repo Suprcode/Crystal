@@ -85,6 +85,7 @@ namespace Server.MirObjects
 
         public bool CoolEye;
         private bool _hidden;
+        
         public bool Hidden
         {
             get

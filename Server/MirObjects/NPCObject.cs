@@ -60,6 +60,7 @@ namespace Server.MirObjects
         private const long TurnDelay = 10000;
         public long TurnTime, UsedGoodsTime;
         public bool NeedSave;
+        public bool Visible = true;
 
         public List<UserItem> Goods = new List<UserItem>();
         public List<UserItem> UsedGoods = new List<UserItem>();
@@ -69,6 +70,8 @@ namespace Server.MirObjects
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<QuestInfo> Quests = new List<QuestInfo>();
 
+        public Dictionary<int, bool> VisibleLog = new Dictionary<int, bool>();
+
         public static List<string> Args = new List<string>();
 
         #region Overrides
@@ -76,6 +79,13 @@ namespace Server.MirObjects
         {
             get { return Info.Name; }
             set { throw new NotSupportedException(); }
+        }
+
+        public override bool Blocking
+        {
+            get { return Visible; }
+
+            //get { return true; }
         }
 
         public override int CurrentMapIndex { get; set; }
@@ -713,6 +723,18 @@ namespace Server.MirObjects
             Direction = dir;
 
             Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+        }
+
+        public void Hide(NPCObject NPC, int i)
+        {
+            NPC.CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = NPC.ObjectID }, NPC.CurrentLocation);
+            Visible = false;
+        }
+
+        public void Show(NPCObject NPC, int i)
+        {
+            NPC.CurrentMap.Broadcast(new S.ObjectNPC { Name = NPC.Name, Direction = NPC.Direction, Image = NPC.Info.Image, Location = NPC.CurrentLocation, NameColour = NPC.NameColour, ObjectID = NPC.ObjectID, QuestIDs = NPC.Info.CollectQuestIndexes }, NPC.CurrentLocation);
+            Visible = true;
         }
 
         public override Packet GetInfo()
@@ -3037,6 +3059,7 @@ namespace Server.MirObjects
 
             return key;
         }
+
         public string ReplaceValue(PlayerObject player, string param)
         {
             var regex = new Regex(@"\<\$(.*?)\>");
