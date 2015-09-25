@@ -1068,7 +1068,7 @@ namespace Client.MirScenes.Dialogs
 
             SenderNameLabel.Text = Mail.SenderName;
             DateSentLabel.Text = Mail.DateSent.ToString("dd/MM/yy H:mm:ss");
-            MessageLabel.Text = Mail.Message;
+            MessageLabel.Text = Mail.Message.Replace("\\r\\n", "\r\n");
 
             Visible = true;
         }
@@ -1191,7 +1191,7 @@ namespace Client.MirScenes.Dialogs
 
             SenderNameLabel.Text = Mail.SenderName;
             DateSentLabel.Text = Mail.DateSent.ToString("dd/MM/yy H:mm:ss");
-            MessageLabel.Text = Mail.Message;
+            MessageLabel.Text = Mail.Message.Replace("\\r\\n", "\r\n");
             GoldSendLabel.Text = Mail.Gold.ToString("###,###,##0");
 
             if (Mail.Items.Count > 0)

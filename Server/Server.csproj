@@ -99,6 +99,12 @@
     <Compile Include="MirForms\BalanceConfigForm.Designer.cs">
       <DependentUpon>BalanceConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MirForms\Database\GameShop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Database\GameShop.designer.cs">
+      <DependentUpon>GameShop.cs</DependentUpon>
+    </Compile>
     <Compile Include="MirForms\Database\MagicInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -245,6 +251,7 @@
     <Compile Include="MirObjects\Monsters\HedgeKekTal.cs" />
     <Compile Include="MirObjects\Monsters\GreatFoxSpirit.cs" />
     <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
+    <Compile Include="MirObjects\Monsters\Runaway.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
     <Compile Include="MirObjects\Monsters\ThunderElement.cs" />
@@ -337,6 +344,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Database\GameShop.resx">
+      <DependentUpon>GameShop.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>

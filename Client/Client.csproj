@@ -37,11 +37,14 @@
     <OutputPath>..\..\Client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -139,6 +142,7 @@
     <Compile Include="Config.designer.cs">
       <DependentUpon>Config.cs</DependentUpon>
     </Compile>
+    <Compile Include="MirControls\MirGameShopCell.cs" />
     <Compile Include="MirControls\MirAmountBox.cs" />
     <Compile Include="MirControls\MirAnimatedButton.cs" />
     <Compile Include="MirControls\MirAnimatedControl.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="MirControls\MirTextBox.cs" />
     <Compile Include="MirGraphics\DXManager.cs" />
     <Compile Include="MirGraphics\MLibrary.cs" />
+    <Compile Include="MirObjects\Damage.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\Effect.cs" />
     <Compile Include="MirObjects\Frames.cs" />

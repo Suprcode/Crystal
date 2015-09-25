@@ -64,6 +64,9 @@ namespace Client.MirObjects
 
         public MirLabel TempLabel;
 
+        public static List<MirLabel> DamageLabelList = new List<MirLabel>();
+        public List<Damage> Damages = new List<Damage>();
+
         protected MapObject(uint objectID)
         {
             ObjectID = objectID;
@@ -276,6 +279,21 @@ namespace Client.MirObjects
             Draw();
             DXManager.SetBlend(false);
         }
+        public void DrawDamages()
+        {
+            for (int i = Damages.Count - 1; i >= 0; i--)
+            {
+                Damage info = Damages[i];
+                if (CMain.Time > info.ExpireTime)
+                {
+                    Damages.RemoveAt(i);
+                }
+                else
+                {
+                    info.Draw(DisplayRectangle.Location);
+                }
+            }
+        }
         public void DrawHealth()
         {
             string name = Name;
@@ -370,4 +388,5 @@ namespace Client.MirObjects
         public abstract void DrawEffects();
 
     }
+
 }

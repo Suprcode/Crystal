@@ -153,6 +153,7 @@ namespace Server.MirObjects
 
         public void ProcessAnimVariant()
         {
+            
             if (Envir.Time > animvariantTicker)
             {
                 animvariantTicker = Envir.Time + animvariantDelay;

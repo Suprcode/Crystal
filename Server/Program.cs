@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Server
@@ -13,15 +14,22 @@ namespace Server
         {
             Packet.IsServer = true;
 
-            Settings.Load();
-            //Resource.Load();
+            try
+            {
+                Settings.Load();
+                //Resource.Load();
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SMain());
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new SMain());
 
-            Settings.Save();
-
+                Settings.Save();
+            }
+            catch(Exception ex)
+            {
+                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+            }
         }
     }
 }

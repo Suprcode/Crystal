@@ -7,6 +7,12 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 
+public enum DamageType : byte
+{
+    Hit = 0,
+    Miss = 1,
+}
+
 [Flags]
 public enum GMOptions : byte
 {
@@ -1177,10 +1183,13 @@ public enum ServerPacketIds : short
     GainedItem,
     GainedGold,
     LoseGold,
+    GainedCredit,
+    LoseCredit,
     ObjectMonster,
     ObjectAttack,
     Struck,
     ObjectStruck,
+    DamageIndicator,
     DuraChanged,
     HealthChanged,
     DeleteItem,
@@ -1333,7 +1342,10 @@ public enum ServerPacketIds : short
     FriendUpdate,
     LoverUpdate,
     MentorUpdate,
-    GuildBuffList
+    GuildBuffList,
+    NPCRequestInput,
+    GameShopInfo,
+    GameShopStock,
 }
 
 public enum ClientPacketIds : short
@@ -1457,7 +1469,9 @@ public enum ClientPacketIds : short
     RemoveFriend,
     RefreshFriends,
     AddMemo,
-    GuildBuffUpdate
+    GuildBuffUpdate,
+    NPCConfirmInput,
+    GameshopBuy,
 }
 
 public class InIReader
@@ -2713,6 +2727,8 @@ public class UserItem
 
     public DateTime BuybackExpiryDate;
 
+    public ExpiryInfo ExpiryInfo;
+
 	public Awake Awake = new Awake();
     public bool IsAdded
     {
@@ -3074,6 +3090,90 @@ public class UserItem
 
         return item;
     }
+
+}
+
+public class ExpiryInfo
+{
+    public DateTime ExpiryDate;
+    public int PlayerReturnIndex = -1;
+}
+
+public class GameShopItem
+{
+    public int ItemIndex;
+    public int GIndex;
+    public ItemInfo Info;
+    public uint GoldPrice = 0;
+    public uint CreditPrice = 0;
+    public uint Count = 1;
+    public string Class = "";
+    public string Category = "";
+    public int Stock = 0;
+    public bool iStock = false;
+    public bool Deal = false;
+    public bool TopItem = false;
+    public DateTime Date;
+    
+    public GameShopItem()
+    {
+    }
+
+    public GameShopItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    {
+        ItemIndex = reader.ReadInt32();
+        GIndex = reader.ReadInt32();
+        GoldPrice = reader.ReadUInt32();
+        CreditPrice = reader.ReadUInt32();
+        Count = reader.ReadUInt32();
+        Class = reader.ReadString();
+        Category = reader.ReadString();
+        Stock = reader.ReadInt32();
+        iStock = reader.ReadBoolean();
+        Deal = reader.ReadBoolean();
+        TopItem = reader.ReadBoolean();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public GameShopItem(BinaryReader reader, bool packet = false)
+    {
+        ItemIndex = reader.ReadInt32();
+        GIndex = reader.ReadInt32();
+        Info = new ItemInfo(reader);
+        GoldPrice = reader.ReadUInt32();
+        CreditPrice = reader.ReadUInt32();
+        Count = reader.ReadUInt32();
+        Class = reader.ReadString();
+        Category = reader.ReadString();
+        Stock = reader.ReadInt32();
+        iStock = reader.ReadBoolean();
+        Deal = reader.ReadBoolean();
+        TopItem = reader.ReadBoolean();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer, bool packet = false)
+    {
+        writer.Write(ItemIndex);
+        writer.Write(GIndex);
+        if (packet) Info.Save(writer);
+        writer.Write(GoldPrice);
+        writer.Write(CreditPrice);
+        writer.Write(Count);
+        writer.Write(Class);
+        writer.Write(Category);
+        writer.Write(Stock);
+        writer.Write(iStock);
+        writer.Write(Deal);
+        writer.Write(TopItem);
+        writer.Write(Date.ToBinary());
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}: {1}", GIndex, Info.FriendlyName);
+    }
+
 }
 
 public class Awake
@@ -3403,6 +3503,7 @@ public class ClientQuestInfo
 
     public uint RewardGold;
     public uint RewardExp;
+    public uint RewardCredit;
     public List<QuestItemReward> RewardsFixedItem = new List<QuestItemReward>();
     public List<QuestItemReward> RewardsSelectItem = new List<QuestItemReward>();
 
@@ -3441,6 +3542,7 @@ public class ClientQuestInfo
         Type = (QuestType)reader.ReadByte();
         RewardGold = reader.ReadUInt32();
         RewardExp = reader.ReadUInt32();
+        RewardCredit = reader.ReadUInt32();
 
         count = reader.ReadInt32();
 
@@ -3480,6 +3582,7 @@ public class ClientQuestInfo
         writer.Write((byte)Type);
         writer.Write(RewardGold);
         writer.Write(RewardExp);
+        writer.Write(RewardCredit);
 
         writer.Write(RewardsFixedItem.Count);
 
@@ -4221,6 +4324,10 @@ public abstract class Packet
                 return new C.AddMemo();
             case (short)ClientPacketIds.GuildBuffUpdate:
                 return new C.GuildBuffUpdate();
+            case (short)ClientPacketIds.GameshopBuy:
+                return new C.GameshopBuy();
+            case (short)ClientPacketIds.NPCConfirmInput:
+                return new C.NPCConfirmInput();
             default:
                 throw new NotImplementedException();
         }
@@ -4338,12 +4445,18 @@ public abstract class Packet
                 return new S.GainedGold();
             case (short)ServerPacketIds.LoseGold:
                 return new S.LoseGold();
+            case (short)ServerPacketIds.GainedCredit:
+                return new S.GainedCredit();
+            case (short)ServerPacketIds.LoseCredit:
+                return new S.LoseCredit();
             case (short)ServerPacketIds.ObjectMonster:
                 return new S.ObjectMonster();
             case (short)ServerPacketIds.ObjectAttack:
                 return new S.ObjectAttack();
             case (short)ServerPacketIds.Struck:
                 return new S.Struck();
+            case (short)ServerPacketIds.DamageIndicator:
+                return new S.DamageIndicator();
             case (short)ServerPacketIds.ObjectStruck:
                 return new S.ObjectStruck();
             case (short)ServerPacketIds.DuraChanged:
@@ -4646,6 +4759,12 @@ public abstract class Packet
                 return new S.MentorUpdate();
             case (short)ServerPacketIds.GuildBuffList:
                 return new S.GuildBuffList();
+            case (short)ServerPacketIds.GameShopInfo:
+                return new S.GameShopInfo();
+            case (short)ServerPacketIds.GameShopStock:
+                return new S.GameShopStock();
+            case (short)ServerPacketIds.NPCRequestInput:
+                return new S.NPCRequestInput();
             default:
                 throw new NotImplementedException();
         }

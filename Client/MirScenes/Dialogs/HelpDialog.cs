@@ -58,6 +58,8 @@ namespace Client.MirScenes.Dialogs
             {
                 CurrentPageNumber--;
 
+                if (CurrentPageNumber < 0) CurrentPageNumber = Pages.Count - 1;
+
                 DisplayPage(CurrentPageNumber);
             };
 
@@ -75,6 +77,8 @@ namespace Client.MirScenes.Dialogs
             NextButton.Click += (o, e) =>
             {
                 CurrentPageNumber++;
+
+                if (CurrentPageNumber > Pages.Count - 1) CurrentPageNumber = 0;
 
                 DisplayPage(CurrentPageNumber);
             };

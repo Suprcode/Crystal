@@ -1218,7 +1218,7 @@ namespace Client.MirObjects
                 }
 
                 //ArcherTest - Need to check for bow weapon only
-                if (Class == MirClass.Archer && HasClassWeapon)
+                if (Class == MirClass.Archer && HasClassWeapon && TransformType < 0)
                 {
                     switch (CurrentAction)
                     {
@@ -2879,6 +2879,7 @@ namespace Client.MirObjects
                                     case Spell.HellFire:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
 
+                                        
                                         Point dest = CurrentLocation;
                                         for (int i = 0; i < 4; i++)
                                         {
@@ -3424,7 +3425,7 @@ namespace Client.MirObjects
         }
 
 
-        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip)
+        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, Color? lightColour = null)
         {
             MapObject ob = MapControl.GetObject(TargetID);
 
@@ -3439,7 +3440,9 @@ namespace Client.MirObjects
                 Interval = interval,
                 FrameCount = count,
                 Blend = blend,
-                Skip = skip
+                Skip = skip,
+                Light = lightDistance,
+                LightColour = lightColour == null ? Color.White : (Color)lightColour
             };
 
             Effects.Add(missile);
