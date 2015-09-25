@@ -1991,12 +1991,16 @@ namespace Server.MirEnvir
 
         public UserItem CreateFreshItem(ItemInfo info)
         {
-            return new UserItem(info)
+            UserItem item = new UserItem(info)
                 {
                     UniqueID = ++NextUserItemID,
                     CurrentDura = info.Durability,
                     MaxDura = info.Durability
                 };
+
+            UpdateItemExpiry(item);
+
+            return item;
         }
         public UserItem CreateDropItem(int index)
         {
@@ -2012,9 +2016,55 @@ namespace Server.MirEnvir
                     MaxDura = info.Durability,
                     CurrentDura = (ushort) Math.Min(info.Durability, Random.Next(info.Durability) + 1000)
                 };
+
             UpgradeItem(item);
+
+            UpdateItemExpiry(item);
+
             if (!info.NeedIdentify) item.Identified = true;
             return item;
+        }
+
+        public void UpdateItemExpiry(UserItem item)
+        {
+            ExpiryInfo expiryInfo = new ExpiryInfo();
+
+            Regex r = new Regex(@"\[(.*?)\]");
+            Match expiryMatch = r.Match(item.Info.Name);
+
+            if (expiryMatch.Success)
+            {
+                string parameter = expiryMatch.Groups[1].Captures[0].Value;
+
+                var numAlpha = new Regex("(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)");
+                var match = numAlpha.Match(parameter);
+
+                string alpha = match.Groups["Alpha"].Value;
+                int num = 0;
+
+                int.TryParse(match.Groups["Numeric"].Value, out num);
+
+                switch (alpha.ToLower())
+                {
+                    case "h":
+                        expiryInfo.ExpiryDate = DateTime.Now.AddHours(num);
+                        break;
+                    case "d":
+                        expiryInfo.ExpiryDate = DateTime.Now.AddDays(num);
+                        break;
+                    case "m":
+                        expiryInfo.ExpiryDate = DateTime.Now.AddMonths(num);
+                        break;
+                    case "y":
+                        expiryInfo.ExpiryDate = DateTime.Now.AddYears(num);
+                        break;
+                    default:
+                        expiryInfo.ExpiryDate = DateTime.MaxValue;
+                        break;
+                }
+
+                item.ExpiryInfo = expiryInfo;
+            }
         }
 
         public void UpgradeItem(UserItem item)

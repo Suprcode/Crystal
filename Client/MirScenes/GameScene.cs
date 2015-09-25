@@ -8324,9 +8324,8 @@ namespace Client.MirScenes
                     }
                     s = Libraries.MapLibs[fileIndex].GetSize(index);
                     if (s.Width == CellWidth && s.Height == CellHeight && animation == 0) continue;
-                    if ((s.Width == CellWidth * 2) && (s.Height == CellHeight * 2) && (animation == 0))
+                    if ((s.Width == CellWidth * 2) && (s.Height == CellHeight * 2) && (animation == 0)) continue;
 
-                    continue;
                     if (blend)
                     {
                         if ((fileIndex > 99) & (fileIndex < 199))

@@ -3434,7 +3434,7 @@ namespace Client.MirObjects
             int duration = Functions.MaxDistance(CurrentLocation, TargetPoint) * 50;
 
 
-            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, TargetPoint, true)
+            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, TargetPoint)
             {
                 Target = ob,
                 Interval = interval,

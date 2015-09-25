@@ -3097,29 +3097,6 @@ public class ExpiryInfo
 {
     public DateTime ExpiryDate;
     public int PlayerReturnIndex = -1;
-
-    public ExpiryInfo(string itemName)
-    {
-        //regex the item name in square brackets to get the expiry date when set
-        //Can override date if needed
-
-        /*
-         * 7h
-         * 5d
-         * 2m
-         * 1y
-         * 
-        */
-
-        Regex r = new Regex(@"\[(.*?)\]");
-
-        Match match = r.Match(itemName);
-
-        if (match.Success)
-        {
-            string expiryMatch = match.Groups[1].Captures[0].Value;
-        }
-    }
 }
 
 public class GameShopItem
