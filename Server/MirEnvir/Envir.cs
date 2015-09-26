@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 63;
+        public const int Version = 64;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -690,25 +690,43 @@ namespace Server.MirEnvir
                 }
             }
 
-            //if (Time >= npcTime)
-            //{
-                //npcTime = Time + (Settings.Minute);
+            if (Time >= npcTime)
+            {
+                npcTime = Time + (Settings.Minute);
                 for (int i = 0; i < MapList.Count; i++)
                 {
                     for (int f = 0; f < MapList[i].NPCs.Count; f++)
                     {
-                        //if (MapList[i].NPCs[f].Info.Image == 7 && DateTime.Now.Minute >= 45 && DateTime.Now.Minute <= 47 && MapList[i].NPCs[f].Visible)
-                        //{
-                            if (TestNPC && MapList[i].NPCs[f].Visible) MapList[i].NPCs[f].Hide(MapList[i].NPCs[f], i);
-                            else if (!TestNPC && !MapList[i].NPCs[f].Visible) MapList[i].NPCs[f].Show(MapList[i].NPCs[f], i);
-                       //}
-                        //else if (MapList[i].NPCs[f].Info.Image == 7 && DateTime.Now.Minute >= 48 && DateTime.Now.Minute <= 44 && !MapList[i].NPCs[f].Visible)
-                        //{
-                            //MapList[i].NPCs[f].Show(MapList[i].NPCs[f], i);
-                        //}
-                    }
-                }
-            //}
+                        NPCObject NPC = MapList[i].NPCs[f];
+
+                        int StartTime =  ((NPC.Info.HourStart * 60) + NPC.Info.MinuteStart);
+                        int FinishTime = ((NPC.Info.HourEnd * 60) + NPC.Info.MinuteEnd);
+                        int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
+
+                        if (NPC.Info.DayofWeek != "" && NPC.Info.DayofWeek != DateTime.Now.DayOfWeek.ToString())
+                        {
+                            if (NPC.Visible) NPC.Hide(NPC, i);
+                            return;
+                        }
+
+                        if (NPC.Info.TimeVisible)
+                            if (NPC.Visible)
+                            {
+                                if (StartTime > CurrentTime || FinishTime <= CurrentTime)
+                                {
+                                    NPC.Hide(NPC, i);
+                                }
+                            }
+                            else if (!NPC.Visible)
+                            {
+                                if (StartTime <= CurrentTime && FinishTime > CurrentTime)
+                                {
+                                    NPC.Show(NPC, i);
+                                }
+                            }
+                        }
+                 }
+            }
         }
 
         public void Broadcast(Packet p)
@@ -1064,6 +1082,7 @@ namespace Server.MirEnvir
                     }
                 }
                 Settings.LinkGuildCreationItems(ItemInfoList);
+                npcTime -= (Settings.Minute);
             }
 
         }

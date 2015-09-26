@@ -88,6 +88,43 @@ namespace Server.MirObjects
             //get { return true; }
         }
 
+
+        public void CheckVisible(PlayerObject Player, bool Force = false)
+        {
+            //if (Info.Sabuk != false && WARISON) NEEDS ADDING WHEN SABUK IS ADDED
+
+            bool CanSee;
+
+            VisibleLog.TryGetValue(Player.Info.Index, out CanSee);
+
+            if (Info.FlagNeeded != 0 && !Player.Info.Flags[Info.FlagNeeded])
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
+
+            if (Info.MinLev != 0 && Player.Level < Info.MinLev || Info.MaxLev != 0 && Player.Level > Info.MaxLev)
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
+
+            if (Info.ClassRequired != "" && Player.Class.ToString() != Info.ClassRequired)
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
+
+            if (Visible && !CanSee) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
+            else if (Force && Visible) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
+
+            VisibleLog[Player.Info.Index] = true;
+
+        }
+
         public override int CurrentMapIndex { get; set; }
 
         public override Point CurrentLocation
@@ -731,10 +768,16 @@ namespace Server.MirObjects
             Visible = false;
         }
 
-        public void Show(NPCObject NPC, int i)
+        public void Show(NPCObject NPC, int f)
         {
-            NPC.CurrentMap.Broadcast(new S.ObjectNPC { Name = NPC.Name, Direction = NPC.Direction, Image = NPC.Info.Image, Location = NPC.CurrentLocation, NameColour = NPC.NameColour, ObjectID = NPC.ObjectID, QuestIDs = NPC.Info.CollectQuestIndexes }, NPC.CurrentLocation);
             Visible = true;
+            for (int i = Envir.MapList[f].Players.Count - 1; i >= 0; i--)
+            {
+                PlayerObject player = Envir.MapList[f].Players[i];
+
+                if (Functions.InRange(NPC.CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                    CheckVisible(player, true);
+            }
         }
 
         public override Packet GetInfo()
@@ -2625,6 +2668,12 @@ namespace Server.MirObjects
                         var flagIsOn = Convert.ToBoolean(onCheck);
 
                         player.Info.Flags[flagIndex] = flagIsOn;
+
+                        for (int f = player.CurrentMap.NPCs.Count - 1; f >= 0; f--)
+                        {
+                            if (Functions.InRange(player.CurrentMap.NPCs[f].CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                                player.CurrentMap.NPCs[f].CheckVisible(player);
+                        }
 
                         if (flagIsOn) player.CheckNeedQuestFlag(flagIndex);
 

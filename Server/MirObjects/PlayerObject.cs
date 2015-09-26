@@ -1543,6 +1543,12 @@ namespace Server.MirObjects
                     MentorBreak();
             }
 
+            for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
+            {
+                if (Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange))
+                    CurrentMap.NPCs[i].CheckVisible(this);
+            }
+
             Report.Levelled(Level);
         }
 
@@ -2169,7 +2175,9 @@ namespace Server.MirObjects
                         {
                             NPCObject NPC = (NPCObject)ob;
 
-                            if (NPC.Visible) Enqueue(ob.GetInfo());
+                            NPC.CheckVisible(this);
+
+                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
                         }
                         else
                         {
@@ -4095,7 +4103,13 @@ namespace Server.MirObjects
 
                         if (tempInt > Info.Flags.Length - 1) return;
 
-                        Info.Flags[tempInt] = true;
+                        Info.Flags[tempInt] = !Info.Flags[tempInt];
+
+                        for (int f = CurrentMap.NPCs.Count - 1; f >= 0; f--)
+                        {
+                            if (Functions.InRange(CurrentMap.NPCs[f].CurrentLocation, CurrentLocation, Globals.DataRange))
+                                CurrentMap.NPCs[f].CheckVisible(this);
+                        }
 
                         break;
 
@@ -4667,7 +4681,14 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
-                    if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
+
+                    if (ob.Race == ObjectType.Merchant)
+                    {
+                        NPCObject NPC = (NPCObject)ob;
+                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                    }
+                    else
+                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                     return;
@@ -4769,6 +4790,13 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
+
+                    if (ob.Race == ObjectType.Merchant)
+                    {
+                        NPCObject NPC = (NPCObject)ob;
+                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                    }
+                    else
                     if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -4788,6 +4816,13 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
+
+                    if (ob.Race == ObjectType.Merchant)
+                    {
+                        NPCObject NPC = (NPCObject)ob;
+                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                    }
+                    else
                     if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -4812,6 +4847,12 @@ namespace Server.MirObjects
                     {
                         MapObject ob = cell.Objects[i];
 
+                        if (ob.Race == ObjectType.Merchant)
+                        {
+                            NPCObject NPC = (NPCObject)ob;
+                            if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                        }
+                        else
                         if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
                         Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                         return;

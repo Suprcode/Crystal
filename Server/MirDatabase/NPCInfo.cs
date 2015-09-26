@@ -19,6 +19,20 @@ namespace Server.MirDatabase
         public ushort Rate = 100;
         public byte Image;
 
+        public bool TimeVisible = false;
+        public byte HourStart = 0;
+        public byte MinuteStart = 0;
+        public byte HourEnd = 0;
+        public byte MinuteEnd = 1;
+        public TimeSpan StartTime = DateTime.Now.TimeOfDay;
+        public DateTime EndTime;
+        public short MinLev = 0;
+        public short MaxLev = 0;
+        public string DayofWeek = "";
+        public string ClassRequired = "";
+        public bool Sabuk = false;
+        public int FlagNeeded = 0;
+
         public bool IsDefault;
 
         public float PriceRate
@@ -54,6 +68,21 @@ namespace Server.MirDatabase
             Image = reader.ReadByte();
             
             Rate = reader.ReadUInt16();
+
+            if (Envir.LoadVersion >= 64)
+            {
+                TimeVisible = reader.ReadBoolean();
+                HourStart = reader.ReadByte();
+                MinuteStart = reader.ReadByte();
+                HourEnd = reader.ReadByte();
+                MinuteEnd = reader.ReadByte();
+                MinLev = reader.ReadInt16();
+                MaxLev = reader.ReadInt16();
+                DayofWeek = reader.ReadString();
+                ClassRequired = reader.ReadString();
+                Sabuk = reader.ReadBoolean();
+                FlagNeeded = reader.ReadInt32();
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -75,6 +104,18 @@ namespace Server.MirDatabase
             writer.Write(Location.Y);
             writer.Write(Image);
             writer.Write(Rate);
+
+            writer.Write(TimeVisible);
+            writer.Write(HourStart);
+            writer.Write(MinuteStart);
+            writer.Write(HourEnd);
+            writer.Write(MinuteEnd);
+            writer.Write(MinLev);
+            writer.Write(MaxLev);
+            writer.Write(DayofWeek);
+            writer.Write(ClassRequired);
+            writer.Write(Sabuk);
+            writer.Write(FlagNeeded);
         }
 
         public static void FromText(string text)
