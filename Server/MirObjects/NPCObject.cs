@@ -653,43 +653,40 @@ namespace Server.MirObjects
             {
                 TurnTime = Envir.Time + TurnDelay;
                 Turn((MirDirection)Envir.Random.Next(3));
-
-                if (UsedGoodsTime < SMain.Envir.Time)
-                {
-                    UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
-                    ProcessGoods();
-                }
             }
 
-            if (Envir.Time >= VisTime)
+            if (Envir.Time > UsedGoodsTime)
+            {
+                UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
+                ProcessGoods();
+            }
+
+            if (Envir.Time > VisTime)
             {
                 VisTime = Envir.Time + (Settings.Minute);
 
                 if (Info.DayofWeek != "" && Info.DayofWeek != DateTime.Now.DayOfWeek.ToString())
                 {
                     if (Visible) Hide();
-                    return;
                 }
+                else
+                {
 
-                int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
-                int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
-                int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
+                    int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
+                    int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
+                    int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
 
-               if (Info.TimeVisible)
-                    if (Visible)
-                    {
+                    if (Info.TimeVisible)
                         if (StartTime > CurrentTime || FinishTime <= CurrentTime)
                         {
-                            Hide();
+                            if (Visible) Hide();
                         }
-                    }
-                    else if (!Visible)
-                    {
-                        if (StartTime <= CurrentTime && FinishTime > CurrentTime)
+                        else if (StartTime <= CurrentTime && FinishTime > CurrentTime)
                         {
-                            Show();
+                            if (!Visible) Show();
                         }
-                    }
+
+                }
              }
         }
 
