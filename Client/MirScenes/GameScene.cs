@@ -9215,7 +9215,7 @@ namespace Client.MirScenes
             {
                 MapObject ob = Objects[i];
 
-                if (ob.CurrentLocation == p && ob.Blocking) //DISPLACEMENT STUFF
+                if (ob.CurrentLocation == p && ob.Blocking)
                     return false;
             }
 

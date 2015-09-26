@@ -84,8 +84,6 @@ namespace Server.MirObjects
         public override bool Blocking
         {
             get { return Visible; }
-
-            //get { return true; }
         }
 
 

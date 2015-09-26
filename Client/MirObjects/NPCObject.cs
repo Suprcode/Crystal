@@ -18,7 +18,7 @@ namespace Client.MirObjects
         }
         public override bool Blocking
         {
-            get { return false; }
+            get { return true; }
         }
 
         public FrameSet Frames;

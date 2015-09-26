@@ -66,8 +66,6 @@ namespace Server.MirEnvir
         public static int LoadVersion;
         public static int LoadCustomVersion;
 
-        public bool TestNPC = false;
-
         private readonly DateTime _startTime = DateTime.Now;
         public readonly Stopwatch Stopwatch = Stopwatch.StartNew();
 

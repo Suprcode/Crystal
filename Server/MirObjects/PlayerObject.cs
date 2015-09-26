@@ -3927,9 +3927,6 @@ namespace Server.MirObjects
                         player.GainCredit(count);
                         SMain.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
                         break;
-                    case "NPCHIDE":
-                        SMain.Envir.TestNPC = !SMain.Envir.TestNPC;
-                        break;
                     case "GIVESKILL":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 

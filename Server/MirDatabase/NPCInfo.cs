@@ -24,8 +24,6 @@ namespace Server.MirDatabase
         public byte MinuteStart = 0;
         public byte HourEnd = 0;
         public byte MinuteEnd = 1;
-        public TimeSpan StartTime = DateTime.Now.TimeOfDay;
-        public DateTime EndTime;
         public short MinLev = 0;
         public short MaxLev = 0;
         public string DayofWeek = "";
