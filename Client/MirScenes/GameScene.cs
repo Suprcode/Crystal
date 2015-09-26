@@ -22571,7 +22571,6 @@ namespace Client.MirScenes
             Location = Center;
             Sort = true;
 
-
             Grid = new GameShopCell[4 * 2];
             for (int x = 0; x < 4; x++)
             {
@@ -23029,6 +23028,7 @@ namespace Client.MirScenes
             totalCredits.Text = GameScene.Credit.ToString("###,###,##0");
             totalGold.Text = GameScene.Gold.ToString("###,###,##0");
         }
+
 
         public void FilterScrolling(object sender, MouseEventArgs e)
         {

@@ -58,8 +58,9 @@ namespace Server.MirObjects
         public static Regex Regex = new Regex(@"<.*?/(\@.*?)>");
         public NPCInfo Info;
         private const long TurnDelay = 10000;
-        public long TurnTime, UsedGoodsTime;
+        public long TurnTime, UsedGoodsTime, VisTime;
         public bool NeedSave;
+        public bool Visible = true;
 
         public List<UserItem> Goods = new List<UserItem>();
         public List<UserItem> UsedGoods = new List<UserItem>();
@@ -69,6 +70,8 @@ namespace Server.MirObjects
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<QuestInfo> Quests = new List<QuestInfo>();
 
+        public Dictionary<int, bool> VisibleLog = new Dictionary<int, bool>();
+
         public static List<string> Args = new List<string>();
 
         #region Overrides
@@ -76,6 +79,48 @@ namespace Server.MirObjects
         {
             get { return Info.Name; }
             set { throw new NotSupportedException(); }
+        }
+
+        public override bool Blocking
+        {
+            get { return Visible; }
+        }
+
+
+        public void CheckVisible(PlayerObject Player, bool Force = false)
+        {
+            //if (Info.Sabuk != false && WARISON) NEEDS ADDING WHEN SABUK IS ADDED
+
+            bool CanSee;
+
+            VisibleLog.TryGetValue(Player.Info.Index, out CanSee);
+
+            if (Info.FlagNeeded != 0 && !Player.Info.Flags[Info.FlagNeeded])
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
+
+            if (Info.MinLev != 0 && Player.Level < Info.MinLev || Info.MaxLev != 0 && Player.Level > Info.MaxLev)
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
+
+            if (Info.ClassRequired != "" && Player.Class.ToString() != Info.ClassRequired)
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
+
+            if (Visible && !CanSee) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
+            else if (Force && Visible) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
+
+            VisibleLog[Player.Info.Index] = true;
+
         }
 
         public override int CurrentMapIndex { get; set; }
@@ -604,16 +649,45 @@ namespace Server.MirObjects
         {
             base.Process();
 
-            if (Envir.Time < TurnTime) return;
+            if (Envir.Time > TurnTime)
+            {
+                TurnTime = Envir.Time + TurnDelay;
+                Turn((MirDirection)Envir.Random.Next(3));
+            }
 
-            TurnTime = Envir.Time + TurnDelay;
-            Turn((MirDirection)Envir.Random.Next(3));
-
-            if (UsedGoodsTime < SMain.Envir.Time)
+            if (Envir.Time > UsedGoodsTime)
             {
                 UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
                 ProcessGoods();
             }
+
+            if (Envir.Time > VisTime)
+            {
+                VisTime = Envir.Time + (Settings.Minute);
+
+                if (Info.DayofWeek != "" && Info.DayofWeek != DateTime.Now.DayOfWeek.ToString())
+                {
+                    if (Visible) Hide();
+                }
+                else
+                {
+
+                    int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
+                    int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
+                    int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
+
+                    if (Info.TimeVisible)
+                        if (StartTime > CurrentTime || FinishTime <= CurrentTime)
+                        {
+                            if (Visible) Hide();
+                        }
+                        else if (StartTime <= CurrentTime && FinishTime > CurrentTime)
+                        {
+                            if (!Visible) Show();
+                        }
+
+                }
+             }
         }
 
         public void ProcessGoods(bool clear = false)
@@ -713,6 +787,24 @@ namespace Server.MirObjects
             Direction = dir;
 
             Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+        }
+
+        public void Hide()
+        {
+            CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
+            Visible = false;
+        }
+
+        public void Show()
+        {
+            Visible = true;
+            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
+            {
+                PlayerObject player = CurrentMap.Players[i];
+
+                if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                    CheckVisible(player, true);
+            }
         }
 
         public override Packet GetInfo()
@@ -2604,6 +2696,12 @@ namespace Server.MirObjects
 
                         player.Info.Flags[flagIndex] = flagIsOn;
 
+                        for (int f = player.CurrentMap.NPCs.Count - 1; f >= 0; f--)
+                        {
+                            if (Functions.InRange(player.CurrentMap.NPCs[f].CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                                player.CurrentMap.NPCs[f].CheckVisible(player);
+                        }
+
                         if (flagIsOn) player.CheckNeedQuestFlag(flagIndex);
 
                         break;
@@ -3037,6 +3135,7 @@ namespace Server.MirObjects
 
             return key;
         }
+
         public string ReplaceValue(PlayerObject player, string param)
         {
             var regex = new Regex(@"\<\$(.*?)\>");
