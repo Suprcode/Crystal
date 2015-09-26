@@ -169,7 +169,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long dayTime, warTime, mailTime, guildTime, npcTime;
+        private long dayTime, warTime, mailTime, guildTime;
 
         private bool MagicExists(Spell spell)
         {
@@ -687,44 +687,6 @@ namespace Server.MirEnvir
                     GuildList[i].Process();
                 }
             }
-
-            if (Time >= npcTime)
-            {
-                npcTime = Time + (Settings.Minute);
-                for (int i = 0; i < MapList.Count; i++)
-                {
-                    for (int f = 0; f < MapList[i].NPCs.Count; f++)
-                    {
-                        NPCObject NPC = MapList[i].NPCs[f];
-
-                        int StartTime =  ((NPC.Info.HourStart * 60) + NPC.Info.MinuteStart);
-                        int FinishTime = ((NPC.Info.HourEnd * 60) + NPC.Info.MinuteEnd);
-                        int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
-
-                        if (NPC.Info.DayofWeek != "" && NPC.Info.DayofWeek != DateTime.Now.DayOfWeek.ToString())
-                        {
-                            if (NPC.Visible) NPC.Hide(NPC, i);
-                            return;
-                        }
-
-                        if (NPC.Info.TimeVisible)
-                            if (NPC.Visible)
-                            {
-                                if (StartTime > CurrentTime || FinishTime <= CurrentTime)
-                                {
-                                    NPC.Hide(NPC, i);
-                                }
-                            }
-                            else if (!NPC.Visible)
-                            {
-                                if (StartTime <= CurrentTime && FinishTime > CurrentTime)
-                                {
-                                    NPC.Show(NPC, i);
-                                }
-                            }
-                        }
-                 }
-            }
         }
 
         public void Broadcast(Packet p)
@@ -1080,7 +1042,6 @@ namespace Server.MirEnvir
                     }
                 }
                 Settings.LinkGuildCreationItems(ItemInfoList);
-                npcTime -= (Settings.Minute);
             }
 
         }

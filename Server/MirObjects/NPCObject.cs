@@ -58,7 +58,7 @@ namespace Server.MirObjects
         public static Regex Regex = new Regex(@"<.*?/(\@.*?)>");
         public NPCInfo Info;
         private const long TurnDelay = 10000;
-        public long TurnTime, UsedGoodsTime;
+        public long TurnTime, UsedGoodsTime, VisTime;
         public bool NeedSave;
         public bool Visible = true;
 
@@ -649,16 +649,48 @@ namespace Server.MirObjects
         {
             base.Process();
 
-            if (Envir.Time < TurnTime) return;
-
-            TurnTime = Envir.Time + TurnDelay;
-            Turn((MirDirection)Envir.Random.Next(3));
-
-            if (UsedGoodsTime < SMain.Envir.Time)
+            if (Envir.Time > TurnTime)
             {
-                UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
-                ProcessGoods();
+                TurnTime = Envir.Time + TurnDelay;
+                Turn((MirDirection)Envir.Random.Next(3));
+
+                if (UsedGoodsTime < SMain.Envir.Time)
+                {
+                    UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
+                    ProcessGoods();
+                }
             }
+
+            if (Envir.Time >= VisTime)
+            {
+                VisTime = Envir.Time + (Settings.Minute);
+
+                if (Info.DayofWeek != "" && Info.DayofWeek != DateTime.Now.DayOfWeek.ToString())
+                {
+                    if (Visible) Hide();
+                    return;
+                }
+
+                int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
+                int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
+                int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
+
+               if (Info.TimeVisible)
+                    if (Visible)
+                    {
+                        if (StartTime > CurrentTime || FinishTime <= CurrentTime)
+                        {
+                            Hide();
+                        }
+                    }
+                    else if (!Visible)
+                    {
+                        if (StartTime <= CurrentTime && FinishTime > CurrentTime)
+                        {
+                            Show();
+                        }
+                    }
+             }
         }
 
         public void ProcessGoods(bool clear = false)
@@ -760,20 +792,20 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
-        public void Hide(NPCObject NPC, int i)
+        public void Hide()
         {
-            NPC.CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = NPC.ObjectID }, NPC.CurrentLocation);
+            CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
             Visible = false;
         }
 
-        public void Show(NPCObject NPC, int f)
+        public void Show()
         {
             Visible = true;
-            for (int i = Envir.MapList[f].Players.Count - 1; i >= 0; i--)
+            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
-                PlayerObject player = Envir.MapList[f].Players[i];
+                PlayerObject player = CurrentMap.Players[i];
 
-                if (Functions.InRange(NPC.CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                     CheckVisible(player, true);
             }
         }

@@ -444,7 +444,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].MinLev = temp;
+                _selectedNPCInfos[i].MaxLev = temp;
         }
 
         private void Class_combo_SelectedIndexChanged(object sender, EventArgs e)
