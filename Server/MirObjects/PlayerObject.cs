@@ -385,7 +385,7 @@ namespace Server.MirObjects
                 if (pet.Info.AI == 64)//IntelligentCreature
                 {
                     //dont save Creatures they will miss alot of AI-Info when they get spawned on login
-                    UnSummonIntelligentCreature(((IntelligentCreatureObject)Pets[i]).petType, false);
+                    UnSummonIntelligentCreature(((IntelligentCreatureObject)pet).petType, false);
                     continue;
                 }
 
@@ -17147,6 +17147,13 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0) return;
             CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+
+            if (Lover == null)
+            {
+                SMain.EnqueueDebugging(Name + " is married but couldn't find marriage ID " + Info.Married);
+                return;
+            }
+
             PlayerObject player = Envir.GetPlayer(Lover.Name);
             if (player != null)
             {
@@ -17393,7 +17400,11 @@ namespace Server.MirObjects
 
             CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
 
-            if (Mentor == null) return; //circumventing an error elsewhere?? shouldn't ever be null.
+            if (Mentor == null)
+            {
+                SMain.EnqueueDebugging(Name + " is mentored but couldn't find mentor ID " + Info.Mentor);
+                return;
+            }
 
             PlayerObject player = Envir.GetPlayer(Mentor.Name);
 

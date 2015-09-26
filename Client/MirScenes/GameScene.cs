@@ -2792,10 +2792,10 @@ namespace Client.MirScenes
                     switch (p.Type)
                     {
                         case DamageType.Hit:
-                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, Color.Red, 50));
+                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.Red, 50));
                             break;
                         case DamageType.Miss:
-                            obj.Damages.Add(new Damage("Miss", 1200, Color.Red, 50));
+                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.Blue : Color.Red, 50));
                             break;
                     }
 
