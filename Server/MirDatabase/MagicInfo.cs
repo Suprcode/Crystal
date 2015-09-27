@@ -111,7 +111,7 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion < 15) return;
             IsTempSpell = reader.ReadBoolean();
 
-            if (Envir.LoadVersion < 64) return;
+            if (Envir.LoadVersion < 65) return;
             CastTime = reader.ReadInt64();
         }
         public void Save(BinaryWriter writer)
