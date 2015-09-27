@@ -2008,6 +2008,53 @@ public static class Functions
         return false;
     }
 
+    public static string PrintTimeSpanFromSeconds(double secs)
+    {
+        TimeSpan t = TimeSpan.FromSeconds(secs);
+        string answer;
+        if (t.TotalMinutes < 1.0)
+        {
+            answer = string.Format("{0}s", t.TotalSeconds);
+        }
+        else if (t.TotalHours < 1.0)
+        {
+            answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
+        }
+        else if (t.TotalDays < 1.0)
+        {
+            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.Hours, t.Minutes, t.Seconds);
+        }
+        else // more than 1 day
+        {
+            answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
+        }
+
+        return answer;
+    }
+
+    public static string PrintTimeSpanFromMilliSeconds(double milliSeconds)
+    {
+        TimeSpan t = TimeSpan.FromMilliseconds(milliSeconds);
+        string answer;
+        if (t.TotalMinutes < 1.0)
+        {
+            answer = string.Format("{0}.{1}s", t.Seconds, (decimal)(t.Milliseconds / 100));
+        }
+        else if (t.TotalHours < 1.0)
+        {
+            answer = string.Format("{0}m {1:D2}s", t.TotalMinutes, t.Seconds);
+        }
+        else if (t.TotalDays < 1.0)
+        {
+            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
+        }
+        else // more than 1 day
+        {
+            answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
+        }
+
+        return answer;
+    }
 
     public static MirDirection PreviousDir(MirDirection d)
     {
@@ -2727,7 +2774,7 @@ public class UserItem
 
     public DateTime BuybackExpiryDate;
 
-    public ExpiryInfo ExpiryInfo;
+    public ExpireInfo ExpireInfo;
 
 	public Awake Awake = new Awake();
     public bool IsAdded
@@ -2828,6 +2875,13 @@ public class UserItem
         if (version < 60) return;
         WeddingRing = reader.ReadInt32();
 
+        if (version < 65) return;
+
+        if (reader.ReadBoolean())
+        {
+            ExpireInfo = new ExpireInfo(reader, version, Customversion);
+        }
+
     }
 
     public void Save(BinaryWriter writer)
@@ -2887,6 +2941,13 @@ public class UserItem
         writer.Write(RefineAdded);
 
         writer.Write(WeddingRing);
+
+        writer.Write(ExpireInfo != null);
+
+        if (ExpireInfo != null)
+        {
+            ExpireInfo.Save(writer);
+        }
     }
 
 
@@ -3086,6 +3147,8 @@ public class UserItem
 
             RefinedValue = RefinedValue,
             RefineAdded = RefineAdded,
+
+            ExpireInfo = ExpireInfo
             };
 
         return item;
@@ -3093,10 +3156,24 @@ public class UserItem
 
 }
 
-public class ExpiryInfo
+public class ExpireInfo
 {
     public DateTime ExpiryDate;
-    public int PlayerReturnIndex = -1;
+
+    public ExpireInfo()
+    {
+
+    }
+
+    public ExpireInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    {
+        ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ExpiryDate.ToBinary());
+    }
 }
 
 public class GameShopItem

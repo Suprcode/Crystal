@@ -95,7 +95,7 @@ namespace Client
                 {
                     UpdateTime();
                     UpdateEnviroment();
-                    RenderEnviroment();
+                    RenderEnvironment();
                 }
 
             }
@@ -304,7 +304,7 @@ namespace Client
             CreateDebugLabel();
  
         }
-        private static void RenderEnviroment()
+        private static void RenderEnvironment()
         {
             try
             {
@@ -335,7 +335,7 @@ namespace Client
             }
             catch (Exception ex)
             {
-                SaveError(ex.ToString());
+                SaveError("Environment error : " + ex.ToString());
 
                 DXManager.AttemptRecovery();
             }

@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 64;
+        public const int Version = 65;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -2031,7 +2031,11 @@ namespace Server.MirEnvir
 
         public void UpdateItemExpiry(UserItem item)
         {
-            ExpiryInfo expiryInfo = new ExpiryInfo();
+            //can't have expiry on usable items
+            if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
+                item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Transform) return;
+
+            ExpireInfo expiryInfo = new ExpireInfo();
 
             Regex r = new Regex(@"\[(.*?)\]");
             Match expiryMatch = r.Match(item.Info.Name);
@@ -2048,15 +2052,18 @@ namespace Server.MirEnvir
 
                 int.TryParse(match.Groups["Numeric"].Value, out num);
 
-                switch (alpha.ToLower())
+                switch (alpha)
                 {
+                    case "m":
+                        expiryInfo.ExpiryDate = DateTime.Now.AddMinutes(num);
+                        break;
                     case "h":
                         expiryInfo.ExpiryDate = DateTime.Now.AddHours(num);
                         break;
                     case "d":
                         expiryInfo.ExpiryDate = DateTime.Now.AddDays(num);
                         break;
-                    case "m":
+                    case "M":
                         expiryInfo.ExpiryDate = DateTime.Now.AddMonths(num);
                         break;
                     case "y":
@@ -2067,7 +2074,7 @@ namespace Server.MirEnvir
                         break;
                 }
 
-                item.ExpiryInfo = expiryInfo;
+                item.ExpireInfo = expiryInfo;
             }
         }
 

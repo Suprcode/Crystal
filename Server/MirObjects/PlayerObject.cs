@@ -621,6 +621,13 @@ namespace Server.MirObjects
                 UpdateFish();
             }
 
+            if (Envir.Time > ItemExpireTime)
+            {
+                ItemExpireTime = Envir.Time + ItemExpireDelay;
+
+                ProcessItems();
+            }
+
             for (int i = Pets.Count() - 1; i >= 0; i--)
             {
                 MonsterObject pet = Pets[i];
@@ -1023,6 +1030,38 @@ namespace Server.MirObjects
             }
             return false;
         }
+
+        private void ProcessItems()
+        {
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                UserItem item = Info.Inventory[i];
+
+                if (item == null || item.ExpireInfo == null) continue;
+
+                if (DateTime.Now > item.ExpireInfo.ExpiryDate)
+                {
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.Inventory[i] = null;
+                    ReceiveChat(string.Format("{0} has just expired from your inventory.", item.Info.FriendlyName), ChatType.Hint);
+                }
+            }
+
+            for (int i = 0; i < Info.Equipment.Length; i++)
+            {
+                UserItem item = Info.Equipment[i];
+
+                if (item == null || item.ExpireInfo == null) continue;
+
+                if (DateTime.Now > item.ExpireInfo.ExpiryDate)
+                {
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.Equipment[i] = null;
+                    ReceiveChat(string.Format("{0} has just expired from your equipment.", item.Info.FriendlyName), ChatType.Hint);
+                }
+            }
+        }
+
         public override void Process(DelayedAction action)
         {
             switch (action.Type)
@@ -1801,6 +1840,7 @@ namespace Server.MirObjects
                     }
                 }
             }
+
             Spawned();
 
             SetLevelEffects();

@@ -30,25 +30,6 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.NPCInfoPanel = new System.Windows.Forms.Panel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.Day_combo = new System.Windows.Forms.ComboBox();
-            this.Class_combo = new System.Windows.Forms.ComboBox();
-            this.EndMin_num = new System.Windows.Forms.NumericUpDown();
-            this.EndHour_combo = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.StartMin_num = new System.Windows.Forms.NumericUpDown();
-            this.StartHour_combo = new System.Windows.Forms.ComboBox();
-            this.TimeVisible_checkbox = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.MaxLev_textbox = new System.Windows.Forms.TextBox();
-            this.Sabuk_checkbox = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.MinLev_textbox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.MapComboBox = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -67,6 +48,27 @@
             this.label28 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.NYTextBox = new System.Windows.Forms.TextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Flag_textbox = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.Day_combo = new System.Windows.Forms.ComboBox();
+            this.Class_combo = new System.Windows.Forms.ComboBox();
+            this.EndMin_num = new System.Windows.Forms.NumericUpDown();
+            this.EndHour_combo = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.StartMin_num = new System.Windows.Forms.NumericUpDown();
+            this.StartHour_combo = new System.Windows.Forms.ComboBox();
+            this.TimeVisible_checkbox = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.MaxLev_textbox = new System.Windows.Forms.TextBox();
+            this.Sabuk_checkbox = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.MinLev_textbox = new System.Windows.Forms.TextBox();
             this.RemoveButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
             this.NPCInfoListBox = new System.Windows.Forms.ListBox();
@@ -75,11 +77,9 @@
             this.ExportButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.ExportSelectedButton = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.Flag_textbox = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.NPCInfoPanel.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EndMin_num)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StartMin_num)).BeginInit();
             this.SuspendLayout();
@@ -90,6 +90,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(174, 41);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -98,7 +99,24 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.NPCInfoPanel);
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.MapComboBox);
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.OpenNButton);
+            this.tabPage1.Controls.Add(this.NFileNameTextBox);
+            this.tabPage1.Controls.Add(this.label29);
+            this.tabPage1.Controls.Add(this.NRateTextBox);
+            this.tabPage1.Controls.Add(this.ClearHButton);
+            this.tabPage1.Controls.Add(this.NNameTextBox);
+            this.tabPage1.Controls.Add(this.label13);
+            this.tabPage1.Controls.Add(this.NPCIndexTextBox);
+            this.tabPage1.Controls.Add(this.label24);
+            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.NImageTextBox);
+            this.tabPage1.Controls.Add(this.NXTextBox);
+            this.tabPage1.Controls.Add(this.label28);
+            this.tabPage1.Controls.Add(this.label30);
+            this.tabPage1.Controls.Add(this.NYTextBox);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -106,319 +124,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Info";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // NPCInfoPanel
-            // 
-            this.NPCInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.NPCInfoPanel.Controls.Add(this.Flag_textbox);
-            this.NPCInfoPanel.Controls.Add(this.label12);
-            this.NPCInfoPanel.Controls.Add(this.label10);
-            this.NPCInfoPanel.Controls.Add(this.Day_combo);
-            this.NPCInfoPanel.Controls.Add(this.Class_combo);
-            this.NPCInfoPanel.Controls.Add(this.EndMin_num);
-            this.NPCInfoPanel.Controls.Add(this.EndHour_combo);
-            this.NPCInfoPanel.Controls.Add(this.label8);
-            this.NPCInfoPanel.Controls.Add(this.label9);
-            this.NPCInfoPanel.Controls.Add(this.StartMin_num);
-            this.NPCInfoPanel.Controls.Add(this.StartHour_combo);
-            this.NPCInfoPanel.Controls.Add(this.TimeVisible_checkbox);
-            this.NPCInfoPanel.Controls.Add(this.label7);
-            this.NPCInfoPanel.Controls.Add(this.MaxLev_textbox);
-            this.NPCInfoPanel.Controls.Add(this.Sabuk_checkbox);
-            this.NPCInfoPanel.Controls.Add(this.label6);
-            this.NPCInfoPanel.Controls.Add(this.label5);
-            this.NPCInfoPanel.Controls.Add(this.label4);
-            this.NPCInfoPanel.Controls.Add(this.label3);
-            this.NPCInfoPanel.Controls.Add(this.MinLev_textbox);
-            this.NPCInfoPanel.Controls.Add(this.label2);
-            this.NPCInfoPanel.Controls.Add(this.MapComboBox);
-            this.NPCInfoPanel.Controls.Add(this.label11);
-            this.NPCInfoPanel.Controls.Add(this.OpenNButton);
-            this.NPCInfoPanel.Controls.Add(this.NFileNameTextBox);
-            this.NPCInfoPanel.Controls.Add(this.label29);
-            this.NPCInfoPanel.Controls.Add(this.NRateTextBox);
-            this.NPCInfoPanel.Controls.Add(this.ClearHButton);
-            this.NPCInfoPanel.Controls.Add(this.NNameTextBox);
-            this.NPCInfoPanel.Controls.Add(this.label13);
-            this.NPCInfoPanel.Controls.Add(this.NPCIndexTextBox);
-            this.NPCInfoPanel.Controls.Add(this.label24);
-            this.NPCInfoPanel.Controls.Add(this.label1);
-            this.NPCInfoPanel.Controls.Add(this.NImageTextBox);
-            this.NPCInfoPanel.Controls.Add(this.NXTextBox);
-            this.NPCInfoPanel.Controls.Add(this.label28);
-            this.NPCInfoPanel.Controls.Add(this.label30);
-            this.NPCInfoPanel.Controls.Add(this.NYTextBox);
-            this.NPCInfoPanel.Enabled = false;
-            this.NPCInfoPanel.Location = new System.Drawing.Point(3, 6);
-            this.NPCInfoPanel.Name = "NPCInfoPanel";
-            this.NPCInfoPanel.Size = new System.Drawing.Size(583, 256);
-            this.NPCInfoPanel.TabIndex = 11;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label10.Location = new System.Drawing.Point(312, 91);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(71, 13);
-            this.label10.TabIndex = 53;
-            this.label10.Text = "Day to Show:";
-            // 
-            // Day_combo
-            // 
-            this.Day_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Day_combo.FormattingEnabled = true;
-            this.Day_combo.Items.AddRange(new object[] {
-            "",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"});
-            this.Day_combo.Location = new System.Drawing.Point(383, 87);
-            this.Day_combo.Name = "Day_combo";
-            this.Day_combo.Size = new System.Drawing.Size(163, 21);
-            this.Day_combo.TabIndex = 52;
-            this.Day_combo.SelectedIndexChanged += new System.EventHandler(this.Day_combo_SelectedIndexChanged);
-            // 
-            // Class_combo
-            // 
-            this.Class_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Class_combo.FormattingEnabled = true;
-            this.Class_combo.Items.AddRange(new object[] {
-            "",
-            "Warrior",
-            "Wizard",
-            "Taoist",
-            "Assassin",
-            "Archer"});
-            this.Class_combo.Location = new System.Drawing.Point(383, 37);
-            this.Class_combo.Name = "Class_combo";
-            this.Class_combo.Size = new System.Drawing.Size(87, 21);
-            this.Class_combo.TabIndex = 51;
-            this.Class_combo.SelectedIndexChanged += new System.EventHandler(this.Class_combo_SelectedIndexChanged);
-            // 
-            // EndMin_num
-            // 
-            this.EndMin_num.Location = new System.Drawing.Point(509, 209);
-            this.EndMin_num.Maximum = new decimal(new int[] {
-            59,
-            0,
-            0,
-            0});
-            this.EndMin_num.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.EndMin_num.Name = "EndMin_num";
-            this.EndMin_num.Size = new System.Drawing.Size(47, 20);
-            this.EndMin_num.TabIndex = 50;
-            this.EndMin_num.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.EndMin_num.ValueChanged += new System.EventHandler(this.EndMin_num_ValueChanged);
-            // 
-            // EndHour_combo
-            // 
-            this.EndHour_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.EndHour_combo.FormattingEnabled = true;
-            this.EndHour_combo.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23"});
-            this.EndHour_combo.Location = new System.Drawing.Point(383, 208);
-            this.EndHour_combo.Name = "EndHour_combo";
-            this.EndHour_combo.Size = new System.Drawing.Size(49, 21);
-            this.EndHour_combo.TabIndex = 49;
-            this.EndHour_combo.SelectedIndexChanged += new System.EventHandler(this.EndHour_combo_SelectedIndexChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label8.Location = new System.Drawing.Point(442, 211);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(64, 13);
-            this.label8.TabIndex = 48;
-            this.label8.Text = "End Minute:";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label9.Location = new System.Drawing.Point(325, 211);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(55, 13);
-            this.label9.TabIndex = 47;
-            this.label9.Text = "End Hour:";
-            // 
-            // StartMin_num
-            // 
-            this.StartMin_num.Location = new System.Drawing.Point(509, 183);
-            this.StartMin_num.Maximum = new decimal(new int[] {
-            58,
-            0,
-            0,
-            0});
-            this.StartMin_num.Name = "StartMin_num";
-            this.StartMin_num.Size = new System.Drawing.Size(47, 20);
-            this.StartMin_num.TabIndex = 46;
-            this.StartMin_num.ValueChanged += new System.EventHandler(this.StartMin_num_ValueChanged);
-            // 
-            // StartHour_combo
-            // 
-            this.StartHour_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.StartHour_combo.FormattingEnabled = true;
-            this.StartHour_combo.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23"});
-            this.StartHour_combo.Location = new System.Drawing.Point(383, 182);
-            this.StartHour_combo.Name = "StartHour_combo";
-            this.StartHour_combo.Size = new System.Drawing.Size(49, 21);
-            this.StartHour_combo.TabIndex = 45;
-            this.StartHour_combo.SelectedIndexChanged += new System.EventHandler(this.StartHour_combo_SelectedIndexChanged);
-            // 
-            // TimeVisible_checkbox
-            // 
-            this.TimeVisible_checkbox.AutoSize = true;
-            this.TimeVisible_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.TimeVisible_checkbox.Location = new System.Drawing.Point(330, 156);
-            this.TimeVisible_checkbox.Name = "TimeVisible_checkbox";
-            this.TimeVisible_checkbox.Size = new System.Drawing.Size(140, 17);
-            this.TimeVisible_checkbox.TabIndex = 44;
-            this.TimeVisible_checkbox.Text = "Only Visible at set Times";
-            this.TimeVisible_checkbox.UseVisualStyleBackColor = true;
-            this.TimeVisible_checkbox.CheckedChanged += new System.EventHandler(this.TimeVisible_checkbox_CheckedChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label7.Location = new System.Drawing.Point(438, 14);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(59, 13);
-            this.label7.TabIndex = 43;
-            this.label7.Text = "Max Level:";
-            // 
-            // MaxLev_textbox
-            // 
-            this.MaxLev_textbox.Location = new System.Drawing.Point(497, 11);
-            this.MaxLev_textbox.MaxLength = 3;
-            this.MaxLev_textbox.Name = "MaxLev_textbox";
-            this.MaxLev_textbox.Size = new System.Drawing.Size(49, 20);
-            this.MaxLev_textbox.TabIndex = 42;
-            this.MaxLev_textbox.TextChanged += new System.EventHandler(this.MaxLev_textbox_TextChanged);
-            // 
-            // Sabuk_checkbox
-            // 
-            this.Sabuk_checkbox.AutoSize = true;
-            this.Sabuk_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Sabuk_checkbox.Location = new System.Drawing.Point(277, 64);
-            this.Sabuk_checkbox.Name = "Sabuk_checkbox";
-            this.Sabuk_checkbox.Size = new System.Drawing.Size(120, 17);
-            this.Sabuk_checkbox.TabIndex = 41;
-            this.Sabuk_checkbox.Text = "Sabuk War Hidden:";
-            this.Sabuk_checkbox.UseVisualStyleBackColor = true;
-            this.Sabuk_checkbox.CheckedChanged += new System.EventHandler(this.Sabuk_checkbox_CheckedChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label6.Location = new System.Drawing.Point(302, 40);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(81, 13);
-            this.label6.TabIndex = 40;
-            this.label6.Text = "Class Required;";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label5.Location = new System.Drawing.Point(442, 185);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 13);
-            this.label5.TabIndex = 37;
-            this.label5.Text = "Start Minute:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label4.Location = new System.Drawing.Point(325, 185);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 13);
-            this.label4.TabIndex = 36;
-            this.label4.Text = "Start Hour:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label3.Location = new System.Drawing.Point(327, 14);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 13);
-            this.label3.TabIndex = 34;
-            this.label3.Text = "Min Level:";
-            // 
-            // MinLev_textbox
-            // 
-            this.MinLev_textbox.Location = new System.Drawing.Point(383, 11);
-            this.MinLev_textbox.MaxLength = 3;
-            this.MinLev_textbox.Name = "MinLev_textbox";
-            this.MinLev_textbox.Size = new System.Drawing.Size(49, 20);
-            this.MinLev_textbox.TabIndex = 33;
-            this.MinLev_textbox.TextChanged += new System.EventHandler(this.MinLev_textbox_TextChanged);
             // 
             // label2
             // 
@@ -533,7 +238,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 7);
+            this.label1.Location = new System.Drawing.Point(20, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 4;
@@ -583,6 +288,318 @@
             this.NYTextBox.Size = new System.Drawing.Size(37, 20);
             this.NYTextBox.TabIndex = 3;
             this.NYTextBox.TextChanged += new System.EventHandler(this.NYTextBox_TextChanged);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.Flag_textbox);
+            this.tabPage2.Controls.Add(this.label12);
+            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.Day_combo);
+            this.tabPage2.Controls.Add(this.Class_combo);
+            this.tabPage2.Controls.Add(this.EndMin_num);
+            this.tabPage2.Controls.Add(this.EndHour_combo);
+            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.label9);
+            this.tabPage2.Controls.Add(this.StartMin_num);
+            this.tabPage2.Controls.Add(this.StartHour_combo);
+            this.tabPage2.Controls.Add(this.TimeVisible_checkbox);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.MaxLev_textbox);
+            this.tabPage2.Controls.Add(this.Sabuk_checkbox);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.label4);
+            this.tabPage2.Controls.Add(this.label3);
+            this.tabPage2.Controls.Add(this.MinLev_textbox);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(592, 268);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Visibility";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // Flag_textbox
+            // 
+            this.Flag_textbox.Location = new System.Drawing.Point(112, 110);
+            this.Flag_textbox.MaxLength = 3;
+            this.Flag_textbox.Name = "Flag_textbox";
+            this.Flag_textbox.Size = new System.Drawing.Size(49, 20);
+            this.Flag_textbox.TabIndex = 55;
+            this.Flag_textbox.TextChanged += new System.EventHandler(this.Flag_textbox_TextChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label12.Location = new System.Drawing.Point(41, 113);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(71, 13);
+            this.label12.TabIndex = 54;
+            this.label12.Text = "Needed Flag:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label10.Location = new System.Drawing.Point(41, 83);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(71, 13);
+            this.label10.TabIndex = 53;
+            this.label10.Text = "Day to Show:";
+            // 
+            // Day_combo
+            // 
+            this.Day_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Day_combo.FormattingEnabled = true;
+            this.Day_combo.Items.AddRange(new object[] {
+            "",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"});
+            this.Day_combo.Location = new System.Drawing.Point(112, 79);
+            this.Day_combo.Name = "Day_combo";
+            this.Day_combo.Size = new System.Drawing.Size(163, 21);
+            this.Day_combo.TabIndex = 52;
+            this.Day_combo.SelectedIndexChanged += new System.EventHandler(this.Day_combo_SelectedIndexChanged);
+            // 
+            // Class_combo
+            // 
+            this.Class_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Class_combo.FormattingEnabled = true;
+            this.Class_combo.Items.AddRange(new object[] {
+            "",
+            "Warrior",
+            "Wizard",
+            "Taoist",
+            "Assassin",
+            "Archer"});
+            this.Class_combo.Location = new System.Drawing.Point(112, 29);
+            this.Class_combo.Name = "Class_combo";
+            this.Class_combo.Size = new System.Drawing.Size(87, 21);
+            this.Class_combo.TabIndex = 51;
+            this.Class_combo.SelectedIndexChanged += new System.EventHandler(this.Class_combo_SelectedIndexChanged);
+            // 
+            // EndMin_num
+            // 
+            this.EndMin_num.Location = new System.Drawing.Point(238, 201);
+            this.EndMin_num.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+            this.EndMin_num.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.EndMin_num.Name = "EndMin_num";
+            this.EndMin_num.Size = new System.Drawing.Size(47, 20);
+            this.EndMin_num.TabIndex = 50;
+            this.EndMin_num.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.EndMin_num.ValueChanged += new System.EventHandler(this.EndMin_num_ValueChanged);
+            // 
+            // EndHour_combo
+            // 
+            this.EndHour_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.EndHour_combo.FormattingEnabled = true;
+            this.EndHour_combo.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23"});
+            this.EndHour_combo.Location = new System.Drawing.Point(112, 200);
+            this.EndHour_combo.Name = "EndHour_combo";
+            this.EndHour_combo.Size = new System.Drawing.Size(49, 21);
+            this.EndHour_combo.TabIndex = 49;
+            this.EndHour_combo.SelectedIndexChanged += new System.EventHandler(this.EndHour_combo_SelectedIndexChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label8.Location = new System.Drawing.Point(171, 203);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(64, 13);
+            this.label8.TabIndex = 48;
+            this.label8.Text = "End Minute:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label9.Location = new System.Drawing.Point(54, 203);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(55, 13);
+            this.label9.TabIndex = 47;
+            this.label9.Text = "End Hour:";
+            // 
+            // StartMin_num
+            // 
+            this.StartMin_num.Location = new System.Drawing.Point(238, 175);
+            this.StartMin_num.Maximum = new decimal(new int[] {
+            58,
+            0,
+            0,
+            0});
+            this.StartMin_num.Name = "StartMin_num";
+            this.StartMin_num.Size = new System.Drawing.Size(47, 20);
+            this.StartMin_num.TabIndex = 46;
+            this.StartMin_num.ValueChanged += new System.EventHandler(this.StartMin_num_ValueChanged);
+            // 
+            // StartHour_combo
+            // 
+            this.StartHour_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.StartHour_combo.FormattingEnabled = true;
+            this.StartHour_combo.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23"});
+            this.StartHour_combo.Location = new System.Drawing.Point(112, 174);
+            this.StartHour_combo.Name = "StartHour_combo";
+            this.StartHour_combo.Size = new System.Drawing.Size(49, 21);
+            this.StartHour_combo.TabIndex = 45;
+            this.StartHour_combo.SelectedIndexChanged += new System.EventHandler(this.StartHour_combo_SelectedIndexChanged);
+            // 
+            // TimeVisible_checkbox
+            // 
+            this.TimeVisible_checkbox.AutoSize = true;
+            this.TimeVisible_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TimeVisible_checkbox.Location = new System.Drawing.Point(59, 148);
+            this.TimeVisible_checkbox.Name = "TimeVisible_checkbox";
+            this.TimeVisible_checkbox.Size = new System.Drawing.Size(140, 17);
+            this.TimeVisible_checkbox.TabIndex = 44;
+            this.TimeVisible_checkbox.Text = "Only Visible at set Times";
+            this.TimeVisible_checkbox.UseVisualStyleBackColor = true;
+            this.TimeVisible_checkbox.CheckedChanged += new System.EventHandler(this.TimeVisible_checkbox_CheckedChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label7.Location = new System.Drawing.Point(167, 6);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(59, 13);
+            this.label7.TabIndex = 43;
+            this.label7.Text = "Max Level:";
+            // 
+            // MaxLev_textbox
+            // 
+            this.MaxLev_textbox.Location = new System.Drawing.Point(226, 3);
+            this.MaxLev_textbox.MaxLength = 3;
+            this.MaxLev_textbox.Name = "MaxLev_textbox";
+            this.MaxLev_textbox.Size = new System.Drawing.Size(49, 20);
+            this.MaxLev_textbox.TabIndex = 42;
+            this.MaxLev_textbox.TextChanged += new System.EventHandler(this.MaxLev_textbox_TextChanged);
+            // 
+            // Sabuk_checkbox
+            // 
+            this.Sabuk_checkbox.AutoSize = true;
+            this.Sabuk_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Sabuk_checkbox.Location = new System.Drawing.Point(6, 56);
+            this.Sabuk_checkbox.Name = "Sabuk_checkbox";
+            this.Sabuk_checkbox.Size = new System.Drawing.Size(120, 17);
+            this.Sabuk_checkbox.TabIndex = 41;
+            this.Sabuk_checkbox.Text = "Sabuk War Hidden:";
+            this.Sabuk_checkbox.UseVisualStyleBackColor = true;
+            this.Sabuk_checkbox.CheckedChanged += new System.EventHandler(this.Sabuk_checkbox_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label6.Location = new System.Drawing.Point(31, 32);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(81, 13);
+            this.label6.TabIndex = 40;
+            this.label6.Text = "Class Required:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label5.Location = new System.Drawing.Point(171, 177);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(67, 13);
+            this.label5.TabIndex = 37;
+            this.label5.Text = "Start Minute:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label4.Location = new System.Drawing.Point(54, 177);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(58, 13);
+            this.label4.TabIndex = 36;
+            this.label4.Text = "Start Hour:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label3.Location = new System.Drawing.Point(56, 6);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 13);
+            this.label3.TabIndex = 34;
+            this.label3.Text = "Min Level:";
+            // 
+            // MinLev_textbox
+            // 
+            this.MinLev_textbox.Location = new System.Drawing.Point(112, 3);
+            this.MinLev_textbox.MaxLength = 3;
+            this.MinLev_textbox.Name = "MinLev_textbox";
+            this.MinLev_textbox.Size = new System.Drawing.Size(49, 20);
+            this.MinLev_textbox.TabIndex = 33;
+            this.MinLev_textbox.TextChanged += new System.EventHandler(this.MinLev_textbox_TextChanged);
             // 
             // RemoveButton
             // 
@@ -666,25 +683,6 @@
             this.ExportSelectedButton.UseVisualStyleBackColor = true;
             this.ExportSelectedButton.Click += new System.EventHandler(this.ExportSelected_Click);
             // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label12.Location = new System.Drawing.Point(312, 121);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(71, 13);
-            this.label12.TabIndex = 54;
-            this.label12.Text = "Needed Flag:";
-            // 
-            // Flag_textbox
-            // 
-            this.Flag_textbox.Location = new System.Drawing.Point(383, 118);
-            this.Flag_textbox.MaxLength = 3;
-            this.Flag_textbox.Name = "Flag_textbox";
-            this.Flag_textbox.Size = new System.Drawing.Size(49, 20);
-            this.Flag_textbox.TabIndex = 55;
-            this.Flag_textbox.TextChanged += new System.EventHandler(this.Flag_textbox_TextChanged);
-            // 
             // NPCInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -704,8 +702,9 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NPCInfoForm_FormClosed);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.NPCInfoPanel.ResumeLayout(false);
-            this.NPCInfoPanel.PerformLayout();
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EndMin_num)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.StartMin_num)).EndInit();
             this.ResumeLayout(false);
@@ -716,7 +715,6 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Panel NPCInfoPanel;
         private System.Windows.Forms.TextBox NPCIndexTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button RemoveButton;
@@ -763,5 +761,6 @@
         private System.Windows.Forms.TextBox MaxLev_textbox;
         private System.Windows.Forms.TextBox Flag_textbox;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }

@@ -3394,7 +3394,9 @@ namespace Client.MirScenes
 
         private void NewMagic(S.NewMagic p)
         {
-            User.Magics.Add(p.Magic);
+            ClientMagic magic = p.Magic;
+
+            User.Magics.Add(magic);
             User.RefreshStats();
         }
 
@@ -6963,7 +6965,6 @@ namespace Client.MirScenes
 
             #endregion
 
-
             #region DONT_DESTROY_ON_DROP
 
             if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DestroyOnDrop))
@@ -7269,31 +7270,50 @@ namespace Client.MirScenes
                         Math.Max(ItemLabel.Size.Height, Gemtorch.DisplayRectangle.Bottom));
                 }
                 #endregion
-
-
-
-
             }
 
             #endregion
 
             #region CANTAWAKEN
 
-            if ((HoverItem.Info.CanAwakening != true) && (HoverItem.Info.Type!= ItemType.Gem))
+            //if ((HoverItem.Info.CanAwakening != true) && (HoverItem.Info.Type != ItemType.Gem))
+            //{
+            //    count++;
+            //    MirLabel CANTAWAKENINGLabel = new MirLabel
+            //    {
+            //        AutoSize = true,
+            //        ForeColour = Color.Yellow,
+            //        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+            //        OutLine = true,
+            //        Parent = ItemLabel,
+            //        Text = string.Format("Can't awaken")
+            //    };
+
+            //    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CANTAWAKENINGLabel.DisplayRectangle.Right + 4),
+            //        Math.Max(ItemLabel.Size.Height, CANTAWAKENINGLabel.DisplayRectangle.Bottom));
+            //}
+
+            #endregion
+
+            #region EXPIRE
+
+            if (HoverItem.ExpireInfo != null)
             {
+                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - DateTime.Now).TotalSeconds;
+
                 count++;
-                MirLabel CANTAWAKENINGLabel = new MirLabel
+                MirLabel EXPIRELabel = new MirLabel
                 {
                     AutoSize = true,
                     ForeColour = Color.Yellow,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't awaken")
+                    Text = remainingSeconds > 0 ? string.Format("Expires in {0}", Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : "Expired"
                 };
 
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CANTAWAKENINGLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, CANTAWAKENINGLabel.DisplayRectangle.Bottom));
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, EXPIRELabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, EXPIRELabel.DisplayRectangle.Bottom));
             }
 
             #endregion
@@ -7464,13 +7484,12 @@ namespace Client.MirScenes
                 }
             }
 
-            if (realItem.Type == ItemType.Scroll && realItem.Shape == 6)//Credit Scroll
+            if (realItem.Type == ItemType.Scroll && realItem.Shape == 7)//Credit Scroll
             {
                 HoverItem.Info.ToolTip = string.Format("Adds {0} Credits to your Account.", HoverItem.Info.Price);
             }
 
-
-                if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
+            if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
             {
                 count++;
                 MirLabel TOOLTIPLabel = new MirLabel
@@ -11398,7 +11417,7 @@ namespace Client.MirScenes
 
                     Cells[i - 1].Index = magic.Icon*2;
                     Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nCooldown: {2}\nKey: {3}", magic.Spell,
-                        (magic.BaseCost + (magic.LevelCost * magic.Level)), PrintTimeSpan(magic.Delay), key);
+                        (magic.BaseCost + (magic.LevelCost * magic.Level)), Functions.PrintTimeSpanFromMilliSeconds(magic.Delay), key);
 
                     KeyNameLabels[i - 1].Text = "";
                 }
@@ -11460,30 +11479,6 @@ namespace Client.MirScenes
                     }
                 }
             }
-        }
-
-        private string PrintTimeSpan(double secs)
-        {
-            TimeSpan t = TimeSpan.FromMilliseconds(secs);
-            string answer;
-            if (t.TotalMinutes < 1.0)
-            {
-                answer = string.Format("{0}.{1}s", t.Seconds, (decimal)(t.Milliseconds / 100));
-            }
-            else if (t.TotalHours < 1.0)
-            {
-                answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
-            }
-            else if (t.TotalDays < 1.0)
-            {
-                answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
-            }
-            else // more than 1 day
-            {
-                answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
-            }
-
-            return answer;
         }
 
         public void Show()
@@ -20394,7 +20389,7 @@ namespace Client.MirScenes
             if (HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == BlackStoneImageFG)
             {
                 if(GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.CanProduceBlackStone)
-                    HoverLabel.Text = string.Format("{0}", PrintTimeSpan(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
+                    HoverLabel.Text = string.Format("{0}", Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
                 else
                     HoverLabel.Text = "No Production.";
             }
@@ -20430,7 +20425,7 @@ namespace Client.MirScenes
             if (sender == BlackStoneImageBG || sender == BlackStoneImageFG)
             {
                 HoverLabel.Visible = true;
-                HoverLabel.Text = string.Format("{0}", PrintTimeSpan(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
+                HoverLabel.Text = string.Format("{0}", Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
                 HoverLabel.Size = BlackStoneImageBG.Size;
                 HoverLabel.Location = new Point(BlackStoneImageBG.Location.X + 5, BlackStoneImageBG.Location.Y - 2);
                 HoverLabelParent = BlackStoneImageFG;
@@ -20730,12 +20725,12 @@ namespace Client.MirScenes
             if (GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime == -9999)
                 CreatureDeadline.Text = "Expire: Never";
             else
-                CreatureDeadline.Text = string.Format("Expire: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
+                CreatureDeadline.Text = string.Format("Expire: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
             //
             if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
                 CreatureMaintainFoodBuff.Text = "0";
             else
-                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
+                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
 
             int StartIndex = CreatureButtons[SelectedCreatureSlot].AnimDefaultIdx;
             int AnimCount = CreatureButtons[SelectedCreatureSlot].AnimDefaultCount;
@@ -20795,34 +20790,6 @@ namespace Client.MirScenes
 
             GameScene.User.IntelligentCreatures[selectedCreature].Filter = filter;
             Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
-        }
-
-        private string PrintTimeSpan(double secs)
-        {
-            TimeSpan t = TimeSpan.FromSeconds(secs);
-            string answer;
-            if (t.TotalMinutes < 1.0)
-            {
-                answer = string.Format("{0}s", t.Seconds);
-            }
-            else if (t.TotalHours < 1.0)
-            {
-                answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
-            }
-            else if (t.TotalDays < 1.0)
-            {
-                answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
-            }
-            //else if (t.TotalDays < 7.0)
-            //{
-            //    answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.TotalHours, t.Minutes, t.Seconds);
-            //}
-            else // more than 1 day
-            {
-                answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
-            }
-
-            return answer;
         }
 
         public override void OnMouseDown(MouseEventArgs e)
@@ -23407,36 +23374,13 @@ namespace Client.MirScenes
                     break;
             }
 
-            text += string.Format("Expire: {0}", Infinite ? "Never" : PrintTimeSpan(Math.Round((Expire - CMain.Time) / 1000D)));
+            text += string.Format("Expire: {0}", Infinite ? "Never" : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
 
             if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
 
             return text;
         }
 
-        private string PrintTimeSpan(double secs)
-        {
-            TimeSpan t = TimeSpan.FromSeconds(secs);
-            string answer;
-            if (t.TotalMinutes < 1.0)
-            {
-                answer = string.Format("{0}s", t.Seconds);
-            }
-            else if (t.TotalHours < 1.0)
-            {
-                answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
-            }
-            else if (t.TotalDays < 1.0)
-            {
-                answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
-            }
-            else // more than 1 day
-            {
-                answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
-            }
-
-            return answer;
-        }
     }
 }
 

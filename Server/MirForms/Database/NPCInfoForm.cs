@@ -62,7 +62,8 @@ namespace Server
 
             if (_selectedNPCInfos.Count == 0)
             {
-                NPCInfoPanel.Enabled = false;
+                tabPage1.Enabled = false;
+                tabPage2.Enabled = false;
                 NPCIndexTextBox.Text = string.Empty;
                 NFileNameTextBox.Text = string.Empty;
                 NNameTextBox.Text = string.Empty;
@@ -87,7 +88,8 @@ namespace Server
 
             NPCInfo info = _selectedNPCInfos[0];
 
-            NPCInfoPanel.Enabled = true;
+            tabPage1.Enabled = true;
+            tabPage2.Enabled = true;
 
             NPCIndexTextBox.Text = info.Index.ToString();
             NFileNameTextBox.Text = info.FileName;
