@@ -283,7 +283,6 @@ namespace Client.MirObjects
                         break;
                 }
 
-
                 switch (CurrentAction)
                 {
                     case MirAction.Standing:

@@ -1349,7 +1349,11 @@ namespace Server.MirObjects
                     CheckList.Add(new NPCChecks(CheckType.CheckWeddingRing));
                     break;
 
+                case "CHECKPET":
+                    if (parts.Length < 2) return;
 
+                    CheckList.Add(new NPCChecks(CheckType.CheckPet, parts[1]));
+                    break;
             }
 
         }
@@ -1447,6 +1451,11 @@ namespace Server.MirObjects
                     string petlevel = parts.Length > 3 ? parts[3] : "0";
 
                     acts.Add(new NPCActions(ActionType.GivePet, parts[1], petcount, petlevel));
+                    break;
+                case "REMOVEPET":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.RemovePet, parts[1]));
                     break;
                 case "CLEARPETS":
                     acts.Add(new NPCActions(ActionType.ClearPets));
@@ -2288,6 +2297,18 @@ namespace Server.MirObjects
                             failed = true;
                         }
                         break;
+                    case CheckType.CheckPet:
+
+                        bool petMatch = false;
+                        for (int c = player.Pets.Count - 1; c >= 0; c--)
+                        {
+                            if (string.Compare(player.Pets[c].Name, param[0], true) != 0) continue;
+
+                            petMatch = true;
+                        }
+
+                        failed = !petMatch;
+                        break;
                 }
 
                 if (!failed) continue;
@@ -2525,6 +2546,15 @@ namespace Server.MirObjects
                             monster.ActionTime = SMain.Envir.Time + 1000;
                             monster.Spawn(player.CurrentMap, player.CurrentLocation);
                             player.Pets.Add(monster);
+                        }
+                        break;
+
+                    case ActionType.RemovePet:
+                        for (int c = player.Pets.Count - 1; c >= 0; c--)
+                        {
+                            if (string.Compare(player.Pets[c].Name, param[0], true) == 0) continue;
+
+                            player.Pets[c].Die();
                         }
                         break;
 
@@ -3392,7 +3422,8 @@ namespace Server.MirObjects
         ForceDivorce,
         GlobalMessage,
         LoadValue,
-        SaveValue
+        SaveValue,
+        RemovePet
     }
     public enum CheckType
     {
@@ -3424,5 +3455,6 @@ namespace Server.MirObjects
         CheckQuest,
         CheckRelationship,
         CheckWeddingRing,
+        CheckPet
     }
 }
