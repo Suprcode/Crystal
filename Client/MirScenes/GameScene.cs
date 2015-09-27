@@ -10105,6 +10105,14 @@ namespace Client.MirScenes
                     backColour = Color.Yellow;
                     foreColour = Color.Black;
                     break;
+                case ChatType.Shout2:
+                    backColour = Color.Green;
+                    foreColour = Color.White;
+                    break;
+                case ChatType.Shout3:
+                    backColour = Color.Purple;
+                    foreColour = Color.White;
+                    break;
                 case ChatType.System:
                     backColour = Color.Red;
                     foreColour = Color.White;

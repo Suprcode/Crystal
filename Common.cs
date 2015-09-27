@@ -673,7 +673,9 @@ public enum ChatType : byte
     LevelUp = 10,
     System2 = 11,
     Relationship = 12,
-    Mentor = 13
+    Mentor = 13,
+    Shout2 = 14,
+    Shout3 = 15
 }
 
 public enum ItemType : byte

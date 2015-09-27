@@ -15,7 +15,7 @@ namespace Server.MirObjects
     public sealed class PlayerObject : MapObject
     {
         public string GMPassword = Settings.GMPassword;
-        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor;
+        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor, HasMapShout, HasServerShout;
 
         public bool HasUpdatedBaseStats = true;
 
@@ -3220,7 +3220,7 @@ namespace Server.MirObjects
                     ReceiveChat(string.Format("You cannot shout for another {0} seconds.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
                     return;
                 }
-                if (Level < 8)
+                if (Level < 8 && (!HasMapShout && !HasServerShout))
                 {
                     ReceiveChat("You need to be level 8 before you can shout.", ChatType.System);
                     return;
@@ -3229,13 +3229,38 @@ namespace Server.MirObjects
                 ShoutTime = Envir.Time + 10000;
                 message = String.Format("(!){0}:{1}", Name, message.Remove(0, 1));
 
-                p = new S.Chat { Message = message, Type = ChatType.Shout };
-
-                //Envir.Broadcast(p);
-                for (int i = 0; i < CurrentMap.Players.Count; i++)
+                if (HasMapShout)
                 {
-                    if (!Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2)) continue;
-                    CurrentMap.Players[i].Enqueue(p);
+                    p = new S.Chat { Message = message, Type = ChatType.Shout2 };
+                    HasMapShout = false;
+
+                    for (int i = 0; i < CurrentMap.Players.Count; i++)
+                    {
+                        CurrentMap.Players[i].Enqueue(p);
+                    }
+                    return;
+                }
+                else if (HasServerShout)
+                {
+                    p = new S.Chat { Message = message, Type = ChatType.Shout3 };
+                    HasServerShout = false;
+
+                    for (int i = 0; i < Envir.Players.Count; i++)
+                    {
+                        CurrentMap.Players[i].Enqueue(p);
+                    }
+                    return;
+                }
+                else
+                {
+                    p = new S.Chat { Message = message, Type = ChatType.Shout };
+
+                    //Envir.Broadcast(p);
+                    for (int i = 0; i < CurrentMap.Players.Count; i++)
+                    {
+                        if (!Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2)) continue;
+                        CurrentMap.Players[i].Enqueue(p);
+                    }
                 }
 
             }
@@ -10197,8 +10222,16 @@ namespace Server.MirObjects
                             if (item.Info.Price > 0)
                             {
                                 GainCredit(item.Info.Price);
-                                ReceiveChat(String.Format("{0} Credits have been added to your Account.", item.Info.Price), ChatType.Hint);
+                                ReceiveChat(String.Format("{0} Credits have been added to your Account", item.Info.Price), ChatType.Hint);
                             }
+                            break;
+                        case 8: //MapShoutScroll
+                            HasMapShout = true;
+                            ReceiveChat("You have been given one free shout across your current map", ChatType.Hint);
+                            break;
+                        case 9://ServerShoutScroll
+                            HasServerShout = true;
+                            ReceiveChat("You have been given one free shout across the server", ChatType.Hint);
                             break;
                     }
                     break;
