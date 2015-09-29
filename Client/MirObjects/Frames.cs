@@ -14,7 +14,6 @@ namespace Client.MirObjects
 
         public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
 
-
         static FrameSet()
         {
             FrameSet frame;
@@ -1283,7 +1282,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack3, new Frame(208, 9, 0, 100));
             frame.Frames.Add(MirAction.Struck, new Frame(280, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(304, 9, 0, 100));
-            frame.Frames.Add(MirAction.Dead, new Frame(312, 1, 7, 1000));
+            frame.Frames.Add(MirAction.Dead, new Frame(312, 1, 8, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(304, 9, 0, 100) { Reverse = true });
 
             //108 - SwampSlime
@@ -1923,10 +1922,10 @@ namespace Client.MirObjects
             //166 - BlackTortoise
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
-            frame.Frames.Add(MirAction.Walking, new Frame(32, 10, 0, 200));
-            frame.Frames.Add(MirAction.Attack1, new Frame(112, 4, 0, 100));
-            frame.Frames.Add(MirAction.Attack2, new Frame(144, 6, 0, 100));
-            frame.Frames.Add(MirAction.Attack3, new Frame(192, 7, 0, 100));
+            //frame.Frames.Add(MirAction.StandingAlt, new Frame(32, 10, 0, 200));
+            frame.Frames.Add(MirAction.Walking, new Frame(112, 4, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(144, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack2, new Frame(192, 7, 0, 100));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(248, 6, 0, 100));
             frame.Frames.Add(MirAction.Struck, new Frame(296, 2, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(312, 6, 0, 100));

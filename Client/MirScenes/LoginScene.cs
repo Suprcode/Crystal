@@ -167,8 +167,9 @@ namespace Client.MirScenes
                 using (MD5 md5 = MD5.Create())
                 using (FileStream stream = File.OpenRead(Application.ExecutablePath))
                     sum = md5.ComputeHash(stream);
+
                 p.VersionHash = sum;
-                Network.Enqueue(p);
+                    Network.Enqueue(p);
             }
             catch (Exception ex)
             {

@@ -195,7 +195,12 @@ namespace Server.MirObjects.Monsters
 
             MonsterObject mob = GetMonster(Envir.GetMonsterInfo(Name));
 
-            if (mob == null) base.ProcessAI();
+            if (mob == null)
+            {
+                base.ProcessAI();
+                return;
+            }
+
             Yimoogi childmob = (Yimoogi)mob;
 
             if (!childmob.Spawn(CurrentMap, Front))

@@ -94,6 +94,8 @@ namespace Server.MirDatabase
         public PlayerObject Player;
         public MountInfo Mount;
 
+        public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
+
         public CharacterInfo()
         {
 
@@ -338,6 +340,16 @@ namespace Server.MirDatabase
                 MentorExp = reader.ReadInt64();
             }
 
+            if (Envir.LoadVersion >= 63)
+            {
+                int logCount = reader.ReadInt32();
+
+                for (int i = 0; i < logCount; i++)
+                {
+                    GSpurchases.Add(reader.ReadInt32(), reader.ReadInt32());
+                }
+            }
+
         }
 
         public void Save(BinaryWriter writer)
@@ -474,6 +486,15 @@ namespace Server.MirDatabase
             writer.Write(MentorDate.ToBinary());
             writer.Write(isMentor);
             writer.Write(MentorExp);
+
+            writer.Write(GSpurchases.Count);
+
+            foreach (var item in GSpurchases)
+            {
+                writer.Write(item.Key);
+                writer.Write(item.Value);
+            }
+
         }
 
         public ListViewItem CreateListView()

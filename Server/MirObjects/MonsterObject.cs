@@ -151,6 +151,8 @@ namespace Server.MirObjects
                     return new DarkDevourer(info);
                 case 68:
                     return new Football(info);
+                case 69:
+                    return new Runaway(info);
                 default:
                     return new MonsterObject(info);
             }
@@ -1705,21 +1707,33 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     break;
             }
 
@@ -1736,7 +1750,11 @@ namespace Server.MirObjects
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
             }
 
-            if (armour >= damage) return 0;
+            if (armour >= damage)
+            {
+                BroadcastDamageIndicator(DamageType.Miss);
+                return 0;
+            }
 
             if (attacker.LifeOnHit > 0)
                 attacker.ChangeHP(attacker.LifeOnHit);
@@ -1814,8 +1832,10 @@ namespace Server.MirObjects
                 }
             }
 
+            BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+
             ChangeHP(armour - damage);
-            return damage - armour;
+            return armour - damage;
         }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
@@ -1827,28 +1847,44 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     armour = GetAttackPower(MinAC, MaxAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
                     break;
             }
 
             armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
             damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
-            if (armour >= damage) return 0;
+            if (armour >= damage)
+            {
+                BroadcastDamageIndicator(DamageType.Miss);
+                return 0;
+            }
 
             if (Target != this && attacker.IsAttackTarget(this))
                 Target = attacker;
@@ -1876,6 +1912,8 @@ namespace Server.MirObjects
             }
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
             ChangeHP(armour - damage);
             return damage - armour;

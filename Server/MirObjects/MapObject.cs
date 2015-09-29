@@ -628,6 +628,18 @@ namespace Server.MirObjects
 
         }
 
+        public void BroadcastDamageIndicator(DamageType type, int damage = 0)
+        {
+            Packet p = new S.DamageIndicator { ObjectID = ObjectID, Damage = damage, Type = type };
+
+            if (Race == ObjectType.Player)
+            {
+                PlayerObject player = (PlayerObject)this;
+                player.Enqueue(p);
+            }
+            Broadcast(p);
+        }
+
         public abstract void Die();
         public abstract int Pushed(MapObject pusher, MirDirection dir, int distance);
 
@@ -664,6 +676,8 @@ namespace Server.MirObjects
 
                     if (checklocation.X < 0) continue;
                     if (checklocation.X >= CurrentMap.Width) continue;
+                    if (checklocation.Y < 0) continue;
+                    if (checklocation.Y >= CurrentMap.Height) continue;
 
                     Cell cell = CurrentMap.GetCell(checklocation.X, checklocation.Y);
                     if (!cell.Valid || cell.Objects == null) continue;
@@ -725,6 +739,9 @@ namespace Server.MirObjects
         public long ExpireTime;
         public int[] Values;
         public bool Infinite;
+
+        public bool RealTime;
+        public DateTime RealTimeExpire;
 
         public bool Paused;
 
