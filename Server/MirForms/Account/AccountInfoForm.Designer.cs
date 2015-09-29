@@ -76,6 +76,7 @@
             this.banReasonHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.expiryDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MatchFilterCheckBox = new System.Windows.Forms.CheckBox();
+            this.WipeCharButton = new System.Windows.Forms.Button();
             this.AccountInfoPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -519,11 +520,22 @@
             this.MatchFilterCheckBox.Text = "Match Filter";
             this.MatchFilterCheckBox.UseVisualStyleBackColor = true;
             // 
+            // WipeCharButton
+            // 
+            this.WipeCharButton.Location = new System.Drawing.Point(93, 12);
+            this.WipeCharButton.Name = "WipeCharButton";
+            this.WipeCharButton.Size = new System.Drawing.Size(115, 23);
+            this.WipeCharButton.TabIndex = 18;
+            this.WipeCharButton.Text = "Wipe All Characters";
+            this.WipeCharButton.UseVisualStyleBackColor = true;
+            this.WipeCharButton.Click += new System.EventHandler(this.WipeCharButton_Click);
+            // 
             // AccountInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(640, 461);
+            this.Controls.Add(this.WipeCharButton);
             this.Controls.Add(this.MatchFilterCheckBox);
             this.Controls.Add(this.FilterPlayerTextBox);
             this.Controls.Add(this.label15);
@@ -593,5 +605,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox FilterPlayerTextBox;
         private System.Windows.Forms.CheckBox MatchFilterCheckBox;
+        private System.Windows.Forms.Button WipeCharButton;
     }
 }

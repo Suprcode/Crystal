@@ -2050,9 +2050,9 @@ public static class Functions
         {
             answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
         }
-        else // more than 1 day
+        else
         {
-            answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
+            answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
         }
 
         return answer;
