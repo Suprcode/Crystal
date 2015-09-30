@@ -10834,6 +10834,10 @@ namespace Server.MirObjects
                     {
                         if (succeeded) tempTo.PoisonResist = (byte)Math.Min(byte.MaxValue, tempFrom.Info.PoisonResist + tempTo.PoisonResist + tempFrom.PoisonResist);
                     }
+                    else if ((tempFrom.Info.Luck + tempFrom.Luck) > 0)
+                    {
+                        if (succeeded) tempTo.Luck = (sbyte) Math.Min(sbyte.MaxValue, tempFrom.Info.Luck + tempTo.Luck + tempFrom.Luck);
+                    }
                     else
                     {
                         ReceiveChat("Cannot combine these items.", ChatType.Hint);
