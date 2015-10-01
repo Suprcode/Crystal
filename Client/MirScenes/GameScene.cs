@@ -15032,10 +15032,8 @@ namespace Client.MirScenes
             {
                 Parent = this,
                 Location = new Point(58, 153),
-                Size = new Size(143, 24),
-                ForeColour = Color.Black,
-                BorderColour = Color.Gray,
-                BackColour = Color.FromArgb(255,20,20,20),
+                Size = new Size(130, 16),
+                ForeColour = Color.White,
                 Visible = true,
                 Enabled = true,
             };
@@ -16911,7 +16909,6 @@ namespace Client.MirScenes
         public int MemberScrollIndex = 0, MembersShowCount = 1;
         public MirButton MembersUpButton, MembersDownButton, MembersPositionBar;
         public MirLabel MembersHeaderRank, MembersHeaderName, MembersHeaderStatus, MembersShowOffline;
-        public MirButton MembersAddMember;
         public MirButton MembersShowOfflineButton;
         public MirImageControl MembersShowOfflineStatus;
         public MirDropDownBox[] MembersRanks;
@@ -16927,6 +16924,8 @@ namespace Client.MirScenes
         public MirLabel StatusData;
         public MirImageControl StatusExpBar;
         public MirLabel StatusExpLabel;
+        public MirTextBox MembersRecruitName;
+        public MirButton RecruitMemberButton;
         #endregion
 
         #region StoragePagePub
@@ -16992,12 +16991,12 @@ namespace Client.MirScenes
             BuffsButton = new MirButton
             {
                 Library = Libraries.Title,
-                Index = 70,
-                HoverIndex = 71,
-                PressedIndex = 69,
+                Index = 526,
+                HoverIndex = 527,
+                PressedIndex = 528,
                 Sound = SoundList.ButtonA,
-                Parent = this,
-                Location = new Point(463, 400),
+                Parent = StatusPage,
+                Location = new Point(124, 63),
                 Visible = false,
             };
             BuffsButton.Click += (o, e) =>
@@ -17049,6 +17048,7 @@ namespace Client.MirScenes
                 Parent = NoticePage,
                 Size = new Size(322, 330),
                 Location = new Point(13, 1)
+                //sorting = true
             };
             Notice.MultiLine();
 
@@ -17214,19 +17214,6 @@ namespace Client.MirScenes
                 };
                 MembersDelete[index].Click += (o, e) => DeleteMember(index);
             }
-            MembersAddMember = new MirButton
-            {
-                Parent = MembersPage,
-                Enabled = true,
-                Visible = false,
-                Location = new Point(15, 335),
-                Library = Libraries.Title,
-                Index = 64,
-                HoverIndex = 65,
-                PressedIndex = 63
-            };
-            MembersAddMember.Click += (o, e) => AddMember();
-
             MembersUpButton = new MirButton
             {
                 HoverIndex = 198,
@@ -17337,7 +17324,7 @@ namespace Client.MirScenes
             };
             StatusHeaders = new MirLabel()
             {
-                Location = new Point(46, 36),
+                Location = new Point(46, 49),
                 Size = new Size(100, 300),
                 NotControl = true,
                 Text = "Guild Name\n\nLevel\n\nMembers",
@@ -17346,7 +17333,7 @@ namespace Client.MirScenes
             };
             StatusData = new MirLabel()
             {
-                Location = new Point(122, 36),
+                Location = new Point(122, 49),
                 Size = new Size(100, 300),
                 NotControl = true,
                 Text = "",
@@ -17372,6 +17359,32 @@ namespace Client.MirScenes
                 Parent = StatusPage,
                 Size = new Size(550, 12)
             };
+            MembersRecruitName = new MirTextBox()
+            {
+                Location = new Point(40, 300),
+                Size = new Size(130, 21),
+                MaxLength = 20,
+                Parent = StatusPage,
+                Visible = true,
+                Text = "",
+                BackColour = Color.FromArgb(255, 6, 6, 6),
+                Border = true,
+                BorderColour = Color.FromArgb(255, 20, 20, 20),
+                CanLoseFocus = true
+                //sorting = true
+            };
+            RecruitMemberButton = new MirButton()
+            {
+                Parent = StatusPage,
+                Enabled = true,
+                Visible = true,
+                Location = new Point(170, 299),
+                Library = Libraries.Title,
+                Index = 356,
+                HoverIndex = 357,
+                PressedIndex = 358
+            };
+            RecruitMemberButton.Click += (o, e) => AddMember();
             #endregion
 
             #region StorageDialogUI 
@@ -17460,7 +17473,7 @@ namespace Client.MirScenes
             RanksSelectTextL = new MirLabel()
             {
                 Text = "Edit Rank",
-                Location = new Point(42, 20),
+                Location = new Point(42,36),
                 Size = new Size(150, 20),
                 ForeColour = Color.White,
                 Parent = RankPage,
@@ -17470,7 +17483,7 @@ namespace Client.MirScenes
             RanksSelectTextR = new MirLabel()
             {
                 Text = "Select Rank",
-                Location = new Point(198, 20),
+                Location = new Point(198, 36),
                 Size = new Size(150, 20),
                 ForeColour = Color.White,
                 Parent = RankPage,
@@ -17483,9 +17496,6 @@ namespace Client.MirScenes
                 Location = new Point(198, 36),
                 Size = new Size(130, 16),
                 ForeColour = Color.White,
-                BackColour = Color.FromArgb(255, 6, 6, 6),
-                Border = true,
-                BorderColour = Color.FromArgb(255, 20, 20, 20),
                 Visible = true,
                 Enabled = true
             };
@@ -17536,7 +17546,7 @@ namespace Client.MirScenes
                     Library = Libraries.Prguse,
                     Sound = SoundList.ButtonA,
                     Parent = RankPage,
-                    Location = new Point(i % 2 == 0 ? 32 : 202, i % 2 == 0 ? 110 + (i * 20) : 110 + ((i - 1) * 20))
+                    Location = new Point(i % 2 == 0 ? 32 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
                 };
                 int index = i;
                 RanksOptionsButtons[i].Click += (o, e) => SwitchRankOption(index);
@@ -17550,7 +17560,7 @@ namespace Client.MirScenes
                     Library = Libraries.Prguse,
                     Parent = RankPage,
                     NotControl = true,
-                    Location = new Point(i % 2 == 0 ? 32 : 202, i % 2 == 0 ? 110 + (i * 20) : 110 + ((i - 1) * 20))
+                    Location = new Point(i % 2 == 0 ? 32 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
                 };
                 int index = i;
                 RanksOptionsStatus[i].Click += (o, e) => SwitchRankOption(index);
@@ -17562,7 +17572,7 @@ namespace Client.MirScenes
                     Visible = true,
                     NotControl = true,
                     Parent = RankPage,
-                    Location = new Point(17 + (i % 2 == 0 ? 32 : 202), i % 2 == 0 ? 108 + (i * 20) : 108 + ((i - 1) * 20)),
+                    Location = new Point(17 + (i % 2 == 0 ? 32 : 202), i % 2 == 0 ? 118 + (i * 20) : 118 + ((i - 1) * 20)),
                     AutoSize = true,
                     Text = Options[i]
                 };
@@ -17777,15 +17787,9 @@ namespace Client.MirScenes
         {
             if (!MyOptions.HasFlag(RankOptions.CanRecruit)) return;
             if (LastGuildMsg > CMain.Time) return;
-            MirInputBox messageBox = new MirInputBox("Who would you like to invite to the guild?");
-            messageBox.OKButton.Click += (o, e) =>
-            {
-                Network.Enqueue(new C.EditGuildMember { ChangeType = 0, Name = messageBox.InputTextBox.Text });
-                LastGuildMsg = CMain.Time + 5000;
-                messageBox.Dispose();
-            };
-            messageBox.Show();
-
+            Network.Enqueue(new C.EditGuildMember { ChangeType = 0, Name = MembersRecruitName.Text });
+            LastGuildMsg = CMain.Time + 5000;
+            MembersRecruitName.Text = "";
         }
 
         public void DeleteMember(int Index)
@@ -17853,9 +17857,9 @@ namespace Client.MirScenes
                 MembersDelete[i].Visible = false;
             }
             if (MyOptions.HasFlag(RankOptions.CanRecruit))
-                MembersAddMember.Visible = true;
+                RecruitMemberButton.Visible = true;
             else
-                MembersAddMember.Visible = false;
+                RecruitMemberButton.Visible = false;
             int Offset = 0;
             int RowCount = 0;
             DateTime now = DateTime.Now;
@@ -18254,11 +18258,13 @@ namespace Client.MirScenes
         public void RightDialog(byte Rpageid)
         {
             StatusPage.Visible = false;
+            BuffsButton.Index = 526;
 
             switch (Rpageid)
             {
                 case 0:
                     StatusPage.Visible = true;
+                    BuffsButton.Index = 526;
                     break;
             }
         }
@@ -18272,7 +18278,6 @@ namespace Client.MirScenes
             NoticeButton.Index = 93;
             MembersButton.Index = 99;
             StorageButton.Index = 105;
-            BuffsButton.Index = 70;
             RankButton.Index = 101;
 
             switch (Lpageid)
