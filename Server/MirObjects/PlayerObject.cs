@@ -15,7 +15,7 @@ namespace Server.MirObjects
     public sealed class PlayerObject : MapObject
     {
         public string GMPassword = Settings.GMPassword;
-        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor;
+        public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor, HasMapShout, HasServerShout;
 
         public bool HasUpdatedBaseStats = true;
 
@@ -186,8 +186,8 @@ namespace Server.MirObjects
             }
         }
 
-        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime;
+        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime;
 
         public byte ChatTick;
 
@@ -385,7 +385,7 @@ namespace Server.MirObjects
                 if (pet.Info.AI == 64)//IntelligentCreature
                 {
                     //dont save Creatures they will miss alot of AI-Info when they get spawned on login
-                    UnSummonIntelligentCreature(((IntelligentCreatureObject)Pets[i]).petType, false);
+                    UnSummonIntelligentCreature(((IntelligentCreatureObject)pet).petType, false);
                     continue;
                 }
 
@@ -619,6 +619,13 @@ namespace Server.MirObjects
             {
                 _fishCounter++;
                 UpdateFish();
+            }
+
+            if (Envir.Time > ItemExpireTime)
+            {
+                ItemExpireTime = Envir.Time + ItemExpireDelay;
+
+                ProcessItems();
             }
 
             for (int i = Pets.Count() - 1; i >= 0; i--)
@@ -1023,6 +1030,38 @@ namespace Server.MirObjects
             }
             return false;
         }
+
+        private void ProcessItems()
+        {
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                UserItem item = Info.Inventory[i];
+
+                if (item == null || item.ExpireInfo == null) continue;
+
+                if (DateTime.Now > item.ExpireInfo.ExpiryDate)
+                {
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.Inventory[i] = null;
+                    ReceiveChat(string.Format("{0} has just expired from your inventory.", item.Info.FriendlyName), ChatType.Hint);
+                }
+            }
+
+            for (int i = 0; i < Info.Equipment.Length; i++)
+            {
+                UserItem item = Info.Equipment[i];
+
+                if (item == null || item.ExpireInfo == null) continue;
+
+                if (DateTime.Now > item.ExpireInfo.ExpiryDate)
+                {
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.Equipment[i] = null;
+                    ReceiveChat(string.Format("{0} has just expired from your equipment.", item.Info.FriendlyName), ChatType.Hint);
+                }
+            }
+        }
+
         public override void Process(DelayedAction action)
         {
             switch (action.Type)
@@ -1543,6 +1582,12 @@ namespace Server.MirObjects
                     MentorBreak();
             }
 
+            for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
+            {
+                if (Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange))
+                    CurrentMap.NPCs[i].CheckVisible(this);
+            }
+
             Report.Levelled(Level);
         }
 
@@ -1795,6 +1840,7 @@ namespace Server.MirObjects
                     }
                 }
             }
+
             Spawned();
 
             SetLevelEffects();
@@ -2164,6 +2210,14 @@ namespace Server.MirObjects
                             SpellObject obSpell = (SpellObject)ob;
                             if ((obSpell.Spell != Spell.ExplosiveTrap) || (IsFriendlyTarget(obSpell.Caster)))
                                 Enqueue(ob.GetInfo());
+                        }
+                        else if (ob.Race == ObjectType.Merchant)
+                        {
+                            NPCObject NPC = (NPCObject)ob;
+
+                            NPC.CheckVisible(this);
+
+                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
                         }
                         else
                         {
@@ -3166,7 +3220,7 @@ namespace Server.MirObjects
                     ReceiveChat(string.Format("You cannot shout for another {0} seconds.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
                     return;
                 }
-                if (Level < 8)
+                if (Level < 8 && (!HasMapShout && !HasServerShout))
                 {
                     ReceiveChat("You need to be level 8 before you can shout.", ChatType.System);
                     return;
@@ -3175,13 +3229,38 @@ namespace Server.MirObjects
                 ShoutTime = Envir.Time + 10000;
                 message = String.Format("(!){0}:{1}", Name, message.Remove(0, 1));
 
-                p = new S.Chat { Message = message, Type = ChatType.Shout };
-
-                //Envir.Broadcast(p);
-                for (int i = 0; i < CurrentMap.Players.Count; i++)
+                if (HasMapShout)
                 {
-                    if (!Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2)) continue;
-                    CurrentMap.Players[i].Enqueue(p);
+                    p = new S.Chat { Message = message, Type = ChatType.Shout2 };
+                    HasMapShout = false;
+
+                    for (int i = 0; i < CurrentMap.Players.Count; i++)
+                    {
+                        CurrentMap.Players[i].Enqueue(p);
+                    }
+                    return;
+                }
+                else if (HasServerShout)
+                {
+                    p = new S.Chat { Message = message, Type = ChatType.Shout3 };
+                    HasServerShout = false;
+
+                    for (int i = 0; i < Envir.Players.Count; i++)
+                    {
+                        CurrentMap.Players[i].Enqueue(p);
+                    }
+                    return;
+                }
+                else
+                {
+                    p = new S.Chat { Message = message, Type = ChatType.Shout };
+
+                    //Envir.Broadcast(p);
+                    for (int i = 0; i < CurrentMap.Players.Count; i++)
+                    {
+                        if (!Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2)) continue;
+                        CurrentMap.Players[i].Enqueue(p);
+                    }
                 }
 
             }
@@ -3219,6 +3298,7 @@ namespace Server.MirObjects
             }
             else if (message.StartsWith("@"))
             {
+                
                 //Command
                 message = message.Remove(0, 1);
                 parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -3912,7 +3992,6 @@ namespace Server.MirObjects
                         player.GainCredit(count);
                         SMain.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
                         break;
-
                     case "GIVESKILL":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
@@ -4086,7 +4165,13 @@ namespace Server.MirObjects
 
                         if (tempInt > Info.Flags.Length - 1) return;
 
-                        Info.Flags[tempInt] = true;
+                        Info.Flags[tempInt] = !Info.Flags[tempInt];
+
+                        for (int f = CurrentMap.NPCs.Count - 1; f >= 0; f--)
+                        {
+                            if (Functions.InRange(CurrentMap.NPCs[f].CurrentLocation, CurrentLocation, Globals.DataRange))
+                                CurrentMap.NPCs[f].CheckVisible(this);
+                        }
 
                         break;
 
@@ -4658,7 +4743,14 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
-                    if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
+
+                    if (ob.Race == ObjectType.Merchant)
+                    {
+                        NPCObject NPC = (NPCObject)ob;
+                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                    }
+                    else
+                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                     return;
@@ -4760,6 +4852,13 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
+
+                    if (ob.Race == ObjectType.Merchant)
+                    {
+                        NPCObject NPC = (NPCObject)ob;
+                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                    }
+                    else
                     if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -4779,6 +4878,13 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
+
+                    if (ob.Race == ObjectType.Merchant)
+                    {
+                        NPCObject NPC = (NPCObject)ob;
+                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                    }
+                    else
                     if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -4802,8 +4908,14 @@ namespace Server.MirObjects
                     for (int i = 0; i < cell.Objects.Count; i++)
                     {
                         MapObject ob = cell.Objects[i];
-                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
 
+                        if (ob.Race == ObjectType.Merchant)
+                        {
+                            NPCObject NPC = (NPCObject)ob;
+                            if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                        }
+                        else
+                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
                         Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                         return;
                     }
@@ -10110,8 +10222,16 @@ namespace Server.MirObjects
                             if (item.Info.Price > 0)
                             {
                                 GainCredit(item.Info.Price);
-                                ReceiveChat(String.Format("{0} Credits have been added to your Account.", item.Info.Price), ChatType.Hint);
+                                ReceiveChat(String.Format("{0} Credits have been added to your Account", item.Info.Price), ChatType.Hint);
                             }
+                            break;
+                        case 8: //MapShoutScroll
+                            HasMapShout = true;
+                            ReceiveChat("You have been given one free shout across your current map", ChatType.Hint);
+                            break;
+                        case 9://ServerShoutScroll
+                            HasServerShout = true;
+                            ReceiveChat("You have been given one free shout across the server", ChatType.Hint);
                             break;
                     }
                     break;
@@ -17147,6 +17267,13 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0) return;
             CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
+
+            if (Lover == null)
+            {
+                SMain.EnqueueDebugging(Name + " is married but couldn't find marriage ID " + Info.Married);
+                return;
+            }
+
             PlayerObject player = Envir.GetPlayer(Lover.Name);
             if (player != null)
             {
@@ -17393,7 +17520,11 @@ namespace Server.MirObjects
 
             CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
 
-            if (Mentor == null) return; //circumventing an error elsewhere?? shouldn't ever be null.
+            if (Mentor == null)
+            {
+                SMain.EnqueueDebugging(Name + " is mentored but couldn't find mentor ID " + Info.Mentor);
+                return;
+            }
 
             PlayerObject player = Envir.GetPlayer(Mentor.Name);
 

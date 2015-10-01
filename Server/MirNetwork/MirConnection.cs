@@ -60,7 +60,7 @@ namespace Server.MirNetwork
                 {
                     connCount++;
 
-                    if (connCount >= 5)
+                    if (connCount >= Settings.MaxIP)
                     {
                         SMain.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
                         conn.SendDisconnect(5);

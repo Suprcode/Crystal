@@ -85,6 +85,7 @@ namespace Server.MirObjects
 
         public bool CoolEye;
         private bool _hidden;
+        
         public bool Hidden
         {
             get
@@ -252,6 +253,13 @@ namespace Server.MirObjects
         }
         public virtual void Add(PlayerObject player)
         {
+            if (Race == ObjectType.Merchant)
+            {
+                NPCObject NPC = (NPCObject)this;
+                NPC.CheckVisible(player, true);
+                return;
+            }
+
             player.Enqueue(GetInfo());
 
             //if (Race == ObjectType.Player)

@@ -110,6 +110,9 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion < 15) return;
             IsTempSpell = reader.ReadBoolean();
+
+            if (Envir.LoadVersion < 65) return;
+            CastTime = reader.ReadInt64();
         }
         public void Save(BinaryWriter writer)
         {
@@ -119,6 +122,7 @@ namespace Server.MirDatabase
             writer.Write(Key);
             writer.Write(Experience);
             writer.Write(IsTempSpell);
+            writer.Write(CastTime);
         }
 
         public Packet GetInfo()

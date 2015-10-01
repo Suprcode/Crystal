@@ -283,6 +283,31 @@ namespace Client.MirObjects
                         break;
                 }
 
+                switch (CurrentAction)
+                {
+                    case MirAction.Standing:
+                    case MirAction.Jump:
+                        Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
+                        break;
+                    case MirAction.Walking:
+                    case MirAction.WalkingBow:
+                        Frames.Frames.TryGetValue(MirAction.Walking, out Frame);
+                        break;
+                    case MirAction.Running:
+                    case MirAction.RunningBow:
+                        Frames.Frames.TryGetValue(MirAction.Running, out Frame);
+                        break;
+                    case MirAction.Attack1:
+                    case MirAction.Attack2:
+                    case MirAction.Attack3:
+                    case MirAction.Attack4:
+                    case MirAction.AttackRange1:
+                    case MirAction.AttackRange2:
+                    case MirAction.AttackRange3:
+                        Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
+                        break;
+                }
+
                 if (MountType > 6 && RidingMount && TransformType != 26)
                 {
                     ArmourOffSet = -416;
@@ -1218,7 +1243,7 @@ namespace Client.MirObjects
                 }
 
                 //ArcherTest - Need to check for bow weapon only
-                if (Class == MirClass.Archer && HasClassWeapon && TransformType < 0)
+                if (Class == MirClass.Archer && HasClassWeapon)
                 {
                     switch (CurrentAction)
                     {

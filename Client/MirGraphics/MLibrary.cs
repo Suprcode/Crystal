@@ -475,10 +475,13 @@ namespace Client.MirGraphics
                 for (int i = 0; i < _count; i++)
                     _indexList[i] = _reader.ReadInt32();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                File.AppendAllText(@".\Error.txt", //test
+                                       string.Format("[{0}] {1} file name {2}{3}", DateTime.Now, ex, _fileName, Environment.NewLine));
+
                 _initialized = false;
-                throw;
+                throw ex;
             }
         }
 
@@ -551,6 +554,7 @@ namespace Client.MirGraphics
                 _images[index] = new MImage(_reader);
             }
             MImage mi = _images[index];
+
             if (mi.TrueSize.IsEmpty)
             {
                 if (!mi.TextureValid)

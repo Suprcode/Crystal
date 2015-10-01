@@ -51,7 +51,8 @@ namespace Server
         public static ushort Port = 7000,
                              TimeOut = 10000,
                              MaxUser = 50,
-                             RelogDelay = 50;
+                             RelogDelay = 50,
+                             MaxIP = 5;
 
 
         //Permission
@@ -255,6 +256,7 @@ namespace Server
             Port = Reader.ReadUInt16("Network", "Port", Port);
             TimeOut = Reader.ReadUInt16("Network", "TimeOut", TimeOut);
             MaxUser = Reader.ReadUInt16("Network", "MaxUser", MaxUser);
+            MaxIP = Reader.ReadUInt16("Network", "MaxIP", MaxIP);
 
             //Permission
             AllowNewAccount = Reader.ReadBoolean("Permission", "AllowNewAccount", AllowNewAccount);
@@ -436,6 +438,7 @@ namespace Server
             Reader.Write("Network", "Port", Port);
             Reader.Write("Network", "TimeOut", TimeOut);
             Reader.Write("Network", "MaxUser", MaxUser);
+            Reader.Write("Network", "MaxIP", MaxIP);
 
             //Permission
             Reader.Write("Permission", "AllowNewAccount", AllowNewAccount);
