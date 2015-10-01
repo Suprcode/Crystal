@@ -24,6 +24,8 @@ namespace Server.MirObjects
         public short Looks_Armour = 0, Looks_Weapon = -1;
         public byte Looks_Wings = 0;
 
+        public bool WarZone = false;
+
         public override ObjectType Race
         {
             get { return ObjectType.Player; }
@@ -1133,7 +1135,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (LastHitter != null && LastHitter.Race == ObjectType.Player && !AtWar((PlayerObject)LastHitter))
+            if (LastHitter != null && LastHitter.Race == ObjectType.Player && !AtWar((PlayerObject)LastHitter) && !WarZone)
             {
                 if (Envir.Time > BrownTime && PKPoints < 200)
                 {
@@ -2957,7 +2959,14 @@ namespace Server.MirObjects
         {
             Color colour = Color.White;
 
-            if (PKPoints >= 200)
+            if (WarZone)
+            {
+                if (MyGuild == null)
+                    colour = Color.Green;
+                else
+                    colour = Color.Blue;
+            }
+            else if (PKPoints >= 200)
                 colour = Color.Red;
             else if (Envir.Time < BrownTime)
                 colour = Color.SaddleBrown;
@@ -2977,6 +2986,22 @@ namespace Server.MirObjects
         public Color GetNameColour(PlayerObject player)
         {
             if (player == null) return NameColour;
+
+            if (WarZone)
+            {
+                if (MyGuild == null)
+                    return Color.Green;
+                else
+                {
+                    if (player.MyGuild == null)
+                        return Color.Orange;
+                    if (player.MyGuild == MyGuild)
+                        return Color.Blue;
+                    else
+                        return Color.Orange;
+                }
+            }
+
             if (MyGuild != null)
                 if (MyGuild.IsAtWar())
                     if (player.MyGuild == MyGuild)
@@ -4174,7 +4199,6 @@ namespace Server.MirObjects
                         LastHitter = null;
                         Die();
                         break;
-
                     case "HAIR":
                         if (!IsGM && !Settings.TestServer) return;
 
@@ -4521,7 +4545,9 @@ namespace Server.MirObjects
                         mapInfo.CreateMap();
                         ReceiveChat(string.Format("Map instance created for map {0}", mapInfo.FileName), ChatType.System);
                         break;
+                    case "StartSabuk":
 
+                        //Start a War
                     default:
                         break;
                 }
@@ -4653,6 +4679,8 @@ namespace Server.MirObjects
                 return;
             }
 
+
+
             Cell cell = CurrentMap.GetCell(location);
             if (cell.Objects != null)
                 for (int i = 0; i < cell.Objects.Count; i++)
@@ -4711,6 +4739,15 @@ namespace Server.MirObjects
             }
             else
                 InSafeZone = false;
+
+            SabukWallInfo swi = CurrentMap.GetSabukWall(CurrentLocation);
+
+            if (swi != null)
+                EnterSabuk();
+            else
+                LeaveSabuk();
+                
+
 
 
             CellTime = Envir.Time + 500;
@@ -4859,6 +4896,14 @@ namespace Server.MirObjects
             }
             else
                 InSafeZone = false;
+
+
+            SabukWallInfo swi = CurrentMap.GetSabukWall(CurrentLocation);
+            if (swi != null)
+                EnterSabuk();
+            else
+                LeaveSabuk();
+
 
 
             CellTime = Envir.Time + 500;
@@ -17653,6 +17698,28 @@ namespace Server.MirObjects
             }
         }
 
+        #endregion
+
+
+        #region SabukWall
+        public void EnterSabuk()
+        {
+            if (WarZone) return;
+            WarZone = true;
+            ReceiveChat("You have entered A War Zone", ChatType.Hint);
+            RefreshNameColour();
+
+            //Broadcast name colour change
+        }
+
+        public void LeaveSabuk()
+        {
+            if (!WarZone) return;
+            WarZone = false;
+            ReceiveChat("You have left A War Zone", ChatType.Hint);
+            RefreshNameColour();
+            //Broadcast name colour change
+        }
         #endregion
     }
 }

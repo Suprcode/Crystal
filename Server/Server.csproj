@@ -86,6 +86,7 @@
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
     <Compile Include="MirDatabase\MailInfo.cs" />
+    <Compile Include="MirDatabase\SabukWallInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
     <Compile Include="MirForms\Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>

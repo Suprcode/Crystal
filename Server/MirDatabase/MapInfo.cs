@@ -22,6 +22,7 @@ namespace Server.MirDatabase
         public int FireDamage, LightningDamage;
 
         public List<SafeZoneInfo> SafeZones = new List<SafeZoneInfo>();
+        public List<SabukWallInfo> SabukWall = new List<SabukWallInfo>();
         public List<MovementInfo> Movements = new List<MovementInfo>();
         public List<RespawnInfo> Respawns = new List<RespawnInfo>();
         public List<NPCInfo> NPCs = new List<NPCInfo>();
@@ -99,6 +100,12 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion < 53) return;
                 Music = reader.ReadUInt16();
+
+            if (Envir.LoadVersion < 65) return;
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                SabukWall.Add(new SabukWallInfo(reader) { Info = this });
+
         }
 
         public void Save(BinaryWriter writer)
@@ -155,6 +162,10 @@ namespace Server.MirDatabase
             writer.Write(NoFight);
 
             writer.Write(Music);
+
+            writer.Write(SabukWall.Count);
+            for (int i = 0; i < SabukWall.Count; i++)
+                SabukWall[i].Save(writer);
         }
 
 
@@ -180,6 +191,7 @@ namespace Server.MirDatabase
         public void CreateSafeZone()
         {
             SafeZones.Add(new SafeZoneInfo { Info = this });
+            SabukWall.Add(new SabukWallInfo { Info = this, Location = new Point(260, 616), Size = 10 });
         }
 
         public void CreateRespawnInfo()

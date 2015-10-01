@@ -9809,7 +9809,7 @@ namespace Client.MirScenes
             if (Libraries.Prguse == null) return;
 
             int height;
-            if (User.HP != User.MaxHP)
+            if (User != null && User.HP != User.MaxHP)
                 height = (int)(80 * User.HP / (float)User.MaxHP);
             else
                 height = 80;
@@ -23084,8 +23084,6 @@ namespace Client.MirScenes
             }
 
            PositionBar.Location = new Point(x, y);
-            
-
         }
 
         public void ResetTabs()

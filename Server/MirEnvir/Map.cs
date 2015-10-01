@@ -2028,6 +2028,17 @@ namespace Server.MirEnvir
             return null;
         }
 
+        public SabukWallInfo GetSabukWall(Point location)
+        {
+            for (int i = 0; i < Info.SabukWall.Count; i++)
+            {
+                SabukWallInfo swi = Info.SabukWall[i];
+                if (Functions.InRange(swi.Location, location, swi.Size))
+                    return swi;
+            }
+            return null;
+        }
+
         public void Broadcast(Packet p, Point location)
         {
             if (p == null) return;
