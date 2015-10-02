@@ -17008,7 +17008,7 @@ namespace Client.MirScenes
                 Parent = this,
                 HoverIndex = 104,
                 Index = 103,
-                Location = new Point(433, 38),
+                Location = new Point(501, 38),
                 Sound = SoundList.ButtonA,
             };
             StatusButton.Click += (o, e) => RightDialog(0);
@@ -17019,10 +17019,12 @@ namespace Client.MirScenes
                 Parent = this,
                 HoverIndex = 96,
                 Index = 95,
-                Location = new Point(501, 38),
+                Location = new Point(433, 38),
                 Sound = SoundList.ButtonA,
+                Visible = false,
             };
             BuffButton.Click += (o, e) => RightDialog(1);
+
             CloseButton = new MirButton
             {
                 HoverIndex = 361,
@@ -17331,7 +17333,7 @@ namespace Client.MirScenes
             };
             StatusHeaders = new MirLabel()
             {
-                Location = new Point(46, 49),
+                Location = new Point(46, 47),
                 Size = new Size(100, 300),
                 NotControl = true,
                 Text = "Guild Name\n\nLevel\n\nMembers",
@@ -17340,7 +17342,7 @@ namespace Client.MirScenes
             };
             StatusData = new MirLabel()
             {
-                Location = new Point(122, 49),
+                Location = new Point(122, 47),
                 Size = new Size(100, 300),
                 NotControl = true,
                 Text = "",
@@ -17378,14 +17380,13 @@ namespace Client.MirScenes
                 Border = true,
                 BorderColour = Color.FromArgb(255, 20, 20, 20),
                 CanLoseFocus = true
-                //sorting = true
             };
             RecruitMemberButton = new MirButton()
             {
                 Parent = StatusPage,
                 Enabled = true,
                 Visible = true,
-                Location = new Point(170, 299),
+                Location = new Point(170, 298),
                 Library = Libraries.Title,
                 Index = 356,
                 HoverIndex = 357,
@@ -18308,7 +18309,7 @@ namespace Client.MirScenes
                     break;
                 case 1:
                     BuffPage.Visible = true;
-                    BuffsButton.Index = 96;
+                    BuffButton.Index = 96;
                     break;
             }
         }
@@ -18369,7 +18370,7 @@ namespace Client.MirScenes
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
-            BuffsButton.Visible = true;
+            BuffButton.Visible = true;
         }
         #endregion
 
