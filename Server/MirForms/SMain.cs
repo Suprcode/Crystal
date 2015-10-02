@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Windows.Forms;
 using Server.MirEnvir;
@@ -367,6 +367,12 @@ namespace Server
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();
+            form.ShowDialog();
+        }
+        private void gemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(6);
+
             form.ShowDialog();
         }
     }
