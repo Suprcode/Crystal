@@ -16869,8 +16869,8 @@ namespace Client.MirScenes
         #endregion
 
         #region GuildRight
-        public MirImageControl StatusPage;
-        public MirImageControl StatusPageBase;
+        public MirButton BuffButton, StatusButton;
+        public MirImageControl BuffPage, StatusPage, StatusPageBase;
         #endregion
 
         #region DataValues
@@ -16922,8 +16922,8 @@ namespace Client.MirScenes
         public MirLabel StatusLevelLabel;
         public MirLabel StatusHeaders;
         public MirLabel StatusData;
-        public MirImageControl StatusExpBar;
-        public MirLabel StatusExpLabel;
+        //public MirImageControl StatusExpBar;
+        //public MirLabel StatusExpLabel;
         public MirTextBox MembersRecruitName;
         public MirButton RecruitMemberButton;
         #endregion
@@ -16944,6 +16944,9 @@ namespace Client.MirScenes
         public MirLabel[] RanksOptionsTexts;
         public MirDropDownBox RanksSelectBox;
         public MirButton RanksSaveName;
+        #endregion
+
+        #region BuffPagePub
         #endregion
 
         #region GuildUI
@@ -16987,23 +16990,6 @@ namespace Client.MirScenes
                 Visible = false
             };
             StorageButton.Click += (o, e) => LeftDialog(2);
-
-            BuffsButton = new MirButton
-            {
-                Library = Libraries.Title,
-                Index = 526,
-                HoverIndex = 527,
-                PressedIndex = 528,
-                Sound = SoundList.ButtonA,
-                Parent = StatusPage,
-                Location = new Point(124, 63),
-                Visible = false,
-            };
-            BuffsButton.Click += (o, e) =>
-            {
-                GameScene.Scene.GuildBuffDialog.Show();
-                Hide();
-            };
             RankButton = new MirButton // Ranks
             {
                 Library = Libraries.Title,
@@ -17016,6 +17002,27 @@ namespace Client.MirScenes
             };
             RankButton.Click += (o, e) => LeftDialog(3);
 
+            StatusButton = new MirButton
+            {
+                Library = Libraries.Title,
+                Parent = this,
+                HoverIndex = 104,
+                Index = 103,
+                Location = new Point(433, 38),
+                Sound = SoundList.ButtonA,
+            };
+            StatusButton.Click += (o, e) => RightDialog(0);
+
+            BuffButton = new MirButton
+            {
+                Library = Libraries.Title,
+                Parent = this,
+                HoverIndex = 96,
+                Index = 95,
+                Location = new Point(501, 38),
+                Sound = SoundList.ButtonA,
+            };
+            BuffButton.Click += (o, e) => RightDialog(1);
             CloseButton = new MirButton
             {
                 HoverIndex = 361,
@@ -17340,25 +17347,25 @@ namespace Client.MirScenes
                 Visible = true,
                 Parent = StatusPage
             };
-            StatusExpBar = new MirImageControl()
+            /*StatusExpBar = new MirImageControl()
             {
-                //Index = 7,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 0),
+                Index = 728,
+                Library = Libraries.Title,
+                Location = new Point(6, 352),
                 DrawImage = false,
                 NotControl = true,
                 Parent = StatusPage,
-                Size = new Size(550, 7)
+                Size = new Size(204, 7)
             };
             StatusExpBar.BeforeDraw += StatusExpBar_BeforeDraw;
             StatusExpLabel = new MirLabel()
             {
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
-                Location = new Point(0, 0),
+                Location = new Point(6, 352),
                 NotControl = true,
                 Parent = StatusPage,
-                Size = new Size(550, 12)
-            };
+                Size = new Size(204, 12)
+            };*/ // USE FAR'S EXP LABEL
             MembersRecruitName = new MirTextBox()
             {
                 Location = new Point(40, 300),
@@ -17385,6 +17392,23 @@ namespace Client.MirScenes
                 PressedIndex = 358
             };
             RecruitMemberButton.Click += (o, e) => AddMember();
+            /* BuffsButton = new MirButton
+            {
+                Library = Libraries.Title,
+                Index = 526,
+                HoverIndex = 527,
+                PressedIndex = 528,
+                Sound = SoundList.ButtonA,
+                Parent = StatusPage,
+                Location = new Point(124, 63),
+                Visible = false,
+            };
+            BuffsButton.Click += (o, e) =>
+            {
+                GameScene.Scene.GuildBuffDialog.Show();
+                Hide();
+            };*/
+
             #endregion
 
             #region StorageDialogUI 
@@ -17473,17 +17497,17 @@ namespace Client.MirScenes
             RanksSelectTextL = new MirLabel()
             {
                 Text = "Edit Rank",
-                Location = new Point(42,36),
+                Location = new Point(42, 18),
                 Size = new Size(150, 20),
                 ForeColour = Color.White,
                 Parent = RankPage,
                 NotControl = true,
-                
+
             };
             RanksSelectTextR = new MirLabel()
             {
                 Text = "Select Rank",
-                Location = new Point(198, 36),
+                Location = new Point(198, 18),
                 Size = new Size(150, 20),
                 ForeColour = Color.White,
                 Parent = RankPage,
@@ -17546,7 +17570,7 @@ namespace Client.MirScenes
                     Library = Libraries.Prguse,
                     Sound = SoundList.ButtonA,
                     Parent = RankPage,
-                    Location = new Point(i % 2 == 0 ? 32 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
+                    Location = new Point(i % 2 == 0 ? 42 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
                 };
                 int index = i;
                 RanksOptionsButtons[i].Click += (o, e) => SwitchRankOption(index);
@@ -17560,7 +17584,7 @@ namespace Client.MirScenes
                     Library = Libraries.Prguse,
                     Parent = RankPage,
                     NotControl = true,
-                    Location = new Point(i % 2 == 0 ? 32 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
+                    Location = new Point(i % 2 == 0 ? 42 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
                 };
                 int index = i;
                 RanksOptionsStatus[i].Click += (o, e) => SwitchRankOption(index);
@@ -17572,13 +17596,26 @@ namespace Client.MirScenes
                     Visible = true,
                     NotControl = true,
                     Parent = RankPage,
-                    Location = new Point(17 + (i % 2 == 0 ? 32 : 202), i % 2 == 0 ? 118 + (i * 20) : 118 + ((i - 1) * 20)),
+                    Location = new Point(17 + (i % 2 == 0 ? 42 : 202), i % 2 == 0 ? 118 + (i * 20) : 118 + ((i - 1) * 20)),
                     AutoSize = true,
                     Text = Options[i]
                 };
             }
-}
+
+            #endregion
+
+            #region BuffDialogUI
+
+            BuffPage = new MirImageControl()
+            {
+                Parent = this,
+                Size = new Size(352, 372),
+                Location = new Point(0, 60),
+                Visible = false
+            };
+        }
         #endregion
+
 
         #region ButtonResets
         public void ResetButtonStats()
@@ -18006,7 +18043,7 @@ namespace Client.MirScenes
         #endregion
 
         #region StatusDialogCode
-        private void StatusExpBar_BeforeDraw(object sender, EventArgs e)
+        /*private void StatusExpBar_BeforeDraw(object sender, EventArgs e)
         {
             if (MaxExperience == 0)
             {
@@ -18014,7 +18051,7 @@ namespace Client.MirScenes
                 return;
             }
             if (StatusExpBar.Library == null) return;
-            StatusExpBar.Library.Draw(StatusExpBar.Index, StatusExpBar.DisplayLocation, new Size(550, 7), Color.Red);
+            StatusExpBar.Library.Draw(StatusExpBar.Index, StatusExpBar.DisplayLocation, new Size(204, 7), Color.White);
 
             double percent = Experience / (double)MaxExperience;
             StatusExpLabel.Text = string.Format("{0:#0.##%}", percent);
@@ -18023,12 +18060,12 @@ namespace Client.MirScenes
             Rectangle section = new Rectangle
             {
                 Location = StatusExpBar.Location,
-                Size = new Size((int)((550 - 3) * percent), StatusExpBar.Size.Height)
+                Size = new Size((int)((204 - 3) * percent), StatusExpBar.Size.Height)
             };
 
             StatusExpBar.Library.Draw(StatusExpBar.Index, section, StatusExpBar.DisplayLocation, Color.White, false);
 
-        }
+        }*/
         #endregion
 
         #region RankDialogCode
@@ -18258,13 +18295,20 @@ namespace Client.MirScenes
         public void RightDialog(byte Rpageid)
         {
             StatusPage.Visible = false;
-            BuffsButton.Index = 526;
+            BuffPage.Visible = false;
+
+            StatusButton.Index = 103;
+            BuffsButton.Index = 95;
 
             switch (Rpageid)
             {
                 case 0:
                     StatusPage.Visible = true;
-                    BuffsButton.Index = 526;
+                    StatusButton.Index = 104;
+                    break;
+                case 1:
+                    BuffPage.Visible = true;
+                    BuffsButton.Index = 96;
                     break;
             }
         }
