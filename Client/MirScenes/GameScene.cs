@@ -14786,19 +14786,16 @@ namespace Client.MirScenes
                     InfoLabel.Text = "Consignment: ";
                     return;
                 case PanelType.Disassemble:
-                    text = "Item will be Destroyed";
+                    text = "Item will be Destroyed\n\n\n\n\n\n\n\n         ";
                     HoldButton.Visible = false;
                     Index = 711;
                     Library = Libraries.Title;
                     Location = new Point(234, 224);
-
                     ConfirmButton.HoverIndex = 716;
                     ConfirmButton.Index = 715;
                     ConfirmButton.PressedIndex = 717;
                     ConfirmButton.Location = new Point(62, 190);
-
-                    InfoLabel.Location = new Point(45, 150);
-
+                    InfoLabel.Location = new Point(44, 60);
                     ItemCell.Location = new Point(83, 94);
                     break;
                 case PanelType.Downgrade:
