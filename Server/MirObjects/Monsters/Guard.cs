@@ -14,7 +14,7 @@ namespace Server.MirObjects.Monsters
 
         protected override bool CanMove
         {
-            get { return Route.Count > 0; }
+            get { return Route.Count > 0 && !Dead && Envir.Time > MoveTime && Envir.Time > ActionTime && Envir.Time > ShockTime; }
         }
 
         protected override bool CanRegen

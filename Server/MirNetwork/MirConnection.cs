@@ -330,6 +330,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CallNPC:
                     CallNPC((C.CallNPC)p);
                     break;
+                case (short)ClientPacketIds.TalkMonsterNPC:
+                    TalkMonsterNPC((C.TalkMonsterNPC)p);
+                    break;
                 case (short)ClientPacketIds.BuyItem:
                     BuyItem((C.BuyItem)p);
                     break;
@@ -1020,6 +1023,14 @@ namespace Server.MirNetwork
             //else
             Player.CallNPC(p.ObjectID, p.Key);
         }
+
+        private void TalkMonsterNPC(C.TalkMonsterNPC p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.TalkMonster(p.ObjectID);
+        }
+
         private void BuyItem(C.BuyItem p)
         {
             if (Stage != GameStage.Game) return;

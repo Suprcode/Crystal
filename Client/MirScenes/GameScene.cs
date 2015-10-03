@@ -8599,6 +8599,18 @@ namespace Client.MirScenes
                             GameScene.NPCID = npc.ObjectID;
                             Network.Enqueue(new C.CallNPC { ObjectID = npc.ObjectID, Key = "[@Main]" });
                         }
+
+                        MonsterObject mon = MapObject.MouseObject as MonsterObject;
+                        if (mon != null && mon.AI == 70)
+                        {
+                            GameScene.Scene.NPCDialog.Hide();
+
+                            if (CMain.Time <= GameScene.NPCTime) return;
+
+                            GameScene.NPCTime = CMain.Time + 5000;
+
+                            Network.Enqueue(new C.TalkMonsterNPC { ObjectID = mon.ObjectID });
+                        }
                     }
                     break;
                 case MouseButtons.Right:
@@ -8698,7 +8710,8 @@ namespace Client.MirScenes
 
 
             if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && !(MapObject.MouseObject is ItemObject) &&
-                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64))
+                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64)
+                 && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70))
             {
                 MapObject.TargetObject = MapObject.MouseObject;
                 if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI != 6)
@@ -8806,6 +8819,7 @@ namespace Client.MirScenes
                 {
                     case MouseButtons.Left:
                         if (MapObject.MouseObject is NPCObject || (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User)) break;
+                        if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70) break;
 
                         if (CMain.Alt)
                         {

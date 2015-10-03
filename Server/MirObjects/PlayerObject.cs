@@ -9,6 +9,7 @@ using Server.MirEnvir;
 using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
+using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
@@ -393,9 +394,16 @@ namespace Server.MirObjects
 
                 if (!pet.Dead)
                 {
-                    Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
-                    pet.CurrentMap.RemoveObject(pet);
-                    pet.Despawn();
+                    try
+                    {
+                        Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
+                        pet.CurrentMap.RemoveObject(pet);
+                        pet.Despawn();
+                    }
+                    catch
+                    {
+                        SMain.EnqueueDebugging(Name + " Pet logout was null on logout : " + pet != null ? pet.Name : "" + " " + pet.CurrentMap != null ? pet.CurrentMap.Info.FileName : "");
+                    }
                 }
             }
             Pets.Clear();
@@ -12731,6 +12739,10 @@ namespace Server.MirObjects
                     key = "Daily";
                     Info.NewDay = false;
                     break;
+                case DefaultNPCType.TalkMonster:
+                    if (value.Length < 1) return;
+                    key = string.Format("TalkMonster({0})", value[0]);
+                    break;
             }
 
             key = string.Format("[@_{0}]", key);
@@ -12775,6 +12787,17 @@ namespace Server.MirObjects
 
                 CompleteNPC(action.Params);
             }
+        }
+
+        public void TalkMonster(uint objectID)
+        {
+            TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
+
+            if (talkMonster == null) return;
+
+            talkMonster.TalkingObjects.Add(this);
+
+            CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
         }
 
         public void BuyItem(ulong index, uint count)
