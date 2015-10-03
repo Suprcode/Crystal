@@ -4798,8 +4798,6 @@ namespace Client.MirScenes
         {
             if (NPCAwakeDialog.Visible != true)
                 NPCAwakeDialog.Show();
-            if (InventoryDialog.Visible != true)
-                InventoryDialog.Show();
         }
         private void NPCDisassemble()
         {
@@ -14944,7 +14942,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 713,
                 Index = 712,
-                Location = new Point(181, 135),
+                Location = new Point(115, 391), //new Point(181, 135),
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 714,
@@ -14956,7 +14954,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(285, 5),
+                Location = new Point(284, 4),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -15265,6 +15263,9 @@ namespace Client.MirScenes
         public void Show()
         {
             Visible = true;
+
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
+            GameScene.Scene.InventoryDialog.Show();
         }
     }
 
