@@ -555,6 +555,11 @@ namespace Client.MirGraphics
             }
             MImage mi = _images[index];
 
+            if (mi == null)
+            {
+                return Size.Empty;
+            }
+
             if (mi.TrueSize.IsEmpty)
             {
                 if (!mi.TextureValid)
