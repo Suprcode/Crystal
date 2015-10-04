@@ -11011,10 +11011,10 @@ namespace Server.MirObjects
             // These may be incomplete. Item definitions may be missing?
 
             else if ((gem.Info.HPrate) > 0)
-                return StatType.HP_Precent;
+                return StatType.HP_Percent;
 
             else if ((gem.Info.MPrate) > 0)
-                return StatType.MP_Precent;
+                return StatType.MP_Percent;
 
             else if ((gem.Info.SpellRecovery) > 0)
                 return StatType.MP_Regen;
