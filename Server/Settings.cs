@@ -176,6 +176,9 @@ namespace Server
         public static byte MentorExpBoost = 10;
         public static byte MenteeExpBank = 1;
 
+        //Gem Settings
+        public static bool GemStatIndependent = true;
+
 
         //Goods Settings
         public static bool GoodsOn = true;
@@ -422,6 +425,7 @@ namespace Server
             LoadMarriage();
             LoadMentor();
             LoadGoods();
+            LoadGem();
         }
         public static void Save()
         {
@@ -1167,7 +1171,24 @@ namespace Server
             reader.Write("Config", "MenteeExpBoost", MentorExpBoost);
             reader.Write("Config", "PercentXPtoMentor", MenteeExpBank);
         }
+        public static void LoadGem()
+        {
+            if (!File.Exists(ConfigPath + @".\GemSystem.ini"))
+            {
+                SaveGem();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\GemSystem.ini");
+            GemStatIndependent = reader.ReadBoolean("Config", "GemStatIndependent", GemStatIndependent);
 
+
+        }
+        public static void SaveGem()
+        {
+            File.Delete(ConfigPath + @".\GemSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\GemSystem.ini");
+            reader.Write("Config", "GemStatIndependent", GemStatIndependent);
+        }
 
         public static void LoadGoods()
         {
