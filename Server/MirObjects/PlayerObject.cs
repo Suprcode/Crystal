@@ -10125,27 +10125,31 @@ namespace Server.MirObjects
                             ReceiveChat("You can now unequip a cursed item.", ChatType.Hint);
                             UnlockCurse = true;
                             break;
-                        case 3:
+                        case 3: //Buff
                             int time = item.Info.Durability;
 
                             if ((item.Info.MaxDC + item.DC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxDC + item.DC } });
+                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxDC + item.DC } });
 
                             if ((item.Info.MaxMC + item.MC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxMC + item.MC } });
+                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMC + item.MC } });
 
                             if ((item.Info.MaxSC + item.SC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxSC + item.SC } });
+                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
 
                             if ((item.Info.AttackSpeed + item.AttackSpeed) > 0)
-                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
+                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
 
                             if ((item.Info.HP + item.HP) > 0)
-                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.HP + item.HP } });
+                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
 
                             if ((item.Info.MP + item.MP) > 0)
-                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MP + item.MP } });
+                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
+                            break;
+                        case 4: //Exp
+                            time = item.Info.Durability;
 
+                            AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                             break;
                     }
                     break;

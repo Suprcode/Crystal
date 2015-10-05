@@ -1129,6 +1129,7 @@ public enum BuffType : byte
     Gold,
     BagWeight,
     Transform,
+    Prison,
 
     Impact,
     Magic,
@@ -3285,7 +3286,7 @@ public class GameShopItem
 
     public override string ToString()
     {
-        return string.Format("{0}: {1}", GIndex, Info.FriendlyName);
+        return string.Format("{0}: {1}", GIndex, Info.Name);
     }
 
 }

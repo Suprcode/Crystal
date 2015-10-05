@@ -5543,6 +5543,16 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+
+                if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
+                {
+                    text = string.Format("Exp + {0}% ", minValue + addValue);
+                }
+                else
+                {
+                    text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", minValue + addValue);
+                }
+
                 MirLabel LUCKLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5550,7 +5560,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(minValue + addValue > 0 ? "Luck + {0} " : "Curse + {0}", minValue + addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, LUCKLabel.DisplayRectangle.Right + 4),
@@ -6469,7 +6479,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(HoverItem.Info.Shape == 3 ? "Time : {0}s" : "Range : {0}", HoverItem.Info.Durability)
+                    Text = string.Format("Time : {0}", Functions.PrintTimeSpanFromSeconds(HoverItem.Info.Durability * 60))
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TNRLabel.DisplayRectangle.Right + 4),
