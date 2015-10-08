@@ -51,7 +51,7 @@ namespace Client.MirGraphics
 
         public static void Create()
         {
-            Parameters = new PresentParameters
+            PresentParameters parameters = new PresentParameters
             {
                 BackBufferFormat = Format.X8R8G8B8,
                 PresentFlag = PresentFlag.LockableBackBuffer,
@@ -61,7 +61,7 @@ namespace Client.MirGraphics
                 PresentationInterval = Settings.FPSCap ? PresentInterval.One : PresentInterval.Immediate,
                 Windowed = !Settings.FullScreen,
             };
-            
+            Parameters = parameters;
 
             Caps devCaps = Manager.GetDeviceCaps(0, DeviceType.Hardware);
             DeviceType devType = DeviceType.Reference;
@@ -180,16 +180,18 @@ namespace Client.MirGraphics
                 switch ((ResultCode)result)
                 {
                     case ResultCode.DeviceNotReset:
-                        Device.Reset(Parameters);
-                        break;
+                        Device.Reset(new PresentParameters[] { Parameters });
+                        return;
                     case ResultCode.DeviceLost:
+                        return;
+                    case ResultCode.Success:                   
                         break;
-                    case ResultCode.Success:
-                        DeviceLost = false;
-                        CurrentSurface = Device.GetBackBuffer(0, 0, BackBufferType.Mono);
-                        Device.SetRenderTarget(0, CurrentSurface);
-                        break;
+                    default:
+                        return;
                 }
+                DeviceLost = false;
+                CurrentSurface = Device.GetBackBuffer(0, 0, BackBufferType.Mono);
+                Device.SetRenderTarget(0, CurrentSurface);
             }
             catch
             {
@@ -311,9 +313,7 @@ namespace Client.MirGraphics
             {
                 MImage m = TextureList[i];
 
-                if (m == null) continue;
-
-                if (m.Image != null && !m.Image.Disposed)
+                if ((m != null) && !((m.Image == null) || m.Image.Disposed))
                     m.Image.Dispose();
             }
             TextureList.Clear();

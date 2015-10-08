@@ -4798,8 +4798,6 @@ namespace Client.MirScenes
         {
             if (NPCAwakeDialog.Visible != true)
                 NPCAwakeDialog.Show();
-            if (InventoryDialog.Visible != true)
-                InventoryDialog.Show();
         }
         private void NPCDisassemble()
         {
@@ -5545,6 +5543,16 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+
+                if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
+                {
+                    text = string.Format("Exp + {0}% ", minValue + addValue);
+                }
+                else
+                {
+                    text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", minValue + addValue);
+                }
+
                 MirLabel LUCKLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5552,7 +5560,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(minValue + addValue > 0 ? "Luck + {0} " : "Curse + {0}", minValue + addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, LUCKLabel.DisplayRectangle.Right + 4),
@@ -6471,7 +6479,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(HoverItem.Info.Shape == 3 ? "Time : {0}s" : "Range : {0}", HoverItem.Info.Durability)
+                    Text = string.Format("Time : {0}", Functions.PrintTimeSpanFromSeconds(HoverItem.Info.Durability * 60))
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TNRLabel.DisplayRectangle.Right + 4),
@@ -8599,6 +8607,18 @@ namespace Client.MirScenes
                             GameScene.NPCID = npc.ObjectID;
                             Network.Enqueue(new C.CallNPC { ObjectID = npc.ObjectID, Key = "[@Main]" });
                         }
+
+                        MonsterObject mon = MapObject.MouseObject as MonsterObject;
+                        if (mon != null && mon.AI == 70)
+                        {
+                            GameScene.Scene.NPCDialog.Hide();
+
+                            if (CMain.Time <= GameScene.NPCTime) return;
+
+                            GameScene.NPCTime = CMain.Time + 5000;
+
+                            Network.Enqueue(new C.TalkMonsterNPC { ObjectID = mon.ObjectID });
+                        }
                     }
                     break;
                 case MouseButtons.Right:
@@ -8698,7 +8718,8 @@ namespace Client.MirScenes
 
 
             if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && !(MapObject.MouseObject is ItemObject) &&
-                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64))
+                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64)
+                 && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70))
             {
                 MapObject.TargetObject = MapObject.MouseObject;
                 if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI != 6)
@@ -8806,6 +8827,7 @@ namespace Client.MirScenes
                 {
                     case MouseButtons.Left:
                         if (MapObject.MouseObject is NPCObject || (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User)) break;
+                        if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70) break;
 
                         if (CMain.Alt)
                         {
@@ -14786,20 +14808,17 @@ namespace Client.MirScenes
                     InfoLabel.Text = "Consignment: ";
                     return;
                 case PanelType.Disassemble:
-                    text = "Disassemble: ";
+                    text = "Item will be Destroyed\n\n\n\n\n\n\n\n         ";
                     HoldButton.Visible = false;
                     Index = 711;
                     Library = Libraries.Title;
                     Location = new Point(234, 224);
-
                     ConfirmButton.HoverIndex = 716;
                     ConfirmButton.Index = 715;
                     ConfirmButton.PressedIndex = 717;
                     ConfirmButton.Location = new Point(62, 190);
-
-                    InfoLabel.Location = new Point(75, 150);
-
-                    ItemCell.Location = new Point(86, 94);
+                    InfoLabel.Location = new Point(44, 60);
+                    ItemCell.Location = new Point(83, 94);
                     break;
                 case PanelType.Downgrade:
                     text = "Downgrade: ";
@@ -14901,14 +14920,14 @@ namespace Client.MirScenes
         {
             Index = 710;
             Library = Libraries.Title;
-            Location = new Point(50, 40);
+            Location = new Point(0, 0);
             Sort = true;
             Movable = true;
 
             GoldLabel = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(135, 268),
+                Location = new Point(112, 354),
                 Parent = this,
                 NotControl = true,
             };
@@ -14916,7 +14935,7 @@ namespace Client.MirScenes
             NeedItemLabel1 = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(90, 192),
+                Location = new Point(67, 317),//
                 Parent = this,
                 NotControl = true,
             };
@@ -14924,7 +14943,7 @@ namespace Client.MirScenes
             NeedItemLabel2 = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(90, 231),
+                Location = new Point(192, 317),//(155, 316),
                 Parent = this,
                 NotControl = true,
             };
@@ -14933,7 +14952,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 713,
                 Index = 712,
-                Location = new Point(80, 375),
+                Location = new Point(115, 391), //new Point(181, 135),
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 714,
@@ -14945,7 +14964,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(211, 5),
+                Location = new Point(284, 4),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -14959,31 +14978,31 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(112, 77),
+                Location = new Point(202, 91),
                 ItemSlot = 0,
             };
             //ItemCells[0].AfterDraw += (o, e) => ItemCell_AfterDraw();
             //ItemCells[0].Click += (o, e) => ItemCell_Click();
 
-            ItemCells[1] = new MirItemCell
+            ItemCells[1] = new MirItemCell //Required
             {
                 BorderColour = Color.Lime,
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(50, 191),
+                Location = new Point(31, 316),
                 ItemSlot = 1,
                 Enabled = false,
-                
+
             };
 
-            ItemCells[2] = new MirItemCell
+            ItemCells[2] = new MirItemCell //Required
             {
                 BorderColour = Color.Lime,
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(50, 230),
+                Location = new Point(155, 316),
                 ItemSlot = 2,
                 Enabled = false,
             };
@@ -14994,7 +15013,7 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(42, 322),
+                Location = new Point(175, 199),
                 ItemSlot = 3,
             };
 
@@ -15004,7 +15023,7 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(86, 322),
+                Location = new Point(230, 199),
                 ItemSlot = 4,
             };
 
@@ -15014,7 +15033,7 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(138, 322),
+                Location = new Point(175, 256),
                 ItemSlot = 5,
             };
 
@@ -15024,15 +15043,15 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(182, 322),
+                Location = new Point(230, 256),
                 ItemSlot = 6,
             };
 
             SelectAwakeType = new MirDropDownBox()
             {
                 Parent = this,
-                Location = new Point(58, 153),
-                Size = new Size(130, 16),
+                Location = new Point(35, 141),
+                Size = new Size(109, 14),
                 ForeColour = Color.White,
                 Visible = true,
                 Enabled = true,
@@ -15064,7 +15083,7 @@ namespace Client.MirScenes
             if (Items[0] == null)
             {
                 SelectAwakeType.Items.Add("Select Upgrade Item.");
-                SelectAwakeType.SelectedIndex = SelectAwakeType.Items.Count-1;
+                SelectAwakeType.SelectedIndex = SelectAwakeType.Items.Count - 1;
                 CurrentAwakeType = AwakeType.None;
             }
             else
@@ -15179,7 +15198,7 @@ namespace Client.MirScenes
             {
                 ItemCells[1].Item = new UserItem(Materials[0]);
                 ItemCells[1].Item.Count = MaterialsCount[0];
-                NeedItemLabel1.Text = Regex.Replace(ItemCells[1].Item.Info.Name, @"[\d-]", string.Empty) + "\n" + MaterialsCount[0].ToString();
+                NeedItemLabel1.Text = Regex.Replace(ItemCells[1].Item.Info.Name, @"[\d-]", string.Empty) + "\nQuantity: " + MaterialsCount[0].ToString();
             }
             else
             {
@@ -15191,7 +15210,7 @@ namespace Client.MirScenes
             {
                 ItemCells[2].Item = new UserItem(Materials[1]);
                 ItemCells[2].Item.Count = MaterialsCount[1];
-                NeedItemLabel2.Text = Regex.Replace(ItemCells[2].Item.Info.Name, @"[\d-]", string.Empty) + "\n" + MaterialsCount[1].ToString();
+                NeedItemLabel2.Text = Regex.Replace(ItemCells[2].Item.Info.Name, @"[\d-]", string.Empty) + "\nQuantity:" + MaterialsCount[1].ToString();
             }
             else
             {
@@ -15254,6 +15273,9 @@ namespace Client.MirScenes
         public void Show()
         {
             Visible = true;
+
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
+            GameScene.Scene.InventoryDialog.Show();
         }
     }
 

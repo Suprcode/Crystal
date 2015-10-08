@@ -91,6 +91,8 @@
             this.MarriageCooldown_textbox = new System.Windows.Forms.TextBox();
             this.LoverRecall_checkbox = new System.Windows.Forms.CheckBox();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.label29 = new System.Windows.Forms.Label();
+            this.MenteeExpBank_textbox = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
             this.MenteeExpBoost_textbox = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
@@ -100,8 +102,8 @@
             this.label28 = new System.Windows.Forms.Label();
             this.MentorLength_textbox = new System.Windows.Forms.TextBox();
             this.MenteeSkillBoost_checkbox = new System.Windows.Forms.CheckBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.MenteeExpBank_textbox = new System.Windows.Forms.TextBox();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.GemStatCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -111,6 +113,7 @@
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage6.SuspendLayout();
+            this.tabPage7.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -257,6 +260,7 @@
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -746,6 +750,23 @@
             this.tabPage6.Text = "Mentor";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(59, 161);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(127, 13);
+            this.label29.TabIndex = 25;
+            this.label29.Text = "EXP to Mentor at End (%)";
+            // 
+            // MenteeExpBank_textbox
+            // 
+            this.MenteeExpBank_textbox.Location = new System.Drawing.Point(194, 158);
+            this.MenteeExpBank_textbox.Name = "MenteeExpBank_textbox";
+            this.MenteeExpBank_textbox.Size = new System.Drawing.Size(64, 20);
+            this.MenteeExpBank_textbox.TabIndex = 24;
+            this.MenteeExpBank_textbox.TextChanged += new System.EventHandler(this.MenteeExpBank_textbox_TextChanged);
+            // 
             // label25
             // 
             this.label25.AutoSize = true;
@@ -826,22 +847,28 @@
             this.MenteeSkillBoost_checkbox.UseVisualStyleBackColor = true;
             this.MenteeSkillBoost_checkbox.CheckedChanged += new System.EventHandler(this.MenteeSkillBoost_checkbox_CheckedChanged);
             // 
-            // label29
+            // tabPage7
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(59, 161);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(127, 13);
-            this.label29.TabIndex = 25;
-            this.label29.Text = "EXP to Mentor at End (%)";
+            this.tabPage7.Controls.Add(this.GemStatCheckBox);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(365, 229);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Gem";
+            this.tabPage7.UseVisualStyleBackColor = true;
             // 
-            // MenteeExpBank_textbox
+            // GemStatCheckBox
             // 
-            this.MenteeExpBank_textbox.Location = new System.Drawing.Point(194, 158);
-            this.MenteeExpBank_textbox.Name = "MenteeExpBank_textbox";
-            this.MenteeExpBank_textbox.Size = new System.Drawing.Size(64, 20);
-            this.MenteeExpBank_textbox.TabIndex = 24;
-            this.MenteeExpBank_textbox.TextChanged += new System.EventHandler(this.MenteeExpBank_textbox_TextChanged);
+            this.GemStatCheckBox.AutoSize = true;
+            this.GemStatCheckBox.Location = new System.Drawing.Point(30, 15);
+            this.GemStatCheckBox.Name = "GemStatCheckBox";
+            this.GemStatCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.GemStatCheckBox.Size = new System.Drawing.Size(133, 17);
+            this.GemStatCheckBox.TabIndex = 16;
+            this.GemStatCheckBox.Text = "Gem Stat Independent";
+            this.GemStatCheckBox.UseVisualStyleBackColor = true;
+            this.GemStatCheckBox.CheckedChanged += new System.EventHandler(this.GemStatCheckBox_CheckedChanged);
             // 
             // SystemInfoForm
             // 
@@ -873,7 +900,10 @@
             this.tabPage5.PerformLayout();
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             this.ResumeLayout(false);
+
 
         }
 
@@ -953,5 +983,7 @@
         private System.Windows.Forms.CheckBox MenteeSkillBoost_checkbox;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox MenteeExpBank_textbox;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.CheckBox GemStatCheckBox;
     }
 }

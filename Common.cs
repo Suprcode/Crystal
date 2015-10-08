@@ -56,7 +56,33 @@ public enum ItemGrade : byte
     Legendary = 3,
     Mythical = 4,
 }
-
+public enum StatType : byte
+{
+    AC = 0,
+    MAC = 1,
+    DC = 2,
+    MC = 3,
+    SC = 4,
+    HP = 5,
+    MP = 6,
+    HP_Percent = 7,
+    MP_Percent = 8,
+    HP_Regen = 9,
+    MP_Regen = 10,
+    ASpeed = 11,
+    Luck = 12,
+    Strong = 13,
+    Accuracy = 14,
+    Agility = 15,
+    MagicResist = 16,
+    PoisonResist = 17,
+    PoisonAttack = 18,
+    PoisonRegen = 19,
+    Freezing = 20,
+    Holy = 21,
+    Durability = 22,
+    Unknown = 23
+}
 public enum RefinedValue : byte
 {
     None = 0,
@@ -101,7 +127,8 @@ public enum DefaultNPCType : byte
     CustomCommand,
     OnAcceptQuest,
     OnFinishQuest,
-    Daily
+    Daily,
+    TalkMonster
 }
 
 public enum IntelligentCreatureType : byte
@@ -1102,6 +1129,7 @@ public enum BuffType : byte
     Gold,
     BagWeight,
     Transform,
+    Prison,
 
     Impact,
     Magic,
@@ -1393,6 +1421,7 @@ public enum ClientPacketIds : short
     RangeAttack,
     Harvest,
     CallNPC,
+    TalkMonsterNPC,
     BuyItem,
     SellItem,
     RepairItem,
@@ -2420,7 +2449,14 @@ public class ItemInfo
 
     public string FriendlyName
     {
-        get { return Regex.Replace(Name, @"\d+$", string.Empty); }
+        get 
+        {
+            string temp = Name;
+            temp = Regex.Replace(temp, @"\d+$", string.Empty); //hides end numbers
+            temp = Regex.Replace(temp, @"\[[^]]*\]", string.Empty); //hides square brackets
+
+            return temp;
+        }
     }
     
     public ItemInfo()
@@ -3250,7 +3286,7 @@ public class GameShopItem
 
     public override string ToString()
     {
-        return string.Format("{0}: {1}", GIndex, Info.FriendlyName);
+        return string.Format("{0}: {1}", GIndex, Info.Name);
     }
 
 }
@@ -4255,6 +4291,8 @@ public abstract class Packet
                 return new C.Harvest();
             case (short)ClientPacketIds.CallNPC:
                 return new C.CallNPC();
+            case (short)ClientPacketIds.TalkMonsterNPC:
+                return new C.TalkMonsterNPC();
             case (short)ClientPacketIds.BuyItem:
                 return new C.BuyItem();
             case (short)ClientPacketIds.SellItem:

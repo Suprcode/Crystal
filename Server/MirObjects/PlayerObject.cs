@@ -9,6 +9,7 @@ using Server.MirEnvir;
 using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
+using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
@@ -393,9 +394,16 @@ namespace Server.MirObjects
 
                 if (!pet.Dead)
                 {
-                    Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
-                    pet.CurrentMap.RemoveObject(pet);
-                    pet.Despawn();
+                    try
+                    {
+                        Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
+                        pet.CurrentMap.RemoveObject(pet);
+                        pet.Despawn();
+                    }
+                    catch
+                    {
+                        SMain.EnqueueDebugging(Name + " Pet logout was null on logout : " + pet != null ? pet.Name : "" + " " + pet.CurrentMap != null ? pet.CurrentMap.Info.FileName : "");
+                    }
                 }
             }
             Pets.Clear();
@@ -10117,27 +10125,31 @@ namespace Server.MirObjects
                             ReceiveChat("You can now unequip a cursed item.", ChatType.Hint);
                             UnlockCurse = true;
                             break;
-                        case 3:
+                        case 3: //Buff
                             int time = item.Info.Durability;
 
                             if ((item.Info.MaxDC + item.DC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxDC + item.DC } });
+                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxDC + item.DC } });
 
                             if ((item.Info.MaxMC + item.MC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxMC + item.MC } });
+                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMC + item.MC } });
 
                             if ((item.Info.MaxSC + item.SC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxSC + item.SC } });
+                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
 
                             if ((item.Info.AttackSpeed + item.AttackSpeed) > 0)
-                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
+                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
 
                             if ((item.Info.HP + item.HP) > 0)
-                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.HP + item.HP } });
+                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
 
                             if ((item.Info.MP + item.MP) > 0)
-                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MP + item.MP } });
+                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
+                            break;
+                        case 4: //Exp
+                            time = item.Info.Durability;
 
+                            AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                             break;
                     }
                     break;
@@ -10753,11 +10765,120 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    int successchance = tempFrom.Info.Reflect * (int)tempTo.GemCount;
+                    int successchance = tempFrom.Info.Reflect;
+
+                    // Gem is only affected by the stat applied.
+                    // Drop rate per gem won't work if gems add more than 1 stat, i.e. DC + 2 per gem.
+                    if (Settings.GemStatIndependent)
+                    {
+                        StatType GemType = GetGemType(tempFrom);
+
+                        switch (GemType)
+                        {
+                            case StatType.AC:
+                                successchance *= (int)tempTo.AC;
+                                break;
+
+                            case StatType.MAC:
+                                successchance *= (int)tempTo.MAC;
+                                break;
+
+                            case StatType.DC:
+                                successchance *= (int)tempTo.DC;
+                                break;
+
+                            case StatType.MC:
+                                successchance *= (int)tempTo.MC;
+                                break;
+
+                            case StatType.SC:
+                                successchance *= (int)tempTo.SC;
+                                break;
+
+                            case StatType.ASpeed:
+                                successchance *= (int)tempTo.AttackSpeed;
+                                break;
+
+                            case StatType.Accuracy:
+                                successchance *= (int)tempTo.Accuracy;
+                                break;
+
+                            case StatType.Agility:
+                                successchance *= (int)tempTo.Agility;
+                                break;
+
+                            case StatType.Freezing:
+                                successchance *= (int)tempTo.Freezing;
+                                break;
+
+                            case StatType.PoisonAttack:
+                                successchance *= (int)tempTo.PoisonAttack;
+                                break;
+
+                            case StatType.MagicResist:
+                                successchance *= (int)tempTo.MagicResist;
+                                break;
+
+                            case StatType.PoisonResist:
+                                successchance *= (int)tempTo.PoisonResist;
+                                break;
+
+                            // These attributes may not work as more than 1 stat is
+                            // added per gem, i.e + 40 HP.
+
+                            case StatType.HP:
+                                successchance *= (int)tempTo.HP;
+                                break;
+
+                            case StatType.MP:
+                                successchance *= (int)tempTo.MP;
+                                break;
+
+                            case StatType.HP_Regen:
+                                successchance *= (int)tempTo.HealthRecovery;
+                                break;
+                                
+                            // I don't know if this conflicts with benes.
+                            case StatType.Luck:
+                                successchance *= (int)tempTo.Luck;
+                                break;
+
+                            case StatType.Strong:
+                                successchance *= (int)tempTo.Strong;
+                                break;
+
+                            case StatType.PoisonRegen:
+                                successchance *= (int)tempTo.PoisonRecovery;
+                                break;
+
+
+                            /*
+                                 Currently not supported.
+                                 Missing item definitions.
+
+                                 case StatType.HP_Precent:
+                                 case StatType.MP_Precent:
+                                 case StatType.MP_Regen:
+                                 case StatType.Holy:
+                                 case StatType.Durability:
+
+
+                            */
+                            default:
+                                successchance *= (int)tempTo.GemCount;
+                                break;
+
+                        }
+                    }
+                    // Gem is affected by the total added stats on the item.
+                    else
+                    {
+                        successchance *= (int)tempTo.GemCount;
+                    }
+
                     successchance = successchance >= tempFrom.Info.CriticalRate ? 0 : (tempFrom.Info.CriticalRate - successchance) + (GemRate * 5);
 
                     //check if combine will succeed
-
                     bool succeeded = Envir.Random.Next(100) < successchance;
                     canUpgrade = true;
 
@@ -10836,7 +10957,7 @@ namespace Server.MirObjects
                     }
                     else if ((tempFrom.Info.Luck + tempFrom.Luck) > 0)
                     {
-                        if (succeeded) tempTo.Luck = (sbyte) Math.Min(sbyte.MaxValue, tempFrom.Info.Luck + tempTo.Luck + tempFrom.Luck);
+                        if (succeeded) tempTo.Luck = (sbyte)Math.Min(sbyte.MaxValue, tempFrom.Info.Luck + tempTo.Luck + tempFrom.Luck);
                     }
                     else
                     {
@@ -10962,16 +11083,101 @@ namespace Server.MirObjects
             }
             return false;
         }
+        //Gems granting multiple stat types are not compatiable with this method.
+        private StatType GetGemType(UserItem gem)
+        {
+            if ((gem.Info.MaxDC + gem.DC) > 0)
+                return StatType.DC;
+
+            else if ((gem.Info.MaxMC + gem.MC) > 0)
+                return StatType.MC;
+
+            else if ((gem.Info.MaxSC + gem.SC) > 0)
+                return StatType.SC;
+
+            else if ((gem.Info.MaxAC + gem.AC) > 0)
+                return StatType.AC;
+
+            else if ((gem.Info.MaxMAC + gem.MAC) > 0)
+                return StatType.MAC;
+
+            else if ((gem.Info.Durability) > 0)
+                return StatType.Durability;
+
+            else if ((gem.Info.AttackSpeed + gem.AttackSpeed) > 0)
+                return StatType.ASpeed;
+
+            else if ((gem.Info.Agility + gem.Agility) > 0)
+                return StatType.Agility;
+
+            else if ((gem.Info.Accuracy + gem.Accuracy) > 0)
+                return StatType.Accuracy;
+
+            else if ((gem.Info.PoisonAttack + gem.PoisonAttack) > 0)
+                return StatType.PoisonAttack;
+
+            else if ((gem.Info.Freezing + gem.Freezing) > 0)
+                return StatType.Freezing;
+
+            else if ((gem.Info.MagicResist + gem.MagicResist) > 0)
+                return StatType.MagicResist;
+
+            else if ((gem.Info.PoisonResist + gem.PoisonResist) > 0)
+                return StatType.PoisonResist;
+
+            else if ((gem.Info.Luck + gem.Luck) > 0)
+                return StatType.Luck;
+
+            else if ((gem.Info.PoisonRecovery + gem.PoisonRecovery) > 0)
+                return StatType.PoisonRegen;
+
+            else if ((gem.Info.HP + gem.HP) > 0)
+                return StatType.HP;
+
+            else if ((gem.Info.MP + gem.MP) > 0)
+                return StatType.MP;
+
+            else if ((gem.Info.HealthRecovery + gem.HealthRecovery) > 0)
+                return StatType.HP_Regen;
+
+            // These may be incomplete. Item definitions may be missing?
+
+            else if ((gem.Info.HPrate) > 0)
+                return StatType.HP_Percent;
+
+            else if ((gem.Info.MPrate) > 0)
+                return StatType.MP_Percent;
+
+            else if ((gem.Info.SpellRecovery) > 0)
+                return StatType.MP_Regen;
+
+            else if ((gem.Info.Holy) > 0)
+                return StatType.Holy;
+
+            else if ((gem.Info.Strong + gem.Strong) > 0)
+                return StatType.Strong;
+
+            else if (gem.Info.HPrate > 0)
+                return StatType.HP_Regen;
+
+            else
+                return StatType.Unknown;
+        }
+        //Gems granting multiple stat types are not compatible with this method.
         private int GetCurrentStatCount(UserItem gem, UserItem item)
         {
             if ((gem.Info.MaxDC + gem.DC) > 0)
                 return item.DC;
+
             else if ((gem.Info.MaxMC + gem.MC) > 0)
                 return item.MC;
+
             else if ((gem.Info.MaxSC + gem.SC) > 0)
                 return item.SC;
+
             else if ((gem.Info.MaxAC + gem.AC) > 0)
                 return item.AC;
+
             else if ((gem.Info.MaxMAC + gem.MAC) > 0)
                 return item.MAC;
 
@@ -10992,10 +11198,48 @@ namespace Server.MirObjects
 
             else if ((gem.Info.Freezing + gem.Freezing) > 0)
                 return item.Freezing;
+
             else if ((gem.Info.MagicResist + gem.MagicResist) > 0)
                 return item.MagicResist;
+
             else if ((gem.Info.PoisonResist + gem.PoisonResist) > 0)
                 return item.PoisonResist;
+
+            else if ((gem.Info.Luck + gem.Luck) > 0)
+                return item.Luck;
+
+            else if ((gem.Info.PoisonRecovery + gem.PoisonRecovery) > 0)
+                return item.PoisonRecovery;
+
+            else if ((gem.Info.HP + gem.HP) > 0)
+                return item.HP;
+
+            else if ((gem.Info.MP + gem.MP) > 0)
+                return item.MP;
+
+            else if ((gem.Info.HealthRecovery + gem.HealthRecovery) > 0)
+                return item.HealthRecovery;
+
+            // Definitions are missing for these.
+            /*
+            else if ((gem.Info.HPrate) > 0)
+                return item.h
+
+            else if ((gem.Info.MPrate) > 0)
+                return 
+
+            else if ((gem.Info.SpellRecovery) > 0)
+                return 
+
+            else if ((gem.Info.Holy) > 0)
+                return 
+
+            else if ((gem.Info.Strong + gem.Strong) > 0)
+                return 
+
+            else if (gem.Info.HPrate > 0)
+                return
+            */
             return 0;
         }
         public void DropItem(ulong id, uint count)
@@ -12731,6 +12975,10 @@ namespace Server.MirObjects
                     key = "Daily";
                     Info.NewDay = false;
                     break;
+                case DefaultNPCType.TalkMonster:
+                    if (value.Length < 1) return;
+                    key = string.Format("TalkMonster({0})", value[0]);
+                    break;
             }
 
             key = string.Format("[@_{0}]", key);
@@ -12775,6 +13023,17 @@ namespace Server.MirObjects
 
                 CompleteNPC(action.Params);
             }
+        }
+
+        public void TalkMonster(uint objectID)
+        {
+            TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
+
+            if (talkMonster == null) return;
+
+            talkMonster.TalkingObjects.Add(this);
+
+            CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
         }
 
         public void BuyItem(ulong index, uint count)
