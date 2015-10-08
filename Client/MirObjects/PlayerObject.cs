@@ -308,7 +308,7 @@ namespace Client.MirObjects
                         break;
                 }
 
-                if (MountType > 6 && RidingMount && TransformType != 26)
+                if (MountType > 6 && RidingMount)
                 {
                     ArmourOffSet = -416;
                     BodyLibrary = TransformType < Libraries.TransformMounts.Length ? Libraries.TransformMounts[TransformType] : Libraries.TransformMounts[0];

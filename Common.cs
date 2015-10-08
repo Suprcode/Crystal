@@ -144,6 +144,7 @@ public enum IntelligentCreatureType : byte
     BabyDragon = 7,
     OlympicFlame = 8,
     BabySnowMan = 9,
+    Frog = 10
 }
 
 //6 blank mob files
@@ -578,6 +579,7 @@ public enum Monster : ushort
     BabyDragon = 10007,//unknown
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
+    Frog = 10010//unknown
 }
 
 public enum MirAction : byte
@@ -1366,6 +1368,7 @@ public enum ServerPacketIds : short
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
+    IntelligentCreaturePickup,
     NPCPearlGoods,
 
     TransformUpdate,
@@ -4866,6 +4869,8 @@ public abstract class Packet
                 return new S.UpdateIntelligentCreatureList();
             case (short)ServerPacketIds.IntelligentCreatureEnableRename:
                 return new S.IntelligentCreatureEnableRename();
+            case (short)ServerPacketIds.IntelligentCreaturePickup:
+                return new S.IntelligentCreaturePickup();
             case (short)ServerPacketIds.NPCPearlGoods:
                 return new S.NPCPearlGoods();
             case (short)ServerPacketIds.FriendUpdate:

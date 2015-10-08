@@ -159,6 +159,7 @@ namespace Server.MirObjects
                 animvariantTicker = Envir.Time + animvariantDelay;
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
+
                 switch (petType)
                 {
                     case IntelligentCreatureType.BabyDragon:
@@ -578,6 +579,8 @@ namespace Server.MirObjects
 
                     if(item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary)
                         Master.ReceiveChat("Pet Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+
+                    ((PlayerObject)Master).Enqueue(new S.IntelligentCreaturePickup { ObjectID = ObjectID });
 
                     ((PlayerObject)Master).GainItem(item.Item);
                     CurrentMap.RemoveObject(ob);

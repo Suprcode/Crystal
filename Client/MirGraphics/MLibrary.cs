@@ -66,9 +66,9 @@ namespace Client.MirGraphics
                                           Mounts = new MLibrary[12],
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[10],
-                                          Transform = new MLibrary[27],
-                                          TransformMounts = new MLibrary[26],
+                                          Pets = new MLibrary[11],
+                                          Transform = new MLibrary[28],
+                                          TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
                                           TransformWeaponEffect = new MLibrary[1];
 
@@ -554,11 +554,6 @@ namespace Client.MirGraphics
                 _images[index] = new MImage(_reader);
             }
             MImage mi = _images[index];
-
-            if (mi == null)
-            {
-                return Size.Empty;
-            }
 
             if (mi.TrueSize.IsEmpty)
             {

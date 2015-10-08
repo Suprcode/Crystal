@@ -10347,32 +10347,32 @@ namespace Server.MirObjects
                                 StrongboxRewardItem(boxtype);
                                 return;
                             case 26://Wonderdrugs + Knapsack
-                                int time = item.Info.Durability * 3600;
+                                int time = item.Info.Durability;
                                 switch (item.Info.Effect)
                                 {
                                     case 0://exp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                         break;
                                     case 1://drop low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                         break;
                                     case 2://hp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.HP + item.HP } });
+                                        AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
                                         break;
                                     case 3://mp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MP + item.MP } });
+                                        AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
                                         break;
                                     case 4://ac-ac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.WonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxAC + item.AC } });
+                                        AddBuff(new Buff { Type = BuffType.WonderShield, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
                                         break;
                                     case 5://mac-mac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MagicWonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxMAC + item.MAC } });
+                                        AddBuff(new Buff { Type = BuffType.MagicWonderShield, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
                                         break;
                                     case 6://speed low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
+                                        AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
                                         break;
                                     case 7://knapsack low/med/high
-                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                         break;
                                 }
                                 break;
@@ -13534,6 +13534,7 @@ namespace Server.MirObjects
         #endregion
 
         #region Awakening
+
         public void Awakening(ulong UniqueID, AwakeType type)
         {
             if (type == AwakeType.None) return;
@@ -13871,6 +13872,7 @@ namespace Server.MirObjects
             }
             return true;
         }
+
         #endregion
 
         #region Groups
@@ -17807,7 +17809,6 @@ namespace Server.MirObjects
 
         #region Gameshop
 
-
         public void GameShopStock(GameShopItem item)
         {
             int purchased;
@@ -18009,12 +18010,8 @@ namespace Server.MirObjects
             ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
         }
             
-
-
-
         public void GetGameShop()
         {
-
             int purchased;
             GameShopItem item = new GameShopItem();
             int StockLevel;
