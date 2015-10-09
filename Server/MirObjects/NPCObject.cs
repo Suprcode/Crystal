@@ -1484,7 +1484,7 @@ namespace Server.MirObjects
                     Directory.CreateDirectory(sDirectory);
 
                     if (!File.Exists(fileName))
-                        File.Create(fileName);
+                        File.Create(fileName).Close();
 
                     acts.Add(new NPCActions(ActionType.AddNameList, fileName));
                     break;
@@ -1833,7 +1833,7 @@ namespace Server.MirObjects
                         Directory.CreateDirectory(sDirectory);
 
                         if (!File.Exists(fileName))
-                            File.Create(fileName);
+                            File.Create(fileName).Close();
 
                         acts.Add(new NPCActions(ActionType.LoadValue, parts[1], fileName, group, key));
                     }
@@ -1862,7 +1862,7 @@ namespace Server.MirObjects
                         Directory.CreateDirectory(sDirectory);
 
                         if (!File.Exists(fileName))
-                            File.Create(fileName);
+                            File.Create(fileName).Close();
 
                         acts.Add(new NPCActions(ActionType.SaveValue, fileName, group, key, value));
                     }

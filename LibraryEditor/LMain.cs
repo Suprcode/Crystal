@@ -493,7 +493,7 @@ namespace LibraryEditor
                 }
 
                 _library.InsertImage(index, image, x, y);
-                image.Dispose();
+
                 toolStripProgressBar.Value++;
             }
 
