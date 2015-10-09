@@ -254,7 +254,6 @@
     <Compile Include="MirObjects\Monsters\Runaway.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
-    <Compile Include="MirObjects\Monsters\TalkingMonster.cs" />
     <Compile Include="MirObjects\Monsters\ThunderElement.cs" />
     <Compile Include="MirObjects\Monsters\GuardianRock.cs" />
     <Compile Include="MirObjects\Monsters\TownArcher.cs" />

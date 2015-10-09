@@ -1028,7 +1028,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.TalkMonster(p.ObjectID);
+            //Player.TalkMonster(p.ObjectID);
         }
 
         private void BuyItem(C.BuyItem p)

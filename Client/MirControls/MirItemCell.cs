@@ -1086,26 +1086,56 @@ namespace Client.MirControls
                     #endregion
                     #region To guild storage
                     case MirGridType.GuildStorage: //To Guild Storage
-                        if (GameScene.SelectedCell.GridType == MirGridType.Inventory)
+                        switch (GameScene.SelectedCell.GridType)
                         {
-                            if (Item != null)
-                            {
-                                GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
+                            case MirGridType.GuildStorage: //From Guild Storage
+                                if (GameScene.SelectedCell.GridType == MirGridType.GuildStorage)
+                                {
+                                    //if (Item != null)
+                                    //{
+                                        //GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
+                                        //return;
+                                    //}
+                                    if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
+                                    {
+                                        GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
+                                        return;
+                                    }
+                                    //if (ItemArray[ItemSlot] == null)
+                                    //{
+                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 3, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                        Locked = true;
+                                        GameScene.SelectedCell.Locked = true;
+                                        GameScene.SelectedCell = null;
+                                        return;
+                                    //}
+                                }
                                 return;
-                            }
-                            if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
-                            {
-                                GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
+
+                            case MirGridType.Inventory:
+
+                                if (GameScene.SelectedCell.GridType == MirGridType.Inventory)
+                                {
+                                    if (Item != null)
+                                    {
+                                        GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
+                                        return;
+                                    }
+                                    if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
+                                    {
+                                        GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
+                                        return;
+                                    }
+                                    if (ItemArray[ItemSlot] == null)
+                                    {
+                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 0, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                        Locked = true;
+                                        GameScene.SelectedCell.Locked = true;
+                                        GameScene.SelectedCell = null;
+                                        return;
+                                    }
+                                }
                                 return;
-                            }
-                            if (ItemArray[ItemSlot] == null)
-                            {
-                                Network.Enqueue(new C.GuildStorageItemChange {Type = 0, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-                                Locked = true;
-                                GameScene.SelectedCell.Locked = true;
-                                GameScene.SelectedCell = null;
-                                return;
-                            }
                         }
                         break;
                     #endregion
