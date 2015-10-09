@@ -153,8 +153,8 @@ namespace Server.MirObjects
                     return new Football(info);
                 case 69://custom
                     return new Runaway(info);
-                //case 70://custom
-                    //return new TalkingMonster(info);
+                case 70://custom
+                    return new TalkingMonster(info);
                 default:
                     return new MonsterObject(info);
             }
