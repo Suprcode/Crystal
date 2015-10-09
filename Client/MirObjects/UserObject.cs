@@ -762,14 +762,14 @@ namespace Client.MirObjects
         public void RefreshGuildBuffs()
         {
             if (User != this) return;
-            if (GameScene.Scene.GuildBuffDialog == null) return;
-            for (int i = 0; i < GameScene.Scene.GuildBuffDialog.EnabledBuffs.Count; i++)
+            if (GameScene.Scene.GuildDialog == null) return;
+            for (int i = 0; i < GameScene.Scene.GuildDialog.EnabledBuffs.Count; i++)
             {
-                GuildBuff Buff = GameScene.Scene.GuildBuffDialog.EnabledBuffs[i];
+                GuildBuff Buff = GameScene.Scene.GuildDialog.EnabledBuffs[i];
                 if (Buff == null) continue;
                 if (!Buff.Active) continue;
                 if (Buff.Info == null)
-                Buff.Info = GameScene.Scene.GuildBuffDialog.FindGuildBuffInfo(Buff.Id);
+                Buff.Info = GameScene.Scene.GuildDialog.FindGuildBuffInfo(Buff.Id);
                 if (Buff.Info == null) continue;
                 MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + Buff.Info.BuffAc);
                 MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + Buff.Info.BuffMac);

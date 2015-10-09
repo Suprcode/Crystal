@@ -13025,7 +13025,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void TalkMonster(uint objectID)
+       public void TalkMonster(uint objectID)
         {
             TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
 
@@ -14583,7 +14583,6 @@ namespace Server.MirObjects
                     MyGuild.StoredItems[to] = new GuildStorageItem() { Item = Info.Inventory[from], UserId = Info.Index };
                     Info.Inventory[from] = null;
                     RefreshBagWeight();
-                    //MyGuild.SendItemInfo(MyGuild.StoredItems[to].Item);
                     MyGuild.SendItemInfo(MyGuild.StoredItems[to].Item);
                     MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 0, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
                     MyGuild.NeedSave = true;
@@ -14645,6 +14644,49 @@ namespace Server.MirObjects
                         CheckItem(item);
                     }
                     Enqueue(new S.GuildStorageList() { Items = MyGuild.StoredItems });
+                    break;
+                case 3: // Move Item
+                    GuildStorageItem q = null;
+                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanStoreItem))
+                    {
+                        Enqueue(p);
+                        ReceiveChat("You do not have permission to move items in guild storage.", ChatType.System);
+                        return;
+                    }
+                    if (from < 0 || from >= MyGuild.StoredItems.Length)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (to < 0 || to >= MyGuild.StoredItems.Length)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (MyGuild.StoredItems[from] == null)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (MyGuild.StoredItems[from].Item.Info.Bind.HasFlag(BindMode.DontStore))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (MyGuild.StoredItems[to] != null)
+                    {
+                        q = MyGuild.StoredItems[to];
+                    }
+                    MyGuild.StoredItems[to] = MyGuild.StoredItems[from];
+                    if (q != null) MyGuild.StoredItems[from] = q;
+                    else MyGuild.StoredItems[from] = null;
+
+                    MyGuild.SendItemInfo(MyGuild.StoredItems[to].Item);
+
+                    if (MyGuild.StoredItems[from] != null) MyGuild.SendItemInfo(MyGuild.StoredItems[from].Item);
+
+                    MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 2, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
+                    MyGuild.NeedSave = true;
                     break;
             }
 
