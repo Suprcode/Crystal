@@ -244,7 +244,7 @@ namespace Server.MirObjects
         public NPCPage NPCPage;
         public bool NPCSuccess;
         public bool NPCDelayed;
-
+        public List<string> NPCSpeech = new List<string>();
         public Map NPCMoveMap;
         public Point NPCMoveCoord;
         public string NPCInputStr;
