@@ -272,7 +272,7 @@ namespace Server.MirObjects
             //Cleans arguments out of search page name
             string tempSectionName = Page.ArgumentParse(sectionName);
 
-            //parse all individual pages in a script, defined by line []
+            //parse all individual pages in a script, defined by sectionName
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i];
@@ -807,7 +807,7 @@ namespace Server.MirObjects
                 case ResetKey:
                     player.Enqueue(new S.NPCReset());
                     break;
-                case PearlBuyKey://pearl currency
+                case PearlBuyKey:
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
@@ -1178,8 +1178,6 @@ namespace Server.MirObjects
             item.BuybackExpiryDate = Envir.Now;
             BuyBack[player.Name].Add(item);
         }
-
-
     }
 
     public class NPCChecks

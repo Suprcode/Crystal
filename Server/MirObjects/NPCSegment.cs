@@ -850,13 +850,21 @@ namespace Server.MirObjects
                     newValue = FindVariable(player, "%" + varMatch.Groups[2].Captures[0].Value.ToUpper());
                     break;
                 case "NPCNAME":
-                    //newValue = NPCName.Replace("_", " "); //FIX
+                    for (int i = 0; i < player.CurrentMap.NPCs.Count; i++)
+                    {
+                        NPCObject ob = player.CurrentMap.NPCs[i];
+                        if (ob.ObjectID != player.NPCID) continue;
+                        newValue = ob.Name.Replace("_", " ");
+                    }
                     break;
                 case "USERNAME":
                     newValue = player.Name;
                     break;
                 case "LEVEL":
                     newValue = player.Level.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "CLASS":
+                    newValue = player.Class.ToString();
                     break;
                 case "MAP":
                     newValue = player.CurrentMap.Info.FileName;
