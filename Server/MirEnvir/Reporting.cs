@@ -255,8 +255,10 @@ namespace Server.MirEnvir
             if (!File.Exists(fullPath))
                 File.Create(fullPath).Close();
 
-            foreach (Action action in Actions)
+            for (int i = 0; i < Actions.Count; i++)
             {
+                Action action = Actions[i];
+
                 string output = string.Format("{0:hh\\:mm\\:ss}, {1}, {2}, {3}, {4}" + Environment.NewLine,
                     action.Time, action.Player, action.Task, action.AddedInfo, action.Source);
 

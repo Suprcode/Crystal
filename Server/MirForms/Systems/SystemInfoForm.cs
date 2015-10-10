@@ -19,7 +19,7 @@ namespace Server
             get { return SMain.EditEnvir; }
         }
 
-        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false;
+        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false;
 
         public SystemInfoForm()
         {
@@ -40,6 +40,7 @@ namespace Server
             UpdateRefine();
             UpdateMarriage();
             UpdateMentor();
+            UpdateGem();
         }
 
         #region Update
@@ -114,7 +115,10 @@ namespace Server
             RefineCost_textbox.Text = Settings.RefineCost.ToString();
             OreName_textbox.Text = Settings.RefineOreName.ToString();
         }
-
+        private void UpdateGem()
+        {
+            GemStatCheckBox.Checked = Settings.GemStatIndependent;
+        }
         #endregion
 
         private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -136,6 +140,9 @@ namespace Server
 
             if (MentorChanged)
                 Settings.SaveMentor();
+
+            if (GemChanged)
+                Settings.SaveGem();
         }
 
         #region Fishing
@@ -659,6 +666,15 @@ namespace Server
             GoodsChanged = true;
         }
 
+        #endregion
+        #region Gem
+        private void GemStatCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.GemStatIndependent = GemStatCheckBox.Checked;
+            GemChanged = true;
+        }
         #endregion
     }
 }

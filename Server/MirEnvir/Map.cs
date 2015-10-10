@@ -2049,7 +2049,33 @@ namespace Server.MirEnvir
 
                 if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
                     player.Enqueue(p);
+                    
             }
+        }
+
+        public void BroadcastNPC(Packet p, Point location)
+        {
+            if (p == null) return;
+
+            for (int i = Players.Count - 1; i >= 0; i--)
+            {
+                PlayerObject player = Players[i];
+
+                if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
+                    player.Enqueue(p);
+
+            }
+        }
+
+
+        public void Broadcast(Packet p, Point location, PlayerObject Player)
+        {
+            if (p == null) return;
+
+            if (Functions.InRange(location, Player.CurrentLocation, Globals.DataRange))
+            {
+                Player.Enqueue(p);
+            }    
         }
 
         public bool Inactive(int count = 5)

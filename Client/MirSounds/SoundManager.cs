@@ -250,7 +250,18 @@ namespace Client.MirSounds
             WolfStruck1 = 10193,
             WolfStruck2 = 10194,
             TigerRide1 = 10218,
-            TigerRide2 = 10219;
+            TigerRide2 = 10219,
 
+            PetPig = 10500,
+            PetChick = 10501,
+            PetKitty = 10502,
+            PetSkeleton = 10503,
+            PetPigman = 10504,
+            PetWemade = 10505,
+            PetBlackKitten = 10506,
+            PetDragon = 10507,
+            PetOlympic = 10508,
+            PetFrog = 10510,
+            PetPickup = 10512;
     }
 }

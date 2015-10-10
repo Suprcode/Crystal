@@ -151,8 +151,10 @@ namespace Server.MirObjects
                     return new DarkDevourer(info);
                 case 68:
                     return new Football(info);
-                case 69:
+                case 69://custom
                     return new Runaway(info);
+                case 70://custom
+                    return new TalkingMonster(info);
                 default:
                     return new MonsterObject(info);
             }
@@ -1748,6 +1750,7 @@ namespace Server.MirObjects
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical});
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
+                BroadcastDamageIndicator(DamageType.Critical);
             }
 
             if (armour >= damage)

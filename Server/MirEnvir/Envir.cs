@@ -139,7 +139,6 @@ namespace Server.MirEnvir
         public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
         private Thread[] MobThreading = new Thread[Settings.ThreadLimit];
         public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
-        public bool HandledError = false;
 
         public List<string> CustomCommands = new List<string>();
         public Dragon DragonSystem;
@@ -519,10 +518,15 @@ namespace Server.MirEnvir
                             Connections[i].SendDisconnect(3);
                     }
 
-                    File.AppendAllText(@".\Error.txt",
-                                           string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+                    // Get stack trace for the exception with source file information
+                    var st = new StackTrace(ex, true);
+                    // Get the top stack frame
+                    var frame = st.GetFrame(0);
+                    // Get the line number from the stack frame
+                    var line = frame.GetFileLineNumber();
 
-                    HandledError = true;
+                    File.AppendAllText(@".\Error.txt",
+                                           string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
                 }
 
                 StopNetwork();
@@ -533,11 +537,16 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
+                // Get stack trace for the exception with source file information
+                var st = new StackTrace(ex, true);
+                // Get the top stack frame
+                var frame = st.GetFrame(0);
+                // Get the line number from the stack frame
+                var line = frame.GetFileLineNumber();
+
                 SMain.Enqueue("[outer workloop error]" + ex);
                 File.AppendAllText(@".\Error.txt",
-                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
-
-                HandledError = true;
+                                       string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
             }
             _thread = null;
 
@@ -1344,11 +1353,6 @@ namespace Server.MirEnvir
             _thread = new Thread(WorkLoop) {IsBackground = true};
             _thread.Start();
 
-            if(HandledError && Settings.TestServer)
-            {
-                HandledError = false;
-                Start();
-            }
         }
         public void Stop()
         {
@@ -2027,7 +2031,11 @@ namespace Server.MirEnvir
 
         public void UpdateItemExpiry(UserItem item)
         {
-            ExpiryInfo expiryInfo = new ExpiryInfo();
+            //can't have expiry on usable items
+            if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
+                item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Transform) return;
+
+            ExpireInfo expiryInfo = new ExpireInfo();
 
             Regex r = new Regex(@"\[(.*?)\]");
             Match expiryMatch = r.Match(item.Info.Name);
@@ -2044,15 +2052,18 @@ namespace Server.MirEnvir
 
                 int.TryParse(match.Groups["Numeric"].Value, out num);
 
-                switch (alpha.ToLower())
+                switch (alpha)
                 {
+                    case "m":
+                        expiryInfo.ExpiryDate = DateTime.Now.AddMinutes(num);
+                        break;
                     case "h":
                         expiryInfo.ExpiryDate = DateTime.Now.AddHours(num);
                         break;
                     case "d":
                         expiryInfo.ExpiryDate = DateTime.Now.AddDays(num);
                         break;
-                    case "m":
+                    case "M":
                         expiryInfo.ExpiryDate = DateTime.Now.AddMonths(num);
                         break;
                     case "y":
@@ -2063,7 +2074,7 @@ namespace Server.MirEnvir
                         break;
                 }
 
-                item.ExpiryInfo = expiryInfo;
+                item.ExpireInfo = expiryInfo;
             }
         }
 

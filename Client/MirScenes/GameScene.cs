@@ -73,7 +73,7 @@ namespace Client.MirScenes
 
         public GroupDialog GroupDialog;
         public GuildDialog GuildDialog;
-        public GuildBuffDialog GuildBuffDialog;
+        //public GuildBuffDialog GuildBuffDialog;
         public BigMapDialog BigMapDialog;
         public TrustMerchantDialog TrustMerchantDialog;
         public CharacterDuraPanel CharacterDuraPanel;
@@ -203,7 +203,7 @@ namespace Client.MirScenes
             
             GroupDialog = new GroupDialog { Parent = this, Visible = false };
             GuildDialog = new GuildDialog { Parent = this, Visible = false };
-            GuildBuffDialog = new GuildBuffDialog { Parent = this, Visible = false };
+            //GuildBuffDialog = new GuildBuffDialog { Parent = this, Visible = false };
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
             CharacterDuraPanel = new CharacterDuraPanel { Parent = this, Visible = false };
@@ -397,7 +397,7 @@ namespace Client.MirScenes
                     if (!GuildDialog.Visible) GuildDialog.Show();
                     else
                     {
-                        GuildBuffDialog.Hide();
+                        //GuildBuffDialog.Hide();
                         GuildDialog.Hide();
                     }
                     break;
@@ -432,7 +432,7 @@ namespace Client.MirScenes
                     GameShopDialog.Hide();
                     GroupDialog.Hide();
                     GuildDialog.Hide();
-                    GuildBuffDialog.Hide();
+                    //GuildBuffDialog.Hide();
                     InspectDialog.Hide();
                     StorageDialog.Hide();
                     TrustMerchantDialog.Hide();
@@ -1473,16 +1473,19 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ResizeInventory:
                     ResizeInventory((S.ResizeInventory)p);
                     break;
-                case (short)ServerPacketIds.NewIntelligentCreature://IntelligentCreature
+                case (short)ServerPacketIds.NewIntelligentCreature:
                     NewIntelligentCreature((S.NewIntelligentCreature)p);
                     break;
-                case (short)ServerPacketIds.UpdateIntelligentCreatureList://IntelligentCreature
+                case (short)ServerPacketIds.UpdateIntelligentCreatureList:
                     UpdateIntelligentCreatureList((S.UpdateIntelligentCreatureList)p);
                     break;
-                case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
+                case (short)ServerPacketIds.IntelligentCreatureEnableRename:
                     IntelligentCreatureEnableRename((S.IntelligentCreatureEnableRename)p);
                     break;
-                case (short)ServerPacketIds.NPCPearlGoods://pearl currency
+                case (short)ServerPacketIds.IntelligentCreaturePickup:
+                    IntelligentCreaturePickup((S.IntelligentCreaturePickup)p);
+                    break;
+                case (short)ServerPacketIds.NPCPearlGoods:
                     NPCPearlGoods((S.NPCPearlGoods)p);
                     break;
                 case (short)ServerPacketIds.FriendUpdate:
@@ -2654,6 +2657,11 @@ namespace Client.MirScenes
                 {
                     switch (p.Type)
                     {
+                        default:
+                            {
+                                action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
+                                break;
+                            }
                         case 1:
                             {
                                 action = new QueuedAction { Action = MirAction.Attack2, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
@@ -2664,9 +2672,9 @@ namespace Client.MirScenes
                                 action = new QueuedAction { Action = MirAction.Attack3, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                                 break;
                             }
-                        default:
+                        case 3:
                             {
-                                action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
+                                action = new QueuedAction { Action = MirAction.Attack4, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                                 break;
                             }
                     }
@@ -2791,11 +2799,14 @@ namespace Client.MirScenes
 
                     switch (p.Type)
                     {
-                        case DamageType.Hit:
-                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, Color.Red, 50));
+                        case DamageType.Hit: //add damage level colours
+                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
                             break;
                         case DamageType.Miss:
-                            obj.Damages.Add(new Damage("Miss", 1200, Color.Red, 50));
+                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            break;
+                        case DamageType.Critical:
+                            obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.Red : Color.Red, 50) { Offset = 15 });
                             break;
                     }
 
@@ -3394,7 +3405,9 @@ namespace Client.MirScenes
 
         private void NewMagic(S.NewMagic p)
         {
-            User.Magics.Add(p.Magic);
+            ClientMagic magic = p.Magic;
+
+            User.Magics.Add(magic);
             User.RefreshStats();
         }
 
@@ -3551,7 +3564,7 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1020, 8, 1200, ob));
                         break;
                     case SpellEffect.Critical:
-                        ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
+                        //ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
                         break;
                     case SpellEffect.Reflect:
                         ob.Effects.Add(new Effect(Libraries.Effect, 580, 10, 70, ob));
@@ -4615,6 +4628,24 @@ namespace Client.MirScenes
                     toCell.Item = fromCell.Item;
                     fromCell.Item = null;
                     break;
+
+                case 2:
+                    toCell = GuildDialog.StorageGrid[p.To];
+                    fromCell = GuildDialog.StorageGrid[p.From];
+
+                    if (toCell == null || fromCell == null) return;
+
+                    toCell.Locked = false;
+                    fromCell.Locked = false;
+                    fromCell.Item = toCell.Item;
+                    toCell.Item = p.Item.Item;
+                    
+                    Bind(toCell.Item);
+                    if (fromCell.Item != null) 
+                        Bind(fromCell.Item);
+
+                    break;
+
                 case 3://failstore
                     fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
 
@@ -4634,6 +4665,13 @@ namespace Client.MirScenes
 
                     toCell.Locked = false;
                     fromCell.Locked = false;
+                    break;
+                case 5://failmove
+                    
+                    if (toCell == null || fromCell == null) return;
+
+                    GuildDialog.StorageGrid[p.From].Locked = false;
+                    GuildDialog.StorageGrid[p.To].Locked = false;
                     break;
             }
         }
@@ -4684,16 +4722,16 @@ namespace Client.MirScenes
 
         private bool UpdateGuildBuff(GuildBuff buff, bool Remove = false)
         {
-            for (int i = 0; i < GuildBuffDialog.EnabledBuffs.Count; i++)
+            for (int i = 0; i < GuildDialog.EnabledBuffs.Count; i++)
             {
-                if (GuildBuffDialog.EnabledBuffs[i].Id == buff.Id)
+                if (GuildDialog.EnabledBuffs[i].Id == buff.Id)
                 {
                     if (Remove)
                     {
-                        GuildBuffDialog.EnabledBuffs.RemoveAt(i);
+                        GuildDialog.EnabledBuffs.RemoveAt(i);
                     }
                     else
-                        GuildBuffDialog.EnabledBuffs[i] = buff;
+                        GuildDialog.EnabledBuffs[i] = buff;
                     return true;
                 }
             }
@@ -4704,7 +4742,7 @@ namespace Client.MirScenes
         {
             for (int i = 0; i < p.GuildBuffs.Count; i++)
             {
-                GuildBuffDialog.GuildBuffInfos.Add(p.GuildBuffs[i]);
+                GuildDialog.GuildBuffInfos.Add(p.GuildBuffs[i]);
             }
             for (int i = 0; i < p.ActiveBuffs.Count; i++)
             {
@@ -4713,22 +4751,22 @@ namespace Client.MirScenes
                 if (UpdateGuildBuff(p.ActiveBuffs[i], p.Remove == 1)) continue;
                 if (!(p.Remove == 1))
                 {
-                    GuildBuffDialog.EnabledBuffs.Add(p.ActiveBuffs[i]);
+                    GuildDialog.EnabledBuffs.Add(p.ActiveBuffs[i]);
                     //CreateGuildBuff(p.ActiveBuffs[i]);
                 }
             }
 
-            for (int i = 0; i < GuildBuffDialog.EnabledBuffs.Count; i++)
+            for (int i = 0; i < GuildDialog.EnabledBuffs.Count; i++)
             {
-                if (GuildBuffDialog.EnabledBuffs[i].Info == null)
+                if (GuildDialog.EnabledBuffs[i].Info == null)
                 {
-                    GuildBuffDialog.EnabledBuffs[i].Info = GuildBuffDialog.FindGuildBuffInfo(GuildBuffDialog.EnabledBuffs[i].Id);
+                    GuildDialog.EnabledBuffs[i].Info = GuildDialog.FindGuildBuffInfo(GuildDialog.EnabledBuffs[i].Id);
                 }
             }
 
             Buff buff = Buffs.FirstOrDefault(e => e.Type == BuffType.GuildBuff);
 
-            if (GuildBuffDialog.EnabledBuffs.Any(e => e.Active))
+            if (GuildDialog.EnabledBuffs.Any(e => e.Active))
             {
                 if (buff == null)
                 {
@@ -4738,7 +4776,7 @@ namespace Client.MirScenes
                     CreateBuff(buff);
                 }
 
-                GuildBuffDialog.UpdateActiveStats();
+                GuildDialog.UpdateActiveStats();
             }
             else
             {
@@ -4796,8 +4834,6 @@ namespace Client.MirScenes
         {
             if (NPCAwakeDialog.Visible != true)
                 NPCAwakeDialog.Show();
-            if (InventoryDialog.Visible != true)
-                InventoryDialog.Show();
         }
         private void NPCDisassemble()
         {
@@ -4841,20 +4877,18 @@ namespace Client.MirScenes
                 cell.Item = null;
             }
 
-            /*
             for (int i = 0; i < InventoryDialog.Grid.Length; i++)
             {
                 if (InventoryDialog.Grid[i].Locked == true)
                 {
                     InventoryDialog.Grid[i].Locked = false;
 
-                    if (InventoryDialog.Grid[i].Item.UniqueID == (ulong)p.removeID)
-                    {
-                        InventoryDialog.Grid[i].Item = null;
-                    }
+                    //if (InventoryDialog.Grid[i].Item.UniqueID == (ulong)p.removeID)
+                    //{
+                    //    InventoryDialog.Grid[i].Item = null;
+                    //}
                 }
-            }
-            */
+            }       
             
             MirMessageBox messageBox = null;
 
@@ -5077,6 +5111,19 @@ namespace Client.MirScenes
         {
             IntelligentCreatureDialog.CreatureRenameButton.Visible = true;
             if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
+        }
+
+        private void IntelligentCreaturePickup(S.IntelligentCreaturePickup p)
+        {
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != p.ObjectID) continue;
+
+                MonsterObject monOb = (MonsterObject)ob;
+
+                if (monOb != null) monOb.PlayPickupSound();
+            }
         }
 
         private void NPCPearlGoods(S.NPCPearlGoods p)//pearl currency
@@ -5543,6 +5590,16 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+
+                if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
+                {
+                    text = string.Format("Exp + {0}% ", minValue + addValue);
+                }
+                else
+                {
+                    text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", minValue + addValue);
+                }
+
                 MirLabel LUCKLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5550,7 +5607,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(minValue + addValue > 0 ? "Luck + {0} " : "Curse + {0}", minValue + addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, LUCKLabel.DisplayRectangle.Right + 4),
@@ -6469,7 +6526,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(HoverItem.Info.Shape == 3 ? "Time : {0}s" : "Range : {0}", HoverItem.Info.Durability)
+                    Text = string.Format("Time : {0}", Functions.PrintTimeSpanFromSeconds(HoverItem.Info.Durability * 60))
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TNRLabel.DisplayRectangle.Right + 4),
@@ -6963,7 +7020,6 @@ namespace Client.MirScenes
 
             #endregion
 
-
             #region DONT_DESTROY_ON_DROP
 
             if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DestroyOnDrop))
@@ -7269,31 +7325,50 @@ namespace Client.MirScenes
                         Math.Max(ItemLabel.Size.Height, Gemtorch.DisplayRectangle.Bottom));
                 }
                 #endregion
-
-
-
-
             }
 
             #endregion
 
             #region CANTAWAKEN
 
-            if ((HoverItem.Info.CanAwakening != true) && (HoverItem.Info.Type!= ItemType.Gem))
+            //if ((HoverItem.Info.CanAwakening != true) && (HoverItem.Info.Type != ItemType.Gem))
+            //{
+            //    count++;
+            //    MirLabel CANTAWAKENINGLabel = new MirLabel
+            //    {
+            //        AutoSize = true,
+            //        ForeColour = Color.Yellow,
+            //        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+            //        OutLine = true,
+            //        Parent = ItemLabel,
+            //        Text = string.Format("Can't awaken")
+            //    };
+
+            //    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CANTAWAKENINGLabel.DisplayRectangle.Right + 4),
+            //        Math.Max(ItemLabel.Size.Height, CANTAWAKENINGLabel.DisplayRectangle.Bottom));
+            //}
+
+            #endregion
+
+            #region EXPIRE
+
+            if (HoverItem.ExpireInfo != null)
             {
+                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - DateTime.Now).TotalSeconds;
+
                 count++;
-                MirLabel CANTAWAKENINGLabel = new MirLabel
+                MirLabel EXPIRELabel = new MirLabel
                 {
                     AutoSize = true,
                     ForeColour = Color.Yellow,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't awaken")
+                    Text = remainingSeconds > 0 ? string.Format("Expires in {0}", Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : "Expired"
                 };
 
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CANTAWAKENINGLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, CANTAWAKENINGLabel.DisplayRectangle.Bottom));
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, EXPIRELabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, EXPIRELabel.DisplayRectangle.Bottom));
             }
 
             #endregion
@@ -7464,13 +7539,12 @@ namespace Client.MirScenes
                 }
             }
 
-            if (realItem.Type == ItemType.Scroll && realItem.Shape == 6)//Credit Scroll
+            if (realItem.Type == ItemType.Scroll && realItem.Shape == 7)//Credit Scroll
             {
                 HoverItem.Info.ToolTip = string.Format("Adds {0} Credits to your Account.", HoverItem.Info.Price);
             }
 
-
-                if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
+            if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
             {
                 count++;
                 MirLabel TOOLTIPLabel = new MirLabel
@@ -8580,6 +8654,18 @@ namespace Client.MirScenes
                             GameScene.NPCID = npc.ObjectID;
                             Network.Enqueue(new C.CallNPC { ObjectID = npc.ObjectID, Key = "[@Main]" });
                         }
+
+                        MonsterObject mon = MapObject.MouseObject as MonsterObject;
+                        if (mon != null && mon.AI == 70)
+                        {
+                            GameScene.Scene.NPCDialog.Hide();
+
+                            if (CMain.Time <= GameScene.NPCTime) return;
+
+                            GameScene.NPCTime = CMain.Time + 5000;
+
+                            Network.Enqueue(new C.TalkMonsterNPC { ObjectID = mon.ObjectID });
+                        }
                     }
                     break;
                 case MouseButtons.Right:
@@ -8679,7 +8765,8 @@ namespace Client.MirScenes
 
 
             if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && !(MapObject.MouseObject is ItemObject) &&
-                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64))
+                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64)
+                 && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70))
             {
                 MapObject.TargetObject = MapObject.MouseObject;
                 if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI != 6)
@@ -8787,6 +8874,7 @@ namespace Client.MirScenes
                 {
                     case MouseButtons.Left:
                         if (MapObject.MouseObject is NPCObject || (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User)) break;
+                        if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70) break;
 
                         if (CMain.Alt)
                         {
@@ -10085,6 +10173,14 @@ namespace Client.MirScenes
                 case ChatType.Shout:
                     backColour = Color.Yellow;
                     foreColour = Color.Black;
+                    break;
+                case ChatType.Shout2:
+                    backColour = Color.Green;
+                    foreColour = Color.White;
+                    break;
+                case ChatType.Shout3:
+                    backColour = Color.Purple;
+                    foreColour = Color.White;
                     break;
                 case ChatType.System:
                     backColour = Color.Red;
@@ -11398,7 +11494,7 @@ namespace Client.MirScenes
 
                     Cells[i - 1].Index = magic.Icon*2;
                     Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nCooldown: {2}\nKey: {3}", magic.Spell,
-                        (magic.BaseCost + (magic.LevelCost * magic.Level)), PrintTimeSpan(magic.Delay), key);
+                        (magic.BaseCost + (magic.LevelCost * magic.Level)), Functions.PrintTimeSpanFromMilliSeconds(magic.Delay), key);
 
                     KeyNameLabels[i - 1].Text = "";
                 }
@@ -11460,30 +11556,6 @@ namespace Client.MirScenes
                     }
                 }
             }
-        }
-
-        private string PrintTimeSpan(double secs)
-        {
-            TimeSpan t = TimeSpan.FromMilliseconds(secs);
-            string answer;
-            if (t.TotalMinutes < 1.0)
-            {
-                answer = string.Format("{0}.{1}s", t.Seconds, (decimal)(t.Milliseconds / 100));
-            }
-            else if (t.TotalHours < 1.0)
-            {
-                answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
-            }
-            else if (t.TotalDays < 1.0)
-            {
-                answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
-            }
-            else // more than 1 day
-            {
-                answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
-            }
-
-            return answer;
         }
 
         public void Show()
@@ -14783,20 +14855,17 @@ namespace Client.MirScenes
                     InfoLabel.Text = "Consignment: ";
                     return;
                 case PanelType.Disassemble:
-                    text = "Disassemble: ";
+                    text = "Item will be Destroyed\n\n\n\n\n\n\n\n         ";
                     HoldButton.Visible = false;
                     Index = 711;
                     Library = Libraries.Title;
                     Location = new Point(234, 224);
-
                     ConfirmButton.HoverIndex = 716;
                     ConfirmButton.Index = 715;
                     ConfirmButton.PressedIndex = 717;
                     ConfirmButton.Location = new Point(62, 190);
-
-                    InfoLabel.Location = new Point(75, 150);
-
-                    ItemCell.Location = new Point(86, 94);
+                    InfoLabel.Location = new Point(44, 60);
+                    ItemCell.Location = new Point(83, 94);
                     break;
                 case PanelType.Downgrade:
                     text = "Downgrade: ";
@@ -14898,14 +14967,14 @@ namespace Client.MirScenes
         {
             Index = 710;
             Library = Libraries.Title;
-            Location = new Point(50, 40);
+            Location = new Point(0, 0);
             Sort = true;
             Movable = true;
 
             GoldLabel = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(135, 268),
+                Location = new Point(112, 354),
                 Parent = this,
                 NotControl = true,
             };
@@ -14913,7 +14982,7 @@ namespace Client.MirScenes
             NeedItemLabel1 = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(90, 192),
+                Location = new Point(67, 317),//
                 Parent = this,
                 NotControl = true,
             };
@@ -14921,7 +14990,7 @@ namespace Client.MirScenes
             NeedItemLabel2 = new MirLabel
             {
                 AutoSize = true,
-                Location = new Point(90, 231),
+                Location = new Point(192, 317),//(155, 316),
                 Parent = this,
                 NotControl = true,
             };
@@ -14930,7 +14999,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 713,
                 Index = 712,
-                Location = new Point(80, 375),
+                Location = new Point(115, 391), //new Point(181, 135),
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 714,
@@ -14942,7 +15011,7 @@ namespace Client.MirScenes
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(211, 5),
+                Location = new Point(284, 4),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -14956,31 +15025,31 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(112, 77),
+                Location = new Point(202, 91),
                 ItemSlot = 0,
             };
             //ItemCells[0].AfterDraw += (o, e) => ItemCell_AfterDraw();
             //ItemCells[0].Click += (o, e) => ItemCell_Click();
 
-            ItemCells[1] = new MirItemCell
+            ItemCells[1] = new MirItemCell //Required
             {
                 BorderColour = Color.Lime,
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(50, 191),
+                Location = new Point(31, 316),
                 ItemSlot = 1,
                 Enabled = false,
-                
+
             };
 
-            ItemCells[2] = new MirItemCell
+            ItemCells[2] = new MirItemCell //Required
             {
                 BorderColour = Color.Lime,
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(50, 230),
+                Location = new Point(155, 316),
                 ItemSlot = 2,
                 Enabled = false,
             };
@@ -14991,7 +15060,7 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(42, 322),
+                Location = new Point(175, 199),
                 ItemSlot = 3,
             };
 
@@ -15001,7 +15070,7 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(86, 322),
+                Location = new Point(230, 199),
                 ItemSlot = 4,
             };
 
@@ -15011,7 +15080,7 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(138, 322),
+                Location = new Point(175, 256),
                 ItemSlot = 5,
             };
 
@@ -15021,18 +15090,16 @@ namespace Client.MirScenes
                 GridType = MirGridType.AwakenItem,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(182, 322),
+                Location = new Point(230, 256),
                 ItemSlot = 6,
             };
 
             SelectAwakeType = new MirDropDownBox()
             {
                 Parent = this,
-                Location = new Point(58, 153),
-                Size = new Size(143, 24),
-                ForeColour = Color.Black,
-                BorderColour = Color.Gray,
-                BackColour = Color.White,
+                Location = new Point(35, 141),
+                Size = new Size(109, 14),
+                ForeColour = Color.White,
                 Visible = true,
                 Enabled = true,
             };
@@ -15063,7 +15130,7 @@ namespace Client.MirScenes
             if (Items[0] == null)
             {
                 SelectAwakeType.Items.Add("Select Upgrade Item.");
-                SelectAwakeType.SelectedIndex = SelectAwakeType.Items.Count-1;
+                SelectAwakeType.SelectedIndex = SelectAwakeType.Items.Count - 1;
                 CurrentAwakeType = AwakeType.None;
             }
             else
@@ -15178,7 +15245,7 @@ namespace Client.MirScenes
             {
                 ItemCells[1].Item = new UserItem(Materials[0]);
                 ItemCells[1].Item.Count = MaterialsCount[0];
-                NeedItemLabel1.Text = Regex.Replace(ItemCells[1].Item.Info.Name, @"[\d-]", string.Empty) + "\n" + MaterialsCount[0].ToString();
+                NeedItemLabel1.Text = Regex.Replace(ItemCells[1].Item.Info.Name, @"[\d-]", string.Empty) + "\nQuantity: " + MaterialsCount[0].ToString();
             }
             else
             {
@@ -15190,7 +15257,7 @@ namespace Client.MirScenes
             {
                 ItemCells[2].Item = new UserItem(Materials[1]);
                 ItemCells[2].Item.Count = MaterialsCount[1];
-                NeedItemLabel2.Text = Regex.Replace(ItemCells[2].Item.Info.Name, @"[\d-]", string.Empty) + "\n" + MaterialsCount[1].ToString();
+                NeedItemLabel2.Text = Regex.Replace(ItemCells[2].Item.Info.Name, @"[\d-]", string.Empty) + "\nQuantity:" + MaterialsCount[1].ToString();
             }
             else
             {
@@ -15245,7 +15312,6 @@ namespace Client.MirScenes
                 }
             }
 
-            ItemCellClear();
             ItemCell_Click();
             Visible = false;
         }
@@ -15253,6 +15319,9 @@ namespace Client.MirScenes
         public void Show()
         {
             Visible = true;
+
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
+            GameScene.Scene.InventoryDialog.Show();
         }
     }
 
@@ -16852,15 +16921,36 @@ namespace Client.MirScenes
             Visible = true;
         }
     }
+
     public sealed class GuildDialog : MirImageControl
     {
-        public MirButton NoticeButton, MembersButton, StatusButton, StorageButton, BuffsButton, RankButton;
-        public MirImageControl NoticePage, MembersPage, StatusPage, StoragePage, RankPage;
+        #region NoticeBase
         public MirLabel GuildName;
-
-        public MirImageControl TitleLabel;
         public MirButton CloseButton;
+        #endregion
 
+        #region GuildLeft
+        public MirButton NoticeButton, MembersButton, StorageButton, BuffsButton, RankButton;
+        public MirImageControl NoticePage, MembersPage, StoragePage, RankPage;
+        public MirImageControl StoragePageBase, MembersPageBase;
+        public MirImageControl TitleLabel;
+        #endregion
+
+        #region GuildRight
+        public MirButton BuffButton, StatusButton;
+        public MirImageControl BuffPage, StatusPage, StatusPageBase;
+
+        public GuildBuffButton[] Buffs;
+        private bool RequestedList = false;
+        public List<GuildBuffInfo> GuildBuffInfos = new List<GuildBuffInfo>();
+        public List<GuildBuff> EnabledBuffs = new List<GuildBuff>();
+        public int StartIndex = 0;
+        private long LastRequest = 0;
+
+        public string ActiveStats = "";
+        #endregion
+
+        #region DataValues
         public byte Level;
         public long Experience;
         public long MaxExperience;
@@ -16871,21 +16961,20 @@ namespace Client.MirScenes
         public bool Voting;
         public byte ItemCount;
         public byte BuffCount;
-        public static RankOptions MyOptions;
         public static int MyRankId;
+        public static RankOptions MyOptions;
         public List<Rank> Ranks = new List<Rank>();
-
         public bool MembersChanged = true;
         public long LastMemberRequest = 0;
         public long LastGuildMsg = 0;
         public long LastRankNameChange = 0;
-
         public RankOptions GetMyOptions()
         {
             return MyOptions;
         }
+        #endregion
 
-        #region notice page
+        #region NoticePagePub
         public bool NoticeChanged = true;
         public long LastNoticeRequest = 0;
         public int NoticeScrollIndex = 0;
@@ -16893,47 +16982,53 @@ namespace Client.MirScenes
         public MirTextBox Notice;
         #endregion
 
-        #region members page
+        #region MembersPagePub
         public int MemberScrollIndex = 0, MembersShowCount = 1;
         public MirButton MembersUpButton, MembersDownButton, MembersPositionBar;
         public MirLabel MembersHeaderRank, MembersHeaderName, MembersHeaderStatus, MembersShowOffline;
-        public MirButton MembersAddMember;
         public MirButton MembersShowOfflineButton;
         public MirImageControl MembersShowOfflineStatus;
         public MirDropDownBox[] MembersRanks;
         public MirLabel[] MembersName, MembersStatus;
         public MirButton[] MembersDelete;
-        public int MemberPageRows = 20;
+        public int MemberPageRows = 18;
         public bool MembersShowOfflinesetting = true;
         #endregion
 
-        #region status page
-        public MirLabel StatusHeaders; //name/level/members(online)/max members
+        #region StatusPagePub
+        public MirLabel StatusLevelLabel;
+        public MirLabel StatusHeaders;
         public MirLabel StatusData;
         public MirImageControl StatusExpBar;
-        public MirLabel StatusExpLabel;
-        //alliance list
-        //enemy list
+        public MirLabel StatusExpLabel, RecruitMemberLabel;
+        public MirTextBox MembersRecruitName;
+        public MirButton RecruitMemberButton;
         #endregion
 
-        #region Storage page
+        #region StoragePagePub
         public MirLabel StorageGoldText;
         public MirButton StorageGoldAdd, StorageGoldRemove, StorageGoldIcon;
         public MirItemCell[] StorageGrid;
+        public MirButton StorageUpButton, StorageDownButton, StoragePositionBar;
         public bool StorageRequested = false;
+        public int StorageIndex = 1;
         #endregion
 
-        #region rank page
+        #region RankPagePub
 
-        public MirLabel RanksSelectText;
+        public MirLabel RanksSelectTextR, RanksSelectTextL, PointsLeft;
         public MirTextBox RanksName;
         public MirImageControl[] RanksOptionsStatus;
         public MirButton[] RanksOptionsButtons;
         public MirLabel[] RanksOptionsTexts;
         public MirDropDownBox RanksSelectBox;
-        public MirButton RanksSaveName;
+        public MirButton RanksSaveName, UpButton, DownButton, PositionBar;
         #endregion
 
+        #region BuffPagePub
+        #endregion
+
+        #region GuildUI
         public GuildDialog()
         {
             Index = 180;
@@ -16942,117 +17037,93 @@ namespace Client.MirScenes
             Sort = true;
             Location = Center;
 
-            #region tab buttons
-            NoticeButton = new MirButton // Notice
+            BeforeDraw += (o, e) => RefreshInterface();
+
+        #region TabUI
+        NoticeButton = new MirButton
             {
                 Library = Libraries.Title,
-                Index = 88,
-                HoverIndex = 87,
-                PressedIndex = 89,
+                Index = 93,
+                PressedIndex = 94,
                 Sound = SoundList.ButtonA,
                 Parent = this,
-                Location = new Point(210, 400)
+                Location = new Point(20, 38)
             };
-            NoticeButton.Click += (o, e) => ChangePage(0);
-            MembersButton = new MirButton // Members
+            NoticeButton.Click += (o, e) => LeftDialog(0);
+            MembersButton = new MirButton
             {
                 Library = Libraries.Title,
-                Index = 76,
-                HoverIndex = 77,
-                PressedIndex = 75,
+                Index = 99,
+                PressedIndex = 100,
                 Sound = SoundList.ButtonA,
                 Parent = this,
-                Location = new Point(125, 400),
+                Location = new Point(91, 38),
             };
-            MembersButton.Click += (o, e) => ChangePage(1);
-            StatusButton = new MirButton // Guild Stats
+            MembersButton.Click += (o, e) => LeftDialog(1);
+            StorageButton = new MirButton
             {
                 Library = Libraries.Title,
-                Index = 67,
-                HoverIndex = 68,
-                PressedIndex = 66,
+                Index = 105,
+                PressedIndex = 106,
                 Sound = SoundList.ButtonA,
                 Parent = this,
-                Location = new Point(40, 400)
-            };
-            StatusButton.Click += (o, e) => ChangePage(2);
-            StorageButton = new MirButton // Storage
-            {
-                Library = Libraries.Title,
-                Index = 79,
-                HoverIndex = 80,
-                PressedIndex = 78,
-                Sound = SoundList.ButtonA,
-                Parent = this,
-                Location = new Point(295, 400),
+                Location = new Point(162, 38),
                 Visible = false
             };
-            StorageButton.Click += (o, e) => ChangePage(3);
-            
-            BuffsButton = new MirButton // Buffs
-            {
-                Library = Libraries.Title,
-                Index = 70,
-                HoverIndex = 71,
-                PressedIndex = 69,
-                Sound = SoundList.ButtonA,
-                Parent = this,
-                Location = new Point(465, 400),
-                Visible = false,
-            };
-            BuffsButton.Click += (o, e) =>
-            {
-                GameScene.Scene.GuildBuffDialog.Show();
-                Hide();
-            };
+            StorageButton.Click += (o, e) => LeftDialog(2);
             RankButton = new MirButton // Ranks
             {
                 Library = Libraries.Title,
-                Index = 73,
-                HoverIndex = 74,
-                PressedIndex = 72,
+                Index = 101,
                 Sound = SoundList.ButtonA,
                 Parent = this,
-                Location = new Point(380, 400),
+                Location = new Point(233, 38),
                 Visible = false,
             };
-            RankButton.Click += (o, e) => ChangePage(5);
-            GuildName = new MirLabel
+            RankButton.Click += (o, e) => LeftDialog(3);
+
+            StatusButton = new MirButton
             {
-                Location = new Point(302, 9),
+                Library = Libraries.Title,
                 Parent = this,
-                Size = new Size(144, 16),
-                Font = new Font(Settings.FontName, 8F),
-                Text = "",
-                Visible = true,
+                Index = 103,
+                Location = new Point(501, 38),
+                Sound = SoundList.ButtonA,
             };
-            GuildName.BeforeDraw += (o, e) =>
+            StatusButton.Click += (o, e) => RightDialog(0);
+
+            BuffButton = new MirButton
             {
-                if (MapControl.User.GuildName != "")
-                    GuildName.Text = MapControl.User.GuildName;
-                else
-                    GuildName.Text = "None";
+                Library = Libraries.Title,
+                Parent = this,
+                Index = 95,
+                Location = new Point(430, 38),
+                Sound = SoundList.ButtonA,
+                Visible = false,
             };
-            #endregion
+            BuffButton.Click += (o, e) => RightDialog(1);
 
             CloseButton = new MirButton
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(563, 6),
+                Location = new Point(565, 4),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
                 Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
+            #endregion
 
-            #region "notice tab"
+            #endregion
+
+            #region NoticePageUI
             NoticePage = new MirImageControl()
             {
                 Parent = this,
-                Size = new Size(567, 368),
-                Location = new Point(13, 37),
+                Size = new Size(352, 372),
+                Location = new Point(0, 60),
                 Visible = true
             };
             Notice = new MirTextBox()
@@ -17062,80 +17133,86 @@ namespace Client.MirScenes
                 Enabled = false,
                 Visible = true,
                 Parent = NoticePage,
-                Size = new Size(550, 325),
-                Location = new Point(0, 0)
+                Size = new Size(322, 330),
+                Location = new Point(13, 1)
             };
             Notice.MultiLine();
 
             NoticeEditButton = new MirButton
             {
                 Visible = false,
-                Index = 85,
-                HoverIndex = 86,
-                PressedIndex = 84,
-                Library = Libraries.Title,
+                Index = 560,
+                HoverIndex = 561,
+                PressedIndex = 562,
+                Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
                 Parent = NoticePage,
-                Location = new Point(27, 337)
+                Location = new Point(20, 342)
             };
             NoticeEditButton.Click += (o, e) => EditNotice();
 
             NoticeSaveButton = new MirButton
             {
                 Visible = false,
-                Index = 82,
-                HoverIndex = 83,
-                PressedIndex = 84,
-                Library = Libraries.Title,
+                Index = 554,
+                HoverIndex = 555,
+                PressedIndex = 556,
+                Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
                 Parent = NoticePage,
-                Location = new Point(27, 337)
+                Location = new Point(20, 342)
             };
             NoticeSaveButton.Click += (o, e) => EditNotice();
 
             NoticeUpButton = new MirButton
             {
-                HoverIndex = 312,
-                Library = Libraries.Prguse,
-                Location = new Point(551, 0),
+                HoverIndex = 198,
+                Index = 197,
+                Visible = true,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 1),
                 Size = new Size(16, 14),
                 Parent = NoticePage,
-                PressedIndex = 313,
+                PressedIndex = 199,
                 Sound = SoundList.ButtonA
             };
             NoticeUpButton.Click += (o, e) =>
             {
                 if (NoticeScrollIndex == 0) return;
-                if (NoticeScrollIndex >= 25) NoticeScrollIndex -= 24;
                 NoticeScrollIndex--;
                 UpdateNotice();
+                UpdateNoticeScrollPosition();
             };
 
             NoticeDownButton = new MirButton
             {
-                HoverIndex = 314,
-                Library = Libraries.Prguse,
-                Location = new Point(551, 316),
+                HoverIndex = 208,
+                Index = 207,
+                Visible = true,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 318),
                 Size = new Size(16, 14),
                 Parent = NoticePage,
-                PressedIndex = 315,
+                PressedIndex = 209,
                 Sound = SoundList.ButtonA
             };
             NoticeDownButton.Click += (o, e) =>
             {
                 if (NoticeScrollIndex == Notice.MultiText.Length - 1) return;
-                if (NoticeScrollIndex < 25) NoticeScrollIndex = 24;
+                if (NoticeScrollIndex >= Notice.MultiText.Length - 25) NoticeScrollIndex--;
                 NoticeScrollIndex++;
-                UpdateNotice();
+                UpdateNotice(true);
+                UpdateNoticeScrollPosition();
             };
 
             NoticePositionBar = new MirButton
             {
-                Index = 955,
-                Library = Libraries.Prguse,
-                Location = new Point(551, 15),
+                Index = 206,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 16),
                 Parent = NoticePage,
                 Movable = true,
+                Visible = true,
                 Sound = SoundList.None
             };
             NoticePositionBar.OnMoving += NoticePositionBar_OnMoving;
@@ -17144,50 +17221,24 @@ namespace Client.MirScenes
             NoticePage.MouseWheel += NoticePanel_MouseWheel;
             #endregion
 
-            #region "members tab"
+            #region MembersPageUI
             MembersPage = new MirImageControl()
             {
                 Parent = this,
-                Size = new Size(567, 368),
-                Location = new Point(13, 37),
+                Size = new Size(352, 372),
+                Location = new Point(0, 60),
                 Visible = false
             };
+            MembersPageBase = new MirImageControl()
+            {
+                Library = Libraries.Prguse,
+                Index = 1852,
+                Parent = MembersPage,
+                Location = new Point(13, 1),
+                Visible = true
+            };
+            MembersPageBase.MouseWheel += MembersPanel_MouseWheel;
             MembersPage.BeforeDraw += (o, e) => RequestUpdateMembers();
-
-            MembersHeaderRank = new MirLabel
-            {
-                Parent = MembersPage,
-                BackColour = Color.FromArgb(0x00, 0x00, 0x33),
-                ForeColour = Color.White,
-                Text = "Rank:",
-                Location = new Point(10, 10),
-                Size = new Size(180, 14),
-                Font = new Font(Settings.FontName, 7F),
-                Visible = true
-            };
-            MembersHeaderName = new MirLabel
-            {
-                Parent = MembersPage,
-                BackColour = Color.FromArgb(0x00, 0x00, 0x33),
-                ForeColour = Color.White,
-                Text = "Name:",
-                Location = new Point(190, 10),
-                Size = new Size(180, 14),
-                Font = new Font(Settings.FontName, 7F),
-                Visible = true
-            };
-            MembersHeaderStatus = new MirLabel
-            {
-                Parent = MembersPage,
-                BackColour = Color.FromArgb(0x00, 0x00, 0x33),
-                ForeColour = Color.White,
-                Text = "Status:",
-                Location = new Point(370, 10),
-                Size = new Size(170, 14),
-                Font = new Font(Settings.FontName, 7F),
-                Visible = true
-            };
-
             MembersRanks = new MirDropDownBox[MemberPageRows];
             MembersName = new MirLabel[MemberPageRows];
             MembersStatus = new MirLabel[MemberPageRows];
@@ -17198,44 +17249,47 @@ namespace Client.MirScenes
                 int index = i;
                 MembersRanks[i] = new MirDropDownBox()
                 {
-                    BackColour = i % 2 == 0 ? Color.FromArgb(0x0F, 0x0F, 0x42) : Color.FromArgb(0x00, 0x00, 0x66),
+                    BackColour = i % 2 == 0 ? Color.FromArgb(255, 10, 10, 10) : Color.FromArgb(255, 15, 15, 15),
                     ForeColour = Color.White,
                     Parent = MembersPage,
-                    Size = new Size(180, 14),
-                    Location = new Point(10, 24 + (i * 15)),
+                    Size = new Size(100, 14),
+                    Location = new Point(24, 30 + (i * 15)),
                     Visible = false,
                     Enabled = false
                 };
                 MembersRanks[index].ValueChanged += (o, e) => OnNewRank(index, MembersRanks[index]._WantedIndex);
+                MembersRanks[index].MouseWheel += MembersPanel_MouseWheel;
             }
             for (int i = 0; i < MembersName.Length; i++)
             {
                 MembersName[i] = new MirLabel()
                 {
-                    BackColour = i % 2 == 0 ? Color.FromArgb(0x0F, 0x0F, 0x42) : Color.FromArgb(0x00, 0x00, 0x66),
+                    BackColour = i % 2 == 0 ? Color.FromArgb(255, 05, 05, 05) : Color.FromArgb(255, 07, 07, 07),
                     ForeColour = Color.White,
                     Parent = MembersPage,
-                    Size = new Size(180, 14),
-                    Location = new Point(190, 24 + (i * 15)),
+                    Size = new Size(100, 14),
+                    Location = new Point(125, 30 + (i * 15)),
                     Visible = false,
                     Enabled = false,
                     Font = new Font(Settings.FontName, 7F)
+                    
                 };
-
+                MembersName[i].MouseWheel += MembersPanel_MouseWheel;
             }
             for (int i = 0; i < MembersStatus.Length; i++)
             {
                 MembersStatus[i] = new MirLabel()
                 {
-                    BackColour = i % 2 == 0 ? Color.FromArgb(0x0F, 0x0F, 0x42) : Color.FromArgb(0x00, 0x00, 0x66),
+                    BackColour = i % 2 == 0 ? Color.FromArgb(255, 10, 10, 10) : Color.FromArgb(255, 15, 15, 15),
                     ForeColour = Color.White,
                     Parent = MembersPage,
-                    Size = new Size(170, 14),
-                    Location = new Point(370, 24 + (i * 15)),
+                    Size = new Size(100, 14),
+                    Location = new Point(225, 30 + (i * 15)),
                     Visible = false,
                     Enabled = false,
                     Font = new Font(Settings.FontName, 7F)
                 };
+                MembersStatus[i].MouseWheel += MembersPanel_MouseWheel;
             }
             for (int i = 0; i < MembersDelete.Length; i++)
             {
@@ -17243,36 +17297,25 @@ namespace Client.MirScenes
                 MembersDelete[i] = new MirButton()
                 {
                     Enabled = true,
-                    Visible = false,
-                    Location = new Point(525, 24 + (i * 15)),
+                    Visible = true,
+                    Location = new Point(210, 30 + (i * 15)),
                     Library = Libraries.Prguse,
                     Index = 917,
                     Parent = MembersPage
                 };
+                MembersDelete[index].MouseWheel += MembersPanel_MouseWheel;
                 MembersDelete[index].Click += (o, e) => DeleteMember(index);
             }
-
-            MembersAddMember = new MirButton
-            {
-                Parent = MembersPage,
-                Enabled = true,
-                Visible = false,
-                Location = new Point(27, 337),
-                Library = Libraries.Title,
-                Index = 64,
-                HoverIndex = 65,
-                PressedIndex = 63
-            };
-            MembersAddMember.Click += (o, e) => AddMember();
-
             MembersUpButton = new MirButton
             {
-                HoverIndex = 312,
-                Library = Libraries.Prguse,
-                Location = new Point(551, 0),
+                HoverIndex = 198,
+                Index = 197,
+                Visible = true,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 1),
                 Size = new Size(16, 14),
                 Parent = MembersPage,
-                PressedIndex = 313,
+                PressedIndex = 199,
                 Sound = SoundList.ButtonA
             };
             MembersUpButton.Click += (o, e) =>
@@ -17282,15 +17325,16 @@ namespace Client.MirScenes
                 UpdateMembers();
                 UpdateMembersScrollPosition();
             };
-
             MembersDownButton = new MirButton
             {
-                HoverIndex = 314,
-                Library = Libraries.Prguse,
-                Location = new Point(551, 316),
+                HoverIndex = 208,
+                Index = 207,
+                Visible = true,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 318),
                 Size = new Size(16, 14),
                 Parent = MembersPage,
-                PressedIndex = 315,
+                PressedIndex = 209,
                 Sound = SoundList.ButtonA
             };
             MembersDownButton.Click += (o, e) =>
@@ -17303,9 +17347,9 @@ namespace Client.MirScenes
 
             MembersPositionBar = new MirButton
             {
-                Index = 955,
-                Library = Libraries.Prguse,
-                Location = new Point(551, 15),
+                Index = 206,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 16),
                 Parent = MembersPage,
                 Movable = true,
                 Sound = SoundList.None
@@ -17319,7 +17363,7 @@ namespace Client.MirScenes
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
                 Parent = MembersPage,
-                Location = new Point(432, 340)
+                Location = new Point(230, 310)
             };
             MembersShowOfflineButton.Click += (o, e) => MembersShowOfflineSwitch();
 
@@ -17329,15 +17373,15 @@ namespace Client.MirScenes
                 Index = 1347,
                 Library = Libraries.Prguse,
                 Parent = MembersPage,
-                Location = new Point(432, 340)
+                Location = new Point(230, 310)
             };
             MembersShowOfflineStatus.Click += (o, e) => MembersShowOfflineSwitch();
 
             MembersShowOffline = new MirLabel
             {
                 Visible = true,
-                Text = "Show Offline Members",
-                Location = new Point(449, 340),
+                Text = "Show Offline",
+                Location = new Point(245, 309),
                 Parent = MembersPage,
                 Size = new Size(150, 12),
                 Font = new Font(Settings.FontName, 7F),
@@ -17345,36 +17389,47 @@ namespace Client.MirScenes
             };
             MembersPage.KeyDown += MembersPanel_KeyDown;
             MembersPage.MouseWheel += MembersPanel_MouseWheel;
+            
             #endregion
 
-            #region "status tab"
+            #region StatusDialogUI 
             StatusPage = new MirImageControl()
             {
                 Parent = this,
-                Size = new Size(567, 368),
-                Location = new Point(13, 37),
-                Visible = false
+                Size = new Size(230, 372),
+                Location = new Point(355, 60),
+                Visible = true
+            };
+            StatusPageBase = new MirImageControl()
+            {
+                Parent = StatusPage,
+                Library = Libraries.Prguse,
+                Index = 1850,
+                Visible = true,
+                Location = new Point(10, 2)
             };
             StatusPage.BeforeDraw += (o, e) =>
             {
                 if (MapControl.User.GuildName == "")
                     StatusData.Text = "";
                 else
-                    StatusData.Text = string.Format("{0}\n{1}\n{2}\n{3}", MapObject.User.GuildName, Level, MemberCount, MaxMembers == 0 ? "Unlimited" : MaxMembers.ToString());
+                    StatusData.Text = string.Format("{0}\n\n{1}\n\n{2}{3}", MapObject.User.GuildName, Level, MemberCount, MaxMembers == 0 ? "" : ("/" + MaxMembers.ToString()));
             };
             StatusHeaders = new MirLabel()
             {
-                Location = new Point(10, 25),
+                Location = new Point(13, 47),
+                DrawFormat = TextFormatFlags.Right,
                 Size = new Size(100, 300),
                 NotControl = true,
-                Text = "Guild Name:\nLevel:\nMembers:\nMaximum Members:\n",
+                Text = "Guild Name\n\nLevel\n\nMembers",
                 Visible = true,
-                Parent = StatusPage
+                Parent = StatusPage,
+                ForeColour = Color.Gray,
             };
             StatusData = new MirLabel()
             {
-                Location = new Point(120, 25),
-                Size = new Size(100, 300),
+                Location = new Point(116, 47),
+                Size = new Size(75, 200),
                 NotControl = true,
                 Text = "",
                 Visible = true,
@@ -17382,63 +17437,96 @@ namespace Client.MirScenes
             };
             StatusExpBar = new MirImageControl()
             {
-                Index = 7,
-                Library = Libraries.Prguse,
-                Location = new Point(0, 0),
+                Visible = true,
+                Index = 423,
+                Library = Libraries.Prguse2,
+                Location = new Point(322, 403),
                 DrawImage = false,
                 NotControl = true,
-                Parent = StatusPage,
-                Size = new Size(550, 7)
+                Parent = this,
+                Size = new Size(260, 15)
             };
             StatusExpBar.BeforeDraw += StatusExpBar_BeforeDraw;
             StatusExpLabel = new MirLabel()
             {
+                Visible = true,
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
-                Location = new Point(0, 0),
+                Location = new Point(322, 405),
+                NotControl = true,
+                Parent = this,
+                Size = new Size(260, 15)
+            };
+            MembersRecruitName = new MirTextBox()
+            {
+                Location = new Point(40, 300),
+                Size = new Size(130, 21),
+                MaxLength = 20,
+                Parent = StatusPage,
+                Visible = true,
+                Text = "",
+                BackColour = Color.FromArgb(255, 25, 25, 25),
+                Border = true,
+                BorderColour = Color.FromArgb(255, 35, 35, 35),
+                CanLoseFocus = true
+            };
+            RecruitMemberButton = new MirButton()
+            {
+                Parent = StatusPage,
+                Enabled = true,
+                Visible = true,
+                Location = new Point(170, 298),
+                Library = Libraries.Title,
+                Index = 356,
+                HoverIndex = 357,
+                PressedIndex = 358
+            };
+            RecruitMemberButton.Click += (o, e) => AddMember();
+
+            RecruitMemberLabel = new MirLabel()
+            {
+                Visible = true,
+                Location = new Point(36, 283),
                 NotControl = true,
                 Parent = StatusPage,
-                Size = new Size(550, 12)
+                Text = "Recruit Member",
+                Size = new Size(150, 15)
             };
+
             #endregion
 
-            #region "storage tab"
+            #region StorageDialogUI 
             StoragePage = new MirImageControl()
             {
                 Parent = this,
-                Size = new Size(567, 368),
-                Location = new Point(13, 37),
+                Size = new Size(352, 372),
+                Location = new Point(0, 60),
                 Visible = false
+            };
+            StoragePageBase = new MirImageControl()
+            {
+                Visible = true,
+                Parent = StoragePage,
+                Library = Libraries.Prguse,
+                Index = 1851,
+                Location = new Point(30, 19)
             };
             StoragePage.BeforeDraw += (o, e) =>
             {
-                StorageGoldText.Text = Gold > 0 ? string.Format("{0:###,###,###} Gold", Gold) : "0 Gold";
+                StorageGoldText.Text = Gold > 0 ? string.Format("{0:###,###,###}", Gold) : "0";
                 if (MyRankId == 0)
                     StorageGoldRemove.Visible = true;
                 else
                     StorageGoldRemove.Visible = false;
 
             };
-            StorageGoldIcon = new MirButton()
-            {
-                Parent = StoragePage,
-                Size = new Size(32, 17),
-                Location = new Point(10, 9),
-                Visible = true,
-                Library = Libraries.Prguse,
-                Index = 28,
-                NotControl = true,
-            };
             StorageGoldText = new MirLabel()
             {
                 Parent = StoragePage,
-                Size = new Size(150, 15),
-                Location = new Point(47, 10),
+                Size = new Size(125, 12),
+                Location = new Point(194, 312),
                 Visible = true,
                 Text = "0",
                 NotControl = true,
-                BackColour = Color.FromArgb(0x0F, 0x0F, 0x42),
-                Border = true,
-                BorderColour = Color.FromArgb(0x54, 0x4F, 0x36)
             };
             StorageGoldAdd = new MirButton()
             {
@@ -17447,91 +17535,160 @@ namespace Client.MirScenes
                 Index = 918,
                 Visible = true,
                 Enabled = true,
-                Location = new Point(202, 10)
+                Location = new Point(158, 313)
             };
             StorageGoldAdd.Click += (o, e) => StorageAddGold();
+
             StorageGoldRemove = new MirButton()
             {
                 Parent = StoragePage,
                 Library = Libraries.Prguse,
                 Index = 917,
-                Visible = false,
+                Visible = true,
                 Enabled = true,
-                Location = new Point(218, 10)
+                Location = new Point(142, 313)
             };
             StorageGoldRemove.Click += (o, e) => StorageRemoveGold();
 
-            for (int i = 0; i < 9; i++)
-                new MirLabel()
-                {
-                    Parent = StoragePage,
-                    BackColour = Color.FromArgb(0x54, 0x4F, 0x36),
-                    Location = new Point(15, (i * 32) + 41 + i),
-                    Size = new Size(518, 1),
-                    Text = " "
-                };
-
-            for (int i = 0; i < 15; i++)
-                new MirLabel()
-                {
-                    Parent = StoragePage,
-                    BackColour = Color.FromArgb(0x54, 0x4F, 0x36),
-                    Location = new Point((i * 36) + 14 + i, 41),
-                    Size = new Size(1, 265),
-                    Text = " "
-                };
-
-            StorageGrid = new MirItemCell[112];
-            for (int i = 0; i < StorageGrid.Length; i++)
+            StorageGrid = new MirItemCell[8 * 14];
             {
-                StorageGrid[i] = new MirItemCell()
+                for (int x = 0; x < 8; x++)
                 {
-                    BorderColour = Color.Lime,
-                    ItemSlot = i,
-                    GridType = MirGridType.GuildStorage,
-                    Library = Libraries.Items,
-                    Parent = StoragePage,
-                    Location = new Point((i % 14) * 36 + 15 + (i % 14), (i / 14) * 32 + 42 + (i / 14))
-                };
+                    for (int y = 0; y < 14; y++)
+                    {
+                        int idx = 8 * y + x;
+                        StorageGrid[idx] = new MirItemCell
+                        {
+                            ItemSlot = idx,
+                            GridType = MirGridType.GuildStorage,
+                            Library = Libraries.Items,
+                            Parent = StoragePage,
+                            Size = new Size(35, 35),
+                            Location = new Point(x * 35 + 31 + x, y * 35 + 20 + y),
+                        };
+                        if (y > 7) StorageGrid[idx].Visible = false;
+                        StorageGrid[idx].MouseWheel += StoragePanel_MouseWheel;
+                    }
+                }
             }
 
+            StorageUpButton = new MirButton
+            {
+                HoverIndex = 198,
+                Index = 197,
+                Visible = true,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 1),
+                Size = new Size(16, 14),
+                Parent = StoragePage,
+                PressedIndex = 199,
+                Sound = SoundList.ButtonA
+            };
+            StorageUpButton.Click += (o, e) =>
+            {
+                if (StorageIndex == 0) return;
+                StorageIndex--;
+                UpdateStorage();
+                StorageUpdatePositionBar();
+            };
+
+            StorageDownButton = new MirButton
+            {
+                HoverIndex = 208,
+                Index = 207,
+                Visible = true,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 318),
+                Size = new Size(16, 14),
+                Parent = StoragePage,
+                PressedIndex = 209,
+                Sound = SoundList.ButtonA
+            };
+            StorageDownButton.Click += (o, e) =>
+            {
+                if (StorageIndex >= 6) StorageIndex = 5;
+                StorageIndex++;
+                UpdateStorage();
+                StorageUpdatePositionBar();
+            };
+
+            StoragePositionBar = new MirButton
+            {
+                Index = 206,
+                Library = Libraries.Prguse2,
+                Location = new Point(337, 16),
+                Parent = StoragePage,
+                Movable = true,
+                Visible = true,
+                Sound = SoundList.None
+            };
+            StoragePositionBar.OnMoving += StoragePositionBar_OnMoving;
+
+            StoragePage.MouseWheel += StoragePanel_MouseWheel;
+            StoragePageBase.MouseWheel += StoragePanel_MouseWheel;
+
             #endregion
-            #region "Ranks tab"
+
+            #region RankDialogUI
             RankPage = new MirImageControl()
             {
                 Parent = this,
-                Size = new Size(567, 368),
-                Location = new Point(13, 37),
+                Size = new Size(352, 372),
+                Location = new Point(0, 60),
                 Visible = false
             };
             RankPage.BeforeDraw += (o, e) => RequestUpdateMembers();
-            RanksSelectText = new MirLabel()
+            RanksSelectTextL = new MirLabel()
             {
-                Text = "Select a rank:",
-                Location = new Point(50, 10),
-                Size = new Size(120, 20),
+                Text = "Edit Rank",
+                Location = new Point(42, 18),
+                Size = new Size(150, 20),
                 ForeColour = Color.White,
                 Parent = RankPage,
-                NotControl = true
+                NotControl = true,
+
             };
+            RanksSelectTextR = new MirLabel()
+            {
+                Text = "Select Rank",
+                Location = new Point(198, 18),
+                Size = new Size(150, 20),
+                ForeColour = Color.White,
+                Parent = RankPage,
+                NotControl = true,
+
+            };
+            RanksSelectBox = new MirDropDownBox()
+            {
+                Parent = RankPage,
+                Location = new Point(198, 36),
+                Size = new Size(130, 16),
+                ForeColour = Color.White,
+                Visible = true,
+                Enabled = true,
+                BackColour = Color.FromArgb(255,25,25,25),
+                BorderColour = Color.FromArgb(255, 35, 35, 35),
+            };
+            RanksSelectBox.ValueChanged += (o, e) => OnRankSelect(RanksSelectBox._WantedIndex);
+
             RanksName = new MirTextBox()
             {
-                Location = new Point(300, 10),
-                Size = new Size(150, 20),
+                Location = new Point(42, 36),
+                Size = new Size(130, 16),
                 MaxLength = 20,
                 Parent = RankPage,
                 Visible = true,
                 Enabled = false,
                 Text = "",
-                BackColour = Color.FromArgb(0x0F, 0x0F, 0x42),
                 Border = true,
-                BorderColour = Color.FromArgb(0x54, 0x4F, 0x36)
+                BackColour = Color.FromArgb(255, 25, 25, 25),
+                BorderColour = Color.FromArgb(255, 35, 35, 35),
             };
             RanksName.BeforeDraw += (o, e) => RanksName_BeforeDraw();
             RanksName.TextBox.KeyPress += RanksName_KeyPress;
             RanksSaveName = new MirButton()
             {
-                Location = new Point(455, 8),
+                Location = new Point(155, 290),
                 Enabled = false,
                 Visible = true,
                 Parent = RankPage,
@@ -17545,7 +17702,6 @@ namespace Client.MirScenes
             {
                 RanksChangeName();
             };
-
             String[] Options = { "Edit ranks", "Recruit member", "Kick member", "Store item", "Retrieve item", "Alter alliance", "Change notice", "Activate Buff" };
             RanksOptionsButtons = new MirButton[8];
             RanksOptionsStatus = new MirImageControl[8];
@@ -17560,12 +17716,11 @@ namespace Client.MirScenes
                     Library = Libraries.Prguse,
                     Sound = SoundList.ButtonA,
                     Parent = RankPage,
-                    Location = new Point(i % 2 == 0 ? 140 : 310, i % 2 == 0 ? 100 + (i * 20) : 100 + ((i - 1) * 20))
+                    Location = new Point(i % 2 == 0 ? 42 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
                 };
                 int index = i;
                 RanksOptionsButtons[i].Click += (o, e) => SwitchRankOption(index);
             }
-
             for (int i = 0; i < RanksOptionsStatus.Length; i++)
             {
                 RanksOptionsStatus[i] = new MirImageControl()
@@ -17575,7 +17730,7 @@ namespace Client.MirScenes
                     Library = Libraries.Prguse,
                     Parent = RankPage,
                     NotControl = true,
-                    Location = new Point(i % 2 == 0 ? 140 : 310, i % 2 == 0 ? 100 + (i * 20) : 100 + ((i - 1) * 20))
+                    Location = new Point(i % 2 == 0 ? 42 : 202, i % 2 == 0 ? 120 + (i * 20) : 120 + ((i - 1) * 20))
                 };
                 int index = i;
                 RanksOptionsStatus[i].Click += (o, e) => SwitchRankOption(index);
@@ -17587,27 +17742,512 @@ namespace Client.MirScenes
                     Visible = true,
                     NotControl = true,
                     Parent = RankPage,
-                    Location = new Point(17 + (i % 2 == 0 ? 140 : 310), i % 2 == 0 ? 100 + (i * 20) : 100 + ((i - 1) * 20)),
+                    Location = new Point(17 + (i % 2 == 0 ? 42 : 202), i % 2 == 0 ? 118 + (i * 20) : 118 + ((i - 1) * 20)),
                     AutoSize = true,
                     Text = Options[i]
                 };
             }
 
-            RanksSelectBox = new MirDropDownBox()
-            {
-                Parent = RankPage,
-                Location = new Point(130, 11),
-                Size = new Size(150, 20),
-                ForeColour = Color.White,
-                Visible = true,
-                Enabled = true
-            };
-            RanksSelectBox.ValueChanged += (o, e) => OnRankSelect(RanksSelectBox._WantedIndex);
-
             #endregion
+
+            #region BuffDialogUI
+
+            BuffPage = new MirImageControl()
+            {
+                Parent = this,
+                Size = new Size(352, 372),
+                Location = new Point(360, 61),
+                Index = 1853,
+                Library = Libraries.Prguse,
+                Visible = false
+            };
+            BuffPage.MouseWheel += BuffsPanel_MouseWheel;
+
+
+            Buffs = new GuildBuffButton[8];
+            for (byte i = 0; i < Buffs.Length; i++)
+            {
+                byte Id = i;
+                Buffs[i] = new GuildBuffButton { Parent = BuffPage, Visible = true, Location = new Point(4, 27 + (i * 38)), Id = Id };
+                Buffs[i].Click += (o, e) => RequestBuff(Id);
+                Buffs[i].MouseWheel += BuffsPanel_MouseWheel;
+            }
+
+            PointsLeft = new MirLabel
+            {
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Parent = BuffPage,
+                Location = new Point(118, 3),
+                Size = new Size(100, 20),
+                NotControl = true
+            };
+
+            UpButton = new MirButton
+            {
+                Index = 197,
+                HoverIndex = 198,
+                PressedIndex = 199,
+                Library = Libraries.Prguse2,
+                Location = new Point(203, 24),
+                Parent = BuffPage,
+                Sound = SoundList.ButtonA
+            };
+            UpButton.Click += (o, e) =>
+            {
+                if (StartIndex == 0) return;
+                StartIndex--;
+                UpdatePositionBar();
+                RefreshInterface();
+            };
+            DownButton = new MirButton
+            {
+                Index = 207,
+                HoverIndex = 208,
+                PressedIndex = 209,
+                Library = Libraries.Prguse2,
+                Location = new Point(203, 317),
+                Parent = BuffPage,
+                Sound = SoundList.ButtonA
+            };
+            DownButton.Click += (o, e) =>
+            {
+                if (GuildBuffInfos.Count < 8) return;
+                if (StartIndex == GuildBuffInfos.Count - 8) return;
+                StartIndex++;
+                UpdatePositionBar();
+                RefreshInterface();
+            };
+
+            PositionBar = new MirButton
+            {
+                Index = 205,
+                HoverIndex = 206,
+                PressedIndex = 206,
+                Library = Libraries.Prguse2,
+                Parent = BuffPage,
+                Movable = true,
+                Sound = SoundList.None,
+                Location = new Point(203, 39)
+            };
+            PositionBar.OnMoving += PositionBar_OnMoving;
+            PositionBar.MouseUp += (o, e) => RefreshInterface();
+
+        }
+        #endregion
+
+        public void RequestBuff(byte Id)
+        {
+            if ((Id + StartIndex) > GuildBuffInfos.Count) return;
+            GuildBuffInfo BuffInfo = GuildBuffInfos[Id + StartIndex];
+            if (BuffInfo == null) return;
+            GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
+            if (Buff == null)
+            {
+                string Error = "";
+                if (GameScene.Scene.GuildDialog.SparePoints < BuffInfo.PointsRequirement)
+                    Error = "Insufficient points available.";
+                if (GameScene.Scene.GuildDialog.Level < BuffInfo.LevelRequirement)
+                    Error = "Guild level too low.";
+                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
+                    Error = "Guild rank does not allow buff activation.";
+                if (Error != "")
+                {
+                    MirMessageBox messageBox = new MirMessageBox(Error);
+                    messageBox.Show();
+                    return;
+                }
+                if (CMain.Time < LastRequest + 100) return;
+                LastRequest = CMain.Time;
+                Network.Enqueue(new C.GuildBuffUpdate { Action = 1, Id = BuffInfo.Id });
+            }
+            else
+            {
+                string Error = "";
+                if (Buff.Active)
+                    Error = "Buff is still active.";
+                if (GameScene.Scene.GuildDialog.Gold < BuffInfo.ActivationCost)
+                    Error = "Insufficient guild funds.";
+                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
+                    Error = "Guild rank does not allow buff activation.";
+                if (Error != "")
+                {
+                    MirMessageBox messageBox = new MirMessageBox(Error);
+                    messageBox.Show();
+                    return;
+                }
+                if (CMain.Time < LastRequest + 100) return;
+                LastRequest = CMain.Time;
+                Network.Enqueue(new C.GuildBuffUpdate { Action = 2, Id = BuffInfo.Id });
+            }
+        }
+
+        public GuildBuff FindGuildBuff(int Index)
+        {
+            for (int i = 0; i < EnabledBuffs.Count; i++)
+            {
+                if ((EnabledBuffs[i] != null) && (EnabledBuffs[i].Id == Index))
+                    return EnabledBuffs[i];
+            }
+            return null;
+        }
+
+        private void UpdatePositionBar()
+        {
+            int h = 277 - PositionBar.Size.Height;
+            h = (int)((h / (float)(GuildBuffInfos.Count - 8)) * StartIndex);
+            PositionBar.Location = new Point(203, 39 + h);
+        }
+
+        private void PositionBar_OnMoving(object sender, MouseEventArgs e)
+        {
+            const int x = 203;
+            int y = PositionBar.Location.Y;
+            if (y >= 296) y = 296;
+            if (y < 39) y = 39;
+
+            int h = 277 - PositionBar.Size.Height;
+            h = (int)Math.Round(((y - 39) / (h / (float)(GuildBuffInfos.Count - 8))));
+            PositionBar.Location = new Point(x, y);
+            if (h == StartIndex) return;
+            StartIndex = h;
+            RefreshInterface();
+        }
+
+        private void BuffsPanel_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
+
+            if (StartIndex == 0 && count >= 0) return;
+            if (StartIndex == (GuildBuffInfos.Count - 8) && count <= 0) return;
+            StartIndex -= count > 0 ? 1 : -1;
+            UpdatePositionBar();
+            RefreshInterface();
+        }
+
+        public void RefreshInterface()
+        {
+            if (StartIndex < 0) StartIndex = 0;
+            if (MapObject.User.GuildName == "")
+            {
+                Hide();
+                return;
+            }
+            else
+            {
+                PointsLeft.Text = GameScene.Scene.GuildDialog.SparePoints.ToString();
+                for (int i = 0; i < Buffs.Length; i++)
+                {
+                    if ((StartIndex + i) > GuildBuffInfos.Count - 1)
+                    {
+                        Buffs[i].Visible = false;
+                        break;
+                    }
+                    GuildBuffInfo BuffInfo = GuildBuffInfos[i + StartIndex];
+                    if (BuffInfo == null)
+                    {
+                        Buffs[i].Visible = false;
+                        break;
+                    }
+                    Buffs[i].Visible = true;
+                    GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
+                    Buffs[i].Name.Text = BuffInfo.name;
+                    Buffs[i].Icon.Index = BuffInfo.Icon;
+
+                    if (Buff == null)
+                    {
+                        if (BuffInfo.LevelRequirement > GameScene.Scene.GuildDialog.Level)
+                        {
+                            Buffs[i].Info.Text = "Insufficient Level";
+                            Buffs[i].Info.ForeColour = Color.Red;
+                            Buffs[i].Icon.Index += 2;
+                        }
+                        else
+                        {
+                            Buffs[i].Info.Text = "Available";
+                            Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
+                            Buffs[i].Icon.Index += 2;
+                        }
+                        Buffs[i].Obtained.Text = "";
+                    }
+                    else
+                    {
+                        if (BuffInfo.TimeLimit > 0)
+                        {
+                            if (Buff.Active)
+                                Buffs[i].Info.Text = "Counting down.";
+                            else
+                                Buffs[i].Info.Text = "Expired.";
+                        }
+                        else
+                            Buffs[i].Info.Text = "Obtained.";
+                        Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
+                        if (Buff.Active)
+                        {
+                            Buffs[i].Obtained.Text = "Active";
+                            Buffs[i].Icon.Index += 1;
+                        }
+                        else
+                            Buffs[i].Obtained.Text = "Inactive";
+                    }
+                }
+            }
+        }
+
+        public GuildBuffInfo FindGuildBuffInfo(int Index)
+        {
+            if (!RequestedList)
+            {
+                RequestGuildBuffList();
+            }
+            for (int i = 0; i < GuildBuffInfos.Count; i++)
+            {
+                if (GuildBuffInfos[i].Id == Index)
+                    return GuildBuffInfos[i];
+            }
+            return null;
+        }
+
+        public void RequestGuildBuffList()
+        {
+            if (!RequestedList)
+            {
+                RequestedList = true;
+                Network.Enqueue(new C.GuildBuffUpdate { Action = 0 });
+            }
+        }
+
+        public void UpdateActiveStats()
+        {
+            string text = "";
+
+            byte BuffAc = 0, BuffMac = 0, BuffDc = 0, BuffMc = 0, BuffSc = 0, BuffAttack = 0,
+                BuffMineRate = 0, BuffGemRate = 0, BuffFishRate = 0, BuffExpRate = 0, BuffCraftRate = 0, BuffSkillRate = 0,
+                BuffHpRegen = 0, BuffMPRegen = 0, BuffDropRate = 0, BuffGoldRate = 0;
+
+            int BuffMaxHp = 0, BuffMaxMp = 0;
+
+            foreach (GuildBuff buff in EnabledBuffs)
+            {
+                if ((buff.Info == null) || (!buff.Active)) continue;
+
+                BuffAc = (byte)Math.Min(byte.MaxValue, BuffAc + buff.Info.BuffAc);
+                BuffMac = (byte)Math.Min(byte.MaxValue, BuffMac + buff.Info.BuffMac);
+                BuffDc = (byte)Math.Min(byte.MaxValue, BuffDc + buff.Info.BuffDc);
+                BuffMc = (byte)Math.Min(byte.MaxValue, BuffMc + buff.Info.BuffMc);
+                BuffSc = (byte)Math.Min(byte.MaxValue, BuffSc + buff.Info.BuffSc);
+                BuffAttack = (byte)Math.Min(byte.MaxValue, BuffAttack + buff.Info.BuffAttack);
+                BuffMaxHp = (ushort)Math.Min(ushort.MaxValue, BuffMaxHp + buff.Info.BuffMaxHp);
+                BuffMaxMp = (ushort)Math.Min(ushort.MaxValue, BuffMaxMp + buff.Info.BuffMaxMp);
+                BuffMineRate = (byte)Math.Min(byte.MaxValue, BuffMineRate + buff.Info.BuffMineRate);
+                BuffGemRate = (byte)Math.Min(byte.MaxValue, BuffGemRate + buff.Info.BuffGemRate);
+                BuffFishRate = (byte)Math.Min(byte.MaxValue, BuffFishRate + buff.Info.BuffFishRate);
+                BuffExpRate = (byte)Math.Min(float.MaxValue, BuffExpRate + buff.Info.BuffExpRate);
+                BuffCraftRate = (byte)Math.Min(byte.MaxValue, BuffCraftRate + buff.Info.BuffCraftRate); //needs coding
+                BuffSkillRate = (byte)Math.Min(byte.MaxValue, BuffSkillRate + buff.Info.BuffSkillRate);
+                BuffHpRegen = (byte)Math.Min(byte.MaxValue, BuffHpRegen + buff.Info.BuffHpRegen);
+                BuffMPRegen = (byte)Math.Min(byte.MaxValue, BuffMPRegen + buff.Info.BuffMPRegen);
+                BuffDropRate = (byte)Math.Min(float.MaxValue, BuffDropRate + buff.Info.BuffDropRate);
+                BuffGoldRate = (byte)Math.Min(float.MaxValue, BuffGoldRate + buff.Info.BuffGoldRate);
+            }
+
+            if (BuffAc > 0)
+            {
+                text += string.Format("Increases AC by: 0-{0}.", BuffAc);
+                if (text != "") text += "\n";
+            }
+            if (BuffMac > 0)
+            {
+                text += string.Format("Increases MAC by: 0-{0}.", BuffMac);
+                if (text != "") text += "\n";
+            }
+            if (BuffDc > 0)
+            {
+                text += string.Format("Increases DC by: 0-{0}.", BuffDc);
+                if (text != "") text += "\n";
+            }
+            if (BuffMc > 0)
+            {
+                text += string.Format("Increases MC by: 0-{0}.", BuffMc);
+                if (text != "") text += "\n";
+            }
+            if (BuffSc > 0)
+            {
+                text += string.Format("Increases SC by: 0-{0}.", BuffSc);
+                if (text != "") text += "\n";
+            }
+            if (BuffMaxHp > 0)
+            {
+                text += string.Format("Increases Hp by: {0}.", BuffMaxHp);
+                if (text != "") text += "\n";
+            }
+            if (BuffMaxMp > 0)
+            {
+                text += string.Format("Increases MP by: {0}.", BuffMaxMp);
+                if (text != "") text += "\n";
+            }
+            if (BuffHpRegen > 0)
+            {
+                text += string.Format("Increases Health regen by: {0}.", BuffHpRegen);
+                if (text != "") text += "\n";
+            }
+            if (BuffMPRegen > 0)
+            {
+                text += string.Format("Increases Mana regen by: {0}.", BuffMPRegen);
+                if (text != "") text += "\n";
+            }
+            if (BuffMineRate > 0)
+            {
+                text += string.Format("Increases Mining success by: {0}%.", BuffMineRate * 5);
+                if (text != "") text += "\n";
+            }
+            if (BuffGemRate > 0)
+            {
+                text += string.Format("Increases Gem success by: {0}%.", BuffGemRate * 5);
+                if (text != "") text += "\n";
+            }
+            if (BuffFishRate > 0)
+            {
+                text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate * 5);
+                if (text != "") text += "\n";
+            }
+            if (BuffExpRate > 0)
+            {
+                text += string.Format("Increases Experience by: {0}%.", BuffExpRate);
+                if (text != "") text += "\n";
+            }
+            if (BuffCraftRate > 0)
+            {
+                text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate * 5);
+                if (text != "") text += "\n";
+            }
+            if (BuffSkillRate > 0)
+            {
+                text += string.Format("Increases Skill training by: {0}.", BuffSkillRate);
+                if (text != "") text += "\n";
+            }
+            if (BuffAttack > 0)
+            {
+                text += string.Format("Increases Damage by: {0}.", BuffAttack);
+                if (text != "") text += "\n";
+            }
+            if (BuffDropRate > 0)
+            {
+                text += string.Format("Droprate increased by: {0}%.", BuffDropRate);
+                if (text != "") text += "\n";
+            }
+            if (BuffGoldRate > 0)
+            {
+                text += string.Format("Goldrate increased by: 0-{0}.", BuffGoldRate);
+                if (text != "") text += "\n";
+            }
+
+            ActiveStats = text;
+        }
+
+        public void CreateHintLabel(byte Id)
+        {
+            GameScene.Scene.GuildBuffLabel = new MirControl
+            {
+                BackColour = Color.FromArgb(255, 50, 50, 50),
+                Border = true,
+                BorderColour = Color.Gray,
+                NotControl = true,
+                Parent = GameScene.Scene,
+                Opacity = 0.7F,
+                DrawControlTexture = true
+            };
+            if (Id + StartIndex > GuildBuffInfos.Count) return;
+
+            GuildBuffInfo Buff = GuildBuffInfos[Id + StartIndex];
+            if (Buff == null) return;
+            MirLabel HintName = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.White,
+                Location = new Point(4, 4),
+                OutLine = true,
+                Parent = GameScene.Scene.GuildBuffLabel,
+                Text = Buff.name
+            };
+
+            GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, HintName.DisplayRectangle.Right + 4),
+                Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, HintName.DisplayRectangle.Bottom));
+
+            string ReqText = "";
+            if (Buff.LevelRequirement > 0)
+            {
+                ReqText += "Minimum Guild Level: " + Buff.LevelRequirement.ToString();
+            }
+            if (Buff.PointsRequirement > 0)
+            {
+                if (ReqText != "") ReqText += "\n";
+                ReqText += "Points Required: " + Buff.PointsRequirement.ToString();
+            }
+            if (Buff.ActivationCost > 0)
+            {
+                if (ReqText != "") ReqText += "\n";
+                ReqText += "Activation Cost: " + Buff.ActivationCost.ToString() + " gold.";
+                //if (ReqText != "") ReqText += "\n";
+            }
+
+
+            MirLabel RequiredLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.White,
+                Location = new Point(4, GameScene.Scene.GuildBuffLabel.DisplayRectangle.Bottom),
+                OutLine = true,
+                Parent = GameScene.Scene.GuildBuffLabel,
+                Text = ReqText
+            };
+            GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, RequiredLabel.DisplayRectangle.Right + 4),
+                Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, RequiredLabel.DisplayRectangle.Bottom));
+
+            //code to dispay the buffs duration
+            if (Buff.TimeLimit > 0)
+            {
+                GuildBuff activeBuff = FindGuildBuff(Buff.Id);
+
+                string text = "";
+
+                if (activeBuff != null && activeBuff.Active)
+                {
+                    text = string.Format("Time Remaining: {0} minutes", activeBuff.ActiveTimeRemaining);
+                }
+                else
+                {
+                    text = string.Format("Buff Length: {0} minutes.", Buff.TimeLimit.ToString());
+                }
+                MirLabel TimeLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.White,
+                    Location = new Point(4, GameScene.Scene.GuildBuffLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = GameScene.Scene.GuildBuffLabel,
+                    Text = text
+                };
+                GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, TimeLabel.DisplayRectangle.Right + 4),
+                    Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, TimeLabel.DisplayRectangle.Bottom));
+            }
+
+
+            //code to display the buff's effect
+            MirLabel InfoLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.White,
+                Location = new Point(4, GameScene.Scene.GuildBuffLabel.DisplayRectangle.Bottom),
+                OutLine = true,
+                Parent = GameScene.Scene.GuildBuffLabel,
+                Text = Buff.ShowStats()
+            };
+            GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, InfoLabel.DisplayRectangle.Right + 4),
+                Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, InfoLabel.DisplayRectangle.Bottom));
 
         }
 
+        #region ButtonResets
         public void ResetButtonStats()
         {
             if (MyOptions.HasFlag(RankOptions.CanRetrieveItem) || MyOptions.HasFlag(RankOptions.CanStoreItem))
@@ -17627,8 +18267,10 @@ namespace Client.MirScenes
 
             BuffsButton.Visible = true;
         }
+        #endregion
 
-        #region "notice code"
+        #region NoticeDialogCode
+        #region NoticeButtonStates
         public void EditNotice()
         {
             if (Notice.Enabled == false)
@@ -17641,7 +18283,7 @@ namespace Client.MirScenes
             else
             {
                 Notice.Enabled = false;
-                NoticeEditButton.Index = 85;
+                NoticeEditButton.Index = 560;
                 NoticeEditButton.Visible = true;
                 NoticeSaveButton.Visible = false;
                 Network.Enqueue(new C.EditGuildNotice() { notice = Notice.MultiText.ToList() });
@@ -17649,7 +18291,7 @@ namespace Client.MirScenes
         }
         public void NoticeChange(List<string> newnotice)
         {
-            NoticeEditButton.Index = 85;
+            NoticeEditButton.Index = 560;
             Notice.Enabled = false;
             NoticeScrollIndex = 0;
             Notice.Text = "";
@@ -17657,55 +18299,92 @@ namespace Client.MirScenes
             NoticeChanged = false;
             UpdateNotice();
         }
-        public void UpdateNotice()
+        #endregion
+
+        #region AssholeNoticeScroller
+        public void UpdateNotice(bool forward = false)
         {
-            if (NoticeScrollIndex >= Notice.MultiText.Length) NoticeScrollIndex = Math.Max(0, Notice.MultiText.Length - 1);
-            if (NoticeScrollIndex < 0) NoticeScrollIndex = 0;
+            int NoticeScrollerIndex = NoticeScrollIndex;
+
+            if (forward) NoticeScrollerIndex += 24;
+
+            if (NoticeScrollerIndex >= Notice.MultiText.Length) NoticeScrollerIndex = Notice.MultiText.Length - 24;
+            if (NoticeScrollerIndex < 0) NoticeScrollerIndex = 0;
             if (Notice.MultiText.Length != 0)
             {
                 Notice.TextBox.SelectionLength = 1;
-                Notice.TextBox.SelectionStart = Notice.TextBox.GetFirstCharIndexFromLine(NoticeScrollIndex);
+                Notice.TextBox.SelectionStart = Notice.TextBox.GetFirstCharIndexFromLine(NoticeScrollerIndex);
                 Notice.TextBox.ScrollToCaret();
             }
-
-            if (Notice.MultiText.Length > 1)
-            {
-                int h = 302 - 19;
-                h = (int)((h / (float)(Notice.MultiText.Length - 1)) * NoticeScrollIndex);
-                NoticePositionBar.Location = new Point(551, 15 + h);
-            }
         }
-        void NoticePositionBar_OnMoving(object sender, MouseEventArgs e)
+
+        private void UpdateNoticeScrollPosition()
         {
-            const int x = 551;
-            int y = NoticePositionBar.Location.Y;
-            if (y >= NoticeDownButton.Location.Y - 19) y = NoticeDownButton.Location.Y - 19;
-            if (y < 15) y = 15;
+            int interval = 289 / (Notice.MultiText.Length - 25);
 
-            int h = 302;// NoticePositionBar.Size.Height;
-            h = (int)((y - 15) / (h / (float)(Notice.MultiText.Length - 1)));
+            int x = 337;
+            int y = 16 + (NoticeScrollIndex * interval);
 
-            if (h != NoticeScrollIndex)
-            {
-                NoticeScrollIndex = h;
-                UpdateNotice();
-            }
+            if (y >= NoticeDownButton.Location.Y - 20) y = NoticeDownButton.Location.Y - 20;
+            if (y <= 16) y = 16;
 
             NoticePositionBar.Location = new Point(x, y);
         }
 
+        void NoticePositionBar_OnMoving(object sender, MouseEventArgs e)
+        {
+            int x = 337;
+            int y = NoticePositionBar.Location.Y;
+            int TempIndex = 0;
+            bool forward;
+
+            if (y < 16) y = 16;
+
+            int location = y - 16;
+            int interval = 289 / (Notice.MultiText.Length - 25);
+
+            double yPoint = location / interval;
+
+            TempIndex = Convert.ToInt16(Math.Floor(yPoint));
+
+            if (NoticeScrollIndex < TempIndex)
+            {
+                forward = true;
+                NoticeScrollIndex = Convert.ToInt16(Math.Floor(yPoint));
+            }
+            else
+            {
+                forward = false;
+                NoticeScrollIndex = Convert.ToInt16(Math.Floor(yPoint));
+            }
+
+            if (NoticeScrollIndex >= Notice.MultiText.Length - 25) NoticeScrollIndex = Notice.MultiText.Length - 25;
+            if (NoticeScrollIndex <= 0) NoticeScrollIndex = 0;
+
+            UpdateNotice(forward);
+
+            UpdateNoticeScrollPosition();
+        }
         private void NoticePanel_MouseWheel(object sender, MouseEventArgs e)
         {
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
 
             if (NoticeScrollIndex == 0 && count >= 0) return;
-            if (NoticeScrollIndex == Notice.MultiText.Length - 1 && count <= 0) return;
+            if (NoticeScrollIndex == Notice.MultiText.Length - 25 && count <= 0) return;
+
             if (count > 0)
-            { if (NoticeScrollIndex >= 25) NoticeScrollIndex -= 24; }
+            {
+                NoticeScrollIndex--;
+                UpdateNotice();
+            }
             else
-            { if (NoticeScrollIndex < 25) NoticeScrollIndex += 24; }
-            NoticeScrollIndex -= count;
-            UpdateNotice();
+            {
+                NoticeScrollIndex++;
+                UpdateNotice(true);
+            }
+
+            
+            UpdateNoticeScrollPosition();
         }
 
         private void NoticePanel_KeyDown(object sender, KeyEventArgs e)
@@ -17745,8 +18424,9 @@ namespace Client.MirScenes
             e.Handled = true;
         }
         #endregion
+        #endregion
 
-        #region "members code"
+        #region MembersDialogCode
         public void NewMembersList(List<Rank> NewRanks)
         {
             Ranks = NewRanks;
@@ -17808,15 +18488,9 @@ namespace Client.MirScenes
         {
             if (!MyOptions.HasFlag(RankOptions.CanRecruit)) return;
             if (LastGuildMsg > CMain.Time) return;
-            MirInputBox messageBox = new MirInputBox("Who would you like to invite to the guild?");
-            messageBox.OKButton.Click += (o, e) =>
-            {
-                Network.Enqueue(new C.EditGuildMember { ChangeType = 0, Name = messageBox.InputTextBox.Text });
-                LastGuildMsg = CMain.Time + 5000;
-                messageBox.Dispose();
-            };
-            messageBox.Show();
-
+            Network.Enqueue(new C.EditGuildMember { ChangeType = 0, Name = MembersRecruitName.Text });
+            LastGuildMsg = CMain.Time + 5000;
+            MembersRecruitName.Text = "";
         }
 
         public void DeleteMember(int Index)
@@ -17841,20 +18515,9 @@ namespace Client.MirScenes
                 {
                     if (MembersShowOfflinesetting || Ranks[i].Members[j].Online) MembersShowCount++;
                 }
-            if (MembersShowCount < (MemberScrollIndex - MemberPageRows))
+            if (MembersShowCount < MemberPageRows)
                 MemberScrollIndex = 0;
-            if (MembersShowCount > MemberPageRows)
-            {
-                MembersUpButton.Visible = true;
-                MembersDownButton.Visible = true;
-                MembersPositionBar.Visible = true;
-            }
-            else
-            {
-                MembersUpButton.Visible = false;
-                MembersDownButton.Visible = false;
-                MembersPositionBar.Visible = false;
-            }
+
 
             for (int i = 0; i < MembersRanks.Length; i++)
             {
@@ -17884,9 +18547,18 @@ namespace Client.MirScenes
                 MembersDelete[i].Visible = false;
             }
             if (MyOptions.HasFlag(RankOptions.CanRecruit))
-                MembersAddMember.Visible = true;
+            {
+                RecruitMemberButton.Visible = true;
+                MembersRecruitName.Visible = true;
+                RecruitMemberLabel.Visible = true;
+            }
             else
-                MembersAddMember.Visible = false;
+            {
+                RecruitMemberButton.Visible = false;
+                MembersRecruitName.Visible = false;
+                RecruitMemberLabel.Visible = false;
+            }
+               
             int Offset = 0;
             int RowCount = 0;
             DateTime now = DateTime.Now;
@@ -17957,27 +18629,36 @@ namespace Client.MirScenes
         }
         public void MembersPositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            const int x = 551;
+            int x = 337;
             int y = MembersPositionBar.Location.Y;
-            if (y >= MembersDownButton.Location.Y - 19) y = MembersDownButton.Location.Y - 19;
-            if (y < 15) y = 15;
 
-            int h = 302;
-            h = (int)((y - 15) / (h / (float)(MembersShowCount - 1)));
-            if (h > (MembersShowCount - MemberPageRows)) h = MembersShowCount - MemberPageRows;
-            if (h != MemberScrollIndex)
-            {
-                MemberScrollIndex = h;
-                UpdateMembers();
-            }
+            if (y >= MembersDownButton.Location.Y - 20) y = MembersDownButton.Location.Y - 20;
+            if (y < 16) y = 16;
+
+            int location = y - 16;
+            int interval = 289 / (MembersShowCount - MemberPageRows);
+
+            double yPoint = location / interval;
+
+            MemberScrollIndex = Convert.ToInt16(Math.Floor(yPoint));
+            if (MemberScrollIndex > MembersShowCount - MemberPageRows) MemberScrollIndex = MembersShowCount - MemberPageRows;
+            if (MemberScrollIndex <= 0) MemberScrollIndex = 0;
+
+            UpdateMembers();
+
             MembersPositionBar.Location = new Point(x, y);
         }
         private void UpdateMembersScrollPosition()
         {
-            int h = 302;
-            h = (int)(h / (float)(MembersShowCount - 1));
-            int y = 15 + (h * MemberScrollIndex);
-            MembersPositionBar.Location = new Point(551, y);
+            int interval = 289 / (MembersShowCount - MemberPageRows);
+
+            int x = 337;
+            int y = 16 + (MemberScrollIndex * interval);
+
+            if (y >= MembersDownButton.Location.Y - 20) y = MembersDownButton.Location.Y - 20;
+            if (y <= 16) y = 16;
+
+            MembersPositionBar.Location = new Point(x, y);
         }
         private void MembersPanel_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -18032,25 +18713,25 @@ namespace Client.MirScenes
         }
         #endregion
 
-        #region status page code
+        #region StatusDialogCode
         private void StatusExpBar_BeforeDraw(object sender, EventArgs e)
         {
-            if (MaxExperience == 0)
+            if (GameScene.Scene.GuildDialog.MaxExperience == 0)
             {
                 StatusExpLabel.Text = "";
                 return;
             }
             if (StatusExpBar.Library == null) return;
-            StatusExpBar.Library.Draw(StatusExpBar.Index, StatusExpBar.DisplayLocation, new Size(550, 7), Color.Red);
 
-            double percent = Experience / (double)MaxExperience;
+            StatusExpBar.Library.Draw(424, StatusExpBar.DisplayLocation, new Size(260, 22), Color.White);
+
+            double percent = GameScene.Scene.GuildDialog.Experience / (double)GameScene.Scene.GuildDialog.MaxExperience;
             StatusExpLabel.Text = string.Format("{0:#0.##%}", percent);
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
             Rectangle section = new Rectangle
             {
-                Location = StatusExpBar.Location,
-                Size = new Size((int)((550 - 3) * percent), StatusExpBar.Size.Height)
+                Size = new Size((int)((260 - 3) * percent), 22)
             };
 
             StatusExpBar.Library.Draw(StatusExpBar.Index, section, StatusExpBar.DisplayLocation, Color.White, false);
@@ -18058,7 +18739,7 @@ namespace Client.MirScenes
         }
         #endregion
 
-        #region ranks page
+        #region RankDialogCode
         public void NewRankRecieved(Rank New)
         {
             int NewIndex = Ranks.Count > 1 ? Ranks.Count - 1 : 1;
@@ -18223,11 +18904,82 @@ namespace Client.MirScenes
 
         #endregion
 
-        #region Storage code
+        #region StorageCode
+
+        public void StoragePositionBar_OnMoving(object sender, MouseEventArgs e)
+        {
+            int x = 337;
+            int y = StoragePositionBar.Location.Y;
+
+            if (y >= StorageDownButton.Location.Y - 20) y = StorageDownButton.Location.Y - 20;
+            if (y < 16) y = 16;
+
+            int location = y - 16;
+            int interval = 289 / 8;
+
+            double yPoint = location / interval;
+
+            StorageIndex = Convert.ToInt16(Math.Floor(yPoint));
+            if (StorageIndex > 6) StorageIndex = 6;
+            if (StorageIndex <= 0) StorageIndex = 0;
+            UpdateStorage();
+
+            StoragePositionBar.Location = new Point(x, y);
+        }
+
+        private void StoragePanel_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
+
+            if (StorageIndex == 0 && count >= 0) return;
+            if (StorageIndex == 6 && count <= 0) return;
+
+            StorageIndex -= count;
+
+            if (StorageIndex < 0) StorageIndex = 0;
+            if (StorageIndex > 6) StorageIndex = 6;
+
+            UpdateStorage();
+
+            StorageUpdatePositionBar();
+        }
+
+        private void StorageUpdatePositionBar()
+        {
+
+            int interval = 289 / 6;
+
+            int x = 337;
+            int y = 16 + (StorageIndex * interval);
+
+            if (y >= StorageDownButton.Location.Y - 20) y = StorageDownButton.Location.Y - 20;
+            if (y <= 16) y = 16;
+
+            StoragePositionBar.Location = new Point(x, y);
+        }
+
+        public void UpdateStorage()
+        {
+                for (int x = 0; x < 8; x++)
+                {
+                    for (int y = 0; y < 14; y++)
+                    {
+                    int idx = 8 * y + x;
+                    if (StorageIndex <= y && (y < StorageIndex + 8))
+                    {
+                        StorageGrid[idx].Location = new Point(x * 35 + 31 + x, (y - StorageIndex) * 35 + 20 + (y - StorageIndex));
+                        StorageGrid[idx].Visible = true;
+                    }
+                    else
+                        StorageGrid[idx].Visible = false;
+                    }
+                }
+        }
+
         public void StorageAddGold()
         {
             if (LastGuildMsg > CMain.Time) return;
-            MirAmountBox amountBox = new MirAmountBox("Gold to add:", 116, GameScene.Gold);
+            MirAmountBox amountBox = new MirAmountBox("Deposit", 116, GameScene.Gold);
 
             amountBox.OKButton.Click += (o, a) =>
             {
@@ -18262,6 +19014,7 @@ namespace Client.MirScenes
         }
         #endregion
 
+        #region UpdateNotice
         public void RequestUpdateNotice()
         {
             if ((NoticeChanged) && (LastNoticeRequest < CMain.Time))
@@ -18270,7 +19023,6 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.RequestGuildInfo() { Type = 0 });
             }
         }
-
         public void RequestUpdateMembers()
         {
             if ((MembersChanged) && (LastMemberRequest < CMain.Time))
@@ -18279,53 +19031,66 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.RequestGuildInfo() { Type = 1 });
             }
         }
+        #endregion
 
-        public void ChangePage(byte pageid)
+        #region NoticeDialogPages
+        public void RightDialog(byte Rpageid)
+        {
+            StatusPage.Visible = false;
+            BuffPage.Visible = false;
+
+            StatusButton.Index = 103;
+            BuffButton.Index = 95;
+
+            switch (Rpageid)
+            {
+                case 0:
+                    StatusPage.Visible = true;
+                    StatusButton.Index = 104;
+                    break;
+                case 1:
+                    BuffPage.Visible = true;
+                    BuffButton.Index = 96;
+                    break;
+            }
+        }
+        public void LeftDialog(byte Lpageid)
         {
             NoticePage.Visible = false;
             MembersPage.Visible = false;
-            StatusPage.Visible = false;
             StoragePage.Visible = false;
             RankPage.Visible = false;
 
-            NoticeButton.Index = 88;
-            MembersButton.Index = 76;
-            StatusButton.Index = 67;
-            StorageButton.Index = 79;
-            BuffsButton.Index = 70;
-            RankButton.Index = 73;
+            NoticeButton.Index = 93;
+            MembersButton.Index = 99;
+            StorageButton.Index = 105;
+            RankButton.Index = 101;
 
-            switch (pageid)
+            switch (Lpageid)
             {
                 case 0:
                     NoticePage.Visible = true;
-                    NoticeButton.Index = 88;
+                    NoticeButton.Index = 94;
                     RequestUpdateNotice();
                     break;
                 case 1:
                     MembersPage.Visible = true;
-                    MembersButton.Index = 76;
+                    MembersButton.Index = 100;
                     RequestUpdateMembers();
                     break;
                 case 2:
-                    StatusPage.Visible = true;
-                    StatusButton.Index = 67;
-                    break;
-                case 3:
                     StoragePage.Visible = true;
-                    StorageButton.Index = 79;
+                    StorageButton.Index = 106;
                     if (!StorageRequested)
                         Network.Enqueue(new C.GuildStorageItemChange() { Type = 2 });
                     break;
-                //case 4: removed this used to be the buffs page
-                case 5:
+                case 3:
                     RankPage.Visible = true;
-                    RankButton.Index = 73;
+                    RankButton.Index = 102;
                     RequestUpdateMembers();
                     break;
             }
         }
-
         public void StatusChanged(RankOptions status)
         {
             Notice.Enabled = false;
@@ -18346,9 +19111,11 @@ namespace Client.MirScenes
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
-            BuffsButton.Visible = true;
+            BuffButton.Visible = true;
         }
+        #endregion
 
+        #region GuildDialogChecks
         public void Hide()
         {
             if (!Visible) return;
@@ -18364,16 +19131,24 @@ namespace Client.MirScenes
                 messageBox.Show();
                 return;
             }
-
             Visible = true;
+
             if (NoticePage.Visible)
+            {
                 if ((NoticeChanged) && (LastNoticeRequest < CMain.Time))
                 {
                     LastNoticeRequest = CMain.Time + 5000;
                     Network.Enqueue(new C.RequestGuildInfo() { Type = 0 });
                 }
+                NoticeButton.Index = 94;
+            }
+            if (StatusPage.Visible)
+                StatusButton.Index = 104;
+
+
         }
     }
+    #endregion
 
     public sealed class GuildBuffButton : MirControl
     {
@@ -18385,7 +19160,7 @@ namespace Client.MirScenes
 
         public GuildBuffButton()
         {
-            Size = new Size(252, 33);
+            Size = new Size(188, 33);
             Icon = new MirImageControl
             {
                 Index = 0,
@@ -18399,14 +19174,14 @@ namespace Client.MirScenes
             {
                 AutoSize = true,
                 Parent = this,
-                Location = new Point(54, 2),
+                Location = new Point(35, 1),
                 NotControl = true
             };
             Info = new MirLabel
             {
                 AutoSize = true,
                 Parent = this,
-                Location = new Point(54, 18),
+                Location = new Point(35, 17),
                 NotControl = true
             };
             Obtained = new MirLabel
@@ -18414,7 +19189,7 @@ namespace Client.MirScenes
                 DrawFormat = TextFormatFlags.Right,
                 AutoSize = true,
                 Parent = this,
-                Location = new Point(150, 18),
+                Location = new Point(140, 17),
                 NotControl = true,
                 Text = ""
             };
@@ -18423,657 +19198,13 @@ namespace Client.MirScenes
         protected override void OnMouseEnter()
         {
             base.OnMouseEnter();
-            GameScene.Scene.GuildBuffDialog.CreateHintLabel(Id);
+            GameScene.Scene.GuildDialog.CreateHintLabel(Id);
         }
         protected override void OnMouseLeave()
         {
             base.OnMouseLeave();
             GameScene.Scene.DisposeGuildBuffLabel();
         }        
-    }
-
-    public sealed class GuildBuffDialog : MirImageControl
-    {
-        private MirButton CloseButton;
-        private bool RequestedList = false;
-        public List<GuildBuffInfo> GuildBuffInfos = new List<GuildBuffInfo>();
-        public List<GuildBuff> EnabledBuffs = new List<GuildBuff>();
-        public int StartIndex = 0;
-        private long LastRequest = 0;
-
-        public string ActiveStats = "";
-
-        public bool Page = false;
-        public MirButton GrowthButton, ExpButton;
-        public MirLabel GuildName, StatusExpLabel;
-        public MirImageControl StatusExpBar;
-        public MirLabel PointsLeft;
-        public MirButton UpButton, DownButton, PositionBar;
-        public GuildBuffButton[] Buffs;
-
-        public void RequestGuildBuffList()
-        {
-            if (!RequestedList)
-            {
-                RequestedList = true;
-                Network.Enqueue(new C.GuildBuffUpdate {  Action = 0 });
-            }
-        }
-        public GuildBuffDialog()
-        {
-            Index = 518;
-            Library = Libraries.Title;
-            Movable = true;
-            Sort = true;
-            Location = Center;
-
-            BeforeDraw += (o, e) => RefreshInterface();
-
-            GrowthButton = new MirButton
-            {
-                Library = Libraries.Title,
-                Location = new Point(12, 37),
-                Parent = this,
-                PressedIndex = 546,
-                Index = 547,
-                Sound = SoundList.ButtonA,
-                Size = new Size(72, 24)
-            };
-            GrowthButton.Click += (o, e) => ShowGrowthPage();
-
-            ExpButton = new MirButton
-            {
-                Library = Libraries.Title,
-                Location = new Point(83, 37),
-                Parent = this,
-                PressedIndex = 548,
-                Index = 548,
-                Sound = SoundList.ButtonA,
-                Size = new Size(72, 24)
-            };
-            ExpButton.Click += (o, e) => ShowExpPage();
-
-            GuildName = new MirLabel
-            {
-                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
-                Parent = this,
-                Location = new Point(27,6),
-                Size = new Size(250,20),
-                NotControl = true
-            };
-            PointsLeft = new MirLabel
-            {
-                DrawFormat = TextFormatFlags.HorizontalCenter,
-                Parent = this,
-                Location = new Point(18, 63),
-                Size = new Size(253, 20),
-                NotControl = true
-            };
-            StatusExpBar = new MirImageControl()
-            {
-                Visible = false,
-                Index = 423,
-                Library = Libraries.Prguse2,
-                Location = new Point(18, 80),
-                DrawImage = false,
-                NotControl = true,
-                Parent = this,
-                Size = new Size(260, 22)
-            };
-            StatusExpBar.BeforeDraw += StatusExpBar_BeforeDraw;
-            StatusExpLabel = new MirLabel()
-            {
-                Visible = false,
-                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
-                Location = new Point(18, 80),
-                NotControl = true,
-                Parent = this,
-                Size = new Size(260, 22)
-            };
-
-
-            UpButton = new MirButton
-            {
-                Index = 197,
-                HoverIndex = 198,
-                PressedIndex = 199,
-                Library = Libraries.Prguse2,
-                Location = new Point(276, 63),
-                Parent = this,
-                Sound = SoundList.ButtonA
-            };
-            UpButton.Click += (o, e) =>
-                {
-                    if (StartIndex == 0) return;
-                    StartIndex--;
-                    UpdatePositionBar();
-                    RefreshInterface();
-                };
-            DownButton = new MirButton
-            {
-                Index = 207,
-                HoverIndex = 208,
-                PressedIndex = 209,
-                Library = Libraries.Prguse2,
-                Location = new Point(276, 378),
-                Parent = this,
-                Sound = SoundList.ButtonA
-            };
-            DownButton.Click += (o, e) =>
-            {
-                if (GuildBuffInfos.Count < 8 ) return;
-                if (StartIndex == GuildBuffInfos.Count - 8) return;
-                StartIndex++;
-                UpdatePositionBar();
-                RefreshInterface();
-            };
-
-            PositionBar = new MirButton
-            {
-                Index = 205,
-                HoverIndex = 206,
-                PressedIndex = 206,
-                Library = Libraries.Prguse2,
-                Parent = this,
-                Movable = true,
-                Sound = SoundList.None,
-                Location = new Point(276, 77)
-            };
-            PositionBar.OnMoving += PositionBar_OnMoving;
-            PositionBar.MouseUp += (o, e) => RefreshInterface();
-
-            Buffs = new GuildBuffButton[8];
-            for (byte i = 0; i < Buffs.Length; i++)
-            {
-                byte Id = i;
-                Buffs[i] = new GuildBuffButton { Parent = this, Visible = false, Location = new Point(18, 88 + (i * 38)), Id = Id };
-                Buffs[i].Click += (o, e) => RequestBuff(Id);
-            }
-            CloseButton = new MirButton
-            {
-                HoverIndex = 361,
-                Index = 360,
-                Location = new Point(279, 3),
-                Library = Libraries.Prguse2,
-                Parent = this,
-                PressedIndex = 362,
-                Sound = SoundList.ButtonA,
-            };
-            CloseButton.Click += (o, e) => Hide();
-
-        }
-
-
-        private void StatusExpBar_BeforeDraw(object sender, EventArgs e)
-        {
-            if (GameScene.Scene.GuildDialog.MaxExperience == 0)
-            {
-                StatusExpLabel.Text = "";
-                return;
-            }
-            if (StatusExpBar.Library == null) return;
-            StatusExpBar.Library.Draw(424, StatusExpBar.DisplayLocation, new Size(260, 22), Color.White);
-
-            double percent = GameScene.Scene.GuildDialog.Experience / (double)GameScene.Scene.GuildDialog.MaxExperience;
-            StatusExpLabel.Text = string.Format("{0:#0.##%}", percent);
-            if (percent > 1) percent = 1;
-            if (percent <= 0) return;
-            Rectangle section = new Rectangle
-            {
-                Size = new Size((int)((260 - 3) * percent), StatusExpBar.Size.Height)
-            };
-
-            StatusExpBar.Library.Draw(StatusExpBar.Index, section, StatusExpBar.DisplayLocation, Color.White, false);
-
-        }
-
-        private void UpdatePositionBar()
-        {
-            int h = 299 - PositionBar.Size.Height;
-            h = (int)((h / (float)(GuildBuffInfos.Count - 8)) * StartIndex);
-            PositionBar.Location = new Point(276, 77 + h);
-        }
-
-        private void PositionBar_OnMoving(object sender, MouseEventArgs e)
-        {
-            const int x = 276;
-            int y = PositionBar.Location.Y;
-            if (y >= 376 - PositionBar.Size.Height) y = 376 - PositionBar.Size.Height;
-            if (y < 77) y = 77;
-
-            int h = 299 - PositionBar.Size.Height;
-            h = (int)Math.Round(((y - 77) / (h / (float)(GuildBuffInfos.Count - 8))));
-            PositionBar.Location = new Point(x, y);
-            if (h == StartIndex) return;
-            StartIndex = h;
-            RefreshInterface();
-        }
-
-        public void RequestBuff(byte Id)
-        {
-            if ((Id + StartIndex) > GuildBuffInfos.Count) return;
-            GuildBuffInfo BuffInfo = GuildBuffInfos[Id + StartIndex];
-            if (BuffInfo == null) return;
-            GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
-            if (Buff == null)
-            {
-                string Error = "";
-                if (GameScene.Scene.GuildDialog.SparePoints < BuffInfo.PointsRequirement)
-                    Error = "Insufficient points available.";
-                if (GameScene.Scene.GuildDialog.Level < BuffInfo.LevelRequirement)
-                    Error = "Guild level too low.";
-                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
-                    Error = "Guild rank does not allow buff activation.";
-                if (Error != "")
-                {
-                    MirMessageBox messageBox = new MirMessageBox(Error);
-                    messageBox.Show();
-                    return;
-                }
-                if (CMain.Time < LastRequest + 100) return;
-                LastRequest = CMain.Time;
-                Network.Enqueue(new C.GuildBuffUpdate { Action = 1, Id = BuffInfo.Id });
-            }
-            else
-            {
-                string Error = "";
-                if (Buff.Active)
-                    Error = "Buff is still active.";
-                if (GameScene.Scene.GuildDialog.Gold < BuffInfo.ActivationCost)
-                    Error = "Insufficient guild funds.";
-                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
-                    Error = "Guild rank does not allow buff activation.";
-                if (Error != "")
-                {
-                    MirMessageBox messageBox = new MirMessageBox(Error);
-                    messageBox.Show();
-                    return;
-                }
-                if (CMain.Time < LastRequest + 100) return;
-                LastRequest = CMain.Time;
-                Network.Enqueue(new C.GuildBuffUpdate {Action = 2, Id = BuffInfo.Id});
-            }            
-        }
-
-        private void ShowGrowthPage()
-        {
-            if (!Page) return;
-            Page = false;
-            GrowthButton.Index = 547;
-            ExpButton.Index = 548;
-            Index = 518;
-            //StatusExpBarBackground.Visible = false;
-            StatusExpBar.Visible = false;
-            StatusExpLabel.Visible = false;
-            PositionBar.Visible = true;
-            UpButton.Visible = true;
-            DownButton.Visible = true;
-        }
-        private void ShowExpPage()
-        {
-            if (Page) return;
-            Page = true;
-            GrowthButton.Index = 546;
-            ExpButton.Index = 549;
-            Index = 519;
-            for (int i = 0; i < Buffs.Length; i++)
-                Buffs[i].Visible = false;
-            //StatusExpBarBackground.Visible = true;
-            StatusExpBar.Visible = true;
-            StatusExpLabel.Visible = true;
-            PositionBar.Visible = false;
-            UpButton.Visible = false;
-            DownButton.Visible = false;
-        }
-
-        public GuildBuff FindGuildBuff(int Index)
-        {
-            for (int i = 0; i < EnabledBuffs.Count; i++ )
-            {
-                if ((EnabledBuffs[i] != null) && (EnabledBuffs[i].Id == Index))
-                    return EnabledBuffs[i];
-            }
-            return null;
-        }
-
-        public void UpdateActiveStats()
-        {
-            string text = "";
-
-            byte BuffAc = 0, BuffMac = 0, BuffDc = 0, BuffMc = 0, BuffSc = 0, BuffAttack = 0,
-                BuffMineRate = 0, BuffGemRate = 0, BuffFishRate = 0, BuffExpRate = 0, BuffCraftRate = 0, BuffSkillRate = 0,
-                BuffHpRegen = 0, BuffMPRegen = 0, BuffDropRate = 0, BuffGoldRate = 0;
-
-            int BuffMaxHp = 0, BuffMaxMp = 0;
-
-            foreach (GuildBuff buff in EnabledBuffs)
-            {
-                if ((buff.Info == null) || (!buff.Active)) continue;
-
-                BuffAc = (byte)Math.Min(byte.MaxValue, BuffAc + buff.Info.BuffAc);
-                BuffMac = (byte)Math.Min(byte.MaxValue, BuffMac + buff.Info.BuffMac);
-                BuffDc = (byte)Math.Min(byte.MaxValue, BuffDc + buff.Info.BuffDc);
-                BuffMc = (byte)Math.Min(byte.MaxValue, BuffMc + buff.Info.BuffMc);
-                BuffSc = (byte)Math.Min(byte.MaxValue, BuffSc + buff.Info.BuffSc);
-                BuffAttack = (byte)Math.Min(byte.MaxValue, BuffAttack + buff.Info.BuffAttack);
-                BuffMaxHp = (ushort)Math.Min(ushort.MaxValue, BuffMaxHp + buff.Info.BuffMaxHp);
-                BuffMaxMp = (ushort)Math.Min(ushort.MaxValue, BuffMaxMp + buff.Info.BuffMaxMp);
-                BuffMineRate = (byte)Math.Min(byte.MaxValue, BuffMineRate + buff.Info.BuffMineRate);
-                BuffGemRate = (byte)Math.Min(byte.MaxValue, BuffGemRate + buff.Info.BuffGemRate);
-                BuffFishRate = (byte)Math.Min(byte.MaxValue, BuffFishRate + buff.Info.BuffFishRate);
-                BuffExpRate = (byte)Math.Min(float.MaxValue, BuffExpRate + buff.Info.BuffExpRate);
-                BuffCraftRate = (byte)Math.Min(byte.MaxValue, BuffCraftRate + buff.Info.BuffCraftRate); //needs coding
-                BuffSkillRate = (byte)Math.Min(byte.MaxValue, BuffSkillRate + buff.Info.BuffSkillRate);
-                BuffHpRegen = (byte)Math.Min(byte.MaxValue, BuffHpRegen + buff.Info.BuffHpRegen);
-                BuffMPRegen = (byte)Math.Min(byte.MaxValue, BuffMPRegen + buff.Info.BuffMPRegen);
-                BuffDropRate = (byte)Math.Min(float.MaxValue, BuffDropRate + buff.Info.BuffDropRate);
-                BuffGoldRate = (byte)Math.Min(float.MaxValue, BuffGoldRate + buff.Info.BuffGoldRate);
-            }
-
-            if (BuffAc > 0)
-            {
-                text += string.Format("Increases AC by: 0-{0}.", BuffAc);
-                if (text != "") text += "\n";
-            }
-            if (BuffMac > 0)
-            {
-                text += string.Format("Increases MAC by: 0-{0}.", BuffMac);
-                if (text != "") text += "\n";
-            }
-            if (BuffDc > 0)
-            {
-                text += string.Format("Increases DC by: 0-{0}.", BuffDc);
-                if (text != "") text += "\n";
-            }
-            if (BuffMc > 0)
-            {
-                text += string.Format("Increases MC by: 0-{0}.", BuffMc);
-                if (text != "") text += "\n";
-            }
-            if (BuffSc > 0)
-            {
-                text += string.Format("Increases SC by: 0-{0}.", BuffSc);
-                if (text != "") text += "\n";
-            }
-            if (BuffMaxHp > 0)
-            {
-                text += string.Format("Increases Hp by: {0}.", BuffMaxHp);
-                if (text != "") text += "\n";
-            }
-            if (BuffMaxMp > 0)
-            {
-                text += string.Format("Increases MP by: {0}.", BuffMaxMp);
-                if (text != "") text += "\n";
-            }
-            if (BuffHpRegen > 0)
-            {
-                text += string.Format("Increases Health regen by: {0}.", BuffHpRegen);
-                if (text != "") text += "\n";
-            }
-            if (BuffMPRegen > 0)
-            {
-                text += string.Format("Increases Mana regen by: {0}.", BuffMPRegen);
-                if (text != "") text += "\n";
-            }
-            if (BuffMineRate > 0)
-            {
-                text += string.Format("Increases Mining success by: {0}%.", BuffMineRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffGemRate > 0)
-            {
-                text += string.Format("Increases Gem success by: {0}%.", BuffGemRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffFishRate > 0)
-            {
-                text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffExpRate > 0)
-            {
-                text += string.Format("Increases Experience by: {0}%.", BuffExpRate);
-                if (text != "") text += "\n";
-            }
-            if (BuffCraftRate > 0)
-            {
-                text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffSkillRate > 0)
-            {
-                text += string.Format("Increases Skill training by: {0}.", BuffSkillRate);
-                if (text != "") text += "\n";
-            }
-            if (BuffAttack > 0)
-            {
-                text += string.Format("Increases Damage by: {0}.", BuffAttack);
-                if (text != "") text += "\n";
-            }
-            if (BuffDropRate > 0)
-            {
-                text += string.Format("Droprate increased by: {0}%.", BuffDropRate);
-                if (text != "") text += "\n";
-            }
-            if (BuffGoldRate > 0)
-            {
-                text += string.Format("Goldrate increased by: 0-{0}.", BuffGoldRate);
-                if (text != "") text += "\n";
-            }
-
-            ActiveStats = text;
-        }
-
-        public GuildBuffInfo FindGuildBuffInfo(int Index)
-        {
-            if (!RequestedList)
-            {
-                RequestGuildBuffList();
-            }
-            for (int i = 0; i < GuildBuffInfos.Count; i++ )
-            {
-                if (GuildBuffInfos[i].Id == Index)
-                    return GuildBuffInfos[i];
-            }
-            return null;
-        }
-
-        public void CreateHintLabel(byte Id)
-        {
-            GameScene.Scene.GuildBuffLabel = new MirControl
-            {
-                BackColour = Color.FromArgb(255, 50, 50, 50),
-                Border = true,
-                BorderColour = Color.Gray,
-                NotControl = true,
-                Parent = GameScene.Scene,
-                Opacity = 0.7F,
-                DrawControlTexture = true
-            };
-            if (Id + StartIndex > GuildBuffInfos.Count) return;
-
-            GuildBuffInfo Buff = GuildBuffInfos[Id + StartIndex];
-            if (Buff == null) return;
-            MirLabel HintName = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.White,
-                Location = new Point(4, 4),
-                OutLine = true,
-                Parent = GameScene.Scene.GuildBuffLabel,
-                Text = Buff.name
-            };
-            
-            GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, HintName.DisplayRectangle.Right + 4),
-                Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, HintName.DisplayRectangle.Bottom));
-            
-            string ReqText = "";
-            if (Buff.LevelRequirement > 0)
-            {
-                ReqText += "Minimum guild level: " + Buff.LevelRequirement.ToString();
-                if (ReqText != "") ReqText += "\n";
-            }
-            if (Buff.PointsRequirement > 0)
-            {
-                ReqText += "Points required: " + Buff.PointsRequirement.ToString();
-                if (ReqText != "") ReqText += "\n";
-            }
-            if (Buff.ActivationCost > 0)
-            {
-                ReqText += "Activationcost: " + Buff.ActivationCost.ToString() + " gold.";
-                if (ReqText != "") ReqText += "\n";
-            }
-            
-
-            MirLabel RequiredLabel = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.White,
-                Location = new Point(4, GameScene.Scene.GuildBuffLabel.DisplayRectangle.Bottom),
-                OutLine = true,
-                Parent = GameScene.Scene.GuildBuffLabel,
-                Text = ReqText
-            };
-            GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, RequiredLabel.DisplayRectangle.Right + 4),
-                Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, RequiredLabel.DisplayRectangle.Bottom));
-
-            //code to dispay the buffs duration
-            if (Buff.TimeLimit > 0)
-            {
-                GuildBuff activeBuff = FindGuildBuff(Buff.Id);
-
-                string text = "";
-
-                if (activeBuff != null && activeBuff.Active)
-                {
-                    text = string.Format("Time remaining: {0} minutes", activeBuff.ActiveTimeRemaining);
-                }
-                else
-                {
-                    text = string.Format("Buff lasts: {0} minutes.", Buff.TimeLimit.ToString());
-                }
-                MirLabel TimeLabel = new MirLabel
-                {
-                    AutoSize = true,
-                    ForeColour = Color.White,
-                    Location = new Point(4, GameScene.Scene.GuildBuffLabel.DisplayRectangle.Bottom),
-                    OutLine = true,
-                    Parent = GameScene.Scene.GuildBuffLabel,
-                    Text = text
-                };
-                GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, TimeLabel.DisplayRectangle.Right + 4),
-                    Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, TimeLabel.DisplayRectangle.Bottom));
-            }
-
-
-            //code to display the buff's effect
-            MirLabel InfoLabel = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.White,
-                Location = new Point(4, GameScene.Scene.GuildBuffLabel.DisplayRectangle.Bottom),
-                OutLine = true,
-                Parent = GameScene.Scene.GuildBuffLabel,
-                Text = Buff.ShowStats()
-            };
-            GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, InfoLabel.DisplayRectangle.Right + 4),
-                Math.Max(GameScene.Scene.GuildBuffLabel.Size.Height, InfoLabel.DisplayRectangle.Bottom));
-
-        }
-
-        public void RefreshInterface()
-        {
-            if (StartIndex < 0) StartIndex = 0;
-            if (MapObject.User.GuildName == "")
-            {
-                Hide();
-                return;
-            }
-            GuildName.Text = MapObject.User.GuildName + " Lv" + GameScene.Scene.GuildDialog.Level.ToString();
-            if (Page)
-            {
-                PointsLeft.Text = "Guild level: " + GameScene.Scene.GuildDialog.Level.ToString();
-            }
-            else
-            {
-                PointsLeft.Text = "Points remaining: " + GameScene.Scene.GuildDialog.SparePoints.ToString();
-                for (int i = 0; i < Buffs.Length ; i++)
-                {
-                    if ((StartIndex + i) > GuildBuffInfos.Count - 1)
-                    {
-                        Buffs[i].Visible = false;
-                        break;
-                    }
-                    GuildBuffInfo BuffInfo = GuildBuffInfos[i + StartIndex];
-                    if (BuffInfo == null)
-                    {
-                        Buffs[i].Visible = false;
-                        break;
-                    }
-                    Buffs[i].Visible = true;
-                    GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
-                    Buffs[i].Name.Text = BuffInfo.name;
-                    Buffs[i].Icon.Index = BuffInfo.Icon;
-
-                    if (Buff == null)
-                    {
-                        if (BuffInfo.LevelRequirement > GameScene.Scene.GuildDialog.Level)
-                        {
-                            Buffs[i].Info.Text = "Insufficient Level";
-                            Buffs[i].Info.ForeColour = Color.Red;
-                            Buffs[i].Icon.Index += 2;
-                        }
-                        else
-                        {
-                            Buffs[i].Info.Text = "Available";
-                            Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
-                            Buffs[i].Icon.Index += 2;
-                        }
-                        Buffs[i].Obtained.Text = "";
-                    }
-                    else
-                    {
-                        if (BuffInfo.TimeLimit > 0)
-                        {
-                            if (Buff.Active)
-                                Buffs[i].Info.Text = "Counting down.";
-                            else
-                                Buffs[i].Info.Text = "Expired.";
-                        }
-                        else
-                            Buffs[i].Info.Text = "Obtained.";
-                        Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
-                        if (Buff.Active)
-                        {
-                            Buffs[i].Obtained.Text = "Active";
-                            Buffs[i].Icon.Index += 1;
-                        }
-                        else
-                            Buffs[i].Obtained.Text = "Inactive";
-                    }
-                }
-            }
-        }
-
-        public void Show()
-        {
-            if (Visible) return;
-            if (MapControl.User.GuildName == "")
-            {
-                MirMessageBox messageBox = new MirMessageBox("You are not in a guild.", MirMessageBoxButtons.OK);
-                messageBox.Show();
-                return;
-            }
-            if (!RequestedList) RequestGuildBuffList();
-            StartIndex = 0;
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
     }
 
     public sealed class BigMapDialog : MirControl
@@ -20394,7 +20525,7 @@ namespace Client.MirScenes
             if (HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == BlackStoneImageFG)
             {
                 if(GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.CanProduceBlackStone)
-                    HoverLabel.Text = string.Format("{0}", PrintTimeSpan(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
+                    HoverLabel.Text = string.Format("{0}", Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
                 else
                     HoverLabel.Text = "No Production.";
             }
@@ -20430,7 +20561,7 @@ namespace Client.MirScenes
             if (sender == BlackStoneImageBG || sender == BlackStoneImageFG)
             {
                 HoverLabel.Visible = true;
-                HoverLabel.Text = string.Format("{0}", PrintTimeSpan(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
+                HoverLabel.Text = string.Format("{0}", Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
                 HoverLabel.Size = BlackStoneImageBG.Size;
                 HoverLabel.Location = new Point(BlackStoneImageBG.Location.X + 5, BlackStoneImageBG.Location.Y - 2);
                 HoverLabelParent = BlackStoneImageFG;
@@ -20730,12 +20861,12 @@ namespace Client.MirScenes
             if (GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime == -9999)
                 CreatureDeadline.Text = "Expire: Never";
             else
-                CreatureDeadline.Text = string.Format("Expire: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
+                CreatureDeadline.Text = string.Format("Expire: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
             //
             if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
                 CreatureMaintainFoodBuff.Text = "0";
             else
-                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", PrintTimeSpan(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
+                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
 
             int StartIndex = CreatureButtons[SelectedCreatureSlot].AnimDefaultIdx;
             int AnimCount = CreatureButtons[SelectedCreatureSlot].AnimDefaultCount;
@@ -20795,34 +20926,6 @@ namespace Client.MirScenes
 
             GameScene.User.IntelligentCreatures[selectedCreature].Filter = filter;
             Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
-        }
-
-        private string PrintTimeSpan(double secs)
-        {
-            TimeSpan t = TimeSpan.FromSeconds(secs);
-            string answer;
-            if (t.TotalMinutes < 1.0)
-            {
-                answer = string.Format("{0}s", t.Seconds);
-            }
-            else if (t.TotalHours < 1.0)
-            {
-                answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
-            }
-            else if (t.TotalDays < 1.0)
-            {
-                answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
-            }
-            //else if (t.TotalDays < 7.0)
-            //{
-            //    answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.TotalHours, t.Minutes, t.Seconds);
-            //}
-            else // more than 1 day
-            {
-                answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
-            }
-
-            return answer;
         }
 
         public override void OnMouseDown(MouseEventArgs e)
@@ -21075,6 +21178,14 @@ namespace Client.MirScenes
                     AnimDefaultDelay = 300;
 
                     AnimExIdx = 820;
+                    AnimExCount = 6;
+                    AnimExDelay = 300;
+                    break;
+                case IntelligentCreatureType.Frog:
+                    AnimDefaultIdx = 840;
+                    AnimDefaultCount = 6;
+                    AnimDefaultDelay = 300;
+                    AnimExIdx = 850;
                     AnimExCount = 6;
                     AnimExDelay = 300;
                     break;
@@ -22571,7 +22682,6 @@ namespace Client.MirScenes
             Location = Center;
             Sort = true;
 
-
             Grid = new GameShopCell[4 * 2];
             for (int x = 0; x < 4; x++)
             {
@@ -23030,6 +23140,7 @@ namespace Client.MirScenes
             totalGold.Text = GameScene.Gold.ToString("###,###,##0");
         }
 
+
         public void FilterScrolling(object sender, MouseEventArgs e)
         {
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
@@ -23376,7 +23487,7 @@ namespace Client.MirScenes
                     break;
                 case BuffType.GuildBuff:
                     text = string.Format("Guild Buff\n");
-                    text += GameScene.Scene.GuildBuffDialog.ActiveStats;
+                    text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
 
                 case BuffType.Impact:
@@ -23405,36 +23516,13 @@ namespace Client.MirScenes
                     break;
             }
 
-            text += string.Format("Expire: {0}", Infinite ? "Never" : PrintTimeSpan(Math.Round((Expire - CMain.Time) / 1000D)));
+            text += string.Format("Expire: {0}", Infinite ? "Never" : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
 
             if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
 
             return text;
         }
 
-        private string PrintTimeSpan(double secs)
-        {
-            TimeSpan t = TimeSpan.FromSeconds(secs);
-            string answer;
-            if (t.TotalMinutes < 1.0)
-            {
-                answer = string.Format("{0}s", t.Seconds);
-            }
-            else if (t.TotalHours < 1.0)
-            {
-                answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
-            }
-            else if (t.TotalDays < 1.0)
-            {
-                answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
-            }
-            else // more than 1 day
-            {
-                answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.TotalDays, (int)t.Hours, t.Minutes, t.Seconds);
-            }
-
-            return answer;
-        }
     }
 }
 
