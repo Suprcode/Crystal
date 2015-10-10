@@ -299,6 +299,7 @@
     <Compile Include="MirObjects\NPCObject.cs" />
     <Compile Include="MirObjects\NPCPage.cs" />
     <Compile Include="MirObjects\NPCSegment.cs" />
+    <Compile Include="MirObjects\NPC_dep\NPCObject_Backup.cs" />
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirForms\Database\QuestInfoForm.cs">
@@ -439,9 +440,7 @@
   <ItemGroup>
     <Content Include="Server.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MirObjects\NPC_dep\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

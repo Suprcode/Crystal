@@ -181,8 +181,8 @@ namespace Server.MirObjects
                     {
                         map.Info.ActiveCoords.Add(point);
                     }
-
                 }
+
                 if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
                 {
                     Regex regex = new Regex(@"\((.*?)\)");
@@ -193,9 +193,9 @@ namespace Server.MirObjects
                     SMain.Envir.CustomCommands.Add(match.Groups[1].Value);
                 }
 
-            }
+                NPCPages.AddRange(ParsePages(lines, lines[i]));
 
-            NPCPages.AddRange(ParsePages(lines));
+            }
         }
 
         private void ParseScript(IList<string> lines)
@@ -288,6 +288,8 @@ namespace Server.MirObjects
                 //Found a page, now process that page and split it into segments
                 for (int j = i + 1; j < lines.Count; j++)
                 {
+                    if (lines[j].StartsWith(";")) continue;
+
                     string nextLine = lines[j];
 
                     if (j < lines.Count - 1)
@@ -340,6 +342,7 @@ namespace Server.MirObjects
                     segmentLines.Add(lines[j]);
                 }
 
+                //bottom of script reached, add all lines found to new segment
                 if (segmentLines.Count > 0)
                 {
                     NPCSegment segment = ParseSegment(Page, segmentLines);
