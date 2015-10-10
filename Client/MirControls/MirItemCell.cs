@@ -1393,8 +1393,8 @@ namespace Client.MirControls
                                 //    messageBox.Show();
                                 //    break;
                                 case -2:
-                                    messageBox = new MirMessageBox("Cannot awaken this item.", MirMessageBoxButtons.OK);
-                                    messageBox.Show();
+                                    //messageBox = new MirMessageBox("Cannot awaken this item.", MirMessageBoxButtons.OK);
+                                    //messageBox.Show();
                                     break;
                             }
                         }

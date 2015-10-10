@@ -244,7 +244,7 @@ namespace Server.MirObjects
         public NPCPage NPCPage;
         public bool NPCSuccess;
         public bool NPCDelayed;
-
+        public List<string> NPCSpeech = new List<string>();
         public Map NPCMoveMap;
         public Point NPCMoveCoord;
         public string NPCInputStr;
@@ -9209,6 +9209,7 @@ namespace Server.MirObjects
             {
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
+                BroadcastDamageIndicator(DamageType.Critical);
             }
 
             if (Envir.Random.Next(100) < Reflect)
@@ -10347,32 +10348,32 @@ namespace Server.MirObjects
                                 StrongboxRewardItem(boxtype);
                                 return;
                             case 26://Wonderdrugs + Knapsack
-                                int time = item.Info.Durability * 3600;
+                                int time = item.Info.Durability;
                                 switch (item.Info.Effect)
                                 {
                                     case 0://exp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                         break;
                                     case 1://drop low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                         break;
                                     case 2://hp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.HP + item.HP } });
+                                        AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
                                         break;
                                     case 3://mp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MP + item.MP } });
+                                        AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
                                         break;
                                     case 4://ac-ac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.WonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxAC + item.AC } });
+                                        AddBuff(new Buff { Type = BuffType.WonderShield, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
                                         break;
                                     case 5://mac-mac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MagicWonderShield, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.MaxMAC + item.MAC } });
+                                        AddBuff(new Buff { Type = BuffType.MagicWonderShield, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
                                         break;
                                     case 6://speed low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
+                                        AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
                                         break;
                                     case 7://knapsack low/med/high
-                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * 1000, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                         break;
                                 }
                                 break;
@@ -13027,13 +13028,13 @@ namespace Server.MirObjects
 
        public void TalkMonster(uint objectID)
         {
-            //TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
+            TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
 
-            //if (talkMonster == null) return;
+            if (talkMonster == null) return;
 
-            //talkMonster.TalkingObjects.Add(this);
+            talkMonster.TalkingObjects.Add(this);
 
-            //CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
+            CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
         }
 
         public void BuyItem(ulong index, uint count)
@@ -13534,6 +13535,7 @@ namespace Server.MirObjects
         #endregion
 
         #region Awakening
+
         public void Awakening(ulong UniqueID, AwakeType type)
         {
             if (type == AwakeType.None) return;
@@ -13871,6 +13873,7 @@ namespace Server.MirObjects
             }
             return true;
         }
+
         #endregion
 
         #region Groups
@@ -17849,7 +17852,6 @@ namespace Server.MirObjects
 
         #region Gameshop
 
-
         public void GameShopStock(GameShopItem item)
         {
             int purchased;
@@ -18051,12 +18053,8 @@ namespace Server.MirObjects
             ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
         }
             
-
-
-
         public void GetGameShop()
         {
-
             int purchased;
             GameShopItem item = new GameShopItem();
             int StockLevel;

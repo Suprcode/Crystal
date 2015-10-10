@@ -333,12 +333,6 @@ namespace Client
             catch (DeviceLostException)
             {
             }
-            catch (Exception ex)
-            {
-                SaveError("Environment error : " + ex.ToString());
-
-                DXManager.AttemptRecovery();
-            }
         }
 
         private static void CreateDebugLabel()

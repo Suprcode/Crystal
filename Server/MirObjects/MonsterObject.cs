@@ -153,8 +153,8 @@ namespace Server.MirObjects
                     return new Football(info);
                 case 69://custom
                     return new Runaway(info);
-                //case 70://custom
-                    //return new TalkingMonster(info);
+                case 70://custom
+                    return new TalkingMonster(info);
                 default:
                     return new MonsterObject(info);
             }
@@ -1746,10 +1746,11 @@ namespace Server.MirObjects
                 attacker.DamageWeapon();
             damage += attacker.AttackBonus;
 
-            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
+            if (50 > Envir.Random.Next(100))
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical});
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
+                BroadcastDamageIndicator(DamageType.Critical);
             }
 
             if (armour >= damage)

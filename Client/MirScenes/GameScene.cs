@@ -1473,16 +1473,19 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ResizeInventory:
                     ResizeInventory((S.ResizeInventory)p);
                     break;
-                case (short)ServerPacketIds.NewIntelligentCreature://IntelligentCreature
+                case (short)ServerPacketIds.NewIntelligentCreature:
                     NewIntelligentCreature((S.NewIntelligentCreature)p);
                     break;
-                case (short)ServerPacketIds.UpdateIntelligentCreatureList://IntelligentCreature
+                case (short)ServerPacketIds.UpdateIntelligentCreatureList:
                     UpdateIntelligentCreatureList((S.UpdateIntelligentCreatureList)p);
                     break;
-                case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
+                case (short)ServerPacketIds.IntelligentCreatureEnableRename:
                     IntelligentCreatureEnableRename((S.IntelligentCreatureEnableRename)p);
                     break;
-                case (short)ServerPacketIds.NPCPearlGoods://pearl currency
+                case (short)ServerPacketIds.IntelligentCreaturePickup:
+                    IntelligentCreaturePickup((S.IntelligentCreaturePickup)p);
+                    break;
+                case (short)ServerPacketIds.NPCPearlGoods:
                     NPCPearlGoods((S.NPCPearlGoods)p);
                     break;
                 case (short)ServerPacketIds.FriendUpdate:
@@ -2654,6 +2657,11 @@ namespace Client.MirScenes
                 {
                     switch (p.Type)
                     {
+                        default:
+                            {
+                                action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
+                                break;
+                            }
                         case 1:
                             {
                                 action = new QueuedAction { Action = MirAction.Attack2, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
@@ -2664,9 +2672,9 @@ namespace Client.MirScenes
                                 action = new QueuedAction { Action = MirAction.Attack3, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                                 break;
                             }
-                        default:
+                        case 3:
                             {
-                                action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
+                                action = new QueuedAction { Action = MirAction.Attack4, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                                 break;
                             }
                     }
@@ -2791,11 +2799,14 @@ namespace Client.MirScenes
 
                     switch (p.Type)
                     {
-                        case DamageType.Hit:
-                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.Red, 50));
+                        case DamageType.Hit: //add damage level colours
+                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
                             break;
                         case DamageType.Miss:
-                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.Blue : Color.Red, 50));
+                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            break;
+                        case DamageType.Critical:
+                            obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.Red : Color.Red, 50) { Offset = 15 });
                             break;
                     }
 
@@ -3553,7 +3564,7 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1020, 8, 1200, ob));
                         break;
                     case SpellEffect.Critical:
-                        ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
+                        //ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
                         break;
                     case SpellEffect.Reflect:
                         ob.Effects.Add(new Effect(Libraries.Effect, 580, 10, 70, ob));
@@ -4866,20 +4877,18 @@ namespace Client.MirScenes
                 cell.Item = null;
             }
 
-            /*
             for (int i = 0; i < InventoryDialog.Grid.Length; i++)
             {
                 if (InventoryDialog.Grid[i].Locked == true)
                 {
                     InventoryDialog.Grid[i].Locked = false;
 
-                    if (InventoryDialog.Grid[i].Item.UniqueID == (ulong)p.removeID)
-                    {
-                        InventoryDialog.Grid[i].Item = null;
-                    }
+                    //if (InventoryDialog.Grid[i].Item.UniqueID == (ulong)p.removeID)
+                    //{
+                    //    InventoryDialog.Grid[i].Item = null;
+                    //}
                 }
-            }
-            */
+            }       
             
             MirMessageBox messageBox = null;
 
@@ -5102,6 +5111,19 @@ namespace Client.MirScenes
         {
             IntelligentCreatureDialog.CreatureRenameButton.Visible = true;
             if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
+        }
+
+        private void IntelligentCreaturePickup(S.IntelligentCreaturePickup p)
+        {
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != p.ObjectID) continue;
+
+                MonsterObject monOb = (MonsterObject)ob;
+
+                if (monOb != null) monOb.PlayPickupSound();
+            }
         }
 
         private void NPCPearlGoods(S.NPCPearlGoods p)//pearl currency
@@ -15290,7 +15312,6 @@ namespace Client.MirScenes
                 }
             }
 
-            ItemCellClear();
             ItemCell_Click();
             Visible = false;
         }
@@ -21153,6 +21174,14 @@ namespace Client.MirScenes
                     AnimDefaultDelay = 300;
 
                     AnimExIdx = 820;
+                    AnimExCount = 6;
+                    AnimExDelay = 300;
+                    break;
+                case IntelligentCreatureType.Frog:
+                    AnimDefaultIdx = 840;
+                    AnimDefaultCount = 6;
+                    AnimDefaultDelay = 300;
+                    AnimExIdx = 850;
                     AnimExCount = 6;
                     AnimExDelay = 300;
                     break;

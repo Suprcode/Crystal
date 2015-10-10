@@ -51,7 +51,7 @@ namespace Client.MirGraphics
 
         public static void Create()
         {
-            PresentParameters parameters = new PresentParameters
+            Parameters = new PresentParameters
             {
                 BackBufferFormat = Format.X8R8G8B8,
                 PresentFlag = PresentFlag.LockableBackBuffer,
@@ -61,7 +61,7 @@ namespace Client.MirGraphics
                 PresentationInterval = Settings.FPSCap ? PresentInterval.One : PresentInterval.Immediate,
                 Windowed = !Settings.FullScreen,
             };
-            Parameters = parameters;
+
 
             Caps devCaps = Manager.GetDeviceCaps(0, DeviceType.Hardware);
             DeviceType devType = DeviceType.Reference;
@@ -106,7 +106,7 @@ namespace Client.MirGraphics
                 RadarTexture = new Texture(Device, 2, 2, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
 
                 using (GraphicsStream stream = RadarTexture.LockRectangle(0, LockFlags.Discard))
-                using (Bitmap image = new Bitmap(2, 2, 8, PixelFormat.Format32bppArgb, (IntPtr) stream.InternalDataPointer))
+                using (Bitmap image = new Bitmap(2, 2, 8, PixelFormat.Format32bppArgb, (IntPtr)stream.InternalDataPointer))
                 using (Graphics graphics = Graphics.FromImage(image))
                     graphics.Clear(Color.White);
             }
@@ -124,7 +124,7 @@ namespace Client.MirGraphics
 
         private unsafe static void CreateLights()
         {
-            
+
             for (int i = Lights.Count - 1; i >= 0; i--)
                 Lights[i].Dispose();
 
@@ -139,7 +139,7 @@ namespace Client.MirGraphics
                 Texture light = new Texture(Device, width, height, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
 
                 using (GraphicsStream stream = light.LockRectangle(0, LockFlags.Discard))
-                using (Bitmap image = new Bitmap(width, height, width*4, PixelFormat.Format32bppArgb, (IntPtr) stream.InternalDataPointer))
+                using (Bitmap image = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, (IntPtr)stream.InternalDataPointer))
                 {
                     using (Graphics graphics = Graphics.FromImage(image))
                     {
@@ -149,7 +149,7 @@ namespace Client.MirGraphics
                             using (PathGradientBrush brush = new PathGradientBrush(path))
                             {
                                 graphics.Clear(Color.FromArgb(0, 0, 0, 0));
-                                brush.SurroundColors = new[] {Color.FromArgb(0, 255, 255, 255)};
+                                brush.SurroundColors = new[] { Color.FromArgb(0, 255, 255, 255) };
                                 brush.CenterColor = Color.FromArgb(255, 255, 255, 255);
                                 graphics.FillPath(brush, path);
                                 graphics.Save();
@@ -180,18 +180,16 @@ namespace Client.MirGraphics
                 switch ((ResultCode)result)
                 {
                     case ResultCode.DeviceNotReset:
-                        Device.Reset(new PresentParameters[] { Parameters });
-                        return;
-                    case ResultCode.DeviceLost:
-                        return;
-                    case ResultCode.Success:                   
+                        Device.Reset(Parameters);
                         break;
-                    default:
-                        return;
+                    case ResultCode.DeviceLost:
+                        break;
+                    case ResultCode.Success:
+                        DeviceLost = false;
+                        CurrentSurface = Device.GetBackBuffer(0, 0, BackBufferType.Mono);
+                        Device.SetRenderTarget(0, CurrentSurface);
+                        break;
                 }
-                DeviceLost = false;
-                CurrentSurface = Device.GetBackBuffer(0, 0, BackBufferType.Mono);
-                Device.SetRenderTarget(0, CurrentSurface);
             }
             catch
             {
@@ -313,7 +311,9 @@ namespace Client.MirGraphics
             {
                 MImage m = TextureList[i];
 
-                if ((m != null) && !((m.Image == null) || m.Image.Disposed))
+                if (m == null) continue;
+
+                if (m.Image != null && !m.Image.Disposed)
                     m.Image.Dispose();
             }
             TextureList.Clear();
