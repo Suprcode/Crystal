@@ -13027,13 +13027,13 @@ namespace Server.MirObjects
 
        public void TalkMonster(uint objectID)
         {
-            TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
+            //TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
 
-            if (talkMonster == null) return;
+            //if (talkMonster == null) return;
 
-            talkMonster.TalkingObjects.Add(this);
+            //talkMonster.TalkingObjects.Add(this);
 
-            CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
+            //CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
         }
 
         public void BuyItem(ulong index, uint count)
