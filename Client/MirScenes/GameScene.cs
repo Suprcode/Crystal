@@ -4641,7 +4641,8 @@ namespace Client.MirScenes
                     toCell.Item = p.Item.Item;
                     
                     Bind(toCell.Item);
-                    Bind(fromCell.Item);
+                    if (fromCell.Item != null) 
+                        Bind(fromCell.Item);
 
                     break;
 
@@ -17534,14 +17535,18 @@ namespace Client.MirScenes
                 Index = 918,
                 Visible = true,
                 Enabled = true,
-                Location = new Point(306, 313)
+                Location = new Point(158, 313)
             };
             StorageGoldAdd.Click += (o, e) => StorageAddGold();
+
             StorageGoldRemove = new MirButton()
             {
-                Visible = false,
+                Parent = StoragePage,
+                Library = Libraries.Prguse,
+                Index = 917,
+                Visible = true,
                 Enabled = true,
-                Location = new Point(218, 10)
+                Location = new Point(142, 313)
             };
             StorageGoldRemove.Click += (o, e) => StorageRemoveGold();
 
@@ -17601,7 +17606,7 @@ namespace Client.MirScenes
             };
             StorageDownButton.Click += (o, e) =>
             {
-                if (StorageIndex == 6) return;
+                if (StorageIndex >= 6) StorageIndex = 5;
                 StorageIndex++;
                 UpdateStorage();
                 StorageUpdatePositionBar();
@@ -18915,7 +18920,7 @@ namespace Client.MirScenes
             double yPoint = location / interval;
 
             StorageIndex = Convert.ToInt16(Math.Floor(yPoint));
-            if (StorageIndex > 8) StorageIndex = 8;
+            if (StorageIndex > 6) StorageIndex = 6;
             if (StorageIndex <= 0) StorageIndex = 0;
             UpdateStorage();
 
