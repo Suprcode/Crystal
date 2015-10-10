@@ -17535,14 +17535,18 @@ namespace Client.MirScenes
                 Index = 918,
                 Visible = true,
                 Enabled = true,
-                Location = new Point(306, 313)
+                Location = new Point(158, 313)
             };
             StorageGoldAdd.Click += (o, e) => StorageAddGold();
+
             StorageGoldRemove = new MirButton()
             {
-                Visible = false,
+                Parent = StoragePage,
+                Library = Libraries.Prguse,
+                Index = 917,
+                Visible = true,
                 Enabled = true,
-                Location = new Point(218, 10)
+                Location = new Point(142, 313)
             };
             StorageGoldRemove.Click += (o, e) => StorageRemoveGold();
 
