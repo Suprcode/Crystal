@@ -10246,6 +10246,9 @@ namespace Server.MirObjects
                             HasServerShout = true;
                             ReceiveChat("You have been given one free shout across the server", ChatType.Hint);
                             break;
+                        case 10://GuildSkillScroll
+                            MyGuild.NewBuff(item.Info.Effect, false);
+                            break;
                     }
                     break;
                 case ItemType.Book:
@@ -11695,6 +11698,31 @@ namespace Server.MirObjects
                             {
                                 ReceiveChat("You cannot use Resurrection Scrolls whilst alive", ChatType.Hint);
                                 return false;
+                            }
+                            break;
+                        case 10:
+                            {
+                                int skillId = item.Info.Effect;
+
+                                if (MyGuild == null)
+                                {
+                                    ReceiveChat("You must be in a guild to use this skill", ChatType.Hint);
+                                    return false;
+                                }
+                                if (MyGuildRank != MyGuild.Ranks[0])
+                                {
+                                    ReceiveChat("You must be the guild leader to use this skill", ChatType.Hint);
+                                    return false;
+                                }
+                                GuildBuffInfo buffInfo = Envir.FindGuildBuffInfo(skillId);
+
+                                if (buffInfo == null) return false;
+
+                                if (MyGuild.BuffList.Any(e => e.Info.Id == skillId))
+                                {
+                                    ReceiveChat("Your guild already has this skill", ChatType.Hint);
+                                    return false;
+                                }
                             }
                             break;
                     }

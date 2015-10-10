@@ -661,7 +661,7 @@ namespace Server.MirObjects
             return null;
         }
 
-        public void NewBuff(int Id)
+        public void NewBuff(int Id, bool charge = true)
         {
             GuildBuffInfo Info = Envir.FindGuildBuffInfo(Id);
             if (Info == null) return;
@@ -673,7 +673,10 @@ namespace Server.MirObjects
             };
             Buff.ActiveTimeRemaining = Buff.Info.TimeLimit;
 
-            SparePoints -= Buff.Info.PointsRequirement;
+            if (charge)
+            {
+                ChargeForBuff(Buff);
+            }
 
             BuffList.Add(Buff);
             List<GuildBuff> NewBuff = new List<GuildBuff>();
@@ -686,6 +689,13 @@ namespace Server.MirObjects
                         SendGuildStatus((PlayerObject)Ranks[i].Members[j].Player);
             NeedSave = true;
             RefreshAllStats();
+        }
+
+        private void ChargeForBuff(GuildBuff buff)
+        {
+            if (buff == null) return;
+
+            SparePoints -= buff.Info.PointsRequirement;
         }
 
         public void ActivateBuff(int Id)

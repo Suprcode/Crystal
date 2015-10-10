@@ -211,17 +211,34 @@ namespace Client.MirGraphics
             }
             #endregion
 
-            Thread thread = new Thread(LoadLibraries) { IsBackground = true };
+            LoadLibraries();
+
+            Thread thread = new Thread(LoadGameLibraries) { IsBackground = true };
             thread.Start();
         }
 
         static void LoadLibraries()
         {
+            ChrSel.Initialize();
+            Progress++;
+
+            Prguse.Initialize();
+            Progress++;
+
+            Prguse2.Initialize();
+            Progress++;
+
+            Title.Initialize();
+            Progress++;
+        }
+
+        static void LoadGameLibraries()
+        {
             Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
-                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 20;
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 16;
 
             Dragon.Initialize();
             Progress++;

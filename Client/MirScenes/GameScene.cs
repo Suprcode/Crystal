@@ -17039,7 +17039,7 @@ namespace Client.MirScenes
 
             BeforeDraw += (o, e) => RefreshInterface();
 
-        #region TabUI
+            #region TabUI
         NoticeButton = new MirButton
             {
                 Library = Libraries.Title,
@@ -17114,8 +17114,6 @@ namespace Client.MirScenes
                 Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
-            #endregion
-
             #endregion
 
             #region NoticePageUI
@@ -17832,6 +17830,7 @@ namespace Client.MirScenes
             PositionBar.OnMoving += PositionBar_OnMoving;
             PositionBar.MouseUp += (o, e) => RefreshInterface();
 
+            #endregion
         }
         #endregion
 
@@ -19160,6 +19159,8 @@ namespace Client.MirScenes
 
         public GuildBuffButton()
         {
+            BorderColour = Color.Orange;
+
             Size = new Size(188, 33);
             Icon = new MirImageControl
             {
@@ -19199,11 +19200,13 @@ namespace Client.MirScenes
         {
             base.OnMouseEnter();
             GameScene.Scene.GuildDialog.CreateHintLabel(Id);
+            Border = true;
         }
         protected override void OnMouseLeave()
         {
             base.OnMouseLeave();
             GameScene.Scene.DisposeGuildBuffLabel();
+            Border = false;
         }        
     }
 
