@@ -3561,7 +3561,7 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1020, 8, 1200, ob));
                         break;
                     case SpellEffect.Critical:
-                        ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
+                        //ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
                         break;
                     case SpellEffect.Reflect:
                         ob.Effects.Add(new Effect(Libraries.Effect, 580, 10, 70, ob));
