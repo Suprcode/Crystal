@@ -232,7 +232,7 @@ namespace Client.MirGraphics
             Progress++;
         }
 
-        static void LoadGameLibraries()
+        private static void LoadGameLibraries()
         {
             Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
@@ -243,15 +243,6 @@ namespace Client.MirGraphics
             Dragon.Initialize();
             Progress++;
 
-            ChrSel.Initialize();
-            Progress++;
-
-            Prguse.Initialize();
-            Progress++;
-
-            Prguse2.Initialize();
-            Progress++;
-
             BuffIcon.Initialize();
             Progress++;
 
@@ -259,9 +250,6 @@ namespace Client.MirGraphics
             Progress++;
 
             MiniMap.Initialize();
-            Progress++;
-
-            Title.Initialize();
             Progress++;
 
             MagIcon.Initialize();
@@ -302,7 +290,7 @@ namespace Client.MirGraphics
                     MapLibs[i].Initialize();
                 Progress++;
             }
-                                         
+
             for (int i = 0; i < Monsters.Length; i++)
             {
                 Monsters[i].Initialize();
@@ -335,7 +323,6 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
-
             for (int i = 0; i < AArmours.Length; i++)
             {
                 AArmours[i].Initialize();
@@ -359,7 +346,7 @@ namespace Client.MirGraphics
                 AWeaponsR[i].Initialize();
                 Progress++;
             }
-                                         
+
             for (int i = 0; i < ARArmours.Length; i++)
             {
                 ARArmours[i].Initialize();

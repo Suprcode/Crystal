@@ -1102,6 +1102,7 @@ public enum BuffType : byte
 {
     None,
 
+    //magics
     Teleport,
     Hiding,
     Haste,
@@ -1125,6 +1126,7 @@ public enum BuffType : byte
     MagicBooster,
     PetEnhancer,
 
+    //special
     GameMaster,
     General,
     Exp,
@@ -1132,20 +1134,23 @@ public enum BuffType : byte
     Gold,
     BagWeight,
     Transform,
-    Prison,
-
-    Impact,
-    Magic,
-    Taoist,
-    Storm,
-    HealthAid,
-    ManaAid,
-    WonderShield,
-    MagicWonderShield,
     RelationshipEXP,
     Mentee,
     Mentor,
-    GuildBuff,
+    Guild,
+    Prison,
+
+    //stats
+    MaxDC,
+    MaxMC,
+    MaxSC,
+    ASpeed,
+    MaxHP,
+    MaxMP,
+    MaxAC,
+    MaxMAC,
+    AC,
+    MAC,
 }
 
 public enum DefenceType : byte
