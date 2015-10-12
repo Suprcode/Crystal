@@ -9,6 +9,7 @@ using Client.MirNetwork;
 using Client.MirSounds;
 using C = ClientPackets;
 using S = ServerPackets;
+using System.Threading;
 namespace Client.MirScenes
 {
     public class SelectScene : MirScene
@@ -252,10 +253,9 @@ namespace Client.MirScenes
             StartGameButton.Enabled = false;
 
             Network.Enqueue(new C.StartGame
-                {
-                    CharacterIndex = Characters[_selected].Index
-                });
-
+            {
+                CharacterIndex = Characters[_selected].Index
+            });
         }
 
         public override void Process()

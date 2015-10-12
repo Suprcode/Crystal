@@ -686,29 +686,35 @@ namespace Client.MirObjects
                         TransformType = (short)buff.Values[0];
                         break;
 
-                    case BuffType.Impact:
+                    case BuffType.MaxDC:
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
                         break;
-                    case BuffType.Magic:
+                    case BuffType.MaxMC:
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         break;
-                    case BuffType.Taoist:
+                    case BuffType.MaxSC:
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         break;
-                    case BuffType.Storm:
+                    case BuffType.ASpeed:
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
-                    case BuffType.HealthAid:
+                    case BuffType.MaxHP:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
                         break;
-                    case BuffType.ManaAid:
+                    case BuffType.MaxMP:
                         MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[0]);
                         break;
-                    case BuffType.WonderShield:
+                    case BuffType.MaxAC:
+                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
+                        break;
+                    case BuffType.MaxMAC:
+                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
+                        break;
+                    case BuffType.AC:
                         MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[0]);
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
                         break;
-                    case BuffType.MagicWonderShield:
+                    case BuffType.MAC:
                         MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[0]);
                         MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
                         break;

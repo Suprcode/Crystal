@@ -211,21 +211,14 @@ namespace Client.MirGraphics
             }
             #endregion
 
-            Thread thread = new Thread(LoadLibraries) { IsBackground = true };
+            LoadLibraries();
+
+            Thread thread = new Thread(LoadGameLibraries) { IsBackground = true };
             thread.Start();
         }
 
         static void LoadLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
-                CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
-                ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
-                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
-                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 20;
-
-            Dragon.Initialize();
-            Progress++;
-
             ChrSel.Initialize();
             Progress++;
 
@@ -235,6 +228,21 @@ namespace Client.MirGraphics
             Prguse2.Initialize();
             Progress++;
 
+            Title.Initialize();
+            Progress++;
+        }
+
+        private static void LoadGameLibraries()
+        {
+            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
+                CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
+                ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
+                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 16;
+
+            Dragon.Initialize();
+            Progress++;
+
             BuffIcon.Initialize();
             Progress++;
 
@@ -242,9 +250,6 @@ namespace Client.MirGraphics
             Progress++;
 
             MiniMap.Initialize();
-            Progress++;
-
-            Title.Initialize();
             Progress++;
 
             MagIcon.Initialize();
@@ -285,7 +290,7 @@ namespace Client.MirGraphics
                     MapLibs[i].Initialize();
                 Progress++;
             }
-                                         
+
             for (int i = 0; i < Monsters.Length; i++)
             {
                 Monsters[i].Initialize();
@@ -318,7 +323,6 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
-
             for (int i = 0; i < AArmours.Length; i++)
             {
                 AArmours[i].Initialize();
@@ -342,7 +346,7 @@ namespace Client.MirGraphics
                 AWeaponsR[i].Initialize();
                 Progress++;
             }
-                                         
+
             for (int i = 0; i < ARArmours.Length; i++)
             {
                 ARArmours[i].Initialize();
