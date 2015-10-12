@@ -27,6 +27,10 @@ namespace Client
                 }
             }
 
+            #if DEBUG
+                Settings.UseTestConfig = true;
+            #endif
+
             if (UpdatePatcher()) return;
 
             if (RuntimePolicyHelper.LegacyV2RuntimeEnabledSuccessfully == true) { }

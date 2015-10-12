@@ -345,6 +345,7 @@ namespace LibraryEditor
                     using (Graphics g = Graphics.FromImage(temp))
                     {
                         g.Clear(Color.Transparent);
+                        g.InterpolationMode = InterpolationMode.NearestNeighbor;
                         g.DrawImage(input, 0, 0);
                         g.Save();
                     }
