@@ -1639,50 +1639,54 @@ namespace Client.MirScenes
             switch (type)
             {
                 //Skills
-                case BuffType.Teleport:
-                    return 25;
-                case BuffType.Hiding:
-                    return 24;
-                case BuffType.Haste:
-                    return 0;
-                case BuffType.SwiftFeet:
-                    return 21;
                 case BuffType.Fury:
-                    return 8;
-                case BuffType.LightBody:
-                    return 22;
-                case BuffType.SoulShield:
-                    return 11;
-                case BuffType.BlessedArmour:
-                    return 10;
-                case BuffType.ProtectionField:
-                    return 9;
+                    return 76;
                 case BuffType.Rage:
-                    return 81;
+                    return 49;
                 case BuffType.CounterAttack:
-                    return 46;
-                case BuffType.UltimateEnhancer:
-                    return 99;
-                case BuffType.EnergyShield:
-                    return 4;
-                case BuffType.Curse:
-                    return 32;
-                case BuffType.MoonLight:
-                    return 24;
-                case BuffType.DarkBody:
-                    return 24;
-                case BuffType.Concentration:
-                    return 66;
-                case BuffType.VampireShot:
-                    return 74;
-                case BuffType.PoisonShot:
-                    return 68;
-                case BuffType.MentalState:
-                    return 59;
-                case BuffType.MagicBooster:
-                    return 37;
+                    return 7;
 
-                //Random
+                case BuffType.Teleport:
+                    return 20;
+                case BuffType.MagicBooster:
+                    return 73;
+
+                case BuffType.Hiding:
+                    return 17;
+                case BuffType.Haste:
+                    return 60;
+                case BuffType.SoulShield:
+                    return 13;
+                case BuffType.BlessedArmour:
+                    return 14;
+                case BuffType.ProtectionField:
+                    return 50;
+                case BuffType.UltimateEnhancer:
+                    return 35;
+                case BuffType.Curse:
+                    return 45;
+                case BuffType.EnergyShield:
+                    return 57;
+
+                case BuffType.SwiftFeet:
+                    return 67;
+                case BuffType.LightBody:
+                    return 68;
+                case BuffType.MoonLight:
+                    return 65;
+                case BuffType.DarkBody:
+                    return 70;
+
+                case BuffType.Concentration:
+                    return 96;
+                case BuffType.VampireShot:
+                    return 100;
+                case BuffType.PoisonShot:
+                    return 102;
+                case BuffType.MentalState:
+                    return 59;//
+
+                //Special
                 case BuffType.GameMaster:
                     return 51;
                 case BuffType.General:
@@ -1692,7 +1696,7 @@ namespace Client.MirScenes
                 case BuffType.Drop:
                     return 12;
                 case BuffType.Gold:
-                    return 316;
+                    return 138;
                 case BuffType.BagWeight:
                     return 12;
                 case BuffType.Transform:
@@ -1706,7 +1710,7 @@ namespace Client.MirScenes
                 case BuffType.Guild:
                     return 63;
 
-                //Consumables
+                //Stats
                 case BuffType.MaxDC:
                     return 321;
                 case BuffType.MaxMC:
