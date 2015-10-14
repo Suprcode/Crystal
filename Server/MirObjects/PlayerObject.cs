@@ -5721,9 +5721,13 @@ namespace Server.MirObjects
                     return;
                 case Spell.ThunderStorm:
                 case Spell.FlameField:
+                case Spell.StormEscape:
                     ThunderStorm(magic);
                     if (spell == Spell.FlameField)
                         SpellTime = Envir.Time + 2500; //Spell Delay
+                    if (spell == Spell.StormEscape)
+                        //Start teleport.
+                        ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 200, magic, location));
                     break;
                 case Spell.MagicShield:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(MinMC, MaxMC) + 15)));
@@ -7827,6 +7831,20 @@ namespace Server.MirObjects
                     LevelMagic(magic);
                     break;
 
+                #endregion
+                #region StormEscape
+                case Spell.StormEscape:
+                    location = (Point) data[1];
+                    if (CurrentMap.Info.NoTeleport)
+                    {
+                        ReceiveChat(("You cannot teleport on this map"), ChatType.System);
+                        return;
+                    }
+                    if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
+                    AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    LevelMagic(magic);
+                    break;
                 #endregion
 
                 #region Teleport
@@ -11011,10 +11029,10 @@ namespace Server.MirObjects
             // These may be incomplete. Item definitions may be missing?
 
             else if ((gem.Info.HPrate) > 0)
-                return StatType.HP_Precent;
+                return StatType.HP_Percent;
 
             else if ((gem.Info.MPrate) > 0)
-                return StatType.MP_Precent;
+                return StatType.MP_Percent;
 
             else if ((gem.Info.SpellRecovery) > 0)
                 return StatType.MP_Regen;
