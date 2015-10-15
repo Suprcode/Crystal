@@ -11,6 +11,7 @@ public enum DamageType : byte
 {
     Hit = 0,
     Miss = 1,
+    Critical = 2
 }
 
 [Flags]
@@ -127,7 +128,8 @@ public enum DefaultNPCType : byte
     CustomCommand,
     OnAcceptQuest,
     OnFinishQuest,
-    Daily
+    Daily,
+    TalkMonster
 }
 
 public enum IntelligentCreatureType : byte
@@ -143,6 +145,7 @@ public enum IntelligentCreatureType : byte
     BabyDragon = 7,
     OlympicFlame = 8,
     BabySnowMan = 9,
+    Frog = 10
 }
 
 //6 blank mob files
@@ -577,6 +580,7 @@ public enum Monster : ushort
     BabyDragon = 10007,//unknown
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
+    Frog = 10010//unknown
 }
 
 public enum MirAction : byte
@@ -699,7 +703,9 @@ public enum ChatType : byte
     LevelUp = 10,
     System2 = 11,
     Relationship = 12,
-    Mentor = 13
+    Mentor = 13,
+    Shout2 = 14,
+    Shout3 = 15
 }
 
 public enum ItemType : byte
@@ -1096,6 +1102,7 @@ public enum BuffType : byte
 {
     None,
 
+    //magics
     Teleport,
     Hiding,
     Haste,
@@ -1119,6 +1126,7 @@ public enum BuffType : byte
     MagicBooster,
     PetEnhancer,
 
+    //special
     GameMaster,
     General,
     Exp,
@@ -1126,19 +1134,23 @@ public enum BuffType : byte
     Gold,
     BagWeight,
     Transform,
-
-    Impact,
-    Magic,
-    Taoist,
-    Storm,
-    HealthAid,
-    ManaAid,
-    WonderShield,
-    MagicWonderShield,
     RelationshipEXP,
     Mentee,
     Mentor,
-    GuildBuff,
+    Guild,
+    Prison,
+
+    //stats
+    MaxDC,
+    MaxMC,
+    MaxSC,
+    ASpeed,
+    MaxHP,
+    MaxMP,
+    MaxAC,
+    MaxMAC,
+    AC,
+    MAC,
 }
 
 public enum DefenceType : byte
@@ -1362,6 +1374,7 @@ public enum ServerPacketIds : short
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
+    IntelligentCreaturePickup,
     NPCPearlGoods,
 
     TransformUpdate,
@@ -1417,6 +1430,7 @@ public enum ClientPacketIds : short
     RangeAttack,
     Harvest,
     CallNPC,
+    TalkMonsterNPC,
     BuyItem,
     SellItem,
     RepairItem,
@@ -2034,6 +2048,53 @@ public static class Functions
         return false;
     }
 
+    public static string PrintTimeSpanFromSeconds(double secs)
+    {
+        TimeSpan t = TimeSpan.FromSeconds(secs);
+        string answer;
+        if (t.TotalMinutes < 1.0)
+        {
+            answer = string.Format("{0}s", t.TotalSeconds);
+        }
+        else if (t.TotalHours < 1.0)
+        {
+            answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
+        }
+        else if (t.TotalDays < 1.0)
+        {
+            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.Hours, t.Minutes, t.Seconds);
+        }
+        else // more than 1 day
+        {
+            answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
+        }
+
+        return answer;
+    }
+
+    public static string PrintTimeSpanFromMilliSeconds(double milliSeconds)
+    {
+        TimeSpan t = TimeSpan.FromMilliseconds(milliSeconds);
+        string answer;
+        if (t.TotalMinutes < 1.0)
+        {
+            answer = string.Format("{0}.{1}s", t.Seconds, (decimal)(t.Milliseconds / 100));
+        }
+        else if (t.TotalHours < 1.0)
+        {
+            answer = string.Format("{0}m {1:D2}s", t.TotalMinutes, t.Seconds);
+        }
+        else if (t.TotalDays < 1.0)
+        {
+            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
+        }
+        else
+        {
+            answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
+        }
+
+        return answer;
+    }
 
     public static MirDirection PreviousDir(MirDirection d)
     {
@@ -2397,7 +2458,14 @@ public class ItemInfo
 
     public string FriendlyName
     {
-        get { return Regex.Replace(Name, @"\d+$", string.Empty); }
+        get 
+        {
+            string temp = Name;
+            temp = Regex.Replace(temp, @"\d+$", string.Empty); //hides end numbers
+            temp = Regex.Replace(temp, @"\[[^]]*\]", string.Empty); //hides square brackets
+
+            return temp;
+        }
     }
     
     public ItemInfo()
@@ -2753,7 +2821,7 @@ public class UserItem
 
     public DateTime BuybackExpiryDate;
 
-    public ExpiryInfo ExpiryInfo;
+    public ExpireInfo ExpireInfo;
 
 	public Awake Awake = new Awake();
     public bool IsAdded
@@ -2854,6 +2922,13 @@ public class UserItem
         if (version < 60) return;
         WeddingRing = reader.ReadInt32();
 
+        if (version < 65) return;
+
+        if (reader.ReadBoolean())
+        {
+            ExpireInfo = new ExpireInfo(reader, version, Customversion);
+        }
+
     }
 
     public void Save(BinaryWriter writer)
@@ -2913,6 +2988,13 @@ public class UserItem
         writer.Write(RefineAdded);
 
         writer.Write(WeddingRing);
+
+        writer.Write(ExpireInfo != null);
+
+        if (ExpireInfo != null)
+        {
+            ExpireInfo.Save(writer);
+        }
     }
 
 
@@ -3112,6 +3194,8 @@ public class UserItem
 
             RefinedValue = RefinedValue,
             RefineAdded = RefineAdded,
+
+            ExpireInfo = ExpireInfo
             };
 
         return item;
@@ -3119,10 +3203,24 @@ public class UserItem
 
 }
 
-public class ExpiryInfo
+public class ExpireInfo
 {
     public DateTime ExpiryDate;
-    public int PlayerReturnIndex = -1;
+
+    public ExpireInfo()
+    {
+
+    }
+
+    public ExpireInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    {
+        ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ExpiryDate.ToBinary());
+    }
 }
 
 public class GameShopItem
@@ -3197,7 +3295,7 @@ public class GameShopItem
 
     public override string ToString()
     {
-        return string.Format("{0}: {1}", GIndex, Info.FriendlyName);
+        return string.Format("{0}: {1}", GIndex, Info.Name);
     }
 
 }
@@ -4202,6 +4300,8 @@ public abstract class Packet
                 return new C.Harvest();
             case (short)ClientPacketIds.CallNPC:
                 return new C.CallNPC();
+            case (short)ClientPacketIds.TalkMonsterNPC:
+                return new C.TalkMonsterNPC();
             case (short)ClientPacketIds.BuyItem:
                 return new C.BuyItem();
             case (short)ClientPacketIds.SellItem:
@@ -4775,6 +4875,8 @@ public abstract class Packet
                 return new S.UpdateIntelligentCreatureList();
             case (short)ServerPacketIds.IntelligentCreatureEnableRename:
                 return new S.IntelligentCreatureEnableRename();
+            case (short)ServerPacketIds.IntelligentCreaturePickup:
+                return new S.IntelligentCreaturePickup();
             case (short)ServerPacketIds.NPCPearlGoods:
                 return new S.NPCPearlGoods();
             case (short)ServerPacketIds.FriendUpdate:

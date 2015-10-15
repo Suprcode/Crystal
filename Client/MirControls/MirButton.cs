@@ -146,7 +146,9 @@ namespace Client.MirControls
                 {
                     NotControl = true,
                     Parent = this,
-                    
+                    //Font = new Font("Constantia", 8, FontStyle.Italic),
+                    //OutLine = true,
+                    //OutLineColour = Color.FromArgb(255, 70, 50, 30),
                 };
         }
 

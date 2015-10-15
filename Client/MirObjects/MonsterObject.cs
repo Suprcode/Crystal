@@ -114,6 +114,7 @@ namespace Client.MirObjects
                 case Monster.BabyDragon:
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
+                case Monster.Frog:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                 default:
@@ -922,6 +923,7 @@ namespace Client.MirObjects
                 case Monster.BabyDragon:
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
+                case Monster.Frog:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
           
@@ -1099,6 +1101,7 @@ namespace Client.MirObjects
                 case Monster.BabyDragon:
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
+                case Monster.Frog:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
             }
@@ -1339,6 +1342,11 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Magic2, 1280, 10, Frame.Count * Frame.Interval, this));
                                 break;
                         }
+
+                        if ((ushort)BaseImage >= 10000)
+                        {
+                            PlayPetSound();
+                        }
                         break;
                     case MirAction.Attack3:
                         //PlaySecondAttackSound();
@@ -1348,6 +1356,8 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Magic2, 1330, 10, Frame.Count * Frame.Interval, this));
                                 break;
                         }
+                        break;
+                    case MirAction.Attack4:
                         break;
                     case MirAction.AttackRange1:
                         PlayRangeSound();
@@ -1657,7 +1667,6 @@ namespace Client.MirObjects
                                         Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ToxicGhoul], 224 + (int)Direction * 6, 6, 600, this));
                                         break;
                                 }
-
                             }
                         }
                         else
@@ -1715,7 +1724,6 @@ namespace Client.MirObjects
                         }
                         else
                         {
-
                             switch (BaseImage)
                             {
                                 case Monster.BabySnowMan:
@@ -1760,6 +1768,24 @@ namespace Client.MirObjects
                                     }
                                     break;
                             }
+                            NextMotion += FrameInterval;
+                        }
+                    }
+                    break;
+                case MirAction.Attack4:
+                    if (CMain.Time >= NextMotion)
+                    {
+                        GameScene.Scene.MapControl.TextureValid = false;
+
+                        if (SkipFrames) UpdateFrame();
+
+                        if (UpdateFrame() >= Frame.Count)
+                        {
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                        {
                             NextMotion += FrameInterval;
                         }
                     }
@@ -2260,6 +2286,10 @@ namespace Client.MirObjects
         {
             SoundManager.PlaySound(BaseSound + 6);
         }
+        public void PlayFourthAttackSound()
+        {
+
+        }
         public void PlaySwingSound()
         {
             SoundManager.PlaySound(BaseSound + 4);
@@ -2308,7 +2338,31 @@ namespace Client.MirObjects
                     break;
             }
         }
+        public void PlayPickupSound()
+        {
+            SoundManager.PlaySound(SoundList.PetPickup);
+        }
+        public void PlayPetSound()
+        {
+            int petSound = (ushort)BaseImage - 10000 + 10500;
 
+            switch (BaseImage)
+            {
+                case Monster.Chick:
+                case Monster.BabyPig:
+                case Monster.Kitten:
+                case Monster.BabySkeleton:
+                case Monster.Baekdon:
+                case Monster.Wimaen:
+                case Monster.BlackKitten:
+                case Monster.BabyDragon:
+                case Monster.OlympicFlame:
+                case Monster.BabySnowMan:
+                case Monster.Frog:
+                    SoundManager.PlaySound(petSound);
+                    break;
+            }
+        }
         public override void Draw()
         {
             float oldOpacity = DXManager.Opacity;
@@ -2873,6 +2927,7 @@ namespace Client.MirObjects
                 case Monster.BabyDragon:
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
+                case Monster.Frog:
                     yOffset = -20;
                     break;
             }
@@ -2943,6 +2998,7 @@ namespace Client.MirObjects
                 case Monster.BabyDragon:
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
+                case Monster.Frog:
                     yOffset = 20;
                     break;
             }

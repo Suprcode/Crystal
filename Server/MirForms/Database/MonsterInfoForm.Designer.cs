@@ -216,6 +216,7 @@
             this.ImageComboBox.Location = new System.Drawing.Point(271, 30);
             this.ImageComboBox.Name = "ImageComboBox";
             this.ImageComboBox.Size = new System.Drawing.Size(128, 21);
+            this.ImageComboBox.Sorted = true;
             this.ImageComboBox.TabIndex = 85;
             this.ImageComboBox.SelectedIndexChanged += new System.EventHandler(this.ImageComboBox_SelectedIndexChanged);
             // 
@@ -709,6 +710,7 @@
             this.MonsterInfoListBox.Name = "MonsterInfoListBox";
             this.MonsterInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.MonsterInfoListBox.Size = new System.Drawing.Size(156, 251);
+            this.MonsterInfoListBox.Sorted = true;
             this.MonsterInfoListBox.TabIndex = 15;
             this.MonsterInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MonsterInfoListBox_SelectedIndexChanged);
             // 
