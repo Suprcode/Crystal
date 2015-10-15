@@ -3119,7 +3119,7 @@ namespace Server.MirObjects
             {
                 if (ChatTime > Envir.Time)
                 {
-                    if (ChatTick >= 5)
+                    if (ChatTick >= 5 & !IsGM)
                     {
                         Info.ChatBanned = true;
                         Info.ChatBanExpiryDate = DateTime.Now.AddMinutes(5);

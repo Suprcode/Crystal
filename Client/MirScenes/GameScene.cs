@@ -1684,53 +1684,53 @@ namespace Client.MirScenes
                 case BuffType.PoisonShot:
                     return 102;
                 case BuffType.MentalState:
-                    return 59;//
+                    return 199;
 
                 //Special
                 case BuffType.GameMaster:
-                    return 51;
+                    return 173;
                 case BuffType.General:
-                    return 503;
+                    return 182;
                 case BuffType.Exp:
-                    return 334;
+                    return 260;
                 case BuffType.Drop:
-                    return 12;
+                    return 162;
                 case BuffType.Gold:
-                    return 138;
+                    return 168;
                 case BuffType.BagWeight:
-                    return 12;
+                    return 235;
                 case BuffType.Transform:
-                    return 19;
+                    return 241;
                 case BuffType.Mentor:
-                    return 30;
+                    return 248;
                 case BuffType.Mentee:
-                    return 30;
+                    return 248;
                 case BuffType.RelationshipEXP:
-                    return 61;
+                    return 201;
                 case BuffType.Guild:
-                    return 63;
+                    return 203;
 
                 //Stats
                 case BuffType.MaxDC:
-                    return 321;
+                    return 249;
                 case BuffType.MaxMC:
-                    return 305;
+                    return 183;
                 case BuffType.MaxSC:
-                    return 327;
+                    return 250;
                 case BuffType.ASpeed:
-                    return 317;
+                    return 170;
                 case BuffType.MaxHP:
-                    return 131;
+                    return 161;
                 case BuffType.MaxMP:
-                    return 139;
+                    return 169;
                 case BuffType.MaxAC:
-                    return 14;
+                    return 166;
                 case BuffType.MaxMAC:
-                    return 15;
+                    return 158;
                 case BuffType.AC:
-                    return 4;
+                    return 166;
                 case BuffType.MAC:
-                    return 4;
+                    return 158;
                 default:
                     return 0;
             }
@@ -23409,7 +23409,7 @@ namespace Client.MirScenes
                     text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.CounterAttack:
-                    text = string.Format("CounterAttack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
+                    text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
                     break;
                 case BuffType.UltimateEnhancer:
                     if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
@@ -23438,10 +23438,10 @@ namespace Client.MirScenes
                     text = "Dark Body\nInvisible to many monsters and able to move.\n";
                     break;
                 case BuffType.VampireShot:
-                    text = string.Format("VampireShot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("Vampire Shot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
                     break;
                 case BuffType.PoisonShot:
-                    text = string.Format("PoisonShot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("Poison Shot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
                     break;
                 case BuffType.Concentration:
                     text = "Concentrating\nIncreases chance on element extraction.\n";
@@ -23481,16 +23481,16 @@ namespace Client.MirScenes
                         text += string.Format("GoldRate increased by {0}%\n", Values[2]);
                     break;
                 case BuffType.Exp:
-                    text = string.Format("ExpRate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Exp Rate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.Gold:
-                    text = string.Format("GoldRate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Gold Rate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.Drop:
-                    text = string.Format("DropRate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Drop Rate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.BagWeight:
-                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    text = string.Format("Bag Weight\nIncreases BagWeight by: {0}.\n", Values[0]);
                     break;
                 case BuffType.Transform:
                     text = string.Format("Transform\nDisguises your appearance.\n");
@@ -23505,7 +23505,7 @@ namespace Client.MirScenes
                     text = string.Format("Mentorship Empowerment\nDamage to monsters increased by {0}%.\n", Values[0]);
                     break;
                 case BuffType.Guild:
-                    text = string.Format("Guild Buff\n");
+                    text = string.Format("Guild Charge\n");
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
 
@@ -23522,22 +23522,22 @@ namespace Client.MirScenes
                     text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
                     break;
                 case BuffType.MaxHP:
-                    text = string.Format("HealthAid\nIncreases HP by: {0}.\n", Values[0]);
+                    text = string.Format("Health Aid\nIncreases HP by: {0}.\n", Values[0]);
                     break;
                 case BuffType.MaxMP:
-                    text = string.Format("ManaAid\nIncreases MP by: {0}.\n", Values[0]);
+                    text = string.Format("Mana Aid\nIncreases MP by: {0}.\n", Values[0]);
                     break;
                 case BuffType.MaxAC:
                     text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.MaxMAC:
-                    text = string.Format("MagicDefence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
+                    text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.AC:
-                    text = string.Format("WonderShield\nIncreases AC by: {0}-{0}.\n", Values[0]);
+                    text = string.Format("Wonder Shield\nIncreases AC by: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.MAC:
-                    text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
+                    text = string.Format("Magic Wonder Shield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
                     break;
             }
 
