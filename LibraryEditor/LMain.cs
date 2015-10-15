@@ -210,7 +210,7 @@ namespace LibraryEditor
 
                 _library.AddImage(image, x, y);
                 toolStripProgressBar.Value++;
-                image.Dispose();
+                //image.Dispose();
             }
 
             PreviewListView.VirtualListSize = _library.Images.Count;
