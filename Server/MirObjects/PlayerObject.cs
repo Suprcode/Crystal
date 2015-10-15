@@ -5727,7 +5727,7 @@ namespace Server.MirObjects
                         SpellTime = Envir.Time + 2500; //Spell Delay
                     if (spell == Spell.StormEscape)
                         //Start teleport.
-                        ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 200, magic, location));
+                        ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 750, magic, location));
                     break;
                 case Spell.MagicShield:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(MinMC, MaxMC) + 15)));
