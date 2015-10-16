@@ -1663,7 +1663,6 @@ namespace Client.MirObjects
                             #region StormEscape
                             case Spell.StormEscape:
                                 Effects.Add(new Effect(Libraries.Magic3, 590, 10, Frame.Count * FrameInterval, this));
-                                Effects.Add(new Effect(Libraries.Magic3, 610, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
                             #endregion

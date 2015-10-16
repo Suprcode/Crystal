@@ -3484,6 +3484,10 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1940, 4, 400, ob));
                         SoundManager.PlaySound(20000 + (ushort)Spell.FatalSword * 10);
                         break;
+                    case SpellEffect.StormEscape:
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 610, 10, 600, ob));
+                        SoundManager.PlaySound(SoundList.Teleport);
+                        break;
                     case SpellEffect.Teleport:
                         ob.Effects.Add(new Effect(Libraries.Magic, 1600, 10, 600, ob));
                         SoundManager.PlaySound(SoundList.Teleport);

@@ -7841,7 +7841,7 @@ namespace Server.MirObjects
                         return;
                     }
                     if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, CurrentLocation);
                     AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
                     LevelMagic(magic);
                     break;

@@ -1095,6 +1095,7 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
+    StormEscape
 }
 
 public enum BuffType : byte
