@@ -16944,7 +16944,7 @@ namespace Client.MirScenes
         #endregion
 
         #region GuildLeft
-        public MirButton NoticeButton, MembersButton, StorageButton, BuffsButton, RankButton;
+        public MirButton NoticeButton, MembersButton, StorageButton, RankButton;
         public MirImageControl NoticePage, MembersPage, StoragePage, RankPage;
         public MirImageControl StoragePageBase, MembersPageBase;
         public MirImageControl TitleLabel;
@@ -17933,6 +17933,7 @@ namespace Client.MirScenes
             if (StartIndex == 0 && count >= 0) return;
             if (StartIndex == (GuildBuffInfos.Count - 8) && count <= 0) return;
             StartIndex -= count > 0 ? 1 : -1;
+            if (GuildBuffInfos.Count <= 8) StartIndex = 0;
             UpdatePositionBar();
             RefreshInterface();
         }
@@ -17940,6 +17941,10 @@ namespace Client.MirScenes
         public void RefreshInterface()
         {
             if (StartIndex < 0) StartIndex = 0;
+
+            if (GuildBuffInfos.Count == 0) BuffButton.Visible = false;
+            else BuffButton.Visible = true;
+
             if (MapObject.User.GuildName == "")
             {
                 Hide();
@@ -17953,13 +17958,13 @@ namespace Client.MirScenes
                     if ((StartIndex + i) > GuildBuffInfos.Count - 1)
                     {
                         Buffs[i].Visible = false;
-                        break;
+                        continue;
                     }
                     GuildBuffInfo BuffInfo = GuildBuffInfos[i + StartIndex];
                     if (BuffInfo == null)
                     {
                         Buffs[i].Visible = false;
-                        break;
+                        continue;
                     }
                     Buffs[i].Visible = true;
                     GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
@@ -18278,7 +18283,7 @@ namespace Client.MirScenes
             else
                 NoticeEditButton.Visible = false;
 
-            BuffsButton.Visible = true;
+                BuffButton.Visible = true;
         }
         #endregion
 
@@ -19124,7 +19129,10 @@ namespace Client.MirScenes
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
-            BuffButton.Visible = true;
+
+            if (GuildBuffInfos.Count == 0) BuffButton.Visible = false;
+            else BuffButton.Visible = true;
+
         }
         #endregion
 
