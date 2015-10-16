@@ -312,7 +312,7 @@ namespace Client
                 {
                     DXManager.AttemptReset();
                     Thread.Sleep(1);
-                    //  return;
+                    return;
                 }
                 else
                 {
@@ -390,7 +390,6 @@ namespace Client
 
         private static void CreateHintLabel()
         {
-
             if (HintBaseLabel == null || HintBaseLabel.IsDisposed)
             {
                 HintBaseLabel = new MirControl
@@ -427,6 +426,7 @@ namespace Client
             }
 
             HintBaseLabel.Visible = true;
+
             HintTextLabel.Text = MirControl.MouseControl.Hint;
 
             Point point = MPoint.Add(-HintTextLabel.Size.Width, 20);
