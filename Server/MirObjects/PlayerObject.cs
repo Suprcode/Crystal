@@ -4840,10 +4840,10 @@ namespace Server.MirObjects
             else
                 InSafeZone = false;
 
-            SabukWallInfo swi = CurrentMap.GetSabukWall(CurrentLocation);
+            ConquestObject swi = CurrentMap.GetConquest(CurrentLocation);
 
             if (swi != null)
-                EnterSabuk();
+                EnterSabuk(swi.Info.Name);
             else
                 LeaveSabuk();
                 
@@ -5018,9 +5018,9 @@ namespace Server.MirObjects
                 InSafeZone = false;
 
 
-            SabukWallInfo swi = CurrentMap.GetSabukWall(CurrentLocation);
+            ConquestObject swi = CurrentMap.GetConquest(CurrentLocation);
             if (swi != null)
-                EnterSabuk();
+                EnterSabuk(swi.Info.Name);
             else
                 LeaveSabuk();
 
@@ -18170,11 +18170,11 @@ namespace Server.MirObjects
 
 
         #region SabukWall
-        public void EnterSabuk()
+        public void EnterSabuk(string ConquestName)
         {
             if (WarZone) return;
             WarZone = true;
-            ReceiveChat("You have entered A War Zone", ChatType.Hint);
+            ReceiveChat(String.Format("You have entered {0}.", ConquestName), ChatType.Hint);
             RefreshNameColour();
 
             //Broadcast name colour change
@@ -18184,7 +18184,7 @@ namespace Server.MirObjects
         {
             if (!WarZone) return;
             WarZone = false;
-            ReceiveChat("You have left A War Zone", ChatType.Hint);
+            ReceiveChat(String.Format("You have left the Conquest Zone."), ChatType.Hint);
             RefreshNameColour();
             //Broadcast name colour change
         }

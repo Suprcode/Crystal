@@ -2028,12 +2028,12 @@ namespace Server.MirEnvir
             return null;
         }
 
-        public SabukWallInfo GetSabukWall(Point location)
+        public ConquestObject GetConquest(Point location)
         {
-            for (int i = 0; i < Info.SabukWall.Count; i++)
+            for (int i = 0; i < Envir.Conquests.Count; i++)
             {
-                SabukWallInfo swi = Info.SabukWall[i];
-                if (Functions.InRange(swi.Location, location, swi.Size))
+                ConquestObject swi = Envir.Conquests[i];
+                if (Functions.InRange(swi.Info.Location, location, swi.Info.Size))
                     return swi;
             }
             return null;

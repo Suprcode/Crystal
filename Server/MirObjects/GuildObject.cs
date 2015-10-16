@@ -35,6 +35,10 @@ namespace Server.MirObjects
         public List<string> Notice = new List<string>();
         public List<GuildObject> WarringGuilds = new List<GuildObject>();
 
+        public ConquestObject Conquest;
+
+
+
         public GuildObject()
         {
         }
@@ -121,6 +125,18 @@ namespace Server.MirObjects
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
+
+            //if (version >= 66)
+            //{
+                //Conquest = new ConquestObject(reader);
+                    //for (int l = 0; l < Envir.ConquestInfos.Count; l++)
+                        //if (Envir.ConquestInfos[l].Index == Conquest.ConquestInfo)
+                        //{
+                            //Conquest.Info = Envir.ConquestInfos[l];
+                            //Conquest.Owner = this;
+                            //Envir.Conquests.Add(Conquest);
+                        //}
+            //}
         }
         public void Save(BinaryWriter writer)
         {
@@ -163,6 +179,8 @@ namespace Server.MirObjects
             writer.Write(Notice.Count);
             for (int i = 0; i < Notice.Count; i++)
                 writer.Write(Notice[i]);
+
+            //Conquest.Save(writer);
         }
 
         public void SendMessage(string message, ChatType Type = ChatType.Guild)

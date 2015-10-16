@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 65;
+        public const int Version = 66;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -123,7 +123,7 @@ namespace Server.MirEnvir
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
         public int GuildCount, NextGuildID;
         public List<GuildObject> GuildList = new List<GuildObject>();
-        
+       
 
         //Live Info
         public List<Map> MapList = new List<Map>();
@@ -134,6 +134,12 @@ namespace Server.MirEnvir
         public bool Saving = false;
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
+
+        public List<ConquestInfo> ConquestInfos = new List<ConquestInfo>();
+        public List<ConquestObject> Conquests = new List<ConquestObject>();
+        
+
+
         //multithread vars
         readonly object _locker = new object();
         public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
@@ -488,7 +494,7 @@ namespace Server.MirEnvir
                             BeginSaveAccounts();
                             SaveGuilds();
                             SaveGoods();
-
+                            SaveConquests();
                         }
 
                         if (Time >= userTime)
@@ -533,6 +539,7 @@ namespace Server.MirEnvir
                 StopEnvir();
                 SaveAccounts();
                 SaveGuilds(true);
+                SaveConquests(true);
 
             }
             catch (Exception ex)
@@ -916,6 +923,47 @@ namespace Server.MirEnvir
 
         }
 
+        private void SaveConquests(bool forced = false)
+        {
+            if (!Directory.Exists(Settings.ConquestsPath)) Directory.CreateDirectory(Settings.ConquestsPath);
+            for (int i = 0; i < Conquests.Count; i++)
+            {
+                if (Conquests[i].NeedSave || forced)
+                {
+                    Conquests[i].NeedSave = false;
+                    MemoryStream mStream = new MemoryStream();
+                    BinaryWriter writer = new BinaryWriter(mStream);
+                    Conquests[i].Save(writer);
+                    FileStream fStream = new FileStream(Settings.ConquestsPath + Conquests[i].ConquestIndex.ToString() + ".mgdn", FileMode.Create);
+                    byte[] data = mStream.ToArray();
+                    fStream.BeginWrite(data, 0, data.Length, EndSaveConquestsAsync, fStream);
+                }
+            }
+        }
+        private void EndSaveConquestsAsync(IAsyncResult result)
+        {
+            FileStream fStream = result.AsyncState as FileStream;
+            try
+            {
+                if (fStream != null)
+                {
+                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                    string newfilename = fStream.Name;
+                    fStream.EndWrite(result);
+                    fStream.Dispose();
+                    if (File.Exists(oldfilename))
+                        File.Move(oldfilename, oldfilename + "o");
+                    File.Move(newfilename, oldfilename);
+                    if (File.Exists(oldfilename + "o"))
+                        File.Delete(oldfilename + "o");
+                }
+            }
+            catch (Exception ex)
+            {
+                SMain.EnqueueDebugging("Error saving conquests: " + ex.Message);
+            }
+        }
+
         private void BeginSaveAccounts()
         {
             if (Saving) return;
@@ -1049,6 +1097,17 @@ namespace Server.MirEnvir
                             }
                         }
                     }
+
+                    if (LoadVersion >= 66)
+                    {
+                        ConquestInfo temp;
+                        count = reader.ReadInt32();
+                        for (int i = 0; i < count; i++)
+                        {
+                            temp = new ConquestInfo(reader);
+                            ConquestInfos.Add(temp);
+                        }
+                    }
                 }
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
@@ -1169,6 +1228,8 @@ namespace Server.MirEnvir
                 }
 
                 if (count != GuildCount) GuildCount = count;
+
+                
             }
         }
 
@@ -1331,6 +1392,51 @@ namespace Server.MirEnvir
             });
         }
 
+        public void LoadConquests()
+        {
+            lock (LoadLock)
+            {
+                int count = 0;
+
+                Conquests.Clear();
+
+                for (int i = 0; i < ConquestInfos.Count; i++)
+                {
+                    ConquestObject newConquest;
+                    if (File.Exists(Settings.ConquestsPath + ConquestInfos[i].Index.ToString() + ".mgd"))
+                    {
+                        using (FileStream stream = File.OpenRead(Settings.ConquestsPath + ConquestInfos[i].Index.ToString() + ".mgd"))
+                        using (BinaryReader reader = new BinaryReader(stream))
+                            newConquest = new ConquestObject(reader);
+
+                            for (int j = 0; j < ConquestInfos.Count; j++)
+                            {
+                                if (newConquest.ConquestIndex == ConquestInfos[j].Index)
+                                    newConquest.Info = ConquestInfos[j];
+                            }
+
+                            for (int k = 0; k < GuildList.Count; k++)
+                            {
+                                if (newConquest.Owner == GuildList[k].Guildindex)
+                                {
+                                    newConquest.Guild = GuildList[k];
+                                    GuildList[k].Conquest = newConquest;
+                                }
+                            }
+
+                        Conquests.Add(newConquest);
+
+                        count++;
+                    }
+                    else
+                    {
+                        Conquests.Add(new ConquestObject { ConquestIndex = ConquestInfos[i].Index, Info = ConquestInfos[i], NeedSave = true });
+                    }
+                }
+                //if (count != ConquestInfos.Count) GuildCount = count;
+            }
+        }
+
         private bool BindCharacter(AuctionInfo auction)
         {
             for (int i = 0; i < CharacterList.Count; i++)
@@ -1432,6 +1538,8 @@ namespace Server.MirEnvir
             LoadAccounts();
 
             LoadGuilds();
+
+            LoadConquests();
 
             _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
             _listener.Start();

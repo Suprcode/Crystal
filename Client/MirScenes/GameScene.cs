@@ -17929,6 +17929,7 @@ namespace Client.MirScenes
             if (StartIndex == 0 && count >= 0) return;
             if (StartIndex == (GuildBuffInfos.Count - 8) && count <= 0) return;
             StartIndex -= count > 0 ? 1 : -1;
+            if (GuildBuffInfos.Count <= 8) StartIndex = 0;
             UpdatePositionBar();
             RefreshInterface();
         }
@@ -17949,13 +17950,13 @@ namespace Client.MirScenes
                     if ((StartIndex + i) > GuildBuffInfos.Count - 1)
                     {
                         Buffs[i].Visible = false;
-                        break;
+                        continue;
                     }
                     GuildBuffInfo BuffInfo = GuildBuffInfos[i + StartIndex];
                     if (BuffInfo == null)
                     {
                         Buffs[i].Visible = false;
-                        break;
+                        continue;
                     }
                     Buffs[i].Visible = true;
                     GuildBuff Buff = FindGuildBuff(BuffInfo.Id);

@@ -86,7 +86,7 @@
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
     <Compile Include="MirDatabase\MailInfo.cs" />
-    <Compile Include="MirDatabase\SabukWallInfo.cs" />
+    <Compile Include="MirDatabase\ConquestInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
     <Compile Include="MirForms\Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
@@ -224,6 +224,7 @@
     </Compile>
     <Compile Include="MirNetwork\MirConnection.cs" />
     <Compile Include="MirNetwork\MirStatusConnection.cs" />
+    <Compile Include="MirObjects\ConquestObject.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\DelayedAction.cs" />
     <Compile Include="MirObjects\GuildObject.cs" />
