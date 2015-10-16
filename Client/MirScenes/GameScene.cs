@@ -16944,7 +16944,7 @@ namespace Client.MirScenes
         #endregion
 
         #region GuildLeft
-        public MirButton NoticeButton, MembersButton, StorageButton, BuffsButton, RankButton;
+        public MirButton NoticeButton, MembersButton, StorageButton, RankButton;
         public MirImageControl NoticePage, MembersPage, StoragePage, RankPage;
         public MirImageControl StoragePageBase, MembersPageBase;
         public MirImageControl TitleLabel;
@@ -17012,7 +17012,7 @@ namespace Client.MirScenes
         #region StatusPagePub
         public MirLabel StatusLevelLabel;
         public MirLabel StatusHeaders;
-        public MirLabel StatusData;
+        public MirLabel StatusGuildName, StatusLevel, StatusMembers;
         public MirImageControl StatusExpBar;
         public MirLabel StatusExpLabel, RecruitMemberLabel;
         public MirTextBox MembersRecruitName;
@@ -17423,25 +17423,51 @@ namespace Client.MirScenes
             StatusPage.BeforeDraw += (o, e) =>
             {
                 if (MapControl.User.GuildName == "")
-                    StatusData.Text = "";
+                {
+                    StatusGuildName.Text = "";
+                    StatusLevel.Text = "";
+                    StatusMembers.Text = "";
+                }
                 else
-                    StatusData.Text = string.Format("{0}\n\n{1}\n\n{2}{3}", MapObject.User.GuildName, Level, MemberCount, MaxMembers == 0 ? "" : ("/" + MaxMembers.ToString()));
+                {
+                    StatusGuildName.Text = string.Format("{0}", MapObject.User.GuildName);
+                    StatusLevel.Text = string.Format("{0}", Level);
+                    StatusMembers.Text = string.Format("{0}{1}", MemberCount, MaxMembers == 0 ? "" : ("/" + MaxMembers.ToString()));
+                }  
             };
             StatusHeaders = new MirLabel()
             {
-                Location = new Point(13, 47),
+                Location = new Point(7, 47),
                 DrawFormat = TextFormatFlags.Right,
-                Size = new Size(100, 300),
+                Size = new Size(75, 300),
                 NotControl = true,
                 Text = "Guild Name\n\nLevel\n\nMembers",
                 Visible = true,
                 Parent = StatusPage,
                 ForeColour = Color.Gray,
             };
-            StatusData = new MirLabel()
+            StatusGuildName = new MirLabel()
             {
-                Location = new Point(116, 47),
-                Size = new Size(75, 200),
+                Location = new Point(82, 47),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = StatusPage
+            };
+            StatusLevel = new MirLabel()
+            {
+                Location = new Point(82, 73),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = StatusPage
+            };
+            StatusMembers = new MirLabel()
+            {
+                Location = new Point(82, 99),
+                Size = new Size(120, 200),
                 NotControl = true,
                 Text = "",
                 Visible = true,
@@ -17933,6 +17959,7 @@ namespace Client.MirScenes
             if (StartIndex == 0 && count >= 0) return;
             if (StartIndex == (GuildBuffInfos.Count - 8) && count <= 0) return;
             StartIndex -= count > 0 ? 1 : -1;
+            if (GuildBuffInfos.Count <= 8) StartIndex = 0;
             UpdatePositionBar();
             RefreshInterface();
         }
@@ -17940,6 +17967,10 @@ namespace Client.MirScenes
         public void RefreshInterface()
         {
             if (StartIndex < 0) StartIndex = 0;
+
+            if (GuildBuffInfos.Count == 0) BuffButton.Visible = false;
+            else BuffButton.Visible = true;
+
             if (MapObject.User.GuildName == "")
             {
                 Hide();
@@ -17953,13 +17984,13 @@ namespace Client.MirScenes
                     if ((StartIndex + i) > GuildBuffInfos.Count - 1)
                     {
                         Buffs[i].Visible = false;
-                        break;
+                        continue;
                     }
                     GuildBuffInfo BuffInfo = GuildBuffInfos[i + StartIndex];
                     if (BuffInfo == null)
                     {
                         Buffs[i].Visible = false;
-                        break;
+                        continue;
                     }
                     Buffs[i].Visible = true;
                     GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
@@ -18278,7 +18309,7 @@ namespace Client.MirScenes
             else
                 NoticeEditButton.Visible = false;
 
-            BuffsButton.Visible = true;
+                BuffButton.Visible = true;
         }
         #endregion
 
@@ -19124,7 +19155,10 @@ namespace Client.MirScenes
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
-            BuffButton.Visible = true;
+
+            if (GuildBuffInfos.Count == 0) BuffButton.Visible = false;
+            else BuffButton.Visible = true;
+
         }
         #endregion
 
