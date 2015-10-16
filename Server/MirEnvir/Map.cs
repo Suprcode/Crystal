@@ -1061,6 +1061,7 @@ namespace Server.MirEnvir
                 case Spell.ThunderStorm:
                 case Spell.FlameField:
                 case Spell.NapalmShot:
+                case Spell.StormEscape:
                     value = (int)data[2];
                     location = (Point)data[3];
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)

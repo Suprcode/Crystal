@@ -967,6 +967,7 @@ public enum Spell : byte
     CounterAttack = 14,
     SlashingBurst = 15,
     Fury = 16,
+    ImmortalSkin = 17,
 
     //Wizard
     FireBall = 31,
@@ -992,6 +993,8 @@ public enum Spell : byte
     MagicBooster = 51,
     MeteorStrike = 52,
     IceThrust = 53,
+    FastMove = 54,
+    StormEscape = 55,
 
     //Taoist
     Healing = 61,
@@ -1018,6 +1021,7 @@ public enum Spell : byte
     PoisonCloud = 83,
     EnergyShield = 84,
     PetEnhancer = 85,
+    HealingCircle = 86,
 
     //Assassin
     FatalSword = 91,
@@ -1035,6 +1039,7 @@ public enum Spell : byte
     DarkBody = 103,
     Hemorrhage = 104,
     CrescentSlash = 105,
+    MoonMist = 106,
 
     //Archer
     Focus = 121,
@@ -1096,6 +1101,7 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
+    StormEscape
 }
 
 public enum BuffType : byte

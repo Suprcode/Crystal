@@ -5841,9 +5841,13 @@ namespace Server.MirObjects
                     return;
                 case Spell.ThunderStorm:
                 case Spell.FlameField:
+                case Spell.StormEscape:
                     ThunderStorm(magic);
                     if (spell == Spell.FlameField)
                         SpellTime = Envir.Time + 2500; //Spell Delay
+                    if (spell == Spell.StormEscape)
+                        //Start teleport.
+                        ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 750, magic, location));
                     break;
                 case Spell.MagicShield:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(MinMC, MaxMC) + 15)));
@@ -7947,6 +7951,20 @@ namespace Server.MirObjects
                     LevelMagic(magic);
                     break;
 
+                #endregion
+                #region StormEscape
+                case Spell.StormEscape:
+                    location = (Point) data[1];
+                    if (CurrentMap.Info.NoTeleport)
+                    {
+                        ReceiveChat(("You cannot teleport on this map"), ChatType.System);
+                        return;
+                    }
+                    if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, CurrentLocation);
+                    AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    LevelMagic(magic);
+                    break;
                 #endregion
 
                 #region Teleport
