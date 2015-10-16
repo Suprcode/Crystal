@@ -1387,7 +1387,7 @@ namespace Server.MirObjects
                         bool petMatch = false;
                         for (int c = player.Pets.Count - 1; c >= 0; c--)
                         {
-                            if (string.Compare(player.Pets[c].Name, param[0], true) != 0) continue;
+                            if (string.Compare(player.Pets[c].Info.Name, param[0], true) != 0) continue;
 
                             petMatch = true;
                         }

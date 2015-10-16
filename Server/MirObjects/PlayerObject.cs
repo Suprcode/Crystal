@@ -2946,6 +2946,7 @@ namespace Server.MirObjects
                     case BuffType.Gold:
                         GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[0]);
                         break;
+                    case BuffType.Knapsack:
                     case BuffType.BagWeight:
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
@@ -2953,31 +2954,51 @@ namespace Server.MirObjects
                         TransformType = (short)buff.Values[0];
                         break;
 
-                    case BuffType.MaxDC:
+                    case BuffType.Impact:
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
                         break;
-                    case BuffType.MaxMC:
+                    case BuffType.Magic:
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         break;
-                    case BuffType.MaxSC:
+                    case BuffType.Taoist:
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         break;
-                    case BuffType.ASpeed:
+                    case BuffType.Storm:
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
-                    case BuffType.MaxHP:
+                    case BuffType.HealthAid:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
                         break;
-                    case BuffType.MaxMP:
+                    case BuffType.ManaAid:
                         MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[0]);
                         break;
-                    case BuffType.AC:
-                        MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[0]);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        break;
-                    case BuffType.MAC:
-                        MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[0]);
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
+                    case BuffType.WonderDrug:
+                        switch (buff.Values[0])
+                        {
+                            case 0:
+                                ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[1]);
+                                break;
+                            case 1:
+                                ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Values[1]);
+                                break;
+                            case 2:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[1]);
+                                break;
+                            case 3:
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[1]);
+                                break;
+                            case 4:
+                                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[1]);
+                                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[1]);
+                                break;
+                            case 5:
+                                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[1]);
+                                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[1]);
+                                break;
+                            case 6:
+                                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[1])));
+                                break;
+                        }
                         break;
                 }
             }
@@ -10148,28 +10169,28 @@ namespace Server.MirObjects
                             int time = item.Info.Durability;
 
                             if ((item.Info.MaxDC + item.DC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxDC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxDC + item.DC } });
+                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxDC + item.DC } });
 
                             if ((item.Info.MaxMC + item.MC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxMC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMC + item.MC } });
+                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMC + item.MC } });
 
                             if ((item.Info.MaxSC + item.SC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxSC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
+                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
 
                             if ((item.Info.AttackSpeed + item.AttackSpeed) > 0)
-                                AddBuff(new Buff { Type = BuffType.ASpeed, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
+                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
 
                             if ((item.Info.HP + item.HP) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxHP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
+                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
 
                             if ((item.Info.MP + item.MP) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxMP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
+                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
 
                             if ((item.Info.MaxAC + item.AC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxAC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
+                                AddBuff(new Buff { Type = BuffType.Defence, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
 
                             if ((item.Info.MaxMAC + item.MAC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxMAC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
+                                AddBuff(new Buff { Type = BuffType.MagicDefence, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
                             break;
                         case 4: //Exp
                             time = item.Info.Durability;
@@ -10374,37 +10395,38 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 StrongboxRewardItem(boxtype);
                                 return;
-                            case 26://Wonderdrugs + Knapsack
+                            case 26://Wonderdrugs
                                 int time = item.Info.Durability;
                                 switch (item.Info.Effect)
                                 {
                                     case 0://exp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.Luck + item.Luck } });
                                         break;
                                     case 1://drop low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.Luck + item.Luck } });
                                         break;
                                     case 2://hp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MaxHP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.HP + item.HP } });
                                         break;
                                     case 3://mp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MaxMP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.MP + item.MP } });
                                         break;
                                     case 4://ac-ac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.AC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.MaxAC + item.AC } });
                                         break;
                                     case 5://mac-mac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MAC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.MaxMAC + item.MAC } });
                                         break;
                                     case 6://speed low/med/high
-                                        AddBuff(new Buff { Type = BuffType.ASpeed, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
-                                        break;
-                                    case 7://knapsack low/med/high
-                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.AttackSpeed + item.AttackSpeed } });
                                         break;
                                 }
                                 break;
                             case 27://FortuneCookies
+                                break;
+                            case 28://Knapsack
+                                time = item.Info.Durability;
+                                AddBuff(new Buff { Type = BuffType.Knapsack, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                 break;
                         }
                     }
@@ -16574,12 +16596,6 @@ namespace Server.MirObjects
                     dropitem.AttackSpeed = (sbyte)2;
                     if (boxtype > 0) dropitem.AttackSpeed = (sbyte)3;
                     if (boxtype > 1) dropitem.AttackSpeed = (sbyte)4;
-                    break;
-                case 7://knapsack low/med/high
-                    dropitem.CurrentDura = (ushort)5;//* 3600
-                    dropitem.Luck = (sbyte)3;
-                    if (boxtype > 0) dropitem.Luck = (sbyte)5;
-                    if (boxtype > 1) dropitem.Luck = (sbyte)9;
                     break;
             }
             //string dbg = String.Format(" Img: {0} Effect: {1} Dura: {2} Exp: {3} Drop: {3} HP: {4} MP: {5} AC: {6} MAC: {7} ASpeed: {8} BagWeight: {9}", dropitem.Image, dropitem.Info.Effect, dropitem.CurrentDura, dropitem.Luck, dropitem.HP, dropitem.MP, dropitem.AC, dropitem.MAC, dropitem.AttackSpeed, dropitem.Luck);

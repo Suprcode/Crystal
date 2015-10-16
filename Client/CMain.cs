@@ -321,7 +321,6 @@ namespace Client
                     DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
                     DXManager.SetSurface(DXManager.MainSurface);
 
-
                     if (MirScene.ActiveScene != null)
                         MirScene.ActiveScene.Draw();
 
@@ -332,6 +331,12 @@ namespace Client
             }
             catch (DeviceLostException)
             {
+            }
+            catch (Exception ex)
+            {
+                SaveError(ex.ToString());
+
+                DXManager.AttemptRecovery();
             }
         }
 

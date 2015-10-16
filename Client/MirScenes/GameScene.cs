@@ -1566,28 +1566,28 @@ namespace Client.MirScenes
                         text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
                     break;
-                case BuffType.MaxDC:
+                case BuffType.Impact:
                     text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     text = string.Format("A.Speed increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxHP:
+                case BuffType.HealthAid:
                     text = string.Format("HP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMP:
+                case BuffType.ManaAid:
                     text = string.Format("MP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     text = string.Format("Max AC increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMAC:
+                case BuffType.MagicDefence:
                     text = string.Format("Max MAC increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
             }
@@ -1697,6 +1697,7 @@ namespace Client.MirScenes
                     return 162;
                 case BuffType.Gold:
                     return 168;
+                case BuffType.Knapsack:
                 case BuffType.BagWeight:
                     return 235;
                 case BuffType.Transform:
@@ -1711,26 +1712,24 @@ namespace Client.MirScenes
                     return 203;
 
                 //Stats
-                case BuffType.MaxDC:
+                case BuffType.Impact:
                     return 249;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     return 183;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     return 250;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     return 170;
-                case BuffType.MaxHP:
+                case BuffType.HealthAid:
                     return 161;
-                case BuffType.MaxMP:
+                case BuffType.ManaAid:
                     return 169;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     return 166;
-                case BuffType.MaxMAC:
+                case BuffType.MagicDefence:
                     return 158;
-                case BuffType.AC:
-                    return 166;
-                case BuffType.MAC:
-                    return 158;
+                case BuffType.WonderDrug:
+                    return 252;
                 default:
                     return 0;
             }
@@ -7550,9 +7549,6 @@ namespace Client.MirScenes
                         break;
                     case 6://speed low/med/high
                         HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
-                        break;
-                    case 7://knapsack low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", HoverItem.Luck + realItem.Luck, strTime);
                         break;
                 }
             }
@@ -23547,35 +23543,59 @@ namespace Client.MirScenes
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
 
-                case BuffType.MaxDC:
+                case BuffType.Impact:
                     text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxHP:
+                case BuffType.HealthAid:
                     text = string.Format("Health Aid\nIncreases HP by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMP:
+                case BuffType.ManaAid:
                     text = string.Format("Mana Aid\nIncreases MP by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMAC:
+                case BuffType.MagicDefence:
                     text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
                     break;
-                case BuffType.AC:
-                    text = string.Format("Wonder Shield\nIncreases AC by: {0}-{0}.\n", Values[0]);
+                case BuffType.WonderDrug:
+                    text = string.Format("Wonder Drug\n");
+                    switch (Values[0])
+                    {
+                        case 0:
+                            text += string.Format("Increases Exp Rate by {0}%\n", Values[1]);
+                            break;
+                        case 1:
+                            text += string.Format("Increases Drop Rate by {0}%\n", Values[1]);
+                            break;
+                        case 2:
+                            text += string.Format("Increases HP by: {0}.\n", Values[1]);
+                            break;
+                        case 3:
+                            text += string.Format("Increases MP by: {0}.\n", Values[1]);
+                            break;
+                        case 4:
+                            text += string.Format("Increases Max AC by: {0}-{0}.\n", Values[1]);
+                            break;
+                        case 5:
+                            text += string.Format("Increases Max MAC by: {0}-{0}.\n", Values[1]);
+                            break;
+                        case 6:
+                            text += string.Format("Increases A.Speed by: {0}.\n", Values[1]);
+                            break;
+                    }
                     break;
-                case BuffType.MAC:
-                    text = string.Format("Magic Wonder Shield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
+                case BuffType.Knapsack:
+                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.\n", Values[0]);
                     break;
             }
 

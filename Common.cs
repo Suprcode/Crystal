@@ -1145,18 +1145,19 @@ public enum BuffType : byte
     Mentor,
     Guild,
     Prison,
+    Rested,
 
     //stats
-    MaxDC,
-    MaxMC,
-    MaxSC,
-    ASpeed,
-    MaxHP,
-    MaxMP,
-    MaxAC,
-    MaxMAC,
-    AC,
-    MAC,
+    Impact,
+    Magic,
+    Taoist,
+    Storm,
+    HealthAid,
+    ManaAid,
+    Defence,
+    MagicDefence,
+    WonderDrug,
+    Knapsack
 }
 
 public enum DefenceType : byte
