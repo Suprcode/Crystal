@@ -4992,6 +4992,26 @@ namespace ServerPackets
         }
     }
 
+    public sealed class IntelligentCreaturePickup : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.IntelligentCreaturePickup; }
+        }
+
+        public uint ObjectID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+        }
+    }
+
     public sealed class NPCPearlGoods : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.NPCPearlGoods; } }

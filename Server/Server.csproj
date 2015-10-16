@@ -44,7 +44,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Mir 2\Server\</OutputPath>
+    <OutputPath>..\..\Server\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -254,6 +254,7 @@
     <Compile Include="MirObjects\Monsters\Runaway.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
+    <Compile Include="MirObjects\Monsters\TalkingMonster.cs" />
     <Compile Include="MirObjects\Monsters\ThunderElement.cs" />
     <Compile Include="MirObjects\Monsters\GuardianRock.cs" />
     <Compile Include="MirObjects\Monsters\TownArcher.cs" />
@@ -296,9 +297,9 @@
     <Compile Include="MirObjects\Monsters\ZumaMonster.cs" />
     <Compile Include="MirObjects\Monsters\ZumaTaurus.cs" />
     <Compile Include="MirObjects\NPCObject.cs" />
-    <Compile Include="MirObjects\NPC_dep\NPCObject.cs" />
-    <Compile Include="MirObjects\NPC_dep\NPCPage.cs" />
-    <Compile Include="MirObjects\NPC_dep\NPCSegment.cs" />
+    <Compile Include="MirObjects\NPCPage.cs" />
+    <Compile Include="MirObjects\NPCSegment.cs" />
+    <Compile Include="MirObjects\NPC_dep\NPCObject_Backup.cs" />
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirForms\Database\QuestInfoForm.cs">
@@ -439,6 +440,7 @@
   <ItemGroup>
     <Content Include="Server.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

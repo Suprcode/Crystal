@@ -15,6 +15,7 @@ namespace Client.MirObjects
         public int Distance;
         public long ExpireTime;
         public double Factor;
+        public int Offset;
 
         MirLabel DamageLabel;
 
@@ -48,7 +49,7 @@ namespace Client.MirObjects
                 MapObject.DamageLabelList.Add(DamageLabel);
             }
 
-            displayLocation.Offset((int)(15 - (Text.Length * 3)), (int)(((int)((double)timeRemaining / Factor)) - Distance) - 75);
+            displayLocation.Offset((int)(15 - (Text.Length * 3)), (int)(((int)((double)timeRemaining / Factor)) - Distance) - 75 - Offset);
 
             DamageLabel.Location = displayLocation;
             DamageLabel.Draw();

@@ -60,7 +60,7 @@ namespace Server.MirNetwork
                 {
                     connCount++;
 
-                    if (connCount >= 5)
+                    if (connCount >= Settings.MaxIP)
                     {
                         SMain.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
                         conn.SendDisconnect(5);
@@ -329,6 +329,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.CallNPC:
                     CallNPC((C.CallNPC)p);
+                    break;
+                case (short)ClientPacketIds.TalkMonsterNPC:
+                    TalkMonsterNPC((C.TalkMonsterNPC)p);
                     break;
                 case (short)ClientPacketIds.BuyItem:
                     BuyItem((C.BuyItem)p);
@@ -1020,6 +1023,14 @@ namespace Server.MirNetwork
             //else
             Player.CallNPC(p.ObjectID, p.Key);
         }
+
+        private void TalkMonsterNPC(C.TalkMonsterNPC p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.TalkMonster(p.ObjectID);
+        }
+
         private void BuyItem(C.BuyItem p)
         {
             if (Stage != GameStage.Game) return;

@@ -345,6 +345,7 @@ namespace LibraryEditor
                     using (Graphics g = Graphics.FromImage(temp))
                     {
                         g.Clear(Color.Transparent);
+                        g.InterpolationMode = InterpolationMode.NearestNeighbor;
                         g.DrawImage(input, 0, 0);
                         g.Save();
                     }
@@ -482,16 +483,16 @@ namespace LibraryEditor
 
                 Preview = new Bitmap(64, 64);
 
-                using (Graphics g = Graphics.FromImage(Preview))
-                {
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    g.Clear(Color.Transparent);
-                    int w = Math.Min((int)Width, 64);
-                    int h = Math.Min((int)Height, 64);
-                    g.DrawImage(Image, new Rectangle((64 - w) / 2, (64 - h) / 2, w, h), new Rectangle(0, 0, Width, Height), GraphicsUnit.Pixel);
+                    using (Graphics g = Graphics.FromImage(Preview))
+                    {
+                        g.InterpolationMode = InterpolationMode.NearestNeighbor;//HighQualityBicubic
+                        g.Clear(Color.Transparent);
+                        int w = Math.Min((int)Width, 64);
+                        int h = Math.Min((int)Height, 64);
+                        g.DrawImage(Image, new Rectangle((64 - w) / 2, (64 - h) / 2, w, h), new Rectangle(0, 0, Width, Height), GraphicsUnit.Pixel);
 
-                    g.Save();
-                }
+                        g.Save();
+                    }
             }
         }
     }

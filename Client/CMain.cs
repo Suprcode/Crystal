@@ -95,7 +95,7 @@ namespace Client
                 {
                     UpdateTime();
                     UpdateEnviroment();
-                    RenderEnviroment();
+                    RenderEnvironment();
                 }
 
             }
@@ -304,7 +304,7 @@ namespace Client
             CreateDebugLabel();
  
         }
-        private static void RenderEnviroment()
+        private static void RenderEnvironment()
         {
             try
             {
@@ -332,12 +332,6 @@ namespace Client
             }
             catch (DeviceLostException)
             {
-            }
-            catch (Exception ex)
-            {
-                SaveError(ex.ToString());
-
-                DXManager.AttemptRecovery();
             }
         }
 

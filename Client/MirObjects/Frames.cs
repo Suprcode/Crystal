@@ -2297,10 +2297,10 @@ namespace Client.MirObjects
             HelperPets.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(96, 9, 0, 100));      //Standing Variant_0
-            frame.Frames.Add(MirAction.Attack2, new Frame(168, 5, 0, 100));     //Standing Variant_1
-            frame.Frames.Add(MirAction.Attack3, new Frame(208, 10, 0, 100));    //Standing Variant_2
-            frame.Frames.Add(MirAction.Attack4, new Frame(288, 10, 0, 100));    //Standing Variant_3
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 9, 0, 100));      //normal pickup
+            frame.Frames.Add(MirAction.Attack2, new Frame(168, 5, 0, 100));     //oink - sound
+            frame.Frames.Add(MirAction.Attack3, new Frame(208, 10, 0, 200));    //walk in circle
+            frame.Frames.Add(MirAction.Attack4, new Frame(288, 10, 0, 200));    //lay on back
             frame.Frames.Add(MirAction.Die, new Frame(288, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(297, 1, 9, 1000));
 
@@ -2396,11 +2396,22 @@ namespace Client.MirObjects
             HelperPets.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(48, 7, 0, 100));
-            frame.Frames.Add(MirAction.Attack1, new Frame(104, 6, 0, 100));         // belly dance :P
+            frame.Frames.Add(MirAction.Attack1, new Frame(104, 6, 0, 100));         // belly dance
             frame.Frames.Add(MirAction.Attack2, new Frame(152, 7, 0, 100));         // melting
             frame.Frames.Add(MirAction.Die, new Frame(152, 7, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(158, 1, 6, 1000));
             //Effect1 Snow : 208,11,0,100
+
+            //10 - Frog
+            HelperPets.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 6, 0, 100));         // tongue
+            frame.Frames.Add(MirAction.Attack2, new Frame(144, 8, 0, 100));         // beltch - sound
+            frame.Frames.Add(MirAction.Attack3, new Frame(208, 9, 0, 100));         //rock
+            frame.Frames.Add(MirAction.Attack4, new Frame(280, 7, 0, 100));         //backflip
+            frame.Frames.Add(MirAction.Die, new Frame(208, 8, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(286, 1, 6, 1000));
 
             #endregion
 

@@ -51,7 +51,8 @@ namespace Server
         public static ushort Port = 7000,
                              TimeOut = 10000,
                              MaxUser = 50,
-                             RelogDelay = 50;
+                             RelogDelay = 50,
+                             MaxIP = 5;
 
 
         //Permission
@@ -129,7 +130,7 @@ namespace Server
 
 
         //IntelligentCreature
-        public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan" };
+        public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog" };
         public static string CreatureBlackStoneName = "BlackCreatureStone";
 
         //Fishing Settings
@@ -174,6 +175,9 @@ namespace Server
         public static byte MentorDamageBoost = 10;
         public static byte MentorExpBoost = 10;
         public static byte MenteeExpBank = 1;
+
+        //Gem Settings
+        public static bool GemStatIndependent = true;
 
 
         //Goods Settings
@@ -255,6 +259,7 @@ namespace Server
             Port = Reader.ReadUInt16("Network", "Port", Port);
             TimeOut = Reader.ReadUInt16("Network", "TimeOut", TimeOut);
             MaxUser = Reader.ReadUInt16("Network", "MaxUser", MaxUser);
+            MaxIP = Reader.ReadUInt16("Network", "MaxIP", MaxIP);
 
             //Permission
             AllowNewAccount = Reader.ReadBoolean("Permission", "AllowNewAccount", AllowNewAccount);
@@ -420,6 +425,7 @@ namespace Server
             LoadMarriage();
             LoadMentor();
             LoadGoods();
+            LoadGem();
         }
         public static void Save()
         {
@@ -436,6 +442,7 @@ namespace Server
             Reader.Write("Network", "Port", Port);
             Reader.Write("Network", "TimeOut", TimeOut);
             Reader.Write("Network", "MaxUser", MaxUser);
+            Reader.Write("Network", "MaxIP", MaxIP);
 
             //Permission
             Reader.Write("Permission", "AllowNewAccount", AllowNewAccount);
@@ -1164,7 +1171,24 @@ namespace Server
             reader.Write("Config", "MenteeExpBoost", MentorExpBoost);
             reader.Write("Config", "PercentXPtoMentor", MenteeExpBank);
         }
+        public static void LoadGem()
+        {
+            if (!File.Exists(ConfigPath + @".\GemSystem.ini"))
+            {
+                SaveGem();
+                return;
+            }
+            InIReader reader = new InIReader(ConfigPath + @".\GemSystem.ini");
+            GemStatIndependent = reader.ReadBoolean("Config", "GemStatIndependent", GemStatIndependent);
 
+
+        }
+        public static void SaveGem()
+        {
+            File.Delete(ConfigPath + @".\GemSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\GemSystem.ini");
+            reader.Write("Config", "GemStatIndependent", GemStatIndependent);
+        }
 
         public static void LoadGoods()
         {
