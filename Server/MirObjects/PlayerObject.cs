@@ -5741,7 +5741,7 @@ namespace Server.MirObjects
 
             int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
 
-            if (spell == Spell.Teleport || spell == Spell.Blink)
+            if (spell == Spell.Teleport || spell == Spell.Blink || spell == Spell.StormEscape)
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     if (Buffs[i].Type != BuffType.Teleport) continue;
