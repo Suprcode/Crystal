@@ -1710,6 +1710,8 @@ namespace Client.MirScenes
                     return 201;
                 case BuffType.Guild:
                     return 203;
+                case BuffType.Rested:
+                    return 240;
 
                 //Stats
                 case BuffType.Impact:
@@ -23412,6 +23414,7 @@ namespace Client.MirScenes
 
             switch (Type)
             {
+                //magic
                 case BuffType.Teleport:
                     text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
                     break;
@@ -23498,6 +23501,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
                     break;
 
+                //special
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)Values[0];
                     text = "GameMaster\n";
@@ -23542,7 +23546,11 @@ namespace Client.MirScenes
                     text = string.Format("Guild Charge\n");
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
+                case BuffType.Rested:
+                    text = string.Format("Rested\nIncreases Exp Rate by {0}%\n", Values[0]);
+                    break;
 
+                //stats
                 case BuffType.Impact:
                     text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;

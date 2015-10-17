@@ -188,7 +188,7 @@ namespace Server.MirObjects
         }
 
         public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime;
 
         public byte ChatTick;
 
@@ -227,7 +227,7 @@ namespace Server.MirObjects
 
         public LevelEffects LevelEffects = LevelEffects.None;
 
-        private int _stepCounter, _runCounter, _fishCounter;
+        private int _stepCounter, _runCounter, _fishCounter, _restedCounter;
 
         public MapObject[,] ArcherTrapObjectsArray = new MapObject[4, 3];
         public SpellObject[] PortalObjectsArray = new SpellObject[2];
@@ -454,7 +454,6 @@ namespace Server.MirObjects
             }
             Buffs.Clear();
 
-
             TradeCancel();
             RefineCancel();
             LogoutRelationship();
@@ -600,6 +599,26 @@ namespace Server.MirObjects
             {
                 RunTime = Envir.Time + 1500;
                 _runCounter--;
+            }
+
+            if (Settings.RestedPeriod > 0)
+            {
+                if (Envir.Time > RestedTime)
+                {
+                    _restedCounter = InSafeZone ? _restedCounter + 1 : _restedCounter - 1;
+
+                    if (_restedCounter < 0) _restedCounter = 0;
+                    if (_restedCounter >= (Settings.RestedPeriod * 60))
+                    {
+                        if (!InSafeZone)
+                        {
+                            AddBuff(new Buff { Type = BuffType.Rested, Caster = this, ExpireTime = Envir.Time + Settings.RestedBuffLength * Settings.Minute, Values = new int[] { Settings.RestedExpBonus } });
+                            _restedCounter = Settings.RestedPeriod * 60;
+                        }
+                    }
+
+                    RestedTime = Envir.Time + Settings.Second;
+                }
             }
 
             if (Stacking && Envir.Time > StackingTime)
@@ -2937,6 +2956,7 @@ namespace Server.MirObjects
                         if (buff.Values.Length > 2)
                             GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[2]);
                         break;
+                    case BuffType.Rested:
                     case BuffType.Exp:
                         ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[0]);
                         break;
