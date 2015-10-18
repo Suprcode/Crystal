@@ -1972,6 +1972,14 @@ namespace Server.MirObjects
                     Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
             }
 
+            if (InSafeZone)
+            {
+                if (Envir.Now > Info.LastDate.AddMinutes((double)(Settings.RestedPeriod)))
+                {
+                    _restedCounter = (Settings.RestedPeriod * 60) + 1;
+                }
+            }
+
             Report.Connected(Connection.IPAddress);
 
             SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
@@ -9819,6 +9827,120 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
+        public void RemoveSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        {
+            S.RemoveSlotItem p = new S.RemoveSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
+            UserItem[] array;
+            switch (gridTo)
+            {
+                case MirGridType.Inventory:
+                    array = Info.Inventory;
+                    break;
+                case MirGridType.Storage:
+                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    NPCObject ob = null;
+                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    {
+                        if (CurrentMap.NPCs[i].ObjectID != NPCID) continue;
+                        ob = CurrentMap.NPCs[i];
+                        break;
+                    }
+
+                    if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    array = Account.Storage;
+                    break;
+                default:
+                    Enqueue(p);
+                    return;
+            }
+
+            if (to < 0 || to >= array.Length) return;
+
+            UserItem temp = null;
+            UserItem slotTemp = null;
+            int index = -1;
+
+            switch (grid)
+            {
+                case MirGridType.Mount:
+                    temp = Info.Equipment[(int)EquipmentSlot.Mount];
+                    break;
+                case MirGridType.Fishing:
+                    temp = Info.Equipment[(int)EquipmentSlot.Weapon];
+                    break;
+                default:
+                    Enqueue(p);
+                    return;
+            }
+
+            if (temp == null || temp.Slots == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (grid == MirGridType.Fishing && (temp.Info.Shape != 49 && temp.Info.Shape != 50))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            for (int i = 0; i < temp.Slots.Length; i++)
+            {
+                slotTemp = temp.Slots[i];
+                if (slotTemp == null || slotTemp.UniqueID != id) continue;
+                index = i;
+                break;
+            }
+
+            if (slotTemp == null || index == -1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (slotTemp.Cursed && !UnlockCurse)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (slotTemp.WeddingRing != -1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (!CanRemoveItem(gridTo, slotTemp)) return;
+
+            temp.Slots[index] = null;
+
+            if (slotTemp.Cursed)
+                UnlockCurse = false;
+
+            if (array[to] == null)
+            {
+                array[to] = slotTemp;
+                p.Success = true;
+                Enqueue(p);
+                RefreshStats();
+                Broadcast(GetUpdateInfo());
+
+                Report.ItemMoved("RemoveSlotItem", temp, grid, gridTo, index, to);
+
+                return;
+            }
+
+            Enqueue(p);
+        }
         public void MoveItem(MirGridType grid, int from, int to)
         {
             S.MoveItem p = new S.MoveItem { Grid = grid, From = from, To = to, Success = false };
@@ -10588,6 +10710,7 @@ namespace Server.MirObjects
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
 
             UserItem[] arrayFrom;
+
             switch (gridFrom)
             {
                 case MirGridType.Inventory:
@@ -10617,11 +10740,18 @@ namespace Server.MirObjects
                 case MirGridType.Equipment:
                     arrayFrom = Info.Equipment;
                     break;
+                case MirGridType.Fishing:
+                    if (Info.Equipment[(int)EquipmentSlot.Weapon] == null || (Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape != 49 && Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape != 50))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    arrayFrom = Info.Equipment[(int)EquipmentSlot.Weapon].Slots;
+                    break;
                 default:
                     Enqueue(p);
                     return;
             }
-
 
             UserItem[] arrayTo;
             switch (gridTo)
@@ -10693,8 +10823,19 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count == tempTo.Info.StackSize ||
-                (tempTo.Info.Type != ItemType.Amulet && (gridFrom == MirGridType.Equipment || gridTo == MirGridType.Equipment)))
+            if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count == tempTo.Info.StackSize)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (tempTo.Info.Type != ItemType.Amulet && (gridFrom == MirGridType.Equipment || gridTo == MirGridType.Equipment))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if(tempTo.Info.Type != ItemType.Bait && (gridFrom == MirGridType.Fishing || gridTo == MirGridType.Fishing))
             {
                 Enqueue(p);
                 return;

@@ -952,6 +952,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.RemoveItem:
                     RemoveItem((S.RemoveItem)p);
                     break;
+                case (short)ServerPacketIds.RemoveSlotItem:
+                    RemoveSlotItem((S.RemoveSlotItem)p);
+                    break;
                 case (short)ServerPacketIds.TakeBackItem:
                     TakeBackItem((S.TakeBackItem)p);
                     break;
@@ -2020,6 +2023,9 @@ namespace Client.MirScenes
                 case MirGridType.Trade:
                     fromCell = TradeDialog.GetCell(p.IDFrom);
                     break;
+                case MirGridType.Fishing:
+                    fromCell = FishingDialog.GetCell(p.IDFrom);
+                    break;
                 default:
                     return;
             }
@@ -2084,6 +2090,48 @@ namespace Client.MirScenes
 
 
             switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+                    break;
+                case MirGridType.Storage:
+                    toCell = StorageDialog.Grid[p.To];
+                    break;
+                default:
+                    return;
+            }
+
+            if (toCell == null || fromCell == null) return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success) return;
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            CharacterDuraPanel.GetCharacterDura();
+            User.RefreshStats();
+        }
+        private void RemoveSlotItem(S.RemoveSlotItem p)
+        {
+            MirItemCell fromCell;
+            MirItemCell toCell;
+
+            int index = -1;
+
+            switch (p.Grid)
+            {
+                case MirGridType.Mount:
+                    fromCell = MountDialog.GetCell(p.UniqueID);
+                    break;
+                case MirGridType.Fishing:
+                    fromCell = FishingDialog.GetCell(p.UniqueID);
+                    break;
+                default:
+                    return;
+            }
+
+            switch (p.GridTo)
             {
                 case MirGridType.Inventory:
                     toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
@@ -16332,6 +16380,16 @@ namespace Client.MirScenes
             }
 
             Visible = true;
+        }
+
+        public MirItemCell GetCell(ulong id)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+                return Grid[i];
+            }
+            return null;
         }
     }
     public sealed class FishingDialog : MirImageControl

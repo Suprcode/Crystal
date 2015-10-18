@@ -710,7 +710,6 @@
             this.MonsterInfoListBox.Name = "MonsterInfoListBox";
             this.MonsterInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.MonsterInfoListBox.Size = new System.Drawing.Size(156, 251);
-            this.MonsterInfoListBox.Sorted = true;
             this.MonsterInfoListBox.TabIndex = 15;
             this.MonsterInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MonsterInfoListBox_SelectedIndexChanged);
             // 
