@@ -293,6 +293,10 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.CheckPet, parts[1]));
                     break;
+
+                case "HASBAGSPACE":
+                    CheckList.Add(new NPCChecks(CheckType.HasBagSpace));
+                    break;
             }
 
         }
@@ -1393,6 +1397,15 @@ namespace Server.MirObjects
                         }
 
                         failed = !petMatch;
+                        break;
+
+                    case CheckType.HasBagSpace:
+                        count = 0;
+
+                        for (int k = 0; i < player.Info.Inventory.Length; i++)
+                            if (player.Info.Inventory[i] == null) count++;
+
+                        failed = count < 1;
                         break;
                 }
 
