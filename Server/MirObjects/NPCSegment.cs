@@ -295,7 +295,9 @@ namespace Server.MirObjects
                     break;
 
                 case "HASBAGSPACE":
-                    CheckList.Add(new NPCChecks(CheckType.HasBagSpace));
+                    if (parts.Length < 3) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.HasBagSpace, parts[1], parts[2]));
                     break;
             }
 
@@ -1400,12 +1402,18 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.HasBagSpace:
-                        count = 0;
+                        if (!int.TryParse(param[1], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
 
-                        for (int k = 0; i < player.Info.Inventory.Length; i++)
-                            if (player.Info.Inventory[i] == null) count++;
+                        int slotCount = 0;
 
-                        failed = count < 1;
+                        for (int k = 0; k < player.Info.Inventory.Length; k++)
+                            if (player.Info.Inventory[k] == null) slotCount++;
+
+                        failed = !Compare(param[0], slotCount, tempInt);
                         break;
                 }
 
