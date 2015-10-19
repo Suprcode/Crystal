@@ -1109,7 +1109,7 @@ public enum BuffType : byte
     None,
 
     //magics
-    Teleport,
+    TemporalFlux,
     Hiding,
     Haste,
     SwiftFeet,

@@ -1649,8 +1649,6 @@ namespace Client.MirScenes
                 case BuffType.CounterAttack:
                     return 7;
 
-                case BuffType.Teleport:
-                    return 20;
                 case BuffType.MagicBooster:
                     return 73;
 
@@ -1715,6 +1713,8 @@ namespace Client.MirScenes
                     return 203;
                 case BuffType.Rested:
                     return 240;
+                case BuffType.TemporalFlux:
+                    return 261;
 
                 //Stats
                 case BuffType.Impact:
@@ -9118,7 +9118,7 @@ namespace Client.MirScenes
             {
                 for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
                 {
-                    if (GameScene.Scene.Buffs[i].Type != BuffType.Teleport) continue;
+                    if (GameScene.Scene.Buffs[i].Type != BuffType.TemporalFlux) continue;
                     cost += (int)(User.MaxMP * 0.3F);
                 }
             }
@@ -23473,7 +23473,7 @@ namespace Client.MirScenes
             switch (Type)
             {
                 //magic
-                case BuffType.Teleport:
+                case BuffType.TemporalFlux:
                     text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
                     break;
                 case BuffType.Hiding:

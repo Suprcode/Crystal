@@ -1222,7 +1222,10 @@ namespace Server.MirObjects
             UnSummonIntelligentCreature(SummonedCreatureType);
 
             for (int i = Pets.Count - 1; i >= 0; i--)
+            {
+                if (Pets[i].Dead) continue;
                 Pets[i].Die();
+            }
 
             if (MagicShield)
             {
@@ -2015,9 +2018,24 @@ namespace Server.MirObjects
 
             CurrentMap.AddObject(this);
 
+            Enqueue(new S.MapChanged
+            {
+                FileName = CurrentMap.Info.FileName,
+                Title = CurrentMap.Info.Title,
+                MiniMap = CurrentMap.Info.MiniMap,
+                BigMap = CurrentMap.Info.BigMap,
+                Lights = CurrentMap.Info.Light,
+                Location = CurrentLocation,
+                Direction = Direction,
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music
+            });
+
             GetObjects();
+
             Enqueue(new S.Revived());
             Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
+
             Fishing = false;
             Enqueue(GetFishInfo());
         }
@@ -5772,7 +5790,7 @@ namespace Server.MirObjects
             if (spell == Spell.Teleport || spell == Spell.Blink || spell == Spell.StormEscape)
                 for (int i = 0; i < Buffs.Count; i++)
                 {
-                    if (Buffs[i].Type != BuffType.Teleport) continue;
+                    if (Buffs[i].Type != BuffType.TemporalFlux) continue;
                     cost += (int)(MaxMP * 0.3F);
                     break;
                 }
@@ -8011,7 +8029,7 @@ namespace Server.MirObjects
                     }
                     if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, CurrentLocation);
-                    AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    AddBuff(new Buff { Type = BuffType.TemporalFlux, Caster = this, ExpireTime = Envir.Time + 30000 });
                     LevelMagic(magic);
                     break;
                 #endregion
@@ -8036,7 +8054,7 @@ namespace Server.MirObjects
                         if (Teleport(temp, location)) break;
                     }
 
-                    AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    AddBuff(new Buff { Type = BuffType.TemporalFlux, Caster = this, ExpireTime = Envir.Time + 30000 });
                     LevelMagic(magic);
 
                     break;
@@ -8055,7 +8073,7 @@ namespace Server.MirObjects
                         if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
                         CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
                         LevelMagic(magic);
-                        AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                        AddBuff(new Buff { Type = BuffType.TemporalFlux, Caster = this, ExpireTime = Envir.Time + 30000 });
                     }
                     break;
 
