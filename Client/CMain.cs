@@ -456,7 +456,7 @@ namespace Client
             DXManager.Parameters.Windowed = !Settings.FullScreen;
             DXManager.Device.Reset(DXManager.Parameters);
             Program.Form.ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-        }
+        }//
 
         public void CreateScreenShot()
         {
