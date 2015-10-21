@@ -291,6 +291,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.RemoveItem:
                     RemoveItem((C.RemoveItem) p);
                     break;
+                case (short)ClientPacketIds.RemoveSlotItem:
+                    RemoveSlotItem((C.RemoveSlotItem)p);
+                    break;
                 case (short)ClientPacketIds.SplitItem:
                     SplitItem((C.SplitItem) p);
                     break;
@@ -924,6 +927,12 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.RemoveItem(p.Grid, p.UniqueID, p.To);
+        }
+        private void RemoveSlotItem(C.RemoveSlotItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RemoveSlotItem(p.Grid, p.UniqueID, p.To, p.GridTo);
         }
         private void SplitItem(C.SplitItem p)
         {

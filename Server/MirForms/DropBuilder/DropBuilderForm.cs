@@ -573,34 +573,34 @@ namespace Server.MirForms.DropBuilder
                         Food.Add(new DropItem { Name = listBoxFood.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Hook":
-                        Hook.Add(new DropItem { Name = listBoxHook.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Hook.Add(new DropItem { Name = listBoxHook.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Float":
-                        Float.Add(new DropItem { Name = listBoxFloat.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Float.Add(new DropItem { Name = listBoxFloat.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Bait":
-                        Bait.Add(new DropItem { Name = listBoxBait.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Bait.Add(new DropItem { Name = listBoxBait.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Finder":
-                        Finder.Add(new DropItem { Name = listBoxFinder.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Finder.Add(new DropItem { Name = listBoxFinder.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Reel":
-                        Reel.Add(new DropItem { Name = listBoxReel.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Reel.Add(new DropItem { Name = listBoxReel.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Fish":
-                        Fish.Add(new DropItem { Name = listBoxFish.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Fish.Add(new DropItem { Name = listBoxFish.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Quest":
-                        Quest.Add(new DropItem { Name = listBoxQuest.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Quest.Add(new DropItem { Name = listBoxQuest.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Awakening":
-                        Awakening.Add(new DropItem { Name = listBoxAwakening.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Awakening.Add(new DropItem { Name = listBoxAwakening.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Pets":
-                        Pets.Add(new DropItem { Name = listBoxPets.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Pets.Add(new DropItem { Name = listBoxPets.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                     case "Transform":
-                        Transform.Add(new DropItem { Name = listBoxTransform.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", textBoxItemOdds.Text), Quest = quest });
+                        Transform.Add(new DropItem { Name = listBoxTransform.SelectedItem.ToString().Replace(" ", string.Empty), Odds = string.Format("1/{0}", dropChance), Quest = quest });
                         break;
                 }
 

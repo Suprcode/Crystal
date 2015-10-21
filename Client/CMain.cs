@@ -32,13 +32,11 @@ namespace Client
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
-
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
 
         public static bool Shift, Alt, Ctrl, Tilde;
-
 
         public CMain()
         {
@@ -321,7 +319,6 @@ namespace Client
                     DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
                     DXManager.SetSurface(DXManager.MainSurface);
 
-
                     if (MirScene.ActiveScene != null)
                         MirScene.ActiveScene.Draw();
 
@@ -332,6 +329,12 @@ namespace Client
             }
             catch (DeviceLostException)
             {
+            }
+            catch (Exception ex)
+            {
+                SaveError(ex.ToString());
+
+                DXManager.AttemptRecovery();
             }
         }
 

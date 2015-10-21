@@ -1346,6 +1346,7 @@ namespace Server.MirObjects
         CheckQuest,
         CheckRelationship,
         CheckWeddingRing,
-        CheckPet
+        CheckPet,
+        HasBagSpace
     }
 }

@@ -952,6 +952,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.RemoveItem:
                     RemoveItem((S.RemoveItem)p);
                     break;
+                case (short)ServerPacketIds.RemoveSlotItem:
+                    RemoveSlotItem((S.RemoveSlotItem)p);
+                    break;
                 case (short)ServerPacketIds.TakeBackItem:
                     TakeBackItem((S.TakeBackItem)p);
                     break;
@@ -1566,28 +1569,28 @@ namespace Client.MirScenes
                         text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
                     break;
-                case BuffType.MaxDC:
+                case BuffType.Impact:
                     text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     text = string.Format("A.Speed increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxHP:
+                case BuffType.HealthAid:
                     text = string.Format("HP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMP:
+                case BuffType.ManaAid:
                     text = string.Format("MP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     text = string.Format("Max AC increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMAC:
+                case BuffType.MagicDefence:
                     text = string.Format("Max MAC increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
             }
@@ -1646,8 +1649,6 @@ namespace Client.MirScenes
                 case BuffType.CounterAttack:
                     return 7;
 
-                case BuffType.Teleport:
-                    return 20;
                 case BuffType.MagicBooster:
                     return 73;
 
@@ -1697,6 +1698,7 @@ namespace Client.MirScenes
                     return 162;
                 case BuffType.Gold:
                     return 168;
+                case BuffType.Knapsack:
                 case BuffType.BagWeight:
                     return 235;
                 case BuffType.Transform:
@@ -1709,28 +1711,30 @@ namespace Client.MirScenes
                     return 201;
                 case BuffType.Guild:
                     return 203;
+                case BuffType.Rested:
+                    return 240;
+                case BuffType.TemporalFlux:
+                    return 261;
 
                 //Stats
-                case BuffType.MaxDC:
+                case BuffType.Impact:
                     return 249;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     return 183;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     return 250;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     return 170;
-                case BuffType.MaxHP:
+                case BuffType.HealthAid:
                     return 161;
-                case BuffType.MaxMP:
+                case BuffType.ManaAid:
                     return 169;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     return 166;
-                case BuffType.MaxMAC:
+                case BuffType.MagicDefence:
                     return 158;
-                case BuffType.AC:
-                    return 166;
-                case BuffType.MAC:
-                    return 158;
+                case BuffType.WonderDrug:
+                    return 252;
                 default:
                     return 0;
             }
@@ -2019,6 +2023,9 @@ namespace Client.MirScenes
                 case MirGridType.Trade:
                     fromCell = TradeDialog.GetCell(p.IDFrom);
                     break;
+                case MirGridType.Fishing:
+                    fromCell = FishingDialog.GetCell(p.IDFrom);
+                    break;
                 default:
                     return;
             }
@@ -2083,6 +2090,48 @@ namespace Client.MirScenes
 
 
             switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+                    break;
+                case MirGridType.Storage:
+                    toCell = StorageDialog.Grid[p.To];
+                    break;
+                default:
+                    return;
+            }
+
+            if (toCell == null || fromCell == null) return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success) return;
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            CharacterDuraPanel.GetCharacterDura();
+            User.RefreshStats();
+        }
+        private void RemoveSlotItem(S.RemoveSlotItem p)
+        {
+            MirItemCell fromCell;
+            MirItemCell toCell;
+
+            int index = -1;
+
+            switch (p.Grid)
+            {
+                case MirGridType.Mount:
+                    fromCell = MountDialog.GetCell(p.UniqueID);
+                    break;
+                case MirGridType.Fishing:
+                    fromCell = FishingDialog.GetCell(p.UniqueID);
+                    break;
+                default:
+                    return;
+            }
+
+            switch (p.GridTo)
             {
                 case MirGridType.Inventory:
                     toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
@@ -7551,9 +7600,6 @@ namespace Client.MirScenes
                     case 6://speed low/med/high
                         HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
                         break;
-                    case 7://knapsack low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", HoverItem.Luck + realItem.Luck, strTime);
-                        break;
                 }
             }
 
@@ -9068,11 +9114,11 @@ namespace Client.MirScenes
 
             int cost = magic.Level * magic.LevelCost + magic.BaseCost;
 
-            if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink)
+            if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink || magic.Spell == Spell.StormEscape)
             {
                 for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
                 {
-                    if (GameScene.Scene.Buffs[i].Type != BuffType.Teleport) continue;
+                    if (GameScene.Scene.Buffs[i].Type != BuffType.TemporalFlux) continue;
                     cost += (int)(User.MaxMP * 0.3F);
                 }
             }
@@ -16335,6 +16381,16 @@ namespace Client.MirScenes
 
             Visible = true;
         }
+
+        public MirItemCell GetCell(ulong id)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+                return Grid[i];
+            }
+            return null;
+        }
     }
     public sealed class FishingDialog : MirImageControl
     {
@@ -23416,7 +23472,8 @@ namespace Client.MirScenes
 
             switch (Type)
             {
-                case BuffType.Teleport:
+                //magic
+                case BuffType.TemporalFlux:
                     text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
                     break;
                 case BuffType.Hiding:
@@ -23502,6 +23559,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
                     break;
 
+                //special
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)Values[0];
                     text = "GameMaster\n";
@@ -23546,36 +23604,64 @@ namespace Client.MirScenes
                     text = string.Format("Guild Charge\n");
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
+                case BuffType.Rested:
+                    text = string.Format("Rested\nIncreases Exp Rate by {0}%\n", Values[0]);
+                    break;
 
-                case BuffType.MaxDC:
+                //stats
+                case BuffType.Impact:
                     text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxHP:
+                case BuffType.HealthAid:
                     text = string.Format("Health Aid\nIncreases HP by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMP:
+                case BuffType.ManaAid:
                     text = string.Format("Mana Aid\nIncreases MP by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMAC:
+                case BuffType.MagicDefence:
                     text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
                     break;
-                case BuffType.AC:
-                    text = string.Format("Wonder Shield\nIncreases AC by: {0}-{0}.\n", Values[0]);
+                case BuffType.WonderDrug:
+                    text = string.Format("Wonder Drug\n");
+                    switch (Values[0])
+                    {
+                        case 0:
+                            text += string.Format("Increases Exp Rate by {0}%\n", Values[1]);
+                            break;
+                        case 1:
+                            text += string.Format("Increases Drop Rate by {0}%\n", Values[1]);
+                            break;
+                        case 2:
+                            text += string.Format("Increases HP by: {0}.\n", Values[1]);
+                            break;
+                        case 3:
+                            text += string.Format("Increases MP by: {0}.\n", Values[1]);
+                            break;
+                        case 4:
+                            text += string.Format("Increases Max AC by: {0}-{0}.\n", Values[1]);
+                            break;
+                        case 5:
+                            text += string.Format("Increases Max MAC by: {0}-{0}.\n", Values[1]);
+                            break;
+                        case 6:
+                            text += string.Format("Increases A.Speed by: {0}.\n", Values[1]);
+                            break;
+                    }
                     break;
-                case BuffType.MAC:
-                    text = string.Format("Magic Wonder Shield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
+                case BuffType.Knapsack:
+                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.\n", Values[0]);
                     break;
             }
 

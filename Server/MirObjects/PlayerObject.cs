@@ -188,7 +188,7 @@ namespace Server.MirObjects
         }
 
         public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime;
 
         public byte ChatTick;
 
@@ -227,7 +227,7 @@ namespace Server.MirObjects
 
         public LevelEffects LevelEffects = LevelEffects.None;
 
-        private int _stepCounter, _runCounter, _fishCounter;
+        private int _stepCounter, _runCounter, _fishCounter, _restedCounter;
 
         public MapObject[,] ArcherTrapObjectsArray = new MapObject[4, 3];
         public SpellObject[] PortalObjectsArray = new SpellObject[2];
@@ -454,7 +454,6 @@ namespace Server.MirObjects
             }
             Buffs.Clear();
 
-
             TradeCancel();
             RefineCancel();
             LogoutRelationship();
@@ -600,6 +599,26 @@ namespace Server.MirObjects
             {
                 RunTime = Envir.Time + 1500;
                 _runCounter--;
+            }
+
+            if (Settings.RestedPeriod > 0)
+            {
+                if (Envir.Time > RestedTime)
+                {
+                    _restedCounter = InSafeZone ? _restedCounter + 1 : _restedCounter - 1;
+
+                    if (_restedCounter < 0) _restedCounter = 0;
+                    if (_restedCounter >= (Settings.RestedPeriod * 60))
+                    {
+                        if (!InSafeZone)
+                        {
+                            AddBuff(new Buff { Type = BuffType.Rested, Caster = this, ExpireTime = Envir.Time + Settings.RestedBuffLength * Settings.Minute, Values = new int[] { Settings.RestedExpBonus } });
+                            _restedCounter = Settings.RestedPeriod * 60;
+                        }
+                    }
+
+                    RestedTime = Envir.Time + Settings.Second;
+                }
             }
 
             if (Stacking && Envir.Time > StackingTime)
@@ -1072,6 +1091,8 @@ namespace Server.MirObjects
 
         public override void Process(DelayedAction action)
         {
+            if (action.FlaggedToRemove) return;
+
             switch (action.Type)
             {
                 case DelayedType.Magic:
@@ -1203,7 +1224,10 @@ namespace Server.MirObjects
             UnSummonIntelligentCreature(SummonedCreatureType);
 
             for (int i = Pets.Count - 1; i >= 0; i--)
+            {
+                if (Pets[i].Dead) continue;
                 Pets[i].Die();
+            }
 
             if (MagicShield)
             {
@@ -1953,6 +1977,14 @@ namespace Server.MirObjects
                     Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
             }
 
+            if (InSafeZone)
+            {
+                if (Envir.Now > Info.LastDate.AddMinutes((double)(Settings.RestedPeriod)))
+                {
+                    _restedCounter = (Settings.RestedPeriod * 60) + 1;
+                }
+            }
+
             Report.Connected(Connection.IPAddress);
 
             SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
@@ -1988,9 +2020,24 @@ namespace Server.MirObjects
 
             CurrentMap.AddObject(this);
 
+            Enqueue(new S.MapChanged
+            {
+                FileName = CurrentMap.Info.FileName,
+                Title = CurrentMap.Info.Title,
+                MiniMap = CurrentMap.Info.MiniMap,
+                BigMap = CurrentMap.Info.BigMap,
+                Lights = CurrentMap.Info.Light,
+                Location = CurrentLocation,
+                Direction = Direction,
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music
+            });
+
             GetObjects();
+
             Enqueue(new S.Revived());
             Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
+
             Fishing = false;
             Enqueue(GetFishInfo());
         }
@@ -2937,6 +2984,7 @@ namespace Server.MirObjects
                         if (buff.Values.Length > 2)
                             GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[2]);
                         break;
+                    case BuffType.Rested:
                     case BuffType.Exp:
                         ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[0]);
                         break;
@@ -2946,6 +2994,7 @@ namespace Server.MirObjects
                     case BuffType.Gold:
                         GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[0]);
                         break;
+                    case BuffType.Knapsack:
                     case BuffType.BagWeight:
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
@@ -2953,31 +3002,51 @@ namespace Server.MirObjects
                         TransformType = (short)buff.Values[0];
                         break;
 
-                    case BuffType.MaxDC:
+                    case BuffType.Impact:
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
                         break;
-                    case BuffType.MaxMC:
+                    case BuffType.Magic:
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         break;
-                    case BuffType.MaxSC:
+                    case BuffType.Taoist:
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         break;
-                    case BuffType.ASpeed:
+                    case BuffType.Storm:
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
-                    case BuffType.MaxHP:
+                    case BuffType.HealthAid:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
                         break;
-                    case BuffType.MaxMP:
+                    case BuffType.ManaAid:
                         MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[0]);
                         break;
-                    case BuffType.AC:
-                        MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[0]);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        break;
-                    case BuffType.MAC:
-                        MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[0]);
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
+                    case BuffType.WonderDrug:
+                        switch (buff.Values[0])
+                        {
+                            case 0:
+                                ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[1]);
+                                break;
+                            case 1:
+                                ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Values[1]);
+                                break;
+                            case 2:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[1]);
+                                break;
+                            case 3:
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[1]);
+                                break;
+                            case 4:
+                                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[1]);
+                                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[1]);
+                                break;
+                            case 5:
+                                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[1]);
+                                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[1]);
+                                break;
+                            case 6:
+                                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[1])));
+                                break;
+                        }
                         break;
                 }
             }
@@ -5720,10 +5789,10 @@ namespace Server.MirObjects
 
             int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
 
-            if (spell == Spell.Teleport || spell == Spell.Blink)
+            if (spell == Spell.Teleport || spell == Spell.Blink || spell == Spell.StormEscape)
                 for (int i = 0; i < Buffs.Count; i++)
                 {
-                    if (Buffs[i].Type != BuffType.Teleport) continue;
+                    if (Buffs[i].Type != BuffType.TemporalFlux) continue;
                     cost += (int)(MaxMP * 0.3F);
                     break;
                 }
@@ -7962,7 +8031,7 @@ namespace Server.MirObjects
                     }
                     if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, CurrentLocation);
-                    AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    AddBuff(new Buff { Type = BuffType.TemporalFlux, Caster = this, ExpireTime = Envir.Time + 30000 });
                     LevelMagic(magic);
                     break;
                 #endregion
@@ -7987,7 +8056,7 @@ namespace Server.MirObjects
                         if (Teleport(temp, location)) break;
                     }
 
-                    AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                    AddBuff(new Buff { Type = BuffType.TemporalFlux, Caster = this, ExpireTime = Envir.Time + 30000 });
                     LevelMagic(magic);
 
                     break;
@@ -8006,7 +8075,7 @@ namespace Server.MirObjects
                         if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
                         CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
                         LevelMagic(magic);
-                        AddBuff(new Buff { Type = BuffType.Teleport, Caster = this, ExpireTime = Envir.Time + 30000 });
+                        AddBuff(new Buff { Type = BuffType.TemporalFlux, Caster = this, ExpireTime = Envir.Time + 30000 });
                     }
                     break;
 
@@ -9778,6 +9847,120 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
+        public void RemoveSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        {
+            S.RemoveSlotItem p = new S.RemoveSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
+            UserItem[] array;
+            switch (gridTo)
+            {
+                case MirGridType.Inventory:
+                    array = Info.Inventory;
+                    break;
+                case MirGridType.Storage:
+                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    NPCObject ob = null;
+                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    {
+                        if (CurrentMap.NPCs[i].ObjectID != NPCID) continue;
+                        ob = CurrentMap.NPCs[i];
+                        break;
+                    }
+
+                    if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    array = Account.Storage;
+                    break;
+                default:
+                    Enqueue(p);
+                    return;
+            }
+
+            if (to < 0 || to >= array.Length) return;
+
+            UserItem temp = null;
+            UserItem slotTemp = null;
+            int index = -1;
+
+            switch (grid)
+            {
+                case MirGridType.Mount:
+                    temp = Info.Equipment[(int)EquipmentSlot.Mount];
+                    break;
+                case MirGridType.Fishing:
+                    temp = Info.Equipment[(int)EquipmentSlot.Weapon];
+                    break;
+                default:
+                    Enqueue(p);
+                    return;
+            }
+
+            if (temp == null || temp.Slots == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (grid == MirGridType.Fishing && (temp.Info.Shape != 49 && temp.Info.Shape != 50))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            for (int i = 0; i < temp.Slots.Length; i++)
+            {
+                slotTemp = temp.Slots[i];
+                if (slotTemp == null || slotTemp.UniqueID != id) continue;
+                index = i;
+                break;
+            }
+
+            if (slotTemp == null || index == -1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (slotTemp.Cursed && !UnlockCurse)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (slotTemp.WeddingRing != -1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (!CanRemoveItem(gridTo, slotTemp)) return;
+
+            temp.Slots[index] = null;
+
+            if (slotTemp.Cursed)
+                UnlockCurse = false;
+
+            if (array[to] == null)
+            {
+                array[to] = slotTemp;
+                p.Success = true;
+                Enqueue(p);
+                RefreshStats();
+                Broadcast(GetUpdateInfo());
+
+                Report.ItemMoved("RemoveSlotItem", temp, grid, gridTo, index, to);
+
+                return;
+            }
+
+            Enqueue(p);
+        }
         public void MoveItem(MirGridType grid, int from, int to)
         {
             S.MoveItem p = new S.MoveItem { Grid = grid, From = from, To = to, Success = false };
@@ -10148,28 +10331,28 @@ namespace Server.MirObjects
                             int time = item.Info.Durability;
 
                             if ((item.Info.MaxDC + item.DC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxDC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxDC + item.DC } });
+                                AddBuff(new Buff { Type = BuffType.Impact, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxDC + item.DC } });
 
                             if ((item.Info.MaxMC + item.MC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxMC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMC + item.MC } });
+                                AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMC + item.MC } });
 
                             if ((item.Info.MaxSC + item.SC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxSC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
+                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
 
                             if ((item.Info.AttackSpeed + item.AttackSpeed) > 0)
-                                AddBuff(new Buff { Type = BuffType.ASpeed, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
+                                AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
 
                             if ((item.Info.HP + item.HP) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxHP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
+                                AddBuff(new Buff { Type = BuffType.HealthAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
 
                             if ((item.Info.MP + item.MP) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxMP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
+                                AddBuff(new Buff { Type = BuffType.ManaAid, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
 
                             if ((item.Info.MaxAC + item.AC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxAC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
+                                AddBuff(new Buff { Type = BuffType.Defence, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
 
                             if ((item.Info.MaxMAC + item.MAC) > 0)
-                                AddBuff(new Buff { Type = BuffType.MaxMAC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
+                                AddBuff(new Buff { Type = BuffType.MagicDefence, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
                             break;
                         case 4: //Exp
                             time = item.Info.Durability;
@@ -10374,37 +10557,38 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 StrongboxRewardItem(boxtype);
                                 return;
-                            case 26://Wonderdrugs + Knapsack
+                            case 26://Wonderdrugs
                                 int time = item.Info.Durability;
                                 switch (item.Info.Effect)
                                 {
                                     case 0://exp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.Luck + item.Luck } });
                                         break;
                                     case 1://drop low/med/high
-                                        AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.Luck + item.Luck } });
                                         break;
                                     case 2://hp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MaxHP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.HP + item.HP } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.HP + item.HP } });
                                         break;
                                     case 3://mp low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MaxMP, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MP + item.MP } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.MP + item.MP } });
                                         break;
                                     case 4://ac-ac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.AC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxAC + item.AC } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.MaxAC + item.AC } });
                                         break;
                                     case 5://mac-mac low/med/high
-                                        AddBuff(new Buff { Type = BuffType.MAC, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMAC + item.MAC } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.MaxMAC + item.MAC } });
                                         break;
                                     case 6://speed low/med/high
-                                        AddBuff(new Buff { Type = BuffType.ASpeed, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
-                                        break;
-                                    case 7://knapsack low/med/high
-                                        AddBuff(new Buff { Type = BuffType.BagWeight, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
+                                        AddBuff(new Buff { Type = BuffType.WonderDrug, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Effect, item.Info.AttackSpeed + item.AttackSpeed } });
                                         break;
                                 }
                                 break;
                             case 27://FortuneCookies
+                                break;
+                            case 28://Knapsack
+                                time = item.Info.Durability;
+                                AddBuff(new Buff { Type = BuffType.Knapsack, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                                 break;
                         }
                     }
@@ -10546,6 +10730,7 @@ namespace Server.MirObjects
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
 
             UserItem[] arrayFrom;
+
             switch (gridFrom)
             {
                 case MirGridType.Inventory:
@@ -10575,11 +10760,18 @@ namespace Server.MirObjects
                 case MirGridType.Equipment:
                     arrayFrom = Info.Equipment;
                     break;
+                case MirGridType.Fishing:
+                    if (Info.Equipment[(int)EquipmentSlot.Weapon] == null || (Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape != 49 && Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape != 50))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    arrayFrom = Info.Equipment[(int)EquipmentSlot.Weapon].Slots;
+                    break;
                 default:
                     Enqueue(p);
                     return;
             }
-
 
             UserItem[] arrayTo;
             switch (gridTo)
@@ -10651,8 +10843,19 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count == tempTo.Info.StackSize ||
-                (tempTo.Info.Type != ItemType.Amulet && (gridFrom == MirGridType.Equipment || gridTo == MirGridType.Equipment)))
+            if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count == tempTo.Info.StackSize)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (tempTo.Info.Type != ItemType.Amulet && (gridFrom == MirGridType.Equipment || gridTo == MirGridType.Equipment))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if(tempTo.Info.Type != ItemType.Bait && (gridFrom == MirGridType.Fishing || gridTo == MirGridType.Fishing))
             {
                 Enqueue(p);
                 return;
@@ -16574,12 +16777,6 @@ namespace Server.MirObjects
                     dropitem.AttackSpeed = (sbyte)2;
                     if (boxtype > 0) dropitem.AttackSpeed = (sbyte)3;
                     if (boxtype > 1) dropitem.AttackSpeed = (sbyte)4;
-                    break;
-                case 7://knapsack low/med/high
-                    dropitem.CurrentDura = (ushort)5;//* 3600
-                    dropitem.Luck = (sbyte)3;
-                    if (boxtype > 0) dropitem.Luck = (sbyte)5;
-                    if (boxtype > 1) dropitem.Luck = (sbyte)9;
                     break;
             }
             //string dbg = String.Format(" Img: {0} Effect: {1} Dura: {2} Exp: {3} Drop: {3} HP: {4} MP: {5} AC: {6} MAC: {7} ASpeed: {8} BagWeight: {9}", dropitem.Image, dropitem.Info.Effect, dropitem.CurrentDura, dropitem.Luck, dropitem.HP, dropitem.MP, dropitem.AC, dropitem.MAC, dropitem.AttackSpeed, dropitem.Luck);

@@ -1109,7 +1109,7 @@ public enum BuffType : byte
     None,
 
     //magics
-    Teleport,
+    TemporalFlux,
     Hiding,
     Haste,
     SwiftFeet,
@@ -1145,18 +1145,19 @@ public enum BuffType : byte
     Mentor,
     Guild,
     Prison,
+    Rested,
 
     //stats
-    MaxDC,
-    MaxMC,
-    MaxSC,
-    ASpeed,
-    MaxHP,
-    MaxMP,
-    MaxAC,
-    MaxMAC,
-    AC,
-    MAC,
+    Impact,
+    Magic,
+    Taoist,
+    Storm,
+    HealthAid,
+    ManaAid,
+    Defence,
+    MagicDefence,
+    WonderDrug,
+    Knapsack
 }
 
 public enum DefenceType : byte
@@ -1203,6 +1204,7 @@ public enum ServerPacketIds : short
     EquipItem,
     MergeItem,
     RemoveItem,
+    RemoveSlotItem,
     TakeBackItem,
     StoreItem,
     SplitItem,
@@ -1415,6 +1417,7 @@ public enum ClientPacketIds : short
     MergeItem,
     EquipItem,
     RemoveItem,
+    RemoveSlotItem,
     SplitItem,
     UseItem,
     DropItem,
@@ -2060,7 +2063,7 @@ public static class Functions
         string answer;
         if (t.TotalMinutes < 1.0)
         {
-            answer = string.Format("{0}s", t.TotalSeconds);
+            answer = string.Format("{0}s", t.Seconds);
         }
         else if (t.TotalHours < 1.0)
         {
@@ -4264,6 +4267,8 @@ public abstract class Packet
                 return new C.EquipItem();
             case (short)ClientPacketIds.RemoveItem:
                 return new C.RemoveItem();
+            case (short)ClientPacketIds.RemoveSlotItem:
+                return new C.RemoveSlotItem();
             case (short)ClientPacketIds.SplitItem:
                 return new C.SplitItem();
             case (short)ClientPacketIds.UseItem:
@@ -4531,6 +4536,8 @@ public abstract class Packet
                 return new S.MergeItem();
             case (short)ServerPacketIds.RemoveItem:
                 return new S.RemoveItem();
+            case (short)ServerPacketIds.RemoveSlotItem:
+                return new S.RemoveSlotItem();
             case (short)ServerPacketIds.TakeBackItem:
                 return new S.TakeBackItem();
             case (short)ServerPacketIds.StoreItem:
