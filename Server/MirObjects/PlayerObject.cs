@@ -1091,6 +1091,8 @@ namespace Server.MirObjects
 
         public override void Process(DelayedAction action)
         {
+            if (action.FlaggedToRemove) return;
+
             switch (action.Type)
             {
                 case DelayedType.Magic:

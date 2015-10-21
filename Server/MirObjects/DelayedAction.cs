@@ -25,6 +25,8 @@ namespace Server.MirObjects
         public long StartTime;
         public object[] Params;
 
+        public bool FlaggedToRemove;
+
         public DelayedAction(DelayedType type, long time, params object[] p)
         {
             StartTime = SMain.Envir.Time;

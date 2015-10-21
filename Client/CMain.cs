@@ -32,13 +32,11 @@ namespace Client
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
-
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
 
         public static bool Shift, Alt, Ctrl, Tilde;
-
 
         public CMain()
         {
