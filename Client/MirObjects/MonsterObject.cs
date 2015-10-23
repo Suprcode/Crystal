@@ -117,6 +117,9 @@ namespace Client.MirObjects
                 case Monster.Frog:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
+                case Monster.SabukGate:
+                    BodyLibrary = Libraries.Effect;
+                    break;
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];
                     break;
@@ -925,6 +928,10 @@ namespace Client.MirObjects
                 case Monster.BabySnowMan:
                 case Monster.Frog:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
+                    break;
+
+                case Monster.SabukGate:
+                    Frames = FrameSet.Gates[0];
                     break;
           
                 default:

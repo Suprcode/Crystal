@@ -605,16 +605,13 @@ namespace Server.MirObjects
             {
                 if (Envir.Time > RestedTime)
                 {
-                    _restedCounter = InSafeZone ? _restedCounter + 1 : _restedCounter - 1;
+                    _restedCounter = InSafeZone ? _restedCounter + 1 : _restedCounter;
 
-                    if (_restedCounter < 0) _restedCounter = 0;
-                    if (_restedCounter >= (Settings.RestedPeriod * 60))
+                    if (_restedCounter > 0)
                     {
-                        if (!InSafeZone)
-                        {
-                            AddBuff(new Buff { Type = BuffType.Rested, Caster = this, ExpireTime = Envir.Time + Settings.RestedBuffLength * Settings.Minute, Values = new int[] { Settings.RestedExpBonus } });
-                            _restedCounter = Settings.RestedPeriod * 60;
-                        }
+                        int count = _restedCounter / (Settings.RestedPeriod * 60);
+
+                        GiveRestedBonus(count);
                     }
 
                     RestedTime = Envir.Time + Settings.Second;
@@ -1977,12 +1974,11 @@ namespace Server.MirObjects
                     Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
             }
 
-            if (InSafeZone)
+            if (InSafeZone && Info.LastDate > DateTime.MinValue)
             {
-                if (Envir.Now > Info.LastDate.AddMinutes((double)(Settings.RestedPeriod)))
-                {
-                    _restedCounter = (Settings.RestedPeriod * 60) + 1;
-                }
+                double totalMinutes = (Envir.Now - Info.LastDate).TotalMinutes;
+
+                _restedCounter = (int)(totalMinutes * 60);
             }
 
             Report.Connected(Connection.IPAddress);
@@ -2003,6 +1999,21 @@ namespace Server.MirObjects
             if (Info.Flags[990]) LevelEffects |= LevelEffects.Mist;
             if (Info.Flags[991]) LevelEffects |= LevelEffects.RedDragon;
             if (Info.Flags[992]) LevelEffects |= LevelEffects.BlueDragon;
+        }
+        public void GiveRestedBonus(int count)
+        {
+            if (count > 0)
+            {
+                Buff buff = Buffs.FirstOrDefault(e => e.Type == BuffType.Rested);
+
+                long existingTime = 0;
+                if (buff != null)
+                {
+                    existingTime = buff.ExpireTime - Envir.Time;
+                }
+                AddBuff(new Buff { Type = BuffType.Rested, Caster = this, ExpireTime = Envir.Time + ((Settings.RestedBuffLength * Settings.Minute) * count) + existingTime, Values = new int[] { Settings.RestedExpBonus } });
+                _restedCounter = 0;
+            }
         }
 
         public void Revive(uint hp, bool effect)

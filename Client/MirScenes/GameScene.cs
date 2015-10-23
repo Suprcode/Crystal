@@ -18,6 +18,7 @@ using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 
 using Client.MirScenes.Dialogs;
+using System.Drawing.Imaging;
 
 namespace Client.MirScenes
 {
@@ -203,7 +204,7 @@ namespace Client.MirScenes
             
             GroupDialog = new GroupDialog { Parent = this, Visible = false };
             GuildDialog = new GuildDialog { Parent = this, Visible = false };
-            //GuildBuffDialog = new GuildBuffDialog { Parent = this, Visible = false };
+
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
             CharacterDuraPanel = new CharacterDuraPanel { Parent = this, Visible = false };
@@ -228,9 +229,9 @@ namespace Client.MirScenes
             MailReadLetterDialog = new MailReadLetterDialog { Parent = this, Visible = false };
             MailReadParcelDialog = new MailReadParcelDialog { Parent = this, Visible = false };
 
-            IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };//IntelligentCreature
-            IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };//IntelligentCreature
-            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
+            IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };
+            IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };
+            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };
 
             RefineDialog = new RefineDialog { Parent = this, Visible = false };
             RelationshipDialog = new RelationshipDialog { Parent = this, Visible = false };
@@ -395,11 +396,7 @@ namespace Client.MirScenes
 
                 case Keys.G:
                     if (!GuildDialog.Visible) GuildDialog.Show();
-                    else
-                    {
-                        //GuildBuffDialog.Hide();
-                        GuildDialog.Hide();
-                    }
+                    else GuildDialog.Hide();
                     break;
 
                 case Keys.Q:
@@ -421,9 +418,9 @@ namespace Client.MirScenes
                     HelpDialog.Hide();
                     KeyboardLayoutDialog.Hide();
                     RankingDialog.Hide();
-                    IntelligentCreatureDialog.Hide();//IntelligentCreature
-                    IntelligentCreatureOptionsDialog.Hide();//IntelligentCreature
-                    IntelligentCreatureOptionsGradeDialog.Hide();//IntelligentCreature
+                    IntelligentCreatureDialog.Hide();
+                    IntelligentCreatureOptionsDialog.Hide();
+                    IntelligentCreatureOptionsGradeDialog.Hide();
                     MountDialog.Hide();
                     FishingDialog.Hide();
                     FriendDialog.Hide();
@@ -432,7 +429,6 @@ namespace Client.MirScenes
                     GameShopDialog.Hide();
                     GroupDialog.Hide();
                     GuildDialog.Hide();
-                    //GuildBuffDialog.Hide();
                     InspectDialog.Hide();
                     StorageDialog.Hide();
                     TrustMerchantDialog.Hide();
@@ -444,6 +440,10 @@ namespace Client.MirScenes
                     RefineDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+
+
+
+                    GameScene.Scene.DisposeItemLabel();
                     break;
                 case Keys.O:
                 case Keys.F12:
@@ -533,7 +533,7 @@ namespace Client.MirScenes
                                 return;
                         }
                     }
-                    //IntelligentCreature semiauto pickup mode
+
                     if (!CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
                     break;
                 case Keys.H:
@@ -9559,7 +9559,7 @@ namespace Client.MirScenes
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
 
         public MainDialog()
         {
@@ -9767,18 +9767,19 @@ namespace Client.MirScenes
 
             LevelLabel = new MirLabel
             {
-                AutoSize = true,
-                Parent = this,
-                Location = new Point(5, 108)
-            };
-
-            CharacterName = new MirLabel
-            {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Parent = this,
-                Location = new Point(6, 120),
-                Size = new Size(90, 16)
+                Location = new Point(17, 123),
+                Size = new Size(33, 12)
             };
+
+            //CharacterName = new MirLabel
+            //{
+            //    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+            //    Parent = this,
+            //    Location = new Point(6, 120),
+            //    Size = new Size(90, 16)
+            //};
 
 
             ExperienceBar = new MirImageControl
@@ -9943,7 +9944,7 @@ namespace Client.MirScenes
             ExperienceLabel.Text = string.Format("{0:#0.##%}", User.Experience / (double)User.MaxExperience);
             ExperienceLabel.Location = new Point((ExperienceBar.Size.Width / 2) - 20, -10);
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
-            CharacterName.Text = User.Name;
+            //CharacterName.Text = User.Name;
             WeightLabel.Text = User.Inventory.Count(t => t == null).ToString();
         }
 
@@ -10594,7 +10595,7 @@ namespace Client.MirScenes
     }
     public sealed class ChatControlBar : MirImageControl
     {
-        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton;
+        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton;
 
         public ChatControlBar()
         {
@@ -10621,7 +10622,6 @@ namespace Client.MirScenes
                 if (GameScene.Scene.BeltDialog.Index == 1932)
                     GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
             };
-
 
             SettingsButton = new MirButton
             {
@@ -10756,6 +10756,36 @@ namespace Client.MirScenes
             {
                 Settings.ShowGuildChat = !Settings.ShowGuildChat;
                 ToggleChatFilter("Guild");
+            };
+
+            ReportButton = new MirButton
+            {
+                Index = 2063,
+                HoverIndex = 2064,
+                PressedIndex = 2065,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(Settings.Resolution != 800 ? 552 : 328, 1),
+                Sound = SoundList.ButtonA,
+                Hint = "Report"
+            };
+            ReportButton.Click += (o, e) =>
+            {
+                Point location = Program.Form.PointToClient(Program.Form.Location);
+
+                location = new Point(-location.X, -location.Y);
+
+                using (Bitmap image = CMain.GetImage(Program.Form.Handle, new Rectangle(location, Program.Form.ClientSize)))
+                {
+                    var chunks = Functions.SplitArray(Functions.ImageToByteArray(image), 20000);
+
+                    int i = 0;
+
+                    foreach (var chunk in chunks)
+                    {
+                        Network.Enqueue(new C.ReportIssue { Image = chunk, ImageSize = chunks.Count(), ImageChunk = ++i });
+                    }
+                }
             };
 
             ToggleChatFilter("All");
@@ -23453,6 +23483,11 @@ namespace Client.MirScenes
             GameScene.Scene.GameShopDialog.Viewer.Visible = false;
            
         }
+
+    }
+
+    public sealed class ReportDialog : MirImageControl
+    {
 
     }
 

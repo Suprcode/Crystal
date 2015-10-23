@@ -155,6 +155,8 @@ namespace Server.MirObjects
                     return new Runaway(info);
                 case 70://custom
                     return new TalkingMonster(info);
+                case 71:
+                    return new SabukGate(info);
                 default:
                     return new MonsterObject(info);
             }

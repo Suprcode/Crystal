@@ -63,7 +63,7 @@ namespace Client
             Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             Graphics.TextContrast = 0;
         }
