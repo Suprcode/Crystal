@@ -46,6 +46,9 @@ namespace Server.MirObjects
             DisassembleKey = "[@DISASSEMBLE]",
             DowngradeKey = "[@DOWNGRADE]",
             ResetKey = "[@RESET]",
+            TransformKey = "[@TRANSFORM]",//stupple
+            TransformBackKey = "[@TRANSFORMBACK]",//stupple
+            HumupTransformKey = "[@HUMUPTRANSFORM]",//stupple
             PearlBuyKey = "[@PEARLBUY]",
             BuyUsedKey = "[@BUYUSED]";
 
@@ -972,6 +975,15 @@ namespace Server.MirObjects
                 case ResetKey:
                     player.Enqueue(new S.NPCReset());
                     break;
+                case TransformKey://stupple
+                    player.Enqueue(new S.NPCTransform { Type = 0 });
+                    break;
+                case TransformBackKey://stupple
+                    player.Enqueue(new S.NPCTransform { Type = 1 });
+                    break;
+                case HumupTransformKey://stupple
+                    player.Enqueue(new S.NPCTransform { Type = 2 });
+                    break;
                 case PearlBuyKey://pearl currency
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
@@ -1614,6 +1626,9 @@ namespace Server.MirObjects
 
                 case "SENDMAIL":
                     acts.Add(new NPCActions(ActionType.SendMail));
+                    break;
+                case "HUMUP"://stupple
+                    acts.Add(new NPCActions(ActionType.Humup));
                     break;
 
                 case "GROUPGOTO":
@@ -2444,6 +2459,21 @@ namespace Server.MirObjects
                             case MirClass.Archer:
                                 player.Info.Class = MirClass.Archer;
                                 break;
+                            case MirClass.HighWarrior://stupple
+                                player.Info.Class = MirClass.HighWarrior;
+                                break;
+                            case MirClass.HighTaoist:
+                                player.Info.Class = MirClass.HighTaoist;
+                                break;
+                            case MirClass.HighWizard:
+                                player.Info.Class = MirClass.HighWizard;
+                                break;
+                            case MirClass.HighAssassin:
+                                player.Info.Class = MirClass.HighAssassin;
+                                break;
+                            case MirClass.HighArcher:
+                                player.Info.Class = MirClass.HighArcher;
+                                break;
                         }
                         break;
 
@@ -2791,6 +2821,11 @@ namespace Server.MirObjects
                         mailInfo.Send();
 
                         break;
+                        
+                     case ActionType.Humup://stupple
+                        player.Humup();
+
+                        break;
 
                     case ActionType.GroupGoto:
                         if (player.GroupMembers == null) return;
@@ -2932,6 +2967,7 @@ namespace Server.MirObjects
         AddMailItem,
         AddMailGold,
         SendMail,
+        Humup,
         GroupGoto,
         EnterMap,
         GivePearls,
