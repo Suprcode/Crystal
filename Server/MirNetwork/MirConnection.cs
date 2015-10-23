@@ -471,6 +471,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MailCost:
                     MailCost((C.MailCost)p);
                     break;
+                case (short)ClientPacketIds.Transform: //stupple
+                    Transform((C.Transform)p);
+                    break;
+                case (short)ClientPacketIds.HumupTransform: //stupple
+                    HumupTransform((C.HumupTransform)p);
+                    break;
                 case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
                     UpdateIntelligentCreature((C.UpdateIntelligentCreature)p);
                     break;
@@ -1270,6 +1276,19 @@ namespace Server.MirNetwork
             uint cost = Player.GetMailCost(p.ItemsIdx, p.Gold, p.Stamped);
 
             Enqueue(new S.MailCost { Cost = cost });
+        }
+        public void Transform(C.Transform p)//stupple
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.Transform(p.ToUniqueID, p.FromUniqueID);
+        }
+
+        public void HumupTransform(C.HumupTransform p)//stupple
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.HumupTransform(p.UniqueID);
         }
 
         private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)//IntelligentCreature
