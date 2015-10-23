@@ -1577,6 +1577,51 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(Locked);
         }
     }
+    
+public sealed class Transform : Packet //stupple
+    {
+        public override short Index { get { return (short)ClientPacketIds.Transform; } }
+
+        public ulong ToUniqueID;
+        public ulong FromUniqueID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ToUniqueID = reader.ReadUInt64();
+            FromUniqueID = reader.ReadUInt64();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ToUniqueID);
+            writer.Write(FromUniqueID);
+        }
+    }
+
+    public sealed class HumupTransform : Packet //stupple
+    {
+        public override short Index { get { return (short)ClientPacketIds.HumupTransform; } }
+ 
+        public ulong[] UniqueID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int count = reader.ReadInt32();
+            UniqueID = new ulong[count];
+            for (int i = 0; i < count; i++)
+            {
+                UniqueID[i] = reader.ReadUInt64();
+            }
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID.Length);
+            for (int i = 0; i < UniqueID.Length; i++)
+            {
+                writer.Write(UniqueID[i]);
+            }
+        }
+    }
+
 
     public sealed class MailCost : Packet
     {
