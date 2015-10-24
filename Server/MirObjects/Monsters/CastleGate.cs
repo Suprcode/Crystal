@@ -61,7 +61,7 @@ namespace Server.MirObjects.Monsters
 
                 if (!b.Spawn(this.CurrentMap, new Point(this.CurrentLocation.X + block.X, this.CurrentLocation.Y + block.Y)))
                 {
-                    SMain.EnqueueDebugging(string.Format("Sabuk blocking mob not spawned at {0}:{1}", block.X, block.Y));
+                    SMain.EnqueueDebugging(string.Format("CastleGate blocking mob not spawned at {0} {1}:{2}", CurrentMap.Info.FileName, block.X, block.Y));
                 }
             }
         }
@@ -71,9 +71,7 @@ namespace Server.MirObjects.Monsters
         }
 
 
-        public override void Turn(MirDirection dir)
-        {
-        }
+        public override void Turn(MirDirection dir) { }
 
         public override bool Walk(MirDirection dir) { return false; }
 
