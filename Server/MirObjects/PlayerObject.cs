@@ -4695,6 +4695,17 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("Map instance created for map {0}", mapInfo.FileName), ChatType.System);
                         break;
 
+                    case "OPENGATE": //TEST CODE
+                        List<CastleGate> gates = Envir.Objects.OfType<CastleGate>().ToList();
+                        foreach (CastleGate gate in gates)
+                        {
+                            if (gate.Closed)
+                                gate.OpenDoor();
+                            else
+                                gate.CloseDoor();
+                        }
+                        break;
+
                     default:
                         break;
                 }

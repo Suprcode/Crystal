@@ -19,7 +19,7 @@ namespace Client.MirObjects
         }
         public override bool Blocking
         {
-            get { return AI == 64 ? false : !Dead; }
+            get { return AI == 64 || (AI == 71 && Direction == (MirDirection)6) ? false : !Dead; }
         }
         public Point ManualLocationOffset
         {
@@ -1466,6 +1466,9 @@ namespace Client.MirObjects
                                 break;
                             case Monster.CharmedSnake:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CharmedSnake], 40, 8, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.SabukGate:
+                                Effects.Add(new Effect(Libraries.Effect, 136, 7, Frame.Count * Frame.Interval, this) { Light = -1 });
                                 break;
                         }
                         PlayDieSound();

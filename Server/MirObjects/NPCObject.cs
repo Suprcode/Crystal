@@ -1104,8 +1104,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Visible && !CanSee) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
-            else if (Force && Visible) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
+            if (Visible && !CanSee) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
+            else if (Force && Visible) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
 
             VisibleLog[Player.Info.Index] = true;
 

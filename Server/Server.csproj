@@ -231,9 +231,11 @@
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
     <Compile Include="MirObjects\Monsters\AxeSkeleton.cs" />
+    <Compile Include="MirObjects\Monsters\BlockingObject.cs" />
     <Compile Include="MirObjects\Monsters\BoneFamiliar.cs" />
     <Compile Include="MirObjects\Monsters\BugBagMaggot.cs" />
     <Compile Include="MirObjects\Monsters\CannibalPlant.cs" />
+    <Compile Include="MirObjects\Monsters\CastleGate.cs" />
     <Compile Include="MirObjects\Monsters\CaveMaggot.cs" />
     <Compile Include="MirObjects\Monsters\BoneSpearman.cs" />
     <Compile Include="MirObjects\Monsters\BoneLord.cs" />
