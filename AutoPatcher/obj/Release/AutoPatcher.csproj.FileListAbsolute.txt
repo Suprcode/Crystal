@@ -1,0 +1,8 @@
+C:\Users\RYAN\Desktop\GitHubRepo\mir2data\Release\AutoPatcher\AutoPatcher.exe.config
+C:\Users\RYAN\Desktop\GitHubRepo\mir2data\Release\AutoPatcher\AutoPatcher.exe
+C:\Users\RYAN\Desktop\GitHubRepo\mir2data\Release\AutoPatcher\AutoPatcher.pdb
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\AutoPatcher\obj\Release\AutoPatcher.AMain.resources
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\AutoPatcher\obj\Release\AutoPatcher.Properties.Resources.resources
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\AutoPatcher\obj\Release\AutoPatcher.csproj.GenerateResource.Cache
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\AutoPatcher\obj\Release\AutoPatcher.exe
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\AutoPatcher\obj\Release\AutoPatcher.pdb
