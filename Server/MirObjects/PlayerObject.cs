@@ -2921,6 +2921,10 @@ namespace Server.MirObjects
                     case BuffType.Fury:
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
+                    case BuffType.ImmortalSkin:
+                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
+                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC - buff.Values[1]);
+                        break;
                     case BuffType.SwiftFeet:
                         ActiveSwiftFeet = true;
                         break;
@@ -5882,6 +5886,9 @@ namespace Server.MirObjects
                 case Spell.Fury:
                     FurySpell(magic, out cast);
                     break;
+                case Spell.ImmortalSkin:
+                    ImmortalSkin(magic, out cast);
+                    break;
                 case Spell.FireBang:
                 case Spell.IceStorm:
                     FireBang(magic, target == null ? location : target.CurrentLocation);
@@ -7296,6 +7303,13 @@ namespace Server.MirObjects
 
             ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic));
         }
+        private void ImmortalSkin(UserMagic magic, out bool cast)
+        {
+            cast = true;
+
+            ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic));         
+
+        }
         private void CounterAttackCast(UserMagic magic, MapObject target)
         {
             if (target == null || magic == null) return;
@@ -8110,6 +8124,16 @@ namespace Server.MirObjects
                     LevelMagic(magic);
                     break;
 
+                #endregion
+
+                #region ImmortalSkin
+
+                case Spell.ImmortalSkin:
+                    int ACvalue = (int)Math.Round(MaxAC * (0.10 + (0.07 * magic.Level)));
+                    int DCValue = (int)Math.Round(MaxDC * (0.05 + (0.01 * magic.Level)));
+                    AddBuff(new Buff { Type = BuffType.ImmortalSkin, Caster = this, ExpireTime = Envir.Time + 60000 + magic.Level * 1000, Values = new int[] { ACvalue, DCValue }, Visible = true });
+                    LevelMagic(magic);
+                    break;
                 #endregion
 
                 #region LightBody
