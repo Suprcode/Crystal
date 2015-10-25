@@ -1135,6 +1135,7 @@ public enum BuffType : byte
     EnergyShield,
     MagicBooster,
     PetEnhancer,
+    ImmortalSkin,
 
     //special
     GameMaster,

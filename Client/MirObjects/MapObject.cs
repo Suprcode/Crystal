@@ -127,6 +127,9 @@ namespace Client.MirObjects
                 case BuffType.Fury:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 190, 7, 1400, this, true, type) { Repeat = true });
                     break;
+                case BuffType.ImmortalSkin:
+                    Effects.Add(new BuffEffect(Libraries.Magic3, 570, 5, 1400, this, true, type) { Repeat = true });
+                    break;
                 case BuffType.SwiftFeet:
                     if (ob != null) ob.Sprint = true;
                     break;
