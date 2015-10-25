@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Windows.Forms;
 using Server.MirEnvir;
+using System.IO;
 
 namespace Server
 {
@@ -14,11 +15,9 @@ namespace Server
 
         public SMain()
         {
-            InitializeComponent();
-            EditEnvir.LoadDB();
-            Envir.Start();
+                InitializeComponent();
 
-            AutoResize();
+                AutoResize();
         }
 
         private void AutoResize()
@@ -33,28 +32,35 @@ namespace Server
             indexHeader.Width = 2;
         }
 
-
-
         public static void Enqueue(Exception ex)
         {
             if (MessageLog.Count < 100)
             MessageLog.Enqueue(String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
+            File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                               String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
         }
 
         public static void EnqueueDebugging(string msg)
         {
             if (DebugLog.Count < 100)
             DebugLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+            File.AppendAllText(Settings.LogPath + "DebugLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
         public static void EnqueueChat(string msg)
         {
             if (ChatLog.Count < 100)
             ChatLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+            File.AppendAllText(Settings.LogPath + "ChatLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
+
         public static void Enqueue(string msg)
         {
             if (MessageLog.Count < 100)
             MessageLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+            File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
 
         private void configToolStripMenuItem_Click(object sender, EventArgs e)
@@ -66,11 +72,23 @@ namespace Server
         {
             try
             {
-                Text = string.Format("Total: {0}, Real: {1}, CycleDelay: {2}", Envir.LastCount, Envir.LastRealCount, Envir.LastRunTime);
-
+                Text = string.Format("Total: {0}, Real: {1}", Envir.LastCount, Envir.LastRealCount);
                 PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
                 MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
                 ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
+
+                if (Settings.Multithreaded && (Envir.MobThreads != null))
+                {
+                    CycleDelayLabel.Text = string.Format("CycleDelays: {0:0000}", Envir.LastRunTime);
+                    for (int i = 0; i < Envir.MobThreads.Length; i++)
+                    {
+                        if (Envir.MobThreads[i] == null) break;
+                        CycleDelayLabel.Text = CycleDelayLabel.Text + string.Format("|{0:0000}", Envir.MobThreads[i].LastRunTime);
+
+                    }
+                }
+                else
+                    CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
 
                 while (!MessageLog.IsEmpty)
                 {
@@ -309,6 +327,53 @@ namespace Server
         {
             SystemInfoForm form = new SystemInfoForm(2);
 
+            form.ShowDialog();
+        }
+
+        private void relationshipToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(4);
+
+            form.ShowDialog();
+        }
+
+        private void refiningToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(3);
+
+            form.ShowDialog();
+        }
+
+        private void mentorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(5);
+
+            form.ShowDialog();
+        }
+
+        private void magicInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MagicInfoForm form = new MagicInfoForm();
+            form.ShowDialog();
+        }
+
+        private void SMain_Load(object sender, EventArgs e)
+        {
+            EditEnvir.LoadDB();
+            Envir.Start();
+            AutoResize();
+        }
+
+        private void gemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(6);
+
+            form.ShowDialog();
+        }
+
+        private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GameShop form = new GameShop();
             form.ShowDialog();
         }
     }

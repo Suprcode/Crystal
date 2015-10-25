@@ -9,6 +9,7 @@ using Client.MirNetwork;
 using Client.MirSounds;
 using C = ClientPackets;
 using S = ServerPackets;
+using System.Threading;
 namespace Client.MirScenes
 {
     public class SelectScene : MirScene
@@ -252,10 +253,9 @@ namespace Client.MirScenes
             StartGameButton.Enabled = false;
 
             Network.Enqueue(new C.StartGame
-                {
-                    CharacterIndex = Characters[_selected].Index
-                });
-
+            {
+                CharacterIndex = Characters[_selected].Index
+            });
         }
 
         public override void Process()
@@ -405,12 +405,18 @@ namespace Client.MirScenes
             StartGameButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiaryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
+            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         public void StartGame(S.StartGame p)
         {
             StartGameButton.Enabled = true;
+
+            if (p.Resolution < Settings.Resolution || Settings.Resolution == 0) Settings.Resolution = p.Resolution;
+
+            if (p.Resolution < 1024 || Settings.Resolution < 1024) Settings.Resolution = 800;
+            else if (p.Resolution < 1366 || Settings.Resolution < 1366) Settings.Resolution = 1024;
+            else if (p.Resolution >= 1366 && Settings.Resolution >= 1366) Settings.Resolution = 1366;
 
             switch (p.Result)
             {
@@ -427,8 +433,10 @@ namespace Client.MirScenes
                     MirMessageBox.Show("No active map and/or start point found.");
                     break;
                 case 4:
-                    if (Settings.HighResolution)
-                        CMain.SetResolution(1024, 768); 
+                    if (Settings.Resolution == 1024)
+                        CMain.SetResolution(1024, 768);
+                    else if (Settings.Resolution == 1366)
+                        CMain.SetResolution(1366, 768);
                     ActiveScene = new GameScene();
                     Dispose();
                     break;

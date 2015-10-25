@@ -8,7 +8,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    class SpellObject : MapObject
+    public class SpellObject : MapObject
     {
         public override ObjectType Race
         {
@@ -19,7 +19,7 @@ namespace Server.MirObjects
         public override int CurrentMapIndex { get; set; }
         public override Point CurrentLocation { get; set; }
         public override MirDirection Direction { get; set; }
-        public override byte Level { get; set; }
+        public override ushort Level { get; set; }
         public override bool Blocking
         {
             get
@@ -35,9 +35,14 @@ namespace Server.MirObjects
         public Point CastLocation;
         public bool Show;
 
-        public int ExplosiveTrapID;//ArcherSpells - Explosive Trap
+        //ExplosiveTrap
+        public int ExplosiveTrapID;
         public int ExplosiveTrapCount;
-        public bool DetonatedTrap;//ArcherSpells - Explosive Trap
+        public bool DetonatedTrap;
+
+        //Portal
+        public Map ExitMap;
+        public Point ExitCoord;
 
         public override uint Health
         {
@@ -81,7 +86,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Spell == Spell.ExplosiveTrap && FindObject(Caster.ObjectID, 20) == null && Caster != null)//ArcherSpells - Explosive Trap
+            if (Spell == Spell.ExplosiveTrap && FindObject(Caster.ObjectID, 20) == null && Caster != null)
             {
                 CurrentMap.RemoveObject(this);
                 Despawn();
@@ -153,7 +158,7 @@ namespace Server.MirObjects
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MACAgility, false);
                     break;
-                case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
+                case Spell.ExplosiveTrap:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
                     if (!ob.IsAttackTarget(Caster)) return;
@@ -168,10 +173,26 @@ namespace Server.MirObjects
                     if (ob.Dead) return;
                     ob.Struck(Value, DefenceType.MAC);
                     break;
+
+                case Spell.Portal:
+                    if (ob.Race != ObjectType.Player) return;
+                    if (Caster != ob && (Caster == null || (Caster.GroupMembers == null) || (!Caster.GroupMembers.Contains((PlayerObject)ob)))) return;
+
+                    if (ExitMap == null) return;
+
+                    MirDirection dir = ob.Direction;
+
+                    Point newExit = Functions.PointMove(ExitCoord, dir, 1);
+
+                    if (!ExitMap.ValidPoint(newExit)) return;
+
+                    ob.Teleport(ExitMap, newExit, false);
+
+                    break;
             }
         }
 
-        public void DetonateTrapNow()//ArcherSpells - Explosive Trap
+        public void DetonateTrapNow()
         {
             DetonatedTrap = true;
             Broadcast(GetInfo());
@@ -283,7 +304,7 @@ namespace Server.MirObjects
                         Spell = Spell,
                         Direction = Direction
                     };
-                case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
+                case Spell.ExplosiveTrap:
                     return new S.ObjectSpell
                     {
                         ObjectID = ObjectID,
@@ -331,8 +352,26 @@ namespace Server.MirObjects
                 Caster.Enqueue(new S.CancelReincarnation { });
             }
 
-            if (Spell == Spell.ExplosiveTrap && Caster != null)//ArcherSpells - Explosive Trap
+            if (Spell == Spell.ExplosiveTrap && Caster != null)
                 Caster.ExplosiveTrapDetonated(ExplosiveTrapID, ExplosiveTrapCount);
+
+            if (Spell == Spell.Portal && Caster != null)
+            {
+                if (Caster.PortalObjectsArray[0] == this)
+                {
+                    Caster.PortalObjectsArray[0] = null;
+
+                    if (Caster.PortalObjectsArray[1] != null)
+                    {
+                        Caster.PortalObjectsArray[1].ExpireTime = 0;
+                        Caster.PortalObjectsArray[1].Process();
+                    }
+                }
+                else
+                {
+                    Caster.PortalObjectsArray[1] = null;
+                }
+            }
         }
 
         public override void BroadcastInfo()

@@ -47,6 +47,9 @@
             this.IPAddressTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.Resolution_textbox = new System.Windows.Forms.TextBox();
             this.AllowArcherCheckBox = new System.Windows.Forms.CheckBox();
             this.AllowAssassinCheckBox = new System.Windows.Forms.CheckBox();
             this.StartGameCheckBox = new System.Windows.Forms.CheckBox();
@@ -62,12 +65,18 @@
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
+            this.ServerVersionLabel = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.DBVersionLabel = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // SaveButton
@@ -96,6 +105,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.RelogDelayTextBox);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.VersionCheckBox);
@@ -257,6 +267,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label9);
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Controls.Add(this.Resolution_textbox);
             this.tabPage3.Controls.Add(this.AllowArcherCheckBox);
             this.tabPage3.Controls.Add(this.AllowAssassinCheckBox);
             this.tabPage3.Controls.Add(this.StartGameCheckBox);
@@ -272,6 +285,33 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Permissions";
             this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(21, 233);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(120, 13);
+            this.label9.TabIndex = 16;
+            this.label9.Text = "Max Resolution Allowed";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(0, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(35, 13);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "label8";
+            // 
+            // Resolution_textbox
+            // 
+            this.Resolution_textbox.Location = new System.Drawing.Point(147, 230);
+            this.Resolution_textbox.Name = "Resolution_textbox";
+            this.Resolution_textbox.Size = new System.Drawing.Size(80, 20);
+            this.Resolution_textbox.TabIndex = 14;
+            this.Resolution_textbox.TextChanged += new System.EventHandler(this.Resolution_textbox_TextChanged);
             // 
             // AllowArcherCheckBox
             // 
@@ -420,6 +460,55 @@
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
             // 
+            // ServerVersionLabel
+            // 
+            this.ServerVersionLabel.AutoSize = true;
+            this.ServerVersionLabel.Location = new System.Drawing.Point(76, 19);
+            this.ServerVersionLabel.Name = "ServerVersionLabel";
+            this.ServerVersionLabel.Size = new System.Drawing.Size(42, 13);
+            this.ServerVersionLabel.TabIndex = 7;
+            this.ServerVersionLabel.Text = "Version";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 19);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(38, 13);
+            this.label10.TabIndex = 22;
+            this.label10.Text = "Server";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 42);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 23;
+            this.label11.Text = "Database";
+            // 
+            // DBVersionLabel
+            // 
+            this.DBVersionLabel.AutoSize = true;
+            this.DBVersionLabel.Location = new System.Drawing.Point(76, 42);
+            this.DBVersionLabel.Name = "DBVersionLabel";
+            this.DBVersionLabel.Size = new System.Drawing.Size(42, 13);
+            this.DBVersionLabel.TabIndex = 24;
+            this.DBVersionLabel.Text = "Version";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.DBVersionLabel);
+            this.groupBox1.Controls.Add(this.ServerVersionLabel);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Location = new System.Drawing.Point(6, 230);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(125, 64);
+            this.groupBox1.TabIndex = 25;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Version Info";
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -441,6 +530,8 @@
             this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -481,5 +572,13 @@
         private System.Windows.Forms.CheckBox SafeZoneHealingCheckBox;
         private System.Windows.Forms.CheckBox AllowArcherCheckBox;
         private System.Windows.Forms.CheckBox AllowAssassinCheckBox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox Resolution_textbox;
+        private System.Windows.Forms.Label ServerVersionLabel;
+        private System.Windows.Forms.Label DBVersionLabel;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
+using Client.MirSounds;
 
 namespace Client.MirObjects
 {
@@ -24,7 +25,7 @@ namespace Client.MirObjects
         public string Name = string.Empty;
         public Point CurrentLocation, MapLocation;
         public MirDirection Direction;
-        public bool Dead, Hidden, SitDown, Sneaking, SneakingActive;
+        public bool Dead, Hidden, SitDown, Sneaking;
         public PoisonType Poison;
         public long DeadTime;
         public byte AI;
@@ -44,6 +45,7 @@ namespace Client.MirObjects
         }
 
         public List<Effect> Effects = new List<Effect>();
+        public List<BuffType> Buffs = new List<BuffType>();
 
         public MLibrary BodyLibrary;
         public Color DrawColour = Color.White, NameColour = Color.White;
@@ -61,6 +63,9 @@ namespace Client.MirObjects
         public int StruckWeapon;
 
         public MirLabel TempLabel;
+
+        public static List<MirLabel> DamageLabelList = new List<MirLabel>();
+        public List<Damage> Damages = new List<Damage>();
 
         protected MapObject(uint objectID)
         {
@@ -129,6 +134,23 @@ namespace Client.MirObjects
                     break;
                 case BuffType.PoisonShot:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 2310, 7, 1400, this, true, type) { Repeat = false });
+                    break;
+                case BuffType.EnergyShield:
+                    BuffEffect effect;
+
+                    Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1880, 9, 900, this, true, type) { Repeat = false });
+                    SoundManager.PlaySound(20000 + (ushort)Spell.EnergyShield * 10 + 0);
+
+                    effect.Complete += (o, e) =>
+                    {
+                        Effects.Add(new BuffEffect(Libraries.Magic2, 1900, 2, 800, this, true, type) { Repeat = true });
+                    };
+                    break;
+                case BuffType.MagicBooster:
+                    Effects.Add(new BuffEffect(Libraries.Magic3, 90, 6, 1200, this, true, type) { Repeat = true });
+                    break;
+                case BuffType.PetEnhancer:
+                    Effects.Add(new BuffEffect(Libraries.Magic3, 230, 6, 1200, this, true, type) { Repeat = true });
                     break;
             }
         }
@@ -257,22 +279,36 @@ namespace Client.MirObjects
             Draw();
             DXManager.SetBlend(false);
         }
+        public void DrawDamages()
+        {
+            for (int i = Damages.Count - 1; i >= 0; i--)
+            {
+                Damage info = Damages[i];
+                if (CMain.Time > info.ExpireTime)
+                {
+                    Damages.RemoveAt(i);
+                }
+                else
+                {
+                    info.Draw(DisplayRectangle.Location);
+                }
+            }
+        }
         public void DrawHealth()
         {
             string name = Name;
 
             if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
-            
 
-            if (PercentHealth == 0 || Dead) return;
+            if (Dead) return;
+            if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
 
             if (CMain.Time >= HealthTime)
             {
                 if (Race == ObjectType.Monster && !Name.EndsWith(string.Format("({0})", User.Name)) && !GroupDialog.GroupList.Contains(name)) return;
                 if (Race == ObjectType.Player && this != User && !GroupDialog.GroupList.Contains(Name)) return;
-                if (this == User && GroupDialog.GroupList.Count == 0 && !Settings.HPView) return;
+                if (this == User && GroupDialog.GroupList.Count == 0) return;
             }
-
 
 
             Libraries.Prguse2.Draw(0, DisplayRectangle.X + 8, DisplayRectangle.Y - 64);
@@ -281,7 +317,7 @@ namespace Client.MirObjects
             switch (Race)
             {
                 case ObjectType.Player:
-                    index = 10;
+                    if (GroupDialog.GroupList.Contains(name)) index = 10;
                     break;
                 case ObjectType.Monster:
                     if (GroupDialog.GroupList.Contains(name) || name == User.Name) index = 11;
@@ -291,9 +327,66 @@ namespace Client.MirObjects
             Libraries.Prguse2.Draw(index, new Rectangle(0, 0, (int)(32 * PercentHealth / 100F), 4), new Point(DisplayRectangle.X + 8, DisplayRectangle.Y - 64), Color.White, false);
         }
 
+        public void DrawPoison()
+        {
+            byte poisoncount = 0;
+            if (Poison != PoisonType.None)
+            {
+                if (Poison.HasFlag(PoisonType.Green))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Green);
+                    poisoncount++;
+                }
+                if (Poison.HasFlag(PoisonType.Red))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Red);
+                    poisoncount++;
+                }
+                if (Poison.HasFlag(PoisonType.Bleeding))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.DarkRed);
+                    poisoncount++;
+                }
+                if (Poison.HasFlag(PoisonType.Slow))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Purple);
+                    poisoncount++;
+                }
+                if (Poison.HasFlag(PoisonType.Stun))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Yellow);
+                    poisoncount++;
+                }
+                if (Poison.HasFlag(PoisonType.Frozen))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Blue);
+                    poisoncount++;
+                }
+                if (Poison.HasFlag(PoisonType.Paralysis))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Gray);
+                    poisoncount++;
+                }
+                if (Poison.HasFlag(PoisonType.DelayedExplosion))
+                {
+                    DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
+                    DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Orange);
+                    poisoncount++;
+                }
+            }
+        }
+
         public abstract void DrawBehindEffects();
 
         public abstract void DrawEffects();
 
     }
+
 }

@@ -12,7 +12,6 @@ namespace Client.MirControls
         private MirLabel _label;
         private MirButton _DropDownButton;
         private MirLabel[] _Option = new MirLabel[5];
-        private MirImageControl _ScrollBar;
         private MirButton _ScrollUp, _ScrollDown, _ScrollPosition;
 
         public int _SelectedIndex = -1;
@@ -69,22 +68,20 @@ namespace Client.MirControls
             OrigHeight = OrigHeight == 0 ? Size.Height : OrigHeight;
             for (int i = 0; i < _Option.Length; i++)
             {
-                _Option[i].Size = new Size(Size.Width - 13, 16); //Size.Width - 13, 13
+                _Option[i].Size = new Size(Size.Width - 16, 16); //Size.Width - 13, 13
             }
 
             if (_label != null && !_label.IsDisposed)
                 _label.Size = new Size(Size.Width - 16, 15); //Size.Width - 16, 12
             if (_DropDownButton != null && !_DropDownButton.IsDisposed)
-                _DropDownButton.Location = new Point(Size.Width - 16, 0);
+                _DropDownButton.Location = new Point(Size.Width - 18, 2);
             if (_ScrollUp != null && !_ScrollUp.IsDisposed)
                 _ScrollUp.Location = new Point(Size.Width - 12, 14);
             if (_ScrollDown != null && !_ScrollDown.IsDisposed)
                 _ScrollDown.Location = new Point(Size.Width - 12, 52);
             if (_ScrollPosition != null && !_ScrollPosition.IsDisposed)
                 _ScrollPosition.Location = new Point(Size.Width - 11, 22);
-            if (_ScrollBar != null && !_ScrollBar.IsDisposed)
-                _ScrollBar.Location = new Point(Size.Width - 8, 22);
-
+ 
         }
         #endregion
 
@@ -107,7 +104,7 @@ namespace Client.MirControls
 
         public MirDropDownBox()
         {
-            BackColour = Color.FromArgb(0x0F, 0x0F, 0x42);
+            BackColour = Color.FromArgb(255,6,6,6);
             ForeColour = Color.White;
             Enabled = false;
             _label = new MirLabel
@@ -116,7 +113,7 @@ namespace Client.MirControls
                 Location = new Point(0, 0),
                 ForeColour = ForeColour,
                 BackColour = BackColour,
-                Font = new Font(Settings.FontName, 7F),
+                Font = new Font(Settings.FontName, 8F),
                 Visible = true,
             };
             _label.Click += (o, e) =>
@@ -145,14 +142,14 @@ namespace Client.MirControls
                     Visible = false,
                     Location = new Point(0, 15 + (i * 13)),
                     ForeColour = ForeColour,
-                    BackColour = Color.MidnightBlue,
-                    Font = new Font(Settings.FontName, 7F)
+                    BackColour = Color.FromArgb(255,20,20,20),
+                    Font = new Font(Settings.FontName, 8F)
                 };
                 int index = i;
-                _Option[index].MouseEnter += (o, e) => _Option[index].BackColour = Color.Blue;
-                _Option[index].MouseLeave += (o, e) => _Option[index].BackColour = Color.MidnightBlue;
-                _Option[index].MouseDown += (o, e) => _Option[index].BackColour = Color.MidnightBlue;
-                _Option[index].MouseUp += (o, e) => _Option[index].BackColour = Color.MidnightBlue;
+                _Option[index].MouseEnter += (o, e) => _Option[index].BackColour = Color.FromArgb(255,140,70,0);
+                _Option[index].MouseLeave += (o, e) => _Option[index].BackColour = Color.FromArgb(255, 20, 20, 20);
+                _Option[index].MouseDown += (o, e) => _Option[index].BackColour = Color.FromArgb(255, 20, 20, 20);
+                _Option[index].MouseUp += (o, e) => _Option[index].BackColour = Color.FromArgb(255,20,20,20);
                 _Option[index].Click += (o, e) => SelectOption(index);
 
                 _Option[index].BeforeDraw += (o, e) =>
@@ -163,11 +160,12 @@ namespace Client.MirControls
             }
             _DropDownButton = new MirButton
             {
-                Index = 314,
-                Library = Libraries.Prguse,
-                Location = new Point(Size.Width - 16, 0),
+                Index = 207,
+                Library = Libraries.Prguse2,
+                Location = new Point(Size.Width - 18, 1),
                 Parent = this,
-                PressedIndex = 315,
+                HoverIndex = 208,
+                PressedIndex = 209,
                 Visible = false,
             };
             _DropDownButton.Click += (o, e) => DropDownClick();
@@ -193,14 +191,7 @@ namespace Client.MirControls
                 Visible = false
             };
             _ScrollDown.Click += (o, e) => ScrollDown();
-            _ScrollBar = new MirImageControl
-            {
-                Index = 2012,
-                Library = Libraries.Prguse,
-                Location = new Point(Size.Width - 8, 22),
-                Parent = this,
-                Visible = false
-            };
+           
             _ScrollPosition = new MirButton
             {
                 HoverIndex = 2016,
@@ -276,14 +267,12 @@ namespace Client.MirControls
                     _Option[i].Visible = false;
             if (Items.Count > 5)
             {
-                _ScrollBar.Visible = true;
                 _ScrollDown.Visible = true;
                 _ScrollPosition.Visible = true;
                 _ScrollUp.Visible = true;
             }
             else
             {
-                _ScrollBar.Visible = false;
                 _ScrollDown.Visible = false;
                 _ScrollPosition.Visible = false;
                 _ScrollUp.Visible = false;
@@ -295,7 +284,6 @@ namespace Client.MirControls
             Size = new Size(Size.Width, OrigHeight);
             for (int i = 0; i < _Option.Length; i++)
                 _Option[i].Visible = false;
-            _ScrollBar.Visible = false;
             _ScrollDown.Visible = false;
             _ScrollPosition.Visible = false;
             _ScrollUp.Visible = false;
@@ -343,10 +331,6 @@ namespace Client.MirControls
             if (_DropDownButton != null && !_DropDownButton.IsDisposed)
                 _DropDownButton.Dispose();
             _DropDownButton = null;
-
-            if (_ScrollBar != null && !_ScrollBar.IsDisposed)
-                _ScrollBar.Dispose();
-            _ScrollBar = null;
 
             if (_ScrollDown != null && !_ScrollDown.IsDisposed)
                 _ScrollDown.Dispose();

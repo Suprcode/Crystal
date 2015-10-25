@@ -46,13 +46,13 @@ namespace Server.MirEnvir
 
         public MailInfo(int recipientIndex, bool canReply = false)
         {
-            MailID++;
+            MailID = ++SMain.Envir.NextMailID;
             RecipientIndex = recipientIndex;
 
             CanReply = canReply;
         }
 
-        public MailInfo(BinaryReader reader)
+        public MailInfo(BinaryReader reader, int version, int customversion)
         {
             MailID = reader.ReadUInt64();
             Sender = reader.ReadString();
@@ -64,7 +64,7 @@ namespace Server.MirEnvir
 
             for (int i = 0; i < count; i++)
             {
-                UserItem item = new UserItem(reader);
+                UserItem item = new UserItem(reader, version, customversion);
                 if (SMain.Envir.BindItem(item))
                     Items.Add(item);
             }

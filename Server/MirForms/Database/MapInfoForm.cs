@@ -75,6 +75,7 @@ namespace Server
                 BigMapTextBox.Text = string.Empty;
                 LightsComboBox.SelectedItem = null;
                 MineComboBox.SelectedItem = null;
+                MusicTextBox.Text = string.Empty;
 
                 NoTeleportCheckbox.Checked = false;
                 NoReconnectCheckbox.Checked = false;
@@ -112,7 +113,8 @@ namespace Server
             BigMapTextBox.Text = mi.BigMap.ToString();
             LightsComboBox.SelectedItem = mi.Light;
             MineComboBox.SelectedIndex = mi.MineIndex;
-            
+            MusicTextBox.Text = mi.Music.ToString();
+
             //map attributes
             NoTeleportCheckbox.Checked = mi.NoTeleport;
             NoReconnectCheckbox.Checked = mi.NoReconnect;
@@ -149,6 +151,8 @@ namespace Server
                 if (BigMapTextBox.Text != mi.BigMap.ToString()) BigMapTextBox.Text = string.Empty;
                 if (LightsComboBox.SelectedItem == null || (LightSetting)LightsComboBox.SelectedItem != mi.Light) LightsComboBox.SelectedItem = null;
                 if (MineComboBox.SelectedItem == null || MineComboBox.SelectedIndex != mi.MineIndex) MineComboBox.SelectedIndex = 1;
+                if (MusicTextBox.Text != mi.Music.ToString()) MusicTextBox.Text = string.Empty;
+
                 //map attributes
                 if (NoTeleportCheckbox.Checked != mi.NoTeleport) NoTeleportCheckbox.Checked = false;
                 if (NoReconnectCheckbox.Checked != mi.NoReconnect) NoReconnectCheckbox.Checked = false;
@@ -1309,7 +1313,7 @@ namespace Server
 
             MirForms.ConvertMapInfo.Path = ofd.FileName;
 
-            MirForms.ConvertMapInfo.Start(Envir.MapIndex);
+            MirForms.ConvertMapInfo.Start(Envir);
 
             for (int i = 0; i < MirForms.ConvertMapInfo.MapInfo.Count; i++)
             {
@@ -1337,7 +1341,8 @@ namespace Server
                     Light = MirForms.ConvertMapInfo.MapInfo[i].Light,
                     MiniMap = MirForms.ConvertMapInfo.MapInfo[i].MiniMapNumber,
                     BigMap = MirForms.ConvertMapInfo.MapInfo[i].BigMapNumber,
-                    MineIndex = (byte)MirForms.ConvertMapInfo.MapInfo[i].MineIndex
+                    Music = MirForms.ConvertMapInfo.MapInfo[i].MusicNumber,
+                    MineIndex = (byte)MirForms.ConvertMapInfo.MapInfo[i].MineIndex,
                 };
 
 
@@ -1372,7 +1377,7 @@ namespace Server
                     newmoveinfo.NeedHole = false;
                     newmoveinfo.NeedMove = false;
 
-                    Envir.MapInfoList[Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].fromIndex) - 1].Movements.Add(newmoveinfo);
+                    Envir.MapInfoList[Envir.MapInfoList.FindIndex(a => a.Index == (MirForms.ConvertMapInfo.MapMovements[j].fromIndex))].Movements.Add(newmoveinfo);
                 }
                 catch (Exception)
                 {
@@ -1423,6 +1428,7 @@ namespace Server
                     attributes += " BIGMAP(" + _selectedMapInfos[i].BigMap + ")";
                     attributes += " MAPLIGHT(" + _selectedMapInfos[i].MapDarkLight + ")";
                     attributes += " MINE(" + _selectedMapInfos[i].MineIndex + ")";
+                    attributes += " MUSIC(" + _selectedMapInfos[i].Music + ")";
 
                     if (_selectedMapInfos[i].NoTeleport)
                         attributes += " NOTELEPORT";
@@ -1448,6 +1454,8 @@ namespace Server
                         attributes += " NONAMES";
                     if (_selectedMapInfos[i].NoFight)
                         attributes += " NOFIGHT";
+                    if (_selectedMapInfos[i].Fight)
+                        attributes += " FIGHT";
                     if (_selectedMapInfos[i].Fire)
                         attributes += " FIRE(" + _selectedMapInfos[i].FireDamage + ")";
                     if (_selectedMapInfos[i].Lightning)
@@ -1557,11 +1565,15 @@ namespace Server
                 {
                     for (int j = 0; j < _selectedMapInfos[i].Respawns.Count; j++)
                     {
+                        MonsterInfo mob = Envir.GetMonsterInfo(_selectedMapInfos[i].Respawns[j].MonsterIndex);
+
+                        if (mob == null) continue;
+                        
                         string Output = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}",
                             _selectedMapInfos[i].FileName,
                             _selectedMapInfos[i].Respawns[j].Location.X,
                             _selectedMapInfos[i].Respawns[j].Location.Y,
-                            Envir.MonsterInfoList[_selectedMapInfos[i].Respawns[j].MonsterIndex - 1].Name.Replace(' ', '*'),
+                            mob.Name.Replace(' ', '*'),
                            _selectedMapInfos[i].Respawns[j].Spread,
                            _selectedMapInfos[i].Respawns[j].Count,
                            _selectedMapInfos[i].Respawns[j].Delay,
@@ -1628,6 +1640,23 @@ namespace Server
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].NoFight = NoFightCheckbox.Checked;
+        }
+
+        private void MusicTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return; ushort temp;
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].Music = temp;
         }
 
 

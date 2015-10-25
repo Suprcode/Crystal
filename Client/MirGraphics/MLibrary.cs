@@ -12,11 +12,11 @@ namespace Client.MirGraphics
         public static bool Loaded;
         public static int Count, Progress;
 
-
         public static readonly MLibrary
             ChrSel = new MLibrary(Settings.DataPath + "ChrSel"),
             Prguse = new MLibrary(Settings.DataPath + "Prguse"),
             Prguse2 = new MLibrary(Settings.DataPath + "Prguse2"),
+            BuffIcon = new MLibrary(Settings.DataPath + "BuffIcon"),
             Help = new MLibrary(Settings.DataPath + "Help"),
             MiniMap = new MLibrary(Settings.DataPath + "MMap"),
             Title = new MLibrary(Settings.DataPath + "Title"),
@@ -27,8 +27,7 @@ namespace Client.MirGraphics
             Magic3 = new MLibrary(Settings.DataPath + "Magic3"),
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
-
-            CustomEffects = new MLibrary(Settings.DataPath + "CustomEffects");
+            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill");
         
 
         public static readonly MLibrary
@@ -61,11 +60,15 @@ namespace Client.MirGraphics
                                           ARWeaponsS = new MLibrary[19],
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
-                                          Monsters = new MLibrary[369],
+                                          Monsters = new MLibrary[403],
                                           Mounts = new MLibrary[12],
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[10];
+                                          Pets = new MLibrary[11],
+                                          Transform = new MLibrary[28],
+                                          TransformMounts = new MLibrary[28],
+                                          TransformEffect = new MLibrary[2],
+                                          TransformWeaponEffect = new MLibrary[1];
 
         static Libraries()
         {
@@ -129,6 +132,18 @@ namespace Client.MirGraphics
 
             for (int i = 0; i < Pets.Length; i++)
                 Pets[i] = new MLibrary(Settings.PetsPath + i.ToString("00"));
+
+            for (int i = 0; i < Transform.Length; i++)
+                Transform[i] = new MLibrary(Settings.TransformPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformMounts.Length; i++)
+                TransformMounts[i] = new MLibrary(Settings.TransformMountsPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformEffect.Length; i++)
+                TransformEffect[i] = new MLibrary(Settings.TransformEffectPath + i.ToString("00"));
+
+            for (int i = 0; i < TransformWeaponEffect.Length; i++)
+                TransformWeaponEffect[i] = new MLibrary(Settings.TransformWeaponEffectPath + i.ToString("00"));
 
             #region Maplibs
             //wemade mir2 (allowed from 0-99)
@@ -196,20 +211,14 @@ namespace Client.MirGraphics
             }
             #endregion
 
-            Thread thread = new Thread(LoadLibraries) { IsBackground = true };
+            LoadLibraries();
+
+            Thread thread = new Thread(LoadGameLibraries) { IsBackground = true };
             thread.Start();
         }
 
         static void LoadLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
-                CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
-                ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
-                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length + 19;
-
-            Dragon.Initialize();
-            Progress++;
-
             ChrSel.Initialize();
             Progress++;
 
@@ -219,11 +228,30 @@ namespace Client.MirGraphics
             Prguse2.Initialize();
             Progress++;
 
+            Title.Initialize();
+            Progress++;
+        }
+
+        private static void LoadGameLibraries()
+        {
+            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
+                CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
+                ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
+                CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 16;
+
+            Dragon.Initialize();
+            Progress++;
+
+            BuffIcon.Initialize();
+            Progress++;
+
             Help.Initialize();
             Progress++;
 
             MiniMap.Initialize();
             Progress++;
+
             MagIcon.Initialize();
             Progress++;
             MagIcon2.Initialize();
@@ -237,9 +265,14 @@ namespace Client.MirGraphics
             Progress++;
             MagicC.Initialize();
             Progress++;
+
             Effect.Initialize();
             Progress++;
-            CustomEffects.Initialize();
+
+            GuildSkill.Initialize();
+            Progress++;
+
+            Deco.Initialize();
             Progress++;
 
             Items.Initialize();
@@ -289,7 +322,6 @@ namespace Client.MirGraphics
                 CWeapons[i].Initialize();
                 Progress++;
             }
-
 
             for (int i = 0; i < AArmours.Length; i++)
             {
@@ -376,11 +408,35 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
+            for (int i = 0; i < Transform.Length; i++)
+            {
+                Transform[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < TransformEffect.Length; i++)
+            {
+                TransformEffect[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < TransformWeaponEffect.Length; i++)
+            {
+                TransformWeaponEffect[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < TransformMounts.Length; i++)
+            {
+                TransformMounts[i].Initialize();
+                Progress++;
+            }
+
             Loaded = true;
         }
 
     }
-    
+
     public sealed class MLibrary
     {
         private const string Extention = ".Lib";
@@ -400,7 +456,7 @@ namespace Client.MirGraphics
         {
             _fileName = Path.ChangeExtension(filename, Extention);
         }
-        
+
         public void Initialize()
         {
             int CurrentVersion = 0;
@@ -497,7 +553,6 @@ namespace Client.MirGraphics
             if (_images == null || index < 0 || index >= _images.Length)
                 return Size.Empty;
 
-
             if (_images[index] == null)
             {
                 _fStream.Position = _indexList[index];
@@ -549,7 +604,7 @@ namespace Client.MirGraphics
                 return;
 
 
-            
+
             DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -570,7 +625,7 @@ namespace Client.MirGraphics
 
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(opacity);
-            
+
             DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
             DXManager.SetOpacity(oldOpacity);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -587,12 +642,12 @@ namespace Client.MirGraphics
 
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
-            
+
             bool oldBlend = DXManager.Blending;
             DXManager.SetBlend(true, rate);
 
             DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
- 
+
             DXManager.SetBlend(oldBlend);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
@@ -652,8 +707,8 @@ namespace Client.MirGraphics
 
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + size.Width < 0 || point.Y + size.Height < 0)
                 return;
-            
-            DXManager.Sprite.Draw2D(mi.Image, new Rectangle(Point.Empty, new Size(mi.Width,mi.Height)), size, point, colour);
+
+            DXManager.Sprite.Draw2D(mi.Image, new Rectangle(Point.Empty, new Size(mi.Width, mi.Height)), size, point, colour);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
@@ -714,14 +769,14 @@ namespace Client.MirGraphics
             DXManager.SetBlend(oldBlend);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
-        
+
         public bool VisiblePixel(int index, Point point, bool accuate)
         {
             return CheckImage(index) && _images[index].VisiblePixel(point, accuate);
         }
 
     }
-     
+
     public sealed class MImage
     {
         public short Width, Height, X, Y, ShadowX, ShadowY;
@@ -736,7 +791,7 @@ namespace Client.MirGraphics
 
         public Texture MaskImage;
         public Boolean HasMask;
-       
+
         public long CleanTime;
         public Size TrueSize;
 
@@ -755,7 +810,7 @@ namespace Client.MirGraphics
             ShadowY = reader.ReadInt16();
             Shadow = reader.ReadByte();
             Length = reader.ReadInt32();
-            
+
             //check if there's a second layer and read it
             HasMask = ((Shadow >> 7) == 1) ? true : false;
             if (HasMask)
@@ -780,7 +835,7 @@ namespace Client.MirGraphics
             Data = (byte*)stream.InternalDataPointer;
 
             stream.Write(reader.ReadBytes(Length), 0, Length);
-            
+
             stream.Dispose();
             Image.UnlockRectangle(0);
 
@@ -823,16 +878,16 @@ namespace Client.MirGraphics
             bool result = false;
             if (Data != null)
             {
-                int x = (p.X - p.X%4)/4;
-                int y = (p.Y - p.Y%4)/4;
-                int index = (y*(w/4) + x)*8;
+                int x = (p.X - p.X % 4) / 4;
+                int y = (p.Y - p.Y % 4) / 4;
+                int index = (y * (w / 4) + x) * 8;
 
                 int col0 = (Data[index + 1] << 8 | Data[index]), col1 = (Data[index + 3] << 8 | Data[index + 2]);
 
                 if (col0 == 0 && col1 == 0) return false;
-                    
+
                 if (!acurrate || col1 < col0) return true;
-                
+
                 x = p.X % 4;
                 y = p.Y % 4;
                 x *= 2;
@@ -845,7 +900,7 @@ namespace Client.MirGraphics
         public Size GetTrueSize()
         {
             if (TrueSize != Size.Empty) return TrueSize;
-            
+
             int l = 0, t = 0, r = Width, b = Height;
 
             bool visible = false;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.MirEnvir;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -9,6 +10,8 @@ namespace Server.MirForms
 {
     public static class ConvertMapInfo
     {
+        public static Envir EditEnvir = null;
+
         public static List<MapInfo> MapInfo = new List<MapInfo>();
         public static List<MapMovements> MapMovements = new List<MapMovements>();
         public static List<MineInfo> MineInfo = new List<MineInfo>();
@@ -16,13 +19,17 @@ namespace Server.MirForms
         private static int _endIndex = 0;
         public static string Path = string.Empty;
 
-        public static void Start(int lastIndex = 0)
+        public static void Start(Envir envir)
         {
             if (Path == string.Empty) return;
 
+            EditEnvir = envir;
+
+            if (EditEnvir == null) return;
+
             var lines = File.ReadAllLines(Path);
 
-            _endIndex = lastIndex; // Last map index number
+            _endIndex = EditEnvir.MapIndex; // Last map index number
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -56,7 +63,7 @@ namespace Server.MirForms
                     int bmi = mapAttributes.FindIndex(x => x.StartsWith("BIGMAP(".ToUpper())); // BIGMAP() placement in list of parameters
                     int mli = mapAttributes.FindIndex(x => x.StartsWith("MAPLIGHT(".ToUpper())); // MAPLIGHT() placement in list of parameters
                     int minei = mapAttributes.FindIndex(x => x.StartsWith("MINE(".ToUpper())); // MINE() placement in list of parameters
-
+                    int musici = mapAttributes.FindIndex(x => x.StartsWith("MUSIC(".ToUpper()));
                     newMapInfo.NoTeleport = mapAttributes.Any(s => s.Contains("NOTELEPORT".ToUpper()));
                     newMapInfo.NoReconnect = mapAttributes.Any(x => x.StartsWith("NORECONNECT(".ToUpper()));
                     newMapInfo.NoRandom = mapAttributes.Any(s => s.Contains("NORANDOMMOVE".ToUpper()));
@@ -69,13 +76,14 @@ namespace Server.MirForms
                     newMapInfo.NoMonsterDrop = mapAttributes.Any(s => s.Contains("NOMONSTERDROP".ToUpper()));
                     newMapInfo.NoNames = mapAttributes.Any(s => s.Contains("NONAMES".ToUpper()));
                     newMapInfo.NoFight = mapAttributes.Any(s => s.Contains("NOFIGHT".ToUpper()));
-                    newMapInfo.Fight = !mapAttributes.Any(s => s.Contains("SAFE".ToUpper()));
+                    newMapInfo.Fight = mapAttributes.Any(s => s.Contains("FIGHT".ToUpper()));
                     newMapInfo.Fire = mapAttributes.Any(x => x.StartsWith("FIRE(".ToUpper()));
                     newMapInfo.Lightning = mapAttributes.Any(x => x.StartsWith("LIGHTNING(".ToUpper()));
                     newMapInfo.MiniMap = mapAttributes.Any(x => x.StartsWith("MINIMAP(".ToUpper()));
                     newMapInfo.BigMap = mapAttributes.Any(x => x.StartsWith("BIGMAP(".ToUpper()));
                     newMapInfo.Mine = mapAttributes.Any(s => s.Contains("MINE(".ToUpper()));
                     newMapInfo.MapLight = mapAttributes.Any(s => s.Contains("MAPLIGHT(".ToUpper()));
+                    newMapInfo.Music = mapAttributes.Any(s => s.Contains("MUSIC(".ToUpper()));
                     newMapInfo.Light = LightSetting.Normal;
 
 
@@ -100,6 +108,9 @@ namespace Server.MirForms
                         newMapInfo.MiniMapNumber = Convert.ToUInt16(mapAttributes[mmi].TrimStart("MINIMAP(".ToCharArray()).TrimEnd(')'));
                     if (newMapInfo.BigMap == true) // If there is a BIGMAP attribute get its value
                         newMapInfo.BigMapNumber = Convert.ToUInt16(mapAttributes[bmi].TrimStart("BIGMAP(".ToCharArray()).TrimEnd(')'));
+
+                    if (newMapInfo.Music == true)
+                        newMapInfo.MusicNumber = Convert.ToUInt16(mapAttributes[musici].TrimStart("MUSIC(".ToCharArray()).TrimEnd(')'));
 
                     if (lighti != -1) // Check if there is a LIGHT attribute and get its value
                     {
@@ -193,10 +204,31 @@ namespace Server.MirForms
 
                             string[] e = c[2].Split(',');
 
+
+                            var toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.FileName == c[3]); //check existing maps for the connection info
+                            var toMap = -1;
+
+                            if (toMapIndex >= 0)
+                            {
+                                toMap = EditEnvir.MapInfoList[toMapIndex].Index; //get real index
+                            }
+
+                            if(toMap < 0)
+                            {
+                                toMapIndex = MapInfo.FindIndex(a => a.MapFile.ToString() == c[3]);
+
+                                if(toMapIndex >= 0)
+                                {
+                                    toMap = MapInfo[toMapIndex].Index;
+                                }
+                            }
+
+                            if (toMap < 0) continue;
+
                             newmapMovements.fromIndex = MapInfo[MapInfo.FindIndex(a => a.MapFile.ToString() == MapInfo[j].MapFile)].Index; // Check MapInfo for MapFile (mapInfo[j].mapFile) and get it's index number
                             newmapMovements.fromX = d[0];
                             newmapMovements.fromY = d[1];
-                            newmapMovements.toMap = MapInfo[MapInfo.FindIndex(a => a.MapFile.ToString() == c[3])].Index; // Check MapInfo for MapFile (c[3]) and get it's index number
+                            newmapMovements.toMap = toMap;
                             newmapMovements.toX = e[0];
                             newmapMovements.toY = e[1];
 
@@ -257,7 +289,8 @@ namespace Server.MirForms
 
         public ushort
             MiniMapNumber = 0,
-            BigMapNumber = 0;
+            BigMapNumber = 0,
+            MusicNumber = 0;
 
         public string
             MapFile = string.Empty,
@@ -286,6 +319,7 @@ namespace Server.MirForms
             MiniMap = false,
             BigMap = false,
             MapLight = false,
+            Music = false,
             Mine = false;
 
         public List<MapMovements>
