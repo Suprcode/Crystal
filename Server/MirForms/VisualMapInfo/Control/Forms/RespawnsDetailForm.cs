@@ -28,7 +28,6 @@ namespace Server.MirForms.VisualMapInfo.Control.Forms
             if (Spread.Text == string.Empty) Spread.Text = "0";
             if (Count.Text == string.Empty) Count.Text = "0";
             if (Delay.Text == string.Empty) Delay.Text = "0";
-            if (RoutePath.Text == string.Empty) RoutePath.Text = "";
 
             this.Close();
         }

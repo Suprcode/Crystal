@@ -35,8 +35,6 @@ namespace Server
         {
             this.MapTabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
-            this.MusicTextBox = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
             this.MineComboBox = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -181,8 +179,6 @@ namespace Server
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label11);
-            this.tabPage1.Controls.Add(this.MusicTextBox);
             this.tabPage1.Controls.Add(this.label33);
             this.tabPage1.Controls.Add(this.MineComboBox);
             this.tabPage1.Controls.Add(this.label15);
@@ -204,23 +200,6 @@ namespace Server
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Info";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(38, 181);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(38, 13);
-            this.label11.TabIndex = 18;
-            this.label11.Text = "Music:";
-            // 
-            // MusicTextBox
-            // 
-            this.MusicTextBox.Location = new System.Drawing.Point(82, 178);
-            this.MusicTextBox.Name = "MusicTextBox";
-            this.MusicTextBox.Size = new System.Drawing.Size(92, 20);
-            this.MusicTextBox.TabIndex = 17;
-            this.MusicTextBox.TextChanged += new System.EventHandler(this.MusicTextBox_TextChanged);
             // 
             // label33
             // 
@@ -1552,8 +1531,6 @@ namespace Server
         private TextBox RoutePathTextBox;
         private CheckBox NoFightCheckbox;
         private CheckBox NeedMoveMCheckBox;
-        private Label label11;
-        private TextBox MusicTextBox;
 
     }
 }

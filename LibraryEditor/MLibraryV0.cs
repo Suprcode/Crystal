@@ -1,11 +1,11 @@
-﻿using ManagedSquish;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using ManagedSquish;
 
 namespace LibraryEditor
 {
@@ -70,6 +70,8 @@ namespace LibraryEditor
 
             Count = Images.Count;
             IndexList.Clear();
+
+
 
             int offSet = 4 + Count * 4;
             for (int i = 0; i < Count; i++)
@@ -177,6 +179,7 @@ namespace LibraryEditor
             return image.Preview;
         }
 
+
         public void AddImage(Bitmap image, short x, short y)
         {
             MImage mImage = new MImage(image) { X = x, Y = y };
@@ -184,6 +187,7 @@ namespace LibraryEditor
             Count++;
             Images.Add(mImage);
         }
+
 
         public void InsertImage(int index, Bitmap image, short x, short y)
         {
@@ -202,6 +206,7 @@ namespace LibraryEditor
                 return;
             }
             Count--;
+
 
             Images.RemoveAt(index);
         }
@@ -229,6 +234,7 @@ namespace LibraryEditor
                         RemoveImage(i);
                 }
             }
+
         }
 
         public sealed class MImage
@@ -264,6 +270,7 @@ namespace LibraryEditor
                 int w = image.Width + (4 - image.Width % 4) % 4;
                 int h = image.Height + (4 - image.Height % 4) % 4;
 
+
                 if (image.Width != w || image.Height != h)
                 {
                     Bitmap temp = new Bitmap(w, h);
@@ -284,6 +291,7 @@ namespace LibraryEditor
 
                 byte[] pixels = new byte[image.Width * image.Height * 4];
 
+
                 Marshal.Copy(data.Scan0, pixels, 0, pixels.Length);
                 image.UnlockBits(data);
 
@@ -296,6 +304,7 @@ namespace LibraryEditor
 
                     if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0)
                         pixels[i + 3] = 0; //Make Transparent
+
                 }
 
                 int count = Squish.GetStorageRequirements(image.Width, image.Height, SquishFlags.Dxt1);
@@ -306,6 +315,7 @@ namespace LibraryEditor
                 {
                     Squish.CompressImage((IntPtr)source, image.Width, image.Height, (IntPtr)dest, SquishFlags.Dxt1);
                 }
+
             }
 
             public void Save(BinaryWriter writer)
@@ -371,6 +381,9 @@ namespace LibraryEditor
                     g.Save();
                 }
             }
+
+
         }
+
     }
 }

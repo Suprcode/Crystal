@@ -54,20 +54,7 @@ namespace Server.MirObjects
         }
         public GuildObject(BinaryReader reader) 
         {
-            int customversion = Envir.LoadCustomVersion;
-            int version = reader.ReadInt32();
-            Guildindex = version;
-            if (version == int.MaxValue)
-            {
-                version = reader.ReadInt32();
-                customversion = reader.ReadInt32();
-                Guildindex = reader.ReadInt32();
-            }
-            else
-            {
-                version = Envir.LoadVersion;
-                NeedSave = true;
-            }
+            Guildindex = reader.ReadInt32();
             Name = reader.ReadString();
             Level = reader.ReadByte();
             SparePoints = reader.ReadByte();
@@ -91,7 +78,7 @@ namespace Server.MirObjects
                     if (!reader.ReadBoolean()) continue;
                 GuildStorageItem Guilditem = new GuildStorageItem()
                 {
-                    Item = new UserItem(reader, version, customversion),
+                    Item = new UserItem(reader, Envir.LoadVersion),
                     UserId = reader.ReadInt64()
                 };
                 
@@ -99,21 +86,9 @@ namespace Server.MirObjects
                     StoredItems[j] = Guilditem;
             }
             int BuffCount = reader.ReadInt32();
-            if (version < 61)
-            {
-                for (int j = 0; j < BuffCount; j++)
-                    new GuildBuffOld(reader);
-            }
-            else
-            {
-                for (int j = 0; j < BuffCount; j++)
-                {
-                    //new GuildBuff(reader);
-                    BuffList.Add(new GuildBuff(reader));
-                }
-            }
-            for (int j = 0; j < BuffList.Count; j++)
-                BuffList[j].Info = Envir.FindGuildBuffInfo(BuffList[j].Id);
+            for (int j = 0; j < BuffCount; j++)
+                BuffList.Add(new GuildBuff(reader));
+
             int  NoticeCount = reader.ReadInt32();
             for (int j = 0; j < NoticeCount; j++)
                 Notice.Add(reader.ReadString());
@@ -124,11 +99,6 @@ namespace Server.MirObjects
         }
         public void Save(BinaryWriter writer)
         {
-            int temp = int.MaxValue;
-            writer.Write(temp);
-            writer.Write(Envir.Version);
-            writer.Write(Envir.LoadVersion);
-
             int RankCount = 0;
             for (int i = Ranks.Count - 1; i >= 0; i--)
                 if (Ranks[i].Members.Count > 0)
@@ -217,7 +187,7 @@ namespace Server.MirObjects
                     Voting = Voting,
                     SparePoints = SparePoints,
                     ItemCount = (byte)StoredItems.Length,
-                    BuffCount = (byte)0,//(byte)BuffList.Count,
+                    BuffCount = (byte)BuffList.Count,
                     MyOptions = member.MyGuildRank != null? member.MyGuildRank.Options: (RankOptions)0,
                     MyRankId = member.MyGuildRank != null? member.MyGuildRank.Index: 256
                 });
@@ -309,7 +279,7 @@ namespace Server.MirObjects
 
         public bool NewRank(PlayerObject Self)
         {
-            if (Ranks.Count >= byte.MaxValue)
+            if (Ranks.Count > 254)
             {
                 Self.ReceiveChat("You cannot have anymore ranks.", ChatType.System);
                 return false;
@@ -527,7 +497,6 @@ namespace Server.MirObjects
             {
                 Leveled = true;
                 Level++;
-                SparePoints = (byte)Math.Min(byte.MaxValue, SparePoints + Settings.Guild_PointPerLevel);
                 experience -= MaxExperience;
                 if (Level < Settings.Guild_ExperienceList.Count)
                     MaxExperience = Settings.Guild_ExperienceList[Level];
@@ -614,115 +583,6 @@ namespace Server.MirObjects
             return false;
         }
         #endregion
-
-        public void RefreshAllStats()
-        {
-            for (int i = 0; i < Ranks.Count; i++)
-                for (int j = 0; j < Ranks[i].Members.Count; j++)
-                {
-                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
-                    if (player != null)
-                        player.RefreshStats();
-                }
-        }
-        public void Process()
-        {
-            //guild buffs
-            bool NeedUpdate = false;
-            List<GuildBuff> UpdatedBuffs = new List<GuildBuff>();
-            for (int k = 0; k < BuffList.Count; k++)
-            {
-                if ((BuffList[k].Info == null) || (BuffList[k].Info.TimeLimit == 0)) continue; //dont bother if it's infinite buffs
-                if (BuffList[k].Active == false) continue;//dont bother if the buff isnt active
-                BuffList[k].ActiveTimeRemaining -= 1;
-                if (BuffList[k].ActiveTimeRemaining < 0)
-                {
-                    NeedUpdate = true;
-                    BuffList[k].Active = false;
-                    UpdatedBuffs.Add(BuffList[k]);
-                    //SendServerPacket(new ServerPackets.RemoveGuildBuff {ObjectID = (uint)BuffList[k].Id});
-                }
-            }
-            if (NeedUpdate)
-            {
-                if (UpdatedBuffs.Count > 0)
-                    SendServerPacket(new ServerPackets.GuildBuffList { ActiveBuffs = UpdatedBuffs });
-                RefreshAllStats();
-            }
-        }
-
-        public GuildBuff GetBuff(int Id)
-        {
-            for (int i = 0; i < BuffList.Count; i++ )
-            {
-                if (BuffList[i].Id == Id)
-                    return BuffList[i];
-            }
-            return null;
-        }
-
-        public void NewBuff(int Id, bool charge = true)
-        {
-            GuildBuffInfo Info = Envir.FindGuildBuffInfo(Id);
-            if (Info == null) return;
-            GuildBuff Buff = new GuildBuff()
-            {
-                Id = Id,
-                Info = Info,
-                Active = true,
-            };
-            Buff.ActiveTimeRemaining = Buff.Info.TimeLimit;
-
-            if (charge)
-            {
-                ChargeForBuff(Buff);
-            }
-
-            BuffList.Add(Buff);
-            List<GuildBuff> NewBuff = new List<GuildBuff>();
-            NewBuff.Add(Buff);
-            SendServerPacket(new ServerPackets.GuildBuffList { ActiveBuffs = NewBuff });
-            //now tell everyone our new sparepoints
-            for (int i = 0; i < Ranks.Count; i++)
-                for (int j = 0; j < Ranks[i].Members.Count; j++)
-                    if (Ranks[i].Members[j].Player != null)
-                        SendGuildStatus((PlayerObject)Ranks[i].Members[j].Player);
-            NeedSave = true;
-            RefreshAllStats();
-        }
-
-        private void ChargeForBuff(GuildBuff buff)
-        {
-            if (buff == null) return;
-
-            SparePoints -= buff.Info.PointsRequirement;
-        }
-
-        public void ActivateBuff(int Id)
-        {
-            GuildBuff Buff = GetBuff(Id);
-            if (Buff == null) return;
-            if (Buff.Active) return;//no point activating buffs if they have no time limit anyway
-            if (Gold < Buff.Info.ActivationCost) return;
-            Buff.Active = true;
-            Buff.ActiveTimeRemaining = Buff.Info.TimeLimit;
-            Gold -= (uint)Buff.Info.ActivationCost;
-            List<GuildBuff> NewBuff = new List<GuildBuff>();
-            NewBuff.Add(Buff);
-            SendServerPacket(new ServerPackets.GuildBuffList { ActiveBuffs = NewBuff });
-            SendServerPacket(new ServerPackets.GuildStorageGoldChange() { Type = 2, Name = "", Amount = (uint)Buff.Info.ActivationCost });
-            NeedSave = true;
-            RefreshAllStats();
-        }
-        public void RemoveAllBuffs()
-        {
-            //note this removes them all but doesnt reset the sparepoints!(should make some sort of 'refreshpoints' procedure for that
-            SendServerPacket(new ServerPackets.GuildBuffList {Remove = 1, ActiveBuffs = BuffList});
-            BuffList.Clear();
-            RefreshAllStats();
-            NeedSave = true;
-        }
-        
     }
 
     public class GuildAtWar
@@ -739,7 +599,7 @@ namespace Server.MirObjects
             GuildA.WarringGuilds.Add(GuildB);
             GuildB.WarringGuilds.Add(GuildA);
 
-            TimeRemaining = Settings.Minute * Settings.Guild_WarTime;
+            TimeRemaining = Settings.Minute * Settings.Guild_WarTime; //make this changable in server form
         }
 
         public void EndWar()

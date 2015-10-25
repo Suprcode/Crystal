@@ -22,7 +22,7 @@ namespace Client
     public partial class CMain : Form
     {
         public static MirControl DebugBaseLabel, HintBaseLabel;
-        public static MirLabel DebugTextLabel, HintTextLabel, ScreenshotTextLabel;
+        public static MirLabel DebugTextLabel, HintTextLabel;
         public static Graphics Graphics;
         public static Point MPoint;
 
@@ -32,11 +32,13 @@ namespace Client
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
+
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
 
         public static bool Shift, Alt, Ctrl, Tilde;
+
 
         public CMain()
         {
@@ -93,7 +95,7 @@ namespace Client
                 {
                     UpdateTime();
                     UpdateEnviroment();
-                    RenderEnvironment();
+                    RenderEnviroment();
                 }
 
             }
@@ -302,7 +304,7 @@ namespace Client
             CreateDebugLabel();
  
         }
-        private static void RenderEnvironment()
+        private static void RenderEnviroment()
         {
             try
             {
@@ -312,20 +314,19 @@ namespace Client
                     Thread.Sleep(1);
                     return;
                 }
-                else
-                {
-                    DXManager.Device.Clear(ClearFlags.Target, Color.CornflowerBlue, 0, 0);
-                    DXManager.Device.BeginScene();
-                    DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
-                    DXManager.SetSurface(DXManager.MainSurface);
 
-                    if (MirScene.ActiveScene != null)
-                        MirScene.ActiveScene.Draw();
+                DXManager.Device.Clear(ClearFlags.Target, Color.CornflowerBlue, 0, 0);
+                DXManager.Device.BeginScene();
+                DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
+                DXManager.SetSurface(DXManager.MainSurface);
 
-                    DXManager.Sprite.End();
-                    DXManager.Device.EndScene();
-                    DXManager.Device.Present();
-                }
+
+                if (MirScene.ActiveScene != null)
+                    MirScene.ActiveScene.Draw();
+                
+                DXManager.Sprite.End();
+                DXManager.Device.EndScene();
+                DXManager.Device.Present();
             }
             catch (DeviceLostException)
             {
@@ -393,6 +394,7 @@ namespace Client
 
         private static void CreateHintLabel()
         {
+
             if (HintBaseLabel == null || HintBaseLabel.IsDisposed)
             {
                 HintBaseLabel = new MirControl
@@ -429,7 +431,6 @@ namespace Client
             }
 
             HintBaseLabel.Visible = true;
-
             HintTextLabel.Text = MirControl.MouseControl.Hint;
 
             Point point = MPoint.Add(-HintTextLabel.Size.Width, 20);
@@ -464,24 +465,19 @@ namespace Client
 
             location = new Point(-location.X, -location.Y);
 
-            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}", 
-                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal", 
-                MapControl.User != null ? MapControl.User.Name : "", 
-                Now.ToShortDateString(), 
-                Now.TimeOfDay);
+            string text = string.Format("Date: {0}{1}", Now.ToShortDateString(), Environment.NewLine);
+            text += string.Format("Time: {0:hh\\:mm\\:ss}{1}", Now.TimeOfDay, Environment.NewLine);
+            if (MapControl.User != null)
+                text += string.Format("Player: {0}{1}", MapControl.User.Name, Environment.NewLine);
 
             using (Bitmap image = GetImage(Handle, new Rectangle(location, ClientSize)))
             using (Graphics graphics = Graphics.FromImage(image))
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
-
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown               
+                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 3, 50);
+                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 4, 49);
+                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 5, 50);
+                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.Black, 4, 51);
+                graphics.DrawString(text, new Font(Settings.FontName, 10F), Brushes.White, 4, 50);
 
                 string path = Path.Combine(Application.StartupPath, @"Screenshots\");
                 if (!Directory.Exists(path))
@@ -604,6 +600,13 @@ namespace Client
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("Cannot leave game for " + (GameScene.LogTime - CMain.Time) / 1000 + " seconds.", ChatType.System);
                 e.Cancel = true;
+
+                //if (MessageBox.Show("Are you sure you want to quit the game?", "Mir 2 Quit",
+                //     MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                //{
+                //    // Cancel the Closing event
+                //    e.Cancel = true;
+                //}
             }
         }
     }

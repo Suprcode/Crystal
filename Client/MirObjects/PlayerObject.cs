@@ -28,7 +28,7 @@ namespace Client.MirObjects
         public MirGender Gender;
         public MirClass Class;
         public byte Hair;
-        public ushort Level;
+        public byte Level;
 
         public MLibrary WeaponLibrary1, WeaponLibrary2, HairLibrary, WingLibrary, MountLibrary;
         public int Armour, Weapon, ArmourOffSet, HairOffSet, WeaponOffSet, WingOffset, MountOffset;
@@ -39,7 +39,6 @@ namespace Client.MirObjects
         public FrameSet Frames;
         public Frame Frame, WingFrame;
         public int FrameIndex, FrameInterval, EffectFrameIndex, EffectFrameInterval, SlowFrameIndex;
-        public byte SkipFrameUpdate = 0;
 
         public bool HasClassWeapon
         {
@@ -75,9 +74,6 @@ namespace Client.MirObjects
         public bool MagicShield;
         public Effect ShieldEffect;
 
-        public bool ElementalBarrier;
-        public Effect ElementalBarrierEffect;
-
         public byte WingEffect;
         private short StanceDelay = 2500;
 
@@ -91,22 +87,32 @@ namespace Client.MirObjects
         public int ElementEffect;//hold orb count for player(object) load
         public int ElementsLevel;
         public int ElementOrbMax;
+        public bool ElementalBarrier;
+        public Effect ElementalBarrierEffect;
         //Elemental system END
 
-        public SpellEffect CurrentEffect;
+        public SpellEffect CurrentEffect; //Stephenking effect sync test
 
-        public bool RidingMount, Sprint, FastRun, Fishing, FoundFish;
-        public long StanceTime, MountTime, FishingTime;
-        public long BlizzardStopTime, ReincarnationStopTime, SlashingBurstTime;
-
-        public short MountType = -1, TransformType = -1;
+        public long StanceTime, BlizzardFreezeTime, ReincarnationStopTime;
 
         public string GuildName;
         public string GuildRankName;
 
+        public short MountType;
+        public long MountTime;
+        public bool RidingMount;
+
+        public bool Sprint;
+        public bool FastRun;
+
+        public long FishingTime;
+        public bool Fishing;
         public Point FishingPoint;
+        public bool FoundFish;
 
         public LevelEffects LevelEffects;
+
+        public List<BuffType> Buffs = new List<BuffType>();
 
         public PlayerObject(uint objectID)
             : base(objectID)
@@ -148,8 +154,6 @@ namespace Client.MirObjects
 
             Fishing = info.Fishing;
 
-            TransformType = info.TransformType;
-
             SetLibraries();
 
             if (Dead) ActionFeed.Add(new QueuedAction { Action = MirAction.Dead, Direction = Direction, Location = CurrentLocation });
@@ -175,7 +179,6 @@ namespace Client.MirObjects
             Armour = info.Armour;
             Light = info.Light;
             WingEffect = info.WingEffect;
-
             SetLibraries();
             SetEffects();
         }
@@ -243,379 +246,282 @@ namespace Client.MirObjects
 
         public virtual void SetLibraries()
         {
-            //fishing broken
-            //10
-            //11
-            //12
-            //13
+            bool AltAnim = false;
 
-            //almost all broken
-            //20 - black footballer - 791
-            //21 - red footballer - 791
-            //22 - blue footballer - 791
-            //23 - green footballer - 791
-            //24 - red2 footballer - 791
-
-            bool altAnim = false;
-
-            bool showMount = true;
-            bool showFishing = true;
-
-            if (TransformType > -1)
+            switch(Class)
             {
-                #region Transform
+                #region Archer
+                case MirClass.Archer:
 
-                switch (TransformType)
-                {
-                    case 4:
-                    case 5:
-                    case 7:
-                    case 8:                
-                    case 26:
-                        showFishing = false;
-                        break;
-                    case 6:
-                    case 9:
-                        showMount = false;
-                        showFishing = false;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch (CurrentAction)
-                {
-                    case MirAction.Standing:
-                    case MirAction.Jump:
-                        Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
-                        break;
-                    case MirAction.Walking:
-                    case MirAction.WalkingBow:
-                        Frames.Frames.TryGetValue(MirAction.Walking, out Frame);
-                        break;
-                    case MirAction.Running:
-                    case MirAction.RunningBow:
-                        Frames.Frames.TryGetValue(MirAction.Running, out Frame);
-                        break;
-                    case MirAction.Attack1:
-                    case MirAction.Attack2:
-                    case MirAction.Attack3:
-                    case MirAction.Attack4:
-                    case MirAction.AttackRange1:
-                    case MirAction.AttackRange2:
-                    case MirAction.AttackRange3:
-                        Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
-                        break;
-                }
-
-                if (MountType > 6 && RidingMount)
-                {
-                    ArmourOffSet = -416;
-                    BodyLibrary = TransformType < Libraries.TransformMounts.Length ? Libraries.TransformMounts[TransformType] : Libraries.TransformMounts[0];
-                }
-                else
-                {
-                    ArmourOffSet = 0;
-                    BodyLibrary = TransformType < Libraries.Transform.Length ? Libraries.Transform[TransformType] : Libraries.Transform[0];
-                }
-
-                HairLibrary = null;
-                WeaponLibrary1 = null;
-                WeaponLibrary2 = null;
-
-                if (TransformType == 19)
-                {
-                    WingEffect = 2;
-
-                    WingLibrary = WingEffect - 1 < Libraries.TransformEffect.Length ? Libraries.TransformEffect[WingEffect - 1] : null;
-                }
-                else
-                {
-                    WingLibrary = null;
-                }
-
-                #endregion
-            }
-            else
-            {
-
-                switch (Class)
-                {
-                    #region Archer
-                    case MirClass.Archer:
-
-                        #region WeaponType
-                        if (HasClassWeapon)
+                    #region WeaponType
+                    if (HasClassWeapon)
+                    {
+                        switch (CurrentAction)
                         {
-                            switch (CurrentAction)
-                            {
-                                case MirAction.Walking:
-                                case MirAction.Running:
-                                case MirAction.AttackRange1:
-                                case MirAction.AttackRange2:
-                                    altAnim = true;
-                                    break;
-                            }
+                            case MirAction.Walking:
+                            case MirAction.Running:
+                            case MirAction.AttackRange1:
+                            case MirAction.AttackRange2:
+                                AltAnim = true;
+                                break;
                         }
+                    }
 
-                        if (CurrentAction == MirAction.Jump) altAnim = true;
+                    if (CurrentAction == MirAction.Jump) AltAnim = true;
 
-                        #endregion
-
-                        #region Armours
-                        if (altAnim)
-                        {
-                            switch (Armour)
-                            {
-                                case 9: //heaven
-                                case 10: //mir
-                                case 11: //oma
-                                case 12: //spirit
-                                    BodyLibrary = Armour + 1 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour + 1] : Libraries.ARArmours[0];
-                                    break;
-
-                                case 19:
-                                    BodyLibrary = Armour - 5 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 5] : Libraries.ARArmours[0];
-                                    break;
-
-                                case 29:
-                                case 30:
-                                    BodyLibrary = Armour - 14 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 14] : Libraries.ARArmours[0];
-                                    break;
-
-                                case 35:
-                                case 36:
-                                case 37:
-                                case 38:
-                                case 39:
-                                case 40:
-                                case 41:
-                                    BodyLibrary = Armour - 32 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 32] : Libraries.ARArmours[0];
-                                    break;
-
-                                default:
-                                    BodyLibrary = Armour < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour] : Libraries.ARArmours[0];
-                                    break;
-                            }
-
-                            HairLibrary = Hair < Libraries.ARHair.Length ? Libraries.ARHair[Hair] : null;
-                        }
-                        else
-                        {
-                            BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
-                            HairLibrary = Hair < Libraries.CHair.Length ? Libraries.CHair[Hair] : null;
-                        }
-                        #endregion
-
-                        #region Weapons
-                        if (HasClassWeapon)
-                        {
-                            int Index = Weapon - 200;
-
-                            if (altAnim)
-                                WeaponLibrary2 = Index < Libraries.ARWeaponsS.Length ? Libraries.ARWeaponsS[Index] : null;
-                            else
-                                WeaponLibrary2 = Index < Libraries.ARWeapons.Length ? Libraries.ARWeapons[Index] : null;
-
-                            WeaponLibrary1 = null;
-                        }
-                        else
-                        {
-                            if (Weapon >= 0)
-                                WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
-                            else
-                                WeaponLibrary1 = null;
-
-                            WeaponLibrary2 = null;
-                        }
-                        #endregion
-
-                        #region WingEffects
-                        if (WingEffect > 0 && WingEffect < 100)
-                        {
-                            if (altAnim)
-                                WingLibrary = (WingEffect - 1) < Libraries.ARHumEffect.Length ? Libraries.ARHumEffect[WingEffect - 1] : null;
-                            else
-                                WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
-                        }
-                        #endregion
-
-                        #region Offsets
-                        ArmourOffSet = Gender == MirGender.Male ? 0 : altAnim ? 352 : 808;
-                        HairOffSet = Gender == MirGender.Male ? 0 : altAnim ? 352 : 808;
-                        WeaponOffSet = Gender == MirGender.Male ? 0 : altAnim ? 352 : 416;
-                        WingOffset = Gender == MirGender.Male ? 0 : altAnim ? 352 : 840;
-                        MountOffset = 0;
-                        #endregion
-
-                        break;
                     #endregion
 
-
-                    #region Assassin
-                    case MirClass.Assassin:
-
-                        #region WeaponType
-                        if (HasClassWeapon || Weapon < 0)
+                    #region Armours
+                    if (AltAnim)
+                    {
+                        switch (Armour)
                         {
-                            switch (CurrentAction)
-                            {
-                                case MirAction.Standing:
-                                case MirAction.Stance:
-                                case MirAction.Walking:
-                                case MirAction.Running:
-                                case MirAction.Die:
-                                case MirAction.Struck:
-                                case MirAction.Attack1:
-                                case MirAction.Attack2:
-                                case MirAction.Attack3:
-                                case MirAction.Attack4:
-                                case MirAction.Sneek:
-                                case MirAction.Spell:
-                                case MirAction.DashAttack:
-                                    altAnim = true;
-                                    break;
-                            }
+                            case 9: //heaven
+                            case 10: //mir
+                            case 11: //oma
+                            case 12: //spirit
+                                BodyLibrary = Armour + 1 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour + 1] : Libraries.ARArmours[0];
+                                break;
+
+                            case 19:
+                                BodyLibrary = Armour - 5 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 5] : Libraries.ARArmours[0];
+                                break;
+
+                            case 29:
+                            case 30:
+                                BodyLibrary = Armour - 14 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 14] : Libraries.ARArmours[0];
+                                break;
+
+                            case 35:
+                            case 36:
+                            case 37:
+                            case 38:
+                            case 39:
+                            case 40:
+                            case 41:
+                                BodyLibrary = Armour - 32 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 32] : Libraries.ARArmours[0];
+                                break;
+
+                            default:
+                                BodyLibrary = Armour < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour] : Libraries.ARArmours[0];
+                                break;
                         }
-                        #endregion
 
-                        #region Armours
-                        if (altAnim)
-                        {
-                            switch (Armour)
-                            {
-                                case 9: //heaven
-                                case 10: //mir
-                                case 11: //oma
-                                case 12: //spirit
-                                    BodyLibrary = Armour + 3 < Libraries.AArmours.Length ? Libraries.AArmours[Armour + 3] : Libraries.AArmours[0];
-                                    break;
-
-                                case 19:
-                                    BodyLibrary = Armour - 3 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 3] : Libraries.AArmours[0];
-                                    break;
-
-                                case 20:
-                                case 21:
-                                case 22:
-                                case 23: //red bone
-                                case 24:
-                                    BodyLibrary = Armour - 17 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 17] : Libraries.AArmours[0];
-                                    break;
-
-                                case 28:
-                                case 29:
-                                case 30:
-                                    BodyLibrary = Armour - 20 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 20] : Libraries.AArmours[0];
-                                    break;
-
-                                case 34:
-                                    BodyLibrary = Armour - 23 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 23] : Libraries.AArmours[0];
-                                    break;
-
-                                default:
-                                    BodyLibrary = Armour < Libraries.AArmours.Length ? Libraries.AArmours[Armour] : Libraries.AArmours[0];
-                                    break;
-                            }
-
-                            HairLibrary = Hair < Libraries.AHair.Length ? Libraries.AHair[Hair] : null;
-                        }
-                        else
-                        {
-                            BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
-                            HairLibrary = Hair < Libraries.CHair.Length ? Libraries.CHair[Hair] : null;
-                        }
-                        #endregion
-
-                        #region Weapons
-                        if (HasClassWeapon)
-                        {
-                            int Index = Weapon - 100;
-
-                            WeaponLibrary1 = Index < Libraries.AWeaponsL.Length ? Libraries.AWeaponsR[Index] : null;
-                            WeaponLibrary2 = Index < Libraries.AWeaponsR.Length ? Libraries.AWeaponsL[Index] : null;
-                        }
-                        else
-                        {
-                            if (Weapon >= 0)
-                                WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
-                            else
-                                WeaponLibrary1 = null;
-
-                            WeaponLibrary2 = null;
-                        }
-                        #endregion
-
-                        #region WingEffects
-                        if (WingEffect > 0 && WingEffect < 100)
-                        {
-                            if (altAnim)
-                                WingLibrary = (WingEffect - 1) < Libraries.AHumEffect.Length ? Libraries.AHumEffect[WingEffect - 1] : null;
-                            else
-                                WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
-                        }
-                        #endregion
-
-                        #region Offsets
-                        ArmourOffSet = Gender == MirGender.Male ? 0 : altAnim ? 512 : 808;
-                        HairOffSet = Gender == MirGender.Male ? 0 : altAnim ? 512 : 808;
-                        WeaponOffSet = Gender == MirGender.Male ? 0 : altAnim ? 512 : 416;
-                        WingOffset = Gender == MirGender.Male ? 0 : altAnim ? 544 : 840;
-                        MountOffset = 0;
-                        #endregion
-
-                        break;
-                    #endregion
-
-
-                    #region Others
-                    case MirClass.Warrior:
-                    case MirClass.Taoist:
-                    case MirClass.Wizard:
-
-                        #region Armours
+                        HairLibrary = Hair < Libraries.ARHair.Length ? Libraries.ARHair[Hair] : null;
+                    }
+                    else
+                    {
                         BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
                         HairLibrary = Hair < Libraries.CHair.Length ? Libraries.CHair[Hair] : null;
-                        #endregion
+                    }
+                    #endregion
 
-                        #region Weapons
+                    #region Weapons
+                    if (HasClassWeapon)
+                    {
+                        int Index = Weapon - 200;
+
+                        if (AltAnim)
+                            WeaponLibrary2 = Index < Libraries.ARWeaponsS.Length ? Libraries.ARWeaponsS[Index] : null;
+                        else
+                            WeaponLibrary2 = Index < Libraries.ARWeapons.Length ? Libraries.ARWeapons[Index] : null;
+
+                        WeaponLibrary1 = null;
+                    }
+                    else
+                    {
                         if (Weapon >= 0)
                             WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
                         else
                             WeaponLibrary1 = null;
+
                         WeaponLibrary2 = null;
-
-                        #endregion
-
-                        #region WingEffects
-                        if (WingEffect > 0 && WingEffect < 100)
-                        {
-                            WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
-                        }
-                        #endregion
-
-                        #region Offsets
-                        ArmourOffSet = Gender == MirGender.Male ? 0 : 808;
-                        HairOffSet = Gender == MirGender.Male ? 0 : 808;
-                        WeaponOffSet = Gender == MirGender.Male ? 0 : 416;
-                        WingOffset = Gender == MirGender.Male ? 0 : 840;
-                        MountOffset = 0;
-                        #endregion
-
-                        break;
+                    }
                     #endregion
-                }
+
+                    #region WingEffects
+                    if (WingEffect > 0 && WingEffect < 100)
+                    {
+                        if (AltAnim)
+                            WingLibrary = (WingEffect - 1) < Libraries.ARHumEffect.Length ? Libraries.ARHumEffect[WingEffect - 1] : null;
+                        else
+                            WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
+                    }
+                    #endregion
+
+                    #region Offsets
+                    ArmourOffSet = Gender == MirGender.Male ? 0 : AltAnim ? 352 : 808;
+                    HairOffSet = Gender == MirGender.Male ? 0 : AltAnim ? 352 : 808;
+                    WeaponOffSet = Gender == MirGender.Male ? 0 : AltAnim ? 352 : 416;
+                    WingOffset = Gender == MirGender.Male ? 0 : AltAnim ? 352 : 840;
+                    MountOffset = 0;
+                    #endregion
+
+                    break;
+                #endregion
+
+
+                #region Assassin
+                case MirClass.Assassin:
+
+                    #region WeaponType
+                    if (HasClassWeapon || Weapon < 0)
+                    {
+                        switch (CurrentAction)
+                        {
+                            case MirAction.Standing:
+                            case MirAction.Stance:
+                            case MirAction.Walking:
+                            case MirAction.Running:
+                            case MirAction.Die:
+                            case MirAction.Struck:
+                            case MirAction.Attack1:
+                            case MirAction.Attack2:
+                            case MirAction.Attack3:
+                            case MirAction.Attack4:
+                            case MirAction.Sneek:
+                            case MirAction.Spell:
+                            case MirAction.DashAttack:
+                                AltAnim = true;
+                                break;
+                        }
+                    }
+                    #endregion
+
+                    #region Armours
+                    if (AltAnim)
+                    {
+                        switch (Armour)
+                        {
+                            case 9: //heaven
+                            case 10: //mir
+                            case 11: //oma
+                            case 12: //spirit
+                                BodyLibrary = Armour + 3 < Libraries.AArmours.Length ? Libraries.AArmours[Armour + 3] : Libraries.AArmours[0];
+                                break;
+
+                            case 19:
+                                BodyLibrary = Armour - 3 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 3] : Libraries.AArmours[0];
+                                break;
+
+                            case 20:
+                            case 21:
+                            case 22:
+                            case 23: //red bone
+                            case 24:
+                                BodyLibrary = Armour - 17 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 17] : Libraries.AArmours[0];
+                                break;
+
+                            case 28:
+                            case 29:
+                            case 30:
+                                BodyLibrary = Armour - 20 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 20] : Libraries.AArmours[0];
+                                break;
+
+                            case 34:
+                                BodyLibrary = Armour - 23 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 23] : Libraries.AArmours[0];
+                                break;
+
+                            default:
+                                BodyLibrary = Armour < Libraries.AArmours.Length ? Libraries.AArmours[Armour] : Libraries.AArmours[0];
+                                break;
+                        }
+
+                        HairLibrary = Hair < Libraries.AHair.Length ? Libraries.AHair[Hair] : null;
+                    }
+                    else
+                    {
+                        BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
+                        HairLibrary = Hair < Libraries.CHair.Length ? Libraries.CHair[Hair] : null;
+                    }
+                    #endregion
+
+                    #region Weapons
+                    if (HasClassWeapon)
+                    {
+                        int Index = Weapon - 100;
+
+                        WeaponLibrary1 = Index < Libraries.AWeaponsL.Length ? Libraries.AWeaponsR[Index] : null;
+                        WeaponLibrary2 = Index < Libraries.AWeaponsR.Length ? Libraries.AWeaponsL[Index] : null;
+                    }
+                    else
+                    {
+                        if (Weapon >= 0)
+                            WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
+                        else
+                            WeaponLibrary1 = null;
+
+                        WeaponLibrary2 = null;
+                    }
+                    #endregion
+
+                    #region WingEffects
+                    if (WingEffect > 0 && WingEffect < 100)
+                    {
+                        if(AltAnim)
+                            WingLibrary = (WingEffect - 1) < Libraries.AHumEffect.Length ? Libraries.AHumEffect[WingEffect - 1] : null;
+                        else
+                            WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
+                    }
+                    #endregion
+
+                    #region Offsets
+                    ArmourOffSet = Gender == MirGender.Male ? 0 : AltAnim ? 512 : 808;
+                    HairOffSet = Gender == MirGender.Male ? 0 : AltAnim ? 512 : 808;
+                    WeaponOffSet = Gender == MirGender.Male ? 0 : AltAnim ? 512 : 416;
+                    WingOffset = Gender == MirGender.Male ? 0 : AltAnim ? 544 : 840;
+                    MountOffset = 0;
+                    #endregion
+
+                    break;
+                #endregion
+
+
+                #region Others
+                case MirClass.Warrior:
+                case MirClass.Taoist:
+                case MirClass.Wizard:
+
+                    #region Armours
+                    BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
+                    HairLibrary = Hair < Libraries.CHair.Length ? Libraries.CHair[Hair] : null;
+                    #endregion
+
+                    #region Weapons
+                    if (Weapon >= 0)
+                        WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
+                    else
+                        WeaponLibrary1 = null;
+                    WeaponLibrary2 = null;
+
+                    #endregion
+
+                    #region WingEffects
+                    if (WingEffect > 0 && WingEffect < 100)
+                    {
+                        WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
+                    }
+                    #endregion
+
+                    #region Offsets
+                    ArmourOffSet = Gender == MirGender.Male ? 0 : 808;
+                    HairOffSet = Gender == MirGender.Male ? 0 : 808;
+                    WeaponOffSet = Gender == MirGender.Male ? 0 : 416;
+                    WingOffset = Gender == MirGender.Male ? 0 : 840;
+                    MountOffset = 0;
+                    #endregion
+
+                    break;
+                #endregion
             }
 
             #region Common
             //Harvest
-            if (CurrentAction == MirAction.Harvest && TransformType < 0)
-            {
+            if (CurrentAction == MirAction.Harvest)
                 WeaponLibrary1 = 1 < Libraries.CWeapons.Length ? Libraries.CWeapons[1] : null;
-            }
 
             //Mounts
-            if (MountType > -1 && RidingMount && showMount)
+            if (MountType > -1 && RidingMount)
             {
                 MountLibrary = MountType < Libraries.Mounts.Length ? Libraries.Mounts[MountType] : null;
             }
@@ -625,7 +531,7 @@ namespace Client.MirObjects
             }
 
             //Fishing
-            if (HasFishingRod && showFishing)
+            if (HasFishingRod)
             {
                 if (CurrentAction == MirAction.FishingCast || CurrentAction == MirAction.FishingWait || CurrentAction == MirAction.FishingReel)
                 {
@@ -715,7 +621,7 @@ namespace Client.MirObjects
                 case MirAction.DashL:
                 case MirAction.DashR:
                 case MirAction.Sneek:
-                case MirAction.Jump:
+                case MirAction.Jump://ArcherSpells - Backstep
                 case MirAction.DashAttack:
                     if (Frame == null)
                     {
@@ -730,7 +636,7 @@ namespace Client.MirObjects
                         i = (Sprint && !Sneaking ? 3 : 2);
                     else i = 1;
 
-                    if (CurrentAction == MirAction.Jump) i = -JumpDistance;
+                    if (CurrentAction == MirAction.Jump) i = -JumpDistance;//ArcherSpells - Backstep
                     if (CurrentAction == MirAction.DashAttack) i = JumpDistance;
 
                     Movement = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -i);
@@ -803,26 +709,36 @@ namespace Client.MirObjects
                 Effects[i].Process();
 
             Color colour = DrawColour;
-            DrawColour = Color.White;
-            if (Poison != PoisonType.None)
+
+            switch (Poison)
             {
-                
-                if (Poison.HasFlag(PoisonType.Green))
+                case PoisonType.None:
+                    DrawColour = Color.White;
+                    break;
+                case PoisonType.Green:
                     DrawColour = Color.Green;
-                if (Poison.HasFlag(PoisonType.Red))
+                    break;
+                case PoisonType.Red:
                     DrawColour = Color.Red;
-                if (Poison.HasFlag(PoisonType.Bleeding))
+                    break;
+                case PoisonType.Bleeding:
                     DrawColour = Color.DarkRed;
-                if (Poison.HasFlag(PoisonType.Slow))
+                    break;
+                case PoisonType.Slow:
                     DrawColour = Color.Purple;
-                if (Poison.HasFlag(PoisonType.Stun))
+                    break;
+                case PoisonType.Stun:
                     DrawColour = Color.Yellow;
-                if (Poison.HasFlag(PoisonType.Frozen))
+                    break;
+                case PoisonType.Frozen:
                     DrawColour = Color.Blue;
-                if (Poison.HasFlag(PoisonType.Paralysis))
+                    break;
+                case PoisonType.Paralysis:
                     DrawColour = Color.Gray;
-                if (Poison.HasFlag(PoisonType.DelayedExplosion))
+                    break;
+                case PoisonType.DelayedExplosion://ArcherSpells - DelayedExplosion
                     DrawColour = Color.Orange;
+                    break;
             }
 
 
@@ -842,7 +758,7 @@ namespace Client.MirObjects
                     case MirAction.DashL:
                     case MirAction.DashR:
                     case MirAction.Sneek:
-                    case MirAction.Jump:
+                    case MirAction.Jump://ArcherSpells - Backstep
                     case MirAction.DashAttack:
                         return;
                 }
@@ -874,10 +790,7 @@ namespace Client.MirObjects
 
             if (ActionFeed.Count == 0)
             {
-                CurrentAction = MirAction.Standing;
-
-                CurrentAction = CMain.Time > BlizzardStopTime ? CurrentAction : MirAction.Stance2;
-                //CurrentAction = CMain.Time > SlashingBurstTime ? CurrentAction : MirAction.Lunge;
+                CurrentAction = CMain.Time > BlizzardFreezeTime ? MirAction.Standing : MirAction.Stance2; //ArcherTest
 
                 if (RidingMount)
                 {
@@ -908,7 +821,7 @@ namespace Client.MirObjects
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
 
-                    if (Concentrating && ConcentrateInterrupted)
+                    if (Concentrating && ConcentrateInterrupted)//ArcherSpells - Elemental system
                         Network.Enqueue(new C.SetConcentration { ObjectID = User.ObjectID, Enabled = Concentrating, Interrupted = false });
                 }
 
@@ -985,7 +898,7 @@ namespace Client.MirObjects
                         temp = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -steps);
 
                         break;
-                    case MirAction.Jump:
+                    case MirAction.Jump://ArcherSpells - Backstep
                     case MirAction.DashAttack:
                         temp = Functions.PointMove(CurrentLocation, Direction, JumpDistance);
                         break;
@@ -1005,7 +918,6 @@ namespace Client.MirObjects
 
 
                 bool ArcherLayTrap = false;
-
                 switch (CurrentAction)
                 {
                     case MirAction.Pushed:
@@ -1025,7 +937,7 @@ namespace Client.MirObjects
                         //Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
                         //CanSetAction = false;
                         break;
-                    case MirAction.Jump:
+                    case MirAction.Jump://ArcherSpells - Backstep
                         Frames.Frames.TryGetValue(MirAction.Jump, out Frame);
                         break;
                     case MirAction.Attack1:
@@ -1163,7 +1075,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 500; //Spell Delay
                                 }
                                 break;
-                            case Spell.ExplosiveTrap:
+                            case Spell.ExplosiveTrap://ArcherSpells - Explosive Trap
                                 Frames.Frames.TryGetValue(MirAction.Harvest, out Frame);
                                 CurrentAction = MirAction.Harvest;
                                 ArcherLayTrap = true;
@@ -1176,7 +1088,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
                                 break;
-                            case Spell.DelayedExplosion:
+                            case Spell.DelayedExplosion://ArcherSpells - DelayedExplosion
                                 Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
@@ -1185,7 +1097,7 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
                                 break;
-                            case Spell.BackStep:
+                            case Spell.BackStep://ArcherSpells - Backstep
                                 {
                                     int sLevel = (byte)action.Params[3];
                                     GetBackStepDistance(sLevel);
@@ -1200,7 +1112,7 @@ namespace Client.MirObjects
                                     }
                                     break;
                                 }
-                            case Spell.ElementalShot:
+                            case Spell.ElementalShot://ArcherSpells - Elemental system
                                 if (HasElements && !ElementCasted)
                                 {
                                     Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
@@ -1214,11 +1126,11 @@ namespace Client.MirObjects
                                 else Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 if (ElementCasted) ElementCasted = false;
                                 break;
-                            case Spell.BindingShot:
-                            case Spell.VampireShot:
-                            case Spell.PoisonShot:
-                            case Spell.CrippleShot:
-                            case Spell.NapalmShot:
+                            case Spell.BindingShot://ArcherSpells - BindingShot
+                            case Spell.VampireShot://ArcherSpells - VampireShot
+                            case Spell.PoisonShot://ArcherSpells - PoisonShot
+                            case Spell.CrippleShot://ArcherSpells - CrippleShot
+                            case Spell.NapalmShot://ArcherSpells - NapalmShot
                             case Spell.SummonVampire:
                             case Spell.SummonToad:
                             case Spell.SummonSnakes:
@@ -1234,7 +1146,6 @@ namespace Client.MirObjects
                                 Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                         }
-                        
                         break;
                     default:
                         Frames.Frames.TryGetValue(CurrentAction, out Frame);
@@ -1269,8 +1180,6 @@ namespace Client.MirObjects
                 Spell = Spell.None;
                 SpellLevel = 0;
                 //NextMagic = null;
-
-                ClientMagic magic;
 
                 if (Frame == null) return;
 
@@ -1310,7 +1219,7 @@ namespace Client.MirObjects
                             break;
                         case MirAction.DashL:
                         case MirAction.DashR:
-                        case MirAction.Jump:
+                        case MirAction.Jump://ArcherSpells - Backstep
                         case MirAction.DashAttack:
                             GameScene.Scene.MapControl.FloorValid = false;
                             //CanSetAction = false;
@@ -1322,58 +1231,55 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Attack1:
                         case MirAction.MountAttack:
+                            ClientMagic magic;
+                            if (GameScene.Slaying && TargetObject != null)
+                                Spell = Spell.Slaying;
 
-                            if (!RidingMount)
+                            if (GameScene.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
+                                Spell = Spell.Thrusting;
+
+                            if (GameScene.HalfMoon)
                             {
-                                if (GameScene.Slaying && TargetObject != null)
-                                    Spell = Spell.Slaying;
-
-                                if (GameScene.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
-                                    Spell = Spell.Thrusting;
-
-                                if (GameScene.HalfMoon)
+                                if (TargetObject != null || GameScene.Scene.MapControl.CanHalfMoon(CurrentLocation, Direction))
                                 {
-                                    if (TargetObject != null || GameScene.Scene.MapControl.CanHalfMoon(CurrentLocation, Direction))
-                                    {
-                                        magic = User.GetMagic(Spell.HalfMoon);
-                                        if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                            Spell = Spell.HalfMoon;
-                                    }
-                                }
-
-                                if (GameScene.CrossHalfMoon)
-                                {
-                                    if (TargetObject != null || GameScene.Scene.MapControl.CanCrossHalfMoon(CurrentLocation))
-                                    {
-                                        magic = User.GetMagic(Spell.CrossHalfMoon);
-                                        if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                            Spell = Spell.CrossHalfMoon;
-                                    }
-                                }
-
-                                if (GameScene.DoubleSlash)
-                                {
-                                    magic = User.GetMagic(Spell.DoubleSlash);
+                                    magic = User.GetMagic(Spell.HalfMoon);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                        Spell = Spell.DoubleSlash;
+                                        Spell = Spell.HalfMoon;
                                 }
+                            }
 
-
-                                if (GameScene.TwinDrakeBlade && TargetObject != null)
+                            if (GameScene.CrossHalfMoon)
+                            {
+                                if (TargetObject != null || GameScene.Scene.MapControl.CanCrossHalfMoon(CurrentLocation))
                                 {
-                                    magic = User.GetMagic(Spell.TwinDrakeBlade);
+                                    magic = User.GetMagic(Spell.CrossHalfMoon);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
-                                        Spell = Spell.TwinDrakeBlade;
+                                        Spell = Spell.CrossHalfMoon;
                                 }
+                            }
 
-                                if (GameScene.FlamingSword)
+                            if (GameScene.DoubleSlash)
+                            {
+                                magic = User.GetMagic(Spell.DoubleSlash);
+                                if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                    Spell = Spell.DoubleSlash;
+                            }
+
+
+                            if (GameScene.TwinDrakeBlade)
+                            {
+                                magic = User.GetMagic(Spell.TwinDrakeBlade);
+                                if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                    Spell = Spell.TwinDrakeBlade;
+                            }
+
+                            if (GameScene.FlamingSword)
+                            {
+                                if (TargetObject != null)
                                 {
-                                    if (TargetObject != null)
-                                    {
-                                        magic = User.GetMagic(Spell.FlamingSword);
-                                        if (magic != null)
-                                            Spell = Spell.FlamingSword;
-                                    }
+                                    magic = User.GetMagic(Spell.FlamingSword);
+                                    if (magic != null)
+                                        Spell = Spell.FlamingSword;
                                 }
                             }
 
@@ -1381,6 +1287,8 @@ namespace Client.MirObjects
 
                             if (Spell == Spell.Slaying)
                                 GameScene.Slaying = false;
+
+
                             if (Spell == Spell.TwinDrakeBlade)
                                 GameScene.TwinDrakeBlade = false;
                             if (Spell == Spell.FlamingSword)
@@ -1418,10 +1326,6 @@ namespace Client.MirObjects
                             Spell = (Spell)action.Params[0];
                             targetID = (uint)action.Params[1];
                             location = (Point)action.Params[2];
-
-                            //magic = User.GetMagic(Spell);
-                            //magic.LastCast = CMain.Time;
-
                             Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
                             if (Spell == Spell.FlashDash)
@@ -1436,7 +1340,7 @@ namespace Client.MirObjects
                             }
                             break;
                         case MirAction.Harvest:
-                            if (ArcherLayTrap)
+                            if (ArcherLayTrap)//ArcherSpells - Explosive Trap
                             {
                                 ArcherLayTrap = false;
                                 SoundManager.PlaySound(20000 + 124 * 10);
@@ -1460,7 +1364,7 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.DashL:
-                    case MirAction.Jump:
+                    case MirAction.Jump://ArcherSpells - Backstep
                         FrameIndex = 0;
                         EffectFrameIndex = 0;
                         GameScene.Scene.Redraw();
@@ -1685,12 +1589,7 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
-                            #region StormEscape
-                            case Spell.StormEscape:
-                                Effects.Add(new Effect(Libraries.Magic3, 590, 10, Frame.Count * FrameInterval, this));
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                break;
-                            #endregion
+
                             #region Teleport
 
                             case Spell.Teleport:
@@ -1733,7 +1632,7 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Magic3, 200, 8, 8 * FrameInterval, this));
                                 Effects.Add(new Effect(Libraries.Magic3, 187, 10, 10 * FrameInterval, this));
                                 //i don't know sound
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                //SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
                             #endregion
@@ -1936,24 +1835,6 @@ namespace Client.MirObjects
 
                             #endregion
 
-                            #region MagicBooster
-
-                            case Spell.MagicBooster:
-                                Effects.Add(new Effect(Libraries.Magic3, 80, 9, 9 * FrameInterval, this));
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                break;
-
-                            #endregion
-
-                            #region PetEnhancer
-
-                            case Spell.PetEnhancer:
-                                Effects.Add(new Effect(Libraries.Magic3, 200, 8, 8 * FrameInterval, this));
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                break;
-
-                            #endregion
-
                             #region Revelation
 
                             case Spell.Revelation:
@@ -1999,15 +1880,6 @@ namespace Client.MirObjects
 
                             #endregion
 
-                            #region TwinDrakeBlade
-
-                            case Spell.TwinDrakeBlade:
-                                Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, this));
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                break;
-
-                            #endregion
-
                             #region Entrapment
 
                             case Spell.Entrapment:
@@ -2029,10 +1901,8 @@ namespace Client.MirObjects
                             #region SlashingBurst
 
                             case Spell.SlashingBurst:
-                                //MapControl.Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, CurrentLocation));
                                 Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                SlashingBurstTime = CMain.Time + 2000;
                                 break;
 
                             #endregion
@@ -2084,7 +1954,6 @@ namespace Client.MirObjects
                             case Spell.Blizzard:
                                 Effects.Add(new Effect(Libraries.Magic2, 1540, 8, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                BlizzardStopTime = CMain.Time + 3000;
                                 break;
 
                             #endregion
@@ -2094,7 +1963,6 @@ namespace Client.MirObjects
                             case Spell.MeteorStrike:
                                 Effects.Add(new Effect(Libraries.Magic2, 1590, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                BlizzardStopTime = CMain.Time + 3000;
                                 break;
 
                             #endregion
@@ -2108,15 +1976,13 @@ namespace Client.MirObjects
                             #endregion
 
                             #region HeavenlySword
-
                             case Spell.HeavenlySword:
                                 Effects.Add(new Effect(Libraries.Magic2, 2230 + ((int)Direction * 10), 8, 800, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
-
                             #endregion
 
-                            #region ElementalBarrier
+                            #region ElementalBarrier ArcherSpells - Elemental system
 
                             case Spell.ElementalBarrier:
                                 if (HasElements && !ElementalBarrier)
@@ -2128,13 +1994,13 @@ namespace Client.MirObjects
 
                             #endregion
 
-                            #region PoisonShot
+                            #region PoisonShot      ArcherSpells - PoisonShot
                             case Spell.PoisonShot:
                                 Effects.Add(new Effect(Libraries.Magic3, 2300, 8, 1000, this));
                                 break;
                             #endregion
 
-                            #region OneWithNature
+                            #region OneWithNature       ArcherSpells - OneWithNature
                             case Spell.OneWithNature:
                                 MapControl.Effects.Add(new Effect(Libraries.Magic3, 2710, 8, 1200, CurrentLocation));
                                 SoundManager.PlaySound(20000 + 139 * 10);
@@ -2163,6 +2029,7 @@ namespace Client.MirObjects
             NextMotion = CMain.Time + FrameInterval;
             NextMotion2 = CMain.Time + EffectFrameInterval;
 
+            //ArcherSpells - Elemental system
             if (ElementalBarrier)
             {
                 switch (CurrentAction)
@@ -2185,54 +2052,31 @@ namespace Client.MirObjects
                 }
             }
 
-            if (MagicShield)
+            if (!MagicShield) return;
+
+            switch (CurrentAction)
             {
-                switch (CurrentAction)
-                {
-                    case MirAction.Struck:
-                    case MirAction.MountStruck:
-                        if (ShieldEffect != null)
-                        {
-                            ShieldEffect.Clear();
-                            ShieldEffect.Remove();
-                        }
+                case MirAction.Struck:
+                case MirAction.MountStruck:
+                    if (ShieldEffect != null)
+                    {
+                        ShieldEffect.Clear();
+                        ShieldEffect.Remove();
+                    }
 
-                        Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3900, 3, 600, this));
-                        ShieldEffect.Complete += (o, e) => Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
-                        break;
-                    default:
-                        if (ShieldEffect == null)
-                            Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
-                        break;
-                }
+                    Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3900, 3, 600, this));
+                    ShieldEffect.Complete += (o, e) => Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
+                    break;
+                default:
+                    if (ShieldEffect == null)
+                        Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
+                    break;
             }
-
         }
 
         public virtual void ProcessFrames()
         {
             if (Frame == null) return;
-            //thedeath2
-            //slow frame speed
-            //if (Poison == PoisonType.Slow)
-            //{
-            //    if (CurrentAction != MirAction.Standing)
-            //    {
-            //        if (SlowFrameIndex >= 3)
-            //        {
-            //            SlowFrameIndex = 0;
-            //        }
-            //        else
-            //        {
-            //            SlowFrameIndex++;
-            //            return;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    SlowFrameIndex = 0;
-            //}
 
             switch (CurrentAction)
             {
@@ -2243,17 +2087,37 @@ namespace Client.MirObjects
                 case MirAction.Sneek:
                 case MirAction.DashAttack:
                     if (!GameScene.CanMove) return;
-                    
 
+                    //slow frame speed
+                    if (Poison == PoisonType.Slow)
+                    {
+                        if ((CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
+                        {
+                            if (SlowFrameIndex >= 3)
+                            {
+                                SlowFrameIndex = 0;
+                            }
+                            else
+                            {
+                                SlowFrameIndex++;
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        SlowFrameIndex = 0;
+                    }
+                    
                     GameScene.Scene.MapControl.TextureValid = false;
 
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-                    //if (CMain.Time < NextMotion) return;
+
                     if (SkipFrames) UpdateFrame();
 
 
 
-                    if (UpdateFrame(false) >= Frame.Count)
+                    if (UpdateFrame() >= Frame.Count)
                     {
 
 
@@ -2267,7 +2131,6 @@ namespace Client.MirObjects
                             if (FrameIndex == 1 || FrameIndex == 4)
                                 PlayStepSound();
                         }
-                        //NextMotion += FrameInterval;
                     }
 
                     if (WingEffect > 0 && CMain.Time >= NextMotion2)
@@ -2282,7 +2145,7 @@ namespace Client.MirObjects
                             NextMotion2 += EffectFrameInterval;
                     }
                     break;
-                 case MirAction.Jump:
+                    case MirAction.Jump://ArcherSpells - Backstep
                     if (!GameScene.CanMove) return;
                     GameScene.Scene.MapControl.TextureValid = false;
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
@@ -2502,7 +2365,7 @@ namespace Client.MirObjects
                     }
                     break;
 
-                case MirAction.AttackRange1:
+                case MirAction.AttackRange1://Archertest
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
@@ -2607,7 +2470,7 @@ namespace Client.MirObjects
                             NextMotion += FrameInterval;
 
                             Missile missile;
-
+                            //ArcherSpells - Doubleshot
                             switch(Spell)
                             {
                                 case Spell.DoubleShot:
@@ -2628,7 +2491,7 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.ElementalShot:
+                                case Spell.ElementalShot://ArcherSpells - Elemental system
                                     if (HasElements && !ElementCasted)
                                         switch (FrameIndex)
                                         {
@@ -2649,7 +2512,7 @@ namespace Client.MirObjects
                                                 break;
                                         }
                                     break;
-                                case Spell.BindingShot:
+                                case Spell.BindingShot://ArcherSpells - BindingShot
                                 case Spell.SummonVampire:
                                 case Spell.SummonToad:
                                 case Spell.SummonSnakes:
@@ -2669,7 +2532,7 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.DelayedExplosion:
+                                case Spell.DelayedExplosion://ArcherSpells - DelayedExplosion
                                     switch (FrameIndex)
                                     {
                                         case 5:
@@ -2686,9 +2549,9 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                                case Spell.VampireShot:
-                                case Spell.PoisonShot:
-                                case Spell.CrippleShot:
+                                case Spell.VampireShot://ArcherSpells - VampireShot
+                                case Spell.PoisonShot://ArcherSpells - PoisonShot
+                                case Spell.CrippleShot://ArcherSpells - CrippleShot
                                     MapObject ob = MapControl.GetObject(TargetID);
                                     Effect eff;
                                     int exFrameStart = 0;
@@ -2909,7 +2772,6 @@ namespace Client.MirObjects
                                     case Spell.HellFire:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
 
-                                        
                                         Point dest = CurrentLocation;
                                         for (int i = 0; i < 4; i++)
                                         {
@@ -2980,16 +2842,6 @@ namespace Client.MirObjects
                                                 SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10 + 2);
                                             };
                                         }
-                                        break;
-
-                                    #endregion
-
-                                    #region EnergyShield
-
-                                    case Spell.EnergyShield:
-
-                                        //Effects.Add(new Effect(Libraries.Magic2, 1880, 9, Frame.Count * FrameInterval, this));
-                                        //SoundManager.PlaySound(20000 + (ushort)Spell * 9);
                                         break;
 
                                     #endregion
@@ -3089,18 +2941,6 @@ namespace Client.MirObjects
                                         else
                                             ob.Effects.Add(new Effect(Libraries.Magic, 3930, 15, 1000, ob));
                                         break;
-                                    #endregion
-
-                                    #region IceThrust
-
-                                    case Spell.IceThrust:
-
-                                        Point location = Functions.PointMove(CurrentLocation, Direction, 1);
-
-                                        MapControl.Effects.Add(new Effect(Libraries.Magic2, 1790 + (int)Direction * 10, 10, 10 * FrameInterval, location));
-                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10);
-                                        break;
-
                                     #endregion
 
                                     #region Revelation
@@ -3240,7 +3080,7 @@ namespace Client.MirObjects
 
                                     case Spell.Blizzard:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
-                                        //BlizzardFreezeTime = CMain.Time + 3000;
+                                        BlizzardFreezeTime = CMain.Time + 3000;
                                         break;
 
                                     #endregion
@@ -3250,7 +3090,7 @@ namespace Client.MirObjects
                                     case Spell.MeteorStrike:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 2);
-                                        //BlizzardFreezeTime = CMain.Time + 3000;
+                                        BlizzardFreezeTime = CMain.Time + 3000;
                                         break;
 
                                     #endregion
@@ -3429,17 +3269,10 @@ namespace Client.MirObjects
             //if Revive and dead set action
 
         }
-        public int UpdateFrame(bool skip = true)
+        public int UpdateFrame()
         {
             if (Frame == null) return 0;
-            if (Poison.HasFlag(PoisonType.Slow) && !skip)
-            {
-                SkipFrameUpdate++;
-                if (SkipFrameUpdate == 2)
-                    SkipFrameUpdate = 0;
-                else
-                    return FrameIndex;
-            }
+
             if (Frame.Reverse) return Math.Abs(--FrameIndex);
 
             return ++FrameIndex;
@@ -3455,7 +3288,7 @@ namespace Client.MirObjects
         }
 
 
-        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, Color? lightColour = null)
+        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip)
         {
             MapObject ob = MapControl.GetObject(TargetID);
 
@@ -3470,9 +3303,7 @@ namespace Client.MirObjects
                 Interval = interval,
                 FrameCount = count,
                 Blend = blend,
-                Skip = skip,
-                Light = lightDistance,
-                LightColour = lightColour == null ? Color.White : (Color)lightColour
+                Skip = skip
             };
 
             Effects.Add(missile);
@@ -3485,73 +3316,65 @@ namespace Client.MirObjects
         {
             int x = CurrentLocation.X - CurrentLocation.X % 2;
             int y = CurrentLocation.Y - CurrentLocation.Y % 2;
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex > 199) return; //prevents any move sounds on non mir2 maps atm
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex > 199) return; //prevents any move sounds on non mir2 maps atm
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 199) return; //prevents any move sounds on non mir2 maps atm
-
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
+            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99) return; //prevents any move sounds on non mir2 maps atm < since i havent bothered transfering all those fixed values yet
+            int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
+            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
             int moveSound;
 
-            if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99 && GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex < 199) //shanda tiles
-            {
+            if ((index >= 330 && index <= 349) || (index >= 450 && index <= 454) || (index >= 550 && index <= 554) ||
+                (index >= 750 &&
+                index <= 754) || (index >= 950 && index <= 954) || (index >= 1250 && index <= 1254) ||
+                (index >= 1400 && index <= 1424) || (index >= 1455 && index <= 1474) || (index >= 1500 && index <= 1524) ||
+                (index >= 1550 && index <= 1574))
+                moveSound = SoundList.WalkLawnL;
+            else if ((index >= 250 && index <= 254) || (index >= 1005 && index <= 1009) || (index >= 1050 && index <= 1054) ||
+                (index >= 1060 && index <= 1064) || (index >= 1450 && index <= 1454) || (index >= 1650 && index <= 1654))
+                moveSound = SoundList.WalkRoughL;
+            else if ((index >= 605 && index <= 609) || (index >= 650 && index <= 654) || (index >= 660 && index <= 664) ||
+                (index >= 2000 && index <= 2049) || (index >= 3025 && index <= 3049) || (index >= 2400 && index <= 2424) ||
+                (index >= 4625 && index <= 4649) || (index >= 4675 && index <= 4678))
+                moveSound = SoundList.WalkStoneL;
+            else if ((index >= 1825 && index <= 1924) || (index >= 2150 && index <= 2174) || (index >= 3075 && index <= 3099) ||
+                (index >= 3325 && index <= 3349) || (index >= 3375 && index <= 3399))
+                moveSound = SoundList.WalkCaveL;
+            else if (index == 3230 || index == 3231 || index == 3246 || index == 3277 || (index >= 3780 && index <= 3799))
+                moveSound = SoundList.WalkWoodL;
+            else if (index >= 3825 && index <= 4434)
+                switch (index % 25)
+                {
+                    case 0:
+                        moveSound = SoundList.WalkWoodL;
+                        break;
+                    default:
+                        moveSound = SoundList.WalkGroundL;
+                        break;
+                }
+            else if ((index >= 2075 && index <= 2099) || (index >= 2125 && index <= 2149))
+                moveSound = SoundList.WalkRoomL;
+            else if (index >= 1800 && index <= 1824)
+                moveSound = SoundList.WalkWaterL;
+            else moveSound = SoundList.WalkGroundL;
+
+            if ((index >= 825 && index <= 1349) && (index - 825) / 25 % 2 == 0) moveSound = SoundList.WalkStoneL;
+            if ((index >= 1375 && index <= 1799) && (index - 1375) / 25 % 2 == 0) moveSound = SoundList.WalkCaveL;
+            if (index == 1385 || index == 1386 || index == 1391 || index == 1392) moveSound = SoundList.WalkWoodL;
+
+            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x7FFF) - 1;
+            if (index >= 0 && index <= 115)
                 moveSound = SoundList.WalkGroundL;
-            }
-            else //wemade tiles
-            {
-                int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
-                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
+            else if (index >= 120 && index <= 124)
+                moveSound = SoundList.WalkLawnL;
 
-                if ((index >= 330 && index <= 349) || (index >= 450 && index <= 454) || (index >= 550 && index <= 554) ||
-                    (index >= 750 && index <= 754) || (index >= 950 && index <= 954) || (index >= 1250 && index <= 1254) ||
-                    (index >= 1400 && index <= 1424) || (index >= 1455 && index <= 1474) || (index >= 1500 && index <= 1524) ||
-                    (index >= 1550 && index <= 1574))
-                    moveSound = SoundList.WalkLawnL;
-                else if ((index >= 250 && index <= 254) || (index >= 1005 && index <= 1009) || (index >= 1050 && index <= 1054) ||
-                    (index >= 1060 && index <= 1064) || (index >= 1450 && index <= 1454) || (index >= 1650 && index <= 1654))
-                    moveSound = SoundList.WalkRoughL;
-                else if ((index >= 605 && index <= 609) || (index >= 650 && index <= 654) || (index >= 660 && index <= 664) ||
-                    (index >= 2000 && index <= 2049) || (index >= 3025 && index <= 3049) || (index >= 2400 && index <= 2424) ||
-                    (index >= 4625 && index <= 4649) || (index >= 4675 && index <= 4678))
-                    moveSound = SoundList.WalkStoneL;
-                else if ((index >= 1825 && index <= 1924) || (index >= 2150 && index <= 2174) || (index >= 3075 && index <= 3099) ||
-                    (index >= 3325 && index <= 3349) || (index >= 3375 && index <= 3399))
-                    moveSound = SoundList.WalkCaveL;
-                else if (index == 3230 || index == 3231 || index == 3246 || index == 3277 || (index >= 3780 && index <= 3799))
-                    moveSound = SoundList.WalkWoodL;
-                else if (index >= 3825 && index <= 4434)
-                    switch (index % 25)
-                    {
-                        case 0:
-                            moveSound = SoundList.WalkWoodL;
-                            break;
-                        default:
-                            moveSound = SoundList.WalkGroundL;
-                            break;
-                    }
-                else if ((index >= 2075 && index <= 2099) || (index >= 2125 && index <= 2149))
-                    moveSound = SoundList.WalkRoomL;
-                else if (index >= 1800 && index <= 1824)
-                    moveSound = SoundList.WalkWaterL;
-                else moveSound = SoundList.WalkGroundL;
-
-                if ((index >= 825 && index <= 1349) && (index - 825) / 25 % 2 == 0) moveSound = SoundList.WalkStoneL;
-                if ((index >= 1375 && index <= 1799) && (index - 1375) / 25 % 2 == 0) moveSound = SoundList.WalkCaveL;
-                if (index == 1385 || index == 1386 || index == 1391 || index == 1392) moveSound = SoundList.WalkWoodL;
-
-                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x7FFF) - 1;
-                if (index >= 0 && index <= 115)
-                    moveSound = SoundList.WalkGroundL;
-                else if (index >= 120 && index <= 124)
-                    moveSound = SoundList.WalkLawnL;
-
-                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
-                if ((index >= 221 && index <= 289) || (index >= 583 && index <= 658) || (index >= 1183 && index <= 1206) ||
-                    (index >= 7163 && index <= 7295) || (index >= 7404 && index <= 7414))
-                    moveSound = SoundList.WalkStoneL;
-                else if ((index >= 3125 && index <= 3267) || (index >= 3757 && index <= 3948) || (index >= 6030 && index <= 6999))
-                    moveSound = SoundList.WalkWoodL;
-                if (index >= 3316 && index <= 3589)
-                    moveSound = SoundList.WalkRoomL;
-            }
+            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
+            if ((index >= 221 && index <= 289) || (index >= 583 && index <= 658) || (index >= 1183 && index <= 1206) ||
+                (index >= 7163 && index <= 7295) || (index >= 7404 && index <= 7414))
+                moveSound = SoundList.WalkStoneL;
+            else if ((index >= 3125 && index <= 3267) || (index >= 3757 && index <= 3948) || (index >= 6030 && index <= 6999))
+                moveSound = SoundList.WalkWoodL;
+            if (index >= 3316 && index <= 3589)
+                moveSound = SoundList.WalkRoomL;
 
             if (RidingMount) moveSound = SoundList.MountWalkL;
 
@@ -3762,19 +3585,21 @@ namespace Client.MirObjects
 
         public override void Draw()
         {
-            if (Settings.Effect)
-            {
-                DrawBehindEffects();
-            }
+            if (SneakingActive) return;
 
             float oldOpacity = DXManager.Opacity;
             if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
 
-            DrawMount();
+            if (Settings.Effect) DrawBehindEffects();
+
+            if (RidingMount)
+            {
+                DrawMount();
+            }
 
             if (!RidingMount)
             {
-                if (Direction == MirDirection.Left || Direction == MirDirection.Up || Direction == MirDirection.UpLeft || Direction == MirDirection.DownLeft)
+                if ((Direction == MirDirection.Left || Direction == MirDirection.Up || Direction == MirDirection.UpLeft || Direction == MirDirection.DownLeft))
                     DrawWeapon();
                 else
                     DrawWeapon2();
@@ -3784,28 +3609,24 @@ namespace Client.MirObjects
 
             DrawHead();
 
-            if (this != User)
-            {
-                DrawWings();
-            }
+            if (this != User) DrawWings();
+
+            if (this != User) DrawCurrentEffects();
 
             if (!RidingMount)
             {
-                if (Direction == MirDirection.UpRight || Direction == MirDirection.Right || Direction == MirDirection.DownRight || Direction == MirDirection.Down)
+                if ((Direction == MirDirection.UpRight || Direction == MirDirection.Right || Direction == MirDirection.DownRight || Direction == MirDirection.Down))
                     DrawWeapon();
                 else
                     DrawWeapon2();
 
-                if (Class == MirClass.Archer && HasClassWeapon)
+                if ((Class == MirClass.Archer && HasClassWeapon))
                     DrawWeapon2();
             }
 
-            DXManager.SetOpacity(oldOpacity);
+           // if (this != User && Settings.Effect) DrawEffects();
 
-            //if (Settings.Effect && this != User)
-            //{
-            //    DrawEffects();  
-            //}
+            DXManager.SetOpacity(oldOpacity);
         }
 
         public override void DrawBehindEffects()
@@ -3813,7 +3634,11 @@ namespace Client.MirObjects
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (!Effects[i].DrawBehind) continue;
-                if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
+
+                if (Effects[i] is SpecialEffect)
+                {
+                    if(((SpecialEffect)Effects[i]).EffectType == 1 && !Settings.LevelEffect) continue;
+                }
 
                 Effects[i].Draw();
             }
@@ -3824,7 +3649,11 @@ namespace Client.MirObjects
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (Effects[i].DrawBehind) continue;
-                if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
+
+                if (Effects[i] is SpecialEffect)
+                {
+                    if (((SpecialEffect)Effects[i]).EffectType == 1 && !Settings.LevelEffect) continue;
+                }
 
                 Effects[i].Draw();
             }
@@ -3886,14 +3715,14 @@ namespace Client.MirObjects
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (CurrentEffect == SpellEffect.ElementalBarrierUp && !ElementalBarrier)
+            if (CurrentEffect == SpellEffect.ElementBarrierUp && !ElementalBarrier)//ArcherSpells - Elemental system
             {
                 ElementalBarrier = true;
                 Effects.Add(ElementalBarrierEffect = new Effect(Libraries.Magic3, 1890, 16, 3200, this) { Repeat = true });
                 CurrentEffect = SpellEffect.None;
             }
 
-            if (ElementEffect > 0 && !HasElements)
+            if (ElementEffect > 0 && !HasElements)//ArcherSpells - Elemental system
             {
                 HasElements = true;
                 if (ElementEffect == 4)
@@ -3920,9 +3749,10 @@ namespace Client.MirObjects
         public void DrawBody()
         {
             if (BodyLibrary != null)
+            {
                 BodyLibrary.Draw(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, true);
-
-            //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
+                //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
+            }
         }
         public void DrawHead()
         {
@@ -3956,11 +3786,10 @@ namespace Client.MirObjects
         {
             if (MountType < 0 || !RidingMount) return;
 
-            if (MountLibrary != null)
-                MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
+            MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
         }
 
-        public void GetBackStepDistance(int magicLevel)
+        public void GetBackStepDistance(int magicLevel)//ArcherSpells - Backstep
         {
             JumpDistance = 0;
             if (InTrapRock) return;

@@ -96,7 +96,7 @@ namespace Server.MirObjects.Monsters
 
         protected override void CompleteAttack(IList<object> data)
         {
-            List<MapObject> targets = FindAllTargets(7, CurrentLocation, false);
+            List<MapObject> targets = FindAllTargets(7, CurrentLocation);
             if (targets.Count == 0) return;
 
             for (int i = 0; i < targets.Count; i++)

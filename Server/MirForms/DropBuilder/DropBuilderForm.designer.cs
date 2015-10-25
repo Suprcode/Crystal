@@ -99,12 +99,6 @@
             this.tabPageTorch = new System.Windows.Forms.TabPage();
             this.listBoxTorch = new System.Windows.Forms.ListBox();
             this.tabPageWeapon = new System.Windows.Forms.TabPage();
-            this.tabPageAwakening = new System.Windows.Forms.TabPage();
-            this.listBoxAwakening = new System.Windows.Forms.ListBox();
-            this.tabPagePets = new System.Windows.Forms.TabPage();
-            this.listBoxPets = new System.Windows.Forms.ListBox();
-            this.tabPageTransform = new System.Windows.Forms.TabPage();
-            this.listBoxTransform = new System.Windows.Forms.ListBox();
             this.labelItemOdds = new System.Windows.Forms.Label();
             this.textBoxMinLevel = new System.Windows.Forms.TextBox();
             this.textBoxMaxLevel = new System.Windows.Forms.TextBox();
@@ -118,7 +112,6 @@
             this.buttonUpdateGold = new System.Windows.Forms.Button();
             this.textBoxGoldAmount = new System.Windows.Forms.TextBox();
             this.groupBoxItem = new System.Windows.Forms.GroupBox();
-            this.QuestOnlyCheckBox = new System.Windows.Forms.CheckBox();
             this.checkBoxCap = new System.Windows.Forms.CheckBox();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
@@ -126,6 +119,7 @@
             this.labelMonsterList = new System.Windows.Forms.Label();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.QuestOnlyCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControlSeperateItems.SuspendLayout();
             this.tabPageAmulet.SuspendLayout();
             this.tabPageArmour.SuspendLayout();
@@ -161,9 +155,6 @@
             this.tabPageStone.SuspendLayout();
             this.tabPageTorch.SuspendLayout();
             this.tabPageWeapon.SuspendLayout();
-            this.tabPageAwakening.SuspendLayout();
-            this.tabPagePets.SuspendLayout();
-            this.tabPageTransform.SuspendLayout();
             this.groupBoxGold.SuspendLayout();
             this.groupBoxItem.SuspendLayout();
             this.SuspendLayout();
@@ -210,7 +201,6 @@
             // 
             this.tabControlSeperateItems.Controls.Add(this.tabPageAmulet);
             this.tabControlSeperateItems.Controls.Add(this.tabPageArmour);
-            this.tabControlSeperateItems.Controls.Add(this.tabPageAwakening);
             this.tabControlSeperateItems.Controls.Add(this.tabPageBait);
             this.tabControlSeperateItems.Controls.Add(this.tabPageBells);
             this.tabControlSeperateItems.Controls.Add(this.tabPageBelt);
@@ -231,7 +221,6 @@
             this.tabControlSeperateItems.Controls.Add(this.tabPageNecklace);
             this.tabControlSeperateItems.Controls.Add(this.tabPageNothing);
             this.tabControlSeperateItems.Controls.Add(this.tabPageOre);
-            this.tabControlSeperateItems.Controls.Add(this.tabPagePets);
             this.tabControlSeperateItems.Controls.Add(this.tabPagePotion);
             this.tabControlSeperateItems.Controls.Add(this.tabPageQuest);
             this.tabControlSeperateItems.Controls.Add(this.tabPageReel);
@@ -243,7 +232,6 @@
             this.tabControlSeperateItems.Controls.Add(this.tabPageScroll);
             this.tabControlSeperateItems.Controls.Add(this.tabPageStone);
             this.tabControlSeperateItems.Controls.Add(this.tabPageTorch);
-            this.tabControlSeperateItems.Controls.Add(this.tabPageTransform);
             this.tabControlSeperateItems.Controls.Add(this.tabPageWeapon);
             this.tabControlSeperateItems.HotTrack = true;
             this.tabControlSeperateItems.Location = new System.Drawing.Point(198, 12);
@@ -285,10 +273,10 @@
             // 
             this.tabPageArmour.Controls.Add(this.listBoxArmour);
             this.tabPageArmour.ImageIndex = 17;
-            this.tabPageArmour.Location = new System.Drawing.Point(4, 22);
+            this.tabPageArmour.Location = new System.Drawing.Point(4, 76);
             this.tabPageArmour.Name = "tabPageArmour";
             this.tabPageArmour.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageArmour.Size = new System.Drawing.Size(468, 374);
+            this.tabPageArmour.Size = new System.Drawing.Size(468, 320);
             this.tabPageArmour.TabIndex = 1;
             this.tabPageArmour.Tag = "Armour";
             this.tabPageArmour.Text = "Armour";
@@ -302,17 +290,17 @@
             this.listBoxArmour.FormattingEnabled = true;
             this.listBoxArmour.Location = new System.Drawing.Point(3, 3);
             this.listBoxArmour.Name = "listBoxArmour";
-            this.listBoxArmour.Size = new System.Drawing.Size(462, 368);
+            this.listBoxArmour.Size = new System.Drawing.Size(462, 314);
             this.listBoxArmour.TabIndex = 3;
             this.listBoxArmour.Tag = "Armour";
             // 
             // tabPageBait
             // 
             this.tabPageBait.Controls.Add(this.listBoxBait);
-            this.tabPageBait.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBait.Location = new System.Drawing.Point(4, 76);
             this.tabPageBait.Name = "tabPageBait";
             this.tabPageBait.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBait.Size = new System.Drawing.Size(468, 374);
+            this.tabPageBait.Size = new System.Drawing.Size(468, 320);
             this.tabPageBait.TabIndex = 29;
             this.tabPageBait.Tag = "Bait";
             this.tabPageBait.Text = "Bait";
@@ -326,17 +314,17 @@
             this.listBoxBait.FormattingEnabled = true;
             this.listBoxBait.Location = new System.Drawing.Point(3, 3);
             this.listBoxBait.Name = "listBoxBait";
-            this.listBoxBait.Size = new System.Drawing.Size(462, 368);
+            this.listBoxBait.Size = new System.Drawing.Size(462, 314);
             this.listBoxBait.TabIndex = 4;
             this.listBoxBait.Tag = "Bait";
             // 
             // tabPageBells
             // 
             this.tabPageBells.Controls.Add(this.listBoxBells);
-            this.tabPageBells.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBells.Location = new System.Drawing.Point(4, 76);
             this.tabPageBells.Name = "tabPageBells";
             this.tabPageBells.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBells.Size = new System.Drawing.Size(468, 374);
+            this.tabPageBells.Size = new System.Drawing.Size(468, 320);
             this.tabPageBells.TabIndex = 22;
             this.tabPageBells.Tag = "Bells";
             this.tabPageBells.Text = "Bells";
@@ -350,7 +338,7 @@
             this.listBoxBells.FormattingEnabled = true;
             this.listBoxBells.Location = new System.Drawing.Point(3, 3);
             this.listBoxBells.Name = "listBoxBells";
-            this.listBoxBells.Size = new System.Drawing.Size(462, 368);
+            this.listBoxBells.Size = new System.Drawing.Size(462, 314);
             this.listBoxBells.TabIndex = 4;
             this.listBoxBells.Tag = "Bells";
             // 
@@ -358,10 +346,10 @@
             // 
             this.tabPageBelt.Controls.Add(this.listBoxBelt);
             this.tabPageBelt.ImageIndex = 18;
-            this.tabPageBelt.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBelt.Location = new System.Drawing.Point(4, 76);
             this.tabPageBelt.Name = "tabPageBelt";
             this.tabPageBelt.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBelt.Size = new System.Drawing.Size(468, 374);
+            this.tabPageBelt.Size = new System.Drawing.Size(468, 320);
             this.tabPageBelt.TabIndex = 7;
             this.tabPageBelt.Tag = "Belt";
             this.tabPageBelt.Text = "Belt";
@@ -375,7 +363,7 @@
             this.listBoxBelt.FormattingEnabled = true;
             this.listBoxBelt.Location = new System.Drawing.Point(3, 3);
             this.listBoxBelt.Name = "listBoxBelt";
-            this.listBoxBelt.Size = new System.Drawing.Size(462, 368);
+            this.listBoxBelt.Size = new System.Drawing.Size(462, 314);
             this.listBoxBelt.TabIndex = 3;
             this.listBoxBelt.Tag = "Belt";
             // 
@@ -383,10 +371,10 @@
             // 
             this.tabPageBook.Controls.Add(this.listBoxBook);
             this.tabPageBook.ImageIndex = 5;
-            this.tabPageBook.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBook.Location = new System.Drawing.Point(4, 76);
             this.tabPageBook.Name = "tabPageBook";
             this.tabPageBook.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBook.Size = new System.Drawing.Size(468, 374);
+            this.tabPageBook.Size = new System.Drawing.Size(468, 320);
             this.tabPageBook.TabIndex = 18;
             this.tabPageBook.Tag = "Book";
             this.tabPageBook.Text = "Book";
@@ -400,7 +388,7 @@
             this.listBoxBook.FormattingEnabled = true;
             this.listBoxBook.Location = new System.Drawing.Point(3, 3);
             this.listBoxBook.Name = "listBoxBook";
-            this.listBoxBook.Size = new System.Drawing.Size(462, 368);
+            this.listBoxBook.Size = new System.Drawing.Size(462, 314);
             this.listBoxBook.TabIndex = 3;
             this.listBoxBook.Tag = "Book";
             // 
@@ -408,10 +396,10 @@
             // 
             this.tabPageBoot.Controls.Add(this.listBoxBoot);
             this.tabPageBoot.ImageIndex = 15;
-            this.tabPageBoot.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBoot.Location = new System.Drawing.Point(4, 76);
             this.tabPageBoot.Name = "tabPageBoot";
             this.tabPageBoot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBoot.Size = new System.Drawing.Size(468, 374);
+            this.tabPageBoot.Size = new System.Drawing.Size(468, 320);
             this.tabPageBoot.TabIndex = 8;
             this.tabPageBoot.Tag = "Boots";
             this.tabPageBoot.Text = "Boot";
@@ -425,7 +413,7 @@
             this.listBoxBoot.FormattingEnabled = true;
             this.listBoxBoot.Location = new System.Drawing.Point(3, 3);
             this.listBoxBoot.Name = "listBoxBoot";
-            this.listBoxBoot.Size = new System.Drawing.Size(462, 368);
+            this.listBoxBoot.Size = new System.Drawing.Size(462, 314);
             this.listBoxBoot.TabIndex = 3;
             this.listBoxBoot.Tag = "Boots";
             // 
@@ -433,10 +421,10 @@
             // 
             this.tabPageBracelet.Controls.Add(this.listBoxBracelet);
             this.tabPageBracelet.ImageIndex = 13;
-            this.tabPageBracelet.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBracelet.Location = new System.Drawing.Point(4, 76);
             this.tabPageBracelet.Name = "tabPageBracelet";
             this.tabPageBracelet.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBracelet.Size = new System.Drawing.Size(468, 374);
+            this.tabPageBracelet.Size = new System.Drawing.Size(468, 320);
             this.tabPageBracelet.TabIndex = 4;
             this.tabPageBracelet.Tag = "Bracelet";
             this.tabPageBracelet.Text = "Bracelet";
@@ -450,7 +438,7 @@
             this.listBoxBracelet.FormattingEnabled = true;
             this.listBoxBracelet.Location = new System.Drawing.Point(3, 3);
             this.listBoxBracelet.Name = "listBoxBracelet";
-            this.listBoxBracelet.Size = new System.Drawing.Size(462, 368);
+            this.listBoxBracelet.Size = new System.Drawing.Size(462, 314);
             this.listBoxBracelet.TabIndex = 3;
             this.listBoxBracelet.Tag = "Bracelet";
             // 
@@ -458,10 +446,10 @@
             // 
             this.tabPageCraftingMaterial.Controls.Add(this.listBoxCraftingMaterial);
             this.tabPageCraftingMaterial.ImageIndex = 1;
-            this.tabPageCraftingMaterial.Location = new System.Drawing.Point(4, 40);
+            this.tabPageCraftingMaterial.Location = new System.Drawing.Point(4, 76);
             this.tabPageCraftingMaterial.Name = "tabPageCraftingMaterial";
             this.tabPageCraftingMaterial.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCraftingMaterial.Size = new System.Drawing.Size(468, 356);
+            this.tabPageCraftingMaterial.Size = new System.Drawing.Size(468, 320);
             this.tabPageCraftingMaterial.TabIndex = 14;
             this.tabPageCraftingMaterial.Tag = "CraftingMaterial";
             this.tabPageCraftingMaterial.Text = "Crafting Material";
@@ -475,17 +463,17 @@
             this.listBoxCraftingMaterial.FormattingEnabled = true;
             this.listBoxCraftingMaterial.Location = new System.Drawing.Point(3, 3);
             this.listBoxCraftingMaterial.Name = "listBoxCraftingMaterial";
-            this.listBoxCraftingMaterial.Size = new System.Drawing.Size(462, 350);
+            this.listBoxCraftingMaterial.Size = new System.Drawing.Size(462, 314);
             this.listBoxCraftingMaterial.TabIndex = 3;
             this.listBoxCraftingMaterial.Tag = "Crafting Material";
             // 
             // tabPageFinder
             // 
             this.tabPageFinder.Controls.Add(this.listBoxFinder);
-            this.tabPageFinder.Location = new System.Drawing.Point(4, 40);
+            this.tabPageFinder.Location = new System.Drawing.Point(4, 76);
             this.tabPageFinder.Name = "tabPageFinder";
             this.tabPageFinder.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFinder.Size = new System.Drawing.Size(468, 356);
+            this.tabPageFinder.Size = new System.Drawing.Size(468, 320);
             this.tabPageFinder.TabIndex = 30;
             this.tabPageFinder.Tag = "Finder";
             this.tabPageFinder.Text = "Finder";
@@ -499,17 +487,17 @@
             this.listBoxFinder.FormattingEnabled = true;
             this.listBoxFinder.Location = new System.Drawing.Point(3, 3);
             this.listBoxFinder.Name = "listBoxFinder";
-            this.listBoxFinder.Size = new System.Drawing.Size(462, 350);
+            this.listBoxFinder.Size = new System.Drawing.Size(462, 314);
             this.listBoxFinder.TabIndex = 5;
             this.listBoxFinder.Tag = "Finder";
             // 
             // tabPageFish
             // 
             this.tabPageFish.Controls.Add(this.listBoxFish);
-            this.tabPageFish.Location = new System.Drawing.Point(4, 40);
+            this.tabPageFish.Location = new System.Drawing.Point(4, 76);
             this.tabPageFish.Name = "tabPageFish";
             this.tabPageFish.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFish.Size = new System.Drawing.Size(468, 356);
+            this.tabPageFish.Size = new System.Drawing.Size(468, 320);
             this.tabPageFish.TabIndex = 32;
             this.tabPageFish.Tag = "Fish";
             this.tabPageFish.Text = "Fish";
@@ -523,17 +511,17 @@
             this.listBoxFish.FormattingEnabled = true;
             this.listBoxFish.Location = new System.Drawing.Point(3, 3);
             this.listBoxFish.Name = "listBoxFish";
-            this.listBoxFish.Size = new System.Drawing.Size(462, 350);
+            this.listBoxFish.Size = new System.Drawing.Size(462, 314);
             this.listBoxFish.TabIndex = 5;
             this.listBoxFish.Tag = "Fish";
             // 
             // tabPageFloat
             // 
             this.tabPageFloat.Controls.Add(this.listBoxFloat);
-            this.tabPageFloat.Location = new System.Drawing.Point(4, 40);
+            this.tabPageFloat.Location = new System.Drawing.Point(4, 76);
             this.tabPageFloat.Name = "tabPageFloat";
             this.tabPageFloat.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFloat.Size = new System.Drawing.Size(468, 356);
+            this.tabPageFloat.Size = new System.Drawing.Size(468, 320);
             this.tabPageFloat.TabIndex = 28;
             this.tabPageFloat.Tag = "Float";
             this.tabPageFloat.Text = "Float";
@@ -547,17 +535,17 @@
             this.listBoxFloat.FormattingEnabled = true;
             this.listBoxFloat.Location = new System.Drawing.Point(3, 3);
             this.listBoxFloat.Name = "listBoxFloat";
-            this.listBoxFloat.Size = new System.Drawing.Size(462, 350);
+            this.listBoxFloat.Size = new System.Drawing.Size(462, 314);
             this.listBoxFloat.TabIndex = 5;
             this.listBoxFloat.Tag = "Float";
             // 
             // tabPageFood
             // 
             this.tabPageFood.Controls.Add(this.listBoxFood);
-            this.tabPageFood.Location = new System.Drawing.Point(4, 40);
+            this.tabPageFood.Location = new System.Drawing.Point(4, 76);
             this.tabPageFood.Name = "tabPageFood";
             this.tabPageFood.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFood.Size = new System.Drawing.Size(468, 356);
+            this.tabPageFood.Size = new System.Drawing.Size(468, 320);
             this.tabPageFood.TabIndex = 26;
             this.tabPageFood.Tag = "Food";
             this.tabPageFood.Text = "Food";
@@ -571,7 +559,7 @@
             this.listBoxFood.FormattingEnabled = true;
             this.listBoxFood.Location = new System.Drawing.Point(3, 3);
             this.listBoxFood.Name = "listBoxFood";
-            this.listBoxFood.Size = new System.Drawing.Size(462, 350);
+            this.listBoxFood.Size = new System.Drawing.Size(462, 314);
             this.listBoxFood.TabIndex = 5;
             this.listBoxFood.Tag = "Food";
             // 
@@ -579,10 +567,10 @@
             // 
             this.tabPageGem.Controls.Add(this.listBoxGem);
             this.tabPageGem.ImageIndex = 7;
-            this.tabPageGem.Location = new System.Drawing.Point(4, 40);
+            this.tabPageGem.Location = new System.Drawing.Point(4, 76);
             this.tabPageGem.Name = "tabPageGem";
             this.tabPageGem.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGem.Size = new System.Drawing.Size(468, 356);
+            this.tabPageGem.Size = new System.Drawing.Size(468, 320);
             this.tabPageGem.TabIndex = 16;
             this.tabPageGem.Tag = "Gem";
             this.tabPageGem.Text = "Gem";
@@ -596,7 +584,7 @@
             this.listBoxGem.FormattingEnabled = true;
             this.listBoxGem.Location = new System.Drawing.Point(3, 3);
             this.listBoxGem.Name = "listBoxGem";
-            this.listBoxGem.Size = new System.Drawing.Size(462, 350);
+            this.listBoxGem.Size = new System.Drawing.Size(462, 314);
             this.listBoxGem.TabIndex = 3;
             this.listBoxGem.Tag = "Gem";
             // 
@@ -604,10 +592,10 @@
             // 
             this.tabPageHelmet.Controls.Add(this.listBoxHelmet);
             this.tabPageHelmet.ImageIndex = 11;
-            this.tabPageHelmet.Location = new System.Drawing.Point(4, 40);
+            this.tabPageHelmet.Location = new System.Drawing.Point(4, 76);
             this.tabPageHelmet.Name = "tabPageHelmet";
             this.tabPageHelmet.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHelmet.Size = new System.Drawing.Size(468, 356);
+            this.tabPageHelmet.Size = new System.Drawing.Size(468, 320);
             this.tabPageHelmet.TabIndex = 2;
             this.tabPageHelmet.Tag = "Helmet";
             this.tabPageHelmet.Text = "Helmet";
@@ -621,17 +609,17 @@
             this.listBoxHelmet.FormattingEnabled = true;
             this.listBoxHelmet.Location = new System.Drawing.Point(3, 3);
             this.listBoxHelmet.Name = "listBoxHelmet";
-            this.listBoxHelmet.Size = new System.Drawing.Size(462, 350);
+            this.listBoxHelmet.Size = new System.Drawing.Size(462, 314);
             this.listBoxHelmet.TabIndex = 3;
             this.listBoxHelmet.Tag = "Helmet";
             // 
             // tabPageHook
             // 
             this.tabPageHook.Controls.Add(this.listBoxHook);
-            this.tabPageHook.Location = new System.Drawing.Point(4, 40);
+            this.tabPageHook.Location = new System.Drawing.Point(4, 76);
             this.tabPageHook.Name = "tabPageHook";
             this.tabPageHook.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHook.Size = new System.Drawing.Size(468, 356);
+            this.tabPageHook.Size = new System.Drawing.Size(468, 320);
             this.tabPageHook.TabIndex = 27;
             this.tabPageHook.Tag = "Hook";
             this.tabPageHook.Text = "Hook";
@@ -645,17 +633,17 @@
             this.listBoxHook.FormattingEnabled = true;
             this.listBoxHook.Location = new System.Drawing.Point(3, 3);
             this.listBoxHook.Name = "listBoxHook";
-            this.listBoxHook.Size = new System.Drawing.Size(462, 350);
+            this.listBoxHook.Size = new System.Drawing.Size(462, 314);
             this.listBoxHook.TabIndex = 5;
             this.listBoxHook.Tag = "Hook";
             // 
             // tabPageMask
             // 
             this.tabPageMask.Controls.Add(this.listBoxMask);
-            this.tabPageMask.Location = new System.Drawing.Point(4, 40);
+            this.tabPageMask.Location = new System.Drawing.Point(4, 76);
             this.tabPageMask.Name = "tabPageMask";
             this.tabPageMask.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMask.Size = new System.Drawing.Size(468, 356);
+            this.tabPageMask.Size = new System.Drawing.Size(468, 320);
             this.tabPageMask.TabIndex = 25;
             this.tabPageMask.Tag = "Mask";
             this.tabPageMask.Text = "Mask";
@@ -669,7 +657,7 @@
             this.listBoxMask.FormattingEnabled = true;
             this.listBoxMask.Location = new System.Drawing.Point(3, 3);
             this.listBoxMask.Name = "listBoxMask";
-            this.listBoxMask.Size = new System.Drawing.Size(462, 350);
+            this.listBoxMask.Size = new System.Drawing.Size(462, 314);
             this.listBoxMask.TabIndex = 5;
             this.listBoxMask.Tag = "Mask";
             // 
@@ -677,10 +665,10 @@
             // 
             this.tabPageMeat.Controls.Add(this.listBoxMeat);
             this.tabPageMeat.ImageIndex = 3;
-            this.tabPageMeat.Location = new System.Drawing.Point(4, 40);
+            this.tabPageMeat.Location = new System.Drawing.Point(4, 76);
             this.tabPageMeat.Name = "tabPageMeat";
             this.tabPageMeat.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMeat.Size = new System.Drawing.Size(468, 356);
+            this.tabPageMeat.Size = new System.Drawing.Size(468, 320);
             this.tabPageMeat.TabIndex = 13;
             this.tabPageMeat.Tag = "Meat";
             this.tabPageMeat.Text = "Meat";
@@ -694,7 +682,7 @@
             this.listBoxMeat.FormattingEnabled = true;
             this.listBoxMeat.Location = new System.Drawing.Point(3, 3);
             this.listBoxMeat.Name = "listBoxMeat";
-            this.listBoxMeat.Size = new System.Drawing.Size(462, 350);
+            this.listBoxMeat.Size = new System.Drawing.Size(462, 314);
             this.listBoxMeat.TabIndex = 3;
             this.listBoxMeat.Tag = "Meat";
             // 
@@ -702,10 +690,10 @@
             // 
             this.tabPageMount.Controls.Add(this.listBoxMount);
             this.tabPageMount.ImageIndex = 19;
-            this.tabPageMount.Location = new System.Drawing.Point(4, 58);
+            this.tabPageMount.Location = new System.Drawing.Point(4, 76);
             this.tabPageMount.Name = "tabPageMount";
             this.tabPageMount.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMount.Size = new System.Drawing.Size(468, 338);
+            this.tabPageMount.Size = new System.Drawing.Size(468, 320);
             this.tabPageMount.TabIndex = 17;
             this.tabPageMount.Tag = "Mount";
             this.tabPageMount.Text = "Mount";
@@ -719,7 +707,7 @@
             this.listBoxMount.FormattingEnabled = true;
             this.listBoxMount.Location = new System.Drawing.Point(3, 3);
             this.listBoxMount.Name = "listBoxMount";
-            this.listBoxMount.Size = new System.Drawing.Size(462, 332);
+            this.listBoxMount.Size = new System.Drawing.Size(462, 314);
             this.listBoxMount.TabIndex = 3;
             this.listBoxMount.Tag = "Mount";
             // 
@@ -727,10 +715,10 @@
             // 
             this.tabPageNecklace.Controls.Add(this.listBoxNecklace);
             this.tabPageNecklace.ImageIndex = 14;
-            this.tabPageNecklace.Location = new System.Drawing.Point(4, 58);
+            this.tabPageNecklace.Location = new System.Drawing.Point(4, 76);
             this.tabPageNecklace.Name = "tabPageNecklace";
             this.tabPageNecklace.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNecklace.Size = new System.Drawing.Size(468, 338);
+            this.tabPageNecklace.Size = new System.Drawing.Size(468, 320);
             this.tabPageNecklace.TabIndex = 3;
             this.tabPageNecklace.Tag = "Necklace";
             this.tabPageNecklace.Text = "Necklace";
@@ -744,7 +732,7 @@
             this.listBoxNecklace.FormattingEnabled = true;
             this.listBoxNecklace.Location = new System.Drawing.Point(3, 3);
             this.listBoxNecklace.Name = "listBoxNecklace";
-            this.listBoxNecklace.Size = new System.Drawing.Size(462, 332);
+            this.listBoxNecklace.Size = new System.Drawing.Size(462, 314);
             this.listBoxNecklace.TabIndex = 3;
             this.listBoxNecklace.Tag = "Necklace";
             // 
@@ -752,10 +740,10 @@
             // 
             this.tabPageNothing.Controls.Add(this.listBoxNothing);
             this.tabPageNothing.ImageIndex = 8;
-            this.tabPageNothing.Location = new System.Drawing.Point(4, 58);
+            this.tabPageNothing.Location = new System.Drawing.Point(4, 76);
             this.tabPageNothing.Name = "tabPageNothing";
             this.tabPageNothing.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNothing.Size = new System.Drawing.Size(468, 338);
+            this.tabPageNothing.Size = new System.Drawing.Size(468, 320);
             this.tabPageNothing.TabIndex = 19;
             this.tabPageNothing.Tag = "Nothing";
             this.tabPageNothing.Text = "Nothing";
@@ -769,7 +757,7 @@
             this.listBoxNothing.FormattingEnabled = true;
             this.listBoxNothing.Location = new System.Drawing.Point(3, 3);
             this.listBoxNothing.Name = "listBoxNothing";
-            this.listBoxNothing.Size = new System.Drawing.Size(462, 332);
+            this.listBoxNothing.Size = new System.Drawing.Size(462, 314);
             this.listBoxNothing.TabIndex = 4;
             this.listBoxNothing.Tag = "Nothing";
             // 
@@ -777,10 +765,10 @@
             // 
             this.tabPageOre.Controls.Add(this.listBoxOre);
             this.tabPageOre.ImageIndex = 6;
-            this.tabPageOre.Location = new System.Drawing.Point(4, 58);
+            this.tabPageOre.Location = new System.Drawing.Point(4, 76);
             this.tabPageOre.Name = "tabPageOre";
             this.tabPageOre.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOre.Size = new System.Drawing.Size(468, 338);
+            this.tabPageOre.Size = new System.Drawing.Size(468, 320);
             this.tabPageOre.TabIndex = 12;
             this.tabPageOre.Tag = "Ore";
             this.tabPageOre.Text = "Ore";
@@ -794,7 +782,7 @@
             this.listBoxOre.FormattingEnabled = true;
             this.listBoxOre.Location = new System.Drawing.Point(3, 3);
             this.listBoxOre.Name = "listBoxOre";
-            this.listBoxOre.Size = new System.Drawing.Size(462, 332);
+            this.listBoxOre.Size = new System.Drawing.Size(462, 314);
             this.listBoxOre.TabIndex = 3;
             this.listBoxOre.Tag = "Ore";
             // 
@@ -802,10 +790,10 @@
             // 
             this.tabPagePotion.Controls.Add(this.listBoxPotion);
             this.tabPagePotion.ImageIndex = 0;
-            this.tabPagePotion.Location = new System.Drawing.Point(4, 58);
+            this.tabPagePotion.Location = new System.Drawing.Point(4, 76);
             this.tabPagePotion.Name = "tabPagePotion";
             this.tabPagePotion.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePotion.Size = new System.Drawing.Size(468, 338);
+            this.tabPagePotion.Size = new System.Drawing.Size(468, 320);
             this.tabPagePotion.TabIndex = 11;
             this.tabPagePotion.Tag = "Potion";
             this.tabPagePotion.Text = "Potion";
@@ -819,17 +807,17 @@
             this.listBoxPotion.FormattingEnabled = true;
             this.listBoxPotion.Location = new System.Drawing.Point(3, 3);
             this.listBoxPotion.Name = "listBoxPotion";
-            this.listBoxPotion.Size = new System.Drawing.Size(462, 332);
+            this.listBoxPotion.Size = new System.Drawing.Size(462, 314);
             this.listBoxPotion.TabIndex = 3;
             this.listBoxPotion.Tag = "Potion";
             // 
             // tabPageQuest
             // 
             this.tabPageQuest.Controls.Add(this.listBoxQuest);
-            this.tabPageQuest.Location = new System.Drawing.Point(4, 58);
+            this.tabPageQuest.Location = new System.Drawing.Point(4, 76);
             this.tabPageQuest.Name = "tabPageQuest";
             this.tabPageQuest.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageQuest.Size = new System.Drawing.Size(468, 338);
+            this.tabPageQuest.Size = new System.Drawing.Size(468, 320);
             this.tabPageQuest.TabIndex = 33;
             this.tabPageQuest.Tag = "Quest";
             this.tabPageQuest.Text = "Quest";
@@ -843,17 +831,17 @@
             this.listBoxQuest.FormattingEnabled = true;
             this.listBoxQuest.Location = new System.Drawing.Point(3, 3);
             this.listBoxQuest.Name = "listBoxQuest";
-            this.listBoxQuest.Size = new System.Drawing.Size(462, 332);
+            this.listBoxQuest.Size = new System.Drawing.Size(462, 314);
             this.listBoxQuest.TabIndex = 4;
             this.listBoxQuest.Tag = "Quest";
             // 
             // tabPageReel
             // 
             this.tabPageReel.Controls.Add(this.listBoxReel);
-            this.tabPageReel.Location = new System.Drawing.Point(4, 58);
+            this.tabPageReel.Location = new System.Drawing.Point(4, 76);
             this.tabPageReel.Name = "tabPageReel";
             this.tabPageReel.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageReel.Size = new System.Drawing.Size(468, 338);
+            this.tabPageReel.Size = new System.Drawing.Size(468, 320);
             this.tabPageReel.TabIndex = 31;
             this.tabPageReel.Tag = "Reel";
             this.tabPageReel.Text = "Reel";
@@ -867,17 +855,17 @@
             this.listBoxReel.FormattingEnabled = true;
             this.listBoxReel.Location = new System.Drawing.Point(3, 3);
             this.listBoxReel.Name = "listBoxReel";
-            this.listBoxReel.Size = new System.Drawing.Size(462, 332);
+            this.listBoxReel.Size = new System.Drawing.Size(462, 314);
             this.listBoxReel.TabIndex = 4;
             this.listBoxReel.Tag = "Reel";
             // 
             // tabPageReins
             // 
             this.tabPageReins.Controls.Add(this.listBoxReins);
-            this.tabPageReins.Location = new System.Drawing.Point(4, 58);
+            this.tabPageReins.Location = new System.Drawing.Point(4, 76);
             this.tabPageReins.Name = "tabPageReins";
             this.tabPageReins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageReins.Size = new System.Drawing.Size(468, 338);
+            this.tabPageReins.Size = new System.Drawing.Size(468, 320);
             this.tabPageReins.TabIndex = 21;
             this.tabPageReins.Tag = "Reins";
             this.tabPageReins.Text = "Reins";
@@ -891,17 +879,17 @@
             this.listBoxReins.FormattingEnabled = true;
             this.listBoxReins.Location = new System.Drawing.Point(3, 3);
             this.listBoxReins.Name = "listBoxReins";
-            this.listBoxReins.Size = new System.Drawing.Size(462, 332);
+            this.listBoxReins.Size = new System.Drawing.Size(462, 314);
             this.listBoxReins.TabIndex = 4;
             this.listBoxReins.Tag = "Reins";
             // 
             // tabPageRibbon
             // 
             this.tabPageRibbon.Controls.Add(this.listBoxRibbon);
-            this.tabPageRibbon.Location = new System.Drawing.Point(4, 58);
+            this.tabPageRibbon.Location = new System.Drawing.Point(4, 76);
             this.tabPageRibbon.Name = "tabPageRibbon";
             this.tabPageRibbon.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageRibbon.Size = new System.Drawing.Size(468, 338);
+            this.tabPageRibbon.Size = new System.Drawing.Size(468, 320);
             this.tabPageRibbon.TabIndex = 24;
             this.tabPageRibbon.Tag = "Ribbon";
             this.tabPageRibbon.Text = "Ribbon";
@@ -915,7 +903,7 @@
             this.listBoxRibbon.FormattingEnabled = true;
             this.listBoxRibbon.Location = new System.Drawing.Point(3, 3);
             this.listBoxRibbon.Name = "listBoxRibbon";
-            this.listBoxRibbon.Size = new System.Drawing.Size(462, 332);
+            this.listBoxRibbon.Size = new System.Drawing.Size(462, 314);
             this.listBoxRibbon.TabIndex = 5;
             this.listBoxRibbon.Tag = "Ribbon";
             // 
@@ -1080,78 +1068,6 @@
             this.tabPageWeapon.Text = "Weapon";
             this.tabPageWeapon.UseVisualStyleBackColor = true;
             // 
-            // tabPageAwakening
-            // 
-            this.tabPageAwakening.Controls.Add(this.listBoxAwakening);
-            this.tabPageAwakening.Location = new System.Drawing.Point(4, 22);
-            this.tabPageAwakening.Name = "tabPageAwakening";
-            this.tabPageAwakening.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAwakening.Size = new System.Drawing.Size(468, 374);
-            this.tabPageAwakening.TabIndex = 34;
-            this.tabPageAwakening.Tag = "Awakening";
-            this.tabPageAwakening.Text = "Awakening";
-            this.tabPageAwakening.UseVisualStyleBackColor = true;
-            // 
-            // listBoxAwakening
-            // 
-            this.listBoxAwakening.BackColor = System.Drawing.Color.GhostWhite;
-            this.listBoxAwakening.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBoxAwakening.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxAwakening.FormattingEnabled = true;
-            this.listBoxAwakening.Location = new System.Drawing.Point(3, 3);
-            this.listBoxAwakening.Name = "listBoxAwakening";
-            this.listBoxAwakening.Size = new System.Drawing.Size(462, 368);
-            this.listBoxAwakening.TabIndex = 0;
-            this.listBoxAwakening.Tag = "Awakening";
-            // 
-            // tabPagePets
-            // 
-            this.tabPagePets.Controls.Add(this.listBoxPets);
-            this.tabPagePets.Location = new System.Drawing.Point(4, 58);
-            this.tabPagePets.Name = "tabPagePets";
-            this.tabPagePets.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPagePets.Size = new System.Drawing.Size(468, 338);
-            this.tabPagePets.TabIndex = 35;
-            this.tabPagePets.Tag = "Pets";
-            this.tabPagePets.Text = "Pets";
-            this.tabPagePets.UseVisualStyleBackColor = true;
-            // 
-            // listBoxPets
-            // 
-            this.listBoxPets.BackColor = System.Drawing.Color.GhostWhite;
-            this.listBoxPets.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBoxPets.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxPets.FormattingEnabled = true;
-            this.listBoxPets.Location = new System.Drawing.Point(3, 3);
-            this.listBoxPets.Name = "listBoxPets";
-            this.listBoxPets.Size = new System.Drawing.Size(462, 332);
-            this.listBoxPets.TabIndex = 1;
-            this.listBoxPets.Tag = "Pets";
-            // 
-            // tabPageTransform
-            // 
-            this.tabPageTransform.Controls.Add(this.listBoxTransform);
-            this.tabPageTransform.Location = new System.Drawing.Point(4, 76);
-            this.tabPageTransform.Name = "tabPageTransform";
-            this.tabPageTransform.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTransform.Size = new System.Drawing.Size(468, 320);
-            this.tabPageTransform.TabIndex = 36;
-            this.tabPageTransform.Tag = "Transform";
-            this.tabPageTransform.Text = "Transform";
-            this.tabPageTransform.UseVisualStyleBackColor = true;
-            // 
-            // listBoxTransform
-            // 
-            this.listBoxTransform.BackColor = System.Drawing.Color.GhostWhite;
-            this.listBoxTransform.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBoxTransform.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxTransform.FormattingEnabled = true;
-            this.listBoxTransform.Location = new System.Drawing.Point(3, 3);
-            this.listBoxTransform.Name = "listBoxTransform";
-            this.listBoxTransform.Size = new System.Drawing.Size(462, 314);
-            this.listBoxTransform.TabIndex = 1;
-            this.listBoxTransform.Tag = "Transform";
-            // 
             // labelItemOdds
             // 
             this.labelItemOdds.AutoSize = true;
@@ -1280,16 +1196,6 @@
             this.groupBoxItem.TabStop = false;
             this.groupBoxItem.Text = "Item Settings";
             // 
-            // QuestOnlyCheckBox
-            // 
-            this.QuestOnlyCheckBox.AutoSize = true;
-            this.QuestOnlyCheckBox.Location = new System.Drawing.Point(9, 67);
-            this.QuestOnlyCheckBox.Name = "QuestOnlyCheckBox";
-            this.QuestOnlyCheckBox.Size = new System.Drawing.Size(78, 17);
-            this.QuestOnlyCheckBox.TabIndex = 17;
-            this.QuestOnlyCheckBox.Text = "Quest Only";
-            this.QuestOnlyCheckBox.UseVisualStyleBackColor = true;
-            // 
             // checkBoxCap
             // 
             this.checkBoxCap.AutoSize = true;
@@ -1328,9 +1234,9 @@
             this.labelMobLevel.AutoSize = true;
             this.labelMobLevel.Location = new System.Drawing.Point(680, 12);
             this.labelMobLevel.Name = "labelMobLevel";
-            this.labelMobLevel.Size = new System.Drawing.Size(86, 13);
+            this.labelMobLevel.Size = new System.Drawing.Size(85, 13);
             this.labelMobLevel.TabIndex = 22;
-            this.labelMobLevel.Text = "Currently Editing:";
+            this.labelMobLevel.Text = "Currently editing:";
             // 
             // labelMonsterList
             // 
@@ -1359,6 +1265,16 @@
             this.label2.Size = new System.Drawing.Size(44, 13);
             this.label2.TabIndex = 25;
             this.label2.Text = "Search:";
+            // 
+            // QuestOnlyCheckBox
+            // 
+            this.QuestOnlyCheckBox.AutoSize = true;
+            this.QuestOnlyCheckBox.Location = new System.Drawing.Point(9, 67);
+            this.QuestOnlyCheckBox.Name = "QuestOnlyCheckBox";
+            this.QuestOnlyCheckBox.Size = new System.Drawing.Size(78, 17);
+            this.QuestOnlyCheckBox.TabIndex = 17;
+            this.QuestOnlyCheckBox.Text = "Quest Only";
+            this.QuestOnlyCheckBox.UseVisualStyleBackColor = true;
             // 
             // DropGenForm
             // 
@@ -1416,9 +1332,6 @@
             this.tabPageStone.ResumeLayout(false);
             this.tabPageTorch.ResumeLayout(false);
             this.tabPageWeapon.ResumeLayout(false);
-            this.tabPageAwakening.ResumeLayout(false);
-            this.tabPagePets.ResumeLayout(false);
-            this.tabPageTransform.ResumeLayout(false);
             this.groupBoxGold.ResumeLayout(false);
             this.groupBoxGold.PerformLayout();
             this.groupBoxItem.ResumeLayout(false);
@@ -1522,12 +1435,6 @@
         private System.Windows.Forms.TextBox textBoxSearch;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox QuestOnlyCheckBox;
-        private System.Windows.Forms.TabPage tabPageAwakening;
-        private System.Windows.Forms.ListBox listBoxAwakening;
-        private System.Windows.Forms.TabPage tabPagePets;
-        private System.Windows.Forms.TabPage tabPageTransform;
-        private System.Windows.Forms.ListBox listBoxPets;
-        private System.Windows.Forms.ListBox listBoxTransform;
 
     }
 }

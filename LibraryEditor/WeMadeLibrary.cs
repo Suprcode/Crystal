@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 
+
 namespace LibraryEditor
 {
     public class WeMadeLibrary
@@ -30,7 +31,7 @@ namespace LibraryEditor
 
         private bool _initialized;
         public byte _nType = 0; //0 = .wil //1 = .wzl //2 = .wil new wemade design //3 = .wil mir3 //4 = .miz shanda mir3
-        private byte[] ImageStructureSize = { 8, 16, 16, 17, 16 };//base size of an image structure
+        private byte[] ImageStructureSize = { 8, 16, 16, 17, 16};//base size of an image structure
 
         public WeMadeLibrary(string name)
         {
@@ -41,7 +42,6 @@ namespace LibraryEditor
                     _MainExtention = WzlExtention;
                     _IndexExtention = WzxExtention;
                     break;
-
                 case ".miz":
                     _nType = 4;
                     _MainExtention = MizExtention;
@@ -55,8 +55,8 @@ namespace LibraryEditor
         public void Initialize()
         {
             _initialized = true;
-
-            if (!File.Exists(_fileName + _IndexExtention)) return;
+            
+            if (!File.Exists(_fileName + _IndexExtention))return;
             if (!File.Exists(_fileName + _MainExtention)) return;
 
             _fStream = new FileStream(_fileName + _MainExtention, FileMode.Open, FileAccess.Read);
@@ -71,11 +71,11 @@ namespace LibraryEditor
         {
             byte[] buffer;
             _palette = new int[256] { -16777216, -8388608, -16744448, -8355840, -16777088, -8388480, -16744320, -4144960, -11173737, -6440504, -8686733, -13817559, -10857902, -10266022, -12437191, -14870504, -15200240, -14084072, -15726584, -886415, -2005153, -42406, -52943, -2729390, -7073792, -7067368, -13039616, -9236480, -4909056, -4365486, -12445680, -21863, -10874880, -9225943, -5944783, -7046285, -4369871, -11394800, -8703720, -13821936, -7583183, -7067392, -4378368, -3771566, -9752296, -3773630, -3257856, -5938375, -10866408, -14020608, -15398912, -12969984, -16252928, -14090240, -11927552, -6488064, -2359296, -2228224, -327680, -6524078, -7050422, -9221591, -11390696, -7583208, -7846895, -11919104, -14608368, -2714534, -3773663, -1086720, -35072, -5925756, -12439263, -15200248, -14084088, -14610432, -13031144, -7576775, -12441328, -9747944, -8697320, -7058944, -7568261, -9739430, -11910599, -14081768, -12175063, -4872812, -8688806, -3231340, -5927821, -7572646, -4877197, -2710157, -1071798, -1063284, -8690878, -9742791, -4352934, -10274560, -2701651, -11386327, -7052520, -1059155, -5927837, -10266038, -4348549, -10862056, -4355023, -13291223, -7043997, -8688822, -5927846, -10859991, -6522055, -12439280, -1069791, -15200256, -14081792, -6526208, -7044006, -11386344, -9741783, -8690911, -6522079, -2185984, -10857927, -13555440, -3228293, -10266055, -7044022, -3758807, -15688680, -12415926, -13530046, -15690711, -16246768, -16246760, -16242416, -15187415, -5917267, -9735309, -15193815, -15187382, -13548982, -10238242, -12263937, -7547153, -9213127, -532935, -528500, -530688, -9737382, -10842971, -12995089, -11887410, -13531979, -13544853, -2171178, -4342347, -7566204, -526370, -16775144, -16246727, -16248791, -16246784, -16242432, -16756059, -16745506, -15718070, -15713941, -15707508, -14591323, -15716006, -15711612, -13544828, -15195855, -11904389, -11375707, -14075549, -15709474, -14079711, -11908551, -14079720, -11908567, -8684734, -6513590, -10855895, -12434924, -13027072, -10921728, -3525332, -9735391, -14077696, -13551344, -13551336, -12432896, -11377896, -10849495, -13546984, -15195904, -15191808, -15189744, -10255286, -9716406, -10242742, -10240694, -10838966, -11891655, -10238390, -10234294, -11369398, -13536471, -10238374, -11354806, -15663360, -15193832, -11892662, -11868342, -16754176, -16742400, -16739328, -16720384, -16716288, -16712960, -11904364, -10259531, -8680234, -9733162, -8943361, -3750194, -7039844, -6515514, -13553351, -14083964, -15204220, -11910574, -11386245, -10265997, -3230217, -7570532, -8969524, -2249985, -1002454, -2162529, -1894477, -1040, -6250332, -8355712, -65536, -16711936, -256, -16776961, -65281, -16711681, -1, };
-            if (_nType == 0) //at least we know it's a .wil file up to now
+            if (_nType == 0) //at least we know it's a .wil file upto now
             {
                 _fStream.Seek(0, SeekOrigin.Begin);
                 buffer = _bReader.ReadBytes(48);
-                _nType = (byte)(buffer[26] == 64 ? 2 : buffer[2] == 73 ? 3 : _nType);
+                _nType = (byte)(buffer[26] == 64 ? 2 : buffer[2] == 73 ? 3 :  _nType);
                 if (_nType == 0)
                 {
                     _palette = new int[_bReader.ReadInt32()];
@@ -85,7 +85,7 @@ namespace LibraryEditor
                     for (int i = 1; i < _palette.Length; i++)
                         _palette[i] = _bReader.ReadInt32() + (255 << 24);
                 }
-            }
+            }            
             LoadIndexFile();
             Images = new WeMadeImage[_indexList.Count];
         }
@@ -106,22 +106,19 @@ namespace LibraryEditor
                         case 4:
                             stream.Seek(24, SeekOrigin.Begin);
                             break;
-
                         case 3:
                             reader.ReadBytes(26);
                             if (reader.ReadUInt16() != 0xB13A)
                                 stream.Seek(24, SeekOrigin.Begin);
                             break;
-
                         case 2:
                             reader.ReadBytes(52);
                             break;
-
                         default:
                             reader.ReadBytes(_version == 0 ? 48 : 52);
                             break;
                     }
-
+                    
                     stream = null;
                     while (reader.BaseStream.Position <= reader.BaseStream.Length - 4)
                         _indexList.Add(reader.ReadInt32());
@@ -136,7 +133,7 @@ namespace LibraryEditor
 
         private void CheckImage(int index)
         {
-            if (!_initialized) Initialize();
+            if (!_initialized) Initialize(); 
             if (Images == null || index < 0 || index >= Images.Length) return;
             if (Images[index] == null)
             {
@@ -149,6 +146,7 @@ namespace LibraryEditor
                 _fStream.Seek(_indexList[index] + (_nType > 0 ? ImageStructureSize[_nType] : _version == 0 ? 8 : 12), SeekOrigin.Begin);
                 Images[index].CreateTexture(_bReader, _palette);
             }
+
         }
 
         public void ToMLibrary()
@@ -158,40 +156,22 @@ namespace LibraryEditor
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            MLibrary library = new MLibrary(fileName) { Images = new List<MLibrary.MImage>(), IndexList = new List<int>(), Count = Images.Length };
-            //library.Save();
+            MLibrary library = new MLibrary(fileName) {Images = new List<MLibrary.MImage>(), IndexList = new List<int>(), Count = Images.Length};
 
             for (int i = 0; i < library.Count; i++)
                 library.Images.Add(null);
 
-            ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
-
-            try
-            {
-                Parallel.For(0, Images.Length, options, i =>
-                    {
-                        WeMadeImage image = Images[i];
-                        if (image.HasMask)
-                            library.Images[i] = new MLibrary.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow ? (byte)1 : (byte)0, MaskX = image.X, MaskY = image.Y };
-                        else
-                            library.Images[i] = new MLibrary.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow ? (byte)1 : (byte)0 };
-                    });
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                library.Save();
-            }
-
-            // Operation finished.
-            // System.Windows.Forms.MessageBox.Show("Converted " + fileName + " successfully.",
-            //    "Wemade Information",
-            //        System.Windows.Forms.MessageBoxButtons.OK,
-            //            System.Windows.Forms.MessageBoxIcon.Information,
-            //                System.Windows.Forms.MessageBoxDefaultButton.Button1);
+            ParallelOptions options = new ParallelOptions {MaxDegreeOfParallelism = 8};
+            Parallel.For(0, Images.Length, options, i =>
+                {
+                    WeMadeImage image = Images[i];
+                    if (image.HasMask)
+                        library.Images[i] = new MLibrary.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow ? (byte)1 : (byte)0, MaskX = image.X, MaskY = image.Y };
+                    else
+                    library.Images[i] = new MLibrary.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow? (byte)1: (byte)0 };
+                });
+            
+            library.Save();
         }
 
         public class WeMadeImage
@@ -206,7 +186,7 @@ namespace LibraryEditor
             public bool boHasShadow;
             public bool HasMask;
             public Bitmap MaskImage;
-
+            
             private int convert16bitTo32bit(int color)
             {
                 byte red = (byte)((color & 0xf800) >> 8);
@@ -215,9 +195,9 @@ namespace LibraryEditor
                 return ((red << 0x10) | (green << 0x8) | blue) | (255 << 24);//the final or is setting alpha to max so it'll display (since mir2 images have no alpha layer)
             }
 
-            private int WidthBytes(int nBit, int nWidth)
+            private int  WidthBytes(int nBit, int nWidth)
             {
-                return (((nWidth * nBit) + 31) >> 5) * 4;
+                return  (((nWidth * nBit) + 31) >> 5) * 4;
             }
 
             private byte[][] DecompressWemadeMir3(BinaryReader BReader, short OutputWidth, short OutputHeight, int InputLength)
@@ -227,7 +207,7 @@ namespace LibraryEditor
                 Pixels[1] = new byte[OutputWidth * OutputHeight * 2];
                 byte[] FileBytes = BReader.ReadBytes(InputLength * 2);
 
-                int End = 0, OffSet = 0, Start = 0, Count;
+                int End = 0, OffSet = 0, Start= 0, Count;
 
                 int nX, x = 0;
                 //for (int Y = 0; Y < OutputHeight; Y++)
@@ -247,7 +227,6 @@ namespace LibraryEditor
                                 x += FileBytes[OffSet + 3] << 8 | FileBytes[OffSet + 2];
                                 OffSet += 4;
                                 break;
-
                             case 193:  //Solid Colour
                             case 195:
                                 nX += 2;
@@ -263,7 +242,6 @@ namespace LibraryEditor
                                 }
                                 nX += Count;
                                 break;
-
                             case 194:  //Overlay Colour
                                 HasMask = true;
                                 nX += 2;
@@ -305,18 +283,16 @@ namespace LibraryEditor
                 X = reader.ReadInt16();
                 Y = reader.ReadInt16();
                 nSize = Width * Height;
-
+                
                 switch (nType)
                 {
                     case 1:
                         nSize = reader.ReadInt32();
                         break;
-
                     case 4:
                         bo16bit = true;
                         nSize = reader.ReadInt32();
                         break;
-
                     case 2:
                         bo16bit = true;
                         reader.ReadInt16();
@@ -324,7 +300,6 @@ namespace LibraryEditor
                         nSize = reader.ReadInt32();
                         Width = (nSize < 6) ? (short)0 : Width;
                         break;
-
                     case 3:
                         bo16bit = true;
                         boHasShadow = reader.ReadByte() == 1 ? true : false;
@@ -333,7 +308,7 @@ namespace LibraryEditor
                         nSize = reader.ReadInt32() * 2;
                         break;
                 }
-                Width = (nSize == 0) ? (short)0 : Width; //this makes sure blank images aren't being processed
+                Width = (nSize == 0) ? (short)0 : Width; //this makes sure blank images arent being processed
             }
 
             public unsafe void CreateTexture(BinaryReader reader, int[] palette)
@@ -341,7 +316,7 @@ namespace LibraryEditor
                 if (Width == 0 || Height == 0) return;
                 Image = new Bitmap(Width, Height);
                 MaskImage = new Bitmap(1, 1);
-
+                
                 BitmapData data = Image.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
                 byte[] bytes = new byte[0];
                 byte[] maskbytes = new byte[0];
@@ -356,17 +331,15 @@ namespace LibraryEditor
                         }
                         bytes = reader.ReadBytes(nSize);
                         break;
-
                     case 1://shanda wzl file compressed
                     case 4://shanda miz file compressed
                         output = new MemoryStream();
-                        Ionic.Zlib.ZlibStream deflateStream = new Ionic.Zlib.ZlibStream(output, Ionic.Zlib.CompressionMode.Decompress);
+                        Ionic.Zlib.ZlibStream deflateStream = new Ionic.Zlib.ZlibStream(output,Ionic.Zlib.CompressionMode.Decompress);
                         deflateStream.Write(reader.ReadBytes(nSize), 0, nSize);
                         bytes = output.ToArray();
                         deflateStream.Close();
                         output.Close();
                         break;
-
                     case 2:
                         byte Compressed = reader.ReadByte();
                         reader.ReadBytes(5);
@@ -375,24 +348,23 @@ namespace LibraryEditor
                             bytes = reader.ReadBytes(nSize - 6);
                             break;
                         }
-                        MemoryStream input = new MemoryStream(reader.ReadBytes(nSize - 6));
+                        MemoryStream input = new MemoryStream(reader.ReadBytes(nSize-6));
                         output = new MemoryStream();
                         byte[] buffer = new byte[10];
                         System.IO.Compression.DeflateStream decompress = new System.IO.Compression.DeflateStream(input, System.IO.Compression.CompressionMode.Decompress);
                         int len;
-                        while ((len = decompress.Read(buffer, 0, buffer.Length)) > 0)
-                        {
+    		            while ((len = decompress.Read(buffer, 0, buffer.Length)) > 0)
+    		            {
                             output.Write(buffer, 0, len);
-                        }
+    		            }
                         bytes = output.ToArray();
                         decompress.Close();
                         output.Close();
                         input.Close();
                         break;
-
                     case 3:
                         MaskImage = new Bitmap(Width, Height);
-                        byte[][] DecodedPixels = DecompressWemadeMir3(reader, Width, Height, nSize);
+                        byte[][] DecodedPixels = DecompressWemadeMir3(reader,Width,Height,nSize);
                         if (DecodedPixels != null)
                         {
                             bytes = DecodedPixels[0];
@@ -407,16 +379,16 @@ namespace LibraryEditor
                         break;
                 }
                 int index = 0;
-                int* scan0 = (int*)data.Scan0;
+                int* scan0 = (int*) data.Scan0;
                 {
                     for (int y = Height - 1; y >= 0; y--)
                     {
                         for (int x = 0; x < Width; x++)
                         {
-                            if (bo16bit)
+                            if (bo16bit) 
                                 scan0[y * Width + x] = convert16bitTo32bit(bytes[index++] + (bytes[index++] << 8));
                             else
-                                scan0[y * Width + x] = palette[bytes[index++]];
+                                scan0[y*Width + x] = palette[bytes[index++]];
                         }
                         if (((nType == 1) || (nType == 4)) & (Width % 4 > 0))
                             index += WidthBytes(bo16bit ? 16 : 8, Width) - (Width * (bo16bit ? 2 : 1));
@@ -436,8 +408,13 @@ namespace LibraryEditor
                         }
                     }
                     MaskImage.UnlockBits(Maskdata);
+
                 }
+                
+                    
             }
         }
+
     }
+
 }

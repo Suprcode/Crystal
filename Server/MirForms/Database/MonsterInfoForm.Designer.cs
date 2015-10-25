@@ -216,7 +216,6 @@
             this.ImageComboBox.Location = new System.Drawing.Point(271, 30);
             this.ImageComboBox.Name = "ImageComboBox";
             this.ImageComboBox.Size = new System.Drawing.Size(128, 21);
-            this.ImageComboBox.Sorted = true;
             this.ImageComboBox.TabIndex = 85;
             this.ImageComboBox.SelectedIndexChanged += new System.EventHandler(this.ImageComboBox_SelectedIndexChanged);
             // 

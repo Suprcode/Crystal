@@ -11,7 +11,7 @@ namespace Server.MirDatabase
     {
         public int Index;
         public string FileName = string.Empty, Title = string.Empty;
-        public ushort MiniMap, BigMap, Music;
+        public ushort MiniMap, BigMap;
         public LightSetting Light;
         public byte MapDarkLight = 0, MineIndex = 0;
 
@@ -96,9 +96,6 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion < 42) return;
             NoFight = reader.ReadBoolean();
-
-            if (Envir.LoadVersion < 53) return;
-                Music = reader.ReadUInt16();
         }
 
         public void Save(BinaryWriter writer)
@@ -153,8 +150,6 @@ namespace Server.MirDatabase
             writer.Write(NeedBridle);
 
             writer.Write(NoFight);
-
-            writer.Write(Music);
         }
 
 

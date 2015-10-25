@@ -52,21 +52,6 @@ namespace Server.MirNetwork
             SessionID = sessionID;
             IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
 
-            int connCount = 0;
-            for (int i = 0; i < SMain.Envir.Connections.Count; i++)
-            {
-                MirConnection conn = SMain.Envir.Connections[i];
-                if (conn.IPAddress == IPAddress && conn.Connected)
-                {
-                    connCount++;
-
-                    if (connCount >= Settings.MaxIP)
-                    {
-                        SMain.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
-                        conn.SendDisconnect(5);
-                    }
-                }
-            }
 
             SMain.Enqueue(IPAddress + ", Connected.");
 
@@ -255,24 +240,6 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.StoreItem:
                     StoreItem((C.StoreItem) p);
                     break;
-                case (short)ClientPacketIds.DepositRefineItem:
-                    DepositRefineItem((C.DepositRefineItem)p);
-                    break;
-                case (short)ClientPacketIds.RetrieveRefineItem:
-                    RetrieveRefineItem((C.RetrieveRefineItem)p);
-                    break;
-                case (short)ClientPacketIds.RefineCancel:
-                    RefineCancel((C.RefineCancel)p);
-                    break;
-                case (short)ClientPacketIds.RefineItem:
-                    RefineItem((C.RefineItem)p);
-                    break;
-                case (short)ClientPacketIds.CheckRefine:
-                    CheckRefine((C.CheckRefine)p);
-                    break;
-                case (short)ClientPacketIds.ReplaceWedRing:
-                    ReplaceWedRing((C.ReplaceWedRing)p);
-                    break;
                 case (short)ClientPacketIds.DepositTradeItem:
                     DepositTradeItem((C.DepositTradeItem)p);
                     break;
@@ -290,9 +257,6 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.RemoveItem:
                     RemoveItem((C.RemoveItem) p);
-                    break;
-                case (short)ClientPacketIds.RemoveSlotItem:
-                    RemoveSlotItem((C.RemoveSlotItem)p);
                     break;
                 case (short)ClientPacketIds.SplitItem:
                     SplitItem((C.SplitItem) p);
@@ -332,9 +296,6 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.CallNPC:
                     CallNPC((C.CallNPC)p);
-                    break;
-                case (short)ClientPacketIds.TalkMonsterNPC:
-                    TalkMonsterNPC((C.TalkMonsterNPC)p);
                     break;
                 case (short)ClientPacketIds.BuyItem:
                     BuyItem((C.BuyItem)p);
@@ -423,33 +384,6 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GuildWarReturn:
                     GuildWarReturn((C.GuildWarReturn)p);
                     return;
-                case (short)ClientPacketIds.MarriageRequest:
-                    MarriageRequest((C.MarriageRequest)p);
-                    return;
-                case (short)ClientPacketIds.MarriageReply:
-                    MarriageReply((C.MarriageReply)p);
-                    return;
-                case (short)ClientPacketIds.ChangeMarriage:
-                    ChangeMarriage((C.ChangeMarriage)p);
-                    return;
-                case (short)ClientPacketIds.DivorceRequest:
-                    DivorceRequest((C.DivorceRequest)p);
-                    return;
-                case (short)ClientPacketIds.DivorceReply:
-                    DivorceReply((C.DivorceReply)p);
-                    return;
-                case (short)ClientPacketIds.AddMentor:
-                    AddMentor((C.AddMentor)p);
-                    return;
-                case (short)ClientPacketIds.MentorReply:
-                    MentorReply((C.MentorReply)p);
-                    return;
-                case (short)ClientPacketIds.AllowMentor:
-                    AllowMentor((C.AllowMentor)p);
-                    return;
-                case (short)ClientPacketIds.CancelMentor:
-                    CancelMentor((C.CancelMentor)p);
-                    return;
                 case (short)ClientPacketIds.TradeRequest:
                     TradeRequest((C.TradeRequest)p);
                     return;
@@ -495,7 +429,7 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CombineItem:
                     CombineItem((C.CombineItem)p);
                     break;
-                case (short)ClientPacketIds.SetConcentration:
+                case (short)ClientPacketIds.SetConcentration://ArcherSpells - Elemental system
                     SetConcentration((C.SetConcentration)p);
                     break;
                 case (short)ClientPacketIds.AwakeningNeedMaterials:
@@ -542,30 +476,6 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
                     IntelligentCreaturePickup((C.IntelligentCreaturePickup)p);
-                    break;
-                case (short)ClientPacketIds.AddFriend:
-                    AddFriend((C.AddFriend)p);
-                    break;
-                case (short)ClientPacketIds.RemoveFriend:
-                    RemoveFriend((C.RemoveFriend)p);
-                    break;
-                case (short)ClientPacketIds.RefreshFriends:
-                    {
-                        if (Stage != GameStage.Game) return;
-                        Player.GetFriends();
-                        break;
-                    }
-                case (short)ClientPacketIds.AddMemo:
-                    AddMemo((C.AddMemo)p);
-                    break;
-                case (short)ClientPacketIds.GuildBuffUpdate:
-                    GuildBuffUpdate((C.GuildBuffUpdate)p);
-                    break;
-                case (short)ClientPacketIds.GameshopBuy:
-                    GameshopBuy((C.GameshopBuy)p);
-                    return;
-                case (short)ClientPacketIds.NPCConfirmInput:
-                    NPCConfirmInput((C.NPCConfirmInput)p);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -656,31 +566,25 @@ namespace Server.MirNetwork
                     SMain.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
-
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
-
             Stage = GameStage.Login;
         }
         private void NewAccount(C.NewAccount p)
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", New account being created.");
             SMain.Envir.NewAccount(p, this);
         }
         private void ChangePassword(C.ChangePassword p)
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", Password being changed.");
             SMain.Envir.ChangePassword(p, this);
         }
         private void Login(C.Login p)
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", User logging in.");
             SMain.Envir.Login(p, this);
         }
         private void NewCharacter(C.NewCharacter p)
@@ -700,7 +604,6 @@ namespace Server.MirNetwork
             }
 
             CharacterInfo temp = null;
-            
 
             for (int i = 0; i < Account.Characters.Count; i++)
 			{
@@ -718,13 +621,15 @@ namespace Server.MirNetwork
 
             temp.Deleted = true;
             temp.DeleteDate = SMain.Envir.Now;
+
+
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
         private void StartGame(C.StartGame p)
         {
             if (Stage != GameStage.Select) return;
 
-            if (!Settings.AllowStartGame && (Account == null || (Account != null && !Account.AdminAccount)))
+            if (!Settings.AllowStartGame)
             {
                 Enqueue(new S.StartGame { Result = 0 });
                 return;
@@ -848,56 +753,12 @@ namespace Server.MirNetwork
 
             Player.StoreItem(p.From, p.To);
         }
-
-        private void DepositRefineItem(C.DepositRefineItem p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.DepositRefineItem(p.From, p.To);
-        }
-
-        private void RetrieveRefineItem(C.RetrieveRefineItem p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.RetrieveRefineItem(p.From, p.To);
-        }
-
-        private void RefineCancel(C.RefineCancel p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.RefineCancel();
-        }
-
-        private void RefineItem(C.RefineItem p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.RefineItem(p.UniqueID);
-        }
-
-        private void CheckRefine(C.CheckRefine p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.CheckRefine(p.UniqueID);
-        }
-
-        private void ReplaceWedRing(C.ReplaceWedRing p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.ReplaceWeddingRing(p.UniqueID);
-        }
-
         private void DepositTradeItem(C.DepositTradeItem p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.DepositTradeItem(p.From, p.To);
         }
-        
         private void RetrieveTradeItem(C.RetrieveTradeItem p)
         {
             if (Stage != GameStage.Game) return;
@@ -927,12 +788,6 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.RemoveItem(p.Grid, p.UniqueID, p.To);
-        }
-        private void RemoveSlotItem(C.RemoveSlotItem p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.RemoveSlotItem(p.Grid, p.UniqueID, p.To, p.GridTo);
         }
         private void SplitItem(C.SplitItem p)
         {
@@ -1004,7 +859,7 @@ namespace Server.MirNetwork
             else
                 Player.Attack(p.Direction, p.Spell);
         }
-        private void RangeAttack(C.RangeAttack p)
+        private void RangeAttack(C.RangeAttack p) //ArcherTest
         {
             if (Stage != GameStage.Game) return;
 
@@ -1032,14 +887,6 @@ namespace Server.MirNetwork
             //else
             Player.CallNPC(p.ObjectID, p.Key);
         }
-
-        private void TalkMonsterNPC(C.TalkMonsterNPC p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.TalkMonster(p.ObjectID);
-        }
-
         private void BuyItem(C.BuyItem p)
         {
             if (Stage != GameStage.Game) return;
@@ -1225,90 +1072,6 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
             Player.GuildWarReturn(p.Name);
         }
-
-
-        private void MarriageRequest(C.MarriageRequest p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.MarriageRequest();
-        }
-
-        private void MarriageReply(C.MarriageReply p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.MarriageReply(p.AcceptInvite);
-        }
-
-        private void ChangeMarriage(C.ChangeMarriage p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            if (Player.Info.Married == 0)
-            {
-                Player.AllowMarriage = !Player.AllowMarriage;
-                if (Player.AllowMarriage)
-                    Player.ReceiveChat("You're now allowing marriage requests.", ChatType.Hint);
-                else
-                    Player.ReceiveChat("You're now blocking marriage requests.", ChatType.Hint);
-            }
-            else
-            {
-                Player.AllowLoverRecall = !Player.AllowLoverRecall;
-                if (Player.AllowLoverRecall)
-                    Player.ReceiveChat("You're now allowing recall from lover.", ChatType.Hint);
-                else
-                    Player.ReceiveChat("You're now blocking recall from lover.", ChatType.Hint);
-            }
-        }
-
-        private void DivorceRequest(C.DivorceRequest p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.DivorceRequest();
-        }
-
-        private void DivorceReply(C.DivorceReply p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.DivorceReply(p.AcceptInvite);
-        }
-
-        private void AddMentor(C.AddMentor p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.AddMentor(p.Name);
-        }
-
-        private void MentorReply(C.MentorReply p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.MentorReply(p.AcceptInvite);
-        }
-
-        private void AllowMentor(C.AllowMentor p)
-        {
-            if (Stage != GameStage.Game) return;
-
-                Player.AllowMentor = !Player.AllowMentor;
-                if (Player.AllowMentor)
-                    Player.ReceiveChat("You're now allowing mentor requests.", ChatType.Hint);
-                else
-                    Player.ReceiveChat("You're now blocking mentor requests.", ChatType.Hint);
-        }
-
-        private void CancelMentor(C.CancelMentor p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.MentorBreak(true);
-        }
-
         private void TradeRequest(C.TradeRequest p)
         {
             if (Stage != GameStage.Game) return;
@@ -1416,7 +1179,7 @@ namespace Server.MirNetwork
             Player.CombineItem(p.IDFrom, p.IDTo);
         }
 
-        private void SetConcentration(C.SetConcentration p)
+        private void SetConcentration(C.SetConcentration p)//ArcherSpells - Elemental system
         {
             if (Stage != GameStage.Game) return;
 
@@ -1561,43 +1324,5 @@ namespace Server.MirNetwork
             Player.IntelligentCreaturePickup(p.MouseMode, p.Location);
         }
 
-        private void AddFriend(C.AddFriend p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.AddFriend(p.Name, p.Blocked);
-        }
-
-        private void RemoveFriend(C.RemoveFriend p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.RemoveFriend(p.CharacterIndex);
-        }
-
-        private void AddMemo(C.AddMemo p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.AddMemo(p.CharacterIndex, p.Memo);
-        }
-        private void GuildBuffUpdate(C.GuildBuffUpdate p)
-        {
-            if (Stage != GameStage.Game) return;
-            Player.GuildBuffUpdate(p.Action,p.Id);
-        }
-        private void GameshopBuy(C.GameshopBuy p)
-        {
-            if (Stage != GameStage.Game) return;
-            Player.GameshopBuy(p.GIndex, p.Quantity);
-        }
-
-        private void NPCConfirmInput(C.NPCConfirmInput p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.NPCInputStr = p.Value;
-            Player.CallNPC(Player.NPCID, p.PageName);
-        }
     }
 }

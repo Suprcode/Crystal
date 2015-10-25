@@ -124,13 +124,13 @@ namespace Server.MirObjects.Monsters
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
-            attacker.GatherElement();
+            attacker.GatherElement();//ArcherSpells - Elemental system
             ChangeHP(-1);
 
             return 1;
         }
 
-        //public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false) { }
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false) { }
 
         protected override void ProcessTarget()
         {

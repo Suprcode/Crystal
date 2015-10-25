@@ -167,7 +167,18 @@ namespace Server.MirObjects.Monsters
         {
             base.Die();
 
-            DeadTime = 0;
+            if (Dead)//fix for snaketotem not disapearing
+            {
+                CurrentMap.RemoveObject(this);
+                if (Master != null)
+                {
+                    Master.Pets.Remove(this);
+                    Master = null;
+                }
+
+                Despawn();
+                return;
+            }
 			
             if (Master == null)
             {

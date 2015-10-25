@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace LibraryEditor
 {
@@ -32,13 +35,12 @@ namespace LibraryEditor
             _fStream = new FileStream(_fileName + ".wtl", FileMode.Open, FileAccess.ReadWrite);
             _bReader = new BinaryReader(_fStream);
             LoadImageInfo();
-
+            
             for (int i = 0; i < _count; i++)
             {
                 CheckMImage(i);
             }
         }
-
         private void LoadImageInfo()
         {
             _fStream.Seek(28, SeekOrigin.Begin);
@@ -50,7 +52,6 @@ namespace LibraryEditor
             for (int i = 0; i < _count; i++)
                 _indexList[i] = _bReader.ReadInt32();
         }
-
         public void Close()
         {
             if (_fStream != null)
@@ -89,39 +90,23 @@ namespace LibraryEditor
                 File.Delete(fileName);
 
             MLibrary library = new MLibrary(fileName) { Images = new List<MLibrary.MImage>(), IndexList = new List<int>(), Count = Images.Length };
-            //library.Save();
 
             for (int i = 0; i < library.Count; i++)
                 library.Images.Add(null);
 
             ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
-            try
+            Parallel.For(0, Images.Length, options, i =>
             {
-                Parallel.For(0, Images.Length, options, i =>
-                {
-                    WTLImage image = Images[i];
-                    if (image.HasMask)
-                        library.Images[i] = new MLibrary.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow, MaskX = image.MaskX, MaskY = image.MaskY };
-                    else
-                        library.Images[i] = new MLibrary.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow };
-                });
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                library.Save();
-            }
-
-            // Operation finished.
-            // System.Windows.Forms.MessageBox.Show("Converted " + fileName + " successfully.",
-            //    "Shanda Information",
-            //        System.Windows.Forms.MessageBoxButtons.OK,
-            //            System.Windows.Forms.MessageBoxIcon.Information,
-            //                System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                WTLImage image = Images[i];
+                if (image.HasMask)
+                    library.Images[i] = new MLibrary.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow, MaskX = image.MaskX, MaskY = image.MaskY};
+                else
+                      library.Images[i] = new MLibrary.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow};
+            });
+            library.Save();
         }
+
+
     }
 
     public class WTLImage
@@ -176,7 +161,6 @@ namespace LibraryEditor
                 MaskImage = ReadImage(bReader, MaskLength, MaskWidth, MaskHeight);
             }
         }
-
         public unsafe Bitmap ReadImage(BinaryReader bReader, int imageLength, short outputWidth, short outputHeight)
         {
             const int size = 8;
@@ -213,6 +197,7 @@ namespace LibraryEditor
 
                         for (int off = 0; off < count; off++)
                         {
+
                             if (currentx < outputWidth)
                                 offset++;
 
@@ -299,11 +284,12 @@ namespace LibraryEditor
                 }
             }
 
+
             codes[8 + 3] = 255;
             codes[12 + 3] = (a <= b) ? (byte)0 : (byte)255;
             for (int i = 0; i < 4; i++)
             {
-                if ((codes[i * 4] == 0) && (codes[(i * 4) + 1] == 0) && (codes[(i * 4) + 2] == 0) && (codes[(i * 4) + 3] == 255))
+                if ((codes[i * 4] == 0) && (codes[(i * 4) + 1] == 0) && (codes[(i * 4) + 2] == 0) && (codes[(i * 4)+3] == 255))
                 { //dont ever use pure black cause that gives transparency issues
                     codes[i * 4] = 1;
                     codes[(i * 4) + 1] = 1;
@@ -332,6 +318,7 @@ namespace LibraryEditor
 
         private static int Unpack(IList<byte> packed, int srcOffset, IList<byte> colour, int dstOffSet)
         {
+
             int value = packed[0 + srcOffset] | (packed[1 + srcOffset] << 8);
             // get components in the stored range
             byte red = (byte)((value >> 11) & 0x1F);

@@ -15,7 +15,6 @@ namespace Server.MirObjects
         Mine,
         NPC,
         Poison,
-        DamageIndicator
     }
 
     public class DelayedAction
@@ -24,8 +23,6 @@ namespace Server.MirObjects
         public long Time;
         public long StartTime;
         public object[] Params;
-
-        public bool FlaggedToRemove;
 
         public DelayedAction(DelayedType type, long time, params object[] p)
         {

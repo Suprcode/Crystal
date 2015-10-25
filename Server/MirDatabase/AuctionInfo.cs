@@ -23,11 +23,11 @@ namespace Server.MirDatabase
         {
             
         }
-        public AuctionInfo(BinaryReader reader, int version, int customversion)
+        public AuctionInfo(BinaryReader reader)
         {
             AuctionID = reader.ReadUInt64();
 
-            Item = new UserItem(reader, version, customversion);
+            Item = new UserItem(reader);
             ConsignmentDate = DateTime.FromBinary(reader.ReadInt64());
             Price = reader.ReadUInt32();
 

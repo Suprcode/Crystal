@@ -32,7 +32,7 @@ namespace Server.MirObjects.Monsters
                 if (Target.IsFriendlyTarget(this))
                 {
                     BuffType bufftype = Info.AI == 41 ? BuffType.BlessedArmour : BuffType.UltimateEnhancer;
-                    Target.AddBuff(new Buff { Type = bufftype, Caster = this, ExpireTime = Envir.Time + 5 * 1000, Values = new int[]{ Target.Level / 7 + 4 } });
+                    Target.AddBuff(new Buff { Type = bufftype, Caster = this, ExpireTime = Envir.Time + 5 * 1000, Value = Target.Level / 7 + 4 });
                     Target.OperateTime = 0;
                 }
             }

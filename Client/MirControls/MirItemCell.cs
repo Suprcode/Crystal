@@ -72,8 +72,6 @@ namespace Client.MirControls
                         return NPCAwakeDialog.Items;
                     case MirGridType.Mail:
                         return MailComposeParcelDialog.Items;
-                    case MirGridType.Refine:
-                        return GameScene.Refine;
                     default:
                         throw new NotImplementedException();
                 }
@@ -281,7 +279,7 @@ namespace Client.MirControls
                 return;
             }
 
-            if (GridType == MirGridType.Equipment || GridType == MirGridType.Mount || GridType == MirGridType.Fishing)
+            if (GridType == MirGridType.Equipment)
             {
                 RemoveItem();
                 return;
@@ -413,8 +411,7 @@ namespace Client.MirControls
                 case ItemType.Book:
                 case ItemType.Food:
                 case ItemType.Script:
-                case ItemType.Pets:
-                case ItemType.Transform:
+                case ItemType.Pets://IntelligentCreature
                     if (CanUseItem() && GridType == MirGridType.Inventory)
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;
@@ -576,29 +573,6 @@ namespace Client.MirControls
         }
         public void RemoveItem()
         {
-            MirGridType fromGrid;
-
-            switch (Item.Info.Type)
-            {
-                case ItemType.Reins:
-                case ItemType.Bells:
-                case ItemType.Ribbon:
-                case ItemType.Saddle:
-                case ItemType.Mask:
-                    fromGrid = MirGridType.Mount;
-                    break;
-                case ItemType.Hook:
-                case ItemType.Float:
-                case ItemType.Bait:
-                case ItemType.Finder:
-                case ItemType.Reel:
-                    fromGrid = MirGridType.Fishing;
-                    break;
-                default:
-                    fromGrid = MirGridType.Equipment;
-                    break;
-            }
-
             int count = 0;
 
             for (int i = 0; i < GameScene.Scene.InventoryDialog.Grid.Length; i++)
@@ -622,7 +596,7 @@ namespace Client.MirControls
                 if (item != null && ((item.Count + Item.Count) <= item.Info.StackSize))
                 {
                     //Merge.
-                    Network.Enqueue(new C.MergeItem { GridFrom = fromGrid, GridTo = MirGridType.Inventory, IDFrom = Item.UniqueID, IDTo = item.UniqueID });
+                    Network.Enqueue(new C.MergeItem { GridFrom = MirGridType.Equipment, GridTo = MirGridType.Inventory, IDFrom = Item.UniqueID, IDTo = item.UniqueID });
 
                     Locked = true;
 
@@ -637,14 +611,7 @@ namespace Client.MirControls
 
                 if (itemCell.Item != null) continue;
 
-                if (fromGrid != MirGridType.Equipment)
-                {
-                    Network.Enqueue(new C.RemoveSlotItem { Grid = fromGrid, UniqueID = Item.UniqueID, To = itemCell.ItemSlot, GridTo = MirGridType.Inventory });
-                }
-                else
-                {
-                    Network.Enqueue(new C.RemoveItem { Grid = fromGrid, UniqueID = Item.UniqueID, To = itemCell.ItemSlot });
-                }
+                Network.Enqueue(new C.RemoveItem { Grid = MirGridType.Inventory, UniqueID = Item.UniqueID, To = itemCell.ItemSlot });
 
                 Locked = true;
 
@@ -741,7 +708,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 0; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RemoveItem { Grid = GridType, UniqueID = GameScene.SelectedCell.Item.UniqueID, To = x });
@@ -801,12 +768,14 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 0; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.TakeBackItem { From = GameScene.SelectedCell.ItemSlot, To = x });
 
-                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
+                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.InventoryDialog.Grid[x] : GameScene.Scene.BeltDialog.Grid[x - GameScene.User.BeltIdx];
+                                       // MirItemCell Temp = GameScene.Scene.BagDialog.Grid.FirstOrDefault(A => A.ItemSlot == X) ??
+                                        //                   GameScene.Scene.BeltDialog.Grid.FirstOrDefault(A => A.ItemSlot == X);
 
                                         if (temp != null) temp.Locked = true;
                                         GameScene.SelectedCell.Locked = true;
@@ -879,12 +848,14 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                for (int x = 6; x < ItemArray.Length; x++)
+                                for (int x = 0; x < ItemArray.Length; x++)
                                     if (ItemArray[x] == null)
                                     {
                                         Network.Enqueue(new C.RetrieveTradeItem { From = GameScene.SelectedCell.ItemSlot, To = x });
 
                                         MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
+                                        // MirItemCell Temp = GameScene.Scene.BagDialog.Grid.FirstOrDefault(A => A.ItemSlot == X) ??
+                                        //                   GameScene.Scene.BeltDialog.Grid.FirstOrDefault(A => A.ItemSlot == X);
 
                                         if (temp != null) temp.Locked = true;
                                         GameScene.SelectedCell.Locked = true;
@@ -902,70 +873,7 @@ namespace Client.MirControls
                                     GameScene.Scene.NPCAwakeDialog.ItemCell_Click();
                                 GameScene.SelectedCell = null;
                                 break;
-                             #endregion
-
-                            #region From Refine
-                            case MirGridType.Refine: //From AwakenItem
-                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
-                                {
-                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
-                                    {
-                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
-
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
-                                    }
-                                }
-
-                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
-                                {
-                                    GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
-                                    GameScene.SelectedCell = null;
-                                    return;
-                                }
-
-                                if (Item != null)
-                                {
-                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
-                                    {
-                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
-
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
-                                    }
-                                }
-
-
-                                if (Item == null)
-                                {
-                                    Network.Enqueue(new C.RetrieveRefineItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-
-                                    Locked = true;
-                                    GameScene.SelectedCell.Locked = true;
-                                    GameScene.SelectedCell = null;
-                                    return;
-                                }
-
-                                for (int x = 6; x < ItemArray.Length; x++)
-                                    if (ItemArray[x] == null)
-                                    {
-                                        Network.Enqueue(new C.RetrieveRefineItem { From = GameScene.SelectedCell.ItemSlot, To = x });
-
-                                        MirItemCell temp = x < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[x] : GameScene.Scene.InventoryDialog.Grid[x - GameScene.User.BeltIdx];
-
-                                        if (temp != null) temp.Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
-                                    }
-                                break;
                             #endregion
-
-
                         }
                         break;
                     #endregion
@@ -1116,56 +1024,26 @@ namespace Client.MirControls
                     #endregion
                     #region To guild storage
                     case MirGridType.GuildStorage: //To Guild Storage
-                        switch (GameScene.SelectedCell.GridType)
+                        if (GameScene.SelectedCell.GridType == MirGridType.Inventory)
                         {
-                            case MirGridType.GuildStorage: //From Guild Storage
-                                if (GameScene.SelectedCell.GridType == MirGridType.GuildStorage)
-                                {
-                                    //if (Item != null)
-                                    //{
-                                        //GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
-                                        //return;
-                                    //}
-                                    if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
-                                    {
-                                        GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
-                                        return;
-                                    }
-                                    //if (ItemArray[ItemSlot] == null)
-                                    //{
-                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 3, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
-                                    //}
-                                }
+                            if (Item != null)
+                            {
+                                GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
                                 return;
-
-                            case MirGridType.Inventory:
-
-                                if (GameScene.SelectedCell.GridType == MirGridType.Inventory)
-                                {
-                                    if (Item != null)
-                                    {
-                                        GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
-                                        return;
-                                    }
-                                    if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
-                                    {
-                                        GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
-                                        return;
-                                    }
-                                    if (ItemArray[ItemSlot] == null)
-                                    {
-                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 0, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
-                                    }
-                                }
+                            }
+                            if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
+                            {
+                                GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
                                 return;
+                            }
+                            if (ItemArray[ItemSlot] == null)
+                            {
+                                Network.Enqueue(new C.GuildStorageItemChange {Type = 0, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                Locked = true;
+                                GameScene.SelectedCell.Locked = true;
+                                GameScene.SelectedCell = null;
+                                return;
+                            }
                         }
                         break;
                     #endregion
@@ -1201,7 +1079,7 @@ namespace Client.MirControls
                             #endregion
 
                             #region From Inventory
-                            case MirGridType.Inventory: //From Inventory
+                            case MirGridType.Inventory: //From Invenotry
                                 if (Item != null)
                                 {
                                     if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
@@ -1242,64 +1120,6 @@ namespace Client.MirControls
                         break;
 
                     #endregion
-
-                    #region To Refine 
-                  
-                    case MirGridType.Refine:
-
-                        switch (GameScene.SelectedCell.GridType)
-                        {
-                            #region From Refine
-                            case MirGridType.Refine: //From Refine
-                                if (Item != null)
-                                {
-                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
-                                    {
-                                        //Merge.
-                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
-
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
-                                    }
-                                }
-
-                                Network.Enqueue(new C.MoveItem { Grid = GridType, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-                                Locked = true;
-                                GameScene.SelectedCell.Locked = true;
-                                GameScene.SelectedCell = null;
-                                return;
-                            #endregion
-
-                            #region From Inventory
-                            case MirGridType.Inventory: //From Inventory
-                                if (Item != null)
-                                {
-                                    if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
-                                    {
-                                        Network.Enqueue(new C.MergeItem { GridFrom = GameScene.SelectedCell.GridType, GridTo = GridType, IDFrom = GameScene.SelectedCell.Item.UniqueID, IDTo = Item.UniqueID });
-
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
-                                    }
-                                }
-
-                                Network.Enqueue(new C.DepositRefineItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-                                Locked = true;
-                                GameScene.SelectedCell.Locked = true;
-                                GameScene.SelectedCell = null;
-                                return;
-                            #endregion
-                        }
-                        break;
-
-                    #endregion
-
-
-
                     #region To Awakening
                     case MirGridType.AwakenItem:
                         {
@@ -1423,8 +1243,8 @@ namespace Client.MirControls
                                 //    messageBox.Show();
                                 //    break;
                                 case -2:
-                                    //messageBox = new MirMessageBox("Cannot awaken this item.", MirMessageBoxButtons.OK);
-                                    //messageBox.Show();
+                                    messageBox = new MirMessageBox("Cannot awaken this item.", MirMessageBoxButtons.OK);
+                                    messageBox.Show();
                                     break;
                             }
                         }

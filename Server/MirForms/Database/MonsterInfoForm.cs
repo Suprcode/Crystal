@@ -245,9 +245,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -332,9 +332,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -350,9 +350,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -368,9 +368,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -386,9 +386,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -403,9 +403,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -421,9 +421,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -439,9 +439,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -457,9 +457,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -475,9 +475,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -493,9 +493,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            ushort temp;
+            byte temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;

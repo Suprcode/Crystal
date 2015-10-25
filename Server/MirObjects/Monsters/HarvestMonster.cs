@@ -27,7 +27,7 @@ namespace Server.MirObjects.Monsters
             {
                 for (int i = _drops.Count - 1; i >= 0; i--)
                 {
-                    if (player.CheckGroupQuestItem(_drops[i]))
+                    if (player.CheckNeedQuestItem(_drops[i]))
                     {
                         _drops.RemoveAt(i); 
                     }
@@ -69,7 +69,7 @@ namespace Server.MirObjects.Monsters
 
                 if (drop.QuestRequired)
                 {
-                    if (!player.CheckGroupQuestItem(item, false)) continue;
+                    if(!player.CheckNeedQuestItem(item, false)) continue;
                 }
 
                 if (item.Info.Type == ItemType.Meat)

@@ -131,14 +131,5 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
         }
 
-        private void OpenAccountButton_Click(object sender, EventArgs e)
-        {
-            string accountId = Character.AccountInfo.AccountID;
-
-            AccountInfoForm form = new AccountInfoForm(accountId, true);
-
-            form.ShowDialog();
-        }
-
     }
 }

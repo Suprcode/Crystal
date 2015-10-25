@@ -19,14 +19,6 @@ namespace Server.MirObjects.Monsters
             Direction = (MirDirection)Math.Min((byte)5, (byte)Direction);
         }
 
-        public override void Spawned()
-        {
-            if (Respawn != null)
-                Direction = (MirDirection)Math.Min((byte)5, (byte)Respawn.Info.Direction);
-
-            base.Spawned();
-        }
-
         public override void Turn(MirDirection dir)
         {
         }

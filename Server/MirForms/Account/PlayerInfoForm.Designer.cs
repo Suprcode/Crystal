@@ -40,15 +40,11 @@
             this.SendMessageButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.SafeZoneButton = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.ChatBanExpiryTextBox = new System.Windows.Forms.TextBox();
-            this.ChatBanButton = new System.Windows.Forms.Button();
-            this.KillPetsButton = new System.Windows.Forms.Button();
-            this.KillButton = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.CurrentMapLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.KillButton = new System.Windows.Forms.Button();
+            this.KillPetsButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.PKPointsLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -58,7 +54,10 @@
             this.label8 = new System.Windows.Forms.Label();
             this.CurrentIPLabel = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.OpenAccountButton = new System.Windows.Forms.Button();
+            this.ChatBanButton = new System.Windows.Forms.Button();
+            this.ChatBanExpiryTextBox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.SafeZoneButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -169,7 +168,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.OpenAccountButton);
             this.groupBox2.Controls.Add(this.SafeZoneButton);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.ChatBanExpiryTextBox);
@@ -183,63 +181,6 @@
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Actions";
-            // 
-            // SafeZoneButton
-            // 
-            this.SafeZoneButton.Location = new System.Drawing.Point(87, 19);
-            this.SafeZoneButton.Name = "SafeZoneButton";
-            this.SafeZoneButton.Size = new System.Drawing.Size(75, 23);
-            this.SafeZoneButton.TabIndex = 22;
-            this.SafeZoneButton.Text = "Safezone";
-            this.SafeZoneButton.UseVisualStyleBackColor = true;
-            this.SafeZoneButton.Click += new System.EventHandler(this.SafeZoneButton_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(93, 110);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(50, 13);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Expires : ";
-            // 
-            // ChatBanExpiryTextBox
-            // 
-            this.ChatBanExpiryTextBox.Location = new System.Drawing.Point(149, 107);
-            this.ChatBanExpiryTextBox.Name = "ChatBanExpiryTextBox";
-            this.ChatBanExpiryTextBox.Size = new System.Drawing.Size(118, 20);
-            this.ChatBanExpiryTextBox.TabIndex = 20;
-            this.ChatBanExpiryTextBox.TextChanged += new System.EventHandler(this.ChatBanExpiryTextBox_TextChanged);
-            // 
-            // ChatBanButton
-            // 
-            this.ChatBanButton.Location = new System.Drawing.Point(6, 105);
-            this.ChatBanButton.Name = "ChatBanButton";
-            this.ChatBanButton.Size = new System.Drawing.Size(75, 23);
-            this.ChatBanButton.TabIndex = 19;
-            this.ChatBanButton.Text = "Chat Ban";
-            this.ChatBanButton.UseVisualStyleBackColor = true;
-            this.ChatBanButton.Click += new System.EventHandler(this.ChatBanButton_Click);
-            // 
-            // KillPetsButton
-            // 
-            this.KillPetsButton.Location = new System.Drawing.Point(6, 77);
-            this.KillPetsButton.Name = "KillPetsButton";
-            this.KillPetsButton.Size = new System.Drawing.Size(75, 23);
-            this.KillPetsButton.TabIndex = 18;
-            this.KillPetsButton.Text = "Kill Pets";
-            this.KillPetsButton.UseVisualStyleBackColor = true;
-            this.KillPetsButton.Click += new System.EventHandler(this.KillPetsButton_Click);
-            // 
-            // KillButton
-            // 
-            this.KillButton.Location = new System.Drawing.Point(6, 48);
-            this.KillButton.Name = "KillButton";
-            this.KillButton.Size = new System.Drawing.Size(75, 23);
-            this.KillButton.TabIndex = 17;
-            this.KillButton.Text = "Kill Player";
-            this.KillButton.UseVisualStyleBackColor = true;
-            this.KillButton.Click += new System.EventHandler(this.KillButton_Click);
             // 
             // groupBox3
             // 
@@ -269,6 +210,26 @@
             this.label5.Size = new System.Drawing.Size(94, 13);
             this.label5.TabIndex = 16;
             this.label5.Text = "Current Location : ";
+            // 
+            // KillButton
+            // 
+            this.KillButton.Location = new System.Drawing.Point(6, 48);
+            this.KillButton.Name = "KillButton";
+            this.KillButton.Size = new System.Drawing.Size(75, 23);
+            this.KillButton.TabIndex = 17;
+            this.KillButton.Text = "Kill Player";
+            this.KillButton.UseVisualStyleBackColor = true;
+            this.KillButton.Click += new System.EventHandler(this.KillButton_Click);
+            // 
+            // KillPetsButton
+            // 
+            this.KillPetsButton.Location = new System.Drawing.Point(6, 77);
+            this.KillPetsButton.Name = "KillPetsButton";
+            this.KillPetsButton.Size = new System.Drawing.Size(75, 23);
+            this.KillPetsButton.TabIndex = 18;
+            this.KillPetsButton.Text = "Kill Pets";
+            this.KillPetsButton.UseVisualStyleBackColor = true;
+            this.KillPetsButton.Click += new System.EventHandler(this.KillPetsButton_Click);
             // 
             // label4
             // 
@@ -361,15 +322,42 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Details";
             // 
-            // OpenAccountButton
+            // ChatBanButton
             // 
-            this.OpenAccountButton.Location = new System.Drawing.Point(168, 19);
-            this.OpenAccountButton.Name = "OpenAccountButton";
-            this.OpenAccountButton.Size = new System.Drawing.Size(99, 23);
-            this.OpenAccountButton.TabIndex = 23;
-            this.OpenAccountButton.Text = "Open Account";
-            this.OpenAccountButton.UseVisualStyleBackColor = true;
-            this.OpenAccountButton.Click += new System.EventHandler(this.OpenAccountButton_Click);
+            this.ChatBanButton.Location = new System.Drawing.Point(6, 105);
+            this.ChatBanButton.Name = "ChatBanButton";
+            this.ChatBanButton.Size = new System.Drawing.Size(75, 23);
+            this.ChatBanButton.TabIndex = 19;
+            this.ChatBanButton.Text = "Chat Ban";
+            this.ChatBanButton.UseVisualStyleBackColor = true;
+            this.ChatBanButton.Click += new System.EventHandler(this.ChatBanButton_Click);
+            // 
+            // ChatBanExpiryTextBox
+            // 
+            this.ChatBanExpiryTextBox.Location = new System.Drawing.Point(149, 107);
+            this.ChatBanExpiryTextBox.Name = "ChatBanExpiryTextBox";
+            this.ChatBanExpiryTextBox.Size = new System.Drawing.Size(118, 20);
+            this.ChatBanExpiryTextBox.TabIndex = 20;
+            this.ChatBanExpiryTextBox.TextChanged += new System.EventHandler(this.ChatBanExpiryTextBox_TextChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(93, 110);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(50, 13);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Expires : ";
+            // 
+            // SafeZoneButton
+            // 
+            this.SafeZoneButton.Location = new System.Drawing.Point(87, 19);
+            this.SafeZoneButton.Name = "SafeZoneButton";
+            this.SafeZoneButton.Size = new System.Drawing.Size(75, 23);
+            this.SafeZoneButton.TabIndex = 22;
+            this.SafeZoneButton.Text = "Safezone";
+            this.SafeZoneButton.UseVisualStyleBackColor = true;
+            this.SafeZoneButton.Click += new System.EventHandler(this.SafeZoneButton_Click);
             // 
             // PlayerInfoForm
             // 
@@ -426,6 +414,5 @@
         private System.Windows.Forms.TextBox ChatBanExpiryTextBox;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button SafeZoneButton;
-        private System.Windows.Forms.Button OpenAccountButton;
     }
 }

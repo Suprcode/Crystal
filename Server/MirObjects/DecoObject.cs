@@ -19,7 +19,7 @@ namespace Server.MirObjects
         public override int CurrentMapIndex { get; set; }
         public override Point CurrentLocation { get; set; }
         public override MirDirection Direction { get; set; }
-        public override ushort Level { get; set; }
+        public override byte Level { get; set; }
         public override bool Blocking
         {
             get

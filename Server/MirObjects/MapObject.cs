@@ -23,10 +23,8 @@ namespace Server.MirObjects
 
         public abstract string Name { get; set; }
 
-        public long ExplosionInflictedTime;
-        public int ExplosionInflictedStage;
-
-        private int SpawnThread;
+        public long ExplosionInflictedTime;//ArcherSpells - DelayedExplosion
+        public int ExplosionInflictedStage;//ArcherSpells - DelayedExplosion
 
         //Position
         private Map _currentMap;
@@ -44,7 +42,7 @@ namespace Server.MirObjects
         public abstract Point CurrentLocation { get; set; }
         public abstract MirDirection Direction { get; set; }
         
-        public abstract ushort Level { get; set; }
+        public abstract byte Level { get; set; }
 
         public abstract uint Health { get; }
         public abstract uint MaxHealth { get; }
@@ -54,14 +52,14 @@ namespace Server.MirObjects
 
         }
 
-        public ushort MinAC, MaxAC, MinMAC, MaxMAC;
-        public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
+        public byte MinAC, MaxAC, MinMAC, MaxMAC;
+        public byte MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
 
         public byte Accuracy, Agility, Light;
         public sbyte ASpeed, Luck;
         public int AttackSpeed;
 
-        public ushort CurrentHandWeight,
+        public byte CurrentHandWeight,
                    MaxHandWeight,
                    CurrentWearWeight,
                    MaxWearWeight;
@@ -85,7 +83,6 @@ namespace Server.MirObjects
 
         public bool CoolEye;
         private bool _hidden;
-        
         public bool Hidden
         {
             get
@@ -127,10 +124,7 @@ namespace Server.MirObjects
             {
                 if (_sneakingActive == value) return;
                 _sneakingActive = value;
-
-                Observer = _sneakingActive;
-
-                //CurrentMap.Broadcast(new S.ObjectSneaking { ObjectID = ObjectID, SneakingActive = value }, CurrentLocation);
+                CurrentMap.Broadcast(new S.ObjectSneaking { ObjectID = ObjectID, SneakingActive = value }, CurrentLocation);
             }
         }
 
@@ -168,14 +162,12 @@ namespace Server.MirObjects
         public virtual PetMode PMode { get; set; }
         public bool InSafeZone;
 
-        public float ArmourRate, DamageRate; //recieved not given
-
+        public float PoisonRate;
         public List<Poison> PoisonList = new List<Poison>();
         public PoisonType CurrentPoison = PoisonType.None;
         public List<DelayedAction> ActionList = new List<DelayedAction>();
 
         public LinkedListNode<MapObject> Node;
-        public LinkedListNode<MapObject> NodeThreaded;
         public long RevTime;
 
         public virtual bool Blocking
@@ -235,12 +227,12 @@ namespace Server.MirObjects
 
             if (Luck > 0)
             {
-                if (Luck > Envir.Random.Next(Settings.MaxLuck))
+                if (Luck > Envir.Random.Next(10))
                     return max;
             }
             else if (Luck < 0)
             {
-                if (Luck < -Envir.Random.Next(Settings.MaxLuck))
+                if (Luck < -Envir.Random.Next(10))
                     return min;
             }
 
@@ -253,24 +245,13 @@ namespace Server.MirObjects
         }
         public virtual void Add(PlayerObject player)
         {
-            if (Race == ObjectType.Merchant)
+            if (Race == ObjectType.Player)
             {
-                NPCObject NPC = (NPCObject)this;
-                NPC.CheckVisible(player, true);
-                return;
+                PlayerObject me = (PlayerObject)this;
+                player.Enqueue(me.GetInfoEx(player));
             }
-
-            player.Enqueue(GetInfo());
-
-            //if (Race == ObjectType.Player)
-            //{
-            //    PlayerObject me = (PlayerObject)this;
-            //    player.Enqueue(me.GetInfoEx(player));
-            //}
-            //else
-            //{
-            //    player.Enqueue(GetInfo());
-            //}
+            else
+                player.Enqueue(GetInfo());
         }
         public virtual void Remove(MonsterObject monster)
         {
@@ -305,11 +286,6 @@ namespace Server.MirObjects
         public virtual void Spawned()
         {
             Node = Envir.Objects.AddLast(this);
-            if ((Race == ObjectType.Monster) && Settings.Multithreaded)
-            {
-                SpawnThread = CurrentMap.Thread;
-                NodeThreaded = Envir.MobThreads[SpawnThread].ObjectsList.AddLast(this);
-            }
             OperateTime = Envir.Time + Envir.Random.Next(OperateDelay);
 
             InSafeZone = CurrentMap != null && CurrentMap.GetSafeZone(CurrentLocation) != null;
@@ -320,10 +296,6 @@ namespace Server.MirObjects
         {
             Broadcast(new S.ObjectRemove {ObjectID = ObjectID});
             Envir.Objects.Remove(Node);
-            if (Settings.Multithreaded && (Race == ObjectType.Monster))
-            {
-                Envir.MobThreads[SpawnThread].ObjectsList.Remove(NodeThreaded);
-            }            
 
             ActionList.Clear();
 
@@ -460,37 +432,12 @@ namespace Server.MirObjects
                 if (Buffs[i].Type != b.Type) continue;
 
                 Buffs[i] = b;
-                Buffs[i].Paused = false;
                 return;
             }
 
             Buffs.Add(b);
         }
-        public void RemoveBuff(BuffType b)
-        {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].Type != b) continue;
 
-                Buffs[i].Infinite = false;
-                Buffs[i].ExpireTime = Envir.Time;
-            }
-        }
-
-        public bool CheckStacked()
-        {
-            Cell cell = CurrentMap.GetCell(CurrentLocation);
-
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
-                    MapObject ob = cell.Objects[i];
-                    if (ob == this || !ob.Blocking) continue;
-                    return true;
-                }
-
-            return false;
-        }
 
         public virtual bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
@@ -577,7 +524,7 @@ namespace Server.MirObjects
 
             if (Race == ObjectType.Player)
             {
-                if (GroupMembers != null) //Send HP to group
+                if (GroupMembers != null) //Send pet HP to group
                 {
                     for (int i = 0; i < GroupMembers.Count; i++)
                     {
@@ -605,7 +552,6 @@ namespace Server.MirObjects
                         PlayerObject member = player.GroupMembers[i];
 
                         if (player == member) continue;
-
                         if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
                         member.Enqueue(p);
                     }
@@ -634,18 +580,6 @@ namespace Server.MirObjects
                 }
             }
 
-        }
-
-        public void BroadcastDamageIndicator(DamageType type, int damage = 0)
-        {
-            Packet p = new S.DamageIndicator { ObjectID = ObjectID, Damage = damage, Type = type };
-
-            if (Race == ObjectType.Player)
-            {
-                PlayerObject player = (PlayerObject)this;
-                player.Enqueue(p);
-            }
-            Broadcast(p);
         }
 
         public abstract void Die();
@@ -684,8 +618,6 @@ namespace Server.MirObjects
 
                     if (checklocation.X < 0) continue;
                     if (checklocation.X >= CurrentMap.Width) continue;
-                    if (checklocation.Y < 0) continue;
-                    if (checklocation.Y >= CurrentMap.Height) continue;
 
                     Cell cell = CurrentMap.GetCell(checklocation.X, checklocation.Y);
                     if (!cell.Valid || cell.Objects == null) continue;
@@ -723,19 +655,6 @@ namespace Server.MirObjects
         public PoisonType PType;
         public int Value;
         public long Duration, Time, TickTime, TickSpeed;
-
-        public Poison() { }
-
-        public Poison(BinaryReader reader)
-        {
-            Owner = null;
-            PType = (PoisonType)reader.ReadByte();
-            Value = reader.ReadInt32();
-            Duration = reader.ReadInt64();
-            Time = reader.ReadInt64();
-            TickTime = reader.ReadInt64();
-            TickSpeed = reader.ReadInt64();
-        }
     }
 
     public class Buff
@@ -745,15 +664,21 @@ namespace Server.MirObjects
         public bool Visible;
         public uint ObjectID;
         public long ExpireTime;
-        public int[] Values;
+        public int Value;
         public bool Infinite;
 
-        public bool RealTime;
-        public DateTime RealTimeExpire;
-
-        public bool Paused;
-
         public Buff() { }
+
+        public Buff(Buff buff)
+        {
+            Type = buff.Type;
+            Caster = buff.Caster;
+            Visible = buff.Visible;
+            ObjectID = buff.ObjectID;
+            ExpireTime = buff.ExpireTime;
+            Value = buff.Value;
+            Infinite = buff.Infinite;
+        }
 
         public Buff(BinaryReader reader)
         {
@@ -762,21 +687,7 @@ namespace Server.MirObjects
             Visible = reader.ReadBoolean();
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
-
-            if (Envir.LoadVersion < 56)
-            {
-                Values = new int[] { reader.ReadInt32() };
-            }
-            else
-            {
-                Values = new int[reader.ReadInt32()];
-
-                for (int i = 0; i < Values.Length; i++)
-                {
-                    Values[i] = reader.ReadInt32();
-                }
-            }
-
+            Value = reader.ReadInt32();
             Infinite = reader.ReadBoolean();
         }
 
@@ -786,13 +697,7 @@ namespace Server.MirObjects
             writer.Write(Visible);
             writer.Write(ObjectID);
             writer.Write(ExpireTime);
-
-            writer.Write(Values.Length);
-            for (int i = 0; i < Values.Length; i++)
-            {
-                writer.Write(Values[i]);
-            }
-
+            writer.Write(Value);
             writer.Write(Infinite);
         }
     }
