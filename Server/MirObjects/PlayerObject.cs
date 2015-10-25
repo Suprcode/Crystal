@@ -2923,7 +2923,7 @@ namespace Server.MirObjects
                         break;
                     case BuffType.ImmortalSkin:
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC - buff.Values[1]);
+                        MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - buff.Values[1]);
                         break;
                     case BuffType.SwiftFeet:
                         ActiveSwiftFeet = true;
