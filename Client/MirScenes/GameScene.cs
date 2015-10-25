@@ -1643,6 +1643,8 @@ namespace Client.MirScenes
                     return 76;
                 case BuffType.Rage:
                     return 49;
+                case BuffType.ImmortalSkin:
+                    return 49;
                 case BuffType.CounterAttack:
                     return 7;
 
@@ -23445,6 +23447,9 @@ namespace Client.MirScenes
                     break;
                 case BuffType.Rage:
                     text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Values[0]);
+                    break;
+                case BuffType.ImmortalSkin:
+                    text = string.Format("ImmortalSkin\nIncreases AC by: 0-{0}.\nImmortalSkin\nDecreases DC by: 0-{1}.\n", Values[0], Values[1]);
                     break;
                 case BuffType.CounterAttack:
                     text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);

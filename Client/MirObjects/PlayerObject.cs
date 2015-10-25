@@ -1738,6 +1738,14 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region ImmortalSkin
+                            case Spell.ImmortalSkin:
+                                Effects.Add(new Effect(Libraries.Magic3, 550, 17, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Magic3, 570, 5, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(2000 + (ushort)Spell * 10);
+                                break;
+                            #endregion
+
                             #region FireBang
 
                             case Spell.FireBang:
@@ -1980,6 +1988,7 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
+
 
                             #region Vampirism
 
