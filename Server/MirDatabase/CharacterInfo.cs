@@ -494,7 +494,6 @@ namespace Server.MirDatabase
                 writer.Write(item.Key);
                 writer.Write(item.Value);
             }
-
         }
 
         public ListViewItem CreateListView()

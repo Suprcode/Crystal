@@ -204,7 +204,7 @@ namespace Client.MirObjects
             MaxSC = (ushort)Math.Min(ushort.MaxValue, CoreStats.MaxSc > 0 ? Level / CoreStats.MaxSc : 0);
             CriticalRate = (byte)Math.Min(byte.MaxValue, CoreStats.CritialRateGain > 0 ? CriticalRate + (Level / CoreStats.CritialRateGain) : CriticalRate);
             CriticalDamage = (byte)Math.Min(byte.MaxValue, CoreStats.CriticalDamageGain > 0 ? CriticalDamage + (Level / CoreStats.CriticalDamageGain) : CriticalDamage);
-            MaxBagWeight = (ushort)(50 + Level / CoreStats.BagWeightGain * Level);
+            MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, 50 + Level / CoreStats.BagWeightGain * Level);
             MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, 15 + Level / CoreStats.WearWeightGain * Level);
             MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, 12 + Level / CoreStats.HandWeightGain * Level);
 
@@ -683,6 +683,7 @@ namespace Client.MirObjects
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         break;
 
+                    case BuffType.Knapsack:
                     case BuffType.BagWeight:
                         MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
                         break;
@@ -690,37 +691,51 @@ namespace Client.MirObjects
                         TransformType = (short)buff.Values[0];
                         break;
 
-                    case BuffType.MaxDC:
+                    case BuffType.Impact:
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
                         break;
-                    case BuffType.MaxMC:
+                    case BuffType.Magic:
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         break;
-                    case BuffType.MaxSC:
+                    case BuffType.Taoist:
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         break;
-                    case BuffType.ASpeed:
+                    case BuffType.Storm:
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
-                    case BuffType.MaxHP:
+                    case BuffType.HealthAid:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
                         break;
-                    case BuffType.MaxMP:
+                    case BuffType.ManaAid:
                         MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[0]);
                         break;
-                    case BuffType.MaxAC:
+                    case BuffType.Defence:
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
                         break;
-                    case BuffType.MaxMAC:
+                    case BuffType.MagicDefence:
                         MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
                         break;
-                    case BuffType.AC:
-                        MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[0]);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        break;
-                    case BuffType.MAC:
-                        MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[0]);
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
+                    case BuffType.WonderDrug:
+                        switch (buff.Values[0])
+                        {
+                            case 2:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[1]);
+                                break;
+                            case 3:
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[1]);
+                                break;
+                            case 4:
+                                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[1]);
+                                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[1]);
+                                break;
+                            case 5:
+                                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[1]);
+                                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[1]);
+                                break;
+                            case 6:
+                                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[1])));
+                                break;
+                        }
                         break;
                 }
 
