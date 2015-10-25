@@ -700,6 +700,7 @@
             this.Name = "NPCInfoForm";
             this.Text = "NPCInfoForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NPCInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.NPCInfoForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

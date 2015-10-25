@@ -542,5 +542,10 @@ namespace Server
         {
             MessageBox.Show(DateTime.Now.TimeOfDay.ToString());
         }
+
+        private void NPCInfoForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -222,9 +222,18 @@ namespace Server.MirObjects
 
         public void SendGuildStatus(PlayerObject member)
         {
-                member.Enqueue(new ServerPackets.GuildStatus()
+            string gName = Name;
+            string conquest = "";
+
+                if (Conquest != null)
                 {
-                    GuildName = Name,
+                    conquest = "[" + Conquest.Info.Name + "]";
+                    gName = gName + conquest;
+                }
+
+            member.Enqueue(new ServerPackets.GuildStatus()
+                {
+                    GuildName = gName,
                     GuildRankName = member.MyGuildRank != null? member.MyGuildRank.Name: "",
                     Experience = Experience,
                     MaxExperience = MaxExperience,

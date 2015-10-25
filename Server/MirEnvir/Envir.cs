@@ -104,7 +104,7 @@ namespace Server.MirEnvir
         
 
         //Server DB
-        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex;
+        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
@@ -728,6 +728,7 @@ namespace Server.MirEnvir
                 writer.Write(NPCIndex);
                 writer.Write(QuestIndex);
                 writer.Write(GameshopIndex);
+                writer.Write(ConquestIndex);
 
                 writer.Write(MapInfoList.Count);
                 for (int i = 0; i < MapInfoList.Count; i++)
@@ -757,6 +758,10 @@ namespace Server.MirEnvir
                 writer.Write(GameShopList.Count);
                 for (int i = 0; i < GameShopList.Count; i++)
                     GameShopList[i].Save(writer);
+
+                writer.Write(ConquestInfos.Count);
+                for (int i = 0; i < ConquestInfos.Count; i++)
+                    ConquestInfos[i].Save(writer);
             }
         }
         public void SaveAccounts()
@@ -934,7 +939,7 @@ namespace Server.MirEnvir
                     MemoryStream mStream = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(mStream);
                     Conquests[i].Save(writer);
-                    FileStream fStream = new FileStream(Settings.ConquestsPath + Conquests[i].ConquestIndex.ToString() + ".mgdn", FileMode.Create);
+                    FileStream fStream = new FileStream(Settings.ConquestsPath + Conquests[i].Info.Index.ToString() + ".mgdn", FileMode.Create);
                     byte[] data = mStream.ToArray();
                     fStream.BeginWrite(data, 0, data.Length, EndSaveConquestsAsync, fStream);
                 }
@@ -1041,6 +1046,11 @@ namespace Server.MirEnvir
                         GameshopIndex = reader.ReadInt32();
                     }
 
+                    if (LoadVersion >= 66)
+                    {
+                        ConquestIndex = reader.ReadInt32();
+                    }
+
                     int count = reader.ReadInt32();
                     MapInfoList.Clear();
                     for (int i = 0; i < count; i++)
@@ -1100,12 +1110,11 @@ namespace Server.MirEnvir
 
                     if (LoadVersion >= 66)
                     {
-                        ConquestInfo temp;
+                        ConquestInfos.Clear();
                         count = reader.ReadInt32();
                         for (int i = 0; i < count; i++)
                         {
-                            temp = new ConquestInfo(reader);
-                            ConquestInfos.Add(temp);
+                            ConquestInfos.Add(new ConquestInfo(reader));
                         }
                     }
                 }
@@ -1400,40 +1409,71 @@ namespace Server.MirEnvir
 
                 Conquests.Clear();
 
+                ConquestObject newConquest;
+                Map tempMap;
+                ConquestArcherObject tempArcher;
+
                 for (int i = 0; i < ConquestInfos.Count; i++)
                 {
-                    ConquestObject newConquest;
+                    newConquest = null;
+                    tempMap = GetMap(ConquestInfos[i].MapIndex);
+
+                    if (tempMap == null) continue;
+
                     if (File.Exists(Settings.ConquestsPath + ConquestInfos[i].Index.ToString() + ".mgd"))
                     {
                         using (FileStream stream = File.OpenRead(Settings.ConquestsPath + ConquestInfos[i].Index.ToString() + ".mgd"))
                         using (BinaryReader reader = new BinaryReader(stream))
-                            newConquest = new ConquestObject(reader);
+                            newConquest = new ConquestObject(reader) { Info = ConquestInfos[i], ConquestMap = tempMap };
 
-                            for (int j = 0; j < ConquestInfos.Count; j++)
+                        for (int k = 0; k < GuildList.Count; k++)
+                        {
+                            if (newConquest.Owner == GuildList[k].Guildindex)
                             {
-                                if (newConquest.ConquestIndex == ConquestInfos[j].Index)
-                                    newConquest.Info = ConquestInfos[j];
+                                newConquest.Guild = GuildList[k];
+                                GuildList[k].Conquest = newConquest;
                             }
+                        }
 
-                            for (int k = 0; k < GuildList.Count; k++)
-                            {
-                                if (newConquest.Owner == GuildList[k].Guildindex)
-                                {
-                                    newConquest.Guild = GuildList[k];
-                                    GuildList[k].Conquest = newConquest;
-                                }
-                            }
+
 
                         Conquests.Add(newConquest);
-
+                        tempMap.Conquest.Add(newConquest);
                         count++;
                     }
                     else
                     {
-                        Conquests.Add(new ConquestObject { ConquestIndex = ConquestInfos[i].Index, Info = ConquestInfos[i], NeedSave = true });
+                        newConquest = new ConquestObject { Info = ConquestInfos[i], NeedSave = true, ConquestMap = tempMap };
+
+                        Conquests.Add(newConquest);
+                        tempMap.Conquest.Add(newConquest);
                     }
+
+                    //Bind Info to Saved Archer objects or create new objects
+                    for (int j = 0; j < ConquestInfos[i].ConquestGuards.Count; j++)
+                    {
+                        tempArcher = newConquest.ArcherList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestGuards[j].Index);
+
+                        if (tempArcher != null)
+                        {
+                            tempArcher.Info = ConquestInfos[i].ConquestGuards[j];
+                            tempArcher.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.ArcherList.Add(new ConquestArcherObject { Info = ConquestInfos[i].ConquestGuards[j], Alive = true, Index = ConquestInfos[i].ConquestGuards[j].Index, Conquest = newConquest });
+                        }
+                    }
+
+                    //Remove archers that have been removed from DB
+                    for (int j = 0; j < newConquest.ArcherList.Count; j++)
+                    {
+                        if (newConquest.ArcherList[j].Info == null)
+                            newConquest.ArcherList.Remove(newConquest.ArcherList[j]);
+                    }
+
+                    newConquest.LoadArchers();
                 }
-                //if (count != ConquestInfos.Count) GuildCount = count;
             }
         }
 

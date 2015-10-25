@@ -156,12 +156,6 @@ namespace Client.MirControls
             }
             catch (Exception e)
             {
-                //var img = this as
-
-                //if (img != null)
-                //{
-                    //string output = string.Format("Index:{0}, Library:{1}", img.Index, img.Library.ToString());
-                //}
             }
         }
         protected void ControlTexture_Disposing(object sender, EventArgs e)

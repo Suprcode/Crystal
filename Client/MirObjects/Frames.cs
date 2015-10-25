@@ -11,6 +11,7 @@ namespace Client.MirObjects
         public static List<FrameSet> NPCs; //Make Array
         public static List<FrameSet> Monsters;
         public static List<FrameSet> HelperPets; //IntelligentCreature
+        public static List<FrameSet> Effects;
 
         public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
 
@@ -24,6 +25,8 @@ namespace Client.MirObjects
             Players = new FrameSet();
 
             HelperPets = new List<FrameSet>(); //IntelligentCreature
+
+            Effects = new List<FrameSet>(); //Sabuk Doors etc
 
             /*
              * PLAYERS
@@ -2285,6 +2288,12 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(304, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(303, 1, 9, 1000));
 
+            //201 - Sabuk Gate
+            Monsters.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
+            frame.Frames.Add(MirAction.Struck, new Frame(0, 4, 0, 100));
+            frame.Frames.Add(MirAction.Die, new Frame(0, 4, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(0, 4, 0, 1000));
 
             #endregion
 
@@ -2414,6 +2423,14 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(286, 1, 6, 1000));
 
             #endregion
+
+            Effects.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(80, 1, 0, 500));
+            frame.Frames.Add(MirAction.Struck, new Frame(81, 3, 0, 500));
+            frame.Frames.Add(MirAction.Die, new Frame(106, 8, 0, 500));
+            frame.Frames.Add(MirAction.Dead, new Frame(113, 1, 0, 500));
+            MirAction.
+
 
         }
     }

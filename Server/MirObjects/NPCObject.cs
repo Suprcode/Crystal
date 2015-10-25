@@ -1267,7 +1267,8 @@ namespace Server.MirObjects
         GlobalMessage,
         LoadValue,
         SaveValue,
-        RemovePet
+        RemovePet,
+        ConquestArcher,
     }
     public enum CheckType
     {

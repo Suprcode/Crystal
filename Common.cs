@@ -564,7 +564,7 @@ public enum Monster : ushort
     
     Ram1 = 400,
     Ram2 = 401,
-    Kite = 403,
+    Kite = 402,
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -580,7 +580,7 @@ public enum Monster : ushort
     BabyDragon = 10007,//unknown
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
-    Frog = 10010//unknown
+    Frog = 10010,//unknown
 }
 
 public enum MirAction : byte

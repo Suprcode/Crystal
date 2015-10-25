@@ -27,7 +27,6 @@ namespace Server.MirDatabase
         public List<NPCInfo> NPCs = new List<NPCInfo>();
         public List<MineZone> MineZones = new List<MineZone>();
         public List<Point> ActiveCoords = new List<Point>();
-        public List<ConquestInfo> MapConquests = new List<ConquestInfo>();
 
         public MapInfo()
         {
@@ -158,9 +157,7 @@ namespace Server.MirDatabase
 
             writer.Write(Music);
 
-            writer.Write(MapConquests.Count);
-            for (int i = 0; i < MapConquests.Count; i++)
-                MapConquests[i].Save(writer);
+            
         }
 
 
@@ -186,7 +183,6 @@ namespace Server.MirDatabase
         public void CreateSafeZone()
         {
             SafeZones.Add(new SafeZoneInfo { Info = this });
-            MapConquests.Add(new ConquestInfo { Location = new Point(260, 616), Size = 10, Name = "Sabuk Wall" });
         }
 
         public void CreateRespawnInfo()

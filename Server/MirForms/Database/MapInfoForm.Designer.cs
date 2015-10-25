@@ -1415,6 +1415,7 @@ namespace Server
             this.Name = "MapInfoForm";
             this.Text = "Map Info";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MapInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.MapInfoForm_Load);
             this.MapTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

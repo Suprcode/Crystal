@@ -806,6 +806,10 @@ namespace Server.MirObjects
                         acts.Add(new NPCActions(ActionType.SaveValue, fileName, group, key, value));
                     }
                     break;
+                case "CONQUESTARCHER":
+                    if (parts.Length < 3) return;
+                    acts.Add(new NPCActions(ActionType.ConquestArcher, parts[1], parts[2]));
+                    break;
             }
 
         }
@@ -1427,6 +1431,9 @@ namespace Server.MirObjects
 
                 ItemInfo info;
                 MonsterInfo monInfo;
+
+                ConquestObject Conquest;
+                ConquestArcherObject ConquestArcher;
 
                 NPCActions act = acts[i];
                 List<string> param = act.Params.Select(t => FindVariable(player, t)).ToList();
@@ -2181,6 +2188,18 @@ namespace Server.MirObjects
 
                         reader = new InIReader(filePath);
                         reader.Write(header, key, val);
+                        break;
+                    case ActionType.ConquestArcher:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+                        
+                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+
+                        if (!int.TryParse(param[1], out tempInt)) return;
+
+                        ConquestArcher = Conquest.ArcherList.FirstOrDefault(z => z.Index == tempInt);
+
+                        if (!ConquestArcher.Alive)
+                            ConquestArcher.Spawn();
                         break;
                 }
             }

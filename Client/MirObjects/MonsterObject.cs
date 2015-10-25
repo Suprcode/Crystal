@@ -911,7 +911,7 @@ namespace Client.MirObjects
                 case Monster.MudZombie:
                     Frames = FrameSet.Monsters[190];
                     break;
-               
+                    break;
 
                 case Monster.BabyPig:
                 case Monster.Chick:
@@ -1103,6 +1103,7 @@ namespace Client.MirObjects
                 case Monster.BabySnowMan:
                 case Monster.Frog:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
+                    break;
                     break;
             }
 

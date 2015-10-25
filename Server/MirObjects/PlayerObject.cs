@@ -4638,9 +4638,36 @@ namespace Server.MirObjects
                         mapInfo.CreateMap();
                         ReceiveChat(string.Format("Map instance created for map {0}", mapInfo.FileName), ChatType.System);
                         break;
-                    case "StartSabuk":
+                    case "STARTCONQUEST":
+                        //Needs some work, but does job for now.
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+                        int ConquestID;
 
-                        //Start a War
+                        if (parts.Length < 1)
+                        {
+                            ReceiveChat(string.Format("The Syntax is /StartConquest [ConquestID]"), ChatType.System);
+                            return;
+                        }
+
+                        if (MyGuild == null)
+                        {
+                            ReceiveChat(string.Format("You need to be in a guild to start a War"), ChatType.System);
+                            return;
+                        }
+                
+                        else if (!int.TryParse(parts[1], out ConquestID)) return;
+
+                        ConquestObject tempConq = Envir.Conquests.FirstOrDefault(t => t.Info.Index == ConquestID);
+
+                        if (tempConq != null)
+                        {
+                            tempConq.WarIsOn = !tempConq.WarIsOn;
+                            tempConq.Attacker = MyGuild;
+                        }
+                        else return;
+                        ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
+                        SMain.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
+                        break;
                     default:
                         break;
                 }
@@ -8910,12 +8937,27 @@ namespace Server.MirObjects
 
                 if (player != null) player.GetRelationship(false);
             }
-                
+
+
+            ConquestObject conq = CurrentMap.GetConquest(CurrentLocation);
+            if (conq != null)
+                EnterSabuk(conq.Info.Name);
+            else
+                LeaveSabuk();
+
+            ConquestObject swi = checkmap.GetConquest(checklocation);
+            if (swi != null)
+                if (swi.Info.PalaceIndex == CurrentMap.Info.Index)
+                {
+                    TakeConquest(swi);
+                }
+
         }
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
             Map oldMap = CurrentMap;
+            Point oldLocation = CurrentLocation;
 
             bool mapChanged = temp != oldMap;
 
@@ -8952,6 +8994,12 @@ namespace Server.MirObjects
             }
             else
                 InSafeZone = false;
+
+            ConquestObject conq = CurrentMap.GetConquest(CurrentLocation);
+            if (conq != null)
+                EnterSabuk(conq.Info.Name);
+            else
+                LeaveSabuk();
 
             Fishing = false;
             Enqueue(GetFishInfo());
@@ -9021,12 +9069,25 @@ namespace Server.MirObjects
             //should never use this but i leave it in for safety
             if (Observer) return null;
 
+            string gName = "";
+            string conquest = "";
+            if (MyGuild != null)
+            {
+                gName = MyGuild.Name;
+                if (MyGuild.Conquest != null)
+                {
+                    conquest = "[" + MyGuild.Conquest.Info.Name + "]";
+                    gName = gName + conquest;
+                }
+                    
+            }
+
             return new S.ObjectPlayer
             {
                 ObjectID = ObjectID,
                 Name = CurrentMap.Info.NoNames ? "?????" : Name,
                 NameColour = NameColour,
-                GuildName = CurrentMap.Info.NoNames ? "?????" : MyGuild != null ? MyGuild.Name : "",
+                GuildName = CurrentMap.Info.NoNames ? "?????" : gName,
                 GuildRankName = CurrentMap.Info.NoNames ? "?????" : MyGuildRank != null ? MyGuildRank.Name : "",
                 Class = Class,
                 Gender = Gender,
@@ -18169,7 +18230,7 @@ namespace Server.MirObjects
         #endregion
 
 
-        #region SabukWall
+        #region ConquestWall
         public void EnterSabuk(string ConquestName)
         {
             if (WarZone) return;
@@ -18187,6 +18248,41 @@ namespace Server.MirObjects
             ReceiveChat(String.Format("You have left the Conquest Zone."), ChatType.Hint);
             RefreshNameColour();
             //Broadcast name colour change
+        }
+
+        public void TakeConquest(ConquestObject Conquest)
+        {
+            GuildObject Previous = null;
+
+            if (MyGuild != null)
+            {
+
+                if (MyGuild == Conquest.Attacker || Conquest.Owner == 0)
+                {
+                    if (MyGuild == Conquest.Attacker)
+                    {
+                        Conquest.Guild.Conquest = null;
+                        Previous = Conquest.Guild;
+                    }
+                        
+
+                    Conquest.Owner = MyGuild.Guildindex;
+                    Conquest.Guild = MyGuild;
+                    MyGuild.Conquest = Conquest;
+                    Conquest.WarIsOn = false;
+                }
+
+               for (int i = 0; i < MyGuild.Ranks.Count; i++)
+                   for (int j = 0; j < MyGuild.Ranks[i].Members.Count; j++)
+                       if (MyGuild.Ranks[i].Members[j].Player != null)
+                          MyGuild.SendGuildStatus((PlayerObject)MyGuild.Ranks[i].Members[j].Player);
+
+                if (Previous != null)
+                    for (int i = 0; i < Previous.Ranks.Count; i++)
+                        for (int j = 0; j < Previous.Ranks[i].Members.Count; j++)
+                            if (Previous.Ranks[i].Members[j].Player != null)
+                                Previous.SendGuildStatus((PlayerObject)Previous.Ranks[i].Members[j].Player);
+            }
         }
         #endregion
     }
