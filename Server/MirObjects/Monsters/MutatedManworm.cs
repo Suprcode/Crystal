@@ -1,13 +1,30 @@
+using System.Drawing;
 using Server.MirDatabase;
+using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
     public class MutatedManworm : MonsterObject
     {
+        public long TeleportTime;
+
         protected internal MutatedManworm(MonsterInfo info)
             : base(info)
         {
+        }
+
+        protected override void ProcessTarget()
+        {
+            if (Target != null && !InAttackRange() && Envir.Time > TeleportTime)
+            {
+                TeleportTime = Envir.Time + 5000;
+                Teleport(CurrentMap, Target.Back, true, 3);
+            }
+            else
+            {
+                base.ProcessTarget();
+            }
         }
 
         protected override void Attack()
@@ -35,6 +52,7 @@ namespace Server.MirObjects.Monsters
             AttackTime = Envir.Time + AttackSpeed;
 
         }
+
         private void Attack2()
         {
             int damage = GetAttackPower(MinDC, MaxDC);
