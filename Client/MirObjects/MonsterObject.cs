@@ -1930,6 +1930,18 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            case Monster.PoisonHugger:
+                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.PoisonHugger], true, 1, 30, 0);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, 150, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
                                             case Monster.RedFoxman:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -2842,6 +2854,7 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Attack1:
                             Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(304 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(448 + FrameIndex, DrawLocation, Color.White, true);
                             break;
                         case MirAction.Struck:
                             Libraries.Monsters[(ushort)Monster.CyanoGhast].DrawBlend(352 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
@@ -2852,14 +2865,32 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
+                case Monster.Behemoth: //mob glow effect
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.Behemoth].DrawBlend(464 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            break;
+                        case MirAction.Attack2:
+                            break;
+                        case MirAction.Attack3:
+                            Libraries.Monsters[(ushort)Monster.Behemoth].DrawBlend(512 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                        case MirAction.Die:
+                        case MirAction.Revive:
+                            break;
+                    }
+                    break;
                 case Monster.MutatedManworm:
                     switch (CurrentAction)
                     {
-                        case MirAction.Attack1:
-                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(285 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
-                            break;
                         case MirAction.Attack2:
-                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(333 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(272 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                             break;
                     }
                     break;
@@ -2871,7 +2902,6 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
-
                 case Monster.DarkDevourer:
                     switch (CurrentAction)
                     {
