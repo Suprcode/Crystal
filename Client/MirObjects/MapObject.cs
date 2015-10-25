@@ -67,6 +67,11 @@ namespace Client.MirObjects
         public static List<MirLabel> DamageLabelList = new List<MirLabel>();
         public List<Damage> Damages = new List<Damage>();
 
+        protected Point GlobalDisplayLocationOffset
+        {
+            get { return new Point(0, 0); }
+        }
+
         protected MapObject(uint objectID)
         {
             ObjectID = objectID;

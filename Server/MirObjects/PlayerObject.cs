@@ -2011,7 +2011,13 @@ namespace Server.MirObjects
                 {
                     existingTime = buff.ExpireTime - Envir.Time;
                 }
-                AddBuff(new Buff { Type = BuffType.Rested, Caster = this, ExpireTime = Envir.Time + ((Settings.RestedBuffLength * Settings.Minute) * count) + existingTime, Values = new int[] { Settings.RestedExpBonus } });
+
+                long duration = ((Settings.RestedBuffLength * Settings.Minute) * count) + existingTime;
+                long maxDuration = (Settings.RestedBuffLength * Settings.Minute) * Settings.RestedMaxBonus;
+
+                if (duration > maxDuration) duration = maxDuration;
+
+                AddBuff(new Buff { Type = BuffType.Rested, Caster = this, ExpireTime = Envir.Time + duration, Values = new int[] { Settings.RestedExpBonus } });
                 _restedCounter = 0;
             }
         }

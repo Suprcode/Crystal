@@ -95,7 +95,8 @@ namespace Server
 
         public static int RestedPeriod = 60,
                           RestedBuffLength = 10,
-                          RestedExpBonus = 5;
+                          RestedExpBonus = 5,
+                          RestedMaxBonus = 24;
 
         public static string SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
@@ -322,6 +323,7 @@ namespace Server
             RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
             RestedBuffLength = Reader.ReadInt32("Rested", "BuffLength", RestedBuffLength);
             RestedExpBonus = Reader.ReadInt32("Rested", "ExpBonus", RestedExpBonus);
+            RestedMaxBonus = Reader.ReadInt32("Rested", "MaxBonus", RestedMaxBonus);
 
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
@@ -512,6 +514,7 @@ namespace Server
             Reader.Write("Rested", "Period", RestedPeriod);
             Reader.Write("Rested", "BuffLength", RestedBuffLength);
             Reader.Write("Rested", "ExpBonus", RestedExpBonus);
+            Reader.Write("Rested", "MaxBonus", RestedMaxBonus);
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);

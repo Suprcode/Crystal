@@ -531,7 +531,6 @@ namespace Client.MirControls
             if (Parent.Controls[Parent.Controls.Count - 1] == this)
                 return;
 
-
             if (!Sort) return;
 
             Parent.Controls.Remove(this);
@@ -993,6 +992,7 @@ namespace Client.MirControls
         public virtual void Redraw()
         {
             if (Parent != null) Parent.Redraw();
+
         }
 
         #region Disposable

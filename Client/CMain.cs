@@ -219,7 +219,6 @@ namespace Client
         }
         public static void CMain_MouseDown(object sender, MouseEventArgs e)
         {
-
             if (Program.Form.ActiveControl is TextBox)
             {
                 MirTextBox textBox = Program.Form.ActiveControl.Tag as MirTextBox;

@@ -1036,6 +1036,7 @@ namespace Client.MirObjects
             DrawLocation.Offset(-OffSetMove.X, -OffSetMove.Y);
             DrawLocation.Offset(User.OffSetMove);
             DrawLocation = DrawLocation.Add(ManualLocationOffset);
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
 
             if (BodyLibrary != null && update)
             {

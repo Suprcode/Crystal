@@ -145,12 +145,36 @@ namespace Client.MirGraphics
                     {
                         using (GraphicsPath path = new GraphicsPath())
                         {
+                            //path.AddEllipse(new Rectangle(0, 0, width, height));
+                            //using (PathGradientBrush brush = new PathGradientBrush(path))
+                            //{
+                            //    graphics.Clear(Color.FromArgb(0, 0, 0, 0));
+                            //    brush.SurroundColors = new[] { Color.FromArgb(0, 255, 255, 255) };
+                            //    brush.CenterColor = Color.FromArgb(255, 255, 255, 255);
+                            //    graphics.FillPath(brush, path);
+                            //    graphics.Save();
+                            //}
+
                             path.AddEllipse(new Rectangle(0, 0, width, height));
                             using (PathGradientBrush brush = new PathGradientBrush(path))
                             {
+                                Color[] blendColours = { Color.White,
+                                                     Color.FromArgb(255,150,150,145),
+                                                     Color.FromArgb(255,80,80,80),
+                                                     Color.FromArgb(255,55,50,45),
+                                                     Color.FromArgb(255,20,20,25),
+                                                     Color.FromArgb(0,0,0,0)};
+
+                                float[] radiusPositions = { 0f, .20f, .40f, .60f, .80f, 1.0f };
+
+                                ColorBlend colourBlend = new ColorBlend();
+                                colourBlend.Colors = blendColours;
+                                colourBlend.Positions = radiusPositions;
+
                                 graphics.Clear(Color.FromArgb(0, 0, 0, 0));
-                                brush.SurroundColors = new[] { Color.FromArgb(0, 255, 255, 255) };
-                                brush.CenterColor = Color.FromArgb(255, 255, 255, 255);
+                                brush.InterpolationColors = colourBlend;
+                                brush.SurroundColors = blendColours;
+                                brush.CenterColor = Color.White;
                                 graphics.FillPath(brush, path);
                                 graphics.Save();
                             }
