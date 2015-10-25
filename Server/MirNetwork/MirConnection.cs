@@ -572,7 +572,8 @@ namespace Server.MirNetwork
                     ReportIssue((C.ReportIssue)p);
                     break;
                 default:
-                    throw new NotImplementedException();
+                    SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
+                    break;
             }
         }
 

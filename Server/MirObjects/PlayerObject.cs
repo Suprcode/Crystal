@@ -655,11 +655,7 @@ namespace Server.MirObjects
             for (int i = Pets.Count() - 1; i >= 0; i--)
             {
                 MonsterObject pet = Pets[i];
-                if (pet.Dead)
-                {
-                    Pets.Remove(pet);
-                    SMain.EnqueueDebugging("Dead pet removed through player process :" + pet.Name);
-                }
+                if (pet.Dead) Pets.Remove(pet);
             }
 
             ProcessBuffs();

@@ -407,6 +407,7 @@ namespace LibraryEditor
                         break;
                 }
                 int index = 0;
+
                 int* scan0 = (int*)data.Scan0;
                 {
                     for (int y = Height - 1; y >= 0; y--)
