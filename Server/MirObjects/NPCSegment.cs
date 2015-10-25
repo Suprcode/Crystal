@@ -293,6 +293,12 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.CheckPet, parts[1]));
                     break;
+
+                case "HASBAGSPACE":
+                    if (parts.Length < 3) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.HasBagSpace, parts[1], parts[2]));
+                    break;
             }
 
         }
@@ -1391,12 +1397,27 @@ namespace Server.MirObjects
                         bool petMatch = false;
                         for (int c = player.Pets.Count - 1; c >= 0; c--)
                         {
-                            if (string.Compare(player.Pets[c].Name, param[0], true) != 0) continue;
+                            if (string.Compare(player.Pets[c].Info.Name, param[0], true) != 0) continue;
 
                             petMatch = true;
                         }
 
                         failed = !petMatch;
+                        break;
+
+                    case CheckType.HasBagSpace:
+                        if (!int.TryParse(param[1], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        int slotCount = 0;
+
+                        for (int k = 0; k < player.Info.Inventory.Length; k++)
+                            if (player.Info.Inventory[k] == null) slotCount++;
+
+                        failed = !Compare(param[0], slotCount, tempInt);
                         break;
                 }
 
@@ -1898,7 +1919,10 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.BreakTimeRecall:
-                        player.ActionList.RemoveAll(d => d.Type == DelayedType.NPC);
+                        foreach (DelayedAction ac in player.ActionList.Where(u => u.Type == DelayedType.NPC))
+                        {
+                            ac.FlaggedToRemove = true;
+                        }
                         break;
 
                     case ActionType.DelayGoto:

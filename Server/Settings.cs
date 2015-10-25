@@ -94,6 +94,10 @@ namespace Server
         public static long PetTimeOut = 5;
         public static bool PetSave = false;
 
+        public static int RestedPeriod = 60,
+                          RestedBuffLength = 10,
+                          RestedExpBonus = 5;
+
         public static string SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
                              BugBatName = "BugBat",
@@ -315,6 +319,11 @@ namespace Server
             SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);
             SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);
 
+            //Rested
+            RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
+            RestedBuffLength = Reader.ReadInt32("Rested", "BuffLength", RestedBuffLength);
+            RestedExpBonus = Reader.ReadInt32("Rested", "ExpBonus", RestedExpBonus);
+
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
             FireRing = Reader.ReadString("Items", "FireRing", FireRing);
@@ -496,10 +505,14 @@ namespace Server
             Reader.Write("Game", "CloneName", CloneName);
             Reader.Write("Game", "AssassinCloneName", AssassinCloneName);
 
-            Reader.Write("Game", "VampireName", VampireName);//SummonVampire
-            Reader.Write("Game", "ToadName", ToadName);//SummonToad
-            Reader.Write("Game", "SnakeTotemName", SnakeTotemName);//SummonSnakes Totem
-            Reader.Write("Game", "SnakesName", SnakesName);//SummonSnakes
+            Reader.Write("Game", "VampireName", VampireName);
+            Reader.Write("Game", "ToadName", ToadName);
+            Reader.Write("Game", "SnakeTotemName", SnakeTotemName);
+            Reader.Write("Game", "SnakesName", SnakesName);
+
+            Reader.Write("Rested", "Period", RestedPeriod);
+            Reader.Write("Rested", "BuffLength", RestedBuffLength);
+            Reader.Write("Rested", "ExpBonus", RestedExpBonus);
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);

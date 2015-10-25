@@ -1,4 +1,4 @@
-﻿using Server.MirDatabase;
+using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects;
 using System;
@@ -893,15 +893,44 @@ namespace Server.MirObjects
         {
             base.Process();
 
-            if (Envir.Time < TurnTime) return;
+            if (Envir.Time > TurnTime)
+            {
+                TurnTime = Envir.Time + TurnDelay;
+                Turn((MirDirection)Envir.Random.Next(3));
+            }
 
-            TurnTime = Envir.Time + TurnDelay;
-            Turn((MirDirection)Envir.Random.Next(3));
-
-            if (UsedGoodsTime < SMain.Envir.Time)
+            if (Envir.Time > UsedGoodsTime)
             {
                 UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
                 ProcessGoods();
+            }
+
+            if (Envir.Time > VisTime)
+            {
+                VisTime = Envir.Time + (Settings.Minute);
+
+                if (Info.DayofWeek != "" && Info.DayofWeek != DateTime.Now.DayOfWeek.ToString())
+                {
+                    if (Visible) Hide();
+                }
+                else
+                {
+
+                    int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
+                    int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
+                    int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
+
+                    if (Info.TimeVisible)
+                        if (StartTime > CurrentTime || FinishTime <= CurrentTime)
+                        {
+                            if (Visible) Hide();
+                        }
+                        else if (StartTime <= CurrentTime && FinishTime > CurrentTime)
+                        {
+                            if (!Visible) Show();
+                        }
+
+                }
             }
         }
         public void ProcessGoods(bool clear = false)
@@ -996,6 +1025,24 @@ namespace Server.MirObjects
                 OperateTime = time;
         }
 
+        public void Hide()
+        {
+            CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
+            Visible = false;
+        }
+
+        public void Show()
+        {
+            Visible = true;
+            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
+            {
+                PlayerObject player = CurrentMap.Players[i];
+
+                if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                    CheckVisible(player, true);
+            }
+        }
+
         public override Packet GetInfo()
         {
             return new S.ObjectNPC
@@ -1057,8 +1104,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Visible && !CanSee) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
-            else if (Force && Visible) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
+            if (Visible && !CanSee) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
+            else if (Force && Visible) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
 
             VisibleLog[Player.Info.Index] = true;
 
@@ -1300,6 +1347,7 @@ namespace Server.MirObjects
         CheckQuest,
         CheckRelationship,
         CheckWeddingRing,
-        CheckPet
+        CheckPet,
+        HasBagSpace
     }
 }

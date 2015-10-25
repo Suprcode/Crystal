@@ -234,7 +234,7 @@ namespace Client.MirControls
         {
             base.OnMouseMove(e);
 
-            if (GameScene.HoverItem != null && Item.Info.Index != GameScene.HoverItem.Info.Index)
+            if (GameScene.HoverItem != null && (Item.Info.Index != GameScene.HoverItem.Info.Index))
             {
                 GameScene.Scene.DisposeItemLabel();
                 GameScene.HoverItem = null;

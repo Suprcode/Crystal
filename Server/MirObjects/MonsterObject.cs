@@ -157,6 +157,8 @@ namespace Server.MirObjects
                     return new TalkingMonster(info);
                 case 71://Sabuk Archer
                     return new ConquestArcher(info);
+                case 72:
+                    return new SabukGate(info);
                 default:
                     return new MonsterObject(info);
             }

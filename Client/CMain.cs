@@ -32,13 +32,11 @@ namespace Client
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
-
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
 
         public static bool Shift, Alt, Ctrl, Tilde;
-
 
         public CMain()
         {
@@ -65,7 +63,7 @@ namespace Client
             Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             Graphics.TextContrast = 0;
         }
@@ -312,7 +310,7 @@ namespace Client
                 {
                     DXManager.AttemptReset();
                     Thread.Sleep(1);
-                    //  return;
+                    return;
                 }
                 else
                 {
@@ -320,7 +318,6 @@ namespace Client
                     DXManager.Device.BeginScene();
                     DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
                     DXManager.SetSurface(DXManager.MainSurface);
-
 
                     if (MirScene.ActiveScene != null)
                         MirScene.ActiveScene.Draw();
@@ -332,6 +329,12 @@ namespace Client
             }
             catch (DeviceLostException)
             {
+            }
+            catch (Exception ex)
+            {
+                SaveError(ex.ToString());
+
+                DXManager.AttemptRecovery();
             }
         }
 
@@ -390,7 +393,6 @@ namespace Client
 
         private static void CreateHintLabel()
         {
-
             if (HintBaseLabel == null || HintBaseLabel.IsDisposed)
             {
                 HintBaseLabel = new MirControl
@@ -427,6 +429,7 @@ namespace Client
             }
 
             HintBaseLabel.Visible = true;
+
             HintTextLabel.Text = MirControl.MouseControl.Hint;
 
             Point point = MPoint.Add(-HintTextLabel.Size.Width, 20);
@@ -453,7 +456,7 @@ namespace Client
             DXManager.Parameters.Windowed = !Settings.FullScreen;
             DXManager.Device.Reset(DXManager.Parameters);
             Program.Form.ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-        }
+        }//
 
         public void CreateScreenShot()
         {

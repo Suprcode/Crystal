@@ -99,6 +99,7 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
+
                     offSet += 10;
                 }
         }
@@ -130,7 +131,11 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 9;
+                    offSet += 6;
+
+                    //fish/light check
+
+                    offSet += 3;
                 }
         }
 
@@ -1063,6 +1068,7 @@ namespace Server.MirEnvir
                 case Spell.ThunderStorm:
                 case Spell.FlameField:
                 case Spell.NapalmShot:
+                case Spell.StormEscape:
                     value = (int)data[2];
                     location = (Point)data[3];
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)
@@ -2100,6 +2106,8 @@ namespace Server.MirEnvir
 
         public List<MapObject> Objects;
         public CellAttribute Attribute;
+
+        public bool FishingCell;
 
         public void Add(MapObject mapObject)
         {

@@ -495,6 +495,30 @@ namespace ClientPackets
             writer.Write(To);
         }
     }
+    public sealed class RemoveSlotItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RemoveSlotItem; } }
+
+        public MirGridType Grid;
+        public MirGridType GridTo;
+        public ulong UniqueID;
+        public int To;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Grid = (MirGridType)reader.ReadByte();
+            GridTo = (MirGridType)reader.ReadByte();
+            UniqueID = reader.ReadUInt64();
+            To = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Grid);
+            writer.Write((byte)GridTo);
+            writer.Write(UniqueID);
+            writer.Write(To);
+        }
+    }
     public sealed class SplitItem : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.SplitItem; } }
@@ -2026,6 +2050,31 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(NPCID);
             writer.Write(PageName);
             writer.Write(Value);
+        }
+    }
+
+    public sealed class ReportIssue : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ReportIssue; } }
+
+        public byte[] Image;
+        public int ImageSize;
+        public int ImageChunk;
+
+        public string Message;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Image = reader.ReadBytes(reader.ReadInt32());
+            ImageSize = reader.ReadInt32();
+            ImageChunk = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Image.Length);
+            writer.Write(Image);
+            writer.Write(ImageSize);
+            writer.Write(ImageChunk);
         }
     }
 }

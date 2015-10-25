@@ -18,6 +18,7 @@ using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 
 using Client.MirScenes.Dialogs;
+using System.Drawing.Imaging;
 
 namespace Client.MirScenes
 {
@@ -203,7 +204,7 @@ namespace Client.MirScenes
             
             GroupDialog = new GroupDialog { Parent = this, Visible = false };
             GuildDialog = new GuildDialog { Parent = this, Visible = false };
-            //GuildBuffDialog = new GuildBuffDialog { Parent = this, Visible = false };
+
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
             CharacterDuraPanel = new CharacterDuraPanel { Parent = this, Visible = false };
@@ -228,9 +229,9 @@ namespace Client.MirScenes
             MailReadLetterDialog = new MailReadLetterDialog { Parent = this, Visible = false };
             MailReadParcelDialog = new MailReadParcelDialog { Parent = this, Visible = false };
 
-            IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };//IntelligentCreature
-            IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };//IntelligentCreature
-            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
+            IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };
+            IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };
+            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };
 
             RefineDialog = new RefineDialog { Parent = this, Visible = false };
             RelationshipDialog = new RelationshipDialog { Parent = this, Visible = false };
@@ -395,11 +396,7 @@ namespace Client.MirScenes
 
                 case Keys.G:
                     if (!GuildDialog.Visible) GuildDialog.Show();
-                    else
-                    {
-                        //GuildBuffDialog.Hide();
-                        GuildDialog.Hide();
-                    }
+                    else GuildDialog.Hide();
                     break;
 
                 case Keys.Q:
@@ -421,9 +418,9 @@ namespace Client.MirScenes
                     HelpDialog.Hide();
                     KeyboardLayoutDialog.Hide();
                     RankingDialog.Hide();
-                    IntelligentCreatureDialog.Hide();//IntelligentCreature
-                    IntelligentCreatureOptionsDialog.Hide();//IntelligentCreature
-                    IntelligentCreatureOptionsGradeDialog.Hide();//IntelligentCreature
+                    IntelligentCreatureDialog.Hide();
+                    IntelligentCreatureOptionsDialog.Hide();
+                    IntelligentCreatureOptionsGradeDialog.Hide();
                     MountDialog.Hide();
                     FishingDialog.Hide();
                     FriendDialog.Hide();
@@ -432,7 +429,6 @@ namespace Client.MirScenes
                     GameShopDialog.Hide();
                     GroupDialog.Hide();
                     GuildDialog.Hide();
-                    //GuildBuffDialog.Hide();
                     InspectDialog.Hide();
                     StorageDialog.Hide();
                     TrustMerchantDialog.Hide();
@@ -444,6 +440,10 @@ namespace Client.MirScenes
                     RefineDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+
+
+
+                    GameScene.Scene.DisposeItemLabel();
                     break;
                 case Keys.O:
                 case Keys.F12:
@@ -533,7 +533,7 @@ namespace Client.MirScenes
                                 return;
                         }
                     }
-                    //IntelligentCreature semiauto pickup mode
+
                     if (!CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
                     break;
                 case Keys.H:
@@ -951,6 +951,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.RemoveItem:
                     RemoveItem((S.RemoveItem)p);
+                    break;
+                case (short)ServerPacketIds.RemoveSlotItem:
+                    RemoveSlotItem((S.RemoveSlotItem)p);
                     break;
                 case (short)ServerPacketIds.TakeBackItem:
                     TakeBackItem((S.TakeBackItem)p);
@@ -1566,28 +1569,28 @@ namespace Client.MirScenes
                         text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
                     break;
-                case BuffType.MaxDC:
+                case BuffType.Impact:
                     text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     text = string.Format("A.Speed increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxHP:
+                case BuffType.HealthAid:
                     text = string.Format("HP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMP:
+                case BuffType.ManaAid:
                     text = string.Format("MP increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     text = string.Format("Max AC increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
-                case BuffType.MaxMAC:
+                case BuffType.MagicDefence:
                     text = string.Format("Max MAC increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
             }
@@ -1639,94 +1642,99 @@ namespace Client.MirScenes
             switch (type)
             {
                 //Skills
-                case BuffType.Teleport:
-                    return 25;
-                case BuffType.Hiding:
-                    return 24;
-                case BuffType.Haste:
-                    return 0;
-                case BuffType.SwiftFeet:
-                    return 21;
                 case BuffType.Fury:
-                    return 8;
-                case BuffType.LightBody:
-                    return 22;
-                case BuffType.SoulShield:
-                    return 11;
-                case BuffType.BlessedArmour:
-                    return 10;
-                case BuffType.ProtectionField:
-                    return 9;
+                    return 76;
                 case BuffType.Rage:
-                    return 81;
+                    return 49;
                 case BuffType.CounterAttack:
-                    return 46;
-                case BuffType.UltimateEnhancer:
-                    return 99;
-                case BuffType.EnergyShield:
-                    return 4;
-                case BuffType.Curse:
-                    return 32;
-                case BuffType.MoonLight:
-                    return 24;
-                case BuffType.DarkBody:
-                    return 24;
-                case BuffType.Concentration:
-                    return 66;
-                case BuffType.VampireShot:
-                    return 74;
-                case BuffType.PoisonShot:
-                    return 68;
-                case BuffType.MentalState:
-                    return 59;
+                    return 7;
+
                 case BuffType.MagicBooster:
-                    return 37;
+                    return 73;
 
-                //Random
-                case BuffType.GameMaster:
-                    return 51;
-                case BuffType.General:
-                    return 503;
-                case BuffType.Exp:
-                    return 334;
-                case BuffType.Drop:
-                    return 12;
-                case BuffType.Gold:
-                    return 316;
-                case BuffType.BagWeight:
-                    return 12;
-                case BuffType.Transform:
-                    return 19;
-                case BuffType.Mentor:
-                    return 30;
-                case BuffType.Mentee:
-                    return 30;
-                case BuffType.RelationshipEXP:
-                    return 61;
-                case BuffType.Guild:
-                    return 63;
-
-                //Consumables
-                case BuffType.MaxDC:
-                    return 321;
-                case BuffType.MaxMC:
-                    return 305;
-                case BuffType.MaxSC:
-                    return 327;
-                case BuffType.ASpeed:
-                    return 317;
-                case BuffType.MaxHP:
-                    return 131;
-                case BuffType.MaxMP:
-                    return 139;
-                case BuffType.MaxAC:
+                case BuffType.Hiding:
+                    return 17;
+                case BuffType.Haste:
+                    return 60;
+                case BuffType.SoulShield:
+                    return 13;
+                case BuffType.BlessedArmour:
                     return 14;
-                case BuffType.MaxMAC:
-                    return 15;
-                case BuffType.AC:
-                    return 4;
-                case BuffType.MAC:
-                    return 4;
+                case BuffType.ProtectionField:
+                    return 50;
+                case BuffType.UltimateEnhancer:
+                    return 35;
+                case BuffType.Curse:
+                    return 45;
+                case BuffType.EnergyShield:
+                    return 57;
+
+                case BuffType.SwiftFeet:
+                    return 67;
+                case BuffType.LightBody:
+                    return 68;
+                case BuffType.MoonLight:
+                    return 65;
+                case BuffType.DarkBody:
+                    return 70;
+
+                case BuffType.Concentration:
+                    return 96;
+                case BuffType.VampireShot:
+                    return 100;
+                case BuffType.PoisonShot:
+                    return 102;
+                case BuffType.MentalState:
+                    return 199;
+
+                //Special
+                case BuffType.GameMaster:
+                    return 173;
+                case BuffType.General:
+                    return 182;
+                case BuffType.Exp:
+                    return 260;
+                case BuffType.Drop:
+                    return 162;
+                case BuffType.Gold:
+                    return 168;
+                case BuffType.Knapsack:
+                case BuffType.BagWeight:
+                    return 235;
+                case BuffType.Transform:
+                    return 241;
+                case BuffType.Mentor:
+                    return 248;
+                case BuffType.Mentee:
+                    return 248;
+                case BuffType.RelationshipEXP:
+                    return 201;
+                case BuffType.Guild:
+                    return 203;
+                case BuffType.Rested:
+                    return 240;
+                case BuffType.TemporalFlux:
+                    return 261;
+
+                //Stats
+                case BuffType.Impact:
+                    return 249;
+                case BuffType.Magic:
+                    return 183;
+                case BuffType.Taoist:
+                    return 250;
+                case BuffType.Storm:
+                    return 170;
+                case BuffType.HealthAid:
+                    return 161;
+                case BuffType.ManaAid:
+                    return 169;
+                case BuffType.Defence:
+                    return 166;
+                case BuffType.MagicDefence:
+                    return 158;
+                case BuffType.WonderDrug:
+                    return 252;
                 default:
                     return 0;
             }
@@ -2015,6 +2023,9 @@ namespace Client.MirScenes
                 case MirGridType.Trade:
                     fromCell = TradeDialog.GetCell(p.IDFrom);
                     break;
+                case MirGridType.Fishing:
+                    fromCell = FishingDialog.GetCell(p.IDFrom);
+                    break;
                 default:
                     return;
             }
@@ -2079,6 +2090,48 @@ namespace Client.MirScenes
 
 
             switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+                    break;
+                case MirGridType.Storage:
+                    toCell = StorageDialog.Grid[p.To];
+                    break;
+                default:
+                    return;
+            }
+
+            if (toCell == null || fromCell == null) return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success) return;
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            CharacterDuraPanel.GetCharacterDura();
+            User.RefreshStats();
+        }
+        private void RemoveSlotItem(S.RemoveSlotItem p)
+        {
+            MirItemCell fromCell;
+            MirItemCell toCell;
+
+            int index = -1;
+
+            switch (p.Grid)
+            {
+                case MirGridType.Mount:
+                    fromCell = MountDialog.GetCell(p.UniqueID);
+                    break;
+                case MirGridType.Fishing:
+                    fromCell = FishingDialog.GetCell(p.UniqueID);
+                    break;
+                default:
+                    return;
+            }
+
+            switch (p.GridTo)
             {
                 case MirGridType.Inventory:
                     toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
@@ -3506,6 +3559,10 @@ namespace Client.MirScenes
                     case SpellEffect.FatalSword:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1940, 4, 400, ob));
                         SoundManager.PlaySound(20000 + (ushort)Spell.FatalSword * 10);
+                        break;
+                    case SpellEffect.StormEscape:
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 610, 10, 600, ob));
+                        SoundManager.PlaySound(SoundList.Teleport);
                         break;
                     case SpellEffect.Teleport:
                         ob.Effects.Add(new Effect(Libraries.Magic, 1600, 10, 600, ob));
@@ -7543,9 +7600,6 @@ namespace Client.MirScenes
                     case 6://speed low/med/high
                         HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
                         break;
-                    case 7://knapsack low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase BagWeight by {0} for {1}.", HoverItem.Luck + realItem.Luck, strTime);
-                        break;
                 }
             }
 
@@ -9060,11 +9114,11 @@ namespace Client.MirScenes
 
             int cost = magic.Level * magic.LevelCost + magic.BaseCost;
 
-            if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink)
+            if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink || magic.Spell == Spell.StormEscape)
             {
                 for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
                 {
-                    if (GameScene.Scene.Buffs[i].Type != BuffType.Teleport) continue;
+                    if (GameScene.Scene.Buffs[i].Type != BuffType.TemporalFlux) continue;
                     cost += (int)(User.MaxMP * 0.3F);
                 }
             }
@@ -9505,7 +9559,7 @@ namespace Client.MirScenes
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
 
         public MainDialog()
         {
@@ -9713,18 +9767,19 @@ namespace Client.MirScenes
 
             LevelLabel = new MirLabel
             {
-                AutoSize = true,
-                Parent = this,
-                Location = new Point(5, 108)
-            };
-
-            CharacterName = new MirLabel
-            {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Parent = this,
-                Location = new Point(6, 120),
-                Size = new Size(90, 16)
+                Location = new Point(17, 123),
+                Size = new Size(33, 12)
             };
+
+            //CharacterName = new MirLabel
+            //{
+            //    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+            //    Parent = this,
+            //    Location = new Point(6, 120),
+            //    Size = new Size(90, 16)
+            //};
 
 
             ExperienceBar = new MirImageControl
@@ -9889,7 +9944,7 @@ namespace Client.MirScenes
             ExperienceLabel.Text = string.Format("{0:#0.##%}", User.Experience / (double)User.MaxExperience);
             ExperienceLabel.Location = new Point((ExperienceBar.Size.Width / 2) - 20, -10);
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
-            CharacterName.Text = User.Name;
+            //CharacterName.Text = User.Name;
             WeightLabel.Text = User.Inventory.Count(t => t == null).ToString();
         }
 
@@ -10540,7 +10595,7 @@ namespace Client.MirScenes
     }
     public sealed class ChatControlBar : MirImageControl
     {
-        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton;
+        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton;
 
         public ChatControlBar()
         {
@@ -10567,7 +10622,6 @@ namespace Client.MirScenes
                 if (GameScene.Scene.BeltDialog.Index == 1932)
                     GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
             };
-
 
             SettingsButton = new MirButton
             {
@@ -10702,6 +10756,36 @@ namespace Client.MirScenes
             {
                 Settings.ShowGuildChat = !Settings.ShowGuildChat;
                 ToggleChatFilter("Guild");
+            };
+
+            ReportButton = new MirButton
+            {
+                Index = 2063,
+                HoverIndex = 2064,
+                PressedIndex = 2065,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(Settings.Resolution != 800 ? 552 : 328, 1),
+                Sound = SoundList.ButtonA,
+                Hint = "Report"
+            };
+            ReportButton.Click += (o, e) =>
+            {
+                Point location = Program.Form.PointToClient(Program.Form.Location);
+
+                location = new Point(-location.X, -location.Y);
+
+                using (Bitmap image = CMain.GetImage(Program.Form.Handle, new Rectangle(location, Program.Form.ClientSize)))
+                {
+                    var chunks = Functions.SplitArray(Functions.ImageToByteArray(image), 20000);
+
+                    int i = 0;
+
+                    foreach (var chunk in chunks)
+                    {
+                        Network.Enqueue(new C.ReportIssue { Image = chunk, ImageSize = chunks.Count(), ImageChunk = ++i });
+                    }
+                }
             };
 
             ToggleChatFilter("All");
@@ -16327,6 +16411,16 @@ namespace Client.MirScenes
 
             Visible = true;
         }
+
+        public MirItemCell GetCell(ulong id)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+                return Grid[i];
+            }
+            return null;
+        }
     }
     public sealed class FishingDialog : MirImageControl
     {
@@ -16940,7 +17034,7 @@ namespace Client.MirScenes
         #endregion
 
         #region GuildLeft
-        public MirButton NoticeButton, MembersButton, StorageButton, BuffsButton, RankButton;
+        public MirButton NoticeButton, MembersButton, StorageButton, RankButton;
         public MirImageControl NoticePage, MembersPage, StoragePage, RankPage;
         public MirImageControl StoragePageBase, MembersPageBase;
         public MirImageControl TitleLabel;
@@ -17008,7 +17102,7 @@ namespace Client.MirScenes
         #region StatusPagePub
         public MirLabel StatusLevelLabel;
         public MirLabel StatusHeaders;
-        public MirLabel StatusData;
+        public MirLabel StatusGuildName, StatusLevel, StatusMembers;
         public MirImageControl StatusExpBar;
         public MirLabel StatusExpLabel, RecruitMemberLabel;
         public MirTextBox MembersRecruitName;
@@ -17419,25 +17513,51 @@ namespace Client.MirScenes
             StatusPage.BeforeDraw += (o, e) =>
             {
                 if (MapControl.User.GuildName == "")
-                    StatusData.Text = "";
+                {
+                    StatusGuildName.Text = "";
+                    StatusLevel.Text = "";
+                    StatusMembers.Text = "";
+                }
                 else
-                    StatusData.Text = string.Format("{0}\n\n{1}\n\n{2}{3}", MapObject.User.GuildName, Level, MemberCount, MaxMembers == 0 ? "" : ("/" + MaxMembers.ToString()));
+                {
+                    StatusGuildName.Text = string.Format("{0}", MapObject.User.GuildName);
+                    StatusLevel.Text = string.Format("{0}", Level);
+                    StatusMembers.Text = string.Format("{0}{1}", MemberCount, MaxMembers == 0 ? "" : ("/" + MaxMembers.ToString()));
+                }  
             };
             StatusHeaders = new MirLabel()
             {
-                Location = new Point(13, 47),
+                Location = new Point(7, 47),
                 DrawFormat = TextFormatFlags.Right,
-                Size = new Size(100, 300),
+                Size = new Size(75, 300),
                 NotControl = true,
                 Text = "Guild Name\n\nLevel\n\nMembers",
                 Visible = true,
                 Parent = StatusPage,
                 ForeColour = Color.Gray,
             };
-            StatusData = new MirLabel()
+            StatusGuildName = new MirLabel()
             {
-                Location = new Point(116, 47),
-                Size = new Size(75, 200),
+                Location = new Point(82, 47),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = StatusPage
+            };
+            StatusLevel = new MirLabel()
+            {
+                Location = new Point(82, 73),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = StatusPage
+            };
+            StatusMembers = new MirLabel()
+            {
+                Location = new Point(82, 99),
+                Size = new Size(120, 200),
                 NotControl = true,
                 Text = "",
                 Visible = true,
@@ -17937,6 +18057,10 @@ namespace Client.MirScenes
         public void RefreshInterface()
         {
             if (StartIndex < 0) StartIndex = 0;
+
+            if (GuildBuffInfos.Count == 0) BuffButton.Visible = false;
+            else BuffButton.Visible = true;
+
             if (MapObject.User.GuildName == "")
             {
                 Hide();
@@ -18275,7 +18399,7 @@ namespace Client.MirScenes
             else
                 NoticeEditButton.Visible = false;
 
-            BuffsButton.Visible = true;
+                BuffButton.Visible = true;
         }
         #endregion
 
@@ -19121,7 +19245,10 @@ namespace Client.MirScenes
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
-            BuffButton.Visible = true;
+
+            if (GuildBuffInfos.Count == 0) BuffButton.Visible = false;
+            else BuffButton.Visible = true;
+
         }
         #endregion
 
@@ -23357,6 +23484,11 @@ namespace Client.MirScenes
 
     }
 
+    public sealed class ReportDialog : MirImageControl
+    {
+
+    }
+
     public class Buff
     {
         public BuffType Type;
@@ -23373,7 +23505,8 @@ namespace Client.MirScenes
 
             switch (Type)
             {
-                case BuffType.Teleport:
+                //magic
+                case BuffType.TemporalFlux:
                     text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
                     break;
                 case BuffType.Hiding:
@@ -23404,7 +23537,7 @@ namespace Client.MirScenes
                     text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.CounterAttack:
-                    text = string.Format("CounterAttack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
+                    text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
                     break;
                 case BuffType.UltimateEnhancer:
                     if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
@@ -23433,10 +23566,10 @@ namespace Client.MirScenes
                     text = "Dark Body\nInvisible to many monsters and able to move.\n";
                     break;
                 case BuffType.VampireShot:
-                    text = string.Format("VampireShot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("Vampire Shot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
                     break;
                 case BuffType.PoisonShot:
-                    text = string.Format("PoisonShot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("Poison Shot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
                     break;
                 case BuffType.Concentration:
                     text = "Concentrating\nIncreases chance on element extraction.\n";
@@ -23459,6 +23592,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
                     break;
 
+                //special
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)Values[0];
                     text = "GameMaster\n";
@@ -23476,16 +23610,16 @@ namespace Client.MirScenes
                         text += string.Format("GoldRate increased by {0}%\n", Values[2]);
                     break;
                 case BuffType.Exp:
-                    text = string.Format("ExpRate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Exp Rate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.Gold:
-                    text = string.Format("GoldRate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Gold Rate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.Drop:
-                    text = string.Format("DropRate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Drop Rate\nIncreased by {0}%\n", Values[0]);
                     break;
                 case BuffType.BagWeight:
-                    text = string.Format("BagWeight\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    text = string.Format("Bag Weight\nIncreases BagWeight by: {0}.\n", Values[0]);
                     break;
                 case BuffType.Transform:
                     text = string.Format("Transform\nDisguises your appearance.\n");
@@ -23500,39 +23634,67 @@ namespace Client.MirScenes
                     text = string.Format("Mentorship Empowerment\nDamage to monsters increased by {0}%.\n", Values[0]);
                     break;
                 case BuffType.Guild:
-                    text = string.Format("Guild Buff\n");
+                    text = string.Format("Guild Charge\n");
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
+                case BuffType.Rested:
+                    text = string.Format("Rested\nIncreases Exp Rate by {0}%\n", Values[0]);
+                    break;
 
-                case BuffType.MaxDC:
+                //stats
+                case BuffType.Impact:
                     text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMC:
+                case BuffType.Magic:
                     text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxSC:
+                case BuffType.Taoist:
                     text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Values[0]);
                     break;
-                case BuffType.ASpeed:
+                case BuffType.Storm:
                     text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxHP:
-                    text = string.Format("HealthAid\nIncreases HP by: {0}.\n", Values[0]);
+                case BuffType.HealthAid:
+                    text = string.Format("Health Aid\nIncreases HP by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMP:
-                    text = string.Format("ManaAid\nIncreases MP by: {0}.\n", Values[0]);
+                case BuffType.ManaAid:
+                    text = string.Format("Mana Aid\nIncreases MP by: {0}.\n", Values[0]);
                     break;
-                case BuffType.MaxAC:
+                case BuffType.Defence:
                     text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.\n", Values[0]);
                     break;
-                case BuffType.MaxMAC:
-                    text = string.Format("MagicDefence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
+                case BuffType.MagicDefence:
+                    text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
                     break;
-                case BuffType.AC:
-                    text = string.Format("WonderShield\nIncreases AC by: {0}-{0}.\n", Values[0]);
+                case BuffType.WonderDrug:
+                    text = string.Format("Wonder Drug\n");
+                    switch (Values[0])
+                    {
+                        case 0:
+                            text += string.Format("Increases Exp Rate by {0}%\n", Values[1]);
+                            break;
+                        case 1:
+                            text += string.Format("Increases Drop Rate by {0}%\n", Values[1]);
+                            break;
+                        case 2:
+                            text += string.Format("Increases HP by: {0}.\n", Values[1]);
+                            break;
+                        case 3:
+                            text += string.Format("Increases MP by: {0}.\n", Values[1]);
+                            break;
+                        case 4:
+                            text += string.Format("Increases Max AC by: {0}-{0}.\n", Values[1]);
+                            break;
+                        case 5:
+                            text += string.Format("Increases Max MAC by: {0}-{0}.\n", Values[1]);
+                            break;
+                        case 6:
+                            text += string.Format("Increases A.Speed by: {0}.\n", Values[1]);
+                            break;
+                    }
                     break;
-                case BuffType.MAC:
-                    text = string.Format("MagicWonderShield\nIncreases MAC by: {0}-{0}.\n", Values[0]);
+                case BuffType.Knapsack:
+                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.\n", Values[0]);
                     break;
             }
 

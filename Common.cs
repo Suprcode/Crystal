@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
+using System.Linq;
 
 public enum DamageType : byte
 {
@@ -570,6 +572,8 @@ public enum Monster : ushort
     EvilMirBody = 901,
     DragonStatue = 902,
 
+    SabukGate = 950,
+
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
     Kitten = 10002,//Permanent
@@ -967,6 +971,7 @@ public enum Spell : byte
     CounterAttack = 14,
     SlashingBurst = 15,
     Fury = 16,
+    ImmortalSkin = 17,
 
     //Wizard
     FireBall = 31,
@@ -992,6 +997,8 @@ public enum Spell : byte
     MagicBooster = 51,
     MeteorStrike = 52,
     IceThrust = 53,
+    FastMove = 54,
+    StormEscape = 55,
 
     //Taoist
     Healing = 61,
@@ -1018,6 +1025,7 @@ public enum Spell : byte
     PoisonCloud = 83,
     EnergyShield = 84,
     PetEnhancer = 85,
+    HealingCircle = 86,
 
     //Assassin
     FatalSword = 91,
@@ -1035,6 +1043,7 @@ public enum Spell : byte
     DarkBody = 103,
     Hemorrhage = 104,
     CrescentSlash = 105,
+    MoonMist = 106,
 
     //Archer
     Focus = 121,
@@ -1096,6 +1105,7 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
+    StormEscape
 }
 
 public enum BuffType : byte
@@ -1103,7 +1113,7 @@ public enum BuffType : byte
     None,
 
     //magics
-    Teleport,
+    TemporalFlux,
     Hiding,
     Haste,
     SwiftFeet,
@@ -1139,18 +1149,19 @@ public enum BuffType : byte
     Mentor,
     Guild,
     Prison,
+    Rested,
 
     //stats
-    MaxDC,
-    MaxMC,
-    MaxSC,
-    ASpeed,
-    MaxHP,
-    MaxMP,
-    MaxAC,
-    MaxMAC,
-    AC,
-    MAC,
+    Impact,
+    Magic,
+    Taoist,
+    Storm,
+    HealthAid,
+    ManaAid,
+    Defence,
+    MagicDefence,
+    WonderDrug,
+    Knapsack
 }
 
 public enum DefenceType : byte
@@ -1197,6 +1208,7 @@ public enum ServerPacketIds : short
     EquipItem,
     MergeItem,
     RemoveItem,
+    RemoveSlotItem,
     TakeBackItem,
     StoreItem,
     SplitItem,
@@ -1409,6 +1421,7 @@ public enum ClientPacketIds : short
     MergeItem,
     EquipItem,
     RemoveItem,
+    RemoveSlotItem,
     SplitItem,
     UseItem,
     DropItem,
@@ -1512,6 +1525,8 @@ public enum ClientPacketIds : short
     GuildBuffUpdate,
     NPCConfirmInput,
     GameshopBuy,
+
+    ReportIssue
 }
 
 public class InIReader
@@ -2054,7 +2069,7 @@ public static class Functions
         string answer;
         if (t.TotalMinutes < 1.0)
         {
-            answer = string.Format("{0}s", t.TotalSeconds);
+            answer = string.Format("{0}s", t.Seconds);
         }
         else if (t.TotalHours < 1.0)
         {
@@ -2370,6 +2385,43 @@ public static class Functions
         }
 
         return newString;
+    }
+
+    public static byte[] ImageToByteArray(Image imageIn)
+    {
+        MemoryStream ms = new MemoryStream();
+        imageIn.Save(ms, ImageFormat.Gif);
+        return ms.ToArray();
+    }
+
+    public static Image ByteArrayToImage(byte[] byteArrayIn)
+    {
+        MemoryStream ms = new MemoryStream(byteArrayIn);
+        Image returnImage = Image.FromStream(ms);
+        return returnImage;
+    }
+
+    public static IEnumerable<byte[]> SplitArray(byte[] value, int bufferLength)
+    {
+        int countOfArray = value.Length / bufferLength;
+        if (value.Length % bufferLength > 0)
+            countOfArray++;
+        for (int i = 0; i < countOfArray; i++)
+        {
+            yield return value.Skip(i * bufferLength).Take(bufferLength).ToArray();
+        }
+    }
+
+    public static byte[] CombineArray(List<byte[]> arrays)
+    {
+        byte[] rv = new byte[arrays.Sum(x => x.Length)];
+        int offset = 0;
+        foreach (byte[] array in arrays)
+        {
+            System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+            offset += array.Length;
+        }
+        return rv;
     }
 }
 
@@ -4258,6 +4310,8 @@ public abstract class Packet
                 return new C.EquipItem();
             case (short)ClientPacketIds.RemoveItem:
                 return new C.RemoveItem();
+            case (short)ClientPacketIds.RemoveSlotItem:
+                return new C.RemoveSlotItem();
             case (short)ClientPacketIds.SplitItem:
                 return new C.SplitItem();
             case (short)ClientPacketIds.UseItem:
@@ -4454,6 +4508,8 @@ public abstract class Packet
                 return new C.GameshopBuy();
             case (short)ClientPacketIds.NPCConfirmInput:
                 return new C.NPCConfirmInput();
+            case (short)ClientPacketIds.ReportIssue:
+                return new C.ReportIssue();
             default:
                 throw new NotImplementedException();
         }
@@ -4525,6 +4581,8 @@ public abstract class Packet
                 return new S.MergeItem();
             case (short)ServerPacketIds.RemoveItem:
                 return new S.RemoveItem();
+            case (short)ServerPacketIds.RemoveSlotItem:
+                return new S.RemoveSlotItem();
             case (short)ServerPacketIds.TakeBackItem:
                 return new S.TakeBackItem();
             case (short)ServerPacketIds.StoreItem:

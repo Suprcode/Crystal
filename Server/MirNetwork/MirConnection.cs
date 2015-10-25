@@ -7,6 +7,7 @@ using Server.MirEnvir;
 using Server.MirObjects;
 using C = ClientPackets;
 using S = ServerPackets;
+using System.Linq;
 
 namespace Server.MirNetwork
 {
@@ -291,6 +292,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.RemoveItem:
                     RemoveItem((C.RemoveItem) p);
                     break;
+                case (short)ClientPacketIds.RemoveSlotItem:
+                    RemoveSlotItem((C.RemoveSlotItem)p);
+                    break;
                 case (short)ClientPacketIds.SplitItem:
                     SplitItem((C.SplitItem) p);
                     break;
@@ -563,6 +567,9 @@ namespace Server.MirNetwork
                     return;
                 case (short)ClientPacketIds.NPCConfirmInput:
                     NPCConfirmInput((C.NPCConfirmInput)p);
+                    break;
+                case (short)ClientPacketIds.ReportIssue:
+                    ReportIssue((C.ReportIssue)p);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -924,6 +931,12 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.RemoveItem(p.Grid, p.UniqueID, p.To);
+        }
+        private void RemoveSlotItem(C.RemoveSlotItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RemoveSlotItem(p.Grid, p.UniqueID, p.To, p.GridTo);
         }
         private void SplitItem(C.SplitItem p)
         {
@@ -1589,6 +1602,22 @@ namespace Server.MirNetwork
 
             Player.NPCInputStr = p.Value;
             Player.CallNPC(Player.NPCID, p.PageName);
+        }
+
+        public List<byte[]> Image = new List<byte[]>();
+        
+        private void ReportIssue(C.ReportIssue p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Image.Add(p.Image);
+
+            if (p.ImageChunk >= p.ImageSize)
+            {
+                System.Drawing.Image image = Functions.ByteArrayToImage(Functions.CombineArray(Image));
+                image.Save("Reported-" + Player.Name + "-" + DateTime.Now.ToString("yyMMddHHmmss") + ".jpg");
+                Image.Clear();
+            }
         }
     }
 }
