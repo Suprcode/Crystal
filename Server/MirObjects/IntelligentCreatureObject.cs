@@ -153,11 +153,13 @@ namespace Server.MirObjects
 
         public void ProcessAnimVariant()
         {
+            
             if (Envir.Time > animvariantTicker)
             {
                 animvariantTicker = Envir.Time + animvariantDelay;
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
+
                 switch (petType)
                 {
                     case IntelligentCreatureType.BabyDragon:
@@ -542,8 +544,14 @@ namespace Server.MirObjects
 
             Cell cell = CurrentMap.GetCell(Target.CurrentLocation);
             if (!cell.Valid || cell.Objects == null) return;
-            for (int i = 0; i < cell.Objects.Count; i++)
+
+
+            int count = cell.Objects.Count;
+
+            for (int i = 0; i < count; i++)
+            {
                 PickUpItem(Target.CurrentLocation);
+            }
         }
 
         public void PickUpItem(Point location)
@@ -569,8 +577,11 @@ namespace Server.MirObjects
                         for (int j = 0; j < Master.GroupMembers.Count; j++)
                             Master.GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.Name + "}", ChatType.Hint);
 
-                    if(item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary)
+                    if (item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary)
+                    {
                         Master.ReceiveChat("Pet Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+                        ((PlayerObject)Master).Enqueue(new S.IntelligentCreaturePickup { ObjectID = ObjectID });
+                    }
 
                     ((PlayerObject)Master).GainItem(item.Item);
                     CurrentMap.RemoveObject(ob);

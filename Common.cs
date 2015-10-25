@@ -7,7 +7,23 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 
-public enum AwakeType
+public enum DamageType : byte
+{
+    Hit = 0,
+    Miss = 1,
+    Critical = 2
+}
+
+[Flags]
+public enum GMOptions : byte
+{
+    None = 0,
+    GameMaster = 0x0001,
+    Observer = 0x0002,
+    Superman = 0x0004
+}
+
+public enum AwakeType : byte
 {
     None = 0,
     DC,
@@ -24,7 +40,7 @@ public enum LevelEffects : byte
     None = 0,
     Mist = 0x0001,
     RedDragon = 0x0002,
-    BlueDragon = 0x0004,
+    BlueDragon = 0x0004
 }
 
 public enum OutputMessageType : byte
@@ -40,6 +56,40 @@ public enum ItemGrade : byte
     Rare = 2,
     Legendary = 3,
     Mythical = 4,
+}
+public enum StatType : byte
+{
+    AC = 0,
+    MAC = 1,
+    DC = 2,
+    MC = 3,
+    SC = 4,
+    HP = 5,
+    MP = 6,
+    HP_Percent = 7,
+    MP_Percent = 8,
+    HP_Regen = 9,
+    MP_Regen = 10,
+    ASpeed = 11,
+    Luck = 12,
+    Strong = 13,
+    Accuracy = 14,
+    Agility = 15,
+    MagicResist = 16,
+    PoisonResist = 17,
+    PoisonAttack = 18,
+    PoisonRegen = 19,
+    Freezing = 20,
+    Holy = 21,
+    Durability = 22,
+    Unknown = 23
+}
+public enum RefinedValue : byte
+{
+    None = 0,
+    DC = 1,
+    MC = 2,
+    SC = 3,
 }
 
 public enum QuestType : byte
@@ -78,10 +128,11 @@ public enum DefaultNPCType : byte
     CustomCommand,
     OnAcceptQuest,
     OnFinishQuest,
-    Daily
+    Daily,
+    TalkMonster
 }
 
-public enum IntelligentCreatureType : byte//IntelligentCreature
+public enum IntelligentCreatureType : byte
 {
     None = 99,
     BabyPig = 0,
@@ -94,12 +145,19 @@ public enum IntelligentCreatureType : byte//IntelligentCreature
     BabyDragon = 7,
     OlympicFlame = 8,
     BabySnowMan = 9,
+    Frog = 10
 }
 
+//6 blank mob files
+//4 mob frames not added
+//2 blank frame sets (92, 173)
+//4 mob frames duplicate of other frame sets
+
+//TODO: add 2 missing frames in to blank frames, remove 2 duplicate frames (leaving no blanks and 2 duplicates)
 public enum Monster : ushort
 {
     Guard = 0,
-    Guard1 = 1,
+    TaoistGuard = 1,
     Guard2 = 2,
     Hen = 3,
     Deer = 4,
@@ -239,28 +297,280 @@ public enum Monster : ushort
     BrownFrogSpider = 138,
     ArcherGuard = 139,
     KatanaGuard = 140,
-    //BLANK01 = 141,
+    //BLANK_141 = 141,
     Pig = 142,
     Bull = 143,
-    //Bush = 144,
-    //ChristmasTree = 145,
-    //HighAssassin = 146,
-    //DarkDustPile = 147,
-    //DarkBrownWolf = 148,
-    //Football = 149,
-    //GingerBreadman = 150,
-    //HalloweenScythe = 151,
+    Bush = 144,
+    ChristmasTree = 145,
+    HighAssassin = 146,
+    DarkDustPile = 147,
+    DarkBrownWolf = 148,
+    Football = 149,
+    GingerBreadman = 150,
+    HalloweenScythe = 151,
+    GhastlyLeecher = 152,
+    CyanoGhast = 153,
+    MutatedManworm = 154,
+    CrazyManworm = 155,
+    MudPile = 156,
+    TailedLion = 157,
 
-    VampireSpider = 359,
-    SpittingToad = 360,
-    SnakeTotem = 361,
-    CharmedSnake = 368,
+    //MOBS NOT TESTED
+    Behemoth = 158,
+    DarkDevourer = 159,//LIB BROKE??
+    PoisonHugger = 160,
+    Hugger = 161,
+    MutatedHugger = 162,//BROKE
+    DreamDevourer = 163,//LIB BROKE??
+    Treasurebox = 164,
+    SnowPile = 165,
+    Snowman = 166,
+    SnowTree = 167,
+    GiantEgg = 168,
+    RedTurtle = 169,
+    GreenTurtle = 170,
+    BlueTurtle = 171,
+    Catapult = 172, //not added frames //special 3 states in 1 
+    SabukWallSection = 173, //not added frames
+    NammandWallSection = 174, //not added frames
+    //BLANK_175 = 175,
+    BlueSanta = 176,//FRAMES BROKE
+    BattleStandard = 177,
+    ArcherGuard2 = 178, //NO FRAMES
+    RedYimoogi = 179,
+    //BLANK_180 = 180,
+    //BLANK_181 = 181,
+    //BLANK_182 = 182,
+    FlameTiger = 183,
+    WingedTigerLord = 184,//FRAMES BROKE
+    TowerTurtle = 185,
+    FinialTurtle = 186,
+    TurtleKing = 187,//NEEDS AI
+    DarkTurtle = 188,
+    LightTurtle = 189,
+    DarkSwordOma = 190,
+    DarkAxeOma = 191,
+    DarkCrossbowOma = 192,
+    DarkWingedOma = 193,
+    BoneWhoo = 194,
+    DarkSpider = 195,
+    ViscusWorm = 196,
+    ViscusCrawler = 197,
+    CrawlerLave = 198,
+    DarkYob = 199,
+
+    FlamingMutant = 200,
+    StoningStatue = 201,
+    FlyingStatue = 202,
+    ValeBat = 203,
+    Weaver = 204,
+    VenomWeaver = 205,
+    CrackingWeaver = 206,
+    ArmingWeaver = 207,
+    CrystalWeaver = 208,
+    FrozenZumaStatue = 209,
+    FrozenZumaGuardian = 210,
+    FrozenRedZuma = 211,
+    GreaterWeaver = 212,
+    SpiderWarrior = 213,
+    SpiderBarbarian = 214,
+    HellSlasher = 215,
+    HellPirate = 216,
+    HellCannibal = 217,
+    HellKeeper = 218,
+    HellBolt = 219,
+    WitchDoctor = 220,
+    ManectricHammer = 221,
+    ManectricClub = 222,
+    ManectricClaw = 223,
+    ManectricStaff = 224,
+    NamelessGhost = 225,
+    DarkGhost = 226,
+    ChaosGhost = 227,
+    ManectricBlest = 228,
+    ManectricKing = 229,
+    FrozenDoor = 230,
+    IcePillar = 231,
+    FrostYeti = 232,
+    ManectricSlave = 233,
+    TrollHammer = 234,
+    TrollBomber = 235,
+    TrollStoner = 236,
+    TrollKing = 237,
+    FlameSpear = 238,
+    FlameMage = 239,
+    FlameScythe = 240,
+    FlameAssassin = 241,
+    FlameQueen = 242,
+    HellKnight1 = 243,
+    HellKnight2 = 244,
+    HellKnight3 = 245,
+    HellKnight4 = 246,
+    HellLord = 247,
+    WaterGuard = 248,
+    IceGuard = 249,
+
+    ElementGuard = 250,
+    DemonGuard = 251,
+    KingGuard = 252,
+    Sanke10 = 253,
+    Sanke11 = 254,
+    Sanke12 = 255,
+    Sanke13 = 256,
+    Sanke14 = 257,
+    Sanke15 = 258,
+    Sanke16 = 259,
+    Sanke17 = 260,
+    DeathCrawler = 261,
+    BurningZombie = 262,
+    MudZombie = 263,
+    FrozenZombie = 264,
+    UndeadWolf = 265,
+    Demonwolf = 266,
+    WhiteMammoth = 267,
+    DarkBeast = 268,
+    LightBeast = 269,
+    BloodBaboon = 270,
+    HardenRhino = 271,
+    AncientBringer = 272,
+    FightingCat = 273,
+    FireCat = 274,
+    CatWidow = 275,
+    StainHammerCat = 276,
+    BlackHammerCat = 277,
+    StrayCat = 278,
+    CatShaman = 279,
+    Jar1 = 280,
+    Jar2 = 281,
+    SeedingsGeneral = 282,
+    RestlessJar = 283,
+    GeneralJinmYo = 284,
+    Bunny = 285,
+    Tucson = 286,
+    TucsonFighter = 287,
+    TucsonMage = 288,
+    TucsonWarrior = 289,
+    Armadillo = 290,
+    ArmadilloElder = 291,
+    TucsonEgg = 292,
+    PlaguedTucson = 293,
+    SandSnail = 294,
+    CannibalTentacles = 295,
+    TucsonGeneral = 296,
+    GasToad = 297,
+    Mantis = 298,
+    SwampWarrior = 299,
+
+    AssassinBird = 300,
+    RhinoWarrior = 301,
+    RhinoPriest = 302,
+    SwampSlime = 303,
+    RockGuard = 304,
+    MudWarrior = 305,
+    SmallPot = 306,
+    TreeQueen = 307,
+    ShellFighter = 308,
+    DarkBaboon = 309,
+    TwinHeadBeast = 310,
+    OmaCannibal = 311,
+    OmaBlest = 312,
+    OmaSlasher = 313,
+    OmaAssassin = 314,
+    OmaMage = 315,
+    OmaWitchDoctor = 316,
+    LightningBead = 317,
+    HealingBead = 318,
+    PowerUpBead = 319,
+    DarkOmaKing = 320,
+    CaveMage = 321,
+    Mandrill = 322,
+    PlagueCrab = 323,
+    CreeperPlant = 324,
+    FloatingWraith = 325,
+    ArmedPlant = 326,
+    AvengerPlant = 327,
+    Nadz = 328,
+    AvengingSpirit = 329,
+    AvengingWarrior = 330,
+    AxePlant = 331,
+    WoodBox = 332,
+    ClawBeast = 333,
+    KillerPlant = 334,
+    SackWarrior = 335,
+    WereTiger = 336,
+    KingHydrax = 337,
+    Hydrax = 338,
+    HornedMage = 339,
+    Basiloid = 340,
+    HornedArcher = 341,
+    ColdArcher = 342,
+    HornedWarrior = 343,
+    FloatingRock = 344,
+    ScalyBeast = 345,
+    HornedSorceror = 346,
+    BoulderSpirit = 347,
+    HornedCommander = 348,
+    MoonStone = 349,
+
+    SunStone = 350,
+    LightningStone = 351,
+    Turtlegrass = 352,
+    Mantree = 353,
+    Bear = 354,
+    Leopard = 355,
+    ChieftainArcher = 356,
+    ChieftainSword = 357,
+    StoningSpider = 358, //Archer Spell mob (not yet coded)
+    VampireSpider = 359, //Archer Spell mob
+    SpittingToad = 360, //Archer Spell mob
+    SnakeTotem = 361, //Archer Spell mob
+    CharmedSnake = 362, //Archer Spell mob
+    FrozenSoldier = 363,
+    FrozenFighter = 364,
+    FrozenArcher = 365,
+    FrozenKnight = 366,
+    FrozenGolem = 367,
+    IcePhantom = 368,
+    SnowWolf = 369,
+    SnowWolfKing = 370,
+    WaterDragon = 371,
+    BlackTortoise = 372,
+    Manticore = 373,
+    DragonWarrior = 374,
+    DragonArcher = 375,
+    Kirin = 376,
+    Guard3 = 377,
+    ArcherGuard3 = 378,
+    Bunny2 = 379,
+    FrozenMiner = 380,
+    FrozenAxeman = 381,
+    FrozenMagician = 382,
+    SnowYeti = 383,
+    IceCrystalSoldier = 384,
+    DarkWraith = 385,
+    DarkSpirit = 386,
+    CrystalBeast = 387,
+    RedOrb = 388,
+    BlueOrb = 389,
+    YellowOrb = 390,
+    GreenOrb = 391,
+    WhiteOrb = 392,
+    FatalLotus = 393,
+    AntCommander = 394,
+    CargoBoxwithlogo = 395,
+    Doe = 396,
+    //BLANK_397 = 397,
+    AngryReindeer = 398,
+    CargoBox = 399,
+    
+    Ram1 = 400,
+    Ram2 = 401,
+    Kite = 403,
 
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
 
-    //IntelligentCreature System
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
     Kitten = 10002,//Permanent
@@ -271,6 +581,7 @@ public enum Monster : ushort
     BabyDragon = 10007,//unknown
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
+    Frog = 10010//unknown
 }
 
 public enum MirAction : byte
@@ -307,6 +618,7 @@ public enum MirAction : byte
     Mine,
     Sneek,
     DashAttack,
+    Lunge,
 
     WalkingBow,
     RunningBow,
@@ -388,10 +700,13 @@ public enum ChatType : byte
     WhisperIn = 6,
     WhisperOut = 7,
     Guild = 8,
-    Experience = 9,
-    Trainer = 10,
-    LevelUp = 11,
-    System2 = 12,
+    Trainer = 9,
+    LevelUp = 10,
+    System2 = 11,
+    Relationship = 12,
+    Mentor = 13,
+    Shout2 = 14,
+    Shout3 = 15
 }
 
 public enum ItemType : byte
@@ -431,7 +746,8 @@ public enum ItemType : byte
     Fish = 33,
     Quest = 34,
 	Awakening = 35,
-    Pets = 36,//IntelligentCreature
+    Pets = 36,
+    Transform = 37,
 }
 
 public enum MirGridType : byte
@@ -451,7 +767,8 @@ public enum MirGridType : byte
     Fishing = 12,
     QuestInventory = 13,
     AwakenItem = 14,
-    Mail = 15
+    Mail = 15,
+    Refine = 16,
 }
 
 public enum EquipmentSlot : byte
@@ -510,22 +827,25 @@ public enum PetMode : byte
     None = 3,
 }
 
+[Flags]
+[Obfuscation(Feature = "renaming", Exclude = true)]
 public enum PoisonType : byte
 {
-    None,
-    Green,
-    Red,
-    Slow,
-    Frozen,
-    Stun,
-    Paralysis,
-    DelayedExplosion,
-    Bleeding
+    None = 0,
+    Green = 1,
+    Red = 2,
+    Slow = 4,
+    Frozen = 8,
+    Stun = 16,
+    Paralysis = 32,
+    DelayedExplosion = 64,
+    Bleeding = 128
 }
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum BindMode : byte
+
+public enum BindMode : short
 {
     none = 0,
     DontDeathdrop = 1,
@@ -535,7 +855,10 @@ public enum BindMode : byte
     DontTrade = 16,
     DontRepair = 32,
     DontUpgrade = 64,
-    DestroyOnDrop = 128
+    DestroyOnDrop = 128,
+    BreakOnDeath = 256,
+    BindOnEquip = 512,
+    NoSRepair = 1024,
 }
 
 [Flags]
@@ -610,7 +933,17 @@ public enum ItemSet : byte
     RedJade = 17,
     RedJadeH = 18,
     Nephrite = 19,
-    NephriteH = 20
+    NephriteH = 20,
+    Whisker1 = 21,
+    Whisker2 = 22,
+    Whisker3 = 23,
+    Whisker4 = 24,
+    Whisker5 = 25,
+    Hyeolryong = 26,
+    Monitor = 27,
+    Oppressive = 28,
+    Paeok = 29,
+    Sulgwan = 30
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -635,6 +968,7 @@ public enum Spell : byte
     CounterAttack = 14,
     SlashingBurst = 15,
     Fury = 16,
+    ImmortalSkin = 17,
 
     //Wizard
     FireBall = 31,
@@ -660,7 +994,8 @@ public enum Spell : byte
     MagicBooster = 51,
     MeteorStrike = 52,
     IceThrust = 53,
-    Blink = 54,
+    FastMove = 54,
+    StormEscape = 55,
 
     //Taoist
     Healing = 61,
@@ -686,7 +1021,9 @@ public enum Spell : byte
     Plague = 82,
     PoisonCloud = 83,
     EnergyShield = 84,
-    
+    PetEnhancer = 85,
+    HealingCircle = 86,
+
     //Assassin
     FatalSword = 91,
     DoubleSlash = 92,
@@ -703,6 +1040,7 @@ public enum Spell : byte
     DarkBody = 103,
     Hemorrhage = 104,
     CrescentSlash = 105,
+    MoonMist = 106,
 
     //Archer
     Focus = 121,
@@ -726,6 +1064,10 @@ public enum Spell : byte
     OneWithNature = 139,
     BindingShot = 140,
     MentalState = 141,
+
+    //Custom
+    Blink = 151,
+    Portal = 152,
     
 
     //Map Events
@@ -739,23 +1081,19 @@ public enum SpellEffect : byte
 {
     None,
     FatalSword,
-    SummonSkeleton,
     Teleport,
     Healing,
     RedMoonEvil,
     TwinDrakeBlade,
     MagicShieldUp,
     MagicShieldDown,
-    FlameSwordCharge,
     GreatFoxSpirit,
     Entrapment,
     Reflect,
     Critical,
     Mine,
-    ElementBarrierUp,
-    ElementBarrierDown,
-    FuryUp,
-    FuryDown,
+    ElementalBarrierUp,
+    ElementalBarrierDown,
     DelayedExplosion,
     MPEater,
     Hemorrhage,
@@ -764,12 +1102,15 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
+    StormEscape
 }
 
 public enum BuffType : byte
 {
     None,
-    Teleport,
+
+    //magics
+    TemporalFlux,
     Hiding,
     Haste,
     SwiftFeet,
@@ -783,24 +1124,41 @@ public enum BuffType : byte
     Curse,
     MoonLight,
     DarkBody,
+    Concentration,
+    VampireShot,
+    PoisonShot,
+    CounterAttack,
+    MentalState,
+    EnergyShield,
+    MagicBooster,
+    PetEnhancer,
+
+    //special
+    GameMaster,
     General,
     Exp,
     Drop,
     Gold,
-    Concentration,
+    BagWeight,
+    Transform,
+    RelationshipEXP,
+    Mentee,
+    Mentor,
+    Guild,
+    Prison,
+    Rested,
+
+    //stats
     Impact,
     Magic,
     Taoist,
     Storm,
     HealthAid,
     ManaAid,
-    VampireShot,
-    PoisonShot,
-    CounterAttack,
-    MentalState,
-    WonderShield,
-    MagicWonderShield,
-    BagWeight
+    Defence,
+    MagicDefence,
+    WonderDrug,
+    Knapsack
 }
 
 public enum DefenceType : byte
@@ -847,10 +1205,15 @@ public enum ServerPacketIds : short
     EquipItem,
     MergeItem,
     RemoveItem,
+    RemoveSlotItem,
     TakeBackItem,
     StoreItem,
     SplitItem,
     SplitItem1,
+    DepositRefineItem,
+    RetrieveRefineItem,
+    RefineCancel,
+    RefineItem,
     DepositTradeItem,
     RetrieveTradeItem,
     UseItem,
@@ -867,10 +1230,13 @@ public enum ServerPacketIds : short
     GainedItem,
     GainedGold,
     LoseGold,
+    GainedCredit,
+    LoseCredit,
     ObjectMonster,
     ObjectAttack,
     Struck,
     ObjectStruck,
+    DamageIndicator,
     DuraChanged,
     HealthChanged,
     DeleteItem,
@@ -897,6 +1263,10 @@ public enum ServerPacketIds : short
     NPCSell,
     NPCRepair,
     NPCSRepair,
+    NPCRefine,
+    NPCCheckRefine,
+    NPCCollectRefine,
+    NPCReplaceWedRing,
     NPCStorage,
     SellItem,
     RepairItem,
@@ -905,6 +1275,8 @@ public enum ServerPacketIds : short
     RemoveMagic,
     MagicLeveled,
     Magic,
+    MagicDelay,
+    MagicCast,
     ObjectMagic,
     ObjectEffect,
     RangeAttack,
@@ -955,6 +1327,9 @@ public enum ServerPacketIds : short
     GuildRequestWar,
     DefaultNPC,
     NPCUpdate,
+    MarriageRequest,
+    DivorceRequest,
+    MentorRequest,
     TradeRequest,
     TradeAccept,
     TradeGold,
@@ -1008,7 +1383,17 @@ public enum ServerPacketIds : short
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
-    NPCPearlGoods
+    IntelligentCreaturePickup,
+    NPCPearlGoods,
+
+    TransformUpdate,
+    FriendUpdate,
+    LoverUpdate,
+    MentorUpdate,
+    GuildBuffList,
+    NPCRequestInput,
+    GameShopInfo,
+    GameShopStock,
 }
 
 public enum ClientPacketIds : short
@@ -1033,9 +1418,16 @@ public enum ClientPacketIds : short
     MergeItem,
     EquipItem,
     RemoveItem,
+    RemoveSlotItem,
     SplitItem,
     UseItem,
     DropItem,
+    DepositRefineItem,
+    RetrieveRefineItem,
+    RefineCancel,
+    RefineItem,
+    CheckRefine,
+    ReplaceWedRing,
     DepositTradeItem,
     RetrieveTradeItem,
     DropGold,
@@ -1048,6 +1440,7 @@ public enum ClientPacketIds : short
     RangeAttack,
     Harvest,
     CallNPC,
+    TalkMonsterNPC,
     BuyItem,
     SellItem,
     RepairItem,
@@ -1077,6 +1470,15 @@ public enum ClientPacketIds : short
     GuildStorageGoldChange,
     GuildStorageItemChange,
     GuildWarReturn,
+    MarriageRequest,
+    MarriageReply,
+    ChangeMarriage,
+    DivorceRequest,
+    DivorceReply,
+    AddMentor,
+    MentorReply,
+    AllowMentor,
+    CancelMentor,
     TradeRequest,
     TradeReply,
     TradeGold,
@@ -1111,7 +1513,15 @@ public enum ClientPacketIds : short
     MailCost,
 
     UpdateIntelligentCreature,
-    IntelligentCreaturePickup
+    IntelligentCreaturePickup,
+
+    AddFriend,
+    RemoveFriend,
+    RefreshFriends,
+    AddMemo,
+    GuildBuffUpdate,
+    NPCConfirmInput,
+    GameshopBuy,
 }
 
 public class InIReader
@@ -1648,6 +2058,53 @@ public static class Functions
         return false;
     }
 
+    public static string PrintTimeSpanFromSeconds(double secs)
+    {
+        TimeSpan t = TimeSpan.FromSeconds(secs);
+        string answer;
+        if (t.TotalMinutes < 1.0)
+        {
+            answer = string.Format("{0}s", t.Seconds);
+        }
+        else if (t.TotalHours < 1.0)
+        {
+            answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
+        }
+        else if (t.TotalDays < 1.0)
+        {
+            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.Hours, t.Minutes, t.Seconds);
+        }
+        else // more than 1 day
+        {
+            answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
+        }
+
+        return answer;
+    }
+
+    public static string PrintTimeSpanFromMilliSeconds(double milliSeconds)
+    {
+        TimeSpan t = TimeSpan.FromMilliseconds(milliSeconds);
+        string answer;
+        if (t.TotalMinutes < 1.0)
+        {
+            answer = string.Format("{0}.{1}s", t.Seconds, (decimal)(t.Milliseconds / 100));
+        }
+        else if (t.TotalHours < 1.0)
+        {
+            answer = string.Format("{0}m {1:D2}s", t.TotalMinutes, t.Seconds);
+        }
+        else if (t.TotalDays < 1.0)
+        {
+            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.TotalHours, t.Minutes, t.Seconds);
+        }
+        else
+        {
+            answer = string.Format("{0}d {1}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
+        }
+
+        return answer;
+    }
 
     public static MirDirection PreviousDir(MirDirection d)
     {
@@ -1854,7 +2311,7 @@ public static class Functions
                 return dir;
         }
     }
-    public static ItemInfo GetRealItem(ItemInfo Origin, byte Level, MirClass job, List<ItemInfo> ItemList)
+    public static ItemInfo GetRealItem(ItemInfo Origin, ushort Level, MirClass job, List<ItemInfo> ItemList)
     {
         if (Origin.ClassBased && Origin.LevelBased)
             return GetClassAndLevelBasedItem(Origin, job, Level, ItemList);
@@ -1864,7 +2321,7 @@ public static class Functions
             return GetLevelBasedItem(Origin, Level, ItemList);
         return Origin;
     }
-    public static ItemInfo GetLevelBasedItem(ItemInfo Origin, byte level, List<ItemInfo> ItemList)
+    public static ItemInfo GetLevelBasedItem(ItemInfo Origin, ushort level, List<ItemInfo> ItemList)
     {
         ItemInfo output = Origin;
         for (int i = 0; i < ItemList.Count; i++)
@@ -1888,7 +2345,7 @@ public static class Functions
         return Origin;
     }
 
-    public static ItemInfo GetClassAndLevelBasedItem(ItemInfo Origin, MirClass job, byte level, List<ItemInfo> ItemList)
+    public static ItemInfo GetClassAndLevelBasedItem(ItemInfo Origin, MirClass job, ushort level, List<ItemInfo> ItemList)
     {
         ItemInfo output = Origin;
         for (int i = 0; i < ItemList.Count; i++)
@@ -1901,13 +2358,36 @@ public static class Functions
         }
         return output;
     }
+
+    public static string StringOverLines(string line, int maxWordsPerLine, int maxLettersPerLine)
+    {
+        string newString = string.Empty;
+
+        string[] words = line.Split(' ');
+
+        int lineLength = 0;
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            lineLength += words[i].Length + 1;
+
+            newString += words[i] + " ";
+            if (i > 0 && i % maxWordsPerLine == 0 && lineLength > maxLettersPerLine)
+            {
+                lineLength = 0;
+                newString += "\r\n";
+            }
+        }
+
+        return newString;
+    }
 }
 
 public class SelectInfo
 {
     public int Index;
     public string Name = string.Empty;
-    public byte Level;
+    public ushort Level;
     public MirClass Class;
     public MirGender Gender;
     public DateTime LastAccess;
@@ -1918,7 +2398,7 @@ public class SelectInfo
         {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
-            Level = reader.ReadByte();
+            Level = reader.ReadUInt16();
             Class = (MirClass)reader.ReadByte();
             Gender = (MirGender)reader.ReadByte();
             LastAccess = DateTime.FromBinary(reader.ReadInt64());
@@ -1945,6 +2425,8 @@ public class ItemInfo
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 
+
+
     public short Shape;
     public byte Weight, Light, RequiredAmount;
 
@@ -1963,7 +2445,7 @@ public class ItemInfo
     public byte Strong;
     public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
     public byte CriticalRate, CriticalDamage;
-    public bool NeedIdentify, ShowGroupPickup, BindOnEquip, BindNoSRepair;
+    public bool NeedIdentify, ShowGroupPickup;
     public bool ClassBased;
     public bool LevelBased;
     public bool CanMine;
@@ -1971,7 +2453,7 @@ public class ItemInfo
     public bool CanAwakening;
     public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
     
-    public BindMode Bind = BindMode.none;//due to lack of space in bindmodes > bindonequip and srepair are seperate bools for now, if anyone adds 2/3 more bindmodes then it'd be more suitable to upgrade bindmode to short!
+    public BindMode Bind = BindMode.none;
     public byte Reflect;
     public SpecialItemMode Unique = SpecialItemMode.None;
     public byte RandomStatsId;
@@ -1981,18 +2463,25 @@ public class ItemInfo
 
     public bool IsConsumable
     {
-        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food; }
+        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform; }
     }
 
     public string FriendlyName
     {
-        get { return Regex.Replace(Name, @"\d+$", string.Empty); }
+        get 
+        {
+            string temp = Name;
+            temp = Regex.Replace(temp, @"\d+$", string.Empty); //hides end numbers
+            temp = Regex.Replace(temp, @"\[[^]]*\]", string.Empty); //hides square brackets
+
+            return temp;
+        }
     }
     
     public ItemInfo()
     {
     }
-    public ItemInfo(BinaryReader reader, int version = int.MaxValue)
+    public ItemInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
     {
         Index = reader.ReadInt32();
         Name = reader.ReadString();
@@ -2062,17 +2551,22 @@ public class ItemInfo
             byte bools = reader.ReadByte();
             NeedIdentify = (bools & 0x01) == 0x01;
             ShowGroupPickup = (bools & 0x02) == 0x02;
-            BindOnEquip = (bools & 0x04) == 0x04;
-            ClassBased = (bools & 0x08) == 0x08;
-            LevelBased = (bools & 0x10) == 0x10;
-            BindNoSRepair = (bools & 0x20) == 0x20;
-            CanMine = (bools & 0x40) == 0x40;
+            ClassBased = (bools & 0x04) == 0x04;
+            LevelBased = (bools & 0x08) == 0x08;
+            CanMine = (bools & 0x10) == 0x10;
             MaxAcRate = reader.ReadByte();
             MaxMacRate = reader.ReadByte();
             Holy = reader.ReadByte();
             Freezing = reader.ReadByte();
             PoisonAttack = reader.ReadByte();
-            Bind = (BindMode)reader.ReadByte();
+            if (version < 55)
+            {
+                Bind = (BindMode)reader.ReadByte();
+            }
+            else
+            {
+                Bind = (BindMode)reader.ReadInt16();
+            }
             
         }
         if (version >= 21)
@@ -2167,18 +2661,16 @@ public class ItemInfo
         byte bools = 0;
         if (NeedIdentify) bools |= 0x01;
         if (ShowGroupPickup) bools |= 0x02;
-        if (BindOnEquip) bools |= 0x04;
-        if (ClassBased) bools |= 0x08;
-        if (LevelBased) bools |= 0x10;
-        if (BindNoSRepair) bools |= 0x20;
-        if (CanMine) bools |= 0x40;
+        if (ClassBased) bools |= 0x04;
+        if (LevelBased) bools |= 0x08;
+        if (CanMine) bools |= 0x10;
         writer.Write(bools);
         writer.Write(MaxAcRate);
         writer.Write(MaxMacRate);
         writer.Write(Holy);
         writer.Write(Freezing);
         writer.Write(PoisonAttack);
-        writer.Write((byte)Bind);
+        writer.Write((short)Bind);
         writer.Write(Reflect);
         writer.Write(HpDrainRate);
         writer.Write((short)Unique);
@@ -2198,6 +2690,7 @@ public class ItemInfo
 
         ItemInfo info = new ItemInfo { Name = data[0] };
 
+        
 
         if (!Enum.TryParse(data[1], out info.Type)) return null;
         if (!Enum.TryParse(data[2], out info.Grade)) return null;
@@ -2261,20 +2754,18 @@ public class ItemInfo
         if (!bool.TryParse(data[52], out info.ClassBased)) return null;
         if (!bool.TryParse(data[53], out info.LevelBased)) return null;
         if (!Enum.TryParse(data[54], out info.Bind)) return null;
-        if (!bool.TryParse(data[55], out info.BindOnEquip)) return null;
-        if (!byte.TryParse(data[56], out info.Reflect)) return null;
-        if (!byte.TryParse(data[57], out info.HpDrainRate)) return null;
-        if (!Enum.TryParse(data[58], out info.Unique)) return null;
-        if (!bool.TryParse(data[59], out info.BindNoSRepair)) return null;
-        if (!byte.TryParse(data[60], out info.RandomStatsId)) return null;
-        if (!bool.TryParse(data[61], out info.CanMine)) return null;
-        if (!bool.TryParse(data[62], out info.CanFastRun)) return null;
-		if (!bool.TryParse(data[63], out info.CanAwakening)) return null;
-        if (data[64] == "-")
+        if (!byte.TryParse(data[55], out info.Reflect)) return null;
+        if (!byte.TryParse(data[56], out info.HpDrainRate)) return null;
+        if (!Enum.TryParse(data[57], out info.Unique)) return null;
+        if (!byte.TryParse(data[58], out info.RandomStatsId)) return null;
+        if (!bool.TryParse(data[59], out info.CanMine)) return null;
+        if (!bool.TryParse(data[60], out info.CanFastRun)) return null;
+		if (!bool.TryParse(data[61], out info.CanAwakening)) return null;
+        if (data[62] == "-")
             info.ToolTip = "";
         else
         {
-            info.ToolTip = data[64];
+            info.ToolTip = data[62];
             info.ToolTip = info.ToolTip.Replace("&^&", "\r\n");
         }
             
@@ -2298,11 +2789,11 @@ public class ItemInfo
 
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
-                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64}",
+                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62}",
             Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
-            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (byte)Bind, BindOnEquip, Reflect, HpDrainRate, (short)Unique, BindNoSRepair,
+            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
             RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
     }
 
@@ -2326,14 +2817,21 @@ public class UserItem
     public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
     public sbyte AttackSpeed, Luck;
 
+    public RefinedValue RefinedValue = RefinedValue.None;
+    public byte RefineAdded = 0;
+
     public bool DuraChanged;
     public int SoulBoundId = -1;
     public bool Identified = false;
     public bool Cursed = false;
 
+    public int WeddingRing = -1;
+
     public UserItem[] Slots = new UserItem[5];
 
     public DateTime BuybackExpiryDate;
+
+    public ExpireInfo ExpireInfo;
 
 	public Awake Awake = new Awake();
     public bool IsAdded
@@ -2368,7 +2866,7 @@ public class UserItem
 
         SetSlotSize();
     }
-    public UserItem(BinaryReader reader, int version = int.MaxValue)
+    public UserItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
     {
         UniqueID = reader.ReadUInt64();
         ItemIndex = reader.ReadInt32();
@@ -2407,6 +2905,7 @@ public class UserItem
         CriticalDamage = reader.ReadByte();
         Freezing = reader.ReadByte();
         PoisonAttack = reader.ReadByte();
+        
 
         if (version <= 31) return;
 
@@ -2414,7 +2913,7 @@ public class UserItem
         for (int i = 0; i < count; i++)
         {
             if (reader.ReadBoolean()) continue;
-            UserItem item = new UserItem(reader, version);
+            UserItem item = new UserItem(reader, version, Customversion);
             Slots[i] = item;
         }
 
@@ -2425,7 +2924,21 @@ public class UserItem
         if (version <= 40) return;
 
         Awake = new Awake(reader);
-        
+
+        if (version <= 56) return;
+
+        RefinedValue = (RefinedValue)reader.ReadByte();
+        RefineAdded = reader.ReadByte();
+        if (version < 60) return;
+        WeddingRing = reader.ReadInt32();
+
+        if (version < 65) return;
+
+        if (reader.ReadBoolean())
+        {
+            ExpireInfo = new ExpireInfo(reader, version, Customversion);
+        }
+
     }
 
     public void Save(BinaryWriter writer)
@@ -2477,7 +2990,21 @@ public class UserItem
         }
 
         writer.Write(GemCount);
+
+       
         Awake.Save(writer);
+
+        writer.Write((byte)RefinedValue);
+        writer.Write(RefineAdded);
+
+        writer.Write(WeddingRing);
+
+        writer.Write(ExpireInfo != null);
+
+        if (ExpireInfo != null)
+        {
+            ExpireInfo.Save(writer);
+        }
     }
 
 
@@ -2638,46 +3165,149 @@ public class UserItem
     public UserItem Clone()
     {
         UserItem item = new UserItem(Info)
-            {
-                UniqueID =  UniqueID,
-                CurrentDura = CurrentDura,
-                MaxDura = MaxDura,
-                Count = Count,
+        {
+            UniqueID = UniqueID,
+            CurrentDura = CurrentDura,
+            MaxDura = MaxDura,
+            Count = Count,
 
-                AC = AC,
-                MAC = MAC,
-                DC = DC,
-                MC = MC,
-                SC = SC,
-                Accuracy = Accuracy,
-                Agility = Agility,
-                HP = HP,
-                MP = MP,
+            AC = AC,
+            MAC = MAC,
+            DC = DC,
+            MC = MC,
+            SC = SC,
+            Accuracy = Accuracy,
+            Agility = Agility,
+            HP = HP,
+            MP = MP,
 
-                AttackSpeed = AttackSpeed,
-                Luck = Luck,
+            AttackSpeed = AttackSpeed,
+            Luck = Luck,
 
-                DuraChanged = DuraChanged,
-                SoulBoundId = SoulBoundId,
-                Identified = Identified,
-                Cursed = Cursed,
-                Strong = Strong,
-                MagicResist = MagicResist,
-                PoisonResist = PoisonResist,
-                HealthRecovery = HealthRecovery,
-                ManaRecovery = ManaRecovery,
-                PoisonRecovery = PoisonRecovery,
-                CriticalRate = CriticalRate,
-                CriticalDamage = CriticalDamage,
-                Freezing = Freezing,
-                PoisonAttack = PoisonAttack,
+            DuraChanged = DuraChanged,
+            SoulBoundId = SoulBoundId,
+            Identified = Identified,
+            Cursed = Cursed,
+            Strong = Strong,
+            MagicResist = MagicResist,
+            PoisonResist = PoisonResist,
+            HealthRecovery = HealthRecovery,
+            ManaRecovery = ManaRecovery,
+            PoisonRecovery = PoisonRecovery,
+            CriticalRate = CriticalRate,
+            CriticalDamage = CriticalDamage,
+            Freezing = Freezing,
+            PoisonAttack = PoisonAttack,
 
-                Slots = Slots,
-				Awake = Awake,
+            Slots = Slots,
+            Awake = Awake,
+
+            RefinedValue = RefinedValue,
+            RefineAdded = RefineAdded,
+
+            ExpireInfo = ExpireInfo
             };
 
         return item;
     }
+
+}
+
+public class ExpireInfo
+{
+    public DateTime ExpiryDate;
+
+    public ExpireInfo()
+    {
+
+    }
+
+    public ExpireInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    {
+        ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ExpiryDate.ToBinary());
+    }
+}
+
+public class GameShopItem
+{
+    public int ItemIndex;
+    public int GIndex;
+    public ItemInfo Info;
+    public uint GoldPrice = 0;
+    public uint CreditPrice = 0;
+    public uint Count = 1;
+    public string Class = "";
+    public string Category = "";
+    public int Stock = 0;
+    public bool iStock = false;
+    public bool Deal = false;
+    public bool TopItem = false;
+    public DateTime Date;
+    
+    public GameShopItem()
+    {
+    }
+
+    public GameShopItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    {
+        ItemIndex = reader.ReadInt32();
+        GIndex = reader.ReadInt32();
+        GoldPrice = reader.ReadUInt32();
+        CreditPrice = reader.ReadUInt32();
+        Count = reader.ReadUInt32();
+        Class = reader.ReadString();
+        Category = reader.ReadString();
+        Stock = reader.ReadInt32();
+        iStock = reader.ReadBoolean();
+        Deal = reader.ReadBoolean();
+        TopItem = reader.ReadBoolean();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public GameShopItem(BinaryReader reader, bool packet = false)
+    {
+        ItemIndex = reader.ReadInt32();
+        GIndex = reader.ReadInt32();
+        Info = new ItemInfo(reader);
+        GoldPrice = reader.ReadUInt32();
+        CreditPrice = reader.ReadUInt32();
+        Count = reader.ReadUInt32();
+        Class = reader.ReadString();
+        Category = reader.ReadString();
+        Stock = reader.ReadInt32();
+        iStock = reader.ReadBoolean();
+        Deal = reader.ReadBoolean();
+        TopItem = reader.ReadBoolean();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer, bool packet = false)
+    {
+        writer.Write(ItemIndex);
+        writer.Write(GIndex);
+        if (packet) Info.Save(writer);
+        writer.Write(GoldPrice);
+        writer.Write(CreditPrice);
+        writer.Write(Count);
+        writer.Write(Class);
+        writer.Write(Category);
+        writer.Write(Stock);
+        writer.Write(iStock);
+        writer.Write(Deal);
+        writer.Write(TopItem);
+        writer.Write(Date.ToBinary());
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}: {1}", GIndex, Info.Name);
+    }
+
 }
 
 public class Awake
@@ -2745,7 +3375,6 @@ public class Awake
         if (item.Info.Grade == ItemGrade.None) return false;
 
         if (IsMaxLevel()) return false;
-
 
         if (this.type == AwakeType.None)
         {
@@ -2909,6 +3538,7 @@ public class ClientMagic
     public ushort Experience;
 
     public bool IsTempSpell;
+    public long CastTime, Delay;
 
     public ClientMagic()
     {
@@ -2931,6 +3561,8 @@ public class ClientMagic
         Level = reader.ReadByte();
         Key = reader.ReadByte();
         Experience = reader.ReadUInt16();
+
+        Delay = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -2950,6 +3582,8 @@ public class ClientMagic
         writer.Write(Level);
         writer.Write(Key);
         writer.Write(Experience);
+
+        writer.Write(Delay);
     }
    
 }
@@ -3003,6 +3637,7 @@ public class ClientQuestInfo
 
     public uint RewardGold;
     public uint RewardExp;
+    public uint RewardCredit;
     public List<QuestItemReward> RewardsFixedItem = new List<QuestItemReward>();
     public List<QuestItemReward> RewardsSelectItem = new List<QuestItemReward>();
 
@@ -3041,6 +3676,7 @@ public class ClientQuestInfo
         Type = (QuestType)reader.ReadByte();
         RewardGold = reader.ReadUInt32();
         RewardExp = reader.ReadUInt32();
+        RewardCredit = reader.ReadUInt32();
 
         count = reader.ReadInt32();
 
@@ -3080,6 +3716,7 @@ public class ClientQuestInfo
         writer.Write((byte)Type);
         writer.Write(RewardGold);
         writer.Write(RewardExp);
+        writer.Write(RewardCredit);
 
         writer.Write(RewardsFixedItem.Count);
 
@@ -3247,15 +3884,46 @@ public class ClientMail
     }
 }
 
+public class ClientFriend
+{
+    public int Index;
+    public string Name;
+    public string Memo = "";
+    public bool Blocked;
+
+    public bool Online;
+
+    public ClientFriend() { }
+
+    public ClientFriend(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Memo = reader.ReadString();
+        Blocked = reader.ReadBoolean();
+
+        Online = reader.ReadBoolean();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Memo);
+        writer.Write(Blocked);
+
+        writer.Write(Online);
+    }
+}
 
 
-public enum IntelligentCreaturePickupMode : byte//IntelligentCreature
+public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
     SemiAutomatic = 1,
 }
 
-public class IntelligentCreatureRules//IntelligentCreature
+public class IntelligentCreatureRules
 {
     public int MinimalFullness = 1;
 
@@ -3311,7 +3979,7 @@ public class IntelligentCreatureRules//IntelligentCreature
     }
 }
 
-public class IntelligentCreatureItemFilter//IntelligentCreature
+public class IntelligentCreatureItemFilter
 {
     public bool PetPickupAll = true;
     public bool PetPickupGold = false;
@@ -3425,7 +4093,7 @@ public class IntelligentCreatureItemFilter//IntelligentCreature
     }
 }
 
-public class ClientIntelligentCreature//IntelligentCreature
+public class ClientIntelligentCreature
 {
     public IntelligentCreatureType PetType;
     public int Icon;
@@ -3600,12 +4268,26 @@ public abstract class Packet
                 return new C.EquipItem();
             case (short)ClientPacketIds.RemoveItem:
                 return new C.RemoveItem();
+            case (short)ClientPacketIds.RemoveSlotItem:
+                return new C.RemoveSlotItem();
             case (short)ClientPacketIds.SplitItem:
                 return new C.SplitItem();
             case (short)ClientPacketIds.UseItem:
                 return new C.UseItem();
             case (short)ClientPacketIds.DropItem:
                 return new C.DropItem();
+            case (short)ClientPacketIds.DepositRefineItem:
+                return new C.DepositRefineItem();
+            case (short)ClientPacketIds.RetrieveRefineItem:
+                return new C.RetrieveRefineItem();
+            case (short)ClientPacketIds.RefineCancel:
+                return new C.RefineCancel();
+            case (short)ClientPacketIds.RefineItem:
+                return new C.RefineItem();
+            case (short)ClientPacketIds.CheckRefine:
+                return new C.CheckRefine();
+            case (short)ClientPacketIds.ReplaceWedRing:
+                return new C.ReplaceWedRing();
             case (short)ClientPacketIds.DepositTradeItem:
                 return new C.DepositTradeItem();
             case (short)ClientPacketIds.RetrieveTradeItem:
@@ -3630,6 +4312,8 @@ public abstract class Packet
                 return new C.Harvest();
             case (short)ClientPacketIds.CallNPC:
                 return new C.CallNPC();
+            case (short)ClientPacketIds.TalkMonsterNPC:
+                return new C.TalkMonsterNPC();
             case (short)ClientPacketIds.BuyItem:
                 return new C.BuyItem();
             case (short)ClientPacketIds.SellItem:
@@ -3688,6 +4372,24 @@ public abstract class Packet
                 return new C.GuildStorageItemChange();
             case (short)ClientPacketIds.GuildWarReturn:
                 return new C.GuildWarReturn();
+            case (short)ClientPacketIds.MarriageRequest:
+                return new C.MarriageRequest();
+            case (short)ClientPacketIds.MarriageReply:
+                return new C.MarriageReply();
+            case (short)ClientPacketIds.ChangeMarriage:
+                return new C.ChangeMarriage();
+            case (short)ClientPacketIds.DivorceRequest:
+                return new C.DivorceRequest();
+            case (short)ClientPacketIds.DivorceReply:
+                return new C.DivorceReply();
+            case (short)ClientPacketIds.AddMentor:
+                return new C.AddMentor();
+            case (short)ClientPacketIds.MentorReply:
+                return new C.MentorReply();
+            case (short)ClientPacketIds.AllowMentor:
+                return new C.AllowMentor();
+            case (short)ClientPacketIds.CancelMentor:
+                return new C.CancelMentor();
             case (short)ClientPacketIds.TradeRequest:
                 return new C.TradeRequest();
             case (short)ClientPacketIds.TradeReply:
@@ -3718,7 +4420,7 @@ public abstract class Packet
                 return new C.CancelReincarnation();
             case (short)ClientPacketIds.CombineItem:
                 return new C.CombineItem();
-            case (short)ClientPacketIds.SetConcentration://ArcherSpells - Elemental system
+            case (short)ClientPacketIds.SetConcentration:
                 return new C.SetConcentration();
 			case (short)ClientPacketIds.AwakeningNeedMaterials:
                 return new C.AwakeningNeedMaterials();
@@ -3750,6 +4452,20 @@ public abstract class Packet
                 return new C.UpdateIntelligentCreature();
             case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
                 return new C.IntelligentCreaturePickup();
+            case (short)ClientPacketIds.AddFriend:
+                return new C.AddFriend();
+            case (short)ClientPacketIds.RemoveFriend:
+                return new C.RemoveFriend();
+            case (short)ClientPacketIds.RefreshFriends:
+                return new C.RefreshFriends();
+            case (short)ClientPacketIds.AddMemo:
+                return new C.AddMemo();
+            case (short)ClientPacketIds.GuildBuffUpdate:
+                return new C.GuildBuffUpdate();
+            case (short)ClientPacketIds.GameshopBuy:
+                return new C.GameshopBuy();
+            case (short)ClientPacketIds.NPCConfirmInput:
+                return new C.NPCConfirmInput();
             default:
                 throw new NotImplementedException();
         }
@@ -3821,10 +4537,18 @@ public abstract class Packet
                 return new S.MergeItem();
             case (short)ServerPacketIds.RemoveItem:
                 return new S.RemoveItem();
+            case (short)ServerPacketIds.RemoveSlotItem:
+                return new S.RemoveSlotItem();
             case (short)ServerPacketIds.TakeBackItem:
                 return new S.TakeBackItem();
             case (short)ServerPacketIds.StoreItem:
                 return new S.StoreItem();
+            case (short)ServerPacketIds.DepositRefineItem:
+                return new S.DepositRefineItem();
+            case (short)ServerPacketIds.RetrieveRefineItem:
+                return new S.RetrieveRefineItem();
+            case (short)ServerPacketIds.RefineItem:
+                return new S.RefineItem();
             case (short)ServerPacketIds.DepositTradeItem:
                 return new S.DepositTradeItem();
             case (short)ServerPacketIds.RetrieveTradeItem:
@@ -3861,12 +4585,18 @@ public abstract class Packet
                 return new S.GainedGold();
             case (short)ServerPacketIds.LoseGold:
                 return new S.LoseGold();
+            case (short)ServerPacketIds.GainedCredit:
+                return new S.GainedCredit();
+            case (short)ServerPacketIds.LoseCredit:
+                return new S.LoseCredit();
             case (short)ServerPacketIds.ObjectMonster:
                 return new S.ObjectMonster();
             case (short)ServerPacketIds.ObjectAttack:
                 return new S.ObjectAttack();
             case (short)ServerPacketIds.Struck:
                 return new S.Struck();
+            case (short)ServerPacketIds.DamageIndicator:
+                return new S.DamageIndicator();
             case (short)ServerPacketIds.ObjectStruck:
                 return new S.ObjectStruck();
             case (short)ServerPacketIds.DuraChanged:
@@ -3919,8 +4649,16 @@ public abstract class Packet
                 return new S.NPCSell();
             case (short)ServerPacketIds.NPCRepair:
                 return new S.NPCRepair();
-            case (short)ServerPacketIds.NPCSRepair:
+            case (short)ServerPacketIds.NPCSRepair: 
                 return new S.NPCSRepair();
+            case (short)ServerPacketIds.NPCRefine:
+                return new S.NPCRefine();
+            case (short)ServerPacketIds.NPCCheckRefine:
+                return new S.NPCCheckRefine();
+            case (short)ServerPacketIds.NPCCollectRefine:
+                return new S.NPCCollectRefine();
+            case (short)ServerPacketIds.NPCReplaceWedRing:
+                return new S.NPCReplaceWedRing();
             case (short)ServerPacketIds.NPCStorage:
                 return new S.NPCStorage();
             case (short)ServerPacketIds.SellItem:
@@ -3935,6 +4673,10 @@ public abstract class Packet
                 return new S.MagicLeveled();
             case (short)ServerPacketIds.Magic:
                 return new S.Magic();
+            case (short)ServerPacketIds.MagicDelay:
+                return new S.MagicDelay();
+            case (short)ServerPacketIds.MagicCast:
+                return new S.MagicCast();
             case (short)ServerPacketIds.ObjectMagic:
                 return new S.ObjectMagic();
             case (short)ServerPacketIds.ObjectEffect:
@@ -4037,6 +4779,12 @@ public abstract class Packet
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:
                 return new S.NPCUpdate();
+            case (short)ServerPacketIds.MarriageRequest:
+                return new S.MarriageRequest();
+            case (short)ServerPacketIds.DivorceRequest:
+                return new S.DivorceRequest();
+            case (short)ServerPacketIds.MentorRequest:
+                return new S.MentorRequest();
             case (short)ServerPacketIds.TradeRequest:
                 return new S.TradeRequest();
             case (short)ServerPacketIds.TradeAccept:
@@ -4051,12 +4799,12 @@ public abstract class Packet
                 return new S.TradeCancel();
             case (short)ServerPacketIds.MountUpdate:
                 return new S.MountUpdate();
+            case (short)ServerPacketIds.TransformUpdate:
+                return new S.TransformUpdate();
             case (short)ServerPacketIds.EquipSlotItem:
                 return new S.EquipSlotItem();
             case (short)ServerPacketIds.FishingUpdate:
                 return new S.FishingUpdate();
-            //case (short)ServerPacketIds.UpdateQuests:
-            //    return new S.UpdateQuests();
             case (short)ServerPacketIds.ChangeQuest:
                 return new S.ChangeQuest();
             case (short)ServerPacketIds.CompleteQuest:
@@ -4073,9 +4821,9 @@ public abstract class Packet
                 return new S.CancelReincarnation();
             case (short)ServerPacketIds.RequestReincarnation:
                 return new S.RequestReincarnation();
-            case (short)ServerPacketIds.UserBackStep://ArcherSpells - Backstep
+            case (short)ServerPacketIds.UserBackStep:
                 return new S.UserBackStep();
-            case (short)ServerPacketIds.ObjectBackStep://ArcherSpells - Backstep
+            case (short)ServerPacketIds.ObjectBackStep:
                 return new S.ObjectBackStep();
             case (short)ServerPacketIds.UserDashAttack:
                 return new S.UserDashAttack();
@@ -4087,15 +4835,15 @@ public abstract class Packet
                 return new S.CombineItem();
             case (short)ServerPacketIds.ItemUpgraded:
                 return new S.ItemUpgraded();
-            case (short)ServerPacketIds.SetConcentration://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetConcentration:
                 return new S.SetConcentration();
-            case (short)ServerPacketIds.SetObjectConcentration://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetObjectConcentration:
                 return new S.SetObjectConcentration();
-            case (short)ServerPacketIds.SetElemental://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetElemental:
                 return new S.SetElemental();
-            case (short)ServerPacketIds.SetObjectElemental://ArcherSpells - Elemental system
+            case (short)ServerPacketIds.SetObjectElemental:
                 return new S.SetObjectElemental();
-            case (short)ServerPacketIds.RemoveDelayedExplosion://ArcherSpells - DelayedExplosion
+            case (short)ServerPacketIds.RemoveDelayedExplosion:
                 return new S.RemoveDelayedExplosion();
             case (short)ServerPacketIds.ObjectDeco:
                 return new S.ObjectDeco();
@@ -4103,7 +4851,7 @@ public abstract class Packet
                 return new S.ObjectSneaking();
             case (short)ServerPacketIds.ObjectLevelEffects:
                 return new S.ObjectLevelEffects();
-            case (short)ServerPacketIds.SetBindingShot://ArcherSpells - BindingShot
+            case (short)ServerPacketIds.SetBindingShot:
                 return new S.SetBindingShot();
             case (short)ServerPacketIds.SendOutputMessage:
                 return new S.SendOutputMessage();
@@ -4134,14 +4882,31 @@ public abstract class Packet
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
 			case (short)ServerPacketIds.ResizeInventory:
-                return new S.ResizeInventory();            case (short)ServerPacketIds.NewIntelligentCreature://IntelligentCreature
+                return new S.ResizeInventory();            
+            case (short)ServerPacketIds.NewIntelligentCreature:
                 return new S.NewIntelligentCreature();
-            case (short)ServerPacketIds.UpdateIntelligentCreatureList://IntelligentCreature
+            case (short)ServerPacketIds.UpdateIntelligentCreatureList:
                 return new S.UpdateIntelligentCreatureList();
-            case (short)ServerPacketIds.IntelligentCreatureEnableRename://IntelligentCreature
+            case (short)ServerPacketIds.IntelligentCreatureEnableRename:
                 return new S.IntelligentCreatureEnableRename();
-            case (short)ServerPacketIds.NPCPearlGoods://pearl currency
+            case (short)ServerPacketIds.IntelligentCreaturePickup:
+                return new S.IntelligentCreaturePickup();
+            case (short)ServerPacketIds.NPCPearlGoods:
                 return new S.NPCPearlGoods();
+            case (short)ServerPacketIds.FriendUpdate:
+                return new S.FriendUpdate();
+            case (short)ServerPacketIds.LoverUpdate:
+                return new S.LoverUpdate();
+            case (short)ServerPacketIds.MentorUpdate:
+                return new S.MentorUpdate();
+            case (short)ServerPacketIds.GuildBuffList:
+                return new S.GuildBuffList();
+            case (short)ServerPacketIds.GameShopInfo:
+                return new S.GameShopInfo();
+            case (short)ServerPacketIds.GameShopStock:
+                return new S.GameShopStock();
+            case (short)ServerPacketIds.NPCRequestInput:
+                return new S.NPCRequestInput();
             default:
                 throw new NotImplementedException();
         }
@@ -4586,6 +5351,68 @@ public class UserId
     public string UserName = "";
 }
 
+#region ItemSets
+
+public class ItemSets
+{
+    public ItemSet Set;
+    public List<ItemType> Type;
+    private byte Amount
+    {
+        get
+        {
+            switch (Set)
+            {
+                case ItemSet.Mundane:
+                case ItemSet.NokChi:
+                case ItemSet.TaoProtect:
+                    return 2;
+                case ItemSet.RedOrchid:
+                case ItemSet.RedFlower:
+                case ItemSet.Smash:
+                case ItemSet.HwanDevil:
+                case ItemSet.Purity:
+                case ItemSet.FiveString:
+                case ItemSet.Bone:
+                case ItemSet.Bug:
+                    return 3;
+                case ItemSet.Recall:
+                    return 4;
+                case ItemSet.Spirit:
+                case ItemSet.WhiteGold:
+                case ItemSet.WhiteGoldH:
+                case ItemSet.RedJade:
+                case ItemSet.RedJadeH:
+                case ItemSet.Nephrite:
+                case ItemSet.NephriteH:
+                case ItemSet.Whisker1:
+                case ItemSet.Whisker2:
+                case ItemSet.Whisker3:
+                case ItemSet.Whisker4:
+                case ItemSet.Whisker5:
+                case ItemSet.Hyeolryong:
+                case ItemSet.Monitor:
+                case ItemSet.Oppressive:
+                case ItemSet.Paeok:
+                case ItemSet.Sulgwan:
+                    return 5;
+                default:
+                    return 0;
+            }
+        }
+    }
+    public byte Count;
+    public bool SetComplete
+    {
+        get
+        {
+            return Count == Amount;
+        }
+    }
+}
+
+#endregion
+
 #region "Mine Related"
 public class MineSet
 {
@@ -4694,35 +5521,6 @@ public class ItemVolume
     public uint Amount;
 }
 
-public class GuildBuff
-{
-    public bool Enabled = false;
-    public bool Active = false;
-    public byte PointsNeeded = 1;
-    public long StartTick = 0;
-    public long RunTime = 0;
-    public int Cost = 0;
-    public byte MinimumLevel = 0;
-    //todo: add all the available stats 
-    public GuildBuff()
-    { }
-    public GuildBuff(BinaryReader reader)
-    {
-        byte bools = reader.ReadByte();
-        Enabled = (bools & 0x01) == 0x01 ? true : false;
-        Active = (bools & 0x02) == 0x02 ? true : false;
-        StartTick = reader.ReadInt64();
-    }
-    public void Save(BinaryWriter writer)
-    {
-        byte bools = 0;
-        if (Enabled) bools |= 0x01;
-        if (Active) bools |= 0x02;
-        writer.Write(bools);
-        writer.Write(StartTick);
-    }
-}
-
 public class Rank
 {
     public List<GuildMember> Members = new List<GuildMember>();
@@ -4816,4 +5614,330 @@ public enum RankOptions : byte
     CanChangeNotice = 64,
     CanActivateBuff = 128
 }
+
+public class GuildBuffInfo
+{
+    public int Id;
+    public int Icon = 0;
+    public string name = "";
+    public byte LevelRequirement;
+    public byte PointsRequirement = 1;
+    public int TimeLimit;
+    public int ActivationCost;
+    public byte BuffAc;
+    public byte BuffMac;
+    public byte BuffDc;
+    public byte BuffMc;
+    public byte BuffSc;
+    public byte BuffAttack;
+    public int  BuffMaxHp;
+    public int  BuffMaxMp;
+    public byte BuffMineRate;
+    public byte BuffGemRate;
+    public byte BuffFishRate;
+    public byte BuffExpRate;
+    public byte BuffCraftRate;
+    public byte BuffSkillRate;
+    public byte BuffHpRegen;
+    public byte BuffMPRegen;
+    
+    public byte BuffDropRate;
+    public byte BuffGoldRate;
+
+    public GuildBuffInfo()
+    {
+
+    }
+
+    public GuildBuffInfo(BinaryReader reader)
+    {
+        Id = reader.ReadInt32();
+        Icon = reader.ReadInt32();
+        name = reader.ReadString();
+        LevelRequirement = reader.ReadByte();
+        PointsRequirement = reader.ReadByte();
+        TimeLimit = reader.ReadInt32();
+        ActivationCost = reader.ReadInt32();
+        BuffAc = reader.ReadByte();
+        BuffMac = reader.ReadByte();
+        BuffDc = reader.ReadByte();
+        BuffMc = reader.ReadByte();
+        BuffSc = reader.ReadByte();
+        BuffMaxHp = reader.ReadInt32();
+        BuffMaxMp = reader.ReadInt32();
+        BuffMineRate = reader.ReadByte();
+        BuffGemRate = reader.ReadByte();
+        BuffFishRate = reader.ReadByte();
+        BuffExpRate = reader.ReadByte();
+        BuffCraftRate = reader.ReadByte();
+        BuffSkillRate = reader.ReadByte();
+        BuffHpRegen = reader.ReadByte();
+        BuffMPRegen = reader.ReadByte();
+        BuffAttack = reader.ReadByte();
+        BuffDropRate = reader.ReadByte();
+        BuffGoldRate = reader.ReadByte();
+    }
+
+    public GuildBuffInfo(InIReader reader, int i)
+    {
+        Id  = reader.ReadInt32("Buff-" + i.ToString(), "Id",0);
+        Icon = reader.ReadInt32("Buff-" + i.ToString(), "Icon", 0);
+        name = reader.ReadString("Buff-" + i.ToString(), "Name","");
+        LevelRequirement = reader.ReadByte("Buff-" + i.ToString(), "LevelReq",0);
+        PointsRequirement = reader.ReadByte("Buff-" + i.ToString(), "PointsReq",1);
+        TimeLimit = reader.ReadInt32("Buff-" + i.ToString(), "TimeLimit",0);;
+        ActivationCost = reader.ReadInt32("Buff-" + i.ToString(), "ActivationCost",0);
+        BuffAc = reader.ReadByte("Buff-" + i.ToString(), "BuffAc",0);
+        BuffMac = reader.ReadByte("Buff-" + i.ToString(), "BuffMAC",0);
+        BuffDc = reader.ReadByte("Buff-" + i.ToString(), "BuffDc",0);
+        BuffMc = reader.ReadByte("Buff-" + i.ToString(), "BuffMc",0);
+        BuffSc = reader.ReadByte("Buff-" + i.ToString(), "BuffSc",0);
+        BuffMaxHp = reader.ReadInt32("Buff-" + i.ToString(), "BuffMaxHp",0);
+        BuffMaxMp = reader.ReadInt32("Buff-" + i.ToString(), "BuffMaxMp",0);
+        BuffMineRate = reader.ReadByte("Buff-" + i.ToString(), "BuffMineRate",0);
+        BuffGemRate = reader.ReadByte("Buff-" + i.ToString(), "BuffGemRate",0);
+        BuffFishRate = reader.ReadByte("Buff-" + i.ToString(), "BuffFishRate",0);
+        BuffExpRate = reader.ReadByte("Buff-" + i.ToString(), "BuffExpRate",0);
+        BuffCraftRate = reader.ReadByte("Buff-" + i.ToString(), "BuffCraftRate",0);
+        BuffSkillRate = reader.ReadByte("Buff-" + i.ToString(), "BuffSkillRate",0);
+        BuffHpRegen = reader.ReadByte("Buff-" + i.ToString(), "BuffHpRegen",0);
+        BuffMPRegen = reader.ReadByte("Buff-" + i.ToString(), "BuffMpRegen",0);
+        BuffAttack = reader.ReadByte("Buff-" + i.ToString(), "BuffAttack",0);
+        BuffDropRate = reader.ReadByte("Buff-" + i.ToString(), "BuffDropRate",0);
+        BuffGoldRate = reader.ReadByte("Buff-" + i.ToString(), "BuffGoldRate",0);
+    }
+
+    public void Save(InIReader reader, int i)
+    {
+        reader.Write("Buff-" + i.ToString(), "Id", Id);
+        reader.Write("Buff-" + i.ToString(), "Icon", Icon);
+        reader.Write("Buff-" + i.ToString(), "Name", name);
+        reader.Write("Buff-" + i.ToString(), "LevelReq", LevelRequirement);
+        reader.Write("Buff-" + i.ToString(), "PointsReq", PointsRequirement);
+        reader.Write("Buff-" + i.ToString(), "TimeLimit", TimeLimit); ;
+        reader.Write("Buff-" + i.ToString(), "ActivationCost", ActivationCost); ;
+        reader.Write("Buff-" + i.ToString(), "BuffAc", BuffAc); ;
+        reader.Write("Buff-" + i.ToString(), "BuffMAC", BuffMac); ;
+        reader.Write("Buff-" + i.ToString(), "BuffDc", BuffDc); ;
+        reader.Write("Buff-" + i.ToString(), "BuffMc", BuffMc); ;
+        reader.Write("Buff-" + i.ToString(), "BuffSc", BuffSc); ;
+        reader.Write("Buff-" + i.ToString(), "BuffMaxHp", BuffMaxHp); ;
+        reader.Write("Buff-" + i.ToString(), "BuffMaxMp", BuffMaxMp); ;
+        reader.Write("Buff-" + i.ToString(), "BuffMineRate", BuffMineRate); ;
+        reader.Write("Buff-" + i.ToString(), "BuffGemRate", BuffGemRate); ;
+        reader.Write("Buff-" + i.ToString(), "BuffFishRate", BuffFishRate); ;
+        reader.Write("Buff-" + i.ToString(), "BuffExpRate", BuffExpRate); ;
+        reader.Write("Buff-" + i.ToString(), "BuffCraftRate", BuffCraftRate); ;
+        reader.Write("Buff-" + i.ToString(), "BuffSkillRate", BuffSkillRate); ;
+        reader.Write("Buff-" + i.ToString(), "BuffHpRegen", BuffHpRegen); ;
+        reader.Write("Buff-" + i.ToString(), "BuffMpRegen", BuffMPRegen); ;
+        reader.Write("Buff-" + i.ToString(), "BuffAttack", BuffAttack); ;
+        reader.Write("Buff-" + i.ToString(), "BuffDropRate", BuffDropRate); ;
+        reader.Write("Buff-" + i.ToString(), "BuffGoldRate", BuffGoldRate); ;
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Id);
+        writer.Write(Icon);
+        writer.Write(name);
+        writer.Write(LevelRequirement);
+        writer.Write(PointsRequirement);
+        writer.Write(TimeLimit);
+        writer.Write(ActivationCost);
+        writer.Write(BuffAc);
+        writer.Write(BuffMac);
+        writer.Write(BuffDc);
+        writer.Write(BuffMc);
+        writer.Write(BuffSc);
+        writer.Write(BuffMaxHp);
+        writer.Write(BuffMaxMp);
+        writer.Write(BuffMineRate);
+        writer.Write(BuffGemRate);
+        writer.Write(BuffFishRate);
+        writer.Write(BuffExpRate);
+        writer.Write(BuffCraftRate);
+        writer.Write(BuffSkillRate);
+        writer.Write(BuffHpRegen);
+        writer.Write(BuffMPRegen);
+        writer.Write(BuffAttack);
+        writer.Write(BuffDropRate);
+        writer.Write(BuffGoldRate);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}: {1}", Id, name);
+    }
+
+    public string ShowStats()
+    {
+        string text = string.Empty;
+
+        //text = name + "\n";
+        if (BuffAc > 0)
+        {
+            text += string.Format("Increases AC by: 0-{0}.", BuffAc);
+            if (text != "") text += "\n";
+        }
+        if (BuffMac > 0)
+        {
+            text += string.Format("Increases MAC by: 0-{0}.", BuffMac);
+            if (text != "") text += "\n";
+        }
+        if (BuffDc > 0)
+        {
+            text += string.Format("Increases DC by: 0-{0}.", BuffDc);
+            if (text != "") text += "\n";
+        }
+        if (BuffMc > 0)
+        {
+            text += string.Format("Increases MC by: 0-{0}.", BuffMc);
+            if (text != "") text += "\n";
+        }
+        if (BuffSc > 0)
+        {
+            text += string.Format("Increases SC by: 0-{0}.", BuffSc);
+            if (text != "") text += "\n";
+        }
+        if (BuffMaxHp > 0)
+        {
+            text += string.Format("Increases Hp by: {0}.", BuffMaxHp);
+            if (text != "") text += "\n";
+        }
+        if (BuffMaxMp > 0)
+        {
+            text += string.Format("Increases MP by: {0}.", BuffMaxMp);
+            if (text != "") text += "\n";
+        }
+        if (BuffHpRegen > 0)
+        {
+            text += string.Format("Increases Health regen by: {0}.", BuffHpRegen);
+            if (text != "") text += "\n";
+        }
+        if (BuffMPRegen > 0)
+        {
+            text += string.Format("Increases Mana regen by: {0}.", BuffMPRegen);
+            if (text != "") text += "\n";
+        }
+        if (BuffMineRate > 0)
+        {
+            text += string.Format("Increases Mining success by: {0}%.", BuffMineRate * 5);
+            if (text != "") text += "\n";
+        }
+        if (BuffGemRate > 0)
+        {
+            text += string.Format("Increases Gem success by: {0}%.", BuffGemRate * 5);
+            if (text != "") text += "\n";
+        }
+        if (BuffFishRate > 0)
+        {
+            text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate * 5);
+            if (text != "") text += "\n";
+        }
+        if (BuffExpRate > 0)
+        {
+            text += string.Format("Increases Experience by: {0}%.", BuffExpRate);
+            if (text != "") text += "\n";
+        }
+        if (BuffCraftRate > 0)
+        {
+            text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate * 5);
+            if (text != "") text += "\n";
+        }
+        if (BuffSkillRate > 0)
+        {
+            text += string.Format("Increases Skill training by: {0}.", BuffSkillRate);
+            if (text != "") text += "\n";
+        }
+        if (BuffAttack > 0)
+        {
+            text += string.Format("Increases Damage by: {0}.", BuffAttack);
+            if (text != "") text += "\n";
+        }
+        if (BuffDropRate > 0)
+        {
+            text += string.Format("Droprate increased by: {0}%.", BuffDropRate);
+            if (text != "") text += "\n";
+        }
+        if (BuffGoldRate > 0)
+        {
+            text += string.Format("Goldrate increased by: 0-{0}.", BuffGoldRate);
+            if (text != "") text += "\n";
+        }
+
+
+        return text;
+    }
+}
+
+public class GuildBuff
+{
+    public int Id;
+    public GuildBuffInfo Info;
+    public bool Active = false;
+    public int ActiveTimeRemaining;
+
+    public bool UsingGuildSkillIcon
+    {
+        get { return Info != null && Info.Icon < 1000; }
+    }
+
+    public GuildBuff()
+    {
+    }
+
+    public GuildBuff(BinaryReader reader)
+    {
+        Id = reader.ReadInt32();
+        Active = reader.ReadBoolean();
+        ActiveTimeRemaining = reader.ReadInt32();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Id);
+        writer.Write(Active);
+        writer.Write(ActiveTimeRemaining);
+    }
+
+    public string PrintTimeSpan(double secs)
+    {
+        TimeSpan t = TimeSpan.FromMinutes(secs);
+        string answer;
+        if (t.TotalMinutes < 1.0)
+        {
+            answer = string.Format("{0}s", t.Seconds);
+        }
+        else if (t.TotalHours < 1.0)
+        {
+            answer = string.Format("{0}ms", t.Minutes);
+        }
+        else // more than 1 hour
+        {
+            answer = string.Format("{0}h {1:D2}m ", (int)t.TotalHours, t.Minutes);
+        }
+
+        return answer;
+    }
+    
+    public string ShowStats()
+    {
+        if (Info == null) return "";
+        return Info.ShowStats();
+    }
+
+}
+
+//outdated but cant delete it or old db's wont load
+public class GuildBuffOld
+{
+    public GuildBuffOld()
+    { }
+    public GuildBuffOld(BinaryReader reader)
+    {
+        reader.ReadByte();
+        reader.ReadInt64();
+    }
+}
+
 #endregion

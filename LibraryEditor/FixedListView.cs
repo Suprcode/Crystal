@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections;
 using System.Windows.Forms;
 
 namespace LibraryEditor
@@ -11,6 +8,7 @@ namespace LibraryEditor
         private int _lastItemIndexClicked1 = -1;
         private int _lastItemIndexClicked2 = -1;
         private bool _shiftOn;
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             _shiftOn = e.Shift;
@@ -72,8 +70,7 @@ namespace LibraryEditor
                     }
                 }
                 ListViewVirtualItemsSelectionRangeChangedEventArgs te =
-                    new ListViewVirtualItemsSelectionRangeChangedEventArgs(start,
-                                                                           end, e.IsSelected);
+                    new ListViewVirtualItemsSelectionRangeChangedEventArgs(start, end, e.IsSelected);
                 base.OnVirtualItemsSelectionRangeChanged(te);
             }
             catch

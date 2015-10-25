@@ -33,6 +33,7 @@
             this.FilterTextBox = new System.Windows.Forms.TextBox();
             this.RefreshButton = new System.Windows.Forms.Button();
             this.AccountInfoPanel = new System.Windows.Forms.Panel();
+            this.AdminCheckBox = new System.Windows.Forms.CheckBox();
             this.PermBanButton = new System.Windows.Forms.Button();
             this.WeekBanButton = new System.Windows.Forms.Button();
             this.DayBanButton = new System.Windows.Forms.Button();
@@ -63,16 +64,19 @@
             this.label3 = new System.Windows.Forms.Label();
             this.AccountIDTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.AdminCheckBox = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.FilterPlayerTextBox = new System.Windows.Forms.TextBox();
             this.AccountInfoListView = new Server.ListViewNF();
             this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.accountIDHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.passwordHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.userNameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.adminHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.bannedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.banReasonHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.expiryDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.adminHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MatchFilterCheckBox = new System.Windows.Forms.CheckBox();
+            this.WipeCharButton = new System.Windows.Forms.Button();
             this.AccountInfoPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -104,7 +108,7 @@
             // 
             // RefreshButton
             // 
-            this.RefreshButton.Location = new System.Drawing.Point(213, 37);
+            this.RefreshButton.Location = new System.Drawing.Point(390, 37);
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(75, 23);
             this.RefreshButton.TabIndex = 13;
@@ -151,6 +155,17 @@
             this.AccountInfoPanel.Name = "AccountInfoPanel";
             this.AccountInfoPanel.Size = new System.Drawing.Size(616, 209);
             this.AccountInfoPanel.TabIndex = 14;
+            // 
+            // AdminCheckBox
+            // 
+            this.AdminCheckBox.AutoSize = true;
+            this.AdminCheckBox.Location = new System.Drawing.Point(207, 17);
+            this.AdminCheckBox.Name = "AdminCheckBox";
+            this.AdminCheckBox.Size = new System.Drawing.Size(86, 17);
+            this.AdminCheckBox.TabIndex = 32;
+            this.AdminCheckBox.Text = "Administrator";
+            this.AdminCheckBox.UseVisualStyleBackColor = true;
+            this.AdminCheckBox.CheckedChanged += new System.EventHandler(this.AdminCheckBox_CheckedChanged);
             // 
             // PermBanButton
             // 
@@ -414,16 +429,21 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Account ID:";
             // 
-            // AdminCheckBox
+            // label15
             // 
-            this.AdminCheckBox.AutoSize = true;
-            this.AdminCheckBox.Location = new System.Drawing.Point(207, 17);
-            this.AdminCheckBox.Name = "AdminCheckBox";
-            this.AdminCheckBox.Size = new System.Drawing.Size(86, 17);
-            this.AdminCheckBox.TabIndex = 32;
-            this.AdminCheckBox.Text = "Administrator";
-            this.AdminCheckBox.UseVisualStyleBackColor = true;
-            this.AdminCheckBox.CheckedChanged += new System.EventHandler(this.AdminCheckBox_CheckedChanged);
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(214, 42);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(64, 13);
+            this.label15.TabIndex = 15;
+            this.label15.Text = "Filter Player:";
+            // 
+            // FilterPlayerTextBox
+            // 
+            this.FilterPlayerTextBox.Location = new System.Drawing.Point(284, 39);
+            this.FilterPlayerTextBox.Name = "FilterPlayerTextBox";
+            this.FilterPlayerTextBox.Size = new System.Drawing.Size(100, 20);
+            this.FilterPlayerTextBox.TabIndex = 16;
             // 
             // AccountInfoListView
             // 
@@ -470,6 +490,11 @@
             this.userNameHeader.Text = "User Name";
             this.userNameHeader.Width = 75;
             // 
+            // adminHeader
+            // 
+            this.adminHeader.Text = "Administrator";
+            this.adminHeader.Width = 73;
+            // 
             // bannedHeader
             // 
             this.bannedHeader.Text = "Banned";
@@ -485,16 +510,35 @@
             this.expiryDateHeader.Text = "Expiry Date";
             this.expiryDateHeader.Width = 81;
             // 
-            // adminHeader
+            // MatchFilterCheckBox
             // 
-            this.adminHeader.Text = "Administrator";
-            this.adminHeader.Width = 73;
+            this.MatchFilterCheckBox.AutoSize = true;
+            this.MatchFilterCheckBox.Location = new System.Drawing.Point(472, 42);
+            this.MatchFilterCheckBox.Name = "MatchFilterCheckBox";
+            this.MatchFilterCheckBox.Size = new System.Drawing.Size(81, 17);
+            this.MatchFilterCheckBox.TabIndex = 17;
+            this.MatchFilterCheckBox.Text = "Match Filter";
+            this.MatchFilterCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // WipeCharButton
+            // 
+            this.WipeCharButton.Location = new System.Drawing.Point(93, 12);
+            this.WipeCharButton.Name = "WipeCharButton";
+            this.WipeCharButton.Size = new System.Drawing.Size(115, 23);
+            this.WipeCharButton.TabIndex = 18;
+            this.WipeCharButton.Text = "Wipe All Characters";
+            this.WipeCharButton.UseVisualStyleBackColor = true;
+            this.WipeCharButton.Click += new System.EventHandler(this.WipeCharButton_Click);
             // 
             // AccountInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(640, 461);
+            this.Controls.Add(this.WipeCharButton);
+            this.Controls.Add(this.MatchFilterCheckBox);
+            this.Controls.Add(this.FilterPlayerTextBox);
+            this.Controls.Add(this.label15);
             this.Controls.Add(this.AccountInfoPanel);
             this.Controls.Add(this.RefreshButton);
             this.Controls.Add(this.FilterTextBox);
@@ -558,5 +602,9 @@
         private System.Windows.Forms.Button DayBanButton;
         private System.Windows.Forms.CheckBox AdminCheckBox;
         private System.Windows.Forms.ColumnHeader adminHeader;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox FilterPlayerTextBox;
+        private System.Windows.Forms.CheckBox MatchFilterCheckBox;
+        private System.Windows.Forms.Button WipeCharButton;
     }
 }

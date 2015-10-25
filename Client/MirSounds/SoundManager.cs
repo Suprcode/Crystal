@@ -11,6 +11,8 @@ namespace Client.MirSounds
         private static readonly List<SoundLibrary> Sounds = new List<SoundLibrary>();
         private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
 
+        public static SoundLibrary Music;
+
         private static int _vol;
         public static int Vol
         {
@@ -20,6 +22,17 @@ namespace Client.MirSounds
                 if (_vol == value) return;
                 _vol = value;
                 AdjustAllVolumes();
+            }
+        }
+
+        private static int _musicVol;
+        public static int MusicVol
+        {
+            get { return _musicVol; }
+            set
+            {
+                if (_musicVol == value) return;
+                _musicVol = value;
             }
         }
 
@@ -99,6 +112,15 @@ namespace Client.MirSounds
             }
         }
 
+        public static void PlayMusic(int index, bool loop = false)
+        {
+            if (Device == null) return;
+
+            Music = new SoundLibrary(index, index + ".wav", true);
+            Music.SetVolume(MusicVol);
+            Music.Play();
+        }
+
         static void AdjustAllVolumes()
         {
             for (int i = 0; i < Sounds.Count; i++)
@@ -111,6 +133,8 @@ namespace Client.MirSounds
     {
         public static int
             None = 0,
+            Music = 0,
+
             IntroMusic = 10146,
             SelectMusic = 10147,
             LoginEffect = 10100,
@@ -226,7 +250,18 @@ namespace Client.MirSounds
             WolfStruck1 = 10193,
             WolfStruck2 = 10194,
             TigerRide1 = 10218,
-            TigerRide2 = 10219;
+            TigerRide2 = 10219,
 
+            PetPig = 10500,
+            PetChick = 10501,
+            PetKitty = 10502,
+            PetSkeleton = 10503,
+            PetPigman = 10504,
+            PetWemade = 10505,
+            PetBlackKitten = 10506,
+            PetDragon = 10507,
+            PetOlympic = 10508,
+            PetFrog = 10510,
+            PetPickup = 10512;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System;
 using Client.MirSounds;
+using System.Windows.Forms;
 
 namespace Client
 {
@@ -7,7 +9,18 @@ namespace Client
     {
         public const long CleanDelay = 600000;
         public static int ScreenWidth = 800, ScreenHeight = 600;
-        private static readonly InIReader Reader = new InIReader(@".\Mir2Config.ini");
+        private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
+
+        public static bool UseTestConfig
+        {
+            set 
+            {
+                if (value == true)
+                {
+                    Reader = new InIReader(@".\Mir2Test.ini");
+                }
+            }
+        }
 
         public const string DataPath = @".\Data\",
                             MapPath = @".\Map\",
@@ -28,7 +41,11 @@ namespace Client
                             ARHumEffectPath = @".\Data\ARHumEffect\",
                             MountPath = @".\Data\Mount\",
                             FishingPath = @".\Data\Fishing\",
-                            PetsPath = @".\Data\Pet\";//IntelligentCreature
+                            PetsPath = @".\Data\Pet\",
+                            TransformPath = @".\Data\Transform\",
+                            TransformMountsPath = @".\Data\TransformRide2\",
+                            TransformEffectPath = @".\Data\TransformEffect\",
+                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\";
 
         //Logs
         public static bool LogErrors = true;
@@ -40,7 +57,7 @@ namespace Client
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
-        public static bool HighResolution = false;
+        public static int Resolution = 1024;
         public static bool DebugMode = false;
 
         //Network
@@ -68,6 +85,23 @@ namespace Client
             }
         }
 
+        private static byte _musicVolume = 100;
+        public static byte MusicVolume
+        {
+            get { return _musicVolume; }
+            set
+            {
+                if (_musicVolume == value) return;
+
+                _musicVolume = (byte)(value > 100 ? 100 : value);
+
+                if (_musicVolume == 0)
+                    SoundManager.MusicVol = -10000;
+                else
+                    SoundManager.MusicVol = (int)(-3000 + (3000 * (_musicVolume / 100M)));
+            }
+        }
+
         //Game
         public static string AccountID = "",
                              Password = "";
@@ -80,7 +114,8 @@ namespace Client
             DropView = true,
             NameView = true,
             HPView = true,
-            TransparentChat = false;
+            TransparentChat = false,
+            DisplayDamage = true;
 
 
         //Chat
@@ -104,6 +139,19 @@ namespace Client
             FilterGroupChat = false,
             FilterGuildChat = false;
 
+
+        //AutoPatcher
+        public static bool P_Patcher = true;
+        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_PatchFileName = @"PList.gz";
+        public static bool P_NeedLogin = false;
+        public static string P_Login = string.Empty;
+        public static string P_Password = string.Empty;
+        public static string P_ServerName = string.Empty;
+        public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
+        public static string P_Client = Application.StartupPath + "\\";
+        public static bool P_AutoStart = false;
+
         public static void Load()
         {
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
@@ -114,7 +162,7 @@ namespace Client
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
             FPSCap = Reader.ReadBoolean("Graphics", "FPSCap", FPSCap);
-            HighResolution = Reader.ReadBoolean("Graphics", "HighResolution", HighResolution);
+            Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
             DebugMode = Reader.ReadBoolean("Graphics", "DebugMode", DebugMode);
 
             //Network
@@ -132,6 +180,7 @@ namespace Client
             //Sound
             Volume = Reader.ReadByte("Sound", "Volume", Volume);
             SoundOverLap = Reader.ReadInt32("Sound", "SoundOverLap", SoundOverLap);
+            MusicVolume = Reader.ReadByte("Sound", "Music", MusicVolume);
 
             //Game
             AccountID = Reader.ReadString("Game", "AccountID", AccountID);
@@ -147,6 +196,7 @@ namespace Client
             HPView = Reader.ReadBoolean("Game", "HPMPView", HPView);
             FontName = Reader.ReadString("Game", "FontName", FontName);
             TransparentChat = Reader.ReadBoolean("Game", "TransparentChat", TransparentChat);
+            DisplayDamage = Reader.ReadBoolean("Game", "DisplayDamage", DisplayDamage);
 
             //Chat
             ShowNormalChat = Reader.ReadBoolean("Chat", "ShowNormalChat", ShowNormalChat);
@@ -166,6 +216,21 @@ namespace Client
             FilterMentorChat = Reader.ReadBoolean("Filter", "FilterMentorChat", FilterMentorChat);
             FilterGroupChat = Reader.ReadBoolean("Filter", "FilterGroupChat", FilterGroupChat);
             FilterGuildChat = Reader.ReadBoolean("Filter", "FilterGuildChat", FilterGuildChat);
+
+            //AutoPatcher
+            P_Patcher = Reader.ReadBoolean("Launcher", "Enabled", P_Patcher);
+            P_Host = Reader.ReadString("Launcher", "Host", P_Host);
+            P_PatchFileName = Reader.ReadString("Launcher", "PatchFile", P_PatchFileName);
+            P_NeedLogin = Reader.ReadBoolean("Launcher", "NeedLogin", P_NeedLogin);
+            P_Login = Reader.ReadString("Launcher", "Login", P_Login);
+            P_Password = Reader.ReadString("Launcher", "Password", P_Password);
+            P_AutoStart = Reader.ReadBoolean("Launcher", "AutoStart", P_AutoStart);
+            P_ServerName = Reader.ReadString("Launcher", "ServerName", P_ServerName);
+            P_BrowserAddress = Reader.ReadString("Launcher", "Browser", P_BrowserAddress);
+
+            if (!P_Host.EndsWith("/")) P_Host += "/";
+            if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
+            if (P_BrowserAddress.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_BrowserAddress = P_BrowserAddress.Insert(0, "http://");
         }
 
         public static void Save()
@@ -174,13 +239,16 @@ namespace Client
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "AlwaysOnTop", TopMost);
             Reader.Write("Graphics", "FPSCap", FPSCap);
-            Reader.Write("Graphics", "HighResolution", HighResolution);
+            Reader.Write("Graphics", "Resolution", Resolution);
             Reader.Write("Graphics", "DebugMode", DebugMode);
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);
+            Reader.Write("Sound", "Music", MusicVolume);
 
             //Game
+            Reader.Write("Game", "AccountID", AccountID);
+            Reader.Write("Game", "Password", Password);
             Reader.Write("Game", "SkillMode", SkillMode);
             Reader.Write("Game", "SkillBar", SkillBar);
             Reader.Write("Game", "SkillSet", SkillSet);
@@ -191,6 +259,7 @@ namespace Client
             Reader.Write("Game", "HPMPView", HPView);
             Reader.Write("Game", "FontName", FontName);
             Reader.Write("Game", "TransparentChat", TransparentChat);
+            Reader.Write("Game", "DisplayDamage", DisplayDamage);
 
             //Chat
             Reader.Write("Chat", "ShowNormalChat", ShowNormalChat);
@@ -210,6 +279,17 @@ namespace Client
             Reader.Write("Filter", "FilterMentorChat", FilterMentorChat);
             Reader.Write("Filter", "FilterGroupChat", FilterGroupChat);
             Reader.Write("Filter", "FilterGuildChat", FilterGuildChat);
+
+            //AutoPatcher
+            Reader.Write("Launcher", "Enabled", P_Patcher);
+            Reader.Write("Launcher", "Host", P_Host);
+            Reader.Write("Launcher", "PatchFile", P_PatchFileName);
+            Reader.Write("Launcher", "NeedLogin", P_NeedLogin);
+            Reader.Write("Launcher", "Login", P_Login);
+            Reader.Write("Launcher", "Password", P_Password);
+            Reader.Write("Launcher", "ServerName", P_ServerName);
+            Reader.Write("Launcher", "Browser", P_BrowserAddress);
+            Reader.Write("Launcher", "AutoStart", P_AutoStart);
         }
     }
 }

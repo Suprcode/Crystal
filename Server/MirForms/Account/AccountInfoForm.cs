@@ -15,6 +15,21 @@ namespace Server
         {
             InitializeComponent();
 
+            Setup();
+        }
+
+        public AccountInfoForm(string accountId, bool match = false)
+        {
+            InitializeComponent();
+
+            FilterTextBox.Text = accountId;
+            MatchFilterCheckBox.Checked = match;
+
+            Setup();
+        }
+
+        private void Setup()
+        {
             RefreshInterface();
             AutoResize();
 
@@ -26,7 +41,6 @@ namespace Server
             QuestionTextBox.MaxLength = 30;
             AnswerTextBox.MaxLength = 30;
             EMailTextBox.MaxLength = 50;
-
         }
 
         private void AutoResize()
@@ -48,7 +62,13 @@ namespace Server
                 return;
             }
 
-            List<AccountInfo> accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text);
+            List<AccountInfo> accounts = SMain.Envir.AccountList;
+
+            if(FilterTextBox.Text.Length > 0)
+                accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
+
+            else if(FilterPlayerTextBox.Text.Length > 0)
+                accounts = SMain.Envir.MatchAccountsByPlayer(FilterPlayerTextBox.Text, MatchFilterCheckBox.Checked);
 
             if (AccountInfoListView.Items.Count != accounts.Count)
             {
@@ -383,6 +403,33 @@ namespace Server
             }
             AutoResize();
             AccountInfoListView.EndUpdate();
+        }
+
+        private void WipeCharButton_Click(object sender, EventArgs e)
+        {
+            if (SMain.Envir.Running)
+            {
+                MessageBox.Show("Cannot wipe characters whilst the server is running", "Notice",
+                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
+
+            if (MessageBox.Show("Are you sure you want to wipe all characters from the database?", "Notice",
+                 MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+            {
+                for (int i = 0; i < SMain.Envir.AccountList.Count; i++)
+                {
+                    AccountInfo account = SMain.Envir.AccountList[i];
+
+                    account.Characters.Clear();
+                }
+
+                SMain.Envir.Auctions.Clear();
+                SMain.Envir.GuildList.Clear();
+
+                MessageBox.Show("All characters and associated data has been cleared", "Notice",
+               MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
         }
     }
 }

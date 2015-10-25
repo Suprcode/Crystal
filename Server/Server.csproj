@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -33,7 +33,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Mir 2\Server\</OutputPath>
+    <OutputPath>..\..\Server\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -44,11 +44,17 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Mir 2\Server\</OutputPath>
+    <OutputPath>..\..\mir2data\Server\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Server.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -80,6 +86,7 @@
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
     <Compile Include="MirDatabase\MailInfo.cs" />
+    <Compile Include="MirEnvir\Reporting.cs" />
     <Compile Include="MirForms\Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +98,18 @@
     </Compile>
     <Compile Include="MirForms\BalanceConfigForm.Designer.cs">
       <DependentUpon>BalanceConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\Database\GameShop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Database\GameShop.designer.cs">
+      <DependentUpon>GameShop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\Database\MagicInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Database\MagicInfoForm.Designer.cs">
+      <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirForms\Systems\DragonInfoForm.cs">
       <SubType>Form</SubType>
@@ -203,6 +222,7 @@
       <DependentUpon>VForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirNetwork\MirConnection.cs" />
+    <Compile Include="MirNetwork\MirStatusConnection.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\DelayedAction.cs" />
     <Compile Include="MirObjects\GuildObject.cs" />
@@ -220,6 +240,9 @@
     <Compile Include="MirObjects\Monsters\BombSpider.cs" />
     <Compile Include="MirObjects\Monsters\BlackFoxman.cs" />
     <Compile Include="MirObjects\Monsters\CharmedSnake.cs" />
+    <Compile Include="MirObjects\Monsters\CrazyManworm.cs" />
+    <Compile Include="MirObjects\Monsters\DarkDevourer.cs" />
+    <Compile Include="MirObjects\Monsters\Football.cs" />
     <Compile Include="MirObjects\Monsters\HumanAssassin.cs" />
     <Compile Include="MirObjects\Monsters\HumanWizard.cs" />
     <Compile Include="MirObjects\Monsters\DragonStatue.cs" />
@@ -227,8 +250,11 @@
     <Compile Include="MirObjects\Monsters\EvilMir.cs" />
     <Compile Include="MirObjects\Monsters\HedgeKekTal.cs" />
     <Compile Include="MirObjects\Monsters\GreatFoxSpirit.cs" />
+    <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
+    <Compile Include="MirObjects\Monsters\Runaway.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
+    <Compile Include="MirObjects\Monsters\TalkingMonster.cs" />
     <Compile Include="MirObjects\Monsters\ThunderElement.cs" />
     <Compile Include="MirObjects\Monsters\GuardianRock.cs" />
     <Compile Include="MirObjects\Monsters\TownArcher.cs" />
@@ -271,6 +297,9 @@
     <Compile Include="MirObjects\Monsters\ZumaMonster.cs" />
     <Compile Include="MirObjects\Monsters\ZumaTaurus.cs" />
     <Compile Include="MirObjects\NPCObject.cs" />
+    <Compile Include="MirObjects\NPCPage.cs" />
+    <Compile Include="MirObjects\NPCSegment.cs" />
+    <Compile Include="MirObjects\NPC_dep\NPCObject_Backup.cs" />
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirForms\Database\QuestInfoForm.cs">
@@ -316,6 +345,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Database\GameShop.resx">
+      <DependentUpon>GameShop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
+      <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\DragonInfoForm.resx">
       <DependentUpon>DragonInfoForm.cs</DependentUpon>
@@ -402,6 +437,10 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Server.ico" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -40,6 +40,8 @@
             this.Count = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.RoutePath = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Spread
@@ -146,11 +148,29 @@
             this.label6.TabIndex = 18;
             this.label6.Text = "(mins)";
             // 
+            // RoutePath
+            // 
+            this.RoutePath.Location = new System.Drawing.Point(184, 63);
+            this.RoutePath.Name = "RoutePath";
+            this.RoutePath.Size = new System.Drawing.Size(100, 20);
+            this.RoutePath.TabIndex = 19;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(141, 66);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(39, 13);
+            this.label7.TabIndex = 20;
+            this.label7.Text = "Route:";
+            // 
             // RespawnsDetailForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(291, 125);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.RoutePath);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.Delay);
             this.Controls.Add(this.label4);
@@ -187,5 +207,7 @@
         public System.Windows.Forms.TextBox Count;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        public System.Windows.Forms.TextBox RoutePath;
+        private System.Windows.Forms.Label label7;
     }
 }

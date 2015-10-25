@@ -32,8 +32,8 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+
+            Location = Center;
 
             MirImageControl TitleLabel = new MirImageControl
             {
@@ -58,6 +58,8 @@ namespace Client.MirScenes.Dialogs
             {
                 CurrentPageNumber--;
 
+                if (CurrentPageNumber < 0) CurrentPageNumber = Pages.Count - 1;
+
                 DisplayPage(CurrentPageNumber);
             };
 
@@ -75,6 +77,8 @@ namespace Client.MirScenes.Dialogs
             NextButton.Click += (o, e) =>
             {
                 CurrentPageNumber++;
+
+                if (CurrentPageNumber > Pages.Count - 1) CurrentPageNumber = 0;
 
                 DisplayPage(CurrentPageNumber);
             };
@@ -225,9 +229,9 @@ namespace Client.MirScenes.Dialogs
             Shortcuts.Add(new ShortcutInfo("F9 , I", "Inventory window (open / close)"));
             Shortcuts.Add(new ShortcutInfo("F10 , C", "Status window (open / close)"));
             Shortcuts.Add(new ShortcutInfo("F11 , S", "Skill window (open / close)"));
-            Shortcuts.Add(new ShortcutInfo("W", "Friend window (open / close)"));
             Shortcuts.Add(new ShortcutInfo("P", "Group window (open / close)"));
             Shortcuts.Add(new ShortcutInfo("T", "Trade window (open / close)"));
+            Shortcuts.Add(new ShortcutInfo("F", "Friend window (open / close)"));
             Shortcuts.Add(new ShortcutInfo("V", "Minimap window (open / close)"));
             Shortcuts.Add(new ShortcutInfo("G", "Guild window (open / close)"));
             Shortcuts.Add(new ShortcutInfo("Y", "Gameshop window (open / close)"));
@@ -255,7 +259,6 @@ namespace Client.MirScenes.Dialogs
             Shortcuts.Add(new ShortcutInfo("", "Good/Evil Mode - Attack PK players and monsters only"));
             Shortcuts.Add(new ShortcutInfo("", "All Attack Mode - Attack all subjects"));
             Shortcuts.Add(new ShortcutInfo("B", "Show the field map"));
-            Shortcuts.Add(new ShortcutInfo("` / Ctrl", "Change the skill bar"));
             Shortcuts.Add(new ShortcutInfo("R", "Show the skill bar"));
             Shortcuts.Add(new ShortcutInfo("D", "Auto run on / off"));
             Shortcuts.Add(new ShortcutInfo("Insert", "Show / Hide interface"));
@@ -264,6 +267,7 @@ namespace Client.MirScenes.Dialogs
             Shortcuts.Add(new ShortcutInfo("F12", "Chat macros"));
             Shortcuts.Add(new ShortcutInfo("Prnt Scrn", "Screen Capture"));
             Shortcuts.Add(new ShortcutInfo("N", "Open / Close fishing window"));
+            Shortcuts.Add(new ShortcutInfo("W", "Mentor window (open / close)"));
 
             LoadKeyBinds();
         }
@@ -273,6 +277,7 @@ namespace Client.MirScenes.Dialogs
         public ShortcutPage3()
         {
             Shortcuts = new List<ShortcutInfo>();
+            Shortcuts.Add(new ShortcutInfo("` / Ctrl", "Change the skill bar"));
             Shortcuts.Add(new ShortcutInfo("/(username)", "Command to whisper to others"));
             Shortcuts.Add(new ShortcutInfo("!(text)", "Command to shout to others nearby"));
             Shortcuts.Add(new ShortcutInfo("!~(text)", "Command to guild chat"));

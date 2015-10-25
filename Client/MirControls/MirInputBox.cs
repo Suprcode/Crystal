@@ -20,7 +20,7 @@ namespace Client.MirControls
             Index = 660;
             Library = Libraries.Prguse;
 
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);
 
             CaptionLabel = new MirLabel
             {

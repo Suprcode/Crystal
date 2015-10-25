@@ -70,17 +70,17 @@ namespace Client.MirControls
         #endregion
 
         #region CenterText
-        private bool Center;
+        private bool _center;
         public bool CenterText
         {
             get
             {
-                return Center;
+                return _center;
             }
             set
             {
-                Center = value;
-                if (Center)
+                _center = value;
+                if (_center)
                 {
                     _label.Size = Size;
                     _label.DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
@@ -146,7 +146,9 @@ namespace Client.MirControls
                 {
                     NotControl = true,
                     Parent = this,
-                    
+                    //Font = new Font("Constantia", 8, FontStyle.Italic),
+                    //OutLine = true,
+                    //OutLineColour = Color.FromArgb(255, 70, 50, 30),
                 };
         }
 

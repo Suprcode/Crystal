@@ -1,0 +1,9 @@
+C:\Users\RYAN\Desktop\GitHubRepo\mir2data\Client\Client.exe.config
+C:\Users\RYAN\Desktop\GitHubRepo\mir2data\Client\Client.exe
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\Client\obj\Release\Client.CMain.resources
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\Client\obj\Release\Client.Properties.Resources.resources
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\Client\obj\Release\Client.csproj.GenerateResource.Cache
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\Client\obj\Release\Client.exe
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\Client\obj\Release\Client.csprojResolveAssemblyReference.cache
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\Client\obj\Release\Launcher.AMain.resources
+C:\Users\RYAN\Desktop\GitHubRepo\mir2\Client\obj\Release\Launcher.Config.resources

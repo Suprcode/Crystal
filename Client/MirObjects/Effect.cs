@@ -23,6 +23,8 @@ namespace Client.MirObjects
         public MapObject Owner;
 
         public int Light = 6;
+        public Color LightColour = Color.White;
+
         public bool Blend = true;
         public float Rate = 1F;
         public Point DrawLocation;
@@ -34,8 +36,6 @@ namespace Client.MirObjects
         public long CurrentDelay;
         public long Delay;
 
-        //public BuffType LinkedToBuff;
-        
         public event EventHandler Complete;
         public event EventHandler Played;
 
@@ -168,6 +168,8 @@ namespace Client.MirObjects
             Destination = target;
 
             Direction = MapControl.Direction16(Source, Destination);
+
+
         }
 
         public override void Process()
@@ -219,7 +221,7 @@ namespace Client.MirObjects
 
     }
 
-    public class InterruptionEffect : Effect//ArcherSpells - Elemental system
+    public class InterruptionEffect : Effect
     {
         public static List<InterruptionEffect> effectlist = new List<InterruptionEffect>();
         bool noProcess = false;
@@ -267,7 +269,7 @@ namespace Client.MirObjects
         }
     }
 
-    public class ElementsEffect : Effect//ArcherSpells - Elemental system
+    public class ElementsEffect : Effect
     {
         int myType;//1 = green orb, 2 = blue orb, 3 = red orb, 4 = mixed orbs
         long killAt;//holds the exp value for 4 orbs : kills all orbs when myType 4 is reached
@@ -319,7 +321,7 @@ namespace Client.MirObjects
         }
     }
 
-    public class DelayedExplosionEffect : Effect//ArcherSpells - DelayedExplosion
+    public class DelayedExplosionEffect : Effect
     {
         public static List<DelayedExplosionEffect> effectlist = new List<DelayedExplosionEffect>();
         public int stage;
@@ -369,7 +371,6 @@ namespace Client.MirObjects
         }
     }
 
-
     public class SpecialEffect : Effect
     {
         public uint EffectType = 0;
@@ -408,7 +409,7 @@ namespace Client.MirObjects
         }
     }
 
-    public class TrackableEffect : Effect//ArcherSpells - BindingShot
+    public class TrackableEffect : Effect
     {
         public static List<TrackableEffect> effectlist = new List<TrackableEffect>();
         public string EffectName = "default";
