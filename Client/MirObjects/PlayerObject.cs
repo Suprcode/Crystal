@@ -1740,9 +1740,9 @@ namespace Client.MirObjects
 
                             #region ImmortalSkin
                             case Spell.ImmortalSkin:
-                                Effects.Add(new Effect(Libraries.Magic3, 550, 17, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Magic3, 550, 17, Frame.Count * FrameInterval * 4, this));
                                 Effects.Add(new Effect(Libraries.Magic3, 570, 5, Frame.Count * FrameInterval, this));
-                                SoundManager.PlaySound(2000 + (ushort)Spell * 10);
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
                             #endregion
 
