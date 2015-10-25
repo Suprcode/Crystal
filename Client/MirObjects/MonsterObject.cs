@@ -2867,12 +2867,8 @@ namespace Client.MirObjects
                 case Monster.MutatedManworm:
                     switch (CurrentAction)
                     {
-                        case MirAction.Attack1:
-                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(285 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
-                            break;
                         case MirAction.Attack2:
-                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(333 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
-                            break;
++                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(272 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                     }
                     break;
                 case Monster.CrazyManworm:
