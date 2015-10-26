@@ -3223,6 +3223,11 @@ namespace Client.MirScenes
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.RedFoxman], 243, 10, 500, ob);
                             break;
                         }
+                    case 4: //MutatedManWorm
+                        {
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 272, 6, 500, ob);
+                            break;
+                        }
                     default:
                         {
                             effect = new Effect(Libraries.Magic, 250, 10, 500, ob);
@@ -3256,6 +3261,11 @@ namespace Client.MirScenes
                     case 2: //RedFoxman
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RedFoxman], 253, 10, 500, ob));
+                            break;
+                        }
+                    case 3: //MutatedManWorm
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 278, 7, 500, ob));
                             break;
                         }
                     default:

@@ -1930,6 +1930,18 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            case Monster.PoisonHugger:
+                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.PoisonHugger], true, 1, 30, 0);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, 150, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
                                             case Monster.RedFoxman:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -2855,12 +2867,8 @@ namespace Client.MirObjects
                 case Monster.MutatedManworm:
                     switch (CurrentAction)
                     {
-                        case MirAction.Attack1:
-                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(285 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
-                            break;
                         case MirAction.Attack2:
-                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(333 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
-                            break;
++                            Libraries.Monsters[(ushort)Monster.MutatedManworm].DrawBlend(272 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                     }
                     break;
                 case Monster.CrazyManworm:
