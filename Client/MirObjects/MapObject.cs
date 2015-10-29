@@ -48,7 +48,7 @@ namespace Client.MirObjects
         public List<BuffType> Buffs = new List<BuffType>();
 
         public MLibrary BodyLibrary;
-        public Color DrawColour = Color.White, NameColour = Color.White;
+        public Color DrawColour = Color.White, NameColour = Color.White, LightColour = Color.White;
         public MirLabel NameLabel, ChatLabel, GuildLabel;
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;

@@ -308,7 +308,6 @@ public enum Monster : ushort
     DarkDustPile = 147,
     DarkBrownWolf = 148,
     Football = 149,
-
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -317,9 +316,10 @@ public enum Monster : ushort
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
+
     Behemoth = 158,
     DarkDevourer = 159,//LIB BROKE??
-    PoisonHugger = 160,
+    PoisonHugger = 160, //DONE
     Hugger = 161,
     MutatedHugger = 162,//BROKE
     DreamDevourer = 163,//LIB BROKE??

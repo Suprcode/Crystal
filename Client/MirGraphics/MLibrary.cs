@@ -830,6 +830,15 @@ namespace Client.MirGraphics
             int w = Width + (4 - Width % 4) % 4;
             int h = Height + (4 - Height % 4) % 4;
 
+
+            //Image = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+            //GraphicsStream stream = Image.LockRectangle(0, LockFlags.Discard);
+            //Data = (byte*)stream.InternalDataPointer;
+
+            //byte[] decomp = Decompress(reader.ReadBytes(Length));
+
+            //stream.Write(decomp, 0, decomp.Length);
+
             Image = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.Dxt1, Pool.Managed);
             GraphicsStream stream = Image.LockRectangle(0, LockFlags.Discard);
             Data = (byte*)stream.InternalDataPointer;

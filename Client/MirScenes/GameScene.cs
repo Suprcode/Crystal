@@ -8592,35 +8592,38 @@ namespace Client.MirScenes
 
                     p = ob.DrawLocation;
 
-                    Color lightIntensity;
+                    Color lightColour = ob.LightColour;
 
-                    switch (light / 15)
+                    if (ob.Race == ObjectType.Player)
                     {
-                        case 0://no light source
-                            lightIntensity = Color.FromArgb(255, 60, 60, 60);
-                            break;
-                        case 1:
-                            lightIntensity = Color.FromArgb(255, 120, 120, 120);
-                            break;
-                        case 2://Candle
-                            lightIntensity = Color.FromArgb(255, 180, 180, 180);
-                            break;
-                        case 3://Torch
-                            lightIntensity = Color.FromArgb(255, 240, 240, 240);
-                            break;
-                        default://Peddler Torch
-                            lightIntensity = Color.FromArgb(255, 255, 255, 255);
-                            break;
+                        switch (light / 15)
+                        {
+                            case 0://no light source
+                                lightColour = Color.FromArgb(255, 60, 60, 60);
+                                break;
+                            case 1:
+                                lightColour = Color.FromArgb(255, 120, 120, 120);
+                                break;
+                            case 2://Candle
+                                lightColour = Color.FromArgb(255, 180, 180, 180);
+                                break;
+                            case 3://Torch
+                                lightColour = Color.FromArgb(255, 240, 240, 240);
+                                break;
+                            default://Peddler Torch
+                                lightColour = Color.FromArgb(255, 255, 255, 255);
+                                break;
+                        }
                     }
-
-                    //NPCs use wider light width, but low source
-                    if (ob.Race == ObjectType.Merchant)
-                        lightIntensity = Color.FromArgb(255, 120, 120, 120);
+                    else if (ob.Race == ObjectType.Merchant)
+                    {
+                        lightColour = Color.FromArgb(255, 120, 120, 120);
+                    }
 
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightIntensity); // ob is MonsterObject && ob.AI != 6 ? Color.PaleVioletRed : 
+                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour); // ob is MonsterObject && ob.AI != 6 ? Color.PaleVioletRed : 
                     }
 
                 }
