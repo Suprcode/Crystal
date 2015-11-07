@@ -600,7 +600,7 @@
             // 
             // OpenWeMadeDialog
             // 
-            this.OpenWeMadeDialog.Filter = "WeMade|*.Wil;*.Wtl|Shanda|*.Wzl;*.Miz";
+            this.OpenWeMadeDialog.Filter = "WeMade|*.Wil;*.Wtl|Shanda|*.Wzl;*.Miz|Lib|*.Lib";
             this.OpenWeMadeDialog.Multiselect = true;
             // 
             // statusStrip
