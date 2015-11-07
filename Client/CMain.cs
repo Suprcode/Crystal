@@ -32,6 +32,8 @@ namespace Client
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
+        public static bool DebugOverride;
+
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
@@ -367,8 +369,9 @@ namespace Client
 
                 DebugTextLabel.SizeChanged += (o, e) => DebugBaseLabel.Size = DebugTextLabel.Size;
             }
-            
 
+            if (DebugOverride) return;
+            
             string text;
             if (MirControl.MouseControl != null)
             {
@@ -386,6 +389,20 @@ namespace Client
                 text = string.Format("FPS: {0}", FPS);
             }
             
+
+            DebugTextLabel.Text = text;
+        }
+
+        public static void SendDebugMessage(string text)
+        {
+            if (!Settings.DebugMode) return;
+
+            if (DebugBaseLabel == null || DebugTextLabel == null)
+            {
+                CreateDebugLabel();
+            }
+
+            DebugOverride = true;
 
             DebugTextLabel.Text = text;
         }

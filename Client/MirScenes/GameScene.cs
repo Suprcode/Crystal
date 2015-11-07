@@ -9578,7 +9578,7 @@ namespace Client.MirScenes
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
 
         public MainDialog()
         {
@@ -9786,19 +9786,18 @@ namespace Client.MirScenes
 
             LevelLabel = new MirLabel
             {
-                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                AutoSize = true,
                 Parent = this,
-                Location = new Point(17, 123),
-                Size = new Size(33, 12)
+                Location = new Point(5, 108)
             };
 
-            //CharacterName = new MirLabel
-            //{
-            //    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-            //    Parent = this,
-            //    Location = new Point(6, 120),
-            //    Size = new Size(90, 16)
-            //};
+            CharacterName = new MirLabel
+            {
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                Parent = this,
+                Location = new Point(6, 120),
+                Size = new Size(90, 16)
+            };
 
 
             ExperienceBar = new MirImageControl
@@ -9963,7 +9962,7 @@ namespace Client.MirScenes
             ExperienceLabel.Text = string.Format("{0:#0.##%}", User.Experience / (double)User.MaxExperience);
             ExperienceLabel.Location = new Point((ExperienceBar.Size.Width / 2) - 20, -10);
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
-            //CharacterName.Text = User.Name;
+            CharacterName.Text = User.Name;
             WeightLabel.Text = User.Inventory.Count(t => t == null).ToString();
         }
 
@@ -13680,9 +13679,9 @@ namespace Client.MirScenes
 
         public MenuDialog()
         {
-            Index = 1963;
+            Index = 567;
             Parent = GameScene.Scene;
-            Library = Libraries.Prguse;
+            Library = Libraries.Title;
             Location = new Point(Settings.ScreenWidth - Size.Width, GameScene.Scene.MainDialog.Location.Y - this.Size.Height + 15);
             Sort = true;
             Visible = false;
@@ -13690,24 +13689,24 @@ namespace Client.MirScenes
 
             ExitButton = new MirButton
             {
-                HoverIndex = 1965,
-                Index = 1964,
+                HoverIndex = 634,
+                Index = 633,
                 Parent = this,
-                Library = Libraries.Prguse,
+                Library = Libraries.Title,
                 Location = new Point(3, 12),
-                PressedIndex = 1966,
+                PressedIndex = 635,
                 Hint = "Exit (Alt + Q)"
             };
             ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
             LogOutButton = new MirButton
             {
-                HoverIndex = 1968,
-                Index = 1967,
+                HoverIndex = 637,
+                Index = 636,
                 Parent = this,
-                Library = Libraries.Prguse,
+                Library = Libraries.Title,
                 Location = new Point(3, 31),
-                PressedIndex = 1969,
+                PressedIndex = 638,
                 Hint = "Log Out (Alt + X)"
             };
             LogOutButton.Click += (o, e) => GameScene.Scene.LogOut();

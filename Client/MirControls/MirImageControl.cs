@@ -156,6 +156,7 @@ namespace Client.MirControls
 
             if (DrawImage && Library != null)
             {
+
                 if (Blending) Library.DrawBlend(Index, DisplayLocation, ForeColour, false, 1F);
                 else Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
             }

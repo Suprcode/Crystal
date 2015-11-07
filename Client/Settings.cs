@@ -11,14 +11,20 @@ namespace Client
         public static int ScreenWidth = 800, ScreenHeight = 600;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
 
+        private static bool _useTestConfig;
         public static bool UseTestConfig
         {
+            get
+            {
+                return _useTestConfig;
+            }
             set 
             {
                 if (value == true)
                 {
                     Reader = new InIReader(@".\Mir2Test.ini");
                 }
+                _useTestConfig = value;
             }
         }
 

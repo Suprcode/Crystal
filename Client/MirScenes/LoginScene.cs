@@ -29,7 +29,7 @@ namespace Client.MirScenes
 
         private InputKeyDialog _ViewKey;
 
-        public MirImageControl ViolenceLabel, MinorLabel, YouthLabel; 
+        public MirImageControl TestLabel, ViolenceLabel, MinorLabel, YouthLabel; 
 
         public LoginScene()
         {
@@ -82,6 +82,14 @@ namespace Client.MirScenes
                     Text = string.Format("Version: {0}", Application.ProductVersion),
                 };
 
+            TestLabel = new MirImageControl
+            {
+                Index = 79,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(Settings.ScreenWidth - 116, 10),
+                Visible = Settings.UseTestConfig
+            };
 
             //ViolenceLabel = new MirImageControl
             //{
