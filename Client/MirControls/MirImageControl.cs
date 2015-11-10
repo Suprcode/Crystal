@@ -160,6 +160,14 @@ namespace Client.MirControls
                 if (Blending) Library.DrawBlend(Index, DisplayLocation, ForeColour, false, 1F);
                 else Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
             }
+
+            if (DrawImage && Library != null)
+            {
+                if (GrayScale) DXManager.SetGrayscale(1F, Color.White);
+                else if (Blending) Library.DrawBlend(Index, DisplayLocation, ForeColour, false, BlendingRate);
+                else Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
+                if (GrayScale) DXManager.SetNormal(1F, Color.White);
+            }
         }
 
         public override bool IsMouseOver(Point p)

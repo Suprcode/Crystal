@@ -372,8 +372,8 @@ namespace LibraryEditor
 
                 for (int i = 0; i < pixels.Length; i += 4)
                 {
-                    if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0)
-                        pixels[i + 3] = 0; //Make Transparent
+                    if (pixels[i + 1] == 0 && pixels[i + 2] == 0 && pixels[i + 3] == 0)
+                        pixels[i] = 0; //Make Transparent
                 }
 
                 byte[] compressedBytes;

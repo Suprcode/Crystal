@@ -28,11 +28,18 @@ namespace Client.MirGraphics
         public static bool DeviceLost;
         public static float Opacity = 1F;
         public static bool Blending;
+        public static float BlendingRate;
+        public static BlendMode BlendingMode;
 
 
         public static Texture RadarTexture;
         public static List<Texture> Lights = new List<Texture>();
         public static Texture PoisonDotBackground;
+
+        public static PixelShader GrayScalePixelShader;
+        public static PixelShader NormalPixelShader;
+        public static PixelShader MagicPixelShader;
+        public static PixelShader ShadowPixelShader;
 
         public static Point[] LightSizes =
         {
@@ -88,6 +95,30 @@ namespace Client.MirGraphics
             Device.SetDialogBoxesEnabled(true);
 
             LoadTextures();
+            LoadPixelsShaders();
+        }
+
+        private static unsafe void LoadPixelsShaders()
+        {
+            var shaderNormalPath = Settings.ShadersPath + "normal.ps";
+            var shaderGrayScalePath = Settings.ShadersPath + "grayscale.ps";
+            var shaderMagicPath = Settings.ShadersPath + "magic.ps";
+
+            if (System.IO.File.Exists(shaderNormalPath))
+            {
+                using (var gs = ShaderLoader.FromFile(shaderNormalPath, null, ShaderFlags.None))
+                    NormalPixelShader = new PixelShader(Device, gs);
+            }
+            if (System.IO.File.Exists(shaderGrayScalePath))
+            {
+                using (var gs = ShaderLoader.FromFile(shaderGrayScalePath, null, ShaderFlags.None))
+                    GrayScalePixelShader = new PixelShader(Device, gs);
+            }
+            if (System.IO.File.Exists(shaderMagicPath))
+            {
+                using (var gs = ShaderLoader.FromFile(shaderMagicPath, null, ShaderFlags.None))
+                    MagicPixelShader = new PixelShader(Device, gs);
+            }
         }
 
         private static unsafe void LoadTextures()
@@ -271,26 +302,79 @@ namespace Client.MirGraphics
             Opacity = opacity;
             Sprite.Flush();
         }
-        public static void SetBlend(bool value, float rate = 1F)
+        public static void SetBlend(bool value, float rate = 1F, BlendMode mode = BlendMode.NORMAL)
         {
-            if (value == Blending) return;
+            if (value == Blending && BlendingRate == rate && BlendingMode == mode) return;
+
             Blending = value;
+            BlendingRate = rate;
+            BlendingMode = mode;
+
             Sprite.Flush();
 
             Sprite.End();
+
             if (Blending)
             {
                 Sprite.Begin(SpriteFlags.DoNotSaveState);
                 Device.RenderState.AlphaBlendEnable = true;
-                Device.RenderState.SourceBlend = Blend.BlendFactor;
-                Device.RenderState.DestinationBlend = Blend.One;
-                Device.RenderState.BlendFactor = Color.FromArgb((byte)(255 * rate), (byte)(255 * rate),
-                                                                (byte)(255 * rate), (byte)(255 * rate));
+
+                switch (BlendingMode)
+                {
+                    case BlendMode.INVLIGHT:
+                        Device.RenderState.BlendOperation = BlendOperation.Add;
+                        Device.RenderState.SourceBlend = Blend.BlendFactor;
+                        Device.RenderState.DestinationBlend = Blend.InvSourceColor;
+                        break;
+                    default:
+                        Device.RenderState.SourceBlend = Blend.BlendFactor;
+                        Device.RenderState.DestinationBlend = Blend.One;
+                        break;
+                }
+
+                Device.RenderState.BlendFactor = Color.FromArgb((byte)(255 * BlendingRate), (byte)(255 * BlendingRate),
+                                                                (byte)(255 * BlendingRate), (byte)(255 * BlendingRate));
             }
             else
                 Sprite.Begin(SpriteFlags.AlphaBlend);
 
             Device.SetRenderTarget(0, CurrentSurface);
+        }
+
+        public static void SetNormal(float blend, Color tintcolor)
+        {
+            if (Device.PixelShader == NormalPixelShader)
+                return;
+
+            Sprite.Flush();
+            Device.PixelShader = NormalPixelShader;
+            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
+            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Sprite.Flush();
+        }
+
+        public static void SetGrayscale(float blend, Color tintcolor)
+        {
+            if (Device.PixelShader == GrayScalePixelShader)
+                return;
+
+            Sprite.Flush();
+            Device.PixelShader = GrayScalePixelShader;
+            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
+            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Sprite.Flush();
+        }
+
+        public static void SetBlendMagic(float blend, Color tintcolor)
+        {
+            if (Device.PixelShader == MagicPixelShader || MagicPixelShader == null)
+                return;
+
+            Sprite.Flush();
+            Device.PixelShader = MagicPixelShader;
+            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
+            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Sprite.Flush();
         }
 
         public static void Clean()

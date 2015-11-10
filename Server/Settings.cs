@@ -38,6 +38,7 @@ namespace Server
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
         public static bool TestServer = false;
+        public static bool EnforceDBChecks = true;
 
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
@@ -258,6 +259,7 @@ namespace Server
             Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
             ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
+            EnforceDBChecks = Reader.ReadBoolean("General", "EnforceDBChecks", EnforceDBChecks);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -447,7 +449,8 @@ namespace Server
             Reader.Write("General", "Multithreaded", Multithreaded);
             Reader.Write("General", "ThreadLimit", ThreadLimit);
             Reader.Write("General", "TestServer", TestServer);
-
+            Reader.Write("General", "EnforceDBChecks", EnforceDBChecks);
+            
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
             Reader.Write("Network", "Port", Port);

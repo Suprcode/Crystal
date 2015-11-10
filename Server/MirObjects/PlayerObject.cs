@@ -6295,6 +6295,23 @@ namespace Server.MirObjects
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
 
+            //if(magic.Info.Spell == Spell.GreatFireBall && magic.Level >= 3 && target.Race == ObjectType.Monster)
+            //{
+            //    List<MapObject> targets = ((MonsterObject)target).FindAllNearby(3, target.CurrentLocation);
+
+            //    int secondaryTargetCount = targets.Count > 3 ? 3 : targets.Count;
+
+            //    for (int i = 0; i < secondaryTargetCount; i++)
+            //    {
+            //        if (!target.IsAttackTarget(this)) continue;
+            //        DelayedAction action2 = new DelayedAction(DelayedType.Magic, Envir.Time + delay + 200, magic, damage / 2, targets[i]);
+            //        ActionList.Add(action2);
+
+            //        Enqueue(new S.Magic { Spell = magic.Info.Spell, TargetID = targets[i].ObjectID, Target = targets[i].CurrentLocation, Cast = true, Level = magic.Level });
+            //        Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = magic.Info.Spell, TargetID = targets[i].ObjectID, Target = targets[i].CurrentLocation, Cast = true, Level = magic.Level });
+            //    }
+            //}
+
             ActionList.Add(action);
 
             return true;

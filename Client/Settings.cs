@@ -31,6 +31,8 @@ namespace Client
         public const string DataPath = @".\Data\",
                             MapPath = @".\Map\",
                             SoundPath = @".\Sound\",
+                            ExtraDataPath = @".\Data\Extra\",
+                            ShadersPath = @".\Data\Shaders\",
                             MonsterPath = @".\Data\Monster\",
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
