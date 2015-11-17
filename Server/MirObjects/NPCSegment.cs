@@ -412,6 +412,10 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.Goto, parts[1]));
                     break;
 
+                case "BREAK":
+                    acts.Add(new NPCActions(ActionType.Break));
+                    break;
+
                 //cant use stored var
                 case "ADDNAMELIST":
                     if (parts.Length < 2) return;
@@ -1819,6 +1823,10 @@ namespace Server.MirObjects
                     case ActionType.Goto:
                         DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
                         player.ActionList.Add(action);
+                        break;
+
+                    case ActionType.Break:
+                        Page.BreakFromSegments = true;
                         break;
 
                     case ActionType.Set:

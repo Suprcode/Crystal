@@ -13,6 +13,8 @@ namespace Server.MirObjects
         public List<string> Args = new List<string>();
         public List<string> Buttons = new List<string>();
 
+        public bool BreakFromSegments = false;
+
         public NPCPage(string key)
         {
             Key = key;

@@ -334,6 +334,11 @@ namespace Server.MirObjects
 
                 if (!lines[i].ToUpper().StartsWith(tempSectionName.ToUpper())) continue;
 
+                if(lines[i] == "[@Market]")
+                {
+
+                }
+
                 List<string> segmentLines = new List<string>();
 
                 nextPage = false;
@@ -650,6 +655,12 @@ namespace Server.MirObjects
 
                 foreach (NPCSegment segment in page.SegmentList)
                 {
+                    if (page.BreakFromSegments)
+                    {
+                        page.BreakFromSegments = false;
+                        break;
+                    }
+
                     ProcessSegment(player, page, segment);
                 }
 
@@ -1319,7 +1330,8 @@ namespace Server.MirObjects
         GlobalMessage,
         LoadValue,
         SaveValue,
-        RemovePet
+        RemovePet,
+        Break
     }
     public enum CheckType
     {
