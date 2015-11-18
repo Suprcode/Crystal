@@ -3341,7 +3341,7 @@ namespace Server.MirObjects
 
                     for (int i = 0; i < Envir.Players.Count; i++)
                     {
-                        CurrentMap.Players[i].Enqueue(p);
+                        Envir.Players[i].Enqueue(p);
                     }
                     return;
                 }
