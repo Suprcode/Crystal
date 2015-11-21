@@ -500,7 +500,7 @@ namespace Server.MirObjects
                                 break;
                         }
                 }
-
+                
                 currentSay.Add(lines[i].TrimEnd());
             }
 

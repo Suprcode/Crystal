@@ -582,12 +582,12 @@ namespace Client.MirScenes
 
                 CancelButton = new MirButton
                     {
-                        HoverIndex = 364,
-                        Index = 363,
+                        HoverIndex = 281,
+                        Index = 280,
                         Library = Libraries.Title,
                         Location = new Point(425, 425),
                         Parent = this,
-                        PressedIndex = 365
+                        PressedIndex = 282
                     };
                 CancelButton.Click += (o, e) => Dispose();
 
