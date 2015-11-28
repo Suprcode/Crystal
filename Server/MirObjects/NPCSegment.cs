@@ -841,7 +841,6 @@ namespace Server.MirObjects
         {
             var regex = new Regex(@"\<\$(.*)\>");
             var varRegex = new Regex(@"(.*?)\(([A-Z][0-9])\)");
-            var twoValRegex = new Regex(@"(.*?)\(((.*?),(.*?))\)");
 
             var match = regex.Match(param);
 
@@ -850,29 +849,14 @@ namespace Server.MirObjects
             string innerMatch = match.Groups[1].Captures[0].Value.ToUpper();
 
             Match varMatch = varRegex.Match(innerMatch);
-            Match twoValMatch = twoValRegex.Match(innerMatch);
 
             if (varRegex.Match(innerMatch).Success)
                 innerMatch = innerMatch.Replace(varMatch.Groups[2].Captures[0].Value.ToUpper(), "");
-            else if (twoValRegex.Match(innerMatch).Success)
-                innerMatch = innerMatch.Replace(twoValMatch.Groups[2].Captures[0].Value.ToUpper(), "");
 
             string newValue = string.Empty;
 
             switch (innerMatch)
             {
-                case "ARCHERCOST()":
-                    var val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
-                    var val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
-
-                    int intVal1, intVal2;
-
-                    if(int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
-                    {
-                        newValue = "";//pass intVal1 and intVal2, return the found desired value.
-                    }
-                    break;
-
                 case "OUTPUT()":
                     newValue = FindVariable(player, "%" + varMatch.Groups[2].Captures[0].Value.ToUpper());
                     break;

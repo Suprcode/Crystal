@@ -3764,15 +3764,15 @@ namespace Server.MirObjects
                             CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
                             player = Envir.GetPlayer(Lover.Name);
 
-                            if (player.Dead)
-                            {
-                                ReceiveChat("You can't recall a dead player.", ChatType.System);
-                                return;
-                            }
-
                             if (player == null)
                             {
                                 ReceiveChat((string.Format("{0} is not online.", Lover.Name)), ChatType.System);
+                                return;
+                            }
+
+                            if (player.Dead)
+                            {
+                                ReceiveChat("You can't recall a dead player.", ChatType.System);
                                 return;
                             }
 
@@ -13185,7 +13185,7 @@ namespace Server.MirObjects
                     TwinDrakeBlade = true;
                     ChangeMP(-cost);
 
-                    Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell });
+                    Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell });
                     break;
                 case Spell.FlamingSword:
                     if (FlamingSword || Envir.Time < FlamingSwordTime) return;
@@ -13494,7 +13494,7 @@ namespace Server.MirObjects
 
                 uint cost = (uint)(temp.RepairPrice() * ob.Info.PriceRate);
 
-                if (cost > Account.Gold || cost == 0) return;
+                if (cost > Account.Gold) return;
 
                 Account.Gold -= cost;
                 Enqueue(new S.LoseGold { Gold = cost });
@@ -14237,24 +14237,31 @@ namespace Server.MirObjects
                 {
                     CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
 
-                    if (Lover == null) continue; //circumventing an error elsewhere?? shouldn't ever be null.
+                    if (Lover == null) continue;
 
                     PlayerObject LoverP = Envir.GetPlayer(Lover.Name);
+
                     RemoveBuff(BuffType.RelationshipEXP);
-                    LoverP.RemoveBuff(BuffType.RelationshipEXP);
+
+                    if (LoverP != null)
+                    {
+                        LoverP.RemoveBuff(BuffType.RelationshipEXP);
+                    }
                 }
                 else if (buff.Type == BuffType.Mentee || buff.Type == BuffType.Mentor)
                 {
                     CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
 
-                    if (Mentor == null) continue; //circumventing an error elsewhere?? shouldn't ever be null.
+                    if (Mentor == null) continue;
 
                     PlayerObject MentorP = Envir.GetPlayer(Mentor.Name);
 
-                    if (MentorP == null) continue; //circumventing an error elsewhere?? shouldn't ever be null.
-
                     RemoveBuff(buff.Type);
-                    MentorP.RemoveBuff(buff.Type == BuffType.Mentee ? BuffType.Mentor : BuffType.Mentee);
+
+                    if (MentorP != null)
+                    {
+                        MentorP.RemoveBuff(buff.Type == BuffType.Mentee ? BuffType.Mentor : BuffType.Mentee);
+                    }
                 }
             }
         }
@@ -17162,7 +17169,7 @@ namespace Server.MirObjects
             //CHECK GOLD HERE
             uint cost = (uint)((Info.Inventory[index].Info.RequiredAmount * 10) * Settings.RefineCost);
 
-            if (cost > Account.Gold || cost == 0)
+            if (cost > Account.Gold)
             {
                 ReceiveChat(String.Format("You don't have enough gold to refine your {0}.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
@@ -17561,7 +17568,7 @@ namespace Server.MirObjects
 
             uint cost = (uint)((Info.Inventory[index].Info.RequiredAmount * 10) * Settings.ReplaceWedRingCost);
 
-            if (cost > Account.Gold || cost == 0)
+            if (cost > Account.Gold)
             {
                 ReceiveChat(String.Format("You don't have enough gold to replace your Wedding Ring."), ChatType.System);
                 return;

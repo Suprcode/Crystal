@@ -111,7 +111,8 @@ public enum QuestType : byte
 {
     General = 0,
     Daily = 1,
-    Repeatable = 2
+    Repeatable = 2,
+    Story = 3
 }
 
 public enum QuestIcon : byte
@@ -121,7 +122,9 @@ public enum QuestIcon : byte
     ExclamationYellow = 2,
     QuestionYellow = 3,
     ExclamationBlue = 5,
-    QuestionBlue = 6
+    QuestionBlue = 6,
+    ExclamationGreen = 7,
+    QuestionGreen = 8
 }
 
 public enum QuestState : byte
@@ -3809,6 +3812,14 @@ public class ClientQuestInfo
                     icon = QuestIcon.QuestionWhite;
                 else
                     icon = QuestIcon.ExclamationBlue;
+                break;
+            case QuestType.Story:
+                if (completed)
+                    icon = QuestIcon.QuestionGreen;
+                else if (taken)
+                    icon = QuestIcon.QuestionWhite;
+                else
+                    icon = QuestIcon.ExclamationGreen;
                 break;
         }
 

@@ -311,15 +311,15 @@ namespace LibraryEditor
                                     WTLLibrary WTLlib = new WTLLibrary(OpenWeMadeDialog.FileNames[i]);
                                     WTLlib.ToMLibrary();
                                 }
-                                else if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".wil")
-                                {
-                                    WeMadeLibrary WILlib = new WeMadeLibrary(OpenWeMadeDialog.FileNames[i]);
-                                    WILlib.ToMLibrary();
-                                }
                                 else if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".Lib")
                                 {
                                     MLibrary v1Lib = new MLibrary(OpenWeMadeDialog.FileNames[i]);
                                     v1Lib.ToMLibrary();
+                                }
+                                else
+                                {
+                                    WeMadeLibrary WILlib = new WeMadeLibrary(OpenWeMadeDialog.FileNames[i]);
+                                    WILlib.ToMLibrary();
                                 }
                                 toolStripProgressBar.Value++;
                             });

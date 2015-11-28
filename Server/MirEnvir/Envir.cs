@@ -2361,17 +2361,6 @@ namespace Server.MirEnvir
 
         private void ClearDailyQuests(CharacterInfo info)
         {
-            //CharacterInfo c1 = info;
-            //foreach (int flagId in
-            //    from q in QuestInfoList
-            //   // let flagId = 1000 + q.Index
-            //    where c1.Flags[flagId] && q.Type == QuestType.Daily
-            //    select flagId)
-            //{
-            //    info.Flags[flagId] = false;
-            //}
-          
-
             foreach (var quest in QuestInfoList)
             {
                 if (quest.Type != QuestType.Daily) continue;

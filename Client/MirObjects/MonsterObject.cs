@@ -947,6 +947,10 @@ namespace Client.MirObjects
                 PlayAppearSound();
                 FrameIndex = CMain.Random.Next(Frame.Count);
             }
+            else if(CurrentAction == MirAction.SitDown)
+            {
+                PlayAppearSound();
+            }
 
             NextMotion -= NextMotion % 100;
         }

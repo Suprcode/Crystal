@@ -154,6 +154,8 @@ namespace Client.MirScenes
         public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
         public static long SpellTime;
 
+        public static Point DoorPoint;
+        public static long DoorTime;
 
         public MirLabel[] OutputLines = new MirLabel[10];
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
@@ -882,6 +884,12 @@ namespace Client.MirScenes
                 };
 
                 messageBox.Show();
+            }
+
+            if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
+            {
+                MapControl.CloseDoor(GameScene.DoorPoint);
+                GameScene.DoorTime = 0;
             }
 
             
@@ -8140,6 +8148,7 @@ namespace Client.MirScenes
 
             CheckInput();
 
+
             MapObject bestmouseobject = null;
             for (int y = MapLocation.Y + 2; y >= MapLocation.Y - 2; y--)
             {
@@ -8462,6 +8471,8 @@ namespace Client.MirScenes
                     if (fileIndex == -1) continue;
                     animation = M2CellInfo[x, y].FrontAnimationFrame;
 
+
+
                     if ((animation & 0x80) > 0)
                     {
                         blend = true;
@@ -8476,6 +8487,17 @@ namespace Client.MirScenes
                         byte animationTick = M2CellInfo[x, y].FrontAnimationTick;
                         index += (AnimationCount % (animation + (animation * animationTick))) / (1 + animationTick);
                     }
+
+
+                    if ((M2CellInfo[x, y].DoorOffset & 0x80) > 0)
+                    {
+                        if ((M2CellInfo[x, y].DoorIndex & 0x7F) > 0)
+                        {
+                            index += (M2CellInfo[x, y].DoorOffset & 0x7F);
+                        }
+                    }
+
+
                     s = Libraries.MapLibs[fileIndex].GetSize(index);
                     if (s.Width == CellWidth && s.Height == CellHeight && animation == 0) continue;
                     if ((s.Width == CellWidth * 2) && (s.Height == CellHeight * 2) && (animation == 0)) continue;
@@ -8942,8 +8964,16 @@ namespace Client.MirScenes
                     }
                     if (CanWalk(direction))
                     {
-                        User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                        return;
+                        if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
+                        {
+                            OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
+                            return;
+                        }
+                        else
+                        {
+                            User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                            return;
+                        }
                     }
                     if (direction != User.Direction)
                     {
@@ -9048,9 +9078,17 @@ namespace Client.MirScenes
                         }
                         if (CanWalk(direction))
                         {
-                            //if (MapObject.MouseObject != null) return;
-                            User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                            return;
+                            if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
+                            {
+                                OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
+                                return;
+                            }
+                            else
+                            {
+                                //if (MapObject.MouseObject != null) return;
+                                User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                                return;
+                            }
                         }
                         if (direction != User.Direction)
                         {
@@ -9456,6 +9494,80 @@ namespace Client.MirScenes
             }
 
             return true;
+        }
+
+        public int GetDoor(Point target)
+        {
+            int result = 0;
+
+            Point nTarget = target;// Functions.PointMove(target, MirDirection.UpLeft, 1);
+
+            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
+            {
+                result = (M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x7F);
+            }
+
+            return result;
+        }
+
+        public void OpenDoor(Point target)
+        {
+            int idx;
+
+            Point nTarget = target;// Functions.PointMove(target, MirDirection.UpLeft, 1);
+
+            if (nTarget.X < 0 || nTarget.Y < 0) return;
+
+            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
+            {
+                idx = (M2CellInfo[target.X, target.Y].DoorIndex & 0x7F);
+
+                for (int x = nTarget.X - 10; x < nTarget.X + 10; x++)
+                {
+                    for (int y = nTarget.Y - 10; y < nTarget.Y + 10; y++)
+                    {
+                        if (x > 0 && y > 0)
+                        {
+                            if ((M2CellInfo[x, y].DoorIndex & 0x7F) == idx)
+                            {
+                                M2CellInfo[x, y].DoorOffset = (byte)(M2CellInfo[x, y].DoorOffset | 0x80);
+                                GameScene.DoorPoint = nTarget;
+                                GameScene.DoorTime = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CloseDoor(Point target)
+        {
+            int idx;
+
+            Point nTarget = target;//Functions.PointMove(target, MirDirection.UpLeft, 1);
+
+            if (nTarget.X < 0 || nTarget.Y < 0) return;
+
+            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
+            {
+                idx = (M2CellInfo[target.X, target.Y].DoorIndex & 0x7F);
+
+                for (int x = nTarget.X - 10; x < nTarget.X + 10; x++)
+                {
+                    for (int y = nTarget.Y - 10; y < nTarget.Y + 10; y++)
+                    {
+                        if (x > 0 && y > 0)
+                        {
+                            if ((M2CellInfo[x, y].DoorIndex & 0x7F) == idx)
+                            {
+                                M2CellInfo[x, y].DoorOffset = (byte)(M2CellInfo[x, y].DoorOffset | 0x7F);
+                                GameScene.DoorPoint = new Point(0,0);
+                                GameScene.DoorTime = 0;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public bool ValidPoint(Point p)
@@ -12731,6 +12843,10 @@ namespace Client.MirScenes
                             color = Color.Yellow;
                             text = "!";
                             break;
+                        case QuestIcon.ExclamationGreen:
+                            color = Color.Green;
+                            text = "!";
+                            break;
                         case QuestIcon.QuestionBlue:
                             color = Color.DodgerBlue;
                             text = "?";
@@ -12741,6 +12857,10 @@ namespace Client.MirScenes
                             break;
                         case QuestIcon.QuestionYellow:
                             color = Color.Yellow;
+                            text = "?";
+                            break;
+                        case QuestIcon.QuestionGreen:
+                            color = Color.Green;
                             text = "?";
                             break;
                     }
