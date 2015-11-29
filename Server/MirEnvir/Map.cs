@@ -167,7 +167,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 12;
+                    offSet += 9;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 2;
                 }
         }
 
@@ -193,7 +200,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 34;
+                    offSet += 16;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 17;
                 }
         }
 
@@ -245,7 +259,12 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall;
                     else
                         Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-                    offSet += 14;
+                    offSet += 13;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
                 }
         }
 
@@ -294,7 +313,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 13;
+                    offSet += 10;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 2;
                 }
         }
 
@@ -321,7 +347,12 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offset += 14;
+                    offset += 13;
+
+                    byte light = Bytes[offset++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
                 }
                 
         }
