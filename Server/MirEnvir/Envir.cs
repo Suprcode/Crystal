@@ -856,7 +856,6 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.EnqueueDebugging("Error saving guilds: " + ex.Message);
             }
         }
 
@@ -922,7 +921,6 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.EnqueueDebugging("Error saving goods: " + ex.Message);
             }
 
         }
@@ -972,7 +970,6 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.EnqueueDebugging("Error saving accounts: " + ex.Message);
             }
 
             Saving = false;

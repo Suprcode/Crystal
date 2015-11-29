@@ -3503,6 +3503,11 @@ namespace Client.MirObjects
 
             if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99 && GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex < 199) //shanda tiles
             {
+                int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
+                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex - 100) * 10000 + index;
+
+                //add 10000 to the index for each tile file up to 10 (100,000), and then count forward to smTiles the same (starting from 10,000)
+
                 moveSound = SoundList.WalkGroundL;
             }
             else //wemade tiles

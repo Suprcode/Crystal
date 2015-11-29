@@ -300,6 +300,10 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.HasBagSpace, parts[1], parts[2]));
                     break;
+
+                case "ISNEWHUMAN":
+                    CheckList.Add(new NPCChecks(CheckType.IsNewHuman));
+                    break;
             }
 
         }
@@ -1420,6 +1424,10 @@ namespace Server.MirObjects
 
                         failed = !Compare(param[0], slotCount, tempInt);
                         break;
+
+                    case CheckType.IsNewHuman:
+                        failed = player.Info.AccountInfo.Characters.Count > 1;
+                        break;
                 }
 
                 if (!failed) continue;
@@ -1819,6 +1827,22 @@ namespace Server.MirObjects
 
                         player.Info.Magics.Add(magic);
                         player.Enqueue(magic.GetInfo());
+                        break;
+
+                    case ActionType.RemoveSkill:
+
+                        if (!Enum.TryParse(param[0], true, out skill)) return;
+
+                        if (!player.Info.Magics.Any(e => e.Spell == skill)) break;
+
+                        for (var j = player.Info.Magics.Count - 1; j >= 0; j--)
+                        {
+                            if (player.Info.Magics[i].Spell != skill) continue;
+
+                            player.Info.Magics.RemoveAt(i);
+                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                        }
+
                         break;
 
                     case ActionType.Goto:

@@ -13651,9 +13651,6 @@ namespace Server.MirObjects
             MatchName = name.Replace(" ", "");
             MatchType = type;
             PageSent = 0;
-
-            long start = Envir.Stopwatch.ElapsedMilliseconds;
-
             LinkedListNode<AuctionInfo> current = UserMatch ? Account.Auctions.First : Envir.Auctions.First;
 
             while (current != null)
@@ -13676,10 +13673,9 @@ namespace Server.MirObjects
                 CheckItem(listings[i].Item);
             }
 
-            Enqueue(new S.NPCMarket { Listings = listings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
-
-            //SMain.EnqueueDebugging(string.Format("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, UserMatch ? Account.Auctions.Count : Envir.Auctions.Count));
+            Enqueue(new S.NPCMarket { Listings = listings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });      
         }
+
         public void MarketSearch(string match)
         {
             if (Dead || Envir.Time < SearchTime) return;
@@ -15591,18 +15587,22 @@ namespace Server.MirObjects
                 Fishing = false;
                 return;
             }
-            else
-            {
-                if (rod.Info.Shape == 49 || rod.Info.Shape == 50)
-                {
-                    flexibilityStat = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, flexibilityStat + rod.Info.CriticalRate)));
-                    successStat = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, successStat + rod.Info.MaxAC)));
-                    if (cast)
-                    {
-                        DamageItem(rod, 1, true);
-                    }
 
-                }
+            Point fishingPoint = Functions.PointMove(CurrentLocation, Direction, 3);
+            Cell fishingCell = CurrentMap.Cells[fishingPoint.X, fishingPoint.Y];
+
+            if (fishingCell.FishingAttribute == FishingAttribute.None)
+            {
+                Fishing = false;
+                return;
+            }
+
+            flexibilityStat = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, flexibilityStat + rod.Info.CriticalRate)));
+            successStat = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, successStat + rod.Info.MaxAC)));
+
+            if (cast)
+            {
+                DamageItem(rod, 1, true);
             }
 
             UserItem hook = rod.Slots[(int)FishingSlot.Hook];

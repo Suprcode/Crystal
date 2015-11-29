@@ -97,8 +97,13 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
+                    offSet += 9;
 
-                    offSet += 10;
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
                 }
         }
 
@@ -129,11 +134,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 6;
+                    offSet += 7;
 
-                    //fish/light check
+                    byte light = fileBytes[offSet++];
 
-                    offSet += 3;
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 1;
                 }
         }
 
@@ -2093,8 +2101,7 @@ namespace Server.MirEnvir
 
         public List<MapObject> Objects;
         public CellAttribute Attribute;
-
-        public bool FishingCell;
+        public FishingAttribute FishingAttribute;
 
         public void Add(MapObject mapObject)
         {

@@ -1296,6 +1296,7 @@ namespace Server.MirObjects
         LocalMessage,
         Goto,
         GiveSkill,
+        RemoveSkill,
         Set,
         Param1,
         Param2,
@@ -1364,6 +1365,7 @@ namespace Server.MirObjects
         CheckRelationship,
         CheckWeddingRing,
         CheckPet,
-        HasBagSpace
+        HasBagSpace,
+        IsNewHuman
     }
 }
