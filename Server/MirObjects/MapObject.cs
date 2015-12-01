@@ -161,8 +161,6 @@ namespace Server.MirObjects
         public List<MonsterObject> Pets = new List<MonsterObject>();
         public List<Buff> Buffs = new List<Buff>();
 
-        public List<ConquestObject> ConquestList = new List<ConquestObject>();
-
         public List<PlayerObject> GroupMembers;
 
         public virtual AttackMode AMode { get; set; }

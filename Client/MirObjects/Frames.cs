@@ -12,6 +12,7 @@ namespace Client.MirObjects
         public static List<FrameSet> Monsters;
         public static List<FrameSet> HelperPets; //IntelligentCreature
         public static List<FrameSet> Gates;
+        public static List<FrameSet> Walls;
 
         public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
 
@@ -27,6 +28,8 @@ namespace Client.MirObjects
             HelperPets = new List<FrameSet>(); //IntelligentCreature
 
             Gates = new List<FrameSet>();
+
+            Walls = new List<FrameSet>();
 
             /*
              * PLAYERS
@@ -2430,6 +2433,31 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack2, new Frame(128, 6, -6, 200));//close
             frame.Frames.Add(MirAction.Die, new Frame(104, 10, -10, 200));
             frame.Frames.Add(MirAction.Dead, new Frame(113, 1, -1, 1000));
+
+            #endregion
+
+            #region Wall Frames
+
+            //Left of Sabuk Palace
+            Walls.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(168, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(168, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Die, new Frame(172, 1, -1, 400));
+            frame.Frames.Add(MirAction.Dead, new Frame(172, 1, -1, 1000));
+
+            //Left of Sabuk Palace Door
+            Walls.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(184, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(184, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Die, new Frame(188, 1, -1, 400, 196));
+            frame.Frames.Add(MirAction.Dead, new Frame(188, 1, -1, 1000, 196));
+
+            //Right of Sabuk Palace Door
+            Walls.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(200, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(200, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Die, new Frame(204, 1, -1, 400));
+            frame.Frames.Add(MirAction.Dead, new Frame(204, 1, -1, 1000));
 
             #endregion
         }

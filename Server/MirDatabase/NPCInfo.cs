@@ -30,13 +30,9 @@ namespace Server.MirDatabase
         public string ClassRequired = "";
         public bool Sabuk = false;
         public int FlagNeeded = 0;
+        public int Conquest;
 
         public bool IsDefault;
-
-        public float PriceRate
-        {
-            get { return Rate / 100F; }
-        }
 
         public List<int> CollectQuestIndexes = new List<int>();
         public List<int> FinishQuestIndexes = new List<int>();
@@ -78,7 +74,10 @@ namespace Server.MirDatabase
                 MaxLev = reader.ReadInt16();
                 DayofWeek = reader.ReadString();
                 ClassRequired = reader.ReadString();
-                Sabuk = reader.ReadBoolean();
+                if (Envir.LoadVersion >= 66)
+                    Conquest = reader.ReadInt32();
+                else
+                    Sabuk = reader.ReadBoolean();
                 FlagNeeded = reader.ReadInt32();
             }
         }
@@ -112,7 +111,7 @@ namespace Server.MirDatabase
             writer.Write(MaxLev);
             writer.Write(DayofWeek);
             writer.Write(ClassRequired);
-            writer.Write(Sabuk);
+            writer.Write(Conquest);
             writer.Write(FlagNeeded);
         }
 

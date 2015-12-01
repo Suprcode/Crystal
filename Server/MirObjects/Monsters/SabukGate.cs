@@ -9,6 +9,10 @@ namespace Server.MirObjects.Monsters
 {
     public class SabukGate : CastleGate
     {
+
+        public ConquestObject Conquest;
+        public int GateIndex;
+
         protected internal SabukGate(MonsterInfo info) : base(info)
         {
             BlockArray = new Point[] 
@@ -25,18 +29,26 @@ namespace Server.MirObjects.Monsters
 
             Direction = MirDirection.Up;
         }
-        
+        public override void Despawn()
+        {
+            base.Despawn();
+        }
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-            MirDirection newDirection = (MirDirection)(3 - GetDamageLevel());
+            CheckDirection();
 
-            if (newDirection != Direction)
-            {
-                Direction = newDirection;
-                Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            }
-
+            if (!Conquest.WarIsOn || attacker.MyGuild != null && Conquest.Owner == attacker.MyGuild.Guildindex) damage = 0;
+             
             return base.Attacked(attacker, damage, type, damageWeapon);
+        }
+
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            CheckDirection();
+
+            if (!Conquest.WarIsOn) damage = 0;
+
+            return base.Attacked(attacker, damage, type);
         }
 
         public override void OpenDoor()
@@ -47,6 +59,17 @@ namespace Server.MirObjects.Monsters
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
             ActiveDoorWall(false);
+        }
+
+        public void CheckDirection()
+        {
+            MirDirection newDirection = (MirDirection)(3 - GetDamageLevel());
+
+            if (newDirection != Direction)
+            {
+                Direction = newDirection;
+                Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            }
         }
 
         public override void CloseDoor()
@@ -60,9 +83,14 @@ namespace Server.MirObjects.Monsters
             ActiveDoorWall(true);
         }
 
-        public override void RepairWall(int level)
+        public override void RepairGate()
         {
+            if (HP == 0)
+                Revive(MaxHP, false);
+            else
+                SetHP(MaxHP);
 
+            CheckDirection();
         }
 
         protected override int GetDamageLevel()
@@ -72,6 +100,14 @@ namespace Server.MirObjects.Monsters
             if (level < 1) level = 1;
 
             return level;
+        }
+
+        protected override bool CanRegen
+        {
+            get
+            {
+                return false;
+            }
         }
     }
 }

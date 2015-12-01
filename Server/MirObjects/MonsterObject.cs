@@ -159,6 +159,8 @@ namespace Server.MirObjects
                     return new ConquestArcher(info);
                 case 72:
                     return new SabukGate(info);
+                case 73:
+                    return new Wall(info);
                 default:
                     return new MonsterObject(info);
             }
@@ -226,9 +228,22 @@ namespace Server.MirObjects
         public virtual uint Experience 
         { 
             get { return Info.Experience; } 
-        }     
-
-        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, DeadDelay = 180000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
+        }
+        public int DeadDelay
+        {
+            get
+            {
+                switch (Info.AI)
+                {
+                    case 72:
+                    case 73:
+                        return int.MaxValue;
+                    default:
+                        return 180000;
+                }
+            }
+        }
+        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
         public bool BindingShotCenter;

@@ -1069,6 +1069,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectColourChanged:
                     ObjectColourChanged((S.ObjectColourChanged)p);
                     break;
+                case (short)ServerPacketIds.ObjectGuildNameChanged:
+                    ObjectGuildNameChanged((S.ObjectGuildNameChanged)p);
+                    break;
                 case (short)ServerPacketIds.GainExperience:
                     GainExperience((S.GainExperience)p);
                     break;
@@ -3059,6 +3062,20 @@ namespace Client.MirScenes
                 return;
             }
         }
+
+        private void ObjectGuildNameChanged(S.ObjectGuildNameChanged p)
+        {
+            if (p.ObjectID == User.ObjectID) return;
+
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != p.ObjectID) continue;
+                PlayerObject obPlayer = (PlayerObject)ob;
+                obPlayer.GuildName = p.GuildName;
+                return;
+            }
+        }
         private void GainExperience(S.GainExperience p)
         {
             OutputMessage(string.Format("Experience Gained {0}.", p.Amount));
@@ -4651,6 +4668,9 @@ namespace Client.MirScenes
                         GuildDialog.Gold -= p.Amount;
                     else
                         GuildDialog.Gold = 0;
+                    break;
+                case 3:
+                    GuildDialog.Gold += p.Amount;
                     break;
             }
         }
@@ -8516,6 +8536,7 @@ namespace Client.MirScenes
 
                 Objects[i].DrawDamages();
             }
+            
 
             if (!Settings.Effect) return;
 

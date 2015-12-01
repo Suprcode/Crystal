@@ -174,7 +174,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long dayTime, warTime, mailTime, guildTime;
+        private long dayTime, warTime, mailTime, guildTime, conquestTime;
 
         private bool MagicExists(Spell spell)
         {
@@ -709,6 +709,15 @@ namespace Server.MirEnvir
                     GuildList[i].Process();
                 }
             }
+
+            if (Time >= conquestTime)
+            {
+                conquestTime = Time + (Settings.Second * 20);
+                for (int i = 0; i < Conquests.Count; i++)
+                    Conquests[i].Process();
+            }
+
+
         }
 
         public void Broadcast(Packet p)
@@ -1418,6 +1427,9 @@ namespace Server.MirEnvir
                 ConquestObject newConquest;
                 Map tempMap;
                 ConquestArcherObject tempArcher;
+                ConquestGateObject tempGate;
+                ConquestWallObject tempWall;
+                ConquestSiegeObject tempSiege;
 
                 for (int i = 0; i < ConquestInfos.Count; i++)
                 {
@@ -1478,7 +1490,80 @@ namespace Server.MirEnvir
                             newConquest.ArcherList.Remove(newConquest.ArcherList[j]);
                     }
 
+                    //Bind Info to Saved Gate objects or create new objects
+                    for (int j = 0; j < ConquestInfos[i].ConquestGates.Count; j++)
+                    {
+                        tempGate = newConquest.GateList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestGates[j].Index);
+
+                        if (tempGate != null)
+                        {
+                            tempGate.Info = ConquestInfos[i].ConquestGates[j];
+                            tempGate.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.GateList.Add(new ConquestGateObject { Info = ConquestInfos[i].ConquestGates[j], Health = uint.MaxValue, Index = ConquestInfos[i].ConquestGates[j].Index, Conquest = newConquest });
+                        }
+                    }
+
+                    //Remove Gates that have been removed from DB
+                    for (int j = 0; j < newConquest.GateList.Count; j++)
+                    {
+                        if (newConquest.GateList[j].Info == null)
+                            newConquest.GateList.Remove(newConquest.GateList[j]);
+                    }
+
+                    //Bind Info to Saved Wall objects or create new objects
+                    for (int j = 0; j < ConquestInfos[i].ConquestWalls.Count; j++)
+                    {
+                        tempWall = newConquest.WallList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestWalls[j].Index);
+
+                        if (tempWall != null)
+                        {
+                            tempWall.Info = ConquestInfos[i].ConquestWalls[j];
+                            tempWall.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.WallList.Add(new ConquestWallObject { Info = ConquestInfos[i].ConquestWalls[j], Index = ConquestInfos[i].ConquestWalls[j].Index, Health = uint.MaxValue, Conquest = newConquest });
+                        }
+                    }
+
+                    //Remove Walls that have been removed from DB
+                    for (int j = 0; j < newConquest.WallList.Count; j++)
+                    {
+                        if (newConquest.WallList[j].Info == null)
+                            newConquest.WallList.Remove(newConquest.WallList[j]);
+                    }
+
+                    //Bind Info to Saved Siege objects or create new objects
+                    for (int j = 0; j < ConquestInfos[i].ConquestSieges.Count; j++)
+                    {
+                        tempSiege = newConquest.SiegeList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestSieges[j].Index);
+
+                        if (tempSiege != null)
+                        {
+                            tempSiege.Info = ConquestInfos[i].ConquestSieges[j];
+                            tempSiege.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.SiegeList.Add(new ConquestSiegeObject { Info = ConquestInfos[i].ConquestSieges[j], Index = ConquestInfos[i].ConquestSieges[j].Index, Health = uint.MaxValue, Conquest = newConquest });
+                        }
+                    }
+
+                    //Remove Siege that have been removed from DB
+                    for (int j = 0; j < newConquest.SiegeList.Count; j++)
+                    {
+                        if (newConquest.SiegeList[j].Info == null)
+                            newConquest.SiegeList.Remove(newConquest.SiegeList[j]);
+                    }
+
                     newConquest.LoadArchers();
+                    newConquest.LoadGates();
+                    newConquest.LoadWalls();
+                    newConquest.LoadSieges();
+                    newConquest.LoadNPCs();
                 }
             }
         }

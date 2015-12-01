@@ -30,6 +30,8 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.ConquestHidden_combo = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.MapComboBox = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -63,7 +65,6 @@
             this.TimeVisible_checkbox = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.MaxLev_textbox = new System.Windows.Forms.TextBox();
-            this.Sabuk_checkbox = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -99,6 +100,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label14);
+            this.tabPage1.Controls.Add(this.ConquestHidden_combo);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.MapComboBox);
             this.tabPage1.Controls.Add(this.label11);
@@ -124,6 +127,33 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Info";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label14.Location = new System.Drawing.Point(26, 195);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(55, 13);
+            this.label14.TabIndex = 59;
+            this.label14.Text = "Conquest:";
+            // 
+            // ConquestHidden_combo
+            // 
+            this.ConquestHidden_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConquestHidden_combo.FormattingEnabled = true;
+            this.ConquestHidden_combo.Items.AddRange(new object[] {
+            "",
+            "Warrior",
+            "Wizard",
+            "Taoist",
+            "Assassin",
+            "Archer"});
+            this.ConquestHidden_combo.Location = new System.Drawing.Point(87, 191);
+            this.ConquestHidden_combo.Name = "ConquestHidden_combo";
+            this.ConquestHidden_combo.Size = new System.Drawing.Size(132, 21);
+            this.ConquestHidden_combo.TabIndex = 58;
+            this.ConquestHidden_combo.SelectedIndexChanged += new System.EventHandler(this.ConquestHidden_combo_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -305,7 +335,6 @@
             this.tabPage2.Controls.Add(this.TimeVisible_checkbox);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.MaxLev_textbox);
-            this.tabPage2.Controls.Add(this.Sabuk_checkbox);
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.label4);
@@ -320,7 +349,7 @@
             // 
             // Flag_textbox
             // 
-            this.Flag_textbox.Location = new System.Drawing.Point(112, 110);
+            this.Flag_textbox.Location = new System.Drawing.Point(112, 87);
             this.Flag_textbox.MaxLength = 3;
             this.Flag_textbox.Name = "Flag_textbox";
             this.Flag_textbox.Size = new System.Drawing.Size(49, 20);
@@ -331,7 +360,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label12.Location = new System.Drawing.Point(41, 113);
+            this.label12.Location = new System.Drawing.Point(41, 90);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(71, 13);
             this.label12.TabIndex = 54;
@@ -341,7 +370,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label10.Location = new System.Drawing.Point(41, 83);
+            this.label10.Location = new System.Drawing.Point(41, 63);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(71, 13);
             this.label10.TabIndex = 53;
@@ -360,7 +389,7 @@
             "Friday",
             "Saturday",
             "Sunday"});
-            this.Day_combo.Location = new System.Drawing.Point(112, 79);
+            this.Day_combo.Location = new System.Drawing.Point(112, 59);
             this.Day_combo.Name = "Day_combo";
             this.Day_combo.Size = new System.Drawing.Size(163, 21);
             this.Day_combo.TabIndex = 52;
@@ -385,7 +414,7 @@
             // 
             // EndMin_num
             // 
-            this.EndMin_num.Location = new System.Drawing.Point(238, 201);
+            this.EndMin_num.Location = new System.Drawing.Point(238, 170);
             this.EndMin_num.Maximum = new decimal(new int[] {
             59,
             0,
@@ -435,7 +464,7 @@
             "21",
             "22",
             "23"});
-            this.EndHour_combo.Location = new System.Drawing.Point(112, 200);
+            this.EndHour_combo.Location = new System.Drawing.Point(112, 169);
             this.EndHour_combo.Name = "EndHour_combo";
             this.EndHour_combo.Size = new System.Drawing.Size(49, 21);
             this.EndHour_combo.TabIndex = 49;
@@ -445,7 +474,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label8.Location = new System.Drawing.Point(171, 203);
+            this.label8.Location = new System.Drawing.Point(171, 172);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(64, 13);
             this.label8.TabIndex = 48;
@@ -455,7 +484,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label9.Location = new System.Drawing.Point(54, 203);
+            this.label9.Location = new System.Drawing.Point(54, 172);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(55, 13);
             this.label9.TabIndex = 47;
@@ -463,7 +492,7 @@
             // 
             // StartMin_num
             // 
-            this.StartMin_num.Location = new System.Drawing.Point(238, 175);
+            this.StartMin_num.Location = new System.Drawing.Point(238, 144);
             this.StartMin_num.Maximum = new decimal(new int[] {
             58,
             0,
@@ -503,7 +532,7 @@
             "21",
             "22",
             "23"});
-            this.StartHour_combo.Location = new System.Drawing.Point(112, 174);
+            this.StartHour_combo.Location = new System.Drawing.Point(112, 143);
             this.StartHour_combo.Name = "StartHour_combo";
             this.StartHour_combo.Size = new System.Drawing.Size(49, 21);
             this.StartHour_combo.TabIndex = 45;
@@ -513,7 +542,7 @@
             // 
             this.TimeVisible_checkbox.AutoSize = true;
             this.TimeVisible_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.TimeVisible_checkbox.Location = new System.Drawing.Point(59, 148);
+            this.TimeVisible_checkbox.Location = new System.Drawing.Point(59, 117);
             this.TimeVisible_checkbox.Name = "TimeVisible_checkbox";
             this.TimeVisible_checkbox.Size = new System.Drawing.Size(140, 17);
             this.TimeVisible_checkbox.TabIndex = 44;
@@ -540,18 +569,6 @@
             this.MaxLev_textbox.TabIndex = 42;
             this.MaxLev_textbox.TextChanged += new System.EventHandler(this.MaxLev_textbox_TextChanged);
             // 
-            // Sabuk_checkbox
-            // 
-            this.Sabuk_checkbox.AutoSize = true;
-            this.Sabuk_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Sabuk_checkbox.Location = new System.Drawing.Point(6, 56);
-            this.Sabuk_checkbox.Name = "Sabuk_checkbox";
-            this.Sabuk_checkbox.Size = new System.Drawing.Size(120, 17);
-            this.Sabuk_checkbox.TabIndex = 41;
-            this.Sabuk_checkbox.Text = "Sabuk War Hidden:";
-            this.Sabuk_checkbox.UseVisualStyleBackColor = true;
-            this.Sabuk_checkbox.CheckedChanged += new System.EventHandler(this.Sabuk_checkbox_CheckedChanged);
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -566,7 +583,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label5.Location = new System.Drawing.Point(171, 177);
+            this.label5.Location = new System.Drawing.Point(171, 146);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(67, 13);
             this.label5.TabIndex = 37;
@@ -576,7 +593,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label4.Location = new System.Drawing.Point(54, 177);
+            this.label4.Location = new System.Drawing.Point(54, 146);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(58, 13);
             this.label4.TabIndex = 36;
@@ -742,7 +759,6 @@
         private System.Windows.Forms.ListBox NPCInfoListBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox MapComboBox;
-        private System.Windows.Forms.CheckBox Sabuk_checkbox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
@@ -763,5 +779,7 @@
         private System.Windows.Forms.TextBox Flag_textbox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.ComboBox ConquestHidden_combo;
     }
 }

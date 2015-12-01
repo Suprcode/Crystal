@@ -3781,17 +3781,20 @@ namespace Server.MirObjects
                         if (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing == Info.Married)
                         {
                             CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-                            player = Envir.GetPlayer(Lover.Name);
 
-                            if (player.Dead)
-                            {
-                                ReceiveChat("You can't recall a dead player.", ChatType.System);
-                                return;
-                            }
+                            if (Lover == null) return;
+
+                            player = Envir.GetPlayer(Lover.Name);
 
                             if (player == null)
                             {
                                 ReceiveChat((string.Format("{0} is not online.", Lover.Name)), ChatType.System);
+                                return;
+                            }
+
+                            if (player.Dead)
+                            {
+                                ReceiveChat("You can't recall a dead player.", ChatType.System);
                                 return;
                             }
 
@@ -4741,24 +4744,44 @@ namespace Server.MirObjects
 
                         if (tempConq != null)
                         {
+                            tempConq.StartType = ConquestType.Forced;
                             tempConq.WarIsOn = !tempConq.WarIsOn;
-                            tempConq.Attacker = MyGuild;
+                            tempConq.AttackerID = MyGuild.Guildindex;
                         }
                         else return;
                         ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
                         SMain.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
                         break;
-                    case "OPENGATE": //TEST CODE
-                        List<CastleGate> gates = Envir.Objects.OfType<CastleGate>().ToList();
-                        foreach (CastleGate gate in gates)
-                        {
-                            if (gate.Closed)
-                                gate.OpenDoor();
-                            else
-                                gate.CloseDoor();
-                        }
-                        break;
+                    case "GATES":
+                        string openclose = parts[1];
+                        bool OpenClose;
 
+                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                        {
+                            ReceiveChat(string.Format("You don't have access to control any gates at the moment."), ChatType.System);
+                            return;
+                        }
+
+                        if (openclose.ToUpper() == "CLOSE") OpenClose = true;
+                        else if (openclose.ToUpper() == "OPEN") OpenClose = false;
+                        else
+                        {
+                            ReceiveChat(string.Format("You must type /Gates Open or /Gates Close."), ChatType.System);
+                            return;
+                        }
+
+                        for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                            if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                if (OpenClose)
+                                    MyGuild.Conquest.GateList[i].Gate.CloseDoor();
+                                else
+                                    MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+
+                        if (OpenClose)
+                            ReceiveChat(string.Format("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
+                        else
+                            ReceiveChat(string.Format("The gates at {0} have been opened.", MyGuild.Conquest.Info.Name), ChatType.System);
+                        break;
                     default:
                         break;
                 }
@@ -4958,13 +4981,8 @@ namespace Server.MirObjects
             else
                 InSafeZone = false;
 
-            ConquestObject swi = CurrentMap.GetConquest(CurrentLocation);
 
-            if (swi != null)
-                EnterSabuk(swi.Info.Name);
-            else
-                LeaveSabuk();
-                
+            CheckConquest();
 
 
 
@@ -5136,11 +5154,7 @@ namespace Server.MirObjects
                 InSafeZone = false;
 
 
-            ConquestObject swi = CurrentMap.GetConquest(CurrentLocation);
-            if (swi != null)
-                EnterSabuk(swi.Info.Name);
-            else
-                LeaveSabuk();
+            CheckConquest();
 
 
 
@@ -9047,20 +9061,7 @@ namespace Server.MirObjects
                 if (player != null) player.GetRelationship(false);
             }
 
-
-            ConquestObject conq = CurrentMap.GetConquest(CurrentLocation);
-            if (conq != null)
-                EnterSabuk(conq.Info.Name);
-            else
-                LeaveSabuk();
-
-            ConquestObject swi = checkmap.GetConquest(checklocation);
-            if (swi != null)
-                if (swi.Info.PalaceIndex == CurrentMap.Info.Index)
-                {
-                    TakeConquest(swi);
-                }
-
+            CheckConquest();
         }
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
@@ -9104,11 +9105,7 @@ namespace Server.MirObjects
             else
                 InSafeZone = false;
 
-            ConquestObject conq = CurrentMap.GetConquest(CurrentLocation);
-            if (conq != null)
-                EnterSabuk(conq.Info.Name);
-            else
-                LeaveSabuk();
+            CheckConquest();
 
             Fishing = false;
             Enqueue(GetFishInfo());
@@ -13555,12 +13552,15 @@ namespace Server.MirObjects
                     return;
                 }
 
-                uint cost = (uint)(temp.RepairPrice() * ob.Info.PriceRate);
+                uint cost = (uint)(temp.RepairPrice() * ob.PriceRate(this));
+
+                uint baseCost = (uint)(temp.RepairPrice() * ob.PriceRate(this, true));
 
                 if (cost > Account.Gold || cost == 0) return;
 
                 Account.Gold -= cost;
                 Enqueue(new S.LoseGold { Gold = cost });
+                if (ob.Conq != null) ob.Conq.GoldStorage += (cost - baseCost);
 
                 if (!special) temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - (temp.MaxDura - temp.CurrentDura) / 30);
 
@@ -18466,16 +18466,29 @@ namespace Server.MirObjects
 
         #endregion
 
-
         #region ConquestWall
-        public void EnterSabuk(string ConquestName)
+        public void CheckConquest()
+        {
+            if (CurrentMap.tempConquest == null && CurrentMap.Conquest != null)
+            {
+                ConquestObject swi = CurrentMap.GetConquest(CurrentLocation);
+                if (swi != null)
+                    EnterSabuk();
+                else
+                    LeaveSabuk();
+            }
+            else if (CurrentMap.tempConquest != null)
+            {
+                if (CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace) CurrentMap.tempConquest.TakeConquest(this);
+                EnterSabuk();
+            }
+        }
+        public void EnterSabuk()
         {
             if (WarZone) return;
             WarZone = true;
-            ReceiveChat(String.Format("You have entered {0}.", ConquestName), ChatType.Hint);
+            ReceiveChat(String.Format("You have entered a conquest."), ChatType.Hint);
             RefreshNameColour();
-
-            //Broadcast name colour change
         }
 
         public void LeaveSabuk()
@@ -18484,42 +18497,6 @@ namespace Server.MirObjects
             WarZone = false;
             ReceiveChat(String.Format("You have left the Conquest Zone."), ChatType.Hint);
             RefreshNameColour();
-            //Broadcast name colour change
-        }
-
-        public void TakeConquest(ConquestObject Conquest)
-        {
-            GuildObject Previous = null;
-
-            if (MyGuild != null)
-            {
-
-                if (MyGuild == Conquest.Attacker || Conquest.Owner == 0)
-                {
-                    if (MyGuild == Conquest.Attacker)
-                    {
-                        Conquest.Guild.Conquest = null;
-                        Previous = Conquest.Guild;
-                    }
-                        
-
-                    Conquest.Owner = MyGuild.Guildindex;
-                    Conquest.Guild = MyGuild;
-                    MyGuild.Conquest = Conquest;
-                    Conquest.WarIsOn = false;
-                }
-
-               for (int i = 0; i < MyGuild.Ranks.Count; i++)
-                   for (int j = 0; j < MyGuild.Ranks[i].Members.Count; j++)
-                       if (MyGuild.Ranks[i].Members[j].Player != null)
-                          MyGuild.SendGuildStatus((PlayerObject)MyGuild.Ranks[i].Members[j].Player);
-
-                if (Previous != null)
-                    for (int i = 0; i < Previous.Ranks.Count; i++)
-                        for (int j = 0; j < Previous.Ranks[i].Members.Count; j++)
-                            if (Previous.Ranks[i].Members[j].Player != null)
-                                Previous.SendGuildStatus((PlayerObject)Previous.Ranks[i].Members[j].Player);
-            }
         }
         #endregion
     }

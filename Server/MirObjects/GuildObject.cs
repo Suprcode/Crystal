@@ -37,6 +37,8 @@ namespace Server.MirObjects
 
         public ConquestObject Conquest;
 
+        public List<GuildObject> AllyGuilds = new List<GuildObject>();
+        public int AllyCount;
 
 
         public GuildObject()
@@ -126,17 +128,10 @@ namespace Server.MirObjects
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
 
-            //if (version >= 66)
-            //{
-                //Conquest = new ConquestObject(reader);
-                    //for (int l = 0; l < Envir.ConquestInfos.Count; l++)
-                        //if (Envir.ConquestInfos[l].Index == Conquest.ConquestInfo)
-                        //{
-                            //Conquest.Info = Envir.ConquestInfos[l];
-                            //Conquest.Owner = this;
-                            //Envir.Conquests.Add(Conquest);
-                        //}
-            //}
+            if (version >= 66)
+            {
+               
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -627,6 +622,14 @@ namespace Server.MirObjects
         {
             if (WarringGuilds.Count == 0) return false;
             return true;
+        }
+
+        public string GetName()
+        {
+            if (Conquest != null)
+                return Name + "[" + Conquest.Info.Name + "]";
+            else
+                return Name;
         }
 
         public bool IsEnemy(GuildObject enemyGuild)
