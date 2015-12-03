@@ -893,21 +893,21 @@ namespace Client.MirGraphics
                 
                 int index = (y * (w << 2)) + (x << 2) ; //(y * (w * 4)) + (x * 4);
 
-                int col0 = (Data[index + 1] << 8 | Data[index]), col1 = (Data[index + 3] << 8 | Data[index + 2]);
+                //int col0 = (Data[index + 1] << 8 | Data[index]), col1 = (Data[index + 3] << 8 | Data[index + 2]);
 
-                if (col0 == 0 && col1 == 0) return false;
-                //byte col = Data[index];
+                //if (col0 == 0 && col1 == 0) return false;
+                byte col = Data[index];
 
-               // if (col == 0) return false;
-                //else return true;
+                if (col == 0) return false;
+                else return true;
 
-                if (!acurrate || col1 < col0) return true;
+                //if (!acurrate || col1 < col0) return true;
 
-                x = p.X;// % 4;
-                y = p.Y;// % 4;
-                x *= 2;
+                //x = p.X;// % 4;
+                //y = p.Y;// % 4;
+                //x *= 2;
 
-                result = ((Data[index + 4 + y] & 1 << x) >> x) != 1 || ((Data[index + 4 + y] & 1 << x + 1) >> x + 1) != 1;
+                //result = ((Data[index + 4 + y] & 1 << x) >> x) != 1 || ((Data[index + 4 + y] & 1 << x + 1) >> x + 1) != 1;
             }
             return result;
         }

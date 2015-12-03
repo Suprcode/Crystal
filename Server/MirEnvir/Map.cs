@@ -698,6 +698,8 @@ namespace Server.MirEnvir
             PlayerObject player = (PlayerObject)data[0];
             UserMagic magic = (UserMagic)data[1];
 
+            if (player == null || player.Info == null) return;
+
             int value, value2;
             Point location;
             Cell cell;

@@ -599,35 +599,41 @@ namespace Client.MirScenes
 
                 KeyEscButton = new MirButton
                 {
+                    Text = "Esc",
                     HoverIndex = 301,
                     Index = 300,
                     Library = Libraries.Title,
                     Location = new Point(12, 12),
                     Parent = this,
-                    PressedIndex = 302
+                    PressedIndex = 302,
+                    CenterText = true
                 };
                 KeyEscButton.Click += (o, e) => Dispose();
 
                 KeyDelButton = new MirButton
                 {
+                    Text = "Delete",
                     HoverIndex = 304,
                     Index = 303,
                     Library = Libraries.Title,
                     Location = new Point(140, 76),
                     Parent = this,
-                    PressedIndex = 305
+                    PressedIndex = 305,
+                    CenterText = true
                 };
                 KeyDelButton.Click += (o, e) => SecureKeyDelete();
 
                 KeyEnterButton = new MirButton
                 {
+                    Text = "Enter",
                     HoverIndex = 307,
                     Index = 306,
                     Library = Libraries.Title,
                     Location = new Point(140, 236),
                     Parent = this,
-                    PressedIndex = 308
-                   
+                    PressedIndex = 308,
+                    CenterText = true
+
                 };
                 KeyEnterButton.Click += (o, e) =>
                 {
@@ -638,12 +644,14 @@ namespace Client.MirScenes
 
                 KeyRandButton = new MirButton
                 {
+                    Text = "Random",
                     HoverIndex = 310,
                     Index = 309,
                     Library = Libraries.Title,
                     Location = new Point(76, 236),
                     Parent = this,
-                    PressedIndex = 311
+                    PressedIndex = 311,
+                    CenterText = true
                 };
                 KeyRandButton.Click += (o, e) =>
                 {
