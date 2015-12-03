@@ -351,6 +351,8 @@ namespace Client.MirScenes
                 Index = 1084;
                 Library = Libraries.Prguse;
                 Location = new Point((Settings.ScreenWidth - Size.Width)/2, (Settings.ScreenHeight - Size.Height)/2);
+                PixelDetect = false;
+                Size = new Size(328, 220);
 
                 TitleLabel = new MirImageControl
                     {
@@ -379,6 +381,7 @@ namespace Client.MirScenes
                 OKButton = new MirButton
                     {
                         Enabled = false,
+                        Size = new Size(42,42),
                         HoverIndex = 321,
                         Index = 320,
                         Library = Libraries.Title,

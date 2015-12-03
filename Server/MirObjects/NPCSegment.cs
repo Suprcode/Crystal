@@ -568,6 +568,12 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.GiveSkill, parts[1], spelllevel));
                     break;
 
+                case "REMOVESKILL":
+                    if (parts.Length < 2) return;
+                    
+                    acts.Add(new NPCActions(ActionType.GiveSkill, parts[1]));
+                    break;
+
                 //cant use stored var
                 case "SET":
                     if (parts.Length < 3) return;

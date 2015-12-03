@@ -13728,10 +13728,9 @@ namespace Server.MirObjects
                 NPCObject ob = CurrentMap.NPCs[n];
                 if (ob.ObjectID != NPCID) continue;
 
-                foreach (AuctionInfo auction in Search)
+                foreach (AuctionInfo auction in Envir.Auctions)
                 {
                     if (auction.AuctionID != auctionID) continue;
-
 
                     if (auction.Sold)
                     {
