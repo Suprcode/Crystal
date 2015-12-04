@@ -2290,8 +2290,6 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Struck, new Frame(280, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(304, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(303, 1, 9, 1000));
-
-
             #endregion
 
             /*
@@ -2426,6 +2424,7 @@ namespace Client.MirObjects
              */
             #region Gate Frames
 
+            //Sabuk Gate
             Gates.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(80, 1, 7, 1000));
             frame.Frames.Add(MirAction.Struck, new Frame(80, 4, 4, 200));
@@ -2433,6 +2432,35 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack2, new Frame(128, 6, -6, 200));//close
             frame.Frames.Add(MirAction.Die, new Frame(104, 10, -10, 200));
             frame.Frames.Add(MirAction.Dead, new Frame(113, 1, -1, 1000));
+
+
+            //Castle Gi Gate South
+            Gates.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 1, 1, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(0, 2, 0, 200));
+            frame.Frames.Add(MirAction.Attack1, new Frame(22, 7, -7, 200));//open
+            frame.Frames.Add(MirAction.Attack2, new Frame(28, 7, -7, 200) { Reverse = true });//close
+            frame.Frames.Add(MirAction.Die, new Frame(14, 8, -8, 200));
+            frame.Frames.Add(MirAction.Dead, new Frame(21, 1, -1, 1000));
+
+            //Castle Gi Gate East
+            Gates.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(29, 1, 1, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(29, 2, 0, 200));
+            frame.Frames.Add(MirAction.Attack1, new Frame(51, 7, -7, 200));//open
+            frame.Frames.Add(MirAction.Attack2, new Frame(57, 7, -7, 200) { Reverse = true });//close
+            frame.Frames.Add(MirAction.Die, new Frame(43, 8, -8, 200));
+            frame.Frames.Add(MirAction.Dead, new Frame(50, 1, -1, 1000));
+            frame.Frames.Add(MirAction.Revive, new Frame(50, 8, -8, 200) { Reverse = true });
+
+            //Castle Gi Gate West
+            Gates.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(58, 1, 1, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(58, 2, 0, 200));
+            frame.Frames.Add(MirAction.Attack1, new Frame(80, 7, -7, 200));//open
+            frame.Frames.Add(MirAction.Attack2, new Frame(86, 7, -7, 200) { Reverse = true });//close
+            frame.Frames.Add(MirAction.Die, new Frame(72, 8, -8, 200));
+            frame.Frames.Add(MirAction.Dead, new Frame(79, 1, -1, 1000));
 
             #endregion
 

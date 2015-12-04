@@ -116,6 +116,7 @@ namespace Server.MirObjects.Monsters
         {
             foreach (var obj in BlockingObjects)
             {
+                if (obj == null) continue;
                 if (closed)
                     obj.Show();
                 else

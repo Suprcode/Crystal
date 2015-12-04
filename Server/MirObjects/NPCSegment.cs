@@ -309,10 +309,10 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.CheckConquest, parts[1]));
                     break;
-                case "AFFORDARCHER":
+                case "AFFORDGUARD":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.AffordArcher, parts[1], parts[2]));
+                    CheckList.Add(new NPCChecks(CheckType.AffordGuard, parts[1], parts[2]));
                     break;
                 case "AFFORDGATE":
                     if (parts.Length < 3) return;
@@ -338,6 +338,11 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
 
                     CheckList.Add(new NPCChecks(CheckType.ConquestAvailable, parts[1]));
+                    break;
+                case "CONQUESTOWNER":
+                    if (parts.Length < 2) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.ConquestOwner, parts[1]));
                     break;
             }
 
@@ -862,9 +867,9 @@ namespace Server.MirObjects
                         acts.Add(new NPCActions(ActionType.SaveValue, fileName, group, key, value));
                     }
                     break;
-                case "CONQUESTARCHER":
+                case "CONQUESTGUARD":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.ConquestArcher, parts[1], parts[2]));
+                    acts.Add(new NPCActions(ActionType.ConquestGuard, parts[1], parts[2]));
                     break;
                 case "CONQUESTGATE":
                     if (parts.Length < 3) return;
@@ -887,8 +892,16 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.StartConquest, parts[1], parts[2]));
                     break;
                 case "SCHEDULECONQUEST":
+                    if (parts.Length < 2) return;
+                    acts.Add(new NPCActions(ActionType.ScheduleConquest, parts[1]));
+                    break;
+                case "OPENGATE":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.ScheduleConquest, parts[1], parts[2]));
+                    acts.Add(new NPCActions(ActionType.OpenGate, parts[1], parts[2]));
+                    break;
+                case "CLOSEGATE":
+                    if (parts.Length < 3) return;
+                    acts.Add(new NPCActions(ActionType.CloseGate, parts[1], parts[2]));
                     break;
             }
 
@@ -943,7 +956,7 @@ namespace Server.MirObjects
 
             switch (innerMatch)
             {
-                case "ARCHERCOST()":
+                case "CONQUESTGUARD()":
                     var val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
                     var val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
 
@@ -952,21 +965,6 @@ namespace Server.MirObjects
                     if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
                     {
 
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
-                        if (Conquest == null) return string.Empty;
-
-                        Archer = Conquest.ArcherList.FirstOrDefault(x => x.Index == intVal2);
-                        if (Archer == null) return string.Empty;
-
-                        newValue = Archer.GetRepairCost().ToString();
-                    }
-                    break;
-                case "ARCHERNAME()":
-                    val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
-                    val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
-
-                    if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
-                    {
                         Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Not Found";
 
@@ -977,24 +975,14 @@ namespace Server.MirObjects
                             newValue = "Conquest Guard";
                         else
                             newValue = Archer.Info.Name;
+
+                        if (Archer.GetRepairCost() == 0)
+                            newValue += " - [ Still Alive ]";
+                        else
+                            newValue += " - [ " + Archer.GetRepairCost().ToString("#,##0") + " gold ]";
                     }
                     break;
-                case "GATECOST()":
-                    val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
-                    val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
-
-                    if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
-                    {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
-                        if (Conquest == null) return string.Empty;
-
-                        Gate = Conquest.GateList.FirstOrDefault(x => x.Index == intVal2);
-                        if (Gate == null) return string.Empty;
-
-                        newValue = Gate.GetRepairCost().ToString();
-                    }
-                    break;
-                case "GATENAME()":
+                case "CONQUESTGATE()":
                     val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
                     val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
 
@@ -1010,72 +998,57 @@ namespace Server.MirObjects
                             newValue = "Conquest Gate";
                         else
                             newValue = Gate.Info.Name;
+
+                        if (Gate.GetRepairCost() == 0)
+                            newValue += " - [ No Repair Required ]";
+                        else
+                            newValue += " - [ " + Gate.GetRepairCost().ToString("#,##0") + " gold ]";
                     }
                     break;
-                case "WALLCOST()":
+                case "CONQUESTWALL()":
                     val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
                     val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
                     {
                         Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
-                        if (Conquest == null) return string.Empty;
+                        if (Conquest == null) return "Not Found";
 
                         Wall = Conquest.WallList.FirstOrDefault(x => x.Index == intVal2);
-                        if (Wall == null) return string.Empty;
-
-                        newValue = Wall.GetRepairCost().ToString();
-                    }
-                    break;
-                case "WALLNAME()":
-                    val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
-                    val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
-
-                    if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
-                    {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
-                        if (Conquest == null) return string.Empty;
-
-                        Wall = Conquest.WallList.FirstOrDefault(x => x.Index == intVal2);
-                        if (Wall == null) return string.Empty;
+                        if (Wall == null) return "Not Found";
 
                         if (Wall.Info.Name == "" || Wall.Info.Name == null)
                             newValue = "Conquest Wall";
                         else
                             newValue = Wall.Info.Name;
+
+                        if (Wall.GetRepairCost() == 0)
+                            newValue += " - [ No Repair Required ]";
+                        else
+                            newValue += " - [ " + Wall.GetRepairCost().ToString("#,##0") + " gold ]";
                     }
                     break;
-                case "SIEGECOST()":
+                case "CONQUESTSIEGE()":
                     val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
                     val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
                     {
                         Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
-                        if (Conquest == null) return string.Empty;
+                        if (Conquest == null) return "Not Found";
 
                         Siege = Conquest.SiegeList.FirstOrDefault(x => x.Index == intVal2);
-                        if (Siege == null) return string.Empty;
-
-                        newValue = Siege.GetRepairCost().ToString();
-                    }
-                    break;
-                case "SIEGENAME()":
-                    val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
-                    val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());
-
-                    if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
-                    {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
-                        if (Conquest == null) return string.Empty;
-
-                        Siege = Conquest.SiegeList.FirstOrDefault(x => x.Index == intVal2);
-                        if (Siege == null) return string.Empty;
+                        if (Siege == null) return "Not Found";
 
                         if (Siege.Info.Name == "" || Siege.Info.Name == null)
                             newValue = "Conquest Siege";
                         else
                             newValue = Siege.Info.Name;
+
+                        if (Siege.GetRepairCost() == 0)
+                            newValue += " - [ Still Alive ]";
+                        else
+                            newValue += " - [ " + Siege.GetRepairCost().ToString("#,##0") + " gold ]";
                     }
                     break;
                 case "CONQUESTGOLD()":
@@ -1098,6 +1071,21 @@ namespace Server.MirObjects
                         if (Conquest == null) return string.Empty;
 
                         newValue = Conquest.npcRate.ToString() + "%";
+                    }
+                    break;
+                case "CONQUESTSCHEDULE()":
+                    val1 = FindVariable(player, "%" + oneValMatch.Groups[2].Captures[0].Value.ToUpper());
+
+                    if (int.TryParse(val1.Replace("%", ""), out intVal1))
+                    {
+                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        if (Conquest == null) return "Conquest Not Found";
+                        if (Conquest.AttackerID == -1) return "No War Scheduled";
+
+                        if (SMain.Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID) == null)
+                            newValue = "No War Scheduled";
+                        else
+                            newValue = (SMain.Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID).Name);
                     }
                     break;
                 case "OUTPUT()":
@@ -1694,7 +1682,7 @@ namespace Server.MirObjects
                                 failed = true;
                                 break;
                             }
-                            failed = !Conquest.WarIsOn;
+                            failed = Conquest.WarIsOn;
                         }
                         catch (ArgumentException)
                         {
@@ -1702,7 +1690,7 @@ namespace Server.MirObjects
                             return true;
                         }
                         break;
-                    case CheckType.AffordArcher:
+                    case CheckType.AffordGuard:
                         if (!int.TryParse(param[0], out tempInt) || !int.TryParse(param[1], out tempInt2))
                         {
                             failed = true;
@@ -1869,6 +1857,33 @@ namespace Server.MirObjects
 
                             if (player.MyGuild != null)
                                 failed = (Conquest.AttackerID != -1);
+                            else
+                                failed = true;
+                        }
+                        catch (ArgumentException)
+                        {
+                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            return true;
+                        }
+                        break;
+                    case CheckType.ConquestOwner:
+                        if (!int.TryParse(param[0], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        try
+                        {
+                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (Conquest == null)
+                            {
+                                failed = true;
+                                break;
+                            }
+
+                            if (player.MyGuild != null && player.MyGuild.Guildindex == Conquest.Owner)
+                                failed = false;
                             else
                                 failed = true;
                         }
@@ -2688,7 +2703,7 @@ namespace Server.MirObjects
                         reader = new InIReader(filePath);
                         reader.Write(header, key, val);
                         break;
-                    case ActionType.ConquestArcher:
+                    case ActionType.ConquestGuard:
                         if (!int.TryParse(param[0], out tempInt)) return;
                         Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
@@ -2701,6 +2716,9 @@ namespace Server.MirObjects
                             if (!ConquestArcher.ArcherMonster.Dead) return;
 
                         if (player.MyGuild == null || player.MyGuild.Gold < ConquestArcher.GetRepairCost()) return;
+
+                        player.MyGuild.Gold -= ConquestArcher.GetRepairCost();
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestArcher.GetRepairCost() });
 
                         ConquestArcher.Spawn(true);
                         break;
@@ -2715,8 +2733,10 @@ namespace Server.MirObjects
 
                         if (player.MyGuild == null || player.MyGuild.Gold < ConquestGate.GetRepairCost()) return;
 
-                        ConquestGate.Repair();
+                        player.MyGuild.Gold -= ConquestGate.GetRepairCost();
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestGate.GetRepairCost() });
 
+                        ConquestGate.Repair();
                         break;
                     case ActionType.ConquestWall:
                         if (!int.TryParse(param[0], out tempInt)) return;
@@ -2731,6 +2751,9 @@ namespace Server.MirObjects
                             if (!ConquestWall.Wall.Dead) return;
 
                         if (player.MyGuild == null || player.MyGuild.Gold < ConquestWall.GetRepairCost()) return;
+
+                        player.MyGuild.Gold -= ConquestWall.GetRepairCost();
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestWall.GetRepairCost() });
 
                         ConquestWall.Repair();
                         break;
@@ -2747,6 +2770,9 @@ namespace Server.MirObjects
                             if (!ConquestSiege.Gate.Dead) return;
 
                         if (player.MyGuild == null || player.MyGuild.Gold < ConquestSiege.GetRepairCost()) return;
+
+                        player.MyGuild.Gold -= ConquestSiege.GetRepairCost();
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestSiege.GetRepairCost() });
 
                         ConquestSiege.Repair();
                         break;
@@ -2797,6 +2823,28 @@ namespace Server.MirObjects
                         {
                             Conquest.AttackerID = player.MyGuild.Guildindex;
                         }
+                        break;
+                    case ActionType.OpenGate:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        if (Conquest == null) return;
+
+                        if (!int.TryParse(param[1], out tempInt)) return;
+                        ConquestGateObject OpenGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                        if (OpenGate == null) return;
+                        if (OpenGate.Gate == null) return;
+                        OpenGate.Gate.OpenDoor();
+                        break;
+                    case ActionType.CloseGate:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        if (Conquest == null) return;
+
+                        if (!int.TryParse(param[1], out tempInt)) return;
+                        ConquestGateObject CloseGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                        if (CloseGate == null) return;
+                        if (CloseGate.Gate == null) return;
+                        CloseGate.Gate.CloseDoor();
                         break;
                 }
             }

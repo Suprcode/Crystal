@@ -1892,6 +1892,8 @@ namespace Server.MirObjects
             else
                 GetMentor();
 
+            CheckConquest();
+
             GetGameShop();
 
             for (int i = 0; i < CurrentQuests.Count; i++)
@@ -4761,6 +4763,8 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("You don't have access to control any gates at the moment."), ChatType.System);
                             return;
                         }
+
+                        if (openclose == null) return;
 
                         if (openclose.ToUpper() == "CLOSE") OpenClose = true;
                         else if (openclose.ToUpper() == "OPEN") OpenClose = false;
@@ -9060,8 +9064,7 @@ namespace Server.MirObjects
 
                 if (player != null) player.GetRelationship(false);
             }
-
-            CheckConquest();
+            CheckConquest(true);
         }
 
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
@@ -18467,7 +18470,7 @@ namespace Server.MirObjects
         #endregion
 
         #region ConquestWall
-        public void CheckConquest()
+        public void CheckConquest(bool checkPalace = false)
         {
             if (CurrentMap.tempConquest == null && CurrentMap.Conquest != null)
             {
@@ -18479,7 +18482,7 @@ namespace Server.MirObjects
             }
             else if (CurrentMap.tempConquest != null)
             {
-                if (CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace) CurrentMap.tempConquest.TakeConquest(this);
+                if (checkPalace && CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace) CurrentMap.tempConquest.TakeConquest(this);
                 EnterSabuk();
             }
         }
@@ -18487,7 +18490,6 @@ namespace Server.MirObjects
         {
             if (WarZone) return;
             WarZone = true;
-            ReceiveChat(String.Format("You have entered a conquest."), ChatType.Hint);
             RefreshNameColour();
         }
 
@@ -18495,7 +18497,6 @@ namespace Server.MirObjects
         {
             if (!WarZone) return;
             WarZone = false;
-            ReceiveChat(String.Format("You have left the Conquest Zone."), ChatType.Hint);
             RefreshNameColour();
         }
         #endregion

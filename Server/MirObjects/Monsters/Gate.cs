@@ -7,26 +7,75 @@ using System.Drawing;
 
 namespace Server.MirObjects.Monsters
 {
-    public class SabukGate : CastleGate
+    public class Gate : CastleGate
     {
 
         public ConquestObject Conquest;
         public int GateIndex;
 
-        protected internal SabukGate(MonsterInfo info) : base(info)
+        protected internal Gate(MonsterInfo info) : base(info)
         {
-            BlockArray = new Point[] 
+            switch (info.Effect)
             {
-                new Point(0, -1),
-                new Point(0, -2),
-                new Point(1, -1),
-                new Point(1, -2),
-                new Point(-1, 0),
-                new Point(-2, 0),
-                new Point(-1, -1),
-                new Point(-1, 1)
-            };
+                case 1: //Sabuk Door
+                    BlockArray = new Point[]
+                    {
+                        new Point(0, -1),
+                        new Point(0, -2),
+                        new Point(1, -1),
+                        new Point(1, -2),
+                        new Point(-1, 0),
+                        new Point(-2, 0),
+                        new Point(-1, -1),
+                        new Point(-1, 1)
+                    };
+                    break;
+                case 2: //West Pointing Castle Gi
+                    BlockArray = new Point[]
+                    {
+                        new Point(0, -1),
+                        new Point(-1, -1),
+                        new Point(-1, 0),
+                        new Point(0, 1),
+                        new Point(1, 1),
+                        new Point(1, 0),
+                        new Point(1, -1),
+                        new Point(0, -2),
+                    };
+                    break;
+                case 3: // South Pointing Castle Gi
+                    {
+                        BlockArray = new Point[]
+                        {
+                        new Point(1, -1),
+                        new Point(0, -1),
+                        new Point(0, -2),
+                        new Point(-1, -1),
+                        new Point(-2, -1),
+                        new Point(-1, 0),
+                        new Point(-1, 1),
+                        new Point(-2, 0),
+                        };
 
+                    }
+                    break;
+                case 4: // East Pointing Castle Gi
+                    {
+                        BlockArray = new Point[]
+                        {
+                        new Point(-2, 0),
+                        new Point(-1, 1),
+                        new Point(0, 2),
+                        new Point(0, 1),
+                        new Point(-1, 0),
+                        new Point(-1, -1),
+                        new Point(1, 1),
+                        };
+
+                    }
+                    break;
+            }
+           
             Direction = MirDirection.Up;
         }
         public override void Despawn()
@@ -53,6 +102,8 @@ namespace Server.MirObjects.Monsters
 
         public override void OpenDoor()
         {
+            if (!Closed) return;
+
             Direction = (MirDirection)6;
             Closed = false;
 
@@ -74,6 +125,9 @@ namespace Server.MirObjects.Monsters
 
         public override void CloseDoor()
         {
+
+            if (Closed) return;
+
             Direction = (MirDirection)(3 - GetDamageLevel());
 
             Closed = true;

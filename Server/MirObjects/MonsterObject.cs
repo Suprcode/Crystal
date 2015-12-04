@@ -158,7 +158,7 @@ namespace Server.MirObjects
                 case 71://Sabuk Archer
                     return new ConquestArcher(info);
                 case 72:
-                    return new SabukGate(info);
+                    return new Gate(info);
                 case 73:
                     return new Wall(info);
                 default:

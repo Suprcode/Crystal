@@ -32,7 +32,14 @@ namespace Client.MirObjects
                     case Monster.PalaceWall2:
                     case Monster.PalaceWallLeft:
                     case Monster.PalaceWall1:
+                    case Monster.GiGateSouth:
+                    
+                    case Monster.GiGateWest:
                         return new Point(-10, 0);
+                        break;
+                    case Monster.GiGateEast:
+                        return new Point(-45, 7);
+                        break;
                     default:
                         return new Point(0, 0);
                 }
@@ -128,6 +135,11 @@ namespace Client.MirObjects
                 case Monster.PalaceWall1:
                 case Monster.PalaceWall2:
                     BodyLibrary = Libraries.Effect;
+                    break;
+                case Monster.GiGateSouth:
+                case Monster.GiGateEast:
+                case Monster.GiGateWest:
+                    BodyLibrary = Libraries.Monsters[404];
                     break;
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];
@@ -923,8 +935,6 @@ namespace Client.MirObjects
                 case Monster.MudZombie:
                     Frames = FrameSet.Monsters[190];
                     break;
-                    break;
-
                 case Monster.BabyPig:
                 case Monster.Chick:
                 case Monster.Kitten:
@@ -938,9 +948,17 @@ namespace Client.MirObjects
                 case Monster.Frog:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
-
                 case Monster.SabukGate:
                     Frames = FrameSet.Gates[0];
+                    break;
+                case Monster.GiGateSouth:
+                    Frames = FrameSet.Gates[1];
+                    break;
+                case Monster.GiGateEast:
+                    Frames = FrameSet.Gates[2];
+                    break;
+                case Monster.GiGateWest:
+                    Frames = FrameSet.Gates[3];
                     break;
                 case Monster.PalaceWallLeft:
                     Frames = FrameSet.Walls[0];

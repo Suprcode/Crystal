@@ -272,7 +272,7 @@
     <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
     <Compile Include="MirObjects\Monsters\Wall.cs" />
     <Compile Include="MirObjects\Monsters\Runaway.cs" />
-    <Compile Include="MirObjects\Monsters\SabukGate.cs" />
+    <Compile Include="MirObjects\Monsters\Gate.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
     <Compile Include="MirObjects\Monsters\TalkingMonster.cs" />

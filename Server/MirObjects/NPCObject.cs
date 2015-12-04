@@ -1338,7 +1338,7 @@ namespace Server.MirObjects
         LoadValue,
         SaveValue,
         RemovePet,
-        ConquestArcher,
+        ConquestGuard,
         ConquestGate,
         ConquestWall,
         ConquestSiege,
@@ -1346,6 +1346,8 @@ namespace Server.MirObjects
         SetConquestRate,
         StartConquest,
         ScheduleConquest,
+        OpenGate,
+        CloseGate,
     }
     public enum CheckType
     {
@@ -1381,11 +1383,12 @@ namespace Server.MirObjects
         CheckPet,
         HasBagSpace,
         CheckConquest,
-        AffordArcher,
+        AffordGuard,
         AffordGate,
         AffordWall,
         AffordSiege,
         CheckPermission,
         ConquestAvailable,
+        ConquestOwner,
     }
 }

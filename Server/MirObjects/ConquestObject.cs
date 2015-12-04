@@ -390,6 +390,9 @@ namespace Server.MirObjects
 
         public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null)
         {
+            if (player == null && winningGuild == null) return;
+            if (player == null || player.MyGuild == null || player.MyGuild.Conquest != null) return;
+
             GuildObject tmpPrevious = null;
 
             switch (GameType)
@@ -428,22 +431,6 @@ namespace Server.MirObjects
                     break;
             }
 
-
-            /*
-            if (Guild != null)
-                for (int i = 0; i < Guild.Ranks.Count; i++)
-                    for (int j = 0; j < Guild.Ranks[i].Members.Count; j++)
-                        if (Guild.Ranks[i].Members[j].Player != null)
-                            Guild.SendGuildStatus((PlayerObject)Guild.Ranks[i].Members[j].Player);
-
-            if (tmpPrevious != null)
-                for (int i = 0; i < tmpPrevious.Ranks.Count; i++)
-                    for (int j = 0; j < tmpPrevious.Ranks[i].Members.Count; j++)
-                        if (tmpPrevious.Ranks[i].Members[j].Player != null)
-                            tmpPrevious.SendGuildStatus((PlayerObject)tmpPrevious.Ranks[i].Members[j].Player);
-            */
-
-
             UpdatePlayers(Guild);
             if (tmpPrevious != null) UpdatePlayers(tmpPrevious);
             NeedSave = true;
@@ -460,6 +447,7 @@ namespace Server.MirObjects
                     player = (PlayerObject)tempGuild.Ranks[i].Members[j].Player;
                     if (player != null)
                     {
+                        tempGuild.SendGuildStatus(player);
                         p = new ServerPackets.ObjectGuildNameChanged { ObjectID = player.ObjectID, GuildName = player.MyGuild.GetName()};
                         BroadcastGuildName(player, p);
                     }
@@ -517,7 +505,12 @@ namespace Server.MirObjects
             {
                 for (int i = 0; i < WarEffects.Count; i++)
                 {
-                    WarEffects[i].Despawn();
+                    if (WarEffects[i].CurrentLocation != null)
+                    {
+                        WarEffects[i].Despawn();
+                        ConquestMap.RemoveObject(WarEffects[i]);
+                    }                
+                        
                 }
             }
 
@@ -536,6 +529,8 @@ namespace Server.MirObjects
                             if (ConquestMap.Players[i].MyGuild != null)
                             {
                                 if (StartType == ConquestType.Request && ConquestMap.Players[i].MyGuild.Guildindex != AttackerID) continue;
+
+                                if (ConquestMap.Players[i].MyGuild.Conquest != null && ConquestMap.Players[i].MyGuild.Conquest != this) continue;
 
                                 Points.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
 

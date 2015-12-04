@@ -25,7 +25,7 @@ namespace Server.MirObjects
 
         public ConquestObject Conquest;
 
-        public SabukGate Gate;
+        public Gate Gate;
 
 
         public ConquestSiegeObject()
@@ -58,7 +58,11 @@ namespace Server.MirObjects
             if (monsterInfo == null) return;
             if (monsterInfo.AI != 72) return;
 
-            Gate = (SabukGate)MonsterObject.GetMonster(monsterInfo);
+            if (monsterInfo.AI == 72)
+                Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
+            else if (monsterInfo.AI == 73)
+                //Gate = (GateWest)MonsterObject.GetMonster(monsterInfo);
+
 
             if (Gate == null) return;
 
@@ -95,7 +99,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Gate.Dead) Gate.Revive(Gate.MaxHP, false);
+            if (Gate.Dead)
+                Spawn();
             else
                 Gate.HP = Gate.MaxHP;
 

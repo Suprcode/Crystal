@@ -96,7 +96,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Wall.Dead) Wall.Revive(Wall.MaxHP, false);
+            if (Wall.Dead)
+                Spawn();
             else
                 Wall.HP = Wall.MaxHP;
 
