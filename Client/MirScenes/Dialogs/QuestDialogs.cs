@@ -47,7 +47,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 14,
                 Library = Libraries.Title,
-                Location = new Point(18, 5), //Y = 9
+                Location = new Point(18, 9), //Y = 9
                 Parent = this
             };
 
@@ -484,7 +484,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 16,
                 Library = Libraries.Title,
-                Location = new Point(18, 5),
+                Location = new Point(18, 9),
                 Parent = this
             };
 

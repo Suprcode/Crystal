@@ -17282,7 +17282,7 @@ namespace Client.MirScenes
 
             TitleLabel = new MirImageControl
             {
-                Index = 7,
+                Index = 25,
                 Library = Libraries.Title,
                 Location = new Point(18, 9),
                 Parent = this
@@ -19600,6 +19600,7 @@ namespace Client.MirScenes
 
         public MirTextBox SearchTextBox;
         public MirButton FindButton, RefreshButton, MailButton, BuyButton, CloseButton, NextButton, BackButton;
+        public MirImageControl TitleLabel;
         public MirLabel ItemLabel, PriceLabel, SellerLabel, PageLabel;
         public MirLabel DateLabel, ExpireLabel;
         public MirLabel NameLabel, TotalPriceLabel, SplitPriceLabel;
@@ -19618,6 +19619,15 @@ namespace Client.MirScenes
             Index = 670;
             Library = Libraries.Prguse;
             Sort = true;
+
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 24,
+                Library = Libraries.Title,
+                Location = new Point(18, 9),
+                Parent = this
+            };
 
             SearchTextBox = new MirTextBox
             {
@@ -22969,7 +22979,7 @@ namespace Client.MirScenes
 
             TitleLabel = new MirImageControl
             {
-                Index = 52,
+                Index = 26,
                 Library = Libraries.Title,
                 Location = new Point(18, 9),
                 Parent = this
