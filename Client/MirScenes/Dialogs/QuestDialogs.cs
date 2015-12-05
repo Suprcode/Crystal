@@ -113,7 +113,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 272,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(40, 437),
+                Location = new Point(40, 436),
                 Sound = SoundList.ButtonA,
             };
             _acceptButton.Click += (o, e) =>
@@ -131,7 +131,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 275,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(40, 437),
+                Location = new Point(40, 436),
                 Sound = SoundList.ButtonA,
                 Visible = false
             };
@@ -157,7 +157,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 278,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(205, 437),
+                Location = new Point(205, 436),
                 Sound = SoundList.ButtonA,
             };
             leaveButton.Click += (o, e) => Hide();
@@ -561,7 +561,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 618,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(40, 437),
+                Location = new Point(40, 436),
                 Sound = SoundList.ButtonA
             };
             _shareButton.Click += (o, e) =>
@@ -576,7 +576,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 272,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(120, 437),
+                Location = new Point(120, 436),
                 Sound = SoundList.ButtonA,
                 Visible = false
             };
@@ -588,7 +588,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 205,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(200, 437),
+                Location = new Point(200, 436),
                 Sound = SoundList.ButtonA,
             };
             _cancelButton.Click += (o, e) =>
@@ -676,7 +676,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 15,
                 Library = Libraries.Title,
-                Location = new Point(18, 5),
+                Location = new Point(18, 9),
                 Parent = this
             };
 
@@ -695,7 +695,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 195,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(200, 437),
+                Location = new Point(200, 436),
                 Sound = SoundList.ButtonA,
             };
             _closeButton.Click += (o, e) => Hide();
@@ -1397,7 +1397,7 @@ namespace Client.MirScenes.Dialogs
             if (quest.RewardCredit > 0)
                 Libraries.Prguse.Draw(2447, DisplayLocation.X + 190 + creditXOffset, DisplayLocation.Y + 2);
 
-            Libraries.Title.Draw(17, DisplayLocation.X + 20, DisplayLocation.Y + 67);
+            Libraries.Title.Draw(17, DisplayLocation.X + 20, DisplayLocation.Y + 66);
         }
 
 

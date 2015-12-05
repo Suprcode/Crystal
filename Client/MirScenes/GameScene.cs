@@ -14504,10 +14504,10 @@ namespace Client.MirScenes
 
             BuyLabel = new MirImageControl
             {
-                Index = 459,
+                Index = 27,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(20, 6),
+                Location = new Point(20, 9),
             };
 
 
@@ -16805,9 +16805,9 @@ namespace Client.MirScenes
 
             AutoCastButton = new MirButton
             {
-                Index = 143,
-                HoverIndex = 144,
-                PressedIndex = 145,
+                Index = 180,
+                HoverIndex = 181,
+                PressedIndex = 182,
                 Location = new Point(110, 95),
                 Library = Libraries.Title,
                 Parent = this,
