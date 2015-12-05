@@ -891,11 +891,11 @@ namespace Client.MirScenes
                 messageBox.Show();
             }
 
-            if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
-            {
-                MapControl.CloseDoor(GameScene.DoorPoint);
-                GameScene.DoorTime = 0;
-            }
+            //if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
+            //{
+            //    MapControl.CloseDoor(GameScene.DoorPoint);
+            //    GameScene.DoorTime = 0;
+            //}
 
             
             UpdateBuffs();
@@ -8971,16 +8971,20 @@ namespace Client.MirScenes
                     }
                     if (CanWalk(direction))
                     {
-                        if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
-                        {
-                            OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
-                            return;
-                        }
-                        else
-                        {
+                        //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
+                            //{
+                            //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
+                            //    return;
+                            //}
+                            //else
+                            //{
+                            //    //if (MapObject.MouseObject != null) return;
+                            //    User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                            //    return;
+                            //}
+
                             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
                             return;
-                        }
                     }
                     if (direction != User.Direction)
                     {
