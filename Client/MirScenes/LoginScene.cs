@@ -360,14 +360,14 @@ namespace Client.MirScenes
                         Library = Libraries.Title,
                         Parent = this,
                     };
-                TitleLabel.Location = new Point((Size.Width - TitleLabel.Size.Width)/2, 5);
+                TitleLabel.Location = new Point((Size.Width - TitleLabel.Size.Width)/2, 12);
 
                 AccountIDLabel = new MirImageControl
                     {
                         Index = 31,
                         Library = Libraries.Title,
                         Parent = this,
-                        Location = new Point(51, 82),
+                        Location = new Point(52, 83),
                     };
 
                 PassLabel = new MirImageControl
@@ -375,7 +375,7 @@ namespace Client.MirScenes
                         Index = 32,
                         Library = Libraries.Title,
                         Parent = this,
-                        Location = new Point(46, 109)
+                        Location = new Point(43, 105)
                     };
 
                 OKButton = new MirButton
@@ -436,9 +436,9 @@ namespace Client.MirScenes
                     {
                         Location = new Point(85, 85),
                         Parent = this,
-                        Size = new Size(136, 15),
+                        Size = new Size(136, 12),
                         MaxLength = Globals.MaxAccountIDLength
-                    };
+                };
                 AccountIDTextBox.SetFocus();
                 AccountIDTextBox.TextBox.TextChanged += AccountIDTextBox_TextChanged;
                 AccountIDTextBox.TextBox.KeyPress += TextBox_KeyPress;
@@ -830,7 +830,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 104),
+                    Location = new Point(226, 103),
                     MaxLength = Globals.MaxAccountIDLength,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -844,7 +844,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 130),
+                    Location = new Point(226, 129),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -858,7 +858,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 156),
+                    Location = new Point(226, 155),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -872,7 +872,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 190),
+                    Location = new Point(226, 189),
                     MaxLength = 20,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -886,7 +886,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 216),
+                    Location = new Point(226, 215),
                     MaxLength = 10,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -899,7 +899,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 251),
+                    Location = new Point(226, 250),
                     MaxLength = 30,
                     Parent = this,
                     Size = new Size(190, 18),
@@ -912,7 +912,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 277),
+                    Location = new Point(226, 276),
                     MaxLength = 30,
                     Parent = this,
                     Size = new Size(190, 18),
@@ -925,7 +925,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 312),
+                    Location = new Point(226, 311),
                     MaxLength = 50,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -1244,7 +1244,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 76),
+                    Location = new Point(178, 75),
                     MaxLength = Globals.MaxAccountIDLength,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -1257,7 +1257,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 114),
+                    Location = new Point(178, 113),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -1270,7 +1270,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 152),
+                    Location = new Point(178, 151),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -1283,7 +1283,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 189),
+                    Location = new Point(178, 188),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,

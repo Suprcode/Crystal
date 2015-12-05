@@ -39,7 +39,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 57,
                 Library = Libraries.Title,
-                Location = new Point(18, 5),
+                Location = new Point(18, 9),
                 Parent = this
             };
 

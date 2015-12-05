@@ -11001,7 +11001,7 @@ namespace Client.MirScenes
             {
                 Index = 18,
                 Library = Libraries.Title,
-                Location = new Point(28, 5),
+                Location = new Point(28, 8),
                 Parent = this
             };
 
@@ -12516,7 +12516,7 @@ namespace Client.MirScenes
             {
                 Index = 0,
                 Library = Libraries.Title,
-                Location = new Point(18, 5),
+                Location = new Point(18, 8),
                 Parent = this
             };
             Storage1Button = new MirButton
@@ -16576,7 +16576,7 @@ namespace Client.MirScenes
 
             TitleLabel = new MirLabel
             {
-                Location = new Point(10, 5),
+                Location = new Point(10, 4),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
                 NotControl = true,
@@ -17009,7 +17009,7 @@ namespace Client.MirScenes
             {
                 Index = 5,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -17279,7 +17279,16 @@ namespace Client.MirScenes
             BeforeDraw += (o, e) => RefreshInterface();
 
             #region TabUI
-        NoticeButton = new MirButton
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 7,
+                Library = Libraries.Title,
+                Location = new Point(18, 9),
+                Parent = this
+            };
+
+            NoticeButton = new MirButton
             {
                 Library = Libraries.Title,
                 Index = 93,
@@ -21766,7 +21775,7 @@ namespace Client.MirScenes
             {
                 // Index = 7,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -21826,7 +21835,7 @@ namespace Client.MirScenes
             {
                 Index = 6,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -22378,7 +22387,7 @@ namespace Client.MirScenes
             {
                 Index = 52,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -22629,7 +22638,7 @@ namespace Client.MirScenes
             {
                 Index = 51,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -22938,7 +22947,7 @@ namespace Client.MirScenes
         List<GameShopItem> filteredShop = new List<GameShopItem>();
         List<GameShopItem> SearchResult = new List<GameShopItem>();
         public MirTextBox Search;
-        public MirImageControl FilterBackground;
+        public MirImageControl TitleLabel, FilterBackground;
 
         public string ClassFilter = "Show All";
         public string TypeFilter = "Show All";
@@ -22957,6 +22966,14 @@ namespace Client.MirScenes
             Movable = true;
             Location = Center;
             Sort = true;
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 52,
+                Library = Libraries.Title,
+                Location = new Point(18, 9),
+                Parent = this
+            };
 
             Grid = new GameShopCell[4 * 2];
             for (int x = 0; x < 4; x++)
