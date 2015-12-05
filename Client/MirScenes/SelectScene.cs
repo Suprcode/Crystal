@@ -48,7 +48,7 @@ namespace Client.MirScenes
                 Index = 40,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(322, 6)
+                Location = new Point(364, 12)
             };
 
             ServerLabel = new MirLabel
@@ -197,15 +197,15 @@ namespace Client.MirScenes
 
             LastAccessLabel = new MirLabel
             {
-                Location = new Point(140, 510),
+                Location = new Point(140, 509),
                 Parent = Background,
-                Size = new Size(189, 21),
+                Size = new Size(180, 21),
                 DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                 Border = true,
             };
             LastAccessLabelLabel = new MirLabel
                 {
-                    Location = new Point(-80, 0),
+                    Location = new Point(-80, -1),
                     Parent = LastAccessLabel,
                     Text = "Last Online:",
                     Size = new Size(100, 21),
@@ -576,18 +576,18 @@ namespace Client.MirScenes
                     {
                         Index = 20,
                         Library = Libraries.Title,
-                        Location = new Point(193, 7),
+                        Location = new Point(206, 11),
                         Parent = this,
                     };
 
                 CancelButton = new MirButton
                     {
-                        HoverIndex = 364,
-                        Index = 363,
+                        HoverIndex = 281,
+                        Index = 280,
                         Library = Libraries.Title,
                         Location = new Point(425, 425),
                         Parent = this,
-                        PressedIndex = 365
+                        PressedIndex = 282
                     };
                 CancelButton.Click += (o, e) => Dispose();
 
@@ -606,9 +606,9 @@ namespace Client.MirScenes
 
                 NameTextBox = new MirTextBox
                     {
-                        Location = new Point(325, 267),
+                        Location = new Point(325, 268),
                         Parent = this,
-                        Size = new Size(241, 20),
+                        Size = new Size(240, 20),
                         MaxLength = Globals.MaxCharacterNameLength
                     };
                 NameTextBox.TextBox.KeyPress += TextBox_KeyPress;

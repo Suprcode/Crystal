@@ -16,7 +16,10 @@ namespace Client.MirControls
         public virtual Point DisplayLocation { get { return Parent == null ? Location : Parent.DisplayLocation.Add(Location); } }
         public Rectangle DisplayRectangle { get { return new Rectangle(DisplayLocation, Size); } }
 
+        public bool GrayScale { get; set; }
         public bool Blending { get; set; }
+        public float BlendingRate { get; set; }
+        public BlendMode BlendMode { get; set; }
 
         #region Back Colour
         private Color _backColour;
@@ -531,7 +534,6 @@ namespace Client.MirControls
             if (Parent.Controls[Parent.Controls.Count - 1] == this)
                 return;
 
-
             if (!Sort) return;
 
             Parent.Controls.Remove(this);
@@ -993,6 +995,7 @@ namespace Client.MirControls
         public virtual void Redraw()
         {
             if (Parent != null) Parent.Redraw();
+
         }
 
         #region Disposable

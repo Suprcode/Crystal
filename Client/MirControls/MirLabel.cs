@@ -215,7 +215,7 @@ namespace Client.MirControls
                     graphics.SmoothingMode = SmoothingMode.AntiAlias;
                     graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
                     graphics.CompositingQuality = CompositingQuality.HighQuality;
-                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
                     graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                     graphics.TextContrast = 0;
                     graphics.Clear(BackColour);

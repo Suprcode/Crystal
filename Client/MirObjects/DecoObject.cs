@@ -40,7 +40,7 @@ namespace Client.MirObjects
         public override void Process()
         {
             DrawLocation = new Point((CurrentLocation.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
             DrawLocation.Offset(User.OffSetMove);
         }
 

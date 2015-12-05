@@ -42,17 +42,18 @@ namespace Server.MirObjects
 
         public string[] ParseArguments(string[] words)
         {
-            Regex r = new Regex(@"\%ARG\((\d+)\)$");
+            Regex r = new Regex(@"\%ARG\((\d+)\)");
 
             for (int i = 0; i < words.Length; i++)
             {
-                Match match = r.Match(words[i].ToUpper());
+                foreach (Match m in r.Matches(words[i].ToUpper()))
+                {
+                    if (!m.Success) continue;
 
-                if (!match.Success) continue;
+                    int sequence = Convert.ToInt32(m.Groups[1].Value);
 
-                int sequence = Convert.ToInt32(match.Groups[1].Value);
-
-                if (Page.Args.Count >= (sequence + 1)) words[i] = Page.Args[sequence];
+                    if (Page.Args.Count >= (sequence + 1)) words[i] = words[i].Replace(m.Groups[0].Value, Page.Args[sequence]);
+                }
             }
 
             return words;
@@ -299,6 +300,10 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.HasBagSpace, parts[1], parts[2]));
                     break;
+
+                case "ISNEWHUMAN":
+                    CheckList.Add(new NPCChecks(CheckType.IsNewHuman));
+                    break;
             }
 
         }
@@ -410,6 +415,10 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
 
                     acts.Add(new NPCActions(ActionType.Goto, parts[1]));
+                    break;
+
+                case "BREAK":
+                    acts.Add(new NPCActions(ActionType.Break));
                     break;
 
                 //cant use stored var
@@ -557,6 +566,12 @@ namespace Server.MirObjects
 
                     string spelllevel = parts.Length > 2 ? parts[2] : "0";
                     acts.Add(new NPCActions(ActionType.GiveSkill, parts[1], spelllevel));
+                    break;
+
+                case "REMOVESKILL":
+                    if (parts.Length < 2) return;
+                    
+                    acts.Add(new NPCActions(ActionType.GiveSkill, parts[1]));
                     break;
 
                 //cant use stored var
@@ -834,7 +849,7 @@ namespace Server.MirObjects
 
         public string ReplaceValue(PlayerObject player, string param)
         {
-            var regex = new Regex(@"\<\$(.*?)\>");
+            var regex = new Regex(@"\<\$(.*)\>");
             var varRegex = new Regex(@"(.*?)\(([A-Z][0-9])\)");
 
             var match = regex.Match(param);
@@ -1415,6 +1430,10 @@ namespace Server.MirObjects
 
                         failed = !Compare(param[0], slotCount, tempInt);
                         break;
+
+                    case CheckType.IsNewHuman:
+                        failed = player.Info.AccountInfo.Characters.Count > 1;
+                        break;
                 }
 
                 if (!failed) continue;
@@ -1816,9 +1835,29 @@ namespace Server.MirObjects
                         player.Enqueue(magic.GetInfo());
                         break;
 
+                    case ActionType.RemoveSkill:
+
+                        if (!Enum.TryParse(param[0], true, out skill)) return;
+
+                        if (!player.Info.Magics.Any(e => e.Spell == skill)) break;
+
+                        for (var j = player.Info.Magics.Count - 1; j >= 0; j--)
+                        {
+                            if (player.Info.Magics[i].Spell != skill) continue;
+
+                            player.Info.Magics.RemoveAt(i);
+                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                        }
+
+                        break;
+
                     case ActionType.Goto:
                         DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
                         player.ActionList.Add(action);
+                        break;
+
+                    case ActionType.Break:
+                        Page.BreakFromSegments = true;
                         break;
 
                     case ActionType.Set:

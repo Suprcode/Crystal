@@ -576,29 +576,6 @@ namespace Client.MirControls
         }
         public void RemoveItem()
         {
-            MirGridType fromGrid;
-
-            switch (Item.Info.Type)
-            {
-                case ItemType.Reins:
-                case ItemType.Bells:
-                case ItemType.Ribbon:
-                case ItemType.Saddle:
-                case ItemType.Mask:
-                    fromGrid = MirGridType.Mount;
-                    break;
-                case ItemType.Hook:
-                case ItemType.Float:
-                case ItemType.Bait:
-                case ItemType.Finder:
-                case ItemType.Reel:
-                    fromGrid = MirGridType.Fishing;
-                    break;
-                default:
-                    fromGrid = MirGridType.Equipment;
-                    break;
-            }
-
             int count = 0;
 
             for (int i = 0; i < GameScene.Scene.InventoryDialog.Grid.Length; i++)
@@ -622,7 +599,7 @@ namespace Client.MirControls
                 if (item != null && ((item.Count + Item.Count) <= item.Info.StackSize))
                 {
                     //Merge.
-                    Network.Enqueue(new C.MergeItem { GridFrom = fromGrid, GridTo = MirGridType.Inventory, IDFrom = Item.UniqueID, IDTo = item.UniqueID });
+                    Network.Enqueue(new C.MergeItem { GridFrom = GridType, GridTo = MirGridType.Inventory, IDFrom = Item.UniqueID, IDTo = item.UniqueID });
 
                     Locked = true;
 
@@ -637,13 +614,13 @@ namespace Client.MirControls
 
                 if (itemCell.Item != null) continue;
 
-                if (fromGrid != MirGridType.Equipment)
+                if (GridType != MirGridType.Equipment)
                 {
-                    Network.Enqueue(new C.RemoveSlotItem { Grid = fromGrid, UniqueID = Item.UniqueID, To = itemCell.ItemSlot, GridTo = MirGridType.Inventory });
+                    Network.Enqueue(new C.RemoveSlotItem { Grid = GridType, UniqueID = Item.UniqueID, To = itemCell.ItemSlot, GridTo = MirGridType.Inventory });
                 }
                 else
                 {
-                    Network.Enqueue(new C.RemoveItem { Grid = fromGrid, UniqueID = Item.UniqueID, To = itemCell.ItemSlot });
+                    Network.Enqueue(new C.RemoveItem { Grid = MirGridType.Inventory, UniqueID = Item.UniqueID, To = itemCell.ItemSlot });
                 }
 
                 Locked = true;

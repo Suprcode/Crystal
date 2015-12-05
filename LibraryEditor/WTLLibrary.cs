@@ -88,7 +88,7 @@ namespace LibraryEditor
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            MLibrary library = new MLibrary(fileName) { Images = new List<MLibrary.MImage>(), IndexList = new List<int>(), Count = Images.Length };
+            MLibraryV2 library = new MLibraryV2(fileName) { Images = new List<MLibraryV2.MImage>(), IndexList = new List<int>(), Count = Images.Length };
             //library.Save();
 
             for (int i = 0; i < library.Count; i++)
@@ -101,9 +101,9 @@ namespace LibraryEditor
                 {
                     WTLImage image = Images[i];
                     if (image.HasMask)
-                        library.Images[i] = new MLibrary.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow, MaskX = image.MaskX, MaskY = image.MaskY };
+                        library.Images[i] = new MLibraryV2.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow, MaskX = image.MaskX, MaskY = image.MaskY };
                     else
-                        library.Images[i] = new MLibrary.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow };
+                        library.Images[i] = new MLibraryV2.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow };
                 });
             }
             catch (System.Exception)

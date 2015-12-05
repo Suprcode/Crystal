@@ -19,7 +19,7 @@ namespace Client.MirObjects
         }
         public override bool Blocking
         {
-            get { return AI == 64 ? false : !Dead; }
+            get { return AI == 64 || (AI == 71 && Direction == (MirDirection)6) ? false : !Dead; }
         }
         public Point ManualLocationOffset
         {
@@ -116,6 +116,9 @@ namespace Client.MirObjects
                 case Monster.BabySnowMan:
                 case Monster.Frog:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
+                    break;
+                case Monster.SabukGate:
+                    BodyLibrary = Libraries.Effect;
                     break;
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];
@@ -926,6 +929,10 @@ namespace Client.MirObjects
                 case Monster.Frog:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
+
+                case Monster.SabukGate:
+                    Frames = FrameSet.Gates[0];
+                    break;
           
                 default:
                     Frames = FrameSet.Monsters[0];
@@ -939,6 +946,10 @@ namespace Client.MirObjects
             {
                 PlayAppearSound();
                 FrameIndex = CMain.Random.Next(Frame.Count);
+            }
+            else if(CurrentAction == MirAction.SitDown)
+            {
+                PlayAppearSound();
             }
 
             NextMotion -= NextMotion % 100;
@@ -1029,6 +1040,7 @@ namespace Client.MirObjects
             DrawLocation.Offset(-OffSetMove.X, -OffSetMove.Y);
             DrawLocation.Offset(User.OffSetMove);
             DrawLocation = DrawLocation.Add(ManualLocationOffset);
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
 
             if (BodyLibrary != null && update)
             {
@@ -1459,6 +1471,9 @@ namespace Client.MirObjects
                                 break;
                             case Monster.CharmedSnake:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CharmedSnake], 40, 8, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.SabukGate:
+                                Effects.Add(new Effect(Libraries.Effect, 136, 7, Frame.Count * Frame.Interval, this) { Light = -1 });
                                 break;
                         }
                         PlayDieSound();

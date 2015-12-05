@@ -250,7 +250,9 @@ namespace Client.MirControls
 
             TextBox.VisibleChanged += TextBox_VisibleChanged;
             TextBox.ParentChanged += TextBox_VisibleChanged;
-            TextBox.KeyUp += TextBoxOnKeyUp;      
+            TextBox.KeyUp += TextBoxOnKeyUp;  
+            TextBox.KeyPress += TextBox_KeyPress;
+
             Shown += MirTextBox_Shown;
             TextBox.MouseMove += CMain.CMain_MouseMove;
         }
@@ -263,6 +265,17 @@ namespace Client.MirControls
                     CMain.CMain_KeyUp(sender, e);
                     break;
 
+            }
+        }
+
+        void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+
+            if (e.KeyChar == (char)Keys.Escape)
+            {
+                Program.Form.ActiveControl = null;
+                e.Handled = true;
             }
         }
 

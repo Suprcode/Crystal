@@ -38,6 +38,7 @@ namespace Server
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
         public static bool TestServer = false;
+        public static bool EnforceDBChecks = true;
 
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
@@ -95,7 +96,8 @@ namespace Server
 
         public static int RestedPeriod = 60,
                           RestedBuffLength = 10,
-                          RestedExpBonus = 5;
+                          RestedExpBonus = 5,
+                          RestedMaxBonus = 24;
 
         public static string SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
@@ -257,6 +259,7 @@ namespace Server
             Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
             ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
+            EnforceDBChecks = Reader.ReadBoolean("General", "EnforceDBChecks", EnforceDBChecks);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -322,6 +325,7 @@ namespace Server
             RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
             RestedBuffLength = Reader.ReadInt32("Rested", "BuffLength", RestedBuffLength);
             RestedExpBonus = Reader.ReadInt32("Rested", "ExpBonus", RestedExpBonus);
+            RestedMaxBonus = Reader.ReadInt32("Rested", "MaxBonus", RestedMaxBonus);
 
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
@@ -445,7 +449,8 @@ namespace Server
             Reader.Write("General", "Multithreaded", Multithreaded);
             Reader.Write("General", "ThreadLimit", ThreadLimit);
             Reader.Write("General", "TestServer", TestServer);
-
+            Reader.Write("General", "EnforceDBChecks", EnforceDBChecks);
+            
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
             Reader.Write("Network", "Port", Port);
@@ -512,6 +517,7 @@ namespace Server
             Reader.Write("Rested", "Period", RestedPeriod);
             Reader.Write("Rested", "BuffLength", RestedBuffLength);
             Reader.Write("Rested", "ExpBonus", RestedExpBonus);
+            Reader.Write("Rested", "MaxBonus", RestedMaxBonus);
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);

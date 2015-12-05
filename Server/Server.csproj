@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -39,6 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -231,9 +233,11 @@
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
     <Compile Include="MirObjects\Monsters\AxeSkeleton.cs" />
+    <Compile Include="MirObjects\Monsters\BlockingObject.cs" />
     <Compile Include="MirObjects\Monsters\BoneFamiliar.cs" />
     <Compile Include="MirObjects\Monsters\BugBagMaggot.cs" />
     <Compile Include="MirObjects\Monsters\CannibalPlant.cs" />
+    <Compile Include="MirObjects\Monsters\CastleGate.cs" />
     <Compile Include="MirObjects\Monsters\CaveMaggot.cs" />
     <Compile Include="MirObjects\Monsters\BoneSpearman.cs" />
     <Compile Include="MirObjects\Monsters\BoneLord.cs" />
@@ -252,6 +256,7 @@
     <Compile Include="MirObjects\Monsters\GreatFoxSpirit.cs" />
     <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
     <Compile Include="MirObjects\Monsters\Runaway.cs" />
+    <Compile Include="MirObjects\Monsters\SabukGate.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
     <Compile Include="MirObjects\Monsters\TalkingMonster.cs" />

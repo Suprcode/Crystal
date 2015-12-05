@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
+using System.Linq;
+
+public enum BlendMode : sbyte
+{
+    NONE = -1,
+    NORMAL = 0,
+    LIGHT = 1,
+    LIGHTINV = 2,
+    INVNORMAL = 3,
+    INVLIGHT = 4,
+    INVLIGHTINV = 5,
+    INVCOLOR = 6,
+    INVBACKGROUND = 7
+}
 
 public enum DamageType : byte
 {
@@ -96,7 +111,8 @@ public enum QuestType : byte
 {
     General = 0,
     Daily = 1,
-    Repeatable = 2
+    Repeatable = 2,
+    Story = 3
 }
 
 public enum QuestIcon : byte
@@ -106,7 +122,9 @@ public enum QuestIcon : byte
     ExclamationYellow = 2,
     QuestionYellow = 3,
     ExclamationBlue = 5,
-    QuestionBlue = 6
+    QuestionBlue = 6,
+    ExclamationGreen = 7,
+    QuestionGreen = 8
 }
 
 public enum QuestState : byte
@@ -306,7 +324,6 @@ public enum Monster : ushort
     DarkDustPile = 147,
     DarkBrownWolf = 148,
     Football = 149,
-
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -315,9 +332,10 @@ public enum Monster : ushort
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
+
     Behemoth = 158,
     DarkDevourer = 159,//LIB BROKE??
-    PoisonHugger = 160,
+    PoisonHugger = 160, //DONE
     Hugger = 161,
     MutatedHugger = 162,//BROKE
     DreamDevourer = 163,//LIB BROKE??
@@ -570,6 +588,8 @@ public enum Monster : ushort
     EvilMirBody = 901,
     DragonStatue = 902,
 
+    SabukGate = 950,
+
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
     Kitten = 10002,//Permanent
@@ -640,6 +660,14 @@ public enum CellAttribute : byte
     HighWall = 1,
     LowWall = 2,
 }
+
+public enum FishingAttribute : byte
+{
+    None = 0,
+    FreshWater = 1,
+    SaltWater = 2
+}
+
 public enum LightSetting : byte
 {
     Normal = 0,
@@ -1522,6 +1550,8 @@ public enum ClientPacketIds : short
     GuildBuffUpdate,
     NPCConfirmInput,
     GameshopBuy,
+
+    ReportIssue
 }
 
 public class InIReader
@@ -2380,6 +2410,43 @@ public static class Functions
         }
 
         return newString;
+    }
+
+    public static byte[] ImageToByteArray(Image imageIn)
+    {
+        MemoryStream ms = new MemoryStream();
+        imageIn.Save(ms, ImageFormat.Gif);
+        return ms.ToArray();
+    }
+
+    public static Image ByteArrayToImage(byte[] byteArrayIn)
+    {
+        MemoryStream ms = new MemoryStream(byteArrayIn);
+        Image returnImage = Image.FromStream(ms);
+        return returnImage;
+    }
+
+    public static IEnumerable<byte[]> SplitArray(byte[] value, int bufferLength)
+    {
+        int countOfArray = value.Length / bufferLength;
+        if (value.Length % bufferLength > 0)
+            countOfArray++;
+        for (int i = 0; i < countOfArray; i++)
+        {
+            yield return value.Skip(i * bufferLength).Take(bufferLength).ToArray();
+        }
+    }
+
+    public static byte[] CombineArray(List<byte[]> arrays)
+    {
+        byte[] rv = new byte[arrays.Sum(x => x.Length)];
+        int offset = 0;
+        foreach (byte[] array in arrays)
+        {
+            System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+            offset += array.Length;
+        }
+        return rv;
     }
 }
 
@@ -3754,6 +3821,14 @@ public class ClientQuestInfo
                 else
                     icon = QuestIcon.ExclamationBlue;
                 break;
+            case QuestType.Story:
+                if (completed)
+                    icon = QuestIcon.QuestionGreen;
+                else if (taken)
+                    icon = QuestIcon.QuestionWhite;
+                else
+                    icon = QuestIcon.ExclamationGreen;
+                break;
         }
 
         return icon;
@@ -4466,6 +4541,8 @@ public abstract class Packet
                 return new C.GameshopBuy();
             case (short)ClientPacketIds.NPCConfirmInput:
                 return new C.NPCConfirmInput();
+            case (short)ClientPacketIds.ReportIssue:
+                return new C.ReportIssue();
             default:
                 throw new NotImplementedException();
         }

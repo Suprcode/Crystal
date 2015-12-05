@@ -11,6 +11,7 @@ namespace Client.MirObjects
         public static List<FrameSet> NPCs; //Make Array
         public static List<FrameSet> Monsters;
         public static List<FrameSet> HelperPets; //IntelligentCreature
+        public static List<FrameSet> Gates;
 
         public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
 
@@ -24,6 +25,8 @@ namespace Client.MirObjects
             Players = new FrameSet();
 
             HelperPets = new List<FrameSet>(); //IntelligentCreature
+
+            Gates = new List<FrameSet>();
 
             /*
              * PLAYERS
@@ -2415,6 +2418,20 @@ namespace Client.MirObjects
 
             #endregion
 
+            /*
+             * Castle Gates             
+             */
+            #region Gate Frames
+
+            Gates.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(80, 1, 7, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(80, 4, 4, 200));
+            frame.Frames.Add(MirAction.Attack1, new Frame(120, 6, -6, 200));//open
+            frame.Frames.Add(MirAction.Attack2, new Frame(128, 6, -6, 200));//close
+            frame.Frames.Add(MirAction.Die, new Frame(104, 10, -10, 200));
+            frame.Frames.Add(MirAction.Dead, new Frame(113, 1, -1, 1000));
+
+            #endregion
         }
     }
 
