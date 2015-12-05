@@ -385,6 +385,11 @@ namespace Client.MirScenes
                         GameScene.Scene.MountDialog.Ride();
                     break;
 
+                case Keys.Y:
+                    if (!GameShopDialog.Visible) GameShopDialog.Show();
+                    else GameShopDialog.Hide();
+                    break;
+
                 case Keys.W:
                     if (!MentorDialog.Visible) MentorDialog.Show();
                     else MentorDialog.Hide();
@@ -1777,8 +1782,10 @@ namespace Client.MirScenes
             MapControl.NextAction = 0;
             if (User.CurrentLocation == p.Location && User.Direction == p.Direction) return;
 
-
-            ReceiveChat(new S.Chat { Message = "Displacement", Type = ChatType.System });
+            if (Settings.DebugMode)
+            {
+                ReceiveChat(new S.Chat { Message = "Displacement", Type = ChatType.System });
+            }
 
             MapControl.RemoveObject(User);
             User.CurrentLocation = p.Location;
@@ -10897,7 +10904,8 @@ namespace Client.MirScenes
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 552 : 328, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Report"
+                Hint = "Report",
+                Visible = false
             };
             ReportButton.Click += (o, e) =>
             {
@@ -11096,7 +11104,7 @@ namespace Client.MirScenes
             {
                 Index = 738,
                 Library = Libraries.Title,
-                Location = new Point(78, 7),
+                Location = new Point(76, 7),
                 Parent = this,
                 Size = new Size(72, 23),
                 Sound = SoundList.ButtonA,
@@ -11107,7 +11115,7 @@ namespace Client.MirScenes
             {
                 Index = 739,
                 Library = Libraries.Title,
-                Location = new Point(148, 7),
+                Location = new Point(146, 7),
                 Parent = this,
                 Size = new Size(72,23),
                 Sound = SoundList.ButtonA,
@@ -13679,7 +13687,10 @@ namespace Client.MirScenes
             //SoundManager.Create();
             //SoundManager.PlayMusic(SoundList.Music, true);
 
+            if (SoundManager.Music == null) return;
+
             SoundManager.Music.SetVolume(SoundManager.MusicVol);
+
         }
 
         private void MusicSoundBar_MouseMove(object sender, MouseEventArgs e)
@@ -14155,7 +14166,7 @@ namespace Client.MirScenes
                 AnimationDelay = 130,
 
                 Index = 530,
-                //HoverIndex = 285,
+                HoverIndex = 284,
                 PressedIndex = 286,
                 Library = Libraries.Title,
                 Parent = this,
@@ -14993,7 +15004,7 @@ namespace Client.MirScenes
                 }
             }
 
-            if (PType == PanelType.Disassemble || PType == PanelType.Downgrade || PType == PanelType.Reset)
+            if (GameScene.SelectedCell != null && (PType == PanelType.Disassemble || PType == PanelType.Downgrade || PType == PanelType.Reset))
             {
                 GameScene.SelectedCell.Locked = false;
                 GameScene.SelectedCell = null;

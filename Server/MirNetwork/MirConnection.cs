@@ -1611,6 +1611,8 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
+            return;
+
             Image.Add(p.Image);
 
             if (p.ImageChunk >= p.ImageSize)

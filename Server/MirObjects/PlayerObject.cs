@@ -15766,7 +15766,7 @@ namespace Server.MirObjects
         {
             UserItem rod = Info.Equipment[(int)EquipmentSlot.Weapon];
 
-            if (rod.Info.Shape != 49 && rod.Info.Shape != 50) return;
+            if (rod == null || (rod.Info.Shape != 49 && rod.Info.Shape != 50)) return;
 
             UserItem reel = rod.Slots[(int)FishingSlot.Reel];
 

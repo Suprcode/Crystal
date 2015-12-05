@@ -385,7 +385,7 @@ namespace Client.MirScenes
                         HoverIndex = 321,
                         Index = 320,
                         Library = Libraries.Title,
-                        Location = new Point(227, 83),
+                        Location = new Point(227, 81),
                         Parent = this,
                         PressedIndex = 322
                     };
