@@ -150,13 +150,34 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);
-                case 69://custom
-                    return new Runaway(info);
-                case 70://custom
-                    return new TalkingMonster(info);
+                    return new Football(info);          
+                case 69:
+                    return new Behemoth(info);
+                case 70:
+                    return new DreamDevourer(info);
                 case 71:
-                    return new SabukGate(info);
+                    return new FlameTiger(info);
+                case 72:
+                    return new FinialTurtle(info);
+                case 73:
+                    return new TurtleKing(info);
+                case 74:
+                    return new LightTurtle(info);
+                case 75:
+                    return new FlamingMutant(info);
+                case 76:
+                    return new StoningStatue(info);
+                case 77:
+                    return new HellPirate(info);
+                case 78:
+                    return new HellKeeper(info);
+                case 79:
+                    return new ManectricClaw(info);
+
+                case 200://custom
+                    return new Runaway(info);
+                case 201://custom
+                    return new TalkingMonster(info);
                 default:
                     return new MonsterObject(info);
             }

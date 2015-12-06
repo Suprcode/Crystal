@@ -3,9 +3,9 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class MutatedManworm : MonsterObject
+    public class DreamDevourer : MonsterObject
     {
-        protected internal MutatedManworm(MonsterInfo info)
+        protected internal DreamDevourer(MonsterInfo info)
             : base(info)
         {
         }

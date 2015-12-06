@@ -450,7 +450,6 @@ namespace Client.MirObjects
                 case Monster.Behemoth:
                     Frames = FrameSet.Monsters[59];
                     break;
-                case Monster.PoisonHugger:
                 case Monster.Hugger:
                 case Monster.ManectricSlave:
                     Frames = FrameSet.Monsters[60];
@@ -483,7 +482,6 @@ namespace Client.MirObjects
                 case Monster.HellSlasher:
                 case Monster.HellCannibal:
                 case Monster.ManectricClub:
-                case Monster.ManectricClaw:
                     Frames = FrameSet.Monsters[69];
                     break;
                 case Monster.HellPirate:
@@ -546,57 +544,26 @@ namespace Client.MirObjects
                 case Monster.KingGuard:
                     Frames = FrameSet.Monsters[84];
                     break;
-                case Monster.WhiteMammoth:
-                case Monster.HardenRhino:
-                    Frames = FrameSet.Monsters[87];
+                case Monster.Bunny2:
+                case Monster.Bunny:
+                    Frames = FrameSet.Monsters[85];
                     break;
                 case Monster.DarkBeast:
                 case Monster.LightBeast:
                     Frames = FrameSet.Monsters[86];
                     break;
-                case Monster.BloodBaboon:
-                    Frames = FrameSet.Monsters[191];
+                case Monster.WhiteMammoth:
+                case Monster.HardenRhino:
+                    Frames = FrameSet.Monsters[87];
                     break;
                 case Monster.AncientBringer:
                     Frames = FrameSet.Monsters[88];
                     break;
-                case Monster.FightingCat:
-                case Monster.DarkDevourer:
-                    Frames = FrameSet.Monsters[192];
-                    break;
-                case Monster.FireCat:
-                    Frames = FrameSet.Monsters[193];
-                    break;
-                case Monster.CatWidow:
-                    Frames = FrameSet.Monsters[194];
-                    break;
-                case Monster.StainHammerCat:
-                    Frames = FrameSet.Monsters[195];
-                    break;
-                case Monster.BlackHammerCat:
-                    Frames = FrameSet.Monsters[196];
-                    break;
-                case Monster.StrayCat:
-                    Frames = FrameSet.Monsters[197];
-                    break;
-                case Monster.CatShaman:
-                    Frames = FrameSet.Monsters[198];
-                    break;
                 case Monster.Jar1:
                     Frames = FrameSet.Monsters[89];
                     break;
-                case Monster.Jar2:
-                    Frames = FrameSet.Monsters[199];
-                    break;
                 case Monster.SeedingsGeneral:
                     Frames = FrameSet.Monsters[90];
-                    break;
-                case Monster.RestlessJar:
-                    Frames = FrameSet.Monsters[200];
-                    break;
-                case Monster.Bunny2:
-                case Monster.Bunny:
-                    Frames = FrameSet.Monsters[85];
                     break;
                 case Monster.Tucson:
                 case Monster.TucsonFighter:
@@ -914,7 +881,49 @@ namespace Client.MirObjects
                 case Monster.MudZombie:
                     Frames = FrameSet.Monsters[190];
                     break;
-               
+                case Monster.BloodBaboon:
+                    Frames = FrameSet.Monsters[191];
+                    break;
+                case Monster.FightingCat:
+                case Monster.PoisonHugger:
+                    Frames = FrameSet.Monsters[192];
+                    break;
+                case Monster.FireCat:
+                    Frames = FrameSet.Monsters[193];
+                    break;
+                case Monster.CatWidow:
+                    Frames = FrameSet.Monsters[194];
+                    break;
+                case Monster.StainHammerCat:
+                    Frames = FrameSet.Monsters[195];
+                    break;
+                case Monster.BlackHammerCat:
+                    Frames = FrameSet.Monsters[196];
+                    break;
+                case Monster.StrayCat:
+                    Frames = FrameSet.Monsters[197];
+                    break;
+                case Monster.CatShaman:
+                    Frames = FrameSet.Monsters[198];
+                    break;
+                case Monster.Jar2:
+                    Frames = FrameSet.Monsters[199];
+                    break;
+                case Monster.RestlessJar:
+                    Frames = FrameSet.Monsters[200];
+                    break;
+                case Monster.FlamingMutant:
+                case Monster.FlyingStatue:
+                case Monster.ManectricClaw:
+                    Frames = FrameSet.Monsters[201];
+                    break;
+                case Monster.StoningStatue:
+                    Frames = FrameSet.Monsters[202];
+                    break;
+                case Monster.ArcherGuard2:
+                    Frames = FrameSet.Monsters[203];
+                    break;
+
 
                 case Monster.BabyPig:
                 case Monster.Chick:
@@ -1340,6 +1349,21 @@ namespace Client.MirObjects
                                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 230 + (CMain.Random.Next(5) * 10), 5, 400, source, CMain.Time + CMain.Random.Next(1000)));
                                 }
                                 break;
+                            case Monster.StoningStatue:
+                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StoningStatue], 624, 8, 8 * 100, User));
+                                break;
+                            case Monster.Behemoth:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 667 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.CrawlerLave:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CrawlerLave], 224 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellKeeper:
+                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellKeeper], 32, 8, 8 * Frame.Interval, User));
+                                break;
+                            case Monster.PoisonHugger:
+                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, 5 * Frame.Interval, User, 500, false));
+                                break;
                         }
                         break;
                     case MirAction.Attack2:
@@ -1402,6 +1426,22 @@ namespace Client.MirObjects
                                 break;
                             case Monster.DragonStatue:
                                 Effects.Add(new Effect(Libraries.Dragon, 310 + ((int)Direction / 3) * 20, 10, 10 * Frame.Interval, this));
+                                break;
+                            case Monster.StoningStatue:
+                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StoningStatue], 642, 25, 25 * 100, User));
+                                break;
+                            case Monster.Behemoth:
+                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 658, 9, Frame.Count * Frame.Interval, User));
+                                break;
+                            case Monster.TurtleKing:
+                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 922, 12, Frame.Count * Frame.Interval, User));
+                                break;
+                            case Monster.FlyingStatue:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 314, 6, 6 * Frame.Interval, this));
+                                //Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 329, 5, 5 * Frame.Interval, this)); this should follow the projectile
+                                break;
+                            case Monster.HellBolt:
+                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellBolt], 315, 10, 10 * 100, User));
                                 break;
                         }
                         TargetID = (uint)action.Params[0];
@@ -1472,6 +1512,25 @@ namespace Client.MirObjects
                             case Monster.CharmedSnake:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CharmedSnake], 40, 8, Frame.Count * Frame.Interval, this));
                                 break;
+                            case Monster.Manticore:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Manticore], 592, 9, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.Behemoth:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 820, 10, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.ValeBat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ValeBat], 224, 20, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.SpiderBat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SpiderBat], 224, 20, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.VenomWeaver:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.VenomWeaver], 224, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.HellBolt:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellBolt], 325, 10, Frame.Count * Frame.Interval, this));
+                                break;
+
                             case Monster.SabukGate:
                                 Effects.Add(new Effect(Libraries.Effect, 136, 7, Frame.Count * Frame.Interval, this) { Light = -1 });
                                 break;
