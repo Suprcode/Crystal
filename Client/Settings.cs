@@ -11,20 +11,28 @@ namespace Client
         public static int ScreenWidth = 800, ScreenHeight = 600;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
 
+        private static bool _useTestConfig;
         public static bool UseTestConfig
         {
+            get
+            {
+                return _useTestConfig;
+            }
             set 
             {
                 if (value == true)
                 {
                     Reader = new InIReader(@".\Mir2Test.ini");
                 }
+                _useTestConfig = value;
             }
         }
 
         public const string DataPath = @".\Data\",
                             MapPath = @".\Map\",
                             SoundPath = @".\Sound\",
+                            ExtraDataPath = @".\Data\Extra\",
+                            ShadersPath = @".\Data\Shaders\",
                             MonsterPath = @".\Data\Monster\",
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",

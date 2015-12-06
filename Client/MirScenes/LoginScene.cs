@@ -29,7 +29,7 @@ namespace Client.MirScenes
 
         private InputKeyDialog _ViewKey;
 
-        public MirImageControl ViolenceLabel, MinorLabel, YouthLabel; 
+        public MirImageControl TestLabel, ViolenceLabel, MinorLabel, YouthLabel; 
 
         public LoginScene()
         {
@@ -82,6 +82,14 @@ namespace Client.MirScenes
                     Text = string.Format("Version: {0}", Application.ProductVersion),
                 };
 
+            TestLabel = new MirImageControl
+            {
+                Index = 79,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(Settings.ScreenWidth - 116, 10),
+                Visible = Settings.UseTestConfig
+            };
 
             //ViolenceLabel = new MirImageControl
             //{
@@ -343,6 +351,8 @@ namespace Client.MirScenes
                 Index = 1084;
                 Library = Libraries.Prguse;
                 Location = new Point((Settings.ScreenWidth - Size.Width)/2, (Settings.ScreenHeight - Size.Height)/2);
+                PixelDetect = false;
+                Size = new Size(328, 220);
 
                 TitleLabel = new MirImageControl
                     {
@@ -350,14 +360,14 @@ namespace Client.MirScenes
                         Library = Libraries.Title,
                         Parent = this,
                     };
-                TitleLabel.Location = new Point((Size.Width - TitleLabel.Size.Width)/2, 5);
+                TitleLabel.Location = new Point((Size.Width - TitleLabel.Size.Width)/2, 12);
 
                 AccountIDLabel = new MirImageControl
                     {
                         Index = 31,
                         Library = Libraries.Title,
                         Parent = this,
-                        Location = new Point(51, 82),
+                        Location = new Point(52, 83),
                     };
 
                 PassLabel = new MirImageControl
@@ -365,16 +375,17 @@ namespace Client.MirScenes
                         Index = 32,
                         Library = Libraries.Title,
                         Parent = this,
-                        Location = new Point(46, 109)
+                        Location = new Point(43, 105)
                     };
 
                 OKButton = new MirButton
                     {
                         Enabled = false,
+                        Size = new Size(42,42),
                         HoverIndex = 321,
                         Index = 320,
                         Library = Libraries.Title,
-                        Location = new Point(227, 83),
+                        Location = new Point(227, 81),
                         Parent = this,
                         PressedIndex = 322
                     };
@@ -425,9 +436,9 @@ namespace Client.MirScenes
                     {
                         Location = new Point(85, 85),
                         Parent = this,
-                        Size = new Size(136, 15),
+                        Size = new Size(136, 12),
                         MaxLength = Globals.MaxAccountIDLength
-                    };
+                };
                 AccountIDTextBox.SetFocus();
                 AccountIDTextBox.TextBox.TextChanged += AccountIDTextBox_TextChanged;
                 AccountIDTextBox.TextBox.KeyPress += TextBox_KeyPress;
@@ -588,35 +599,41 @@ namespace Client.MirScenes
 
                 KeyEscButton = new MirButton
                 {
+                    Text = "Esc",
                     HoverIndex = 301,
                     Index = 300,
                     Library = Libraries.Title,
                     Location = new Point(12, 12),
                     Parent = this,
-                    PressedIndex = 302
+                    PressedIndex = 302,
+                    CenterText = true
                 };
                 KeyEscButton.Click += (o, e) => Dispose();
 
                 KeyDelButton = new MirButton
                 {
+                    Text = "Delete",
                     HoverIndex = 304,
                     Index = 303,
                     Library = Libraries.Title,
                     Location = new Point(140, 76),
                     Parent = this,
-                    PressedIndex = 305
+                    PressedIndex = 305,
+                    CenterText = true
                 };
                 KeyDelButton.Click += (o, e) => SecureKeyDelete();
 
                 KeyEnterButton = new MirButton
                 {
+                    Text = "Enter",
                     HoverIndex = 307,
                     Index = 306,
                     Library = Libraries.Title,
                     Location = new Point(140, 236),
                     Parent = this,
-                    PressedIndex = 308
-                   
+                    PressedIndex = 308,
+                    CenterText = true
+
                 };
                 KeyEnterButton.Click += (o, e) =>
                 {
@@ -627,12 +644,14 @@ namespace Client.MirScenes
 
                 KeyRandButton = new MirButton
                 {
+                    Text = "Random",
                     HoverIndex = 310,
                     Index = 309,
                     Library = Libraries.Title,
                     Location = new Point(76, 236),
                     Parent = this,
-                    PressedIndex = 311
+                    PressedIndex = 311,
+                    CenterText = true
                 };
                 KeyRandButton.Click += (o, e) =>
                 {
@@ -811,7 +830,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 104),
+                    Location = new Point(226, 103),
                     MaxLength = Globals.MaxAccountIDLength,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -825,7 +844,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 130),
+                    Location = new Point(226, 129),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -839,7 +858,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 156),
+                    Location = new Point(226, 155),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -853,7 +872,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 190),
+                    Location = new Point(226, 189),
                     MaxLength = 20,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -867,7 +886,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 216),
+                    Location = new Point(226, 215),
                     MaxLength = 10,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -880,7 +899,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 251),
+                    Location = new Point(226, 250),
                     MaxLength = 30,
                     Parent = this,
                     Size = new Size(190, 18),
@@ -893,7 +912,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 277),
+                    Location = new Point(226, 276),
                     MaxLength = 30,
                     Parent = this,
                     Size = new Size(190, 18),
@@ -906,7 +925,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(226, 312),
+                    Location = new Point(226, 311),
                     MaxLength = 50,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -1225,7 +1244,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 76),
+                    Location = new Point(178, 75),
                     MaxLength = Globals.MaxAccountIDLength,
                     Parent = this,
                     Size = new Size(136, 18),
@@ -1238,7 +1257,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 114),
+                    Location = new Point(178, 113),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -1251,7 +1270,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 152),
+                    Location = new Point(178, 151),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,
@@ -1264,7 +1283,7 @@ namespace Client.MirScenes
                 {
                     Border = true,
                     BorderColour = Color.Gray,
-                    Location = new Point(178, 189),
+                    Location = new Point(178, 188),
                     MaxLength = Globals.MaxPasswordLength,
                     Parent = this,
                     Password = true,

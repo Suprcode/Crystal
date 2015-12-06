@@ -34,7 +34,7 @@ namespace Server.MirObjects
         public const long delayedpickupDelay = Settings.Second;//1 second
 
         public long blackstoneTime = 0;
-        public const long blackstoneProduceTime = 3 * Settings.Hour;//3 hours in seconds
+        public const long blackstoneProduceTime = 10800;//3 hours in seconds
 
         public long pearlTicker = 0;
         public const long pearlProduceCount = 1000;//1000 items = 1 pearl

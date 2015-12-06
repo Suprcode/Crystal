@@ -18,6 +18,7 @@ using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 
 using Client.MirScenes.Dialogs;
+using System.Drawing.Imaging;
 
 namespace Client.MirScenes
 {
@@ -108,6 +109,8 @@ namespace Client.MirScenes
         public MentorDialog MentorDialog;
         public GameShopDialog GameShopDialog;
 
+        public ReportDialog ReportDialog;
+
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
@@ -151,6 +154,8 @@ namespace Client.MirScenes
         public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
         public static long SpellTime;
 
+        public static Point DoorPoint;
+        public static long DoorTime;
 
         public MirLabel[] OutputLines = new MirLabel[10];
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
@@ -203,7 +208,7 @@ namespace Client.MirScenes
             
             GroupDialog = new GroupDialog { Parent = this, Visible = false };
             GuildDialog = new GuildDialog { Parent = this, Visible = false };
-            //GuildBuffDialog = new GuildBuffDialog { Parent = this, Visible = false };
+
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
             CharacterDuraPanel = new CharacterDuraPanel { Parent = this, Visible = false };
@@ -228,9 +233,9 @@ namespace Client.MirScenes
             MailReadLetterDialog = new MailReadLetterDialog { Parent = this, Visible = false };
             MailReadParcelDialog = new MailReadParcelDialog { Parent = this, Visible = false };
 
-            IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };//IntelligentCreature
-            IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };//IntelligentCreature
-            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };//IntelligentCreature
+            IntelligentCreatureDialog = new IntelligentCreatureDialog { Parent = this, Visible = false };
+            IntelligentCreatureOptionsDialog = new IntelligentCreatureOptionsDialog { Parent = this, Visible = false };
+            IntelligentCreatureOptionsGradeDialog = new IntelligentCreatureOptionsGradeDialog { Parent = this, Visible = false };
 
             RefineDialog = new RefineDialog { Parent = this, Visible = false };
             RelationshipDialog = new RelationshipDialog { Parent = this, Visible = false };
@@ -238,6 +243,8 @@ namespace Client.MirScenes
             MemoDialog = new MemoDialog { Parent = this, Visible = false };
             MentorDialog = new MentorDialog { Parent = this, Visible = false };
             GameShopDialog = new GameShopDialog { Parent = this, Visible = false };
+
+            ReportDialog = new ReportDialog { Parent = this, Visible = false };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -378,6 +385,11 @@ namespace Client.MirScenes
                         GameScene.Scene.MountDialog.Ride();
                     break;
 
+                case Keys.Y:
+                    if (!GameShopDialog.Visible) GameShopDialog.Show();
+                    else GameShopDialog.Hide();
+                    break;
+
                 case Keys.W:
                     if (!MentorDialog.Visible) MentorDialog.Show();
                     else MentorDialog.Hide();
@@ -395,11 +407,7 @@ namespace Client.MirScenes
 
                 case Keys.G:
                     if (!GuildDialog.Visible) GuildDialog.Show();
-                    else
-                    {
-                        //GuildBuffDialog.Hide();
-                        GuildDialog.Hide();
-                    }
+                    else GuildDialog.Hide();
                     break;
 
                 case Keys.Q:
@@ -417,13 +425,13 @@ namespace Client.MirScenes
                     CharacterDialog.Hide();
                     OptionDialog.Hide();
                     MenuDialog.Hide();
-                    NPCDialog.Hide();
+                    if(NPCDialog.Visible) NPCDialog.Hide();
                     HelpDialog.Hide();
                     KeyboardLayoutDialog.Hide();
                     RankingDialog.Hide();
-                    IntelligentCreatureDialog.Hide();//IntelligentCreature
-                    IntelligentCreatureOptionsDialog.Hide();//IntelligentCreature
-                    IntelligentCreatureOptionsGradeDialog.Hide();//IntelligentCreature
+                    IntelligentCreatureDialog.Hide();
+                    IntelligentCreatureOptionsDialog.Hide();
+                    IntelligentCreatureOptionsGradeDialog.Hide();
                     MountDialog.Hide();
                     FishingDialog.Hide();
                     FriendDialog.Hide();
@@ -432,7 +440,6 @@ namespace Client.MirScenes
                     GameShopDialog.Hide();
                     GroupDialog.Hide();
                     GuildDialog.Hide();
-                    //GuildBuffDialog.Hide();
                     InspectDialog.Hide();
                     StorageDialog.Hide();
                     TrustMerchantDialog.Hide();
@@ -444,6 +451,10 @@ namespace Client.MirScenes
                     RefineDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+
+
+
+                    GameScene.Scene.DisposeItemLabel();
                     break;
                 case Keys.O:
                 case Keys.F12:
@@ -533,7 +544,7 @@ namespace Client.MirScenes
                                 return;
                         }
                     }
-                    //IntelligentCreature semiauto pickup mode
+
                     if (!CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
                     break;
                 case Keys.H:
@@ -879,6 +890,12 @@ namespace Client.MirScenes
 
                 messageBox.Show();
             }
+
+            //if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
+            //{
+            //    MapControl.CloseDoor(GameScene.DoorPoint);
+            //    GameScene.DoorTime = 0;
+            //}
 
             
             UpdateBuffs();
@@ -1765,8 +1782,10 @@ namespace Client.MirScenes
             MapControl.NextAction = 0;
             if (User.CurrentLocation == p.Location && User.Direction == p.Direction) return;
 
-
-            ReceiveChat(new S.Chat { Message = "Displacement", Type = ChatType.System });
+            if (Settings.DebugMode)
+            {
+                ReceiveChat(new S.Chat { Message = "Displacement", Type = ChatType.System });
+            }
 
             MapControl.RemoveObject(User);
             User.CurrentLocation = p.Location;
@@ -8136,6 +8155,7 @@ namespace Client.MirScenes
 
             CheckInput();
 
+
             MapObject bestmouseobject = null;
             for (int y = MapLocation.Y + 2; y >= MapLocation.Y - 2; y--)
             {
@@ -8458,6 +8478,8 @@ namespace Client.MirScenes
                     if (fileIndex == -1) continue;
                     animation = M2CellInfo[x, y].FrontAnimationFrame;
 
+
+
                     if ((animation & 0x80) > 0)
                     {
                         blend = true;
@@ -8472,6 +8494,17 @@ namespace Client.MirScenes
                         byte animationTick = M2CellInfo[x, y].FrontAnimationTick;
                         index += (AnimationCount % (animation + (animation * animationTick))) / (1 + animationTick);
                     }
+
+
+                    if ((M2CellInfo[x, y].DoorOffset & 0x80) > 0)
+                    {
+                        if ((M2CellInfo[x, y].DoorIndex & 0x7F) > 0)
+                        {
+                            index += (M2CellInfo[x, y].DoorOffset & 0x7F);
+                        }
+                    }
+
+
                     s = Libraries.MapLibs[fileIndex].GetSize(index);
                     if (s.Width == CellWidth && s.Height == CellHeight && animation == 0) continue;
                     if ((s.Width == CellWidth * 2) && (s.Height == CellHeight * 2) && (animation == 0)) continue;
@@ -8588,35 +8621,38 @@ namespace Client.MirScenes
 
                     p = ob.DrawLocation;
 
-                    Color lightIntensity;
+                    Color lightColour = ob.LightColour;
 
-                    switch (light / 15)
+                    if (ob.Race == ObjectType.Player)
                     {
-                        case 0://no light source
-                            lightIntensity = Color.FromArgb(255, 60, 60, 60);
-                            break;
-                        case 1:
-                            lightIntensity = Color.FromArgb(255, 120, 120, 120);
-                            break;
-                        case 2://Candle
-                            lightIntensity = Color.FromArgb(255, 180, 180, 180);
-                            break;
-                        case 3://Torch
-                            lightIntensity = Color.FromArgb(255, 240, 240, 240);
-                            break;
-                        default://Peddler Torch
-                            lightIntensity = Color.FromArgb(255, 255, 255, 255);
-                            break;
+                        switch (light / 15)
+                        {
+                            case 0://no light source
+                                lightColour = Color.FromArgb(255, 60, 60, 60);
+                                break;
+                            case 1:
+                                lightColour = Color.FromArgb(255, 120, 120, 120);
+                                break;
+                            case 2://Candle
+                                lightColour = Color.FromArgb(255, 180, 180, 180);
+                                break;
+                            case 3://Torch
+                                lightColour = Color.FromArgb(255, 240, 240, 240);
+                                break;
+                            default://Peddler Torch
+                                lightColour = Color.FromArgb(255, 255, 255, 255);
+                                break;
+                        }
                     }
-
-                    //NPCs use wider light width, but low source
-                    if (ob.Race == ObjectType.Merchant)
-                        lightIntensity = Color.FromArgb(255, 120, 120, 120);
+                    else if (ob.Race == ObjectType.Merchant)
+                    {
+                        lightColour = Color.FromArgb(255, 120, 120, 120);
+                    }
 
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
-                        p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightIntensity); // ob is MonsterObject && ob.AI != 6 ? Color.PaleVioletRed : 
+                        p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
+                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour); // ob is MonsterObject && ob.AI != 6 ? Color.PaleVioletRed : 
                     }
 
                 }
@@ -8935,8 +8971,20 @@ namespace Client.MirScenes
                     }
                     if (CanWalk(direction))
                     {
-                        User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                        return;
+                        //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
+                            //{
+                            //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
+                            //    return;
+                            //}
+                            //else
+                            //{
+                            //    //if (MapObject.MouseObject != null) return;
+                            //    User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                            //    return;
+                            //}
+
+                            User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                            return;
                     }
                     if (direction != User.Direction)
                     {
@@ -9041,9 +9089,17 @@ namespace Client.MirScenes
                         }
                         if (CanWalk(direction))
                         {
-                            //if (MapObject.MouseObject != null) return;
-                            User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                            return;
+                            if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
+                            {
+                                OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
+                                return;
+                            }
+                            else
+                            {
+                                //if (MapObject.MouseObject != null) return;
+                                User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                                return;
+                            }
                         }
                         if (direction != User.Direction)
                         {
@@ -9449,6 +9505,80 @@ namespace Client.MirScenes
             }
 
             return true;
+        }
+
+        public int GetDoor(Point target)
+        {
+            int result = 0;
+
+            Point nTarget = target;// Functions.PointMove(target, MirDirection.UpLeft, 1);
+
+            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
+            {
+                result = (M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x7F);
+            }
+
+            return result;
+        }
+
+        public void OpenDoor(Point target)
+        {
+            int idx;
+
+            Point nTarget = target;// Functions.PointMove(target, MirDirection.UpLeft, 1);
+
+            if (nTarget.X < 0 || nTarget.Y < 0) return;
+
+            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
+            {
+                idx = (M2CellInfo[target.X, target.Y].DoorIndex & 0x7F);
+
+                for (int x = nTarget.X - 10; x < nTarget.X + 10; x++)
+                {
+                    for (int y = nTarget.Y - 10; y < nTarget.Y + 10; y++)
+                    {
+                        if (x > 0 && y > 0)
+                        {
+                            if ((M2CellInfo[x, y].DoorIndex & 0x7F) == idx)
+                            {
+                                M2CellInfo[x, y].DoorOffset = (byte)(M2CellInfo[x, y].DoorOffset | 0x80);
+                                GameScene.DoorPoint = nTarget;
+                                GameScene.DoorTime = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CloseDoor(Point target)
+        {
+            int idx;
+
+            Point nTarget = target;//Functions.PointMove(target, MirDirection.UpLeft, 1);
+
+            if (nTarget.X < 0 || nTarget.Y < 0) return;
+
+            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
+            {
+                idx = (M2CellInfo[target.X, target.Y].DoorIndex & 0x7F);
+
+                for (int x = nTarget.X - 10; x < nTarget.X + 10; x++)
+                {
+                    for (int y = nTarget.Y - 10; y < nTarget.Y + 10; y++)
+                    {
+                        if (x > 0 && y > 0)
+                        {
+                            if ((M2CellInfo[x, y].DoorIndex & 0x7F) == idx)
+                            {
+                                M2CellInfo[x, y].DoorOffset = (byte)(M2CellInfo[x, y].DoorOffset | 0x7F);
+                                GameScene.DoorPoint = new Point(0,0);
+                                GameScene.DoorTime = 0;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public bool ValidPoint(Point p)
@@ -10606,7 +10736,7 @@ namespace Client.MirScenes
     }
     public sealed class ChatControlBar : MirImageControl
     {
-        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton;
+        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton;
 
         public ChatControlBar()
         {
@@ -10633,7 +10763,6 @@ namespace Client.MirScenes
                 if (GameScene.Scene.BeltDialog.Index == 1932)
                     GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
             };
-
 
             SettingsButton = new MirButton
             {
@@ -10770,6 +10899,23 @@ namespace Client.MirScenes
                 ToggleChatFilter("Guild");
             };
 
+            ReportButton = new MirButton
+            {
+                Index = 2063,
+                HoverIndex = 2064,
+                PressedIndex = 2065,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(Settings.Resolution != 800 ? 552 : 328, 1),
+                Sound = SoundList.ButtonA,
+                Hint = "Report",
+                Visible = false
+            };
+            ReportButton.Click += (o, e) =>
+            {
+                GameScene.Scene.ReportDialog.Visible = !GameScene.Scene.ReportDialog.Visible;
+            };
+
             ToggleChatFilter("All");
         }
 
@@ -10859,7 +11005,7 @@ namespace Client.MirScenes
             {
                 Index = 18,
                 Library = Libraries.Title,
-                Location = new Point(28, 5),
+                Location = new Point(28, 8),
                 Parent = this
             };
 
@@ -10962,7 +11108,7 @@ namespace Client.MirScenes
             {
                 Index = 738,
                 Library = Libraries.Title,
-                Location = new Point(78, 7),
+                Location = new Point(76, 7),
                 Parent = this,
                 Size = new Size(72, 23),
                 Sound = SoundList.ButtonA,
@@ -10973,7 +11119,7 @@ namespace Client.MirScenes
             {
                 Index = 739,
                 Library = Libraries.Title,
-                Location = new Point(148, 7),
+                Location = new Point(146, 7),
                 Parent = this,
                 Size = new Size(72,23),
                 Sound = SoundList.ButtonA,
@@ -12374,7 +12520,7 @@ namespace Client.MirScenes
             {
                 Index = 0,
                 Library = Libraries.Title,
-                Location = new Point(18, 5),
+                Location = new Point(18, 8),
                 Parent = this
             };
             Storage1Button = new MirButton
@@ -12709,6 +12855,10 @@ namespace Client.MirScenes
                             color = Color.Yellow;
                             text = "!";
                             break;
+                        case QuestIcon.ExclamationGreen:
+                            color = Color.Green;
+                            text = "!";
+                            break;
                         case QuestIcon.QuestionBlue:
                             color = Color.DodgerBlue;
                             text = "?";
@@ -12719,6 +12869,10 @@ namespace Client.MirScenes
                             break;
                         case QuestIcon.QuestionYellow:
                             color = Color.Yellow;
+                            text = "?";
+                            break;
+                        case QuestIcon.QuestionGreen:
+                            color = Color.Green;
                             text = "?";
                             break;
                     }
@@ -13537,7 +13691,10 @@ namespace Client.MirScenes
             //SoundManager.Create();
             //SoundManager.PlayMusic(SoundList.Music, true);
 
+            if (SoundManager.Music == null) return;
+
             SoundManager.Music.SetVolume(SoundManager.MusicVol);
+
         }
 
         private void MusicSoundBar_MouseMove(object sender, MouseEventArgs e)
@@ -13657,9 +13814,9 @@ namespace Client.MirScenes
 
         public MenuDialog()
         {
-            Index = 1963;
+            Index = 567;
             Parent = GameScene.Scene;
-            Library = Libraries.Prguse;
+            Library = Libraries.Title;
             Location = new Point(Settings.ScreenWidth - Size.Width, GameScene.Scene.MainDialog.Location.Y - this.Size.Height + 15);
             Sort = true;
             Visible = false;
@@ -13667,24 +13824,24 @@ namespace Client.MirScenes
 
             ExitButton = new MirButton
             {
-                HoverIndex = 1965,
-                Index = 1964,
+                HoverIndex = 634,
+                Index = 633,
                 Parent = this,
-                Library = Libraries.Prguse,
+                Library = Libraries.Title,
                 Location = new Point(3, 12),
-                PressedIndex = 1966,
+                PressedIndex = 635,
                 Hint = "Exit (Alt + Q)"
             };
             ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
             LogOutButton = new MirButton
             {
-                HoverIndex = 1968,
-                Index = 1967,
+                HoverIndex = 637,
+                Index = 636,
                 Parent = this,
-                Library = Libraries.Prguse,
+                Library = Libraries.Title,
                 Location = new Point(3, 31),
-                PressedIndex = 1969,
+                PressedIndex = 638,
                 Hint = "Log Out (Alt + X)"
             };
             LogOutButton.Click += (o, e) => GameScene.Scene.LogOut();
@@ -14013,7 +14170,7 @@ namespace Client.MirScenes
                 AnimationDelay = 130,
 
                 Index = 530,
-                //HoverIndex = 285,
+                HoverIndex = 284,
                 PressedIndex = 286,
                 Library = Libraries.Title,
                 Parent = this,
@@ -14351,10 +14508,10 @@ namespace Client.MirScenes
 
             BuyLabel = new MirImageControl
             {
-                Index = 459,
+                Index = 27,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(20, 6),
+                Location = new Point(20, 9),
             };
 
 
@@ -14851,7 +15008,7 @@ namespace Client.MirScenes
                 }
             }
 
-            if (PType == PanelType.Disassemble || PType == PanelType.Downgrade || PType == PanelType.Reset)
+            if (GameScene.SelectedCell != null && (PType == PanelType.Disassemble || PType == PanelType.Downgrade || PType == PanelType.Reset))
             {
                 GameScene.SelectedCell.Locked = false;
                 GameScene.SelectedCell = null;
@@ -16423,7 +16580,7 @@ namespace Client.MirScenes
 
             TitleLabel = new MirLabel
             {
-                Location = new Point(10, 5),
+                Location = new Point(10, 4),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
                 NotControl = true,
@@ -16652,9 +16809,9 @@ namespace Client.MirScenes
 
             AutoCastButton = new MirButton
             {
-                Index = 143,
-                HoverIndex = 144,
-                PressedIndex = 145,
+                Index = 180,
+                HoverIndex = 181,
+                PressedIndex = 182,
                 Location = new Point(110, 95),
                 Library = Libraries.Title,
                 Parent = this,
@@ -16856,7 +17013,7 @@ namespace Client.MirScenes
             {
                 Index = 5,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -17126,7 +17283,16 @@ namespace Client.MirScenes
             BeforeDraw += (o, e) => RefreshInterface();
 
             #region TabUI
-        NoticeButton = new MirButton
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 25,
+                Library = Libraries.Title,
+                Location = new Point(18, 9),
+                Parent = this
+            };
+
+            NoticeButton = new MirButton
             {
                 Library = Libraries.Title,
                 Index = 93,
@@ -19438,6 +19604,7 @@ namespace Client.MirScenes
 
         public MirTextBox SearchTextBox;
         public MirButton FindButton, RefreshButton, MailButton, BuyButton, CloseButton, NextButton, BackButton;
+        public MirImageControl TitleLabel;
         public MirLabel ItemLabel, PriceLabel, SellerLabel, PageLabel;
         public MirLabel DateLabel, ExpireLabel;
         public MirLabel NameLabel, TotalPriceLabel, SplitPriceLabel;
@@ -19456,6 +19623,15 @@ namespace Client.MirScenes
             Index = 670;
             Library = Libraries.Prguse;
             Sort = true;
+
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 24,
+                Library = Libraries.Title,
+                Location = new Point(18, 9),
+                Parent = this
+            };
 
             SearchTextBox = new MirTextBox
             {
@@ -21613,7 +21789,7 @@ namespace Client.MirScenes
             {
                 // Index = 7,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -21673,7 +21849,7 @@ namespace Client.MirScenes
             {
                 Index = 6,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -22225,7 +22401,7 @@ namespace Client.MirScenes
             {
                 Index = 52,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -22476,7 +22652,7 @@ namespace Client.MirScenes
             {
                 Index = 51,
                 Library = Libraries.Title,
-                Location = new Point(18, 4),
+                Location = new Point(18, 8),
                 Parent = this
             };
 
@@ -22785,7 +22961,7 @@ namespace Client.MirScenes
         List<GameShopItem> filteredShop = new List<GameShopItem>();
         List<GameShopItem> SearchResult = new List<GameShopItem>();
         public MirTextBox Search;
-        public MirImageControl FilterBackground;
+        public MirImageControl TitleLabel, FilterBackground;
 
         public string ClassFilter = "Show All";
         public string TypeFilter = "Show All";
@@ -22804,6 +22980,14 @@ namespace Client.MirScenes
             Movable = true;
             Location = Center;
             Sort = true;
+
+            TitleLabel = new MirImageControl
+            {
+                Index = 26,
+                Library = Libraries.Title,
+                Location = new Point(18, 9),
+                Parent = this
+            };
 
             Grid = new GameShopCell[4 * 2];
             for (int x = 0; x < 4; x++)
@@ -23464,6 +23648,107 @@ namespace Client.MirScenes
 
             GameScene.Scene.GameShopDialog.Viewer.Visible = false;
            
+        }
+
+    }
+
+    public sealed class ReportDialog : MirImageControl
+    {
+        MirDropDownBox ReportType;
+        MirButton SendButton, CloseButton;
+        MirTextBox MessageArea;
+
+        public ReportDialog()
+        {
+            Index = 1633;
+            Library = Libraries.Prguse;
+            Movable = true;
+            Sort = true;
+            Location = Center;
+
+            CloseButton = new MirButton
+            {
+                HoverIndex = 361,
+                Index = 360,
+                Location = new Point(336, 3),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                PressedIndex = 362,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+            ReportType = new MirDropDownBox()
+            {
+                Parent = this,
+                Location = new Point(12, 35),
+                Size = new Size(170, 14),
+                ForeColour = Color.White,
+                Visible = true,
+                Enabled = true,
+            };
+            ReportType.Items.Add("Select Report Type.");
+            ReportType.Items.Add("Submit Bug");
+            ReportType.Items.Add("Report Player");
+
+            MessageArea = new MirTextBox
+            {
+                Parent = this,
+                Location = new Point(12, 57),
+                Size = new Size(330, 150),
+                Font = new Font(Settings.FontName, 8F),
+            };
+
+            MessageArea.MultiLine();
+
+            SendButton = new MirButton
+            {
+                Parent = this,
+                Library = Libraries.Title,
+                Index = 607,
+                HoverIndex = 608,
+                PressedIndex = 609,
+                Sound = SoundList.ButtonA,
+                Location = new Point(260, 219)
+            };
+            SendButton.Click += SendButton_Click;
+           
+        }
+
+        void SendButton_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SendScreenshot()
+        {
+            Point location = Program.Form.PointToClient(Program.Form.Location);
+
+            location = new Point(-location.X, -location.Y);
+
+            using (Bitmap image = CMain.GetImage(Program.Form.Handle, new Rectangle(location, Program.Form.ClientSize)))
+            {
+                var chunks = Functions.SplitArray(Functions.ImageToByteArray(image), 20000);
+
+                int i = 0;
+
+                foreach (var chunk in chunks)
+                {
+                    Network.Enqueue(new C.ReportIssue { Image = chunk, ImageSize = chunks.Count(), ImageChunk = ++i });
+                }
+            }
+        }
+
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+        public void Show()
+        {
+            if (Visible) return;
+            Visible = true;
         }
 
     }

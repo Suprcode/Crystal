@@ -48,7 +48,7 @@ namespace Client.MirObjects
         public List<BuffType> Buffs = new List<BuffType>();
 
         public MLibrary BodyLibrary;
-        public Color DrawColour = Color.White, NameColour = Color.White;
+        public Color DrawColour = Color.White, NameColour = Color.White, LightColour = Color.White;
         public MirLabel NameLabel, ChatLabel, GuildLabel;
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;
@@ -66,6 +66,11 @@ namespace Client.MirObjects
 
         public static List<MirLabel> DamageLabelList = new List<MirLabel>();
         public List<Damage> Damages = new List<Damage>();
+
+        protected Point GlobalDisplayLocationOffset
+        {
+            get { return new Point(0, 0); }
+        }
 
         protected MapObject(uint objectID)
         {

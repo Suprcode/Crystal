@@ -786,6 +786,7 @@ namespace Client.MirObjects
             DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
 
             DrawLocation = new Point((Movement.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
 
             if (this != User)
             {
@@ -1043,7 +1044,7 @@ namespace Client.MirObjects
                                     Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 40 ? MirAction.Attack1 : MirAction.Attack4, out Frame);
                                 break;
                             default:
-                                if (CMain.Shift)
+                                if (CMain.Shift && TargetObject == null)
                                     Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? MirAction.Attack1 : MirAction.Attack3, out Frame);
                                 else
                                     Frames.Frames.TryGetValue(CurrentAction, out Frame);
@@ -3502,13 +3503,28 @@ namespace Client.MirObjects
 
             if (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex > 99 && GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex < 199) //shanda tiles
             {
+                //PlayShandaStepSound(x, y, out moveSound);
                 moveSound = SoundList.WalkGroundL;
             }
             else //wemade tiles
             {
-                int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
-                index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
+                PlayWemadeStepSound(x, y, out moveSound);
+            }
 
+            if (RidingMount) moveSound = SoundList.MountWalkL;
+
+            if (CurrentAction == MirAction.Running) moveSound += 2;
+            if (FrameIndex == 4) moveSound++;
+
+            SoundManager.PlaySound(moveSound);
+        }
+        private void PlayWemadeStepSound(int x, int y, out int moveSound)
+        {
+            int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
+            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
+
+            if (index >= 0 && index <= 10000)
+            {
                 if ((index >= 330 && index <= 349) || (index >= 450 && index <= 454) || (index >= 550 && index <= 554) ||
                     (index >= 750 && index <= 754) || (index >= 950 && index <= 954) || (index >= 1250 && index <= 1254) ||
                     (index >= 1400 && index <= 1424) || (index >= 1455 && index <= 1474) || (index >= 1500 && index <= 1524) ||
@@ -3561,14 +3577,10 @@ namespace Client.MirObjects
                 if (index >= 3316 && index <= 3589)
                     moveSound = SoundList.WalkRoomL;
             }
-
-            if (RidingMount) moveSound = SoundList.MountWalkL;
-
-            if (CurrentAction == MirAction.Running) moveSound += 2;
-            if (FrameIndex == 4) moveSound++;
-
-            SoundManager.PlaySound(moveSound);
+            else
+                moveSound = SoundList.WalkGroundL;
         }
+
         public void PlayStruckSound()
         {
             if (RidingMount)

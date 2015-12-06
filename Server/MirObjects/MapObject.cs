@@ -382,7 +382,7 @@ namespace Server.MirObjects
         {
             Broadcast(GetInfo());
             return;
-        }
+        } 
 
         public abstract bool IsAttackTarget(PlayerObject attacker);
         public abstract bool IsAttackTarget(MonsterObject attacker);

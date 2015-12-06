@@ -32,6 +32,8 @@ namespace Client
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
+        public static bool DebugOverride;
+
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
@@ -63,7 +65,7 @@ namespace Client
             Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             Graphics.TextContrast = 0;
         }
@@ -219,7 +221,6 @@ namespace Client
         }
         public static void CMain_MouseDown(object sender, MouseEventArgs e)
         {
-
             if (Program.Form.ActiveControl is TextBox)
             {
                 MirTextBox textBox = Program.Form.ActiveControl.Tag as MirTextBox;
@@ -368,8 +369,9 @@ namespace Client
 
                 DebugTextLabel.SizeChanged += (o, e) => DebugBaseLabel.Size = DebugTextLabel.Size;
             }
-            
 
+            if (DebugOverride) return;
+            
             string text;
             if (MirControl.MouseControl != null)
             {
@@ -387,6 +389,20 @@ namespace Client
                 text = string.Format("FPS: {0}", FPS);
             }
             
+
+            DebugTextLabel.Text = text;
+        }
+
+        public static void SendDebugMessage(string text)
+        {
+            if (!Settings.DebugMode) return;
+
+            if (DebugBaseLabel == null || DebugTextLabel == null)
+            {
+                CreateDebugLabel();
+            }
+
+            DebugOverride = true;
 
             DebugTextLabel.Text = text;
         }
@@ -456,7 +472,7 @@ namespace Client
             DXManager.Parameters.Windowed = !Settings.FullScreen;
             DXManager.Device.Reset(DXManager.Parameters);
             Program.Form.ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-        }
+        }//
 
         public void CreateScreenShot()
         {

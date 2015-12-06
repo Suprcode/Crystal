@@ -28,11 +28,18 @@ namespace Client.MirGraphics
         public static bool DeviceLost;
         public static float Opacity = 1F;
         public static bool Blending;
+        public static float BlendingRate;
+        public static BlendMode BlendingMode;
 
 
         public static Texture RadarTexture;
         public static List<Texture> Lights = new List<Texture>();
         public static Texture PoisonDotBackground;
+
+        public static PixelShader GrayScalePixelShader;
+        public static PixelShader NormalPixelShader;
+        public static PixelShader MagicPixelShader;
+        public static PixelShader ShadowPixelShader;
 
         public static Point[] LightSizes =
         {
@@ -88,6 +95,30 @@ namespace Client.MirGraphics
             Device.SetDialogBoxesEnabled(true);
 
             LoadTextures();
+            LoadPixelsShaders();
+        }
+
+        private static unsafe void LoadPixelsShaders()
+        {
+            var shaderNormalPath = Settings.ShadersPath + "normal.ps";
+            var shaderGrayScalePath = Settings.ShadersPath + "grayscale.ps";
+            var shaderMagicPath = Settings.ShadersPath + "magic.ps";
+
+            if (System.IO.File.Exists(shaderNormalPath))
+            {
+                using (var gs = ShaderLoader.FromFile(shaderNormalPath, null, ShaderFlags.None))
+                    NormalPixelShader = new PixelShader(Device, gs);
+            }
+            if (System.IO.File.Exists(shaderGrayScalePath))
+            {
+                using (var gs = ShaderLoader.FromFile(shaderGrayScalePath, null, ShaderFlags.None))
+                    GrayScalePixelShader = new PixelShader(Device, gs);
+            }
+            if (System.IO.File.Exists(shaderMagicPath))
+            {
+                using (var gs = ShaderLoader.FromFile(shaderMagicPath, null, ShaderFlags.None))
+                    MagicPixelShader = new PixelShader(Device, gs);
+            }
         }
 
         private static unsafe void LoadTextures()
@@ -145,12 +176,36 @@ namespace Client.MirGraphics
                     {
                         using (GraphicsPath path = new GraphicsPath())
                         {
+                            //path.AddEllipse(new Rectangle(0, 0, width, height));
+                            //using (PathGradientBrush brush = new PathGradientBrush(path))
+                            //{
+                            //    graphics.Clear(Color.FromArgb(0, 0, 0, 0));
+                            //    brush.SurroundColors = new[] { Color.FromArgb(0, 255, 255, 255) };
+                            //    brush.CenterColor = Color.FromArgb(255, 255, 255, 255);
+                            //    graphics.FillPath(brush, path);
+                            //    graphics.Save();
+                            //}
+
                             path.AddEllipse(new Rectangle(0, 0, width, height));
                             using (PathGradientBrush brush = new PathGradientBrush(path))
                             {
+                                Color[] blendColours = { Color.White,
+                                                     Color.FromArgb(255,150,150,145),
+                                                     Color.FromArgb(255,80,80,80),
+                                                     Color.FromArgb(255,55,50,45),
+                                                     Color.FromArgb(255,20,20,25),
+                                                     Color.FromArgb(0,0,0,0)};
+
+                                float[] radiusPositions = { 0f, .20f, .40f, .60f, .80f, 1.0f };
+
+                                ColorBlend colourBlend = new ColorBlend();
+                                colourBlend.Colors = blendColours;
+                                colourBlend.Positions = radiusPositions;
+
                                 graphics.Clear(Color.FromArgb(0, 0, 0, 0));
-                                brush.SurroundColors = new[] { Color.FromArgb(0, 255, 255, 255) };
-                                brush.CenterColor = Color.FromArgb(255, 255, 255, 255);
+                                brush.InterpolationColors = colourBlend;
+                                brush.SurroundColors = blendColours;
+                                brush.CenterColor = Color.White;
                                 graphics.FillPath(brush, path);
                                 graphics.Save();
                             }
@@ -247,26 +302,79 @@ namespace Client.MirGraphics
             Opacity = opacity;
             Sprite.Flush();
         }
-        public static void SetBlend(bool value, float rate = 1F)
+        public static void SetBlend(bool value, float rate = 1F, BlendMode mode = BlendMode.NORMAL)
         {
-            if (value == Blending) return;
+            if (value == Blending && BlendingRate == rate && BlendingMode == mode) return;
+
             Blending = value;
+            BlendingRate = rate;
+            BlendingMode = mode;
+
             Sprite.Flush();
 
             Sprite.End();
+
             if (Blending)
             {
                 Sprite.Begin(SpriteFlags.DoNotSaveState);
                 Device.RenderState.AlphaBlendEnable = true;
-                Device.RenderState.SourceBlend = Blend.BlendFactor;
-                Device.RenderState.DestinationBlend = Blend.One;
-                Device.RenderState.BlendFactor = Color.FromArgb((byte)(255 * rate), (byte)(255 * rate),
-                                                                (byte)(255 * rate), (byte)(255 * rate));
+
+                switch (BlendingMode)
+                {
+                    case BlendMode.INVLIGHT:
+                        Device.RenderState.BlendOperation = BlendOperation.Add;
+                        Device.RenderState.SourceBlend = Blend.BlendFactor;
+                        Device.RenderState.DestinationBlend = Blend.InvSourceColor;
+                        break;
+                    default:
+                        Device.RenderState.SourceBlend = Blend.BlendFactor;
+                        Device.RenderState.DestinationBlend = Blend.One;
+                        break;
+                }
+
+                Device.RenderState.BlendFactor = Color.FromArgb((byte)(255 * BlendingRate), (byte)(255 * BlendingRate),
+                                                                (byte)(255 * BlendingRate), (byte)(255 * BlendingRate));
             }
             else
                 Sprite.Begin(SpriteFlags.AlphaBlend);
 
             Device.SetRenderTarget(0, CurrentSurface);
+        }
+
+        public static void SetNormal(float blend, Color tintcolor)
+        {
+            if (Device.PixelShader == NormalPixelShader)
+                return;
+
+            Sprite.Flush();
+            Device.PixelShader = NormalPixelShader;
+            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
+            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Sprite.Flush();
+        }
+
+        public static void SetGrayscale(float blend, Color tintcolor)
+        {
+            if (Device.PixelShader == GrayScalePixelShader)
+                return;
+
+            Sprite.Flush();
+            Device.PixelShader = GrayScalePixelShader;
+            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
+            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Sprite.Flush();
+        }
+
+        public static void SetBlendMagic(float blend, Color tintcolor)
+        {
+            if (Device.PixelShader == MagicPixelShader || MagicPixelShader == null)
+                return;
+
+            Sprite.Flush();
+            Device.PixelShader = MagicPixelShader;
+            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
+            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Sprite.Flush();
         }
 
         public static void Clean()

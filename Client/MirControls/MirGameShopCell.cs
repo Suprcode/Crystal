@@ -197,7 +197,7 @@ namespace Client.MirControls
             uint GoldCost;
             MirMessageBox messageBox;
 
-            if (Item.CreditPrice * Quantity < GameScene.Credit)
+            if (Item.CreditPrice * Quantity <= GameScene.Credit)
             {
                 CreditCost = Item.CreditPrice * Quantity;
                 messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
@@ -234,7 +234,7 @@ namespace Client.MirControls
         {
             base.OnMouseMove(e);
 
-            if (GameScene.HoverItem != null && Item.Info.Index != GameScene.HoverItem.Info.Index)
+            if (GameScene.HoverItem != null && (Item.Info.Index != GameScene.HoverItem.Info.Index))
             {
                 GameScene.Scene.DisposeItemLabel();
                 GameScene.HoverItem = null;
