@@ -76,6 +76,11 @@ namespace Server.MirObjects
             }
         }
 
+        public override ObjectType Race
+        {
+            get { return ObjectType.Creature; }
+        }
+
 
         protected internal IntelligentCreatureObject(MonsterInfo info)
             : base(info)

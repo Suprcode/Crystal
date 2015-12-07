@@ -751,9 +751,14 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonSkeleton
+                #region SummonSkeleton, SummonShinsu, SummonHolyDeva, ArcherSummons
 
                 case Spell.SummonSkeleton:
+                case Spell.SummonShinsu:
+                case Spell.SummonHolyDeva:
+                case Spell.SummonVampire:
+                case Spell.SummonToad:
+                case Spell.SummonSnakes:
                     monster = (MonsterObject)data[2];
                     front = (Point)data[3];
 
@@ -761,6 +766,8 @@ namespace Server.MirEnvir
                         monster.Spawn(this, front);
                     else
                         monster.Spawn(player.CurrentMap, player.CurrentLocation);
+
+                    monster.Master.Pets.Add(monster);
                     break;
 
                 #endregion
@@ -1144,20 +1151,6 @@ namespace Server.MirEnvir
                         }
                     }
 
-                    break;
-
-                #endregion
-
-                #region SummonShinsu
-
-                case Spell.SummonShinsu:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
                     break;
 
                 #endregion
@@ -1601,21 +1594,6 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonHolyDeva
-
-                case Spell.SummonHolyDeva:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
-                    break;
-
-                #endregion
-
                 #region Curse
 
                 case Spell.Curse:
@@ -1934,22 +1912,6 @@ namespace Server.MirEnvir
                         //cancel out buff
                         player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
                     }
-                    break;
-
-                #endregion
-
-                #region ArcherSummons
-
-                case Spell.SummonVampire:
-                case Spell.SummonToad:
-                case Spell.SummonSnakes:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
                     break;
 
                 #endregion
