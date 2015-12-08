@@ -190,7 +190,7 @@ namespace Launcher
                             if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
                                 Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
 
-                            File.WriteAllBytes(Settings.P_Client + info.FileName, Decompress(e.Result));
+                            File.WriteAllBytes(Settings.P_Client + info.FileName, e.Result);
                             File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
                             }
                             BeginDownload();
@@ -225,7 +225,7 @@ namespace Launcher
                     else
                         client.Credentials = new NetworkCredential("", "");
 
-                    return Decompress(client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz")));
+                    return client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz"));
                 }
             }
             catch

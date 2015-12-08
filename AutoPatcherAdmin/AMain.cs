@@ -213,7 +213,7 @@ namespace AutoPatcherAdmin
                 using (WebClient client = new WebClient())
                 {
                     client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
-                    return Decompress(client.DownloadData(Settings.Host + "/" + Path.ChangeExtension(fileName, ".gz")));
+                    return client.DownloadData(Settings.Host + "/" + Path.ChangeExtension(fileName, ".gz"));
                 }
             }
             catch
@@ -232,7 +232,7 @@ namespace AutoPatcherAdmin
             {
                 client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
 
-                byte[] data = !retry ? raw : Compress(raw);
+                byte[] data = !retry ? raw : raw;
                 info.Compressed = data.Length;
 
                 client.UploadProgressChanged += (o, e) =>
