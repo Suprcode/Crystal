@@ -713,7 +713,8 @@ public enum ObjectType : byte
     Merchant = 3,
     Spell = 4,
     Monster = 5,
-    Deco = 6
+    Deco = 6,
+    Creature = 7
 }
 
 public enum ChatType : byte

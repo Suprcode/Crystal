@@ -1,11 +1,14 @@
+using System;
+using System.Drawing;
 using Server.MirDatabase;
+using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class MutatedManworm : MonsterObject
+    public class HellPirate : MonsterObject
     {
-        protected internal MutatedManworm(MonsterInfo info)
+        protected internal HellPirate(MonsterInfo info)
             : base(info)
         {
         }
@@ -26,7 +29,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.HalfMoon, Type = 1 });
                 Attack2();
             }
 
@@ -40,7 +43,7 @@ namespace Server.MirObjects.Monsters
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
 
-            Target.Attacked(this, damage, DefenceType.MACAgility);
-        }
+           Target.Attacked(this, damage, DefenceType.ACAgility);
+        }    
     }
 }

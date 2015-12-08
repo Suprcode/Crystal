@@ -422,11 +422,11 @@ namespace Client.MirControls
 
                         if (Item.Count == 1 && ItemSlot < 6)
                         {
-                            for (int i = 6; i < GameScene.User.Inventory.Length; i++)
+                            for (int i = GameScene.User.BeltIdx; i < GameScene.User.Inventory.Length; i++)
                                 if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
                                 {
                                     Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = i, To = ItemSlot });
-                                    GameScene.Scene.InventoryDialog.Grid[i - 6].Locked = true;
+                                    GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx].Locked = true;
                                     break;
                                 }
                         }
@@ -578,8 +578,12 @@ namespace Client.MirControls
         {
             int count = 0;
 
-            for (int i = 0; i < GameScene.Scene.InventoryDialog.Grid.Length; i++)
-                if (GameScene.Scene.InventoryDialog.Grid[i].Item != null) count++;
+            for (int i = 0; i < GameScene.User.Inventory.Length; i++)
+            {
+                MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
+
+                if (itemCell.Item == null) count++;
+            }
 
             if (Item == null || count < 1 || (MapObject.User.RidingMount && Item.Info.Type != ItemType.Torch)) return;
 
@@ -587,13 +591,13 @@ namespace Client.MirControls
             {
                 UserItem item = null;
 
-                for (int i = 0; i < GameScene.Scene.InventoryDialog.Grid.Length; i++)
+                for (int i = 0; i < GameScene.User.Inventory.Length; i++)
                 {
-                    MirItemCell cell = GameScene.Scene.InventoryDialog.Grid[i];
+                    MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
 
-                    if (cell.Item == null || cell.Item.Info != Item.Info) continue;
+                    if (itemCell.Item == null || itemCell.Item.Info != Item.Info) continue;
 
-                    item = cell.Item;
+                    item = itemCell.Item;
                 }
 
                 if (item != null && ((item.Count + Item.Count) <= item.Info.StackSize))
@@ -608,9 +612,9 @@ namespace Client.MirControls
                 }
             }
 
-            for (int i = 0; i < GameScene.Scene.InventoryDialog.Grid.Length; i++)
+            for (int i = 0; i < GameScene.User.Inventory.Length; i++)
             {
-                MirItemCell itemCell = GameScene.Scene.InventoryDialog.Grid[i];
+                MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
 
                 if (itemCell.Item != null) continue;
 
