@@ -3581,6 +3581,8 @@ namespace Client.MirObjects
                 moveSound = SoundList.WalkGroundL;
         }
 
+
+
         public void PlayStruckSound()
         {
             if (RidingMount)

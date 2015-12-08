@@ -891,11 +891,11 @@ namespace Client.MirScenes
                 messageBox.Show();
             }
 
-            if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
-            {
-                MapControl.CloseDoor(GameScene.DoorPoint);
-                GameScene.DoorTime = 0;
-            }
+            //if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
+            //{
+            //    MapControl.CloseDoor(GameScene.DoorPoint);
+            //    GameScene.DoorTime = 0;
+            //}
 
             
             UpdateBuffs();
@@ -8651,7 +8651,7 @@ namespace Client.MirScenes
 
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
-                        p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
+                        p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
                         DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour); // ob is MonsterObject && ob.AI != 6 ? Color.PaleVioletRed : 
                     }
 
@@ -8669,7 +8669,7 @@ namespace Client.MirScenes
 
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
-                        p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
+                        p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
                         DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, effect.LightColour);
                     }
 
@@ -8690,7 +8690,7 @@ namespace Client.MirScenes
 
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
-                        p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
+                        p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
                         DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
                     }
                 }
@@ -8768,7 +8768,7 @@ namespace Client.MirScenes
                         }
 
                         MonsterObject mon = MapObject.MouseObject as MonsterObject;
-                        if (mon != null && mon.AI == 70)
+                        if (mon != null && mon.AI == 201)
                         {
                             GameScene.Scene.NPCDialog.Hide();
 
@@ -8971,16 +8971,19 @@ namespace Client.MirScenes
                     }
                     if (CanWalk(direction))
                     {
-                        if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
-                        {
-                            OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
-                            return;
-                        }
-                        else
-                        {
-                            User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                            return;
-                        }
+                        //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
+                        //{
+                        //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
+                        //    return;
+                        //}
+                        //else
+                        //{
+                        //    User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                        //    return;
+                        //}
+
+                        User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                        return;
                     }
                     if (direction != User.Direction)
                     {
@@ -9085,17 +9088,20 @@ namespace Client.MirScenes
                         }
                         if (CanWalk(direction))
                         {
-                            if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
-                            {
-                                OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
-                                return;
-                            }
-                            else
-                            {
-                                //if (MapObject.MouseObject != null) return;
-                                User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                                return;
-                            }
+                            //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
+                            //{
+                            //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
+                            //    return;
+                            //}
+                            //else
+                            //{
+                            //    //if (MapObject.MouseObject != null) return;
+                            //    User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                            //    return;
+                            //}
+
+                            User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
+                            return;
                         }
                         if (direction != User.Direction)
                         {
@@ -12784,7 +12790,7 @@ namespace Client.MirScenes
             Point drawLocation = Location;
             drawLocation.Offset(3, 22);
 
-            Size miniMapSize = Libraries.MiniMap.GetTrueSize(map.MiniMap);
+            Size miniMapSize = Libraries.MiniMap.GetSize(map.MiniMap);
             float scaleX = miniMapSize.Width / (float)map.Width;
             float scaleY = miniMapSize.Height / (float)map.Height;
 
@@ -21249,6 +21255,12 @@ namespace Client.MirScenes
                 messageBox.Show();
                 return;
             }
+
+            if(!CreatureButtons.Any(x => x.Selected))
+            {
+                CreatureButtons[0].SelectButton();
+            }
+
 
             Visible = true;
             showing = true;

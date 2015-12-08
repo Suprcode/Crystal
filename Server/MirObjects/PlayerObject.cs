@@ -6662,7 +6662,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Count > 1) return;
+            if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
 
             UserItem item = GetAmulet(1);
             if (item == null) return;
@@ -6681,7 +6681,7 @@ namespace Server.MirObjects
             monster.ActionTime = Envir.Time + 1000;
             monster.RefreshNameColour(false);
 
-            Pets.Add(monster);
+            //Pets.Add(monster);
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, Front);
             CurrentMap.ActionList.Add(action);
@@ -6706,7 +6706,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Count > 1) return;
+            if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
 
             UserItem item = GetAmulet(5);
             if (item == null) return;
@@ -6726,7 +6726,7 @@ namespace Server.MirObjects
             monster.Direction = Direction;
             monster.ActionTime = Envir.Time + 1000;
 
-            Pets.Add(monster);
+            //Pets.Add(monster);
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, Front);
             CurrentMap.ActionList.Add(action);
@@ -6891,7 +6891,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Count > 1) return;
+            if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
 
             UserItem item = GetAmulet(2);
             if (item == null) return;
@@ -6910,7 +6910,7 @@ namespace Server.MirObjects
             monster.Direction = Direction;
             monster.ActionTime = Envir.Time + 1000;
 
-            Pets.Add(monster);
+            //Pets.Add(monster);
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 1500, this, magic, monster, Front);
             CurrentMap.ActionList.Add(action);
@@ -8076,6 +8076,7 @@ namespace Server.MirObjects
                     break;
 
                 #endregion
+
                 #region StormEscape
                 case Spell.StormEscape:
                     location = (Point) data[1];
@@ -8628,7 +8629,7 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if (Pets.Count > 1) return;
+                    if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
 
                     //left it in for future summon amulets
                     //UserItem item = GetAmulet(5);
@@ -8647,6 +8648,7 @@ namespace Server.MirObjects
                     monster.Direction = Direction;
                     monster.ActionTime = Envir.Time + 1000;
                     monster.Target = target;
+
                     if (SummonType == 1)
                         ((Monsters.VampireSpider)monster).AliveTime = Envir.Time + ((magic.Level * 1500) + 15000);
                     if (SummonType == 2)
@@ -8654,7 +8656,7 @@ namespace Server.MirObjects
                     if (SummonType == 3)
                         ((Monsters.SnakeTotem)monster).AliveTime = Envir.Time + ((magic.Level * 1500) + 20000);
 
-                    Pets.Add(monster);
+                    //Pets.Add(monster);
 
                     DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
                     CurrentMap.ActionList.Add(action);

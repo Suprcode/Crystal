@@ -519,21 +519,6 @@ namespace LibraryEditor
             PreviewListView.VirtualListSize = _library.Count;
         }
 
-        private void convertlibsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to convert every .Lib file in the folder to version 1?\nThis will break any .Lib file that is not version 0!",
-                "Convert lib folder", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
-
-            MessageBox.Show("Select any .Lib file you want.\nThe code will convert all .Lib files in this folder + sub folders.\nThis will take a while.\nYou will get a message when its finished!\nRemember to backup first!");
-
-            if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
-            string MainFolder = Path.GetDirectoryName(OpenLibraryDialog.FileName);
-            string NewFolder = MainFolder + "\\Converted\\";
-            ProcessDir(MainFolder, 0, NewFolder);
-
-            MessageBox.Show("Folder processing finally finished.\n Location: " + NewFolder);
-        }
-
         private const int HowDeepToScan = 6;
 
         public static void ProcessDir(string sourceDir, int recursionLvl, string outputDir)
