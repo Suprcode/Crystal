@@ -1663,7 +1663,7 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || attacker == this) return false;
-            
+
             if (attacker.Info.AI == 6) // Guard
             {
                 if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3 && (Master == null || Master.PKPoints >= 200)) //Not Dear/Hen/Tree/Pets or Red Master 

@@ -190,10 +190,10 @@ namespace Client.MirGraphics
                             using (PathGradientBrush brush = new PathGradientBrush(path))
                             {
                                 Color[] blendColours = { Color.White,
-                                                     Color.FromArgb(255,150,150,145),
-                                                     Color.FromArgb(255,80,80,80),
-                                                     Color.FromArgb(255,55,50,45),
-                                                     Color.FromArgb(255,20,20,25),
+                                                     Color.FromArgb(255,150,150,150),
+                                                     Color.FromArgb(255,60,60,60),
+                                                     Color.FromArgb(255,30,30,30),
+                                                     Color.FromArgb(255,10,10,10),
                                                      Color.FromArgb(0,0,0,0)};
 
                                 float[] radiusPositions = { 0f, .20f, .40f, .60f, .80f, 1.0f };

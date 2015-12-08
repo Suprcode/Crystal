@@ -491,6 +491,7 @@ namespace Server.MirEnvir
                                 current = next;
                             }
                         }
+
                         for (int i = 0; i < MapList.Count; i++)
                             MapList[i].Process();
 
@@ -601,7 +602,6 @@ namespace Server.MirEnvir
                             if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
                             {
                                 Info.current.Value.Process();
-
 
                                 Info.current.Value.SetOperateTime();
                             }
