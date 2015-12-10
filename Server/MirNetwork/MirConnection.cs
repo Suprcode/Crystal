@@ -572,7 +572,8 @@ namespace Server.MirNetwork
                     ReportIssue((C.ReportIssue)p);
                     break;
                 default:
-                    throw new NotImplementedException();
+                    SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
+                    break;
             }
         }
 
@@ -1609,6 +1610,8 @@ namespace Server.MirNetwork
         private void ReportIssue(C.ReportIssue p)
         {
             if (Stage != GameStage.Game) return;
+
+            return;
 
             Image.Add(p.Image);
 

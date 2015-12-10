@@ -304,6 +304,9 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.HasBagSpace, parts[1], parts[2]));
                     break;
+                case "ISNEWHUMAN":
+                    CheckList.Add(new NPCChecks(CheckType.IsNewHuman));
+                    break;
                 case "CHECKCONQUEST":
                     if (parts.Length < 2) return;
 
@@ -467,6 +470,10 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.Goto, parts[1]));
                     break;
 
+                case "BREAK":
+                    acts.Add(new NPCActions(ActionType.Break));
+                    break;
+
                 //cant use stored var
                 case "ADDNAMELIST":
                     if (parts.Length < 2) return;
@@ -612,6 +619,12 @@ namespace Server.MirObjects
 
                     string spelllevel = parts.Length > 2 ? parts[2] : "0";
                     acts.Add(new NPCActions(ActionType.GiveSkill, parts[1], spelllevel));
+                    break;
+
+                case "REMOVESKILL":
+                    if (parts.Length < 2) return;
+                    
+                    acts.Add(new NPCActions(ActionType.GiveSkill, parts[1]));
                     break;
 
                 //cant use stored var
@@ -1667,6 +1680,10 @@ namespace Server.MirObjects
 
                         failed = !Compare(param[0], slotCount, tempInt);
                         break;
+                    case CheckType.IsNewHuman:
+                        failed = player.Info.AccountInfo.Characters.Count > 1;
+                        break;
+
                     case CheckType.CheckConquest:
                         if (!int.TryParse(param[0], out tempInt))
                         {
@@ -2313,9 +2330,29 @@ namespace Server.MirObjects
                         player.Enqueue(magic.GetInfo());
                         break;
 
+                    case ActionType.RemoveSkill:
+
+                        if (!Enum.TryParse(param[0], true, out skill)) return;
+
+                        if (!player.Info.Magics.Any(e => e.Spell == skill)) break;
+
+                        for (var j = player.Info.Magics.Count - 1; j >= 0; j--)
+                        {
+                            if (player.Info.Magics[i].Spell != skill) continue;
+
+                            player.Info.Magics.RemoveAt(i);
+                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                        }
+
+                        break;
+
                     case ActionType.Goto:
                         DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
                         player.ActionList.Add(action);
+                        break;
+
+                    case ActionType.Break:
+                        Page.BreakFromSegments = true;
                         break;
 
                     case ActionType.Set:

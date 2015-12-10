@@ -625,6 +625,10 @@ namespace Client.MirObjects
                     case BuffType.Fury:
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
                         break;
+                    case BuffType.ImmortalSkin:
+                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
+                        MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - buff.Values[1]);
+                        break;
                     case BuffType.SwiftFeet:
                         Sprint = true;
                         break;

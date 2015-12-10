@@ -117,6 +117,7 @@ namespace Server.MirObjects
                 List<string> lines = File.ReadAllLines(fileName).ToList();
 
                 lines = ParseInsert(lines);
+                lines = ParseInclude(lines);
 
                 if (Info.IsDefault)
                     ParseDefault(lines);
@@ -246,6 +247,58 @@ namespace Server.MirObjects
             return lines;
         }
 
+        private List<string> ParseInclude(List<string> lines)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].ToUpper().StartsWith("#INCLUDE")) continue;
+
+                string[] split = lines[i].Split(' ');
+
+                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
+                string page = ("[" + split[2] + "]").ToUpper();
+
+                bool start = false, finish = false;
+
+                var parsedLines = new List<string>();
+
+                if (!File.Exists(path)) return parsedLines;
+                IList<string> extLines = File.ReadAllLines(path);
+
+                for (int j = 0; j < extLines.Count; j++)
+                {
+                    if (!extLines[j].ToUpper().StartsWith(page)) continue;
+
+                    for (int x = j + 1; x < extLines.Count; x++)
+                    {
+                        if (extLines[x].Trim() == ("{"))
+                        {
+                            start = true;
+                            continue;
+                        }
+
+                        if (extLines[x].Trim() == ("}"))
+                        {
+                            finish = true;
+                            break;
+                        }
+
+                        parsedLines.Add(extLines[x]);
+                    }
+                }
+
+                if (start && finish)
+                {
+                    lines.InsertRange(i + 1, parsedLines);
+                    parsedLines.Clear();
+                }
+            }
+
+            lines.RemoveAll(str => str.ToUpper().StartsWith("#INCLUDE"));
+
+            return lines;
+        }
+
         private List<NPCPage> ParsePages(IList<string> lines, string key = MainKey)
         {
             List<NPCPage> pages = new List<NPCPage>();
@@ -293,6 +346,11 @@ namespace Server.MirObjects
 
                 if (!lines[i].ToUpper().StartsWith(tempSectionName.ToUpper())) continue;
 
+                if(lines[i] == "[@Market]")
+                {
+
+                }
+
                 List<string> segmentLines = new List<string>();
 
                 nextPage = false;
@@ -300,20 +358,12 @@ namespace Server.MirObjects
                 //Found a page, now process that page and split it into segments
                 for (int j = i + 1; j < lines.Count; j++)
                 {
-                    if (lines[j].StartsWith(";")) continue;
-
                     string nextLine = lines[j];
 
                     if (j < lines.Count - 1)
                         nextLine = lines[j + 1];
                     else
                         nextLine = "";
-
-                    if (lines[j].StartsWith("#INCLUDE"))
-                    {
-                        lines.InsertRange(j + 1, ParseInclude(lines[j]).Where(x => !string.IsNullOrEmpty(x)).ToList());
-                        continue;
-                    }
 
                     if (nextLine.StartsWith("[") && nextLine.EndsWith("]"))
                     {
@@ -394,6 +444,8 @@ namespace Server.MirObjects
             {
                 if (string.IsNullOrEmpty(lines[i])) continue;
 
+                if (lines[i].StartsWith(";")) continue;
+
                 if (lines[i].StartsWith("#"))
                 {
                     string[] action = lines[i].Remove(0, 1).ToUpper().Trim().Split(' ');
@@ -460,7 +512,7 @@ namespace Server.MirObjects
                                 break;
                         }
                 }
-
+                
                 currentSay.Add(lines[i].TrimEnd());
             }
 
@@ -482,48 +534,6 @@ namespace Server.MirObjects
             currentButtons.AddRange(gotoButtons);
 
             return segment;
-        }
-
-        private IEnumerable<string> ParseInclude(string line)
-        {
-            string[] split = line.Split(' ');
-
-            string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
-            string page = ("[" + split[2] + "]").ToUpper();
-
-            bool start = false, finish = false;
-
-            var parsedLines = new List<string>();
-
-            if (!File.Exists(path)) return parsedLines;
-            IList<string> lines = File.ReadAllLines(path);
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                if (!lines[i].ToUpper().StartsWith(page)) continue;
-
-                for (int x = i + 1; x < lines.Count; x++)
-                {
-                    if (lines[x].Trim() == ("{"))
-                    {
-                        start = true;
-                        continue;
-                    }
-
-                    if (lines[x].Trim() == ("}"))
-                    {
-                        finish = true;
-                        break;
-                    }
-
-                    parsedLines.Add(lines[x]);
-                }
-            }
-
-            if (start && finish)
-                return parsedLines;
-
-            return new List<string>();
         }
 
         private void ParseTypes(IList<string> lines)
@@ -657,6 +667,12 @@ namespace Server.MirObjects
 
                 foreach (NPCSegment segment in page.SegmentList)
                 {
+                    if (page.BreakFromSegments)
+                    {
+                        page.BreakFromSegments = false;
+                        break;
+                    }
+
                     ProcessSegment(player, page, segment);
                 }
 
@@ -1303,6 +1319,7 @@ namespace Server.MirObjects
         LocalMessage,
         Goto,
         GiveSkill,
+        RemoveSkill,
         Set,
         Param1,
         Param2,
@@ -1337,6 +1354,7 @@ namespace Server.MirObjects
         GlobalMessage,
         LoadValue,
         SaveValue,
+        RemovePet
         RemovePet,
         ConquestGuard,
         ConquestGate,
@@ -1347,8 +1365,7 @@ namespace Server.MirObjects
         StartConquest,
         ScheduleConquest,
         OpenGate,
-        CloseGate,
-    }
+        CloseGate,    }
     public enum CheckType
     {
         IsAdmin,
@@ -1382,6 +1399,8 @@ namespace Server.MirObjects
         CheckWeddingRing,
         CheckPet,
         HasBagSpace,
+		IsNewHuman
+        HasBagSpace,
         CheckConquest,
         AffordGuard,
         AffordGate,
@@ -1389,6 +1408,5 @@ namespace Server.MirObjects
         AffordSiege,
         CheckPermission,
         ConquestAvailable,
-        ConquestOwner,
-    }
+        ConquestOwner,    }
 }

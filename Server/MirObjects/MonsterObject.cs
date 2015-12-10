@@ -150,18 +150,42 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);
-                case 69://custom
+                    return new Football(info);          
+                case 69:
+                    return new Behemoth(info);
+                case 70:
+                    return new DreamDevourer(info);
+                case 71:
+                    return new FlameTiger(info);
+                case 72:
+                    return new FinialTurtle(info);
+                case 73:
+                    return new TurtleKing(info);
+                case 74:
+                    return new LightTurtle(info);
+                case 75:
+                    return new FlamingMutant(info);
+                case 76:
+                    return new StoningStatue(info);
+                case 77:
+                    return new HellPirate(info);
+                case 78:
+                    return new HellKeeper(info);
+                case 79:
+                    return new ManectricClaw(info);
+
+                case 200://custom
                     return new Runaway(info);
-                case 70://custom
+                case 201://custom
                     return new TalkingMonster(info);
+                case 71:
+                    return new SabukGate(info);
                 case 71://Sabuk Archer
                     return new ConquestArcher(info);
                 case 72:
                     return new Gate(info);
                 case 73:
-                    return new Wall(info);
-                default:
+                    return new Wall(info);                default:
                     return new MonsterObject(info);
             }
         }
@@ -1543,6 +1567,43 @@ namespace Server.MirObjects
 
             return false;
         }
+
+        public List<MapObject> FindAllNearby(int dist, Point location, bool needSight = true)
+        {
+            List<MapObject> targets = new List<MapObject>();
+            for (int d = 0; d <= dist; d++)
+            {
+                for (int y = location.Y - d; y <= location.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if (!cell.Valid || cell.Objects == null) continue;
+
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                    targets.Add(ob);
+                                    continue;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+            return targets;
+        }
+
         protected List<MapObject> FindAllTargets(int dist, Point location, bool needSight = true)
         {
             List<MapObject> targets = new List<MapObject>();
@@ -1622,7 +1683,7 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || attacker == this) return false;
-            
+
             if (attacker.Info.AI == 6) // Guard
             {
                 if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3 && (Master == null || Master.PKPoints >= 200)) //Not Dear/Hen/Tree/Pets or Red Master 

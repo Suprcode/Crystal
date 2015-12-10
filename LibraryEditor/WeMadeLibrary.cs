@@ -13,7 +13,8 @@ namespace LibraryEditor
                              WzlExtention = ".Wzl",
                              WzxExtention = ".Wzx",
                              MizExtention = ".Miz",
-                             MixExtention = ".Mix";
+                             MixExtention = ".Mix",
+                             LibExtention = ".Lib";
 
         public WeMadeImage[] Images;
 
@@ -158,7 +159,7 @@ namespace LibraryEditor
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            MLibrary library = new MLibrary(fileName) { Images = new List<MLibrary.MImage>(), IndexList = new List<int>(), Count = Images.Length };
+            MLibraryV2 library = new MLibraryV2(fileName) { Images = new List<MLibraryV2.MImage>(), IndexList = new List<int>(), Count = Images.Length };
             //library.Save();
 
             for (int i = 0; i < library.Count; i++)
@@ -172,9 +173,9 @@ namespace LibraryEditor
                     {
                         WeMadeImage image = Images[i];
                         if (image.HasMask)
-                            library.Images[i] = new MLibrary.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow ? (byte)1 : (byte)0, MaskX = image.X, MaskY = image.Y };
+                            library.Images[i] = new MLibraryV2.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow ? (byte)1 : (byte)0, MaskX = image.X, MaskY = image.Y };
                         else
-                            library.Images[i] = new MLibrary.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow ? (byte)1 : (byte)0 };
+                            library.Images[i] = new MLibraryV2.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.boHasShadow ? (byte)1 : (byte)0 };
                     });
             }
             catch (System.Exception)
@@ -407,6 +408,7 @@ namespace LibraryEditor
                         break;
                 }
                 int index = 0;
+
                 int* scan0 = (int*)data.Scan0;
                 {
                     for (int y = Height - 1; y >= 0; y--)

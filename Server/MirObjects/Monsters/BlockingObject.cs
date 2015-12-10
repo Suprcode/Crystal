@@ -13,7 +13,6 @@ namespace Server.MirObjects.Monsters
         protected internal BlockingObject(MonsterObject parent, MonsterInfo info) : base(info)
         {
             Parent = parent;
-            //info.Image = Monster.EvilMirBody;
             Visible = true;
         }
 

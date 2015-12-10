@@ -219,6 +219,8 @@ namespace Client.MirObjects
 
                         if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
                             MapCells[x, y].FishingCell = true;
+
+
                     }
             }
             catch (Exception ex)

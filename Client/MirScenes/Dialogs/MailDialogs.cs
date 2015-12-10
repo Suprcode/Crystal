@@ -589,7 +589,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Font = new Font(Settings.FontName, 8F),
                 ForeColour = Color.White,
-                Location = new Point(70, 33),
+                Location = new Point(70, 35),
                 Size = new Size(150, 15),
                 NotControl = true,
             };
@@ -676,7 +676,7 @@ namespace Client.MirScenes.Dialogs
             Size = new Size(236, 384);
             Movable = true;
             Sort = true;
-            Location = new Point(100, 100);
+            Location = new Point(GameScene.Scene.InventoryDialog.Size.Width + 10, 0);
 
             CloseButton = new MirButton
             {
@@ -700,7 +700,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Font = new Font(Settings.FontName, 8F),
                 ForeColour = Color.White,
-                Location = new Point(70, 33),
+                Location = new Point(70, 35),
                 Size = new Size(150, 15),
                 NotControl = true,
             };
@@ -721,7 +721,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 203,
                 HoverIndex = 203,
                 PressedIndex = 203,
-                Location = new Point(89, 54),
+                Location = new Point(73, 56),
                 Size = new Size(20,20),
                 Library = Libraries.Prguse2,
                 Parent = this,             
@@ -805,7 +805,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Title,
                 Sound = SoundList.ButtonA,
-                Location = new Point(30, 349)
+                Location = new Point(30, 350)
             };
             SendButton.Click += (o, e) =>
             {
@@ -820,7 +820,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Title,
                 Sound = SoundList.ButtonA,
-                Location = new Point(135, 349)
+                Location = new Point(135, 350)
             };
             CancelButton.Click += (o, e) =>
             {
@@ -978,7 +978,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Font = new Font(Settings.FontName, 8F),
                 ForeColour = Color.White,
-                Location = new Point(70, 33),
+                Location = new Point(70, 35),
                 Size = new Size(150, 15),
                 NotControl = true,
             };
@@ -988,7 +988,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Font = new Font(Settings.FontName, 8F),
                 ForeColour = Color.White,
-                Location = new Point(70, 52),
+                Location = new Point(70, 56),
                 Size = new Size(150, 15),
                 NotControl = true,
             };
@@ -1115,7 +1115,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Font = new Font(Settings.FontName, 8F),
                 ForeColour = Color.White,
-                Location = new Point(70, 33),
+                Location = new Point(70, 35),
                 Size = new Size(150, 15),
                 NotControl = true,
             };
@@ -1125,7 +1125,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Font = new Font(Settings.FontName, 8F),
                 ForeColour = Color.White,
-                Location = new Point(70, 52),
+                Location = new Point(70, 56),
                 Size = new Size(150, 15),
                 NotControl = true,
             };
@@ -1156,7 +1156,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Title,
                 Sound = SoundList.ButtonA,
-                Location = new Point(30, 349)
+                Location = new Point(30, 350)
             };
             CollectButton.Click += (o, e) =>
             {
@@ -1171,7 +1171,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Title,
                 Sound = SoundList.ButtonA,
-                Location = new Point(135, 349)
+                Location = new Point(135, 350)
             };
             CancelButton.Click += (o, e) => Hide();
         }

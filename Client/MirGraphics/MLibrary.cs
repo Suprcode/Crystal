@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.IO.Compression;
 
 namespace Client.MirGraphics
 {
@@ -69,6 +70,10 @@ namespace Client.MirGraphics
                                           TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
                                           TransformWeaponEffect = new MLibrary[1];
+
+        //Extra
+        public static readonly MLibrary
+            ExMagic_MagicEx5 = new MLibrary(Settings.ExtraDataPath + "WemadeMir3\\MagicEx5");
 
         static Libraries()
         {
@@ -147,67 +152,67 @@ namespace Client.MirGraphics
 
             #region Maplibs
             //wemade mir2 (allowed from 0-99)
-            MapLibs[0] = new MLibrary(Settings.DataPath + "Tiles");
-            MapLibs[1] = new MLibrary(Settings.DataPath + "Smtiles");
-            MapLibs[2] = new MLibrary(Settings.DataPath + "Objects");
+            MapLibs[0] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Tiles");
+            MapLibs[1] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Smtiles");
+            MapLibs[2] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects");
             for (int i = 2; i < 24; i++)
             {
-                MapLibs[i+1] = new MLibrary(Settings.DataPath + "Objects" + i.ToString());
+                MapLibs[i + 1] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects" + i.ToString());
             }
             //shanda mir2 (allowed from 100-199)
-            MapLibs[100] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir2\\Tiles");
+            MapLibs[100] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\Tiles");
             for (int i = 1; i < 10; i++)
             {
-                MapLibs[100 + i] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir2\\Tiles" + (i+1));
+                MapLibs[100 + i] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\Tiles" + (i + 1));
             }
-            MapLibs[110] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir2\\SmTiles");
+            MapLibs[110] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\SmTiles");
             for (int i = 1; i < 10; i++)
             {
-                MapLibs[110 + i] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir2\\SmTiles" + (i+1));
+                MapLibs[110 + i] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\SmTiles" + (i + 1));
             }
-            MapLibs[120] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir2\\Objects");
+            MapLibs[120] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\Objects");
             for (int i = 1; i < 31; i++)
             {
-                MapLibs[120 + i] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir2\\Objects" + (i+1));
+                MapLibs[120 + i] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\Objects" + (i + 1));
             }
-            MapLibs[190] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir2\\AniTiles1");
+            MapLibs[190] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\AniTiles1");
             //wemade mir3 (allowed from 200-299)
             string[] Mapstate = { "", "wood\\", "sand\\", "snow\\", "forest\\"};
             for (int i = 0; i < Mapstate.Length; i++)
             {
-                MapLibs[200 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Tilesc");
-                MapLibs[201 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Tiles30c");
-                MapLibs[202 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Tiles5c");
-                MapLibs[203 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Smtilesc");
-                MapLibs[204 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Housesc");
-                MapLibs[205 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Cliffsc");
-                MapLibs[206 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Dungeonsc");
-                MapLibs[207 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Innersc");
-                MapLibs[208 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Furnituresc");
-                MapLibs[209 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Wallsc");
-                MapLibs[210 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "smObjectsc");
-                MapLibs[211 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Animationsc");
-                MapLibs[212 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Object1c");
-                MapLibs[213 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Wemade-Mir3\\" + Mapstate[i] + "Object2c");
+                MapLibs[200 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Tilesc");
+                MapLibs[201 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Tiles30c");
+                MapLibs[202 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Tiles5c");
+                MapLibs[203 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Smtilesc");
+                MapLibs[204 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Housesc");
+                MapLibs[205 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Cliffsc");
+                MapLibs[206 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Dungeonsc");
+                MapLibs[207 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Innersc");
+                MapLibs[208 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Furnituresc");
+                MapLibs[209 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Wallsc");
+                MapLibs[210 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "smObjectsc");
+                MapLibs[211 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Animationsc");
+                MapLibs[212 +(i*15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Object1c");
+                MapLibs[213 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\WemadeMir3\\" + Mapstate[i] + "Object2c");
             }
             Mapstate = new string[] { "", "wood", "sand", "snow", "forest"};
             //shanda mir3 (allowed from 300-399)
             for (int i = 0; i < Mapstate.Length; i++)
             {
-                MapLibs[300 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Tilesc" + Mapstate[i]);
-                MapLibs[301 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Tiles30c" + Mapstate[i]);
-                MapLibs[302 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Tiles5c" + Mapstate[i]);
-                MapLibs[303 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Smtilesc" + Mapstate[i]);
-                MapLibs[304 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Housesc" + Mapstate[i]);
-                MapLibs[305 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Cliffsc" + Mapstate[i]);
-                MapLibs[306 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Dungeonsc" + Mapstate[i]);
-                MapLibs[307 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Innersc" + Mapstate[i]);
-                MapLibs[308 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Furnituresc" + Mapstate[i]);
-                MapLibs[309 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Wallsc" + Mapstate[i]);
-                MapLibs[310 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "smObjectsc" + Mapstate[i]);
-                MapLibs[311 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Animationsc" + Mapstate[i]);
-                MapLibs[312 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Object1c" + Mapstate[i]);
-                MapLibs[313 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\Shanda-Mir3\\" + "Object2c" + Mapstate[i]);
+                MapLibs[300 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Tilesc" + Mapstate[i]);
+                MapLibs[301 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Tiles30c" + Mapstate[i]);
+                MapLibs[302 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Tiles5c" + Mapstate[i]);
+                MapLibs[303 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Smtilesc" + Mapstate[i]);
+                MapLibs[304 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Housesc" + Mapstate[i]);
+                MapLibs[305 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Cliffsc" + Mapstate[i]);
+                MapLibs[306 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Dungeonsc" + Mapstate[i]);
+                MapLibs[307 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Innersc" + Mapstate[i]);
+                MapLibs[308 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Furnituresc" + Mapstate[i]);
+                MapLibs[309 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Wallsc" + Mapstate[i]);
+                MapLibs[310 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "smObjectsc" + Mapstate[i]);
+                MapLibs[311 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Animationsc" + Mapstate[i]);
+                MapLibs[312 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Object1c" + Mapstate[i]);
+                MapLibs[313 + (i * 15)] = new MLibrary(Settings.DataPath + "Map\\ShandaMir3\\" + "Object2c" + Mapstate[i]);
             }
             #endregion
 
@@ -431,7 +436,7 @@ namespace Client.MirGraphics
                 TransformMounts[i].Initialize();
                 Progress++;
             }
-
+            
             Loaded = true;
         }
 
@@ -440,7 +445,7 @@ namespace Client.MirGraphics
     public sealed class MLibrary
     {
         private const string Extention = ".Lib";
-        public const int LibVersion = 1;
+        public const int LibVersion = 2;
 
         private readonly string _fileName;
 
@@ -471,7 +476,8 @@ namespace Client.MirGraphics
                 _reader = new BinaryReader(_fStream);
                 CurrentVersion = _reader.ReadInt32();
                 if (CurrentVersion != LibVersion)
-                {//cant use a directx based error popup cause it could be the lib file containing the interface is invalid :(
+                {
+                    //cant use a directx based error popup cause it could be the lib file containing the interface is invalid :(
                     System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
                     System.Windows.Forms.Application.Exit();
                     return;
@@ -618,7 +624,6 @@ namespace Client.MirGraphics
             MImage mi = _images[index];
 
             if (offSet) point.Offset(mi.X, mi.Y);
-
 
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
@@ -827,14 +832,17 @@ namespace Client.MirGraphics
         public unsafe void CreateTexture(BinaryReader reader)
         {
 
-            int w = Width + (4 - Width % 4) % 4;
-            int h = Height + (4 - Height % 4) % 4;
+            int w = Width;// + (4 - Width % 4) % 4;
+            int h = Height;// + (4 - Height % 4) % 4;
+            GraphicsStream stream = null;
 
-            Image = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.Dxt1, Pool.Managed);
-            GraphicsStream stream = Image.LockRectangle(0, LockFlags.Discard);
+            Image = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+            stream = Image.LockRectangle(0, LockFlags.Discard);
             Data = (byte*)stream.InternalDataPointer;
 
-            stream.Write(reader.ReadBytes(Length), 0, Length);
+            byte[] decomp = DecompressImage(reader.ReadBytes(Length));
+
+            stream.Write(decomp, 0, decomp.Length);
 
             stream.Dispose();
             Image.UnlockRectangle(0);
@@ -842,13 +850,15 @@ namespace Client.MirGraphics
             if (HasMask)
             {
                 reader.ReadBytes(12);
-                w = Width + (4 - Width % 4) % 4;
-                h = Height + (4 - Height % 4) % 4;
+                w = Width;// + (4 - Width % 4) % 4;
+                h = Height;// + (4 - Height % 4) % 4;
 
-                MaskImage = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.Dxt1, Pool.Managed);
-                stream = MaskImage.LockRectangle(0, LockFlags.Discard);
+                MaskImage = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+                stream = Image.LockRectangle(0, LockFlags.Discard);
 
-                stream.Write(reader.ReadBytes(Length), 0, Length);
+                decomp = DecompressImage(reader.ReadBytes(Length));
+
+                stream.Write(decomp, 0, decomp.Length);
 
                 stream.Dispose();
                 MaskImage.UnlockRectangle(0);
@@ -873,26 +883,31 @@ namespace Client.MirGraphics
             if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
                 return false;
 
-            int w = Width + (4 - Width % 4) % 4;
+            int w = Width;// +(4 - Width % 4) % 4;
 
             bool result = false;
             if (Data != null)
             {
-                int x = (p.X - p.X % 4) / 4;
-                int y = (p.Y - p.Y % 4) / 4;
-                int index = (y * (w / 4) + x) * 8;
+                int x = p.X;// (p.X - p.X % 4) / 4;
+                int y = p.Y;// (p.Y - p.Y % 4) / 4;
+                
+                int index = (y * (w << 2)) + (x << 2) ; //(y * (w * 4)) + (x * 4);
 
                 int col0 = (Data[index + 1] << 8 | Data[index]), col1 = (Data[index + 3] << 8 | Data[index + 2]);
 
-                if (col0 == 0 && col1 == 0) return false;
+                //if (col0 == 0 && col1 == 0) return false;
+                byte col = Data[index];
 
-                if (!acurrate || col1 < col0) return true;
+                if (col == 0) return false;
+                else return true;
 
-                x = p.X % 4;
-                y = p.Y % 4;
-                x *= 2;
+                //if (!acurrate || col1 < col0) return true;
 
-                result = ((Data[index + 4 + y] & 1 << x) >> x) != 1 || ((Data[index + 4 + y] & 1 << x + 1) >> x + 1) != 1;
+                x = p.X;// % 4;
+                y = p.Y;// % 4;
+                //x *= 2;
+
+                //result = ((Data[index + y] & 1 << x) >> x) != 1 || ((Data[index + y] & 1 << x + 1) >> x + 1) != 1;
             }
             return result;
         }
@@ -974,6 +989,29 @@ namespace Client.MirGraphics
             TrueSize = Rectangle.FromLTRB(l, t, r, b).Size;
 
             return TrueSize;
+        }
+
+        private static byte[] DecompressImage(byte[] image)
+        {
+            using (GZipStream stream = new GZipStream(new MemoryStream(image), CompressionMode.Decompress))
+            {
+                const int size = 4096;
+                byte[] buffer = new byte[size];
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    int count = 0;
+                    do
+                    {
+                        count = stream.Read(buffer, 0, size);
+                        if (count > 0)
+                        {
+                            memory.Write(buffer, 0, count);
+                        }
+                    }
+                    while (count > 0);
+                    return memory.ToArray();
+                }
+            }
         }
     }
 

@@ -9,6 +9,19 @@ using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
 
+public enum BlendMode : sbyte
+{
+    NONE = -1,
+    NORMAL = 0,
+    LIGHT = 1,
+    LIGHTINV = 2,
+    INVNORMAL = 3,
+    INVLIGHT = 4,
+    INVLIGHTINV = 5,
+    INVCOLOR = 6,
+    INVBACKGROUND = 7
+}
+
 public enum DamageType : byte
 {
     Hit = 0,
@@ -98,7 +111,8 @@ public enum QuestType : byte
 {
     General = 0,
     Daily = 1,
-    Repeatable = 2
+    Repeatable = 2,
+    Story = 3
 }
 
 public enum QuestIcon : byte
@@ -108,7 +122,9 @@ public enum QuestIcon : byte
     ExclamationYellow = 2,
     QuestionYellow = 3,
     ExclamationBlue = 5,
-    QuestionBlue = 6
+    QuestionBlue = 6,
+    ExclamationGreen = 7,
+    QuestionGreen = 8
 }
 
 public enum QuestState : byte
@@ -308,7 +324,6 @@ public enum Monster : ushort
     DarkDustPile = 147,
     DarkBrownWolf = 148,
     Football = 149,
-
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -317,9 +332,10 @@ public enum Monster : ushort
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
+
     Behemoth = 158,
     DarkDevourer = 159,//LIB BROKE??
-    PoisonHugger = 160,
+    PoisonHugger = 160, //DONE
     Hugger = 161,
     MutatedHugger = 162,//BROKE
     DreamDevourer = 163,//LIB BROKE??
@@ -651,6 +667,14 @@ public enum CellAttribute : byte
     HighWall = 1,
     LowWall = 2,
 }
+
+public enum FishingAttribute : byte
+{
+    None = 0,
+    FreshWater = 1,
+    SaltWater = 2
+}
+
 public enum LightSetting : byte
 {
     Normal = 0,
@@ -696,7 +720,8 @@ public enum ObjectType : byte
     Merchant = 3,
     Spell = 4,
     Monster = 5,
-    Deco = 6
+    Deco = 6,
+    Creature = 7
 }
 
 public enum ChatType : byte
@@ -1142,6 +1167,7 @@ public enum BuffType : byte
     EnergyShield,
     MagicBooster,
     PetEnhancer,
+    ImmortalSkin,
 
     //special
     GameMaster,
@@ -3817,6 +3843,14 @@ public class ClientQuestInfo
                     icon = QuestIcon.QuestionWhite;
                 else
                     icon = QuestIcon.ExclamationBlue;
+                break;
+            case QuestType.Story:
+                if (completed)
+                    icon = QuestIcon.QuestionGreen;
+                else if (taken)
+                    icon = QuestIcon.QuestionWhite;
+                else
+                    icon = QuestIcon.ExclamationGreen;
                 break;
         }
 

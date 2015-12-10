@@ -100,8 +100,13 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
+                    offSet += 9;
 
-                    offSet += 10;
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
                 }
         }
 
@@ -132,11 +137,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 6;
+                    offSet += 7;
 
-                    //fish/light check
+                    byte light = fileBytes[offSet++];
 
-                    offSet += 3;
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 1;
                 }
         }
 
@@ -162,7 +170,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 12;
+                    offSet += 9;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 2;
                 }
         }
 
@@ -188,7 +203,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 34;
+                    offSet += 16;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 17;
                 }
         }
 
@@ -240,7 +262,12 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall;
                     else
                         Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-                    offSet += 14;
+                    offSet += 13;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
                 }
         }
 
@@ -289,7 +316,14 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 13;
+                    offSet += 10;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+
+                    offSet += 2;
                 }
         }
 
@@ -316,7 +350,12 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offset += 14;
+                    offset += 13;
+
+                    byte light = Bytes[offset++];
+
+                    if (light == 100 || light == 101)
+                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
                 }
                 
         }
@@ -662,6 +701,8 @@ namespace Server.MirEnvir
             PlayerObject player = (PlayerObject)data[0];
             UserMagic magic = (UserMagic)data[1];
 
+            if (player == null || player.Info == null) return;
+
             int value, value2;
             Point location;
             Cell cell;
@@ -713,9 +754,14 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonSkeleton
+                #region SummonSkeleton, SummonShinsu, SummonHolyDeva, ArcherSummons
 
                 case Spell.SummonSkeleton:
+                case Spell.SummonShinsu:
+                case Spell.SummonHolyDeva:
+                case Spell.SummonVampire:
+                case Spell.SummonToad:
+                case Spell.SummonSnakes:
                     monster = (MonsterObject)data[2];
                     front = (Point)data[3];
 
@@ -723,6 +769,8 @@ namespace Server.MirEnvir
                         monster.Spawn(this, front);
                     else
                         monster.Spawn(player.CurrentMap, player.CurrentLocation);
+
+                    monster.Master.Pets.Add(monster);
                     break;
 
                 #endregion
@@ -1106,20 +1154,6 @@ namespace Server.MirEnvir
                         }
                     }
 
-                    break;
-
-                #endregion
-
-                #region SummonShinsu
-
-                case Spell.SummonShinsu:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
                     break;
 
                 #endregion
@@ -1563,21 +1597,6 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonHolyDeva
-
-                case Spell.SummonHolyDeva:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
-                    break;
-
-                #endregion
-
                 #region Curse
 
                 case Spell.Curse:
@@ -1900,22 +1919,6 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region ArcherSummons
-
-                case Spell.SummonVampire:
-                case Spell.SummonToad:
-                case Spell.SummonSnakes:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
-                    break;
-
-                #endregion
-
                 #region Portal
 
                 case Spell.Portal:                  
@@ -2119,8 +2122,7 @@ namespace Server.MirEnvir
 
         public List<MapObject> Objects;
         public CellAttribute Attribute;
-
-        public bool FishingCell;
+        public FishingAttribute FishingAttribute;
 
         public void Add(MapObject mapObject)
         {
