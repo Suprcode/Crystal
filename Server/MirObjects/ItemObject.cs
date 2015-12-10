@@ -59,7 +59,7 @@ namespace Server.MirObjects
             ExpireTime = Envir.Time + Settings.ItemTimeOut * Settings.Minute;
 
             Item = item;
-            if (Item.IsAdded)
+            if (Item.IsAdded && !Item.Info.Generate)
                 NameColour = Color.Cyan;
 
             CurrentMap = dropper.CurrentMap;

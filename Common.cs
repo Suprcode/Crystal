@@ -2527,6 +2527,7 @@ public class ItemInfo
     public RandomItemStat RandomStats;
     public string ToolTip = string.Empty;
 
+    public bool Generate = true;
 
     public bool IsConsumable
     {
@@ -2634,6 +2635,7 @@ public class ItemInfo
             {
                 Bind = (BindMode)reader.ReadInt16();
             }
+
             
         }
         if (version >= 21)
@@ -2664,6 +2666,9 @@ public class ItemInfo
             if (isTooltip)
                 ToolTip = reader.ReadString();
         }
+
+        if (version > 65)
+            Generate = reader.ReadBoolean();
     }
 
 
@@ -2747,6 +2752,8 @@ public class ItemInfo
         writer.Write(ToolTip != null);
         if (ToolTip != null)
             writer.Write(ToolTip);
+
+        writer.Write(Generate);
     }
 
     public static ItemInfo FromText(string text)
@@ -2881,7 +2888,7 @@ public class UserItem
     public ushort CurrentDura, MaxDura;
     public uint Count = 1, GemCount = 0;
 
-    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
+    public ushort AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
     public sbyte AttackSpeed, Luck;
 
     public RefinedValue RefinedValue = RefinedValue.None;
@@ -2943,16 +2950,32 @@ public class UserItem
 
         Count = reader.ReadUInt32();
 
-        AC = reader.ReadByte();
-        MAC = reader.ReadByte();
-        DC = reader.ReadByte();
-        MC = reader.ReadByte();
-        SC = reader.ReadByte();
+        if (version > 67)
+        {
+            AC = reader.ReadUInt16();
+            MAC = reader.ReadUInt16();
+            DC = reader.ReadUInt16();
+            MC = reader.ReadUInt16();
+            SC = reader.ReadUInt16();
+            Accuracy = reader.ReadUInt16();
+            Agility = reader.ReadUInt16();
+            HP = reader.ReadUInt16();
+            MP = reader.ReadUInt16();
+        }
+        else
+        {
+            AC = (ushort)reader.ReadByte();
+            MAC = (ushort)reader.ReadByte();
+            DC = (ushort)reader.ReadByte();
+            MC = (ushort)reader.ReadByte();
+            SC = (ushort)reader.ReadByte();
+            Accuracy = (ushort)reader.ReadByte();
+            Agility = (ushort)reader.ReadByte();
+            HP = (ushort)reader.ReadByte();
+            MP = (ushort)reader.ReadByte();
+        }
 
-        Accuracy = reader.ReadByte();
-        Agility = reader.ReadByte();
-        HP = reader.ReadByte();
-        MP = reader.ReadByte();
+        
 
         AttackSpeed = reader.ReadSByte();
         Luck = reader.ReadSByte();
@@ -2962,17 +2985,33 @@ public class UserItem
         byte Bools = reader.ReadByte();        
         Identified = (Bools & 0x01) == 0x01;
         Cursed = (Bools & 0x02) == 0x02;
-        Strong = reader.ReadByte();
-        MagicResist = reader.ReadByte();
-        PoisonResist = reader.ReadByte();
-        HealthRecovery = reader.ReadByte();
-        ManaRecovery = reader.ReadByte();
-        PoisonRecovery = reader.ReadByte();
-        CriticalRate = reader.ReadByte();
-        CriticalDamage = reader.ReadByte();
-        Freezing = reader.ReadByte();
-        PoisonAttack = reader.ReadByte();
-        
+
+        if (version > 67)
+        {
+            Strong = reader.ReadUInt16();
+            MagicResist = reader.ReadUInt16();
+            PoisonResist = reader.ReadUInt16();
+            HealthRecovery = reader.ReadUInt16();
+            ManaRecovery = reader.ReadUInt16();
+            PoisonRecovery = reader.ReadUInt16();
+            CriticalRate = reader.ReadUInt16();
+            CriticalDamage = reader.ReadUInt16();
+            Freezing = reader.ReadUInt16();
+            PoisonAttack = reader.ReadUInt16();
+        }
+        else
+        {
+            Strong = (ushort)reader.ReadByte();
+            MagicResist = (ushort)reader.ReadByte();
+            PoisonResist = (ushort)reader.ReadByte();
+            HealthRecovery = (ushort)reader.ReadByte();
+            ManaRecovery = (ushort)reader.ReadByte();
+            PoisonRecovery = (ushort)reader.ReadByte();
+            CriticalRate = (ushort)reader.ReadByte();
+            CriticalDamage = (ushort)reader.ReadByte();
+            Freezing = (ushort)reader.ReadByte();
+            PoisonAttack = (ushort)reader.ReadByte();
+        }
 
         if (version <= 31) return;
 
@@ -3018,11 +3057,11 @@ public class UserItem
 
         writer.Write(Count);
 
-        writer.Write(AC);
-        writer.Write(MAC);
-        writer.Write(DC);
-        writer.Write(MC);
-        writer.Write(SC);
+        writer.Write((ushort)AC);
+        writer.Write((ushort)MAC);
+        writer.Write((ushort)DC);
+        writer.Write((ushort)MC);
+        writer.Write((ushort)SC);
 
         writer.Write(Accuracy);
         writer.Write(Agility);

@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 65;
+        public const int Version = 68;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -2034,6 +2034,92 @@ namespace Server.MirEnvir
             UpdateItemExpiry(item);
 
             if (!info.NeedIdentify) item.Identified = true;
+            return item;
+        }
+
+        public UserItem RandomDropItem(ItemInfo info)
+        {
+            if (info == null) return null;
+
+            UserItem item = new UserItem(info)
+            {
+                UniqueID = ++NextUserItemID,
+                MaxDura = info.Durability,
+                CurrentDura = (ushort)Math.Min(info.Durability, Random.Next(info.Durability) + 1000)
+            };
+
+            int WeightValue = 10;
+
+            int minDc = 20, maxDc = 15, minSc = 20, maxSc = 15, minMc = 20, maxMc = 15, minAc = 15, maxAc = 12, minMac = 15, maxMac = 12;
+            int _dc = 0, sc = 0, mc = 0, ac = 0, mac = 0;
+
+
+            if (item.Info.MaxDC > 0)
+                item.DC -= (item.Info.MaxDC);
+
+            item.DC += 1;
+
+
+            int CurrentWeightVal = WeightValue * info.RequiredAmount;
+            int MinimumWeight = 15;
+
+            CurrentWeightVal -= (item.Info.MinDC * minDc);
+            CurrentWeightVal -= (item.Info.MinSC * minSc);
+            CurrentWeightVal -= (item.Info.MinMC * minMc);
+            CurrentWeightVal -= (item.Info.MinAC * minAc);
+            CurrentWeightVal -= (item.Info.MinMAC * minMac);
+
+            while (CurrentWeightVal > 0)
+                {
+                CurrentWeightVal = 0;
+                switch (SMain.Envir.Random.Next(1, 5))
+                {
+                    case 1: //Max DC
+                        //if (info.MaxDC > 0)
+                            //if (CurrentWeightVal >= maxDc)
+                            //{
+                                //item.DC++;
+                                //CurrentWeightVal -= maxDc;
+                            //}
+                            //else if (CurrentWeightVal < MinimumWeight)
+                                //CurrentWeightVal = 0;
+                        break;
+                    case 2: //Max SC
+                        //if (info.MaxSC > 0)
+                            //if (CurrentWeightVal >= minSc)
+                            //{
+                                //info.MaxDC++;
+                                //CurrentWeightVal -= maxSc;
+                            //}
+                            //else if (CurrentWeightVal < MinimumWeight)
+                                    //CurrentWeightVal = 0;
+                        break;
+                    case 3: //Min SC
+                        break;
+                    case 4: //Max SC
+                        break;
+                    case 5: //Min MC
+                        break;
+                    case 6: //Max MC
+                            break;
+                    }
+                }
+
+            //info.MinDC = (byte)minDc;
+            //info.MaxDC = (byte)maxDc;
+            //info.MinSC = (byte)minSc;
+            //info.MaxSC = (byte)maxSc;
+            //info.MinMC = (byte)minMc;
+            //info.MaxMC = (byte)maxMc;
+
+            
+
+            //UpgradeItem(item);
+
+            UpdateItemExpiry(item);
+
+            if (!info.NeedIdentify) item.Identified = true;
+
             return item;
         }
 

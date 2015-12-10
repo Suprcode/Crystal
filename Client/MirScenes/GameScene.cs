@@ -5594,7 +5594,6 @@ namespace Client.MirScenes
             minValue = realItem.MinDC;
             maxValue = realItem.MaxDC;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.DC : 0;
-
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;

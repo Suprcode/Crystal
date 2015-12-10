@@ -647,7 +647,13 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    UserItem item = Envir.CreateDropItem(drop.Item);
+                    UserItem item;
+
+                    if (drop.Item.Generate)
+                        item = Envir.RandomDropItem(drop.Item);
+                    else
+                        item = Envir.CreateDropItem(drop.Item);
+
                     if (item == null) continue;
 
                     if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
