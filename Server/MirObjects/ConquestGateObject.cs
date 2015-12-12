@@ -56,7 +56,7 @@ namespace Server.MirObjects
             MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
 
             if (monsterInfo == null) return;
-            if (monsterInfo.AI != 72) return;
+            if (monsterInfo.AI != 81) return;
 
             Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
 

@@ -1354,7 +1354,6 @@ namespace Server.MirObjects
         GlobalMessage,
         LoadValue,
         SaveValue,
-        RemovePet
         RemovePet,
         ConquestGuard,
         ConquestGate,
@@ -1365,7 +1364,9 @@ namespace Server.MirObjects
         StartConquest,
         ScheduleConquest,
         OpenGate,
-        CloseGate,    }
+        CloseGate,
+        Break,
+    }
     public enum CheckType
     {
         IsAdmin,
@@ -1399,8 +1400,7 @@ namespace Server.MirObjects
         CheckWeddingRing,
         CheckPet,
         HasBagSpace,
-		IsNewHuman
-        HasBagSpace,
+		IsNewHuman,
         CheckConquest,
         AffordGuard,
         AffordGate,

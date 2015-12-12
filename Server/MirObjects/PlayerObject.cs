@@ -4760,6 +4760,38 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
                         SMain.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
                         break;
+                    case "RESETCONQUEST":
+                        //Needs some work, but does job for now.
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+                        int ConquestNum;
+
+                        if (parts.Length < 1)
+                        {
+                            ReceiveChat(string.Format("The Syntax is /ResetConquest [ConquestID]"), ChatType.System);
+                            return;
+                        }
+
+                        if (MyGuild == null)
+                        {
+                            ReceiveChat(string.Format("You need to be in a guild to start a War"), ChatType.System);
+                            return;
+                        }
+
+                        else if (!int.TryParse(parts[1], out ConquestNum)) return;
+
+                        ConquestObject ResetConq = Envir.Conquests.FirstOrDefault(t => t.Info.Index == ConquestNum);
+
+                        if (ResetConq != null && !ResetConq.WarIsOn)
+                        {
+                            ResetConq.Reset();
+                        }
+                        else
+                        {
+                            ReceiveChat("Conquest not found or War is currently on.", ChatType.System);
+                            return;
+                        }
+                        ReceiveChat(string.Format("{0} has been reset.", ResetConq.Info.Name), ChatType.System);
+                        break;
                     case "GATES":
                         string openclose = parts[1];
                         bool OpenClose;
@@ -10628,6 +10660,13 @@ namespace Server.MirObjects
                             break;
                         case 10://GuildSkillScroll
                             MyGuild.NewBuff(item.Info.Effect, false);
+                            break;
+                        case 11://HomeTeleport
+                            if (MyGuild != null && MyGuild.Conquest != null && !MyGuild.Conquest.WarIsOn && MyGuild.Conquest.PalaceMap != null && !TeleportRandom(200, 0, MyGuild.Conquest.PalaceMap))
+                            {
+                                Enqueue(p);
+                                return;
+                            }
                             break;
                     }
                     break;

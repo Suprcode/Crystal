@@ -722,7 +722,7 @@ namespace Server.MirEnvir
 
             if (Time >= conquestTime)
             {
-                conquestTime = Time + (Settings.Second * 20);
+                conquestTime = Time + (Settings.Second * 10);
                 for (int i = 0; i < Conquests.Count; i++)
                     Conquests[i].Process();
             }
@@ -1460,8 +1460,6 @@ namespace Server.MirEnvir
                             }
                         }
 
-
-
                         Conquests.Add(newConquest);
                         tempMap.Conquest.Add(newConquest);
                         count++;
@@ -1543,6 +1541,7 @@ namespace Server.MirEnvir
                             newConquest.WallList.Remove(newConquest.WallList[j]);
                     }
 
+                    
                     //Bind Info to Saved Siege objects or create new objects
                     for (int j = 0; j < ConquestInfos[i].ConquestSieges.Count; j++)
                     {
@@ -1565,6 +1564,7 @@ namespace Server.MirEnvir
                         if (newConquest.SiegeList[j].Info == null)
                             newConquest.SiegeList.Remove(newConquest.SiegeList[j]);
                     }
+                    
 
                     newConquest.LoadArchers();
                     newConquest.LoadGates();

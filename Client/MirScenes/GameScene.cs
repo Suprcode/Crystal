@@ -8426,7 +8426,7 @@ namespace Client.MirScenes
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
-                    M2CellInfo[x, y].DrawDeadObjects();
+                    //M2CellInfo[x, y].DrawDeadObjects();
                 }
             }
 
@@ -8488,6 +8488,9 @@ namespace Client.MirScenes
                         }
                     }
                     #endregion
+
+
+                    M2CellInfo[x, y].DrawDeadObjects();
 
                     #region Draw front layer
                     index = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;

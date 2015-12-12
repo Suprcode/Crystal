@@ -87,7 +87,7 @@ namespace Server.MirObjects
                 WallList.Add(new ConquestWallObject(reader));
             }
             SiegeCount = reader.ReadInt32();
-            for (int i = 0; i < WallCount; i++)
+            for (int i = 0; i < SiegeCount; i++)
             {
                 SiegeList.Add(new ConquestSiegeObject(reader));
             }
@@ -213,7 +213,7 @@ namespace Server.MirObjects
                 {
                     WarStartTime = DateTime.Now;
                     WarEndTime = WarStartTime.AddMinutes(Info.WarLength);
-                    GameType = ConquestGame.KingOfHill;
+                    GameType = Info.Game;
                 }
                 
                 NPCVisibility(true);
@@ -221,12 +221,13 @@ namespace Server.MirObjects
                 switch (GameType)
                 {
                     case ConquestGame.CapturePalace:
-
                         break;
                     case ConquestGame.KingOfHill:
                         CreateZone(true);
                         break;
                     case ConquestGame.Random:
+                        break;
+                    case ConquestGame.Classic:
                         break;
                 }
 
@@ -252,12 +253,13 @@ namespace Server.MirObjects
                 switch (GameType)
                 {
                     case ConquestGame.CapturePalace:
-
                         break;
                     case ConquestGame.KingOfHill:
                         CreateZone(false);
                         break;
                     case ConquestGame.Random:
+                        break;
+                    case ConquestGame.Classic:
                         break;
                 }
             }
@@ -385,13 +387,49 @@ namespace Server.MirObjects
         public void Process()
         {
             if (ScheduleTimer < Envir.Time) AutoSchedule();
-            if (WarIsOn && GameType == ConquestGame.KingOfHill) ScorePoints();
+            if (WarIsOn && (GameType == ConquestGame.KingOfHill || GameType == ConquestGame.Classic)) ScorePoints();
+        }
+
+        public void Reset()
+        {
+            Owner = -1;
+            AttackerID = -1;
+            GoldStorage = 0;
+            npcRate = 0;
+
+            if (Guild != null)
+            {
+                Guild.Conquest = null;
+                UpdatePlayers(Guild);
+                Guild = null;
+            }
+
+            for (int i = 0; i < ArcherList.Count; i++)
+            {
+                ArcherList[i].Spawn();
+            }
+
+            for (int i = 0; i < GateList.Count; i++)
+            {
+                GateList[i].Repair();
+            }
+
+            for (int i = 0; i < WallList.Count; i++)
+            {
+                WallList[i].Repair();
+            }
+
+            for (int i = 0; i < SiegeList.Count; i++)
+            {
+                //SiegeList[i].Repair();
+            }
+
+            NeedSave = true;
         }
 
         public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null)
         {
-            if (player == null && winningGuild == null) return;
-            if (player == null || player.MyGuild == null || player.MyGuild.Conquest != null) return;
+            if (winningGuild == null && (player == null || player.MyGuild == null || player.MyGuild.Conquest != null)) return;
 
             GuildObject tmpPrevious = null;
 
@@ -399,7 +437,7 @@ namespace Server.MirObjects
             {
                 case ConquestGame.CapturePalace:
                     if (player == null) return;
-                    if (Info.Type == ConquestType.Request)
+                    if (StartType == ConquestType.Request)
                         if (player.MyGuild.Guildindex != AttackerID) break;
 
                     if (Guild != null)
@@ -415,7 +453,8 @@ namespace Server.MirObjects
                     WarIsOn = false;
                     break;
                 case ConquestGame.KingOfHill:
-                    if (Info.Type == ConquestType.Request)
+                case ConquestGame.Classic:
+                    if (StartType == ConquestType.Request)
                         if (winningGuild.Guildindex != AttackerID) break;
 
                     if (Guild != null)
@@ -550,34 +589,63 @@ namespace Server.MirObjects
                                 PointsChanged = true;
                             }
                     }
+
+                    if (PointsChanged)
+                    {
+                        GuildObject tempWinning = Guild;
+                        int tempInt;
+
+                        //Check Scores
+                        for (int i = 0; i < Envir.GuildList.Count; i++)
+                        {
+                            Points.TryGetValue(Envir.GuildList[i], out points);
+                            if (tempWinning != null)
+                                Points.TryGetValue(tempWinning, out tempInt);
+                            else tempInt = 0;
+
+                            if (points > tempInt)
+                            {
+                                tempWinning = Envir.GuildList[i];
+                            }
+                        }
+
+                        if (tempWinning != Guild)
+                            TakeConquest(null, tempWinning);
+                    }
                     break;
+                case ConquestGame.Classic:
+                    int GuildCounter = 0;
+                    GuildObject TakingGuild = null;
+                    for (int i = 0; i < PalaceMap.Players.Count; i++)
+                    {
+                        if (PalaceMap.Players[i].MyGuild != null)
+                        {
+                            if (TakingGuild == null || TakingGuild != PalaceMap.Players[i].MyGuild)
+                                GuildCounter++;
+
+                            TakingGuild = PalaceMap.Players[i].MyGuild;
+                        }
+                        else
+                        {
+                            GuildCounter++;
+                        }
+                    }
+
+                    if (GuildCounter == 1 && TakingGuild != Guild)
+                    {
+                        if (StartType == ConquestType.Request && TakingGuild.Guildindex != AttackerID) return;
+
+                        TakeConquest(null, TakingGuild);
+                    }
+
+                    break;
+                
 
                 default:
                     return;
             }
 
-            if (PointsChanged)
-            {
-                GuildObject tempWinning = Guild;
-                int tempInt;
-
-                //Check Scores
-                for (int i = 0; i < Envir.GuildList.Count; i++)
-                {
-                    Points.TryGetValue(Envir.GuildList[i], out points);
-                    if (tempWinning != null)
-                        Points.TryGetValue(tempWinning, out tempInt);
-                    else tempInt = 0;
-
-                    if (points > tempInt)
-                    {
-                        tempWinning = Envir.GuildList[i];
-                    }
-                }
-
-                if (tempWinning != Guild)
-                    TakeConquest(null, tempWinning);
-            }
+            
 
         }
     }

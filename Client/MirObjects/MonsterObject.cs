@@ -33,8 +33,10 @@ namespace Client.MirObjects
                     case Monster.PalaceWallLeft:
                     case Monster.PalaceWall1:
                     case Monster.GiGateSouth:
-                    
                     case Monster.GiGateWest:
+                    case Monster.SSabukWall1:
+                    case Monster.SSabukWall2:
+                    case Monster.SSabukWall3:
                         return new Point(-10, 0);
                         break;
                     case Monster.GiGateEast:
@@ -139,6 +141,11 @@ namespace Client.MirObjects
                 case Monster.GiGateSouth:
                 case Monster.GiGateEast:
                 case Monster.GiGateWest:
+                    BodyLibrary = Libraries.Monsters[405];
+                    break;
+                case Monster.SSabukWall1:
+                case Monster.SSabukWall2:
+                case Monster.SSabukWall3:
                     BodyLibrary = Libraries.Monsters[404];
                     break;
                 default:
@@ -980,7 +987,15 @@ namespace Client.MirObjects
                 case Monster.PalaceWall2:
                     Frames = FrameSet.Walls[2];
                     break;
-
+                case Monster.SSabukWall1:
+                    Frames = FrameSet.Walls[3];
+                    break;
+                case Monster.SSabukWall2:
+                    Frames = FrameSet.Walls[4];
+                    break;
+                case Monster.SSabukWall3:
+                    Frames = FrameSet.Walls[5];
+                    break;
                 default:
                     Frames = FrameSet.Monsters[0];
                     break;

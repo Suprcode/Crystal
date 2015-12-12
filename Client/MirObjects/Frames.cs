@@ -2521,6 +2521,27 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(204, 1, -1, 400));
             frame.Frames.Add(MirAction.Dead, new Frame(204, 1, -1, 1000));
 
+            //Left of Shanda Sabuk Palace
+            Walls.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(0, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Die, new Frame(4, 1, -1, 400));
+            frame.Frames.Add(MirAction.Dead, new Frame(4, 1, -1, 1000));
+
+            //Left of Shanda Sabuk Palace Door
+            Walls.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(5, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(5, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Die, new Frame(9, 1, -1, 400));
+            frame.Frames.Add(MirAction.Dead, new Frame(9, 1, -1, 1000));
+
+            //Right of Shanda Sabuk Palace Door
+            Walls.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(10, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Struck, new Frame(10, 1, 0, 1000));
+            frame.Frames.Add(MirAction.Die, new Frame(14, 1, -1, 400));
+            frame.Frames.Add(MirAction.Dead, new Frame(14, 1, -1, 1000));
+
             #endregion
         }
     }

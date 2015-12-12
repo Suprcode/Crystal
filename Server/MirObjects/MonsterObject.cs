@@ -173,19 +173,17 @@ namespace Server.MirObjects
                     return new HellKeeper(info);
                 case 79:
                     return new ManectricClaw(info);
-
+                case 80://Sabuk Archer
+                    return new ConquestArcher(info);
+                case 81:
+                    return new Gate(info);
+                case 82:
+                    return new Wall(info);
                 case 200://custom
                     return new Runaway(info);
                 case 201://custom
                     return new TalkingMonster(info);
-                case 71:
-                    return new SabukGate(info);
-                case 71://Sabuk Archer
-                    return new ConquestArcher(info);
-                case 72:
-                    return new Gate(info);
-                case 73:
-                    return new Wall(info);                default:
+                default:
                     return new MonsterObject(info);
             }
         }
@@ -259,8 +257,8 @@ namespace Server.MirObjects
             {
                 switch (Info.AI)
                 {
-                    case 72:
-                    case 73:
+                    case 81:
+                    case 82:
                         return int.MaxValue;
                     default:
                         return 180000;

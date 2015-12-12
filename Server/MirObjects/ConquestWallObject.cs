@@ -57,7 +57,7 @@ namespace Server.MirObjects
 
             if (monsterInfo == null) return;
 
-            if (monsterInfo.AI != 73) return;
+            if (monsterInfo.AI != 82) return;
 
             Wall = (Wall)MonsterObject.GetMonster(monsterInfo);
 

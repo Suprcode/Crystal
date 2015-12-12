@@ -583,9 +583,7 @@ public enum Monster : ushort
     Ram1 = 400,
     Ram2 = 401,
     Kite = 402,
-    GiGateSouth = 404,
-    GiGateEast = 405,
-    GiGateWest = 406,
+    
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -595,7 +593,12 @@ public enum Monster : ushort
     PalaceWallLeft = 951,
     PalaceWall1 = 952,
     PalaceWall2 = 953,
-    
+    GiGateSouth = 954,
+    GiGateEast = 955,
+    GiGateWest = 956,
+    SSabukWall1 = 957,
+    SSabukWall2 = 958,
+    SSabukWall3 = 959,
 
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
@@ -1575,6 +1578,7 @@ public enum ConquestGame : byte
     CapturePalace = 0,
     KingOfHill = 1,
     Random = 2,
+    Classic = 3,
 }
 
 public class InIReader
