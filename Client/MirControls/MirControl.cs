@@ -135,8 +135,6 @@ namespace Client.MirControls
         }
         protected virtual void CreateTexture()
         {
-            try
-            { 
             if (ControlTexture != null && !ControlTexture.Disposed && Size != TextureSize)
                 ControlTexture.Dispose();
 
@@ -156,10 +154,6 @@ namespace Client.MirControls
 
             TextureValid = true;
             surface.Dispose();
-            }
-            catch (Exception e)
-            {
-            }
         }
         protected void ControlTexture_Disposing(object sender, EventArgs e)
         {
