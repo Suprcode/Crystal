@@ -310,6 +310,11 @@ namespace Client.MirScenes
             bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
             bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
 
+            if(skillMode)
+            {
+
+            }
+
             switch (e.KeyCode)
             {
                 case Keys.F1:

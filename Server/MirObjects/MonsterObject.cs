@@ -150,7 +150,10 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);          
+                    return new Football(info);   
+                    
+                    
+                    //CHECK       
                 case 69:
                     return new Behemoth(info);
                 case 70:
@@ -173,6 +176,7 @@ namespace Server.MirObjects
                     return new HellKeeper(info);
                 case 79:
                     return new ManectricClaw(info);
+
 
                 case 200://custom
                     return new Runaway(info);

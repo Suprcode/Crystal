@@ -1169,7 +1169,11 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckNameList:
-                        if (!File.Exists(param[0])) return true;
+                        if (!File.Exists(param[0]))
+                        {
+                            failed = true;
+                            break;
+                        }
 
                         var read = File.ReadAllLines(param[0]);
                         failed = !read.Contains(player.Name);

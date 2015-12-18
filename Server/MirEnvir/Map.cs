@@ -762,6 +762,8 @@ namespace Server.MirEnvir
                     monster = (MonsterObject)data[2];
                     front = (Point)data[3];
 
+                    if (monster.Master.Dead) return;
+
                     if (ValidPoint(front))
                         monster.Spawn(this, front);
                     else
