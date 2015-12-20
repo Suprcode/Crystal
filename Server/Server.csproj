@@ -236,11 +236,7 @@
     </Compile>
     <Compile Include="MirNetwork\MirConnection.cs" />
     <Compile Include="MirNetwork\MirStatusConnection.cs" />
-    <Compile Include="MirObjects\ConquestArcherObject.cs" />
-    <Compile Include="MirObjects\ConquestGateObject.cs" />
     <Compile Include="MirObjects\ConquestObject.cs" />
-    <Compile Include="MirObjects\ConquestSiegeObject.cs" />
-    <Compile Include="MirObjects\ConquestWallObject.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\DelayedAction.cs" />
     <Compile Include="MirObjects\GuildObject.cs" />

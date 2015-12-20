@@ -4273,21 +4273,24 @@ public abstract class Packet
 
         int length = (rawBytes[1] << 8) + rawBytes[0];
 
-        if (length > rawBytes.Length) return null;
+        if (length > rawBytes.Length || length < 2) return null;
 
         using (MemoryStream stream = new MemoryStream(rawBytes, 2, length - 2))
         using (BinaryReader reader = new BinaryReader(stream))
         {
-            short id = reader.ReadInt16();
-
-            p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
             try
             {
+                short id = reader.ReadInt16();
+
+                p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
+                if (p == null) return null;
+
                 p.ReadPacket(reader);
             }
             catch
             {
                 return null;
+                //return new C.Disconnect();
             }
         }
 
@@ -4571,7 +4574,7 @@ public abstract class Packet
             case (short)ClientPacketIds.ReportIssue:
                 return new C.ReportIssue();
             default:
-                throw new NotImplementedException();
+                return null;
         }
 
     }
@@ -5014,7 +5017,7 @@ public abstract class Packet
             case (short)ServerPacketIds.NPCRequestInput:
                 return new S.NPCRequestInput();
             default:
-                throw new NotImplementedException();
+                return null;
         }
     }
 }

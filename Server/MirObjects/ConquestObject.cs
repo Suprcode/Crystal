@@ -10,7 +10,6 @@ using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
-
     public class ConquestObject
     {
         protected static Envir Envir
@@ -647,6 +646,370 @@ namespace Server.MirObjects
 
             
 
+        }
+    }
+
+    public class ConquestSiegeObject
+    {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
+        public int Index;
+        public uint Health;
+
+        public ConquestSiegeInfo Info;
+
+        public ConquestObject Conquest;
+
+        public Gate Gate;
+
+
+        public ConquestSiegeObject()
+        {
+
+        }
+        public ConquestSiegeObject(PlayerObject owner, string name)
+        {
+
+        }
+        public ConquestSiegeObject(BinaryReader reader)
+        {
+            Index = reader.ReadInt32();
+            Health = reader.ReadUInt32();
+        }
+        public void Save(BinaryWriter writer)
+        {
+            //if (Gate != null) Health = Gate.HP; - needs adding
+            writer.Write(Index);
+            writer.Write(Health);
+        }
+
+
+        public void Spawn()
+        {
+            if (Gate != null) Gate.Despawn();
+
+            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
+
+            if (monsterInfo == null) return;
+            if (monsterInfo.AI != 72) return;
+
+            if (monsterInfo.AI == 72)
+                Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
+            else if (monsterInfo.AI == 73)
+                //Gate = (GateWest)MonsterObject.GetMonster(monsterInfo);
+
+
+                if (Gate == null) return;
+
+            Gate.Conquest = Conquest;
+            Gate.GateIndex = Index;
+
+            Gate.Spawn(Conquest.ConquestMap, Info.Location);
+
+            if (Health == 0)
+                Gate.Die();
+            else
+                Gate.SetHP(Health);
+
+            Gate.CheckDirection();
+        }
+
+        public uint GetRepairCost()
+        {
+            uint cost = 0;
+
+            if (Gate != null)
+            {
+                if (Info.RepairCost != 0 && Gate.MaxHP != Gate.HP)
+                    cost = Info.RepairCost / (Gate.MaxHP / (Gate.MaxHP - Gate.HP));
+            }
+            return cost;
+        }
+
+        public void Repair()
+        {
+            if (Gate == null)
+            {
+                Spawn();
+                return;
+            }
+
+            if (Gate.Dead)
+                Spawn();
+            else
+                Gate.HP = Gate.MaxHP;
+
+            Gate.CheckDirection();
+
+
+        }
+    }
+
+    public class ConquestWallObject
+    {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
+        public int Index;
+        public uint Health;
+
+        public ConquestWallInfo Info;
+
+        public ConquestObject Conquest;
+
+        public Wall Wall;
+
+
+        public ConquestWallObject()
+        {
+
+        }
+        public ConquestWallObject(PlayerObject owner, string name)
+        {
+
+        }
+        public ConquestWallObject(BinaryReader reader)
+        {
+            Index = reader.ReadInt32();
+            Health = reader.ReadUInt32();
+        }
+        public void Save(BinaryWriter writer)
+        {
+            if (Wall != null) Health = Wall.HP;
+            writer.Write(Index);
+            writer.Write(Wall.Health);
+        }
+
+
+        public void Spawn()
+        {
+            if (Wall != null) Wall.Despawn();
+
+            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
+
+            if (monsterInfo == null) return;
+
+            if (monsterInfo.AI != 82) return;
+
+            Wall = (Wall)MonsterObject.GetMonster(monsterInfo);
+
+            if (Wall == null) return;
+
+            Wall.Conquest = Conquest;
+            Wall.WallIndex = Index;
+
+            Wall.Spawn(Conquest.ConquestMap, Info.Location);
+
+            if (Health == 0)
+                Wall.Die();
+            else
+                Wall.SetHP(Health);
+
+            Wall.CheckDirection();
+        }
+
+        public uint GetRepairCost()
+        {
+            uint cost = 0;
+
+            if (Wall != null)
+            {
+                cost = Info.RepairCost / (Wall.MaxHP / (Wall.MaxHP - Wall.HP));
+            }
+
+            return cost;
+        }
+
+        public void Repair()
+        {
+            if (Wall == null)
+            {
+                Spawn();
+                return;
+            }
+
+            if (Wall.Dead)
+                Spawn();
+            else
+                Wall.HP = Wall.MaxHP;
+
+            Wall.CheckDirection();
+        }
+    }
+
+    public class ConquestGateObject
+    {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
+        public int Index;
+        public uint Health;
+
+        public ConquestGateInfo Info;
+
+        public ConquestObject Conquest;
+
+        public Gate Gate;
+
+
+        public ConquestGateObject()
+        {
+
+        }
+        public ConquestGateObject(PlayerObject owner, string name)
+        {
+
+        }
+        public ConquestGateObject(BinaryReader reader)
+        {
+            Index = reader.ReadInt32();
+            Health = reader.ReadUInt32();
+        }
+        public void Save(BinaryWriter writer)
+        {
+            if (Gate != null) Health = Gate.HP;
+            writer.Write(Index);
+            writer.Write(Health);
+        }
+
+
+        public void Spawn()
+        {
+            if (Gate != null) Gate.Despawn();
+
+            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
+
+            if (monsterInfo == null) return;
+            if (monsterInfo.AI != 81) return;
+
+            Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
+
+            if (Gate == null) return;
+
+            Gate.Conquest = Conquest;
+            Gate.GateIndex = Index;
+
+            Gate.Spawn(Conquest.ConquestMap, Info.Location);
+
+            if (Health == 0)
+                Gate.Die();
+            else
+                Gate.SetHP(Health);
+
+            Gate.CheckDirection();
+        }
+
+        public uint GetRepairCost()
+        {
+            uint cost = 0;
+
+            if (Gate != null)
+            {
+                if (Info.RepairCost != 0 && Gate.MaxHP != Gate.HP)
+                    cost = Info.RepairCost / (Gate.MaxHP / (Gate.MaxHP - Gate.HP));
+            }
+            return cost;
+        }
+
+        public void Repair()
+        {
+            if (Gate == null)
+            {
+                Spawn();
+                return;
+            }
+
+            if (Gate.Dead)
+                Spawn();
+            else
+                Gate.HP = Gate.MaxHP;
+
+            Gate.CheckDirection();
+
+
+        }
+    }
+
+    public class ConquestArcherObject
+    {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
+        public int Index;
+        public bool Alive;
+
+        public ConquestArcherInfo Info;
+
+        public ConquestObject Conquest;
+
+        public ConquestArcher ArcherMonster;
+
+
+        public ConquestArcherObject()
+        {
+
+        }
+        public ConquestArcherObject(PlayerObject owner, string name)
+        {
+
+        }
+        public ConquestArcherObject(BinaryReader reader)
+        {
+            Index = reader.ReadInt32();
+            Alive = reader.ReadBoolean();
+        }
+        public void Save(BinaryWriter writer)
+        {
+            if (ArcherMonster == null || ArcherMonster.Dead) Alive = false;
+            else Alive = true;
+            writer.Write(Index);
+            writer.Write(Alive);
+        }
+
+
+        public void Spawn(bool Revive = false)
+        {
+            if (Revive) Alive = true;
+
+            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
+
+            if (monsterInfo == null) return;
+            if (monsterInfo.AI != 80) return;
+
+            ArcherMonster = (ConquestArcher)MonsterObject.GetMonster(monsterInfo);
+
+            if (ArcherMonster == null) return;
+
+            ArcherMonster.Conquest = Conquest;
+            ArcherMonster.ArcherIndex = Index;
+
+            if (Alive)
+                ArcherMonster.Spawn(Conquest.ConquestMap, Info.Location);
+            else
+            {
+                ArcherMonster.Spawn(Conquest.ConquestMap, Info.Location);
+                ArcherMonster.Die();
+                ArcherMonster.DeadTime = Envir.Time;
+            }
+        }
+
+        public uint GetRepairCost()
+        {
+            uint cost = 0;
+
+            if (ArcherMonster == null || ArcherMonster.Dead)
+                cost = Info.RepairCost;
+
+            return cost;
         }
     }
 }

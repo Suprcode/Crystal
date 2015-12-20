@@ -150,7 +150,9 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);          
+                    return new Football(info);    
+                    
+                //unfinished START      
                 case 69:
                     return new Behemoth(info);
                 case 70:
@@ -173,16 +175,20 @@ namespace Server.MirObjects
                     return new HellKeeper(info);
                 case 79:
                     return new ManectricClaw(info);
-                case 80://Sabuk Archer
+                //unfinished END
+
+                case 80:
                     return new ConquestArcher(info);
                 case 81:
                     return new Gate(info);
                 case 82:
                     return new Wall(info);
+
                 case 200://custom
                     return new Runaway(info);
                 case 201://custom
                     return new TalkingMonster(info);
+
                 default:
                     return new MonsterObject(info);
             }

@@ -7413,6 +7413,7 @@ namespace Server.MirObjects
             Enqueue(new S.MagicCast { Spell = magic.Spell });
 
             CellTime = Envir.Time + 500;
+            ActionTime = Envir.Time + GetDelayTime(MoveDelay) / 2;
         }
         private void SlashingBurst(UserMagic magic, out bool cast)
         {
@@ -8848,7 +8849,21 @@ namespace Server.MirObjects
             NPCDelayed = true;
 
             if (page.Length > 0)
-                CallNPC(npcid, page);
+            {
+                if (npcid == DefaultNPC.ObjectID)
+                {
+                    DefaultNPC.Call(this, page.ToUpper());
+                }
+                else
+                {
+                    NPCObject obj = SMain.Envir.Objects.FirstOrDefault(x => x.ObjectID == npcid) as NPCObject;
+
+                    if (obj != null)
+                        obj.Call(this, page);
+                }
+
+                CallNPCNextPage();
+            }
         }
         private void CompletePoison(IList<object> data)
         {
@@ -13458,13 +13473,6 @@ namespace Server.MirObjects
         }
         public void CallNPC(uint objectID, string key)
         {
-            if (objectID == DefaultNPC.ObjectID)
-            {
-                DefaultNPC.Call(this, key.ToUpper());
-                CallNPCNextPage();
-                return;
-            }
-
             if (Dead) return;
 
             for (int i = 0; i < CurrentMap.NPCs.Count; i++)
@@ -13475,7 +13483,6 @@ namespace Server.MirObjects
                 ob.Call(this, key.ToUpper());
                 break;
             }
-
 
             CallNPCNextPage();
         }

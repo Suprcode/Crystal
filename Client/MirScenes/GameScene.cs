@@ -310,6 +310,11 @@ namespace Client.MirScenes
             bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
             bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
 
+            if(skillMode)
+            {
+
+            }
+
             switch (e.KeyCode)
             {
                 case Keys.F1:
@@ -8420,13 +8425,13 @@ namespace Client.MirScenes
         {
             for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
             {
-            	if (y <= 0) continue;
+                if (y <= 0) continue;
                 if (y >= Height) break;
                 for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
-                    //M2CellInfo[x, y].DrawDeadObjects();
+                    M2CellInfo[x, y].DrawDeadObjects();
                 }
             }
 
@@ -8488,9 +8493,6 @@ namespace Client.MirScenes
                         }
                     }
                     #endregion
-
-
-                    M2CellInfo[x, y].DrawDeadObjects();
 
                     #region Draw front layer
                     index = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
