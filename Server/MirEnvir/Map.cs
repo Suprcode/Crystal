@@ -30,6 +30,9 @@ namespace Server.MirEnvir
         public List<MapRespawn> Respawns = new List<MapRespawn>();
         public List<DelayedAction> ActionList = new List<DelayedAction>();
 
+        public List<ConquestObject> Conquest = new List<ConquestObject>();
+        public ConquestObject tempConquest;
+
         public Map(MapInfo info)
         {
             Info = info;
@@ -2014,7 +2017,8 @@ namespace Server.MirEnvir
                 Players.Add((PlayerObject)ob);
                 InactiveTime = Envir.Time;
             }
-            if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
+            if (ob.Race == ObjectType.Merchant)
+                NPCs.Add((NPCObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
         }
@@ -2035,6 +2039,28 @@ namespace Server.MirEnvir
                 SafeZoneInfo szi = Info.SafeZones[i];
                 if (Functions.InRange(szi.Location, location, szi.Size))
                     return szi;
+            }
+            return null;
+        }
+
+        public ConquestObject GetConquest(Point location)
+        {
+            for (int i = 0; i < Conquest.Count; i++)
+            {
+                ConquestObject swi = Conquest[i];
+                if (Functions.InRange(swi.Info.Location, location, swi.Info.Size) && swi.WarIsOn)
+                    return swi;
+            }
+            return null;
+        }
+
+        public ConquestObject GetInnerConquest(Point location)
+        {
+            for (int i = 0; i < Conquest.Count; i++)
+            {
+                ConquestObject swi = Conquest[i];
+                if (Functions.InRange(swi.Info.ObjectLoc, location, swi.Info.ObjectSize) && swi.WarIsOn)
+                    return swi;
             }
             return null;
         }

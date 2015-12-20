@@ -61,7 +61,8 @@ namespace Client.MirObjects
             if (CellObjects == null) return;
             for (int i = 0; i < CellObjects.Count; i++)
             {
-                if (CellObjects[i].Dead) continue;
+                if (CellObjects[i].Dead && !(CellObjects[i] is MonsterObject && ((MonsterObject)CellObjects[i]).AI == 82)) continue;
+
                 CellObjects[i].Draw();
             }
         }
@@ -71,7 +72,7 @@ namespace Client.MirObjects
             if (CellObjects == null) return;
             for (int i = 0; i < CellObjects.Count; i++)
             {
-                if (!CellObjects[i].Dead) continue;
+                if (!CellObjects[i].Dead || (CellObjects[i] is MonsterObject && ((MonsterObject)CellObjects[i]).AI == 82)) continue;
                 CellObjects[i].Draw();
             }
         }

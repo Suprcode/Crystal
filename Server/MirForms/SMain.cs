@@ -371,6 +371,13 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void conquestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConquestInfoForm form = new ConquestInfoForm();
+
+            form.ShowDialog();
+        }
+
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();

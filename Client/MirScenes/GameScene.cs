@@ -1091,6 +1091,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectColourChanged:
                     ObjectColourChanged((S.ObjectColourChanged)p);
                     break;
+                case (short)ServerPacketIds.ObjectGuildNameChanged:
+                    ObjectGuildNameChanged((S.ObjectGuildNameChanged)p);
+                    break;
                 case (short)ServerPacketIds.GainExperience:
                     GainExperience((S.GainExperience)p);
                     break;
@@ -3085,6 +3088,20 @@ namespace Client.MirScenes
                 return;
             }
         }
+
+        private void ObjectGuildNameChanged(S.ObjectGuildNameChanged p)
+        {
+            if (p.ObjectID == User.ObjectID) return;
+
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != p.ObjectID) continue;
+                PlayerObject obPlayer = (PlayerObject)ob;
+                obPlayer.GuildName = p.GuildName;
+                return;
+            }
+        }
         private void GainExperience(S.GainExperience p)
         {
             OutputMessage(string.Format("Experience Gained {0}.", p.Amount));
@@ -4687,6 +4704,9 @@ namespace Client.MirScenes
                         GuildDialog.Gold -= p.Amount;
                     else
                         GuildDialog.Gold = 0;
+                    break;
+                case 3:
+                    GuildDialog.Gold += p.Amount;
                     break;
             }
         }
@@ -8405,7 +8425,7 @@ namespace Client.MirScenes
         {
             for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
             {
-            	if (y <= 0) continue;
+                if (y <= 0) continue;
                 if (y >= Height) break;
                 for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
                 {
@@ -8566,6 +8586,7 @@ namespace Client.MirScenes
 
                 Objects[i].DrawDamages();
             }
+            
 
             if (!Settings.Effect) return;
 
@@ -10110,7 +10131,7 @@ namespace Client.MirScenes
             if (Libraries.Prguse == null) return;
 
             int height;
-            if (User.HP != User.MaxHP)
+            if (User != null && User.HP != User.MaxHP)
                 height = (int)(80 * User.HP / (float)User.MaxHP);
             else
                 height = 80;
@@ -23515,8 +23536,6 @@ namespace Client.MirScenes
             }
 
            PositionBar.Location = new Point(x, y);
-            
-
         }
 
         public void ResetTabs()

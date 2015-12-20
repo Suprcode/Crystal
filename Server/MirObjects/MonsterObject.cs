@@ -150,10 +150,9 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);   
+                    return new Football(info);    
                     
-                    
-                    //CHECK       
+                //unfinished START      
                 case 69:
                     return new Behemoth(info);
                 case 70:
@@ -176,12 +175,20 @@ namespace Server.MirObjects
                     return new HellKeeper(info);
                 case 79:
                     return new ManectricClaw(info);
+                //unfinished END
 
+                case 80:
+                    return new ConquestArcher(info);
+                case 81:
+                    return new Gate(info);
+                case 82:
+                    return new Wall(info);
 
                 case 200://custom
                     return new Runaway(info);
                 case 201://custom
                     return new TalkingMonster(info);
+
                 default:
                     return new MonsterObject(info);
             }
@@ -249,9 +256,22 @@ namespace Server.MirObjects
         public virtual uint Experience 
         { 
             get { return Info.Experience; } 
-        }     
-
-        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, DeadDelay = 180000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
+        }
+        public int DeadDelay
+        {
+            get
+            {
+                switch (Info.AI)
+                {
+                    case 81:
+                    case 82:
+                        return int.MaxValue;
+                    default:
+                        return 180000;
+                }
+            }
+        }
+        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
         public bool BindingShotCenter;

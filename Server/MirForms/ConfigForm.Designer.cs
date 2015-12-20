@@ -31,6 +31,11 @@
             this.SaveButton = new System.Windows.Forms.Button();
             this.configTabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.DBVersionLabel = new System.Windows.Forms.Label();
+            this.ServerVersionLabel = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.RelogDelayTextBox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.VersionCheckBox = new System.Windows.Forms.CheckBox();
@@ -65,18 +70,13 @@
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
-            this.ServerVersionLabel = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.DBVersionLabel = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // SaveButton
@@ -119,6 +119,55 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.DBVersionLabel);
+            this.groupBox1.Controls.Add(this.ServerVersionLabel);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Location = new System.Drawing.Point(6, 230);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(125, 64);
+            this.groupBox1.TabIndex = 25;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Version Info";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 42);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 23;
+            this.label11.Text = "Database";
+            // 
+            // DBVersionLabel
+            // 
+            this.DBVersionLabel.AutoSize = true;
+            this.DBVersionLabel.Location = new System.Drawing.Point(76, 42);
+            this.DBVersionLabel.Name = "DBVersionLabel";
+            this.DBVersionLabel.Size = new System.Drawing.Size(42, 13);
+            this.DBVersionLabel.TabIndex = 24;
+            this.DBVersionLabel.Text = "Version";
+            // 
+            // ServerVersionLabel
+            // 
+            this.ServerVersionLabel.AutoSize = true;
+            this.ServerVersionLabel.Location = new System.Drawing.Point(76, 19);
+            this.ServerVersionLabel.Name = "ServerVersionLabel";
+            this.ServerVersionLabel.Size = new System.Drawing.Size(42, 13);
+            this.ServerVersionLabel.TabIndex = 7;
+            this.ServerVersionLabel.Text = "Version";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 19);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(38, 13);
+            this.label10.TabIndex = 22;
+            this.label10.Text = "Server";
             // 
             // RelogDelayTextBox
             // 
@@ -444,6 +493,7 @@
             this.SafeZoneHealingCheckBox.TabIndex = 1;
             this.SafeZoneHealingCheckBox.Text = "SafeZone Healing";
             this.SafeZoneHealingCheckBox.UseVisualStyleBackColor = true;
+            this.SafeZoneHealingCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneHealingCheckBox_CheckedChanged);
             // 
             // SafeZoneBorderCheckBox
             // 
@@ -454,60 +504,12 @@
             this.SafeZoneBorderCheckBox.TabIndex = 0;
             this.SafeZoneBorderCheckBox.Text = "SafeZone Border";
             this.SafeZoneBorderCheckBox.UseVisualStyleBackColor = true;
+            this.SafeZoneBorderCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneBorderCheckBox_CheckedChanged);
             // 
             // VPathDialog
             // 
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
-            // 
-            // ServerVersionLabel
-            // 
-            this.ServerVersionLabel.AutoSize = true;
-            this.ServerVersionLabel.Location = new System.Drawing.Point(76, 19);
-            this.ServerVersionLabel.Name = "ServerVersionLabel";
-            this.ServerVersionLabel.Size = new System.Drawing.Size(42, 13);
-            this.ServerVersionLabel.TabIndex = 7;
-            this.ServerVersionLabel.Text = "Version";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 19);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(38, 13);
-            this.label10.TabIndex = 22;
-            this.label10.Text = "Server";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 42);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 13);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "Database";
-            // 
-            // DBVersionLabel
-            // 
-            this.DBVersionLabel.AutoSize = true;
-            this.DBVersionLabel.Location = new System.Drawing.Point(76, 42);
-            this.DBVersionLabel.Name = "DBVersionLabel";
-            this.DBVersionLabel.Size = new System.Drawing.Size(42, 13);
-            this.DBVersionLabel.TabIndex = 24;
-            this.DBVersionLabel.Text = "Version";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label11);
-            this.groupBox1.Controls.Add(this.DBVersionLabel);
-            this.groupBox1.Controls.Add(this.ServerVersionLabel);
-            this.groupBox1.Controls.Add(this.label10);
-            this.groupBox1.Location = new System.Drawing.Point(6, 230);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(125, 64);
-            this.groupBox1.TabIndex = 25;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Version Info";
             // 
             // ConfigForm
             // 
@@ -522,6 +524,8 @@
             this.configTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -530,8 +534,6 @@
             this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }

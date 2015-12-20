@@ -75,6 +75,18 @@ namespace Server.MirObjects
 
         public List<NPCPage> NPCPages = new List<NPCPage>();
 
+        public ConquestObject Conq;
+
+        public float PriceRate(PlayerObject player, bool baseRate = false)
+        {
+            if (Conq == null || baseRate) return Info.Rate / 100F;
+
+            if (player.MyGuild != null && player.MyGuild.Guildindex == Conq.Owner)
+                return Info.Rate / 100F;
+            else
+                return (((Info.Rate / 100F) * Conq.npcRate) + Info.Rate) / 100F;
+        }
+
         public NPCObject(NPCInfo info)
         {
             Info = info;
@@ -694,7 +706,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player) });
                     break;
                 case SellKey:
                     player.Enqueue(new S.NPCSell());
@@ -703,14 +715,14 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player) });
                     player.Enqueue(new S.NPCSell());
                     break;
                 case RepairKey:
-                    player.Enqueue(new S.NPCRepair { Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCRepair { Rate = PriceRate(player) });
                     break;
                 case SRepairKey:
-                    player.Enqueue(new S.NPCSRepair { Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCSRepair { Rate = PriceRate(player) });
                     break;
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
@@ -743,13 +755,13 @@ namespace Server.MirObjects
                         player.CheckItem(BuyBack[player.Name][i]);
                     }
 
-                    player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player) });
                     break;
                 case BuyUsedKey:
                     for (int i = 0; i < UsedGoods.Count; i++)
                         player.CheckItem(UsedGoods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = PriceRate(player) });
                     break;
                 case ConsignKey:
                     player.Enqueue(new S.NPCConsign());
@@ -827,7 +839,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player) });
                     break;
             }
         }
@@ -1093,11 +1105,16 @@ namespace Server.MirObjects
 
         public void CheckVisible(PlayerObject Player, bool Force = false)
         {
-            //if (Info.Sabuk != false && WARISON) NEEDS ADDING WHEN SABUK IS ADDED
-
             bool CanSee;
 
             VisibleLog.TryGetValue(Player.Info.Index, out CanSee);
+
+            if (Conq != null && Conq.WarIsOn)
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
 
             if (Info.FlagNeeded != 0 && !Player.Info.Flags[Info.FlagNeeded])
             {
@@ -1187,7 +1204,8 @@ namespace Server.MirObjects
             if (goods == null || goods.Count == 0 || goods.Count > goods.Info.StackSize) return;
 
             uint cost = goods.Price();
-            cost = (uint)(cost * Info.PriceRate);
+            cost = (uint)(cost * PriceRate(player));
+            uint baseCost = (uint)(goods.Price() * PriceRate(player, true));
 
             if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
             {
@@ -1208,6 +1226,7 @@ namespace Server.MirObjects
             {
                 player.Account.Gold -= cost;
                 player.Enqueue(new S.LoseGold { Gold = cost });
+                if (Conq != null) Conq.GoldStorage += (cost - baseCost);
             }
             player.GainItem(item);
 
@@ -1221,13 +1240,13 @@ namespace Server.MirObjects
 
                 NeedSave = true;
 
-                player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = Info.PriceRate });
+                player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = PriceRate(player) });
             }
 
             if (isBuyBack)
             {
                 BuyBack[player.Name].Remove(goods);
-                player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = Info.PriceRate });
+                player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player) });
             }
         }
         public void Sell(PlayerObject player, UserItem item)
@@ -1242,6 +1261,8 @@ namespace Server.MirObjects
             BuyBack[player.Name].Add(item);
         }
     }
+
+
 
     public class NPCChecks
     {
@@ -1275,6 +1296,8 @@ namespace Server.MirObjects
         InstanceMove,
         GiveGold,
         TakeGold,
+        GiveGuildGold,
+        TakeGuildGold,
         GiveCredit,
         TakeCredit,
         GiveItem,
@@ -1332,7 +1355,17 @@ namespace Server.MirObjects
         LoadValue,
         SaveValue,
         RemovePet,
-        Break
+        ConquestGuard,
+        ConquestGate,
+        ConquestWall,
+        ConquestSiege,
+        TakeConquestGold,
+        SetConquestRate,
+        StartConquest,
+        ScheduleConquest,
+        OpenGate,
+        CloseGate,
+        Break,
     }
     public enum CheckType
     {
@@ -1340,6 +1373,7 @@ namespace Server.MirObjects
         Level,
         CheckItem,
         CheckGold,
+        CheckGuildGold,
         CheckCredit,
         CheckGender,
         CheckClass,
@@ -1366,6 +1400,13 @@ namespace Server.MirObjects
         CheckWeddingRing,
         CheckPet,
         HasBagSpace,
-        IsNewHuman
-    }
+		IsNewHuman,
+        CheckConquest,
+        AffordGuard,
+        AffordGate,
+        AffordWall,
+        AffordSiege,
+        CheckPermission,
+        ConquestAvailable,
+        ConquestOwner,    }
 }
