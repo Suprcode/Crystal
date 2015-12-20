@@ -2186,6 +2186,28 @@ namespace ServerPackets
             writer.Write(NameColour.ToArgb());
         }
     }
+    public sealed class ObjectGuildNameChanged : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ObjectGuildNameChanged; }
+        }
+
+        public uint ObjectID;
+        public string GuildName;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+            GuildName = reader.ReadString();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(GuildName);
+        }
+    }
     public sealed class GainExperience : Packet
     {
         public override short Index

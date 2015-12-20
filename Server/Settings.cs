@@ -15,6 +15,7 @@ namespace Server
                             MapPath = @".\Maps\",
                             ExportPath = @".\Exports\",
                             GuildPath = @".\Guilds\",
+                            ConquestsPath = @".\Conquests\",
                             NPCPath = EnvirPath + @".\NPCs\",
                             GoodsPath = EnvirPath + @".\Goods\",
                             QuestPath = EnvirPath + @".\Quests\",

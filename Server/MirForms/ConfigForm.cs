@@ -132,5 +132,15 @@ namespace Server
         {
 
         }
+
+        private void SafeZoneBorderCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SafeZoneHealingCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -582,13 +582,23 @@ public enum Monster : ushort
     
     Ram1 = 400,
     Ram2 = 401,
-    Kite = 403,
+    Kite = 402,
+    
 
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
 
     SabukGate = 950,
+    PalaceWallLeft = 951,
+    PalaceWall1 = 952,
+    PalaceWall2 = 953,
+    GiGateSouth = 954,
+    GiGateEast = 955,
+    GiGateWest = 956,
+    SSabukWall1 = 957,
+    SSabukWall2 = 958,
+    SSabukWall3 = 959,
 
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
@@ -600,7 +610,7 @@ public enum Monster : ushort
     BabyDragon = 10007,//unknown
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
-    Frog = 10010//unknown
+    Frog = 10010,//unknown
 }
 
 public enum MirAction : byte
@@ -1273,6 +1283,7 @@ public enum ServerPacketIds : short
     ObjectDied,
     ColourChanged,
     ObjectColourChanged,
+    ObjectGuildNameChanged,
     GainExperience,
     LevelChanged,
     ObjectLeveled,
@@ -1553,6 +1564,21 @@ public enum ClientPacketIds : short
     GameshopBuy,
 
     ReportIssue
+}
+
+public enum ConquestType : byte
+{
+    Request = 0,
+    Auto = 1,
+    Forced = 2,
+}
+
+public enum ConquestGame : byte
+{
+    CapturePalace = 0,
+    KingOfHill = 1,
+    Random = 2,
+    Classic = 3,
 }
 
 public class InIReader
@@ -4691,6 +4717,8 @@ public abstract class Packet
                 return new S.ColourChanged();
             case (short)ServerPacketIds.ObjectColourChanged:
                 return new S.ObjectColourChanged();
+            case (short)ServerPacketIds.ObjectGuildNameChanged:
+                return new S.ObjectGuildNameChanged();
             case (short)ServerPacketIds.GainExperience:
                 return new S.GainExperience();
             case (short)ServerPacketIds.LevelChanged:
