@@ -18353,6 +18353,8 @@ namespace Server.MirObjects
 
         public void GameshopBuy(int GIndex, byte Quantity)
         {
+            if (Quantity < 1) return;
+
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
             

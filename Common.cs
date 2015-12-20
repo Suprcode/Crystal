@@ -350,14 +350,14 @@ public enum Monster : ushort
     Catapult = 172, //not added frames //special 3 states in 1 
     SabukWallSection = 173, //not added frames
     NammandWallSection = 174, //not added frames
-    //BLANK_175 = 175,
+    SiegeRepairman = 175, //not added frames
     BlueSanta = 176,//FRAMES BROKE
     BattleStandard = 177,
-    ArcherGuard2 = 178, //NO FRAMES
+    ArcherGuard2 = 178,
     RedYimoogi = 179,
-    //BLANK_180 = 180,
-    //BLANK_181 = 181,
-    //BLANK_182 = 182,
+    LionRiderMale = 180, //frames not added
+    LionRiderFemale = 181, //frames not added
+    Tornado = 182, //frames not added
     FlameTiger = 183,
     WingedTigerLord = 184,//FRAMES BROKE
     TowerTurtle = 185,
@@ -576,7 +576,7 @@ public enum Monster : ushort
     AntCommander = 394,
     CargoBoxwithlogo = 395,
     Doe = 396,
-    //BLANK_397 = 397,
+    Reindeer = 397, //frames not added
     AngryReindeer = 398,
     CargoBox = 399,
     

@@ -87,10 +87,6 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
-    <Compile Include="MirDatabase\ConquestArcherInfo.cs" />
-    <Compile Include="MirDatabase\ConquestGateInfo.cs" />
-    <Compile Include="MirDatabase\ConquestSiegeInfo.cs" />
-    <Compile Include="MirDatabase\ConquestWallInfo.cs" />
     <Compile Include="MirDatabase\MailInfo.cs" />
     <Compile Include="MirDatabase\ConquestInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />

@@ -52,8 +52,8 @@ namespace Client.MirGraphics
                                           CHair = new MLibrary[9],
                                           CHumEffect = new MLibrary[3],
                                           AArmours = new MLibrary[17],
-                                          AWeaponsL = new MLibrary[19],
-                                          AWeaponsR = new MLibrary[19],
+                                          AWeaponsL = new MLibrary[14],
+                                          AWeaponsR = new MLibrary[14],
                                           AHair = new MLibrary[9],
                                           AHumEffect = new MLibrary[3],
                                           ARArmours = new MLibrary[17],
@@ -70,10 +70,6 @@ namespace Client.MirGraphics
                                           TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
                                           TransformWeaponEffect = new MLibrary[1];
-
-        //Extra
-        public static readonly MLibrary
-            ExMagic_MagicEx5 = new MLibrary(Settings.ExtraDataPath + "WemadeMir3\\MagicEx5");
 
         static Libraries()
         {
