@@ -113,6 +113,12 @@
     <Compile Include="MirForms\Database\MagicInfoForm.Designer.cs">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MirForms\Systems\ProfForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Systems\ProfForm.Designer.cs">
+      <DependentUpon>ProfForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MirForms\Systems\DragonInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +186,12 @@
     </Compile>
     <Compile Include="MirForms\Systems\MiningInfoForm.Designer.cs">
       <DependentUpon>MiningInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\Systems\ProfessionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Systems\ProfessionsForm.Designer.cs">
+      <DependentUpon>ProfessionsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirForms\Systems\SystemInfoForm.cs">
       <SubType>Form</SubType>
@@ -369,6 +381,9 @@
     <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Systems\ProfForm.resx">
+      <DependentUpon>ProfForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\DragonInfoForm.resx">
       <DependentUpon>DragonInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -386,6 +401,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\MiningInfoForm.resx">
       <DependentUpon>MiningInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Systems\ProfessionsForm.resx">
+      <DependentUpon>ProfessionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\SystemInfoForm.resx">
       <DependentUpon>SystemInfoForm.cs</DependentUpon>

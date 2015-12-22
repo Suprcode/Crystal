@@ -378,5 +378,9 @@ namespace Server
 
         #endregion
 
+        private void MiningInfoForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

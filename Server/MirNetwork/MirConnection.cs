@@ -46,6 +46,7 @@ namespace Server.MirNetwork
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public bool StorageSent;
+        public byte ItemAttempts;
 
 
         public MirConnection(int sessionID, TcpClient client)
@@ -211,6 +212,9 @@ namespace Server.MirNetwork
             {
                 case (short)ClientPacketIds.ClientVersion:
                     ClientVersion((C.ClientVersion) p);
+                    break;
+                case (short)ClientPacketIds.ItemInfoVersion:
+                    ItemInfoVersion((C.ItemInfoVersion)p);
                     break;
                 case (short)ClientPacketIds.Disconnect:
                     Disconnect(22);
@@ -665,7 +669,39 @@ namespace Server.MirNetwork
             SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
 
-            Stage = GameStage.Login;
+        }
+        private void ItemInfoVersion(C.ItemInfoVersion p)
+        {
+            if (ItemAttempts >= Globals.ItemInfoAttempts)
+            {
+                Disconnecting = true;
+
+                List<byte> data = new List<byte>();
+
+                data.AddRange(new S.ItemInfoVersion { Item = new ItemInfo { }, Result = 4 }.GetPacketBytes());
+
+                BeginSend(data);
+                SoftDisconnect(10);
+                SMain.Enqueue(SessionID + ", Disconnnected - Too many ItemInfo requests.");
+                return;
+            }
+            if (!Functions.CompareBytes(SMain.Envir.ItemInfoCheckSum, p.VersionHash))
+            {
+                for (int i = 0; i < SMain.Envir.ItemInfoList.Count; i++)
+                {
+                    if (i == (SMain.Envir.ItemInfoList.Count - 1))
+                        Enqueue(new S.ItemInfoVersion { Item = SMain.Envir.ItemInfoList[i], Result = 2 });
+                    else
+                        Enqueue(new S.ItemInfoVersion { Item = SMain.Envir.ItemInfoList[i], Result = 1 });
+                }
+            }
+            else
+            {
+                Enqueue(new S.ItemInfoVersion { Item = new ItemInfo { }, Result = 3 });
+                Stage = GameStage.Login;
+            }
+
+            ItemAttempts++;
         }
         private void NewAccount(C.NewAccount p)
         {

@@ -11,6 +11,7 @@ using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
 using S = ServerPackets;
+using System.Security.Cryptography;
 
 namespace Server.MirEnvir
 {
@@ -54,7 +55,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 65;
+        public const int Version = 66;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -104,7 +105,7 @@ namespace Server.MirEnvir
         
 
         //Server DB
-        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex;
+        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, CraftingIndex, RecipeIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
@@ -114,6 +115,9 @@ namespace Server.MirEnvir
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
         public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
+        public List<ProfessionInfo> ProfessionList = new List<ProfessionInfo>();
+        public List<RecipeInfo> RecipeList = new List<RecipeInfo>();
+        public byte[] ItemInfoCheckSum;
 
         //User DB
         public int NextAccountID, NextCharacterID;
@@ -737,6 +741,7 @@ namespace Server.MirEnvir
                 writer.Write(NPCIndex);
                 writer.Write(QuestIndex);
                 writer.Write(GameshopIndex);
+                writer.Write(CraftingIndex);
 
                 writer.Write(MapInfoList.Count);
                 for (int i = 0; i < MapInfoList.Count; i++)
@@ -766,6 +771,14 @@ namespace Server.MirEnvir
                 writer.Write(GameShopList.Count);
                 for (int i = 0; i < GameShopList.Count; i++)
                     GameShopList[i].Save(writer);
+
+                writer.Write(ProfessionList.Count);
+                for (int i = 0; i < ProfessionList.Count; i++)
+                    ProfessionList[i].Save(writer);
+
+                writer.Write(RecipeList.Count);
+                for (int i = 0; i < RecipeList.Count; i++)
+                    RecipeList[i].Save(writer);
             }
         }
         public void SaveAccounts()
@@ -1005,6 +1018,11 @@ namespace Server.MirEnvir
                     {
                         GameshopIndex = reader.ReadInt32();
                     }
+                    if (LoadVersion >= 66)
+                    {
+                        CraftingIndex = reader.ReadInt32();
+                    }
+                  
 
                     int count = reader.ReadInt32();
                     MapInfoList.Clear();
@@ -1021,6 +1039,7 @@ namespace Server.MirEnvir
                             ItemInfoList[i].RandomStats = Settings.RandomItemStatsList[ItemInfoList[i].RandomStatsId];
                         }
                     }
+                    
                     count = reader.ReadInt32();
                     MonsterInfoList.Clear();
                     for (int i = 0; i < count; i++)
@@ -1062,6 +1081,36 @@ namespace Server.MirEnvir
                             }
                         }
                     }
+
+                    if (LoadVersion >= 66)
+                    {
+                        count = reader.ReadInt32();
+                        ProfessionList.Clear();
+                        for (int i = 0; i < count; i++)
+                        {
+                            ProfessionInfo Prof = new ProfessionInfo(reader, LoadVersion, LoadCustomVersion);
+                            ProfessionList.Add(Prof);
+                            //if (SMain.Envir.BindGameShop(item))
+                            //{
+                                //GameShopList.Add(item);
+                            //}
+                        }
+
+                        count = reader.ReadInt32();
+                        RecipeList.Clear();
+                        for (int i = 0; i < count; i++)
+                        {
+                            RecipeInfo Recipe = new RecipeInfo(reader, LoadVersion, LoadCustomVersion);
+                            RecipeList.Add(Recipe);
+                            //if (SMain.Envir.BindGameShop(item))
+                            //{
+                            //GameShopList.Add(item);
+                            //}
+                        }
+
+                    }
+
+                    GetItemCheckSum();
                 }
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
@@ -1365,6 +1414,34 @@ namespace Server.MirEnvir
 
             _thread = new Thread(WorkLoop) {IsBackground = true};
             _thread.Start();
+        }
+
+        public void GetItemCheckSum()
+        {
+            using (FileStream stream = File.Create(@".\mir.dat"))
+            using (BinaryWriter writer = new BinaryWriter(stream))
+            {
+                writer.Write(ItemInfoList.Count);
+                for (int i = 0; i < ItemInfoList.Count; i++)
+                    ItemInfoList[i].Save(writer);
+            }
+
+            try
+            {
+                byte[] sum;
+                using (MD5 md5 = MD5.Create())
+                using (FileStream stream = File.OpenRead(@".\mir.dat"))
+                    sum = md5.ComputeHash(stream);
+
+                ItemInfoCheckSum = sum;
+
+            }
+            catch (Exception ex)
+            {
+                SMain.Enqueue(ex);
+            }
+
+            if (File.Exists(@".\mir.dat")) File.Delete(@".\mir.dat");
 
         }
         public void Stop()
@@ -1967,6 +2044,11 @@ namespace Server.MirEnvir
         public void AddToGameShop(ItemInfo Info)
         {
             GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
+        }
+
+        public void AddProfession()
+        {
+            ProfessionList.Add(new ProfessionInfo { Index = ++CraftingIndex });  
         }
 
         public void Remove(MapInfo info)

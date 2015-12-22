@@ -13,6 +13,8 @@ using S = ServerPackets;
 using C = ClientPackets;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Client.MirScenes
 {
@@ -29,11 +31,12 @@ namespace Client.MirScenes
 
         private InputKeyDialog _ViewKey;
 
-        public MirImageControl TestLabel, ViolenceLabel, MinorLabel, YouthLabel; 
+        public MirImageControl TestLabel, ViolenceLabel, MinorLabel, YouthLabel;
+
+        public List<ItemInfo> ItemInfos = new List<ItemInfo>();
 
         public LoginScene()
         {
-
             SoundManager.PlaySound(SoundList.IntroMusic, true);
             Disposing += (o, e) => SoundManager.StopSound(SoundList.IntroMusic);
 
@@ -70,6 +73,8 @@ namespace Client.MirScenes
 
                 _ViewKey = new InputKeyDialog(_login) { Parent = _background };
             };
+
+            
 
             Version = new MirLabel
                 {
@@ -140,6 +145,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ClientVersion:
                     ClientVersion((S.ClientVersion) p);
                     break;
+                case (short)ServerPacketIds.ItemInfoVersion:
+                    ItemInfoVersion((S.ItemInfoVersion) p);
+                    break;
                 case (short)ServerPacketIds.NewAccount:
                     NewAccount((S.NewAccount) p);
                     break;
@@ -184,6 +192,34 @@ namespace Client.MirScenes
                 if (Settings.LogErrors) CMain.SaveError(ex.ToString());
             }
         }
+        private void SendItems()
+        {
+            _connectBox.Label.Text = "Updating Items...";
+
+            C.ItemInfoVersion p = new C.ItemInfoVersion();
+            if (!File.Exists(@".\data\mir.dat"))
+            {
+                byte[] arr = new byte[] { 0 };
+                p.VersionHash = arr;
+                Network.Enqueue(p);
+                return;
+            }
+
+            try
+            {
+                byte[] sum;
+                using (MD5 md5 = MD5.Create())
+                using (FileStream stream = File.OpenRead(@".\data\mir.dat"))
+                    sum = md5.ComputeHash(stream);
+
+                p.VersionHash = sum;
+                Network.Enqueue(p);
+            }
+            catch (Exception ex)
+            {
+                if (Settings.LogErrors) CMain.SaveError(ex.ToString());
+            }
+        }
         private void ClientVersion(S.ClientVersion p)
         {
             switch (p.Result)
@@ -194,11 +230,48 @@ namespace Client.MirScenes
                     Network.Disconnect();
                     break;
                 case 1:
-                    _connectBox.Dispose();
-                    _login.Show();
+                    SendItems();
+                    break;
+                case 2:
+                    
                     break;
             }
         }
+        private void ItemInfoVersion(S.ItemInfoVersion p)
+        {
+            if (p.Result == 4)
+            {
+                MirMessageBox.Show("You haven't been able to recieve the ItemInfo, please retry.\nGame will now Close", true);
+                Network.Disconnect();
+                return;
+            }
+
+            if (p.Result == 1 || p.Result == 2)
+            {
+                ItemInfos.Add(p.Item);
+                if (p.Result == 2)
+                {
+                    using (FileStream stream = File.Create(@".\data\mir.dat"))
+                    using (BinaryWriter writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(ItemInfos.Count);
+                        for (int i = 0; i < ItemInfos.Count; i++)
+                            ItemInfos[i].Save(writer);
+                    }
+                }
+            }
+            if (p.Result == 2)
+            {
+                ItemInfos.Clear();
+                SendItems();
+            }  
+            if (p.Result == 3)
+            {
+                _connectBox.Dispose();
+                _login.Show();
+            }
+        }
+
         private void NewAccount(S.NewAccount p)
         {
             _account.OKButton.Enabled = true;

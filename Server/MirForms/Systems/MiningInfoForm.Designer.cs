@@ -476,6 +476,7 @@
             this.Name = "MiningInfoForm";
             this.Text = "MiningInfoForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MiningInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.MiningInfoForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);

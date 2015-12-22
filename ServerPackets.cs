@@ -43,6 +43,27 @@ namespace ServerPackets
             writer.Write(Result);
         }
     }
+    public sealed class ItemInfoVersion : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ItemInfoVersion; }
+        }
+        public ItemInfo Item;
+        public byte Result;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Item = (new ItemInfo(reader));
+            Result = reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Item.Save(writer);
+            writer.Write(Result);
+        }
+    }
     public sealed class Disconnect : Packet
     {
         public override short Index
@@ -5199,6 +5220,44 @@ namespace ServerPackets
         {
             writer.Write(NPCID);
             writer.Write(PageName);
+        }
+    }
+
+    public sealed class ProfessionData : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ProfessionData; } }
+
+        public UserProfession Profession;
+        public ProfessionInfo ProfInfo;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Profession = new UserProfession(reader, int.MaxValue, int.MaxValue);
+            ProfInfo = new ProfessionInfo(reader, int.MaxValue, int.MaxValue);
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Profession.Save(writer);
+            ProfInfo.Save(writer);
+        }
+    }
+
+    public sealed class RecipeData : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.RecipeData; } }
+
+        public UserRecipe Recipe;
+        public RecipeInfo RecipeInfo;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Recipe = new UserRecipe(reader, int.MaxValue, int.MaxValue);
+            RecipeInfo = new RecipeInfo(reader, int.MaxValue, int.MaxValue);
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Recipe.Save(writer);
+            RecipeInfo.Save(writer);
         }
     }
 }

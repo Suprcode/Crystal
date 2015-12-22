@@ -1205,6 +1205,7 @@ public enum ServerPacketIds : short
 {
     Connected,
     ClientVersion,
+    ItemInfoVersion,
     Disconnect,
     NewAccount,
     ChangePassword,
@@ -1423,11 +1424,14 @@ public enum ServerPacketIds : short
     NPCRequestInput,
     GameShopInfo,
     GameShopStock,
+    ProfessionData,
+    RecipeData,
 }
 
 public enum ClientPacketIds : short
 {
     ClientVersion,
+    ItemInfoVersion,
     Disconnect,
     KeepAlive,
     NewAccount,
@@ -1555,6 +1559,14 @@ public enum ClientPacketIds : short
     ReportIssue
 }
 
+public enum ProfType : byte
+{
+    Mining = 0,
+    Gatherig = 1,
+    Fishing = 2,
+    Crafting = 3,
+}
+
 public class InIReader
 {
     #region Fields
@@ -1627,6 +1639,9 @@ public class InIReader
         {
         }
     }
+
+    
+
     #endregion
 
     #region Read
@@ -2011,7 +2026,9 @@ public static class Globals
 
         LogDelay = 10000,
 
-        DataRange = 24;
+        DataRange = 24,
+
+        ItemInfoAttempts = 3;
 
     public static float Commission = 0.05F;
 
@@ -2025,6 +2042,16 @@ public static class Globals
 
 public static class Functions
 {
+    public static void SaveItemInfo()
+    {
+        string Test = "HelloMe";
+        using (FileStream stream = File.Create(@".\data\mir.dat"))
+        using (BinaryWriter writer = new BinaryWriter(stream))
+        {
+            writer.Write(Test);
+        }
+    }
+
     public static bool CompareBytes(byte[] a, byte[] b)
     {
         if (a == b) return true;
@@ -3378,6 +3405,178 @@ public class GameShopItem
 
 }
 
+public class ProfessionInfo
+{
+    public int Index;
+    public string Name;
+    public ProfType Type;
+
+    public ProfessionInfo()
+    {
+        Name = "Profession";
+    }
+    public ProfessionInfo(BinaryReader reader, int version, int customversion)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Type = (ProfType)reader.ReadByte();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write((byte)Type);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}: {1}", Index, Name);
+    }
+}
+
+public class RecipeInfo
+{
+    public int Index;
+    public int ProfIndex;
+    public string Name;
+    public ushort Level;
+    public long Experience;
+    public short CraftingTime;
+    public bool StartingRecipe;
+
+    public int CraftItemIDX;
+    public List<IngredientInfo> Ingredients = new List<IngredientInfo>();
+
+    private int counter;
+
+    public RecipeInfo()
+    {
+        Name = "Recipe";
+        Level = 1;
+        Experience = 100;
+        CraftingTime = 15;
+        StartingRecipe = false;
+        CraftItemIDX = 0;
+    }
+    public RecipeInfo(BinaryReader reader, int version, int customversion)
+    {
+        Index = reader.ReadInt32();
+        ProfIndex = reader.ReadInt32();
+        Name = reader.ReadString();
+        Level = reader.ReadUInt16();
+        Experience = reader.ReadInt64();
+        CraftingTime = reader.ReadInt16();
+        StartingRecipe = reader.ReadBoolean();
+        CraftItemIDX = reader.ReadInt32();
+        counter = reader.ReadInt32();
+        for (int i = 0; i < counter; i++)
+        {
+            Ingredients.Add(new IngredientInfo(reader, version, customversion));
+        }
+
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(ProfIndex);
+        writer.Write(Name);
+        writer.Write(Level);
+        writer.Write(Experience);
+        writer.Write(CraftingTime);
+        writer.Write(StartingRecipe);
+        writer.Write(CraftItemIDX);
+        writer.Write(Ingredients.Count);
+        for (int i = 0; i < Ingredients.Count; i++)
+            Ingredients[i].Save(writer);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}: {1}", Index, Name);
+    }
+}
+
+public class IngredientInfo
+{
+    public int ItemIndex;
+    public string Name;
+    public int Quantity;
+
+    public IngredientInfo()
+    {
+        ItemIndex = 1;
+        Quantity = 1;
+    }
+    public IngredientInfo(BinaryReader reader, int version, int customversion)
+    {
+        ItemIndex = reader.ReadInt32();
+        Quantity = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ItemIndex);
+        writer.Write(Quantity);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}x ({1})", Quantity, Name);
+    }
+}
+
+public class UserProfession
+{
+    public short Level;
+    public long Experience;
+    public int ProfIndex;
+
+    public ProfessionInfo Info;
+    public List<UserRecipe> Recipes = new List<UserRecipe>();
+
+    public UserProfession()
+    {
+    }
+    public UserProfession(BinaryReader reader, int version, int customversion)
+    {
+        Level = reader.ReadInt16();
+        Experience = reader.ReadInt64();
+        ProfIndex = reader.ReadInt32();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Level);
+        writer.Write(Experience);
+        writer.Write(ProfIndex);
+    }
+    public override string ToString()
+    {
+        return string.Format("{0}", Info.Name);
+    }
+}
+
+public class UserRecipe
+{
+    public int InfoIndex;
+    public RecipeInfo Info;
+
+
+    public UserRecipe()
+    {
+    }
+    public UserRecipe(BinaryReader reader, int version, int customversion)
+    {
+        InfoIndex = reader.ReadInt32();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(InfoIndex);
+    }
+}
+
+
 public class Awake
 {
     //Awake Option
@@ -4252,11 +4451,12 @@ public abstract class Packet
         using (MemoryStream stream = new MemoryStream(rawBytes, 2, length - 2))
         using (BinaryReader reader = new BinaryReader(stream))
         {
-            short id = reader.ReadInt16();
-
-            p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
+            
             try
             {
+                short id = reader.ReadInt16();
+
+                p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
                 p.ReadPacket(reader);
             }
             catch
@@ -4306,6 +4506,8 @@ public abstract class Packet
         {
             case (short)ClientPacketIds.ClientVersion:
                 return new C.ClientVersion();
+            case (short)ClientPacketIds.ItemInfoVersion:
+                return new C.ItemInfoVersion();
             case (short)ClientPacketIds.Disconnect:
                 return new C.Disconnect();
             case (short)ClientPacketIds.KeepAlive:
@@ -4557,6 +4759,8 @@ public abstract class Packet
                 return new S.Connected();
             case (short)ServerPacketIds.ClientVersion:
                 return new S.ClientVersion();
+            case (short)ServerPacketIds.ItemInfoVersion:
+                return new S.ItemInfoVersion();
             case (short)ServerPacketIds.Disconnect:
                 return new S.Disconnect();
             case (short)ServerPacketIds.NewAccount:
@@ -4985,6 +5189,10 @@ public abstract class Packet
                 return new S.GameShopStock();
             case (short)ServerPacketIds.NPCRequestInput:
                 return new S.NPCRequestInput();
+            case (short)ServerPacketIds.ProfessionData:
+                return new S.ProfessionData();
+            case (short)ServerPacketIds.RecipeData:
+                return new S.RecipeData();
             default:
                 throw new NotImplementedException();
         }
@@ -6003,8 +6211,9 @@ public class GuildBuff
         if (Info == null) return "";
         return Info.ShowStats();
     }
-
 }
+
+
 
 //outdated but cant delete it or old db's wont load
 public class GuildBuffOld

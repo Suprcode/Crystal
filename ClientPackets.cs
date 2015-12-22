@@ -24,6 +24,24 @@ namespace ClientPackets
             writer.Write(VersionHash);
         }
     }
+    public sealed class ItemInfoVersion : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.ItemInfoVersion; }
+        }
+        public byte[] VersionHash;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            VersionHash = reader.ReadBytes(reader.ReadInt32());
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(VersionHash.Length);
+            writer.Write(VersionHash);
+        }
+    }
     public sealed class Disconnect : Packet
     {
         public override short Index

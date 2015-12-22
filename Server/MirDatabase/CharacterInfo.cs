@@ -80,6 +80,9 @@ namespace Server.MirDatabase
         public List<Poison> Poisons = new List<Poison>();
         public List<MailInfo> Mail = new List<MailInfo>();
         public List<FriendInfo> Friends = new List<FriendInfo>();
+        public List<UserProfession> Professions = new List<UserProfession>();
+        public List<UserRecipe> Recipes = new List<UserRecipe>();
+
 
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
@@ -95,6 +98,8 @@ namespace Server.MirDatabase
         public MountInfo Mount;
 
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
+
+        
 
         public CharacterInfo()
         {
@@ -350,6 +355,39 @@ namespace Server.MirDatabase
                 }
             }
 
+            if (Envir.LoadVersion >= 66)
+            {
+                int ProfCount = reader.ReadInt32();
+                for (int i = 0; i < ProfCount; i++)
+                    Professions.Add(new UserProfession(reader, Envir.LoadVersion, Envir.CustomVersion));
+
+                ProfCount = reader.ReadInt32();
+                for (int i = 0; i < ProfCount; i++)
+                    Recipes.Add(new UserRecipe(reader, Envir.LoadVersion, Envir.CustomVersion));
+
+                for (int i = 0; i < Professions.Count; i++)
+                {
+                    for (int j = 0; j < SMain.Envir.ProfessionList.Count; j++)
+                    {
+                        if (SMain.Envir.ProfessionList[j].Index == Professions[i].ProfIndex)
+                            Professions[i].Info = SMain.Envir.ProfessionList[j];
+                    }
+                    if (Professions[i].Info == null)
+                        Professions.Remove(Professions[i]);
+                }
+
+                for (int i = 0; i < Recipes.Count; i++)
+                {
+                    for (int j = 0; j < SMain.Envir.RecipeList.Count; j++)
+                    {
+                        if (SMain.Envir.RecipeList[j].Index == Recipes[i].InfoIndex)
+                            Recipes[i].Info = SMain.Envir.RecipeList[j];
+                    }
+                    if (Recipes[i].Info == null)
+                        Recipes.Remove(Recipes[i]);
+                }
+            }
+
         }
 
         public void Save(BinaryWriter writer)
@@ -494,6 +532,10 @@ namespace Server.MirDatabase
                 writer.Write(item.Key);
                 writer.Write(item.Value);
             }
+
+            writer.Write(Professions.Count);
+            for (int i = 0; i < Professions.Count; i++)
+                Professions[i].Save(writer);
         }
 
         public ListViewItem CreateListView()

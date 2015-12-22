@@ -83,6 +83,7 @@ namespace Server
         public static List<long> OrbsExpList = new List<long>();
         public static List<long> OrbsDefList = new List<long>();
         public static List<long> OrbsDmgList = new List<long>();
+        public static List<long> ProfExpList = new List<long>();
 
         public static float DropRate = 1F, ExpRate = 1F;
 
@@ -576,6 +577,16 @@ namespace Server
                 exp = reader.ReadInt64("Att", "Orb" + i, exp);
                 OrbsDmgList.Add(exp);
             }
+
+            exp = 100;
+            reader = new InIReader(ConfigPath + @".\ProfExpList.ini");
+
+            for (int i = 1; i <= 100; i++)
+            {
+                exp = reader.ReadInt64("Exp", "Level" + i, exp);
+                ProfExpList.Add(exp);
+            }
+
         }
 
         public static void LoadBaseStats()

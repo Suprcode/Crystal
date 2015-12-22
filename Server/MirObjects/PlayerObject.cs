@@ -1764,6 +1764,7 @@ namespace Server.MirObjects
         }
         public void CheckItem(UserItem item)
         {
+            return;
             CheckItemInfo(item.Info);
 
             for (int i = 0; i < item.Slots.Length; i++)
@@ -1887,6 +1888,8 @@ namespace Server.MirObjects
                 GetMentor();
 
             GetGameShop();
+
+            GetCrafting();
 
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
@@ -5684,6 +5687,7 @@ namespace Server.MirObjects
                 if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
                 if (!Info.Equipment[(int)EquipmentSlot.Weapon].Info.CanMine) return;
                 if (CurrentMap.Mine == null) return;
+                
                 MineSpot Mine = CurrentMap.Mine[target.X, target.Y];
                 if ((Mine == null) || (Mine.Mine == null)) return;
                 if (Mine.StonesLeft > 0)
@@ -18198,6 +18202,7 @@ namespace Server.MirObjects
 
         public void GameshopBuy(int GIndex, byte Quantity)
         {
+            if (Quantity < 1) return;
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
             
@@ -18406,6 +18411,23 @@ namespace Server.MirObjects
                 {
                     Enqueue(new S.GameShopInfo { Item = item, StockLevel = item.Stock });
                 }  
+            }
+        }
+
+        #endregion
+
+        #region Crafting
+
+        public void GetCrafting()
+        {
+            for (int i = 0; i < Info.Professions.Count; i++)
+            {
+                Enqueue(new S.ProfessionData { Profession = Info.Professions[i], ProfInfo = Info.Professions[i].Info });
+            }
+
+            for (int i = 0; i < Info.Recipes.Count; i++)
+            {
+                Enqueue(new S.RecipeData { Recipe = Info.Recipes[i], RecipeInfo = Info.Recipes[i].Info });
             }
         }
 

@@ -371,6 +371,20 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void craftingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CraftingForm form = new CraftingForm();
+
+            form.ShowDialog();
+        }
+
+        private void professionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProfessionsForm form = new ProfessionsForm();
+
+            form.ShowDialog();
+        }
+
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();
