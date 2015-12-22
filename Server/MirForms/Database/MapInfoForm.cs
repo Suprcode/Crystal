@@ -1659,6 +1659,9 @@ namespace Server
                 _selectedMapInfos[i].Music = temp;
         }
 
+        private void MapInfoForm_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 }

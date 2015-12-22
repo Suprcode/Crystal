@@ -35,6 +35,12 @@ namespace Server.MirObjects
         public List<string> Notice = new List<string>();
         public List<GuildObject> WarringGuilds = new List<GuildObject>();
 
+        public ConquestObject Conquest;
+
+        public List<GuildObject> AllyGuilds = new List<GuildObject>();
+        public int AllyCount;
+
+
         public GuildObject()
         {
         }
@@ -121,6 +127,11 @@ namespace Server.MirObjects
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
+
+            if (version >= 66)
+            {
+               
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -163,6 +174,8 @@ namespace Server.MirObjects
             writer.Write(Notice.Count);
             for (int i = 0; i < Notice.Count; i++)
                 writer.Write(Notice[i]);
+
+            //Conquest.Save(writer);
         }
 
         public void SendMessage(string message, ChatType Type = ChatType.Guild)
@@ -204,9 +217,18 @@ namespace Server.MirObjects
 
         public void SendGuildStatus(PlayerObject member)
         {
-                member.Enqueue(new ServerPackets.GuildStatus()
+            string gName = Name;
+            string conquest = "";
+
+                if (Conquest != null)
                 {
-                    GuildName = Name,
+                    conquest = "[" + Conquest.Info.Name + "]";
+                    gName = gName + conquest;
+                }
+
+            member.Enqueue(new ServerPackets.GuildStatus()
+                {
+                    GuildName = gName,
                     GuildRankName = member.MyGuildRank != null? member.MyGuildRank.Name: "",
                     Experience = Experience,
                     MaxExperience = MaxExperience,
@@ -600,6 +622,14 @@ namespace Server.MirObjects
         {
             if (WarringGuilds.Count == 0) return false;
             return true;
+        }
+
+        public string GetName()
+        {
+            if (Conquest != null)
+                return Name + "[" + Conquest.Info.Name + "]";
+            else
+                return Name;
         }
 
         public bool IsEnemy(GuildObject enemyGuild)

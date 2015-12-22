@@ -19,7 +19,7 @@ namespace Client.MirObjects
         }
         public override bool Blocking
         {
-            get { return AI == 64 || (AI == 71 && Direction == (MirDirection)6) ? false : !Dead; }
+            get { return AI == 64 || (AI == 72 && Direction == (MirDirection)6) ? false : !Dead; }
         }
         public Point ManualLocationOffset
         {
@@ -29,6 +29,19 @@ namespace Client.MirObjects
                 {
                     case Monster.EvilMir:
                         return new Point(-21, -15);
+                    case Monster.PalaceWall2:
+                    case Monster.PalaceWallLeft:
+                    case Monster.PalaceWall1:
+                    case Monster.GiGateSouth:
+                    case Monster.GiGateWest:
+                    case Monster.SSabukWall1:
+                    case Monster.SSabukWall2:
+                    case Monster.SSabukWall3:
+                        return new Point(-10, 0);
+                        break;
+                    case Monster.GiGateEast:
+                        return new Point(-45, 7);
+                        break;
                     default:
                         return new Point(0, 0);
                 }
@@ -41,7 +54,7 @@ namespace Client.MirObjects
 
         public FrameSet Frames;
         public Frame Frame;
-        public int FrameIndex, FrameInterval;
+        public int FrameIndex, FrameInterval, EffectFrameIndex, EffectFrameInterval;
 
         public uint TargetID;
         public Point TargetPoint;
@@ -119,6 +132,21 @@ namespace Client.MirObjects
                     break;
                 case Monster.SabukGate:
                     BodyLibrary = Libraries.Effect;
+                    break;
+                case Monster.PalaceWallLeft:
+                case Monster.PalaceWall1:
+                case Monster.PalaceWall2:
+                    BodyLibrary = Libraries.Effect;
+                    break;
+                case Monster.GiGateSouth:
+                case Monster.GiGateEast:
+                case Monster.GiGateWest:
+                    BodyLibrary = Libraries.Monsters[405];
+                    break;
+                case Monster.SSabukWall1:
+                case Monster.SSabukWall2:
+                case Monster.SSabukWall3:
+                    BodyLibrary = Libraries.Monsters[404];
                     break;
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];
@@ -938,11 +966,36 @@ namespace Client.MirObjects
                 case Monster.Frog:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
-
                 case Monster.SabukGate:
                     Frames = FrameSet.Gates[0];
                     break;
-          
+                case Monster.GiGateSouth:
+                    Frames = FrameSet.Gates[1];
+                    break;
+                case Monster.GiGateEast:
+                    Frames = FrameSet.Gates[2];
+                    break;
+                case Monster.GiGateWest:
+                    Frames = FrameSet.Gates[3];
+                    break;
+                case Monster.PalaceWallLeft:
+                    Frames = FrameSet.Walls[0];
+                    break;
+                case Monster.PalaceWall1:
+                    Frames = FrameSet.Walls[1];
+                    break;
+                case Monster.PalaceWall2:
+                    Frames = FrameSet.Walls[2];
+                    break;
+                case Monster.SSabukWall1:
+                    Frames = FrameSet.Walls[3];
+                    break;
+                case Monster.SSabukWall2:
+                    Frames = FrameSet.Walls[4];
+                    break;
+                case Monster.SSabukWall3:
+                    Frames = FrameSet.Walls[5];
+                    break;
                 default:
                     Frames = FrameSet.Monsters[0];
                     break;
@@ -972,8 +1025,15 @@ namespace Client.MirObjects
             ProcessFrames();
 
             if (Frame == null)
+            {
                 DrawFrame = 0;
-            else DrawFrame = Frame.Start + (Frame.OffSet * (byte)Direction) + FrameIndex;
+                DrawWingFrame = 0;
+            }
+            else 
+            {
+                DrawFrame = Frame.Start + (Frame.OffSet * (byte)Direction) + FrameIndex;
+                DrawWingFrame = Frame.EffectStart + (Frame.EffectOffSet * (byte)Direction) + EffectFrameIndex;
+            }
 
 
             #region Moving OffSet
@@ -1124,6 +1184,7 @@ namespace Client.MirObjects
                 case Monster.BabySnowMan:
                 case Monster.Frog:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
+                    break;
                     break;
             }
 
@@ -1708,6 +1769,11 @@ namespace Client.MirObjects
                                     case Monster.SnakeTotem://SummonSnakes Totem
                                         if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "SnakeTotem") < 0)
                                             Effects.Add(new TrackableEffect(new Effect(Libraries.Monsters[(ushort)Monster.SnakeTotem], 16, 10, 1500, this) { Repeat = true }, "SnakeTotem"));
+                                        break;
+                                    case Monster.PalaceWall1:
+                                        //Effects.Add(new Effect(Libraries.Effect, 196, 1, 1000, this) { DrawBehind = true, d });
+                                        //Libraries.Effect.Draw(196, DrawLocation, Color.White, true);
+                                        //Libraries.Effect.DrawBlend(196, DrawLocation, Color.White, true);
                                         break;
                                 }
                             FrameIndex = Frame.Count - 1;
@@ -2478,7 +2544,6 @@ namespace Client.MirObjects
         {
             for (int i = 0; i < Effects.Count; i++)
                 Effects[i].Draw();
-
 
             switch (BaseImage)
             {

@@ -98,7 +98,8 @@ namespace Server.MirDatabase
             NoFight = reader.ReadBoolean();
 
             if (Envir.LoadVersion < 53) return;
-                Music = reader.ReadUInt16();
+                Music = reader.ReadUInt16(); 
+
         }
 
         public void Save(BinaryWriter writer)
@@ -155,6 +156,8 @@ namespace Server.MirDatabase
             writer.Write(NoFight);
 
             writer.Write(Music);
+
+            
         }
 
 

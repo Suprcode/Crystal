@@ -371,16 +371,9 @@ namespace Server
             form.ShowDialog();
         }
 
-        private void craftingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void conquestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CraftingForm form = new CraftingForm();
-
-            form.ShowDialog();
-        }
-
-        private void professionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ProfessionsForm form = new ProfessionsForm();
+            ConquestInfoForm form = new ConquestInfoForm();
 
             form.ShowDialog();
         }

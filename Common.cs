@@ -582,13 +582,23 @@ public enum Monster : ushort
     
     Ram1 = 400,
     Ram2 = 401,
-    Kite = 403,
+    Kite = 402,
+    
 
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
 
     SabukGate = 950,
+    PalaceWallLeft = 951,
+    PalaceWall1 = 952,
+    PalaceWall2 = 953,
+    GiGateSouth = 954,
+    GiGateEast = 955,
+    GiGateWest = 956,
+    SSabukWall1 = 957,
+    SSabukWall2 = 958,
+    SSabukWall3 = 959,
 
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
@@ -600,7 +610,7 @@ public enum Monster : ushort
     BabyDragon = 10007,//unknown
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
-    Frog = 10010//unknown
+    Frog = 10010,//unknown
 }
 
 public enum MirAction : byte
@@ -1274,6 +1284,7 @@ public enum ServerPacketIds : short
     ObjectDied,
     ColourChanged,
     ObjectColourChanged,
+    ObjectGuildNameChanged,
     GainExperience,
     LevelChanged,
     ObjectLeveled,
@@ -1559,15 +1570,26 @@ public enum ClientPacketIds : short
     ReportIssue
 }
 
-public enum ProfType : byte
+public enum ConquestType : byte
+{
+    Request = 0,
+    Auto = 1,
+    Forced = 2,
+}
+
+public enum ConquestGame : byte
+{
+    CapturePalace = 0,
+    KingOfHill = 1,
+    Random = 2,
+    Classic = 3,
+}public enum ProfType : byte
 {
     Mining = 0,
     Gatherig = 1,
     Fishing = 2,
     Crafting = 3,
-}
-
-public class InIReader
+}public class InIReader
 {
     #region Fields
     private readonly List<string> _contents;
@@ -4446,22 +4468,24 @@ public abstract class Packet
 
         int length = (rawBytes[1] << 8) + rawBytes[0];
 
-        if (length > rawBytes.Length) return null;
+        if (length > rawBytes.Length || length < 2) return null;
 
         using (MemoryStream stream = new MemoryStream(rawBytes, 2, length - 2))
         using (BinaryReader reader = new BinaryReader(stream))
         {
-            
             try
             {
                 short id = reader.ReadInt16();
 
                 p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
+                if (p == null) return null;
+
                 p.ReadPacket(reader);
             }
             catch
             {
                 return null;
+                //return new C.Disconnect();
             }
         }
 
@@ -4747,7 +4771,7 @@ public abstract class Packet
             case (short)ClientPacketIds.ReportIssue:
                 return new C.ReportIssue();
             default:
-                throw new NotImplementedException();
+                return null;
         }
 
     }
@@ -4895,6 +4919,8 @@ public abstract class Packet
                 return new S.ColourChanged();
             case (short)ServerPacketIds.ObjectColourChanged:
                 return new S.ObjectColourChanged();
+            case (short)ServerPacketIds.ObjectGuildNameChanged:
+                return new S.ObjectGuildNameChanged();
             case (short)ServerPacketIds.GainExperience:
                 return new S.GainExperience();
             case (short)ServerPacketIds.LevelChanged:
@@ -5194,7 +5220,7 @@ public abstract class Packet
             case (short)ServerPacketIds.RecipeData:
                 return new S.RecipeData();
             default:
-                throw new NotImplementedException();
+                return null;
         }
     }
 }

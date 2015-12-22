@@ -60,8 +60,7 @@ namespace Server.MirObjects
 
             if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.ExplosiveTrap) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
             {
-                if (Spell == Spell.TrapHexagon && Target != null ||
-                    Spell == Spell.Trap && Target != null)
+                if (Spell == Spell.TrapHexagon && Target != null || Spell == Spell.Trap && Target != null)
                 {
                     MonsterObject ob = (MonsterObject)Target;
 
