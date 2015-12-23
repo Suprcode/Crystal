@@ -1246,7 +1246,20 @@ namespace Server.MirObjects
                                     PlayerObject playerob = (PlayerObject)ob;
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level) || Envir.Time < HallucinationTime) continue;
+
                                     Target = ob;
+
+                                    if (Master != null)
+                                    {
+                                        for (int j = 0; j < playerob.Pets.Count; j++)
+                                        {
+                                            MonsterObject pet = playerob.Pets[j];
+
+                                            if (!pet.IsAttackTarget(this)) continue;
+                                            Target = pet;
+                                            break;
+                                        }
+                                    }
                                     return;
                                 default:
                                     continue;
@@ -1750,7 +1763,7 @@ namespace Server.MirObjects
                     if (ob == Target || ob.Target == this) return true;
                 }
 
-                if (Target == attacker.Master )
+                if (Target == attacker.Master)
                     return true;
             }
 
@@ -1924,8 +1937,12 @@ namespace Server.MirObjects
                 }
             }
 
-            LastHitter = attacker;
-            LastHitTime = Envir.Time + 10000;
+            for (int i = 0; i < attacker.Pets.Count; i++)
+            {
+                MonsterObject ob = attacker.Pets[i];
+
+                if (IsAttackTarget(ob)) ob.Target = this;
+            }
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 

@@ -7418,6 +7418,7 @@ namespace Server.MirObjects
 
             magic.CastTime = Envir.Time;
             _stepCounter = 0;
+            ActionTime = Envir.Time + GetDelayTime(MoveDelay) * dist;
 
             Enqueue(new S.MagicCast { Spell = magic.Spell });
 
@@ -17515,7 +17516,7 @@ namespace Server.MirObjects
 
             if (Info.CollectTime > Envir.Time)
             {
-                ReceiveChat(String.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
+                ReceiveChat(string.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -17523,7 +17524,7 @@ namespace Server.MirObjects
 
             if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > MaxBagWeight)
             {
-                ReceiveChat(String.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
+                ReceiveChat(string.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
                 Enqueue(p);
                 return;
             }
