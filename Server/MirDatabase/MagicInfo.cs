@@ -18,6 +18,7 @@ namespace Server.MirDatabase
         public uint DelayBase = 1800, DelayReduction;
         public ushort PowerBase, PowerBonus;
         public ushort MPowerBase, MPowerBonus;
+        public byte Range = 9;
 
         public override string ToString()
         {
@@ -151,8 +152,9 @@ namespace Server.MirDatabase
                     Key = Key,
                     Experience = Experience,
                     IsTempSpell = IsTempSpell,
-                    Delay = GetDelay()
-                };
+                    Delay = GetDelay(),
+                    Range = Info.Range
+            };
         }
 
 

@@ -1731,6 +1731,12 @@ namespace Server.MirObjects
                 for (int i = 0; i < Master.Pets.Count; i++)
                     if (Master.Pets[i].EXPOwner == attacker.Master) return true;
 
+                for (int i = 0; i < attacker.Master.Pets.Count; i++)
+                {
+                    MonsterObject ob = attacker.Master.Pets[i];
+                    if (ob == Target || ob.Target == this) return true;
+                }
+
                 return Master.LastHitter == attacker.Master;
             }
             else if (attacker.Master != null) //Pet Attacking Wild Monster
@@ -1782,7 +1788,6 @@ namespace Server.MirObjects
 
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-
             if (Target == null && attacker.IsAttackTarget(this))
             {
                 Target = attacker;
@@ -1918,6 +1923,9 @@ namespace Server.MirObjects
                     }
                 }
             }
+
+            LastHitter = attacker;
+            LastHitTime = Envir.Time + 10000;
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 

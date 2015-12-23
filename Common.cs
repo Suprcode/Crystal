@@ -3628,7 +3628,7 @@ public class ClientMagic
     public byte Level1, Level2, Level3;
     public ushort Need1, Need2, Need3;
 
-    public byte Level, Key;
+    public byte Level, Key, Range;
     public ushort Experience;
 
     public bool IsTempSpell;
@@ -3657,6 +3657,8 @@ public class ClientMagic
         Experience = reader.ReadUInt16();
 
         Delay = reader.ReadInt64();
+
+        Range = reader.ReadByte();
     }
 
     public void Save(BinaryWriter writer)
@@ -3678,6 +3680,8 @@ public class ClientMagic
         writer.Write(Experience);
 
         writer.Write(Delay);
+
+        writer.Write(Range);
     }
    
 }

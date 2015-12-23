@@ -570,6 +570,8 @@ namespace Server.MirObjects
                     ((SpellObject)ArcherTrapObjectsArray[i, j]).DetonateTrapNow();
             }
 
+            if (CellTime + 700 < Envir.Time) _stepCounter = 0;
+
             if (Sneaking) CheckSneakRadius();
 
             if (FlamingSword && Envir.Time >= FlamingSwordTime)
@@ -5304,6 +5306,9 @@ namespace Server.MirObjects
         {
             LogTime = Envir.Time + Globals.LogDelay;
 
+            if (Info.Equipment[(int)EquipmentSlot.Weapon] == null || ((Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape / 100) != 2)) return;
+            if (Functions.InRange(CurrentLocation, location, 9) == false) return;
+
             MapObject target = null;
 
             if (targetID == ObjectID)
@@ -5909,6 +5914,8 @@ namespace Server.MirObjects
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
+
+            if (Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
 
             if (Hidden)
             {
@@ -7410,10 +7417,11 @@ namespace Server.MirObjects
             }
 
             magic.CastTime = Envir.Time;
+            _stepCounter = 0;
+
             Enqueue(new S.MagicCast { Spell = magic.Spell });
 
             CellTime = Envir.Time + 500;
-            ActionTime = Envir.Time + GetDelayTime(MoveDelay) / 2;
         }
         private void SlashingBurst(UserMagic magic, out bool cast)
         {
@@ -8251,6 +8259,7 @@ namespace Server.MirObjects
                             ReceiveChat(("You cannot teleport on this map"), ChatType.System);
                             return;
                         }
+                        if (Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
                         if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
                         CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
                         LevelMagic(magic);
@@ -9367,9 +9376,9 @@ namespace Server.MirObjects
             {
                 bool target = false;
 
-                for (int i = 0; i < attacker.Pets.Count; i++)
+                for (int i = 0; i < attacker.Master.Pets.Count; i++)
                 {
-                    if (attacker.Pets[i].EXPOwner != this) continue;
+                    if (attacker.Master.Pets[i].Target != this) continue;
 
                     target = true;
                     break;
@@ -9701,7 +9710,7 @@ namespace Server.MirObjects
             MagicShieldTime -= (damage - armour) * 60;
 
             ElementalBarrierTime -= (damage - armour) * 60;
-
+            
             LastHitter = attacker.Master ?? attacker;
             LastHitTime = Envir.Time + 10000;
             RegenTime = Envir.Time + RegenDelay;

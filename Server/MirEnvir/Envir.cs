@@ -460,7 +460,7 @@ namespace Server.MirEnvir
 
                                 if (Info.Stop == true)
                                 {
-                                    Info.EndTime = Time + 20;
+                                    Info.EndTime = Time + 10;
                                     Info.Stop = false;
                                 }
                             }

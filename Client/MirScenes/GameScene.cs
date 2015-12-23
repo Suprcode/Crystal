@@ -881,7 +881,7 @@ namespace Client.MirScenes
             if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
             {
                 ShowReviveMessage = false;
-                MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo, false);
 
                 messageBox.YesButton.Click += (o, e) =>
                 {
@@ -14597,32 +14597,53 @@ namespace Client.MirScenes
         private void BuyItem()
         {
             if (SelectedItem == null) return;
-            /*
-            if (SelectedItem.StackSize > 1)
-            {
-                UserItem temp = new UserItem(SelectedItem) { Count = SelectedItem.StackSize };
 
-                if (temp.Price() > GameScene.Gold)
+            if (SelectedItem.Info.StackSize > 1)
+            {
+                uint tempCount = SelectedItem.Count;
+                uint maxQuantity = SelectedItem.Info.StackSize;
+
+                SelectedItem.Count = maxQuantity;
+
+                if (usePearls)//pearl currency
                 {
-                    temp.Count = GameScene.Gold / SelectedItem.Price;
-                    if (temp.Count == 0)
+                    if (SelectedItem.Price() > GameScene.User.PearlCount)
+                    {
+                        maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
+                        if (maxQuantity == 0)
+                        {
+                            GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
+                            return;
+                        }              
+                    }
+                }
+
+                else if (SelectedItem.Price() > GameScene.Gold)
+                {            
+                    maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
+                    if (maxQuantity == 0)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do no have enough Gold.", ChatType.System);
                         return;
                     }
                 }
 
-                MapObject.User.GetMaxGain(temp);
+                MapObject.User.GetMaxGain(SelectedItem);
 
-                if (temp.Count == 0) return;
+                if (SelectedItem.Count > tempCount)
+                {
+                    SelectedItem.Count = tempCount;
+                }
 
-                MirAmountBox amountBox = new MirAmountBox("Purchase Amount:", SelectedItem.Image, temp.Count);
+                if (SelectedItem.Count == 0) return;
+
+                MirAmountBox amountBox = new MirAmountBox("Purchase Amount:", SelectedItem.Image, maxQuantity, 0, SelectedItem.Count);
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
                     if (amountBox.Amount > 0)
                     {
-                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = amountBox.Amount });
+                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = amountBox.Amount });
                     }
                 };
 
@@ -14630,7 +14651,7 @@ namespace Client.MirScenes
             }
             else
             {
-                if (SelectedItem.Price > GameScene.Gold)
+                if (SelectedItem.Info.Price > GameScene.Gold)
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
                     return;
@@ -14638,7 +14659,7 @@ namespace Client.MirScenes
 
                 if (SelectedItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do no have enough weight.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
                     return;
                 }
 
@@ -14647,47 +14668,16 @@ namespace Client.MirScenes
                     if (MapObject.User.Inventory[i] == null) break;
                     if (i == MapObject.User.Inventory.Length - 1)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot purchase any more items.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("You cannot purchase any more items.", ChatType.System);
                         return;
                     }
                 }
 
 
-                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
-            }
-            */
-            if (usePearls)//pearl currency
-            {
-                if (SelectedItem.Price() > GameScene.User.PearlCount)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
-                    return;
-                }
-            }
-            else if (SelectedItem.Price() > GameScene.Gold)
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
-                return;
-            }
-
-            if (SelectedItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat("Your bag is over weight.", ChatType.System);
-                return;
-            }
-
-            for (int i = 0; i < MapObject.User.Inventory.Length; i++)
-            {
-                if (MapObject.User.Inventory[i] == null) break;
-                if (i == MapObject.User.Inventory.Length - 1)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Not enough space in your inventory.", ChatType.System);
-                    return;
-                }
-            }
-
-            Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID });
+                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1 });
+            }         
         }
+
         private void NPCGoodsPanel_MouseWheel(object sender, MouseEventArgs e)
         {
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;

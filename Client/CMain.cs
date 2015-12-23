@@ -378,10 +378,24 @@ namespace Client
                 text = string.Format("FPS: {0}", FPS);
 
                 if (MirControl.MouseControl is MapControl)
+                {
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
 
+                    //text += "\r\n";
+
+                    //var cell = GameScene.Scene.MapControl.M2CellInfo[MapControl.MapLocation.X, MapControl.MapLocation.Y];
+
+                    //if (cell != null)
+                    //{
+                    //    text += string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}. FrontImage : {4}. FrontIndex : {5}", cell.BackImage, cell.BackIndex, cell.MiddleImage, cell.MiddleIndex, cell.FrontImage, cell.FrontIndex);
+                    //}
+                }
+
                 if (MirScene.ActiveScene is GameScene)
-                    text += string.Format(", Objects: {0}", MapControl.Objects.Count);
+                {
+                    text += "\r\n";
+                    text += string.Format("Objects: {0}", MapControl.Objects.Count);
+                }
 
             }
             else

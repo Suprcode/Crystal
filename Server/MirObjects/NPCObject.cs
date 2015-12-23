@@ -1201,7 +1201,9 @@ namespace Server.MirObjects
                 }
             }
 
-            if (goods == null || goods.Count == 0 || goods.Count > goods.Info.StackSize) return;
+            if (goods == null || count == 0 || count > goods.Info.StackSize) return;
+
+            goods.Count = count;
 
             uint cost = goods.Price();
             cost = (uint)(cost * PriceRate(player));
@@ -1213,7 +1215,7 @@ namespace Server.MirObjects
             }
             else if (cost > player.Account.Gold) return;
 
-            UserItem item = (isBuyBack || isUsed ? goods : Envir.CreateFreshItem(goods.Info));
+            UserItem item = (isBuyBack || isUsed) ? goods : Envir.CreateFreshItem(goods.Info);
             item.Count = goods.Count;
 
             if (!player.CanGainItem(item)) return;
@@ -1232,7 +1234,7 @@ namespace Server.MirObjects
 
             if (isUsed)
             {
-                UsedGoods.Remove(goods);
+                UsedGoods.Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
 
                 List<UserItem> newGoodsList = new List<UserItem>();
                 newGoodsList.AddRange(Goods);
@@ -1245,7 +1247,7 @@ namespace Server.MirObjects
 
             if (isBuyBack)
             {
-                BuyBack[player.Name].Remove(goods);
+                BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
                 player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player) });
             }
         }

@@ -128,6 +128,8 @@ namespace Client.MirObjects
                     }
                 return;
             }
+
+
             //c# custom map format
             if ((Bytes[2] == 0x43) && (Bytes[3] == 0x23))
             {
@@ -160,7 +162,7 @@ namespace Client.MirObjects
                 return;
             }
             //shanda's 2012 format and one of shandas(wemades) older formats share same header info, only difference is the filesize
-            if ((Bytes[4] == 0x0F) && (Bytes[18] == 0x0D) && (Bytes[19] == 0x0A))
+            if ((Bytes[4] == 0x0F) || (Bytes[4] == 0x03) && (Bytes[18] == 0x0D) && (Bytes[19] == 0x0A))
             {
                 int W = Bytes[0] + (Bytes[1] << 8);
                 int H = Bytes[2] + (Bytes[3] << 8);
