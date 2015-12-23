@@ -5915,7 +5915,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
+            if (location != new Point(0,0) && Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
 
             if (Hidden)
             {
@@ -7418,7 +7418,7 @@ namespace Server.MirObjects
 
             magic.CastTime = Envir.Time;
             _stepCounter = 0;
-            ActionTime = Envir.Time + GetDelayTime(MoveDelay) * dist;
+            ActionTime = Envir.Time + GetDelayTime(MoveDelay);
 
             Enqueue(new S.MagicCast { Spell = magic.Spell });
 
