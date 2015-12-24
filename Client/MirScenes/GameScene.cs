@@ -8417,24 +8417,18 @@ namespace Client.MirScenes
             if(cleanFilename.StartsWith("ID1") || cleanFilename.StartsWith("ID2"))
             {
                 Libraries.Background.Draw(10, 0, 0); //mountains
-                return;
             }
-            if(cleanFilename.StartsWith("ID3_013"))
+            else if(cleanFilename.StartsWith("ID3_013"))
             {
                 Libraries.Background.Draw(22, 0, 0); //desert
-                return;
             }
-
-            if (cleanFilename.StartsWith("ID3_015"))
+            else if (cleanFilename.StartsWith("ID3_015"))
             {
                 Libraries.Background.Draw(23, 0, 0); //greatwall
-                return;
             }
-
-            if (cleanFilename.StartsWith("ID3_023") || cleanFilename.StartsWith("ID3_025"))
+            else if (cleanFilename.StartsWith("ID3_023") || cleanFilename.StartsWith("ID3_025"))
             {
                 Libraries.Background.Draw(21, 0, 0); //village entrance
-                return;
             }
         }
 
@@ -8624,8 +8618,10 @@ namespace Client.MirScenes
 
             Surface oldSurface = DXManager.CurrentSurface;
             DXManager.SetSurface(_lightSurface);
+
+            #region Night Lights
             Color Darkness = Color.Black;
-            switch (MapDarkLight)//todo fill these with more usefull values :p
+            switch (MapDarkLight)
             {
                 case 1:
                     Darkness = Color.FromArgb(255, 20, 20, 20);
@@ -8646,11 +8642,14 @@ namespace Client.MirScenes
 
             DXManager.Device.Clear(ClearFlags.Target, setting == LightSetting.Night ? Darkness : Color.FromArgb(255, 50, 50, 50), 0, 0);
 
+            #endregion
+
             int light;
             Point p;
             DXManager.SetBlend(true);
             DXManager.Device.RenderState.SourceBlend = Blend.SourceAlpha;
 
+            #region Object Lights (Player/Mob/NPC)
             for (int i = 0; i < Objects.Count; i++)
             {
                 MapObject ob = Objects[i];
@@ -8695,11 +8694,11 @@ namespace Client.MirScenes
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour); // ob is MonsterObject && ob.AI != 6 ? Color.PaleVioletRed : 
+                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour);
                     }
 
                 }
-
+                #region Object Effect Lights
                 if (!Settings.Effect) continue;
                 for (int e = 0; e < ob.Effects.Count; e++)
                 {
@@ -8717,9 +8716,11 @@ namespace Client.MirScenes
                     }
 
                 }
+                #endregion
             }
+            #endregion
 
-
+            #region Map Effect Lights
             if (Settings.Effect)
                 for (int e = 0; e < Effects.Count; e++)
                 {
@@ -8737,8 +8738,9 @@ namespace Client.MirScenes
                         DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
                     }
                 }
+            #endregion
 
-
+            #region Map Lights
             for (int y = MapObject.User.Movement.Y - ViewRangeY - 24; y <= MapObject.User.Movement.Y + ViewRangeY + 24; y++)
             {
                 if (y < 0) continue;
@@ -8748,12 +8750,32 @@ namespace Client.MirScenes
                     if (x < 0) continue;
                     if (x >= Width) break;
                     int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
-                    if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
-                    Color lightIntensity = Color.FromArgb(255, 255, 255, 255);  //Color lightIntensity = Color.FromArgb(255, 97, 200, 200); -- this colour matches mir3
-                    //this code would look great on shanda mir2 maps (give a blue glow to blue town lights), but it'll also give blue glow to mir3 maps
-                    //if (M2CellInfo[x, y].Light == 4) 
-                    //    lightIntensity = Color.FromArgb(255, 100,100,200);
-                    light = M2CellInfo[x, y].Light * 3;
+                    //if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
+                    if (M2CellInfo[x, y].Light == 0) continue;
+
+                    Color lightIntensity;
+
+                    light = (M2CellInfo[x, y].Light % 10) * 3;
+
+                    switch (M2CellInfo[x, y].Light / 10)
+                    {
+                        case 1:
+                            lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                            break;
+                        case 2:
+                            lightIntensity = Color.FromArgb(255, 120, 180, 255);
+                            break;
+                        case 3:
+                            lightIntensity = Color.FromArgb(255, 255, 180, 120);
+                            break;
+                        case 4:
+                            lightIntensity = Color.FromArgb(255, 22, 160, 5);
+                            break;
+                        default:
+                            lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                            break;
+                    }
+
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
 
                     p = new Point(
@@ -8774,6 +8796,7 @@ namespace Client.MirScenes
                     }
                 }
             }
+            #endregion
 
             DXManager.SetBlend(false);
             DXManager.SetSurface(oldSurface);

@@ -11,9 +11,9 @@ namespace Client.MirObjects
         public short BackIndex;
         public int BackImage;
         public short MiddleIndex;
-        public short MiddleImage;
+        public int MiddleImage;
         public short FrontIndex;
-        public short FrontImage;
+        public int FrontImage;
 
         public byte DoorIndex;
         public byte DoorOffset;
@@ -458,15 +458,15 @@ namespace Client.MirObjects
                         offset++;
                         MapCells[x,y].MiddleIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
                         offset++;
-                        MapCells[x,y].MiddleImage = (short)(BitConverter.ToInt16(Bytes,offset)+1);
+                        MapCells[x,y].MiddleImage = (int)(BitConverter.ToInt16(Bytes,offset)+1);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (short)(BitConverter.ToInt16(Bytes, offset)+1);
+                        MapCells[x, y].FrontImage = (int)(BitConverter.ToInt16(Bytes, offset)+1);
                         if ((MapCells[x, y].FrontImage == 1) && (MapCells[x, y].FrontIndex == 200))
                             MapCells[x, y].FrontIndex = -1;
                         offset += 2;
                         offset += 3;//mir3 maps dont have doors so dont bother reading the info
                         MapCells[x, y].Light = (byte)(Bytes[offset] & 0x0F);
-                        MapCells[x, y].Light *= 4;//far wants all light on mir3 maps to be maxed :p
+                        MapCells[x, y].Light *= 2;//expand general mir3 lighting as default range is small
                         offset += 2;
                         if ((flag & 0x01) != 1) MapCells[x, y].BackImage |= 0x20000000;
                         if ((flag & 0x02) != 2) MapCells[x, y].FrontImage = (short)((UInt16)MapCells[x, y].FrontImage | 0x8000);

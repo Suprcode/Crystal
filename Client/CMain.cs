@@ -381,14 +381,14 @@ namespace Client
                 {
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
 
-                    //text += "\r\n";
+                    text += "\r\n";
 
-                    //var cell = GameScene.Scene.MapControl.M2CellInfo[MapControl.MapLocation.X, MapControl.MapLocation.Y];
+                    var cell = GameScene.Scene.MapControl.M2CellInfo[MapControl.MapLocation.X, MapControl.MapLocation.Y];
 
-                    //if (cell != null)
-                    //{
-                    //    text += string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}. FrontImage : {4}. FrontIndex : {5}", cell.BackImage, cell.BackIndex, cell.MiddleImage, cell.MiddleIndex, cell.FrontImage, cell.FrontIndex);
-                    //}
+                    if (cell != null)
+                    {
+                        text += string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}. FrontImage : {4}. FrontIndex : {5}", cell.BackImage, cell.BackIndex, cell.MiddleImage, cell.MiddleIndex, cell.FrontImage, cell.FrontIndex);
+                    }
                 }
 
                 if (MirScene.ActiveScene is GameScene)
