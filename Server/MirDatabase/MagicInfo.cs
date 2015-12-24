@@ -10,7 +10,7 @@ namespace Server.MirDatabase
 {
     public class MagicInfo
     {
-        public String Name;
+        public string Name;
         public Spell Spell;
         public byte BaseCost, LevelCost, Icon;
         public byte Level1, Level2, Level3;
@@ -49,6 +49,9 @@ namespace Server.MirDatabase
             PowerBonus = reader.ReadUInt16();
             MPowerBase = reader.ReadUInt16();
             MPowerBonus = reader.ReadUInt16();
+
+            if (version > 66)
+                Range = reader.ReadByte();
         }
 
         public void Save(BinaryWriter writer)
@@ -70,6 +73,7 @@ namespace Server.MirDatabase
             writer.Write(PowerBonus);
             writer.Write(MPowerBase);
             writer.Write(MPowerBonus);
+            writer.Write(Range);
         }
     }
 

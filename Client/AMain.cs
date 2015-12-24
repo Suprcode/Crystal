@@ -146,7 +146,7 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
-                if (old.FileName == System.AppDomain.CurrentDomain.FriendlyName)
+                if ((old.FileName.Contains(System.AppDomain.CurrentDomain.FriendlyName)))
                 {
                     File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + oldClientName);
                     Restart = true;

@@ -8118,6 +8118,7 @@ namespace Client.MirScenes
                 Objects.Add(User);
 
 
+
             MapObject.MouseObject = null;
             MapObject.TargetObject = null;
             MapObject.MagicObject = null;
@@ -8140,7 +8141,6 @@ namespace Client.MirScenes
                 // Do nothing. index was not valid.
             }
 
-
             SetMusic = Music;
             SoundList.Music = Music;
         }
@@ -8159,19 +8159,6 @@ namespace Client.MirScenes
 
             for (int i = Effects.Count - 1; i >= 0; i--)
                 Effects[i].Process();
-            //if (Lightning && CMain.Time > LightningTime)
-            //{
-            //    LightningTime = CMain.Time + CMain.Random.Next(2000, 5000);
-            //    Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
-            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 400, source));
-            //}
-            //if (Fire && CMain.Time > FireTime)
-            //{
-            //    FireTime = CMain.Time + CMain.Random.Next(2000, 5000);
-            //    Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
-            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, source) { Blend = false });
-            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, source));
-            //}
 
             if (MapObject.TargetObject != null && MapObject.TargetObject is MonsterObject && MapObject.TargetObject.AI == 64)
                 MapObject.TargetObject = null;
@@ -8249,6 +8236,7 @@ namespace Client.MirScenes
             if (!FloorValid)
                 DrawFloor();
 
+
             if (ControlTexture != null && !ControlTexture.Disposed && Size != TextureSize)
                 ControlTexture.Dispose();
 
@@ -8264,6 +8252,8 @@ namespace Client.MirScenes
             Surface surface = ControlTexture.GetSurfaceLevel(0);
             DXManager.SetSurface(surface);
             DXManager.Device.Clear(ClearFlags.Target, BackColour, 0, 0);
+
+            DrawBackground();
 
             if (FloorValid)
                 DXManager.Sprite.Draw2D(_floorTexture, Point.Empty, 0F, Point.Empty, Color.White);
@@ -8334,7 +8324,6 @@ namespace Client.MirScenes
 
         private void DrawFloor()
         {
-
             if (_floorTexture == null || _floorTexture.Disposed)
             {
                 _floorTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
@@ -8346,7 +8335,7 @@ namespace Client.MirScenes
             Surface oldSurface = DXManager.CurrentSurface;
 
             DXManager.SetSurface(_floorSurface);
-            DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+            DXManager.Device.Clear(ClearFlags.Target, Color.Empty, 0, 0); //Color.Black
 
             int index;
             int drawY, drawX;
@@ -8409,8 +8398,8 @@ namespace Client.MirScenes
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
                     if (fileIndex == -1) continue;
                     Size s = Libraries.MapLibs[fileIndex].GetSize(index);
-                    if (fileIndex == 200) //could break maps i have no clue anymore :( fixes random bad spots on old school 4.map tho
-                        continue;
+                    if (fileIndex == 200) continue; //fixes random bad spots on old school 4.map
+
                     if (index < 0 || ((s.Width != CellWidth || s.Height != CellHeight) && ((s.Width != CellWidth * 2) || (s.Height != CellHeight * 2)))) continue;
                     Libraries.MapLibs[fileIndex].Draw(index, drawX, drawY);
                 }
@@ -8419,6 +8408,34 @@ namespace Client.MirScenes
             DXManager.SetSurface(oldSurface);
 
             FloorValid = true;
+        }
+
+        private void DrawBackground()
+        {
+            string cleanFilename = FileName.Replace(Settings.MapPath, "");
+
+            if(cleanFilename.StartsWith("ID1") || cleanFilename.StartsWith("ID2"))
+            {
+                Libraries.Background.Draw(10, 0, 0); //mountains
+                return;
+            }
+            if(cleanFilename.StartsWith("ID3_013"))
+            {
+                Libraries.Background.Draw(22, 0, 0); //desert
+                return;
+            }
+
+            if (cleanFilename.StartsWith("ID3_015"))
+            {
+                Libraries.Background.Draw(23, 0, 0); //greatwall
+                return;
+            }
+
+            if (cleanFilename.StartsWith("ID3_023") || cleanFilename.StartsWith("ID3_025"))
+            {
+                Libraries.Background.Draw(21, 0, 0); //village entrance
+                return;
+            }
         }
 
         private void DrawObjects()
@@ -8945,7 +8962,6 @@ namespace Client.MirScenes
                         {
                             if (CMain.Time > GameScene.AttackTime)
                             {
-
                                 User.QueuedAction = new QueuedAction { Action = MirAction.AttackRange1, Direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation), Location = User.CurrentLocation, Params = new List<object>() };
                                 User.QueuedAction.Params.Add(MapObject.TargetObject != null ? MapObject.TargetObject.ObjectID : (uint)0);
                                 User.QueuedAction.Params.Add(MapObject.TargetObject.CurrentLocation);
@@ -9230,7 +9246,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            bool isTargetSpell = true;
+            //bool isTargetSpell = true;
 
             MapObject target = null;
 
@@ -9289,19 +9305,19 @@ namespace Client.MirScenes
 
                     if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObject = target;
 
-                    if(magic.Spell == Spell.ElementalShot)
-                    {
-                        isTargetSpell = User.HasElements;
-                    }
+                    //if(magic.Spell == Spell.ElementalShot)
+                    //{
+                    //    isTargetSpell = User.HasElements;
+                    //}
 
-                    switch(magic.Spell)
-                    {
-                        case Spell.SummonVampire:
-                        case Spell.SummonToad:
-                        case Spell.SummonSnakes:
-                            isTargetSpell = false;
-                            break;
-                    }
+                    //switch(magic.Spell)
+                    //{
+                    //    case Spell.SummonVampire:
+                    //    case Spell.SummonToad:
+                    //    case Spell.SummonSnakes:
+                    //        isTargetSpell = false;
+                    //        break;
+                    //}
 
                     break;
                 case Spell.Purification:
@@ -9362,10 +9378,10 @@ namespace Client.MirScenes
                         User.ClearMagic();
                         return;
                     }
-                    isTargetSpell = false;
+                    //isTargetSpell = false;
                     break;
                 default:
-                    isTargetSpell = false;
+                    //isTargetSpell = false;
                         break;
             }
 
@@ -9376,7 +9392,7 @@ namespace Client.MirScenes
             if (magic.Spell == Spell.FlashDash)
                 dir = User.Direction;
 
-            if (!Functions.InRange(User.CurrentLocation, location, 9) && isTargetSpell)
+            if ((magic.Range != 0) && (!Functions.InRange(User.CurrentLocation, location, magic.Range)))
             {
                 if (CMain.Time >= OutputDelay)
                 {

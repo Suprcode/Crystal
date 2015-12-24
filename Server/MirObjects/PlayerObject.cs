@@ -5915,7 +5915,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (location != new Point(0,0) && Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
+            if (magic.Info.Range != 0 && Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
 
             if (Hidden)
             {
