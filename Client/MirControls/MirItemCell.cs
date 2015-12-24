@@ -612,9 +612,19 @@ namespace Client.MirControls
                 }
             }
 
+
             for (int i = 0; i < GameScene.User.Inventory.Length; i++)
             {
-                MirItemCell itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
+                MirItemCell itemCell = null;
+
+                if (Item.Info.Type == ItemType.Amulet)
+                {
+                    itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
+                }
+                else
+                {
+                    itemCell = i < (GameScene.User.Inventory.Length - GameScene.User.BeltIdx) ? GameScene.Scene.InventoryDialog.Grid[i] : GameScene.Scene.BeltDialog.Grid[i - GameScene.User.Inventory.Length];
+                }
 
                 if (itemCell.Item != null) continue;
 
