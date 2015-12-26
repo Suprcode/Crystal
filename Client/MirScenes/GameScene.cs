@@ -310,11 +310,6 @@ namespace Client.MirScenes
             bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
             bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
 
-            if(skillMode)
-            {
-
-            }
-
             switch (e.KeyCode)
             {
                 case Keys.F1:
@@ -5011,8 +5006,13 @@ namespace Client.MirScenes
                     //    InventoryDialog.Grid[i].Item = null;
                     //}
                 }
-            }       
-            
+            }
+
+            for (int i = 0; i < NPCAwakeDialog.ItemsIdx.Length; i++)
+            {
+                NPCAwakeDialog.ItemsIdx[i] = 0;
+            }
+
             MirMessageBox messageBox = null;
 
             switch (p.result)
@@ -15407,6 +15407,7 @@ namespace Client.MirScenes
                 ItemCells[2].Item = null;
             }
 
+            
             NeedItemLabel2.Text = "";
             NeedItemLabel1.Text = "";
             GoldLabel.Text = "";
@@ -15600,6 +15601,11 @@ namespace Client.MirScenes
                     Network.Enqueue(new C.AwakeningLockedItem { UniqueID = item.Item.UniqueID, Locked = false });
                     item.Item = null;
                 }
+            }
+
+            for (int i = 0; i < ItemsIdx.Length; i++)
+            {
+                ItemsIdx[i] = 0;
             }
 
             ItemCell_Click();

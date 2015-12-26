@@ -458,9 +458,9 @@ namespace Client.MirObjects
                         offset++;
                         MapCells[x,y].MiddleIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
                         offset++;
-                        MapCells[x,y].MiddleImage = (int)(BitConverter.ToInt16(Bytes,offset)+1);
+                        MapCells[x,y].MiddleImage = (ushort)(BitConverter.ToInt16(Bytes,offset)+1);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (int)(BitConverter.ToInt16(Bytes, offset)+1);
+                        MapCells[x, y].FrontImage = (ushort)(BitConverter.ToInt16(Bytes, offset)+1);
                         if ((MapCells[x, y].FrontImage == 1) && (MapCells[x, y].FrontIndex == 200))
                             MapCells[x, y].FrontIndex = -1;
                         offset += 2;

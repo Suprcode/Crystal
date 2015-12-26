@@ -889,6 +889,8 @@ namespace Client.MirControls
                                 Network.Enqueue(new C.MoveItem { Grid = GridType, From = NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot], To = NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot] });
                                 GameScene.SelectedCell.Locked = false;
                                 GameScene.SelectedCell.Item = null;
+                                NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot] = 0;
+
                                 if (GameScene.SelectedCell.ItemSlot == 0)
                                     GameScene.Scene.NPCAwakeDialog.ItemCell_Click();
                                 GameScene.SelectedCell = null;
@@ -1345,7 +1347,7 @@ namespace Client.MirControls
                                             case MirGridType.Inventory:
                                                 {
                                                     if (GameScene.SelectedCell.Item.Info.Type == ItemType.Awakening &&
-                                                        GameScene.SelectedCell.Item.Info.Shape < 200)
+                                                        GameScene.SelectedCell.Item.Info.Shape < 200 && NPCAwakeDialog.ItemsIdx[_itemSlot] == 0)
                                                     {
                                                         Item = GameScene.SelectedCell.Item;
                                                         GameScene.SelectedCell.Locked = true;

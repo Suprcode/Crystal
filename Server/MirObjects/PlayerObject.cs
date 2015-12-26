@@ -5452,7 +5452,7 @@ namespace Server.MirObjects
                 case Spell.Thrusting:
                 case Spell.FlamingSword:
                     magic = GetMagic(spell);
-                    if (magic == null)
+                    if ((magic == null) || (!FlamingSword && (spell == Spell.FlamingSword)))
                     {
                         spell = Spell.None;
                         break;
@@ -13489,6 +13489,10 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != objectID) continue;
+
+                ob.CheckVisible(this);
+
+                if (!ob.VisibleLog[Info.Index] || !ob.Visible) return;
 
                 ob.Call(this, key.ToUpper());
                 break;
