@@ -15759,9 +15759,16 @@ namespace Server.MirObjects
             }
 
             Point fishingPoint = Functions.PointMove(CurrentLocation, Direction, 3);
+
+            if (fishingPoint.X < 0 || fishingPoint.Y < 0 || CurrentMap.Width < fishingPoint.X || CurrentMap.Height < fishingPoint.Y)
+            {
+                Fishing = false;
+                return;
+            }
+
             Cell fishingCell = CurrentMap.Cells[fishingPoint.X, fishingPoint.Y];
 
-            if (fishingCell.FishingAttribute == FishingAttribute.None)
+            if (fishingCell.FishingAttribute < 0)
             {
                 Fishing = false;
                 return;
@@ -15878,7 +15885,7 @@ namespace Server.MirObjects
 
                     int highRate = int.MaxValue;
                     UserItem dropItem = null;
-                    foreach (DropInfo drop in Envir.FishingDrops)
+                    foreach (DropInfo drop in Envir.FishingDrops.Where(x => x.Type == fishingCell.FishingAttribute))
                     {
                         int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate);
 

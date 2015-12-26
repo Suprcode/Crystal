@@ -8494,10 +8494,19 @@ namespace Client.MirScenes
                                 {
                                     byte animationTick = M2CellInfo[x, y].MiddleAnimationTick;
                                     index += (AnimationCount % (animation + (animation * animationTick))) / (1 + animationTick);
+
+                                    if (blend && (animation == 10 || animation == 8)) //diamond mines, abyss blends
+                                    {
+                                        Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].DrawUpBlend(index, new Point(drawX, drawY));
+                                    }
+                                    else
+                                    {
+                                        Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].DrawUp(index, drawX, drawY);
+                                    }
                                 }
                             }
                             s = Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].GetSize(index);
-                            if ((s.Width != CellWidth || s.Height != CellHeight) && (s.Width != (CellWidth * 2) || s.Height != (CellHeight * 2)))
+                            if ((s.Width != CellWidth || s.Height != CellHeight) && (s.Width != (CellWidth * 2) || s.Height != (CellHeight * 2)) && !blend)
                             {
                                 Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].DrawUp(index, drawX, drawY);
                             }
@@ -8513,8 +8522,6 @@ namespace Client.MirScenes
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
                     if (fileIndex == -1) continue;
                     animation = M2CellInfo[x, y].FrontAnimationFrame;
-
-
 
                     if ((animation & 0x80) > 0)
                     {

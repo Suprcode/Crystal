@@ -184,9 +184,9 @@ namespace Client.MirObjects
                 LoadMapType7();
                 return;
             }
+
             //if it's none of the above load the default old school format
             LoadMapType0();
-
         }
 
         private void LoadMapType0()
@@ -220,7 +220,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
 
 
@@ -270,7 +270,7 @@ namespace Client.MirObjects
                             };
                         offSet++;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -311,7 +311,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -358,7 +358,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
 
@@ -404,7 +404,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -449,6 +449,7 @@ namespace Client.MirObjects
                         
                         flag = Bytes[offset++];
                         MapCells[x, y].MiddleAnimationFrame = Bytes[offset++];
+
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset] == 255? (byte)0 : Bytes[offset];
                         MapCells[x, y].FrontAnimationFrame &= 0x8F;
                         offset++;
@@ -466,11 +467,14 @@ namespace Client.MirObjects
                         offset += 2;
                         offset += 3;//mir3 maps dont have doors so dont bother reading the info
                         MapCells[x, y].Light = (byte)(Bytes[offset] & 0x0F);
-                        MapCells[x, y].Light *= 2;//expand general mir3 lighting as default range is small
                         offset += 2;
                         if ((flag & 0x01) != 1) MapCells[x, y].BackImage |= 0x20000000;
-                        if ((flag & 0x02) != 2) MapCells[x, y].FrontImage = (short)((UInt16)MapCells[x, y].FrontImage | 0x8000);
+                        if ((flag & 0x02) != 2) MapCells[x, y].FrontImage = (ushort)((UInt16)MapCells[x, y].FrontImage | 0x8000);
 
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
+                            MapCells[x, y].FishingCell = true;
+                        else
+                            MapCells[x, y].Light *= 2;//expand general mir3 lighting as default range is small. Might break new colour lights.
                     }
             }
             catch (Exception ex)
@@ -565,7 +569,7 @@ namespace Client.MirObjects
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
                         offset++;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -615,7 +619,7 @@ namespace Client.MirObjects
                         MapCells[x, y].TileAnimationFrames = Bytes[offset++];
                         MapCells[x, y].Light = Bytes[offset++];
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }

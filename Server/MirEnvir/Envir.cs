@@ -1267,41 +1267,49 @@ namespace Server.MirEnvir
         public void LoadFishingDrops()
         {
             FishingDrops.Clear();
-
-            string path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
-
-            if (!File.Exists(path))
+            
+            for (byte i = 0; i <= 19; i++)
             {
-                FileStream newfile = File.Create(path);
-                newfile.Close();
-                
-            }
+                string path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
 
-            string[] lines = File.ReadAllLines(path);
+                path = path.Replace("00", i.ToString("D2"));
 
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-
-                DropInfo drop = DropInfo.FromLine(lines[i]);
-                if (drop == null)
+                if (!File.Exists(path) && i < 2)
                 {
-                    SMain.Enqueue(string.Format("Could not load fishing drop: {0}", lines[i]));
-                    continue;
+                    FileStream newfile = File.Create(path);
+                    newfile.Close();
                 }
 
-                FishingDrops.Add(drop);
-            }
+                if (!File.Exists(path)) continue;
 
-            FishingDrops.Sort((drop1, drop2) =>
-            {
-                if (drop1.Chance > 0 && drop2.Chance == 0)
-                    return 1;
-                if (drop1.Chance == 0 && drop2.Chance > 0)
-                    return -1;
+                string[] lines = File.ReadAllLines(path);
 
-                return drop1.Item.Type.CompareTo(drop2.Item.Type);
-            });
+                for (int j = 0; j < lines.Length; j++)
+                {
+                    if (lines[j].StartsWith(";") || string.IsNullOrWhiteSpace(lines[j])) continue;
+
+                    DropInfo drop = DropInfo.FromLine(lines[j]);
+                    if (drop == null)
+                    {
+                        SMain.Enqueue(string.Format("Could not load fishing drop: {0}", lines[j]));
+                        continue;
+                    }
+
+                    drop.Type = i;
+
+                    FishingDrops.Add(drop);
+                }
+
+                FishingDrops.Sort((drop1, drop2) =>
+                {
+                    if (drop1.Chance > 0 && drop2.Chance == 0)
+                        return 1;
+                    if (drop1.Chance == 0 && drop2.Chance > 0)
+                        return -1;
+
+                    return drop1.Item.Type.CompareTo(drop2.Item.Type);
+                });
+            }  
         }
 
         public void LoadAwakeningMaterials()

@@ -671,13 +671,6 @@ public enum CellAttribute : byte
     LowWall = 2,
 }
 
-public enum FishingAttribute : byte
-{
-    None = 0,
-    FreshWater = 1,
-    SaltWater = 2
-}
-
 public enum LightSetting : byte
 {
     Normal = 0,
