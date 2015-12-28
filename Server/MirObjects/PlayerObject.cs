@@ -189,8 +189,8 @@ namespace Server.MirObjects
             }
         }
 
-        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime;
+        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000, MovementDelay = 2000;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime, MovementTime;
 
         public byte ChatTick;
 
@@ -9063,6 +9063,8 @@ namespace Server.MirObjects
 
         public bool CheckMovement(Point location)
         {
+            if (Envir.Time < MovementTime) return false;
+
             //Script triggered coords
             for (int s = 0; s < CurrentMap.Info.ActiveCoords.Count; s++)
             {
@@ -9126,6 +9128,8 @@ namespace Server.MirObjects
 
             CurrentMap.AddObject(this);
 
+            MovementTime = Envir.Time + MovementDelay;
+
             Enqueue(new S.MapChanged
             {
                 FileName = CurrentMap.Info.FileName,
@@ -9166,6 +9170,7 @@ namespace Server.MirObjects
 
                 if (player != null) player.GetRelationship(false);
             }
+
             CheckConquest(true);
         }
 

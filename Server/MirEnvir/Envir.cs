@@ -1631,6 +1631,16 @@ namespace Server.MirEnvir
                 while (_thread != null)
                     Thread.Sleep(1);
         }
+
+        public void Reboot()
+        {
+            (new Thread(() =>
+            {
+                SMain.Enqueue("Server rebooting...");
+                Stop();
+                Start();
+            })).Start();
+        }
         
         private void StartEnvir()
         {
