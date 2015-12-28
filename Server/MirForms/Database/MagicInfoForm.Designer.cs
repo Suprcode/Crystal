@@ -49,5 +49,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label lblSelected;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox txtRange;
     }
 }

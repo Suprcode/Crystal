@@ -3588,7 +3588,7 @@ namespace Client.MirObjects
 
             var tt = GameScene.Scene.MapControl.M2CellInfo[x, y];
 
-            CMain.SendDebugMessage(string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}", tt.BackImage, tt.BackIndex, tt.MiddleImage, tt.MiddleIndex));
+            //CMain.SendDebugMessage(string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}", tt.BackImage, tt.BackIndex, tt.MiddleImage, tt.MiddleIndex));
 
             switch (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex)
             {

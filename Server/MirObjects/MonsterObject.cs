@@ -1246,7 +1246,20 @@ namespace Server.MirObjects
                                     PlayerObject playerob = (PlayerObject)ob;
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level) || Envir.Time < HallucinationTime) continue;
+
                                     Target = ob;
+
+                                    if (Master != null)
+                                    {
+                                        for (int j = 0; j < playerob.Pets.Count; j++)
+                                        {
+                                            MonsterObject pet = playerob.Pets[j];
+
+                                            if (!pet.IsAttackTarget(this)) continue;
+                                            Target = pet;
+                                            break;
+                                        }
+                                    }
                                     return;
                                 default:
                                     continue;
@@ -1731,6 +1744,12 @@ namespace Server.MirObjects
                 for (int i = 0; i < Master.Pets.Count; i++)
                     if (Master.Pets[i].EXPOwner == attacker.Master) return true;
 
+                for (int i = 0; i < attacker.Master.Pets.Count; i++)
+                {
+                    MonsterObject ob = attacker.Master.Pets[i];
+                    if (ob == Target || ob.Target == this) return true;
+                }
+
                 return Master.LastHitter == attacker.Master;
             }
             else if (attacker.Master != null) //Pet Attacking Wild Monster
@@ -1744,7 +1763,7 @@ namespace Server.MirObjects
                     if (ob == Target || ob.Target == this) return true;
                 }
 
-                if (Target == attacker.Master )
+                if (Target == attacker.Master)
                     return true;
             }
 
@@ -1782,7 +1801,6 @@ namespace Server.MirObjects
 
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-
             if (Target == null && attacker.IsAttackTarget(this))
             {
                 Target = attacker;
@@ -1917,6 +1935,13 @@ namespace Server.MirObjects
                         damage += ((damage / 100) * Settings.MentorDamageBoost);
                     }
                 }
+            }
+
+            for (int i = 0; i < attacker.Pets.Count; i++)
+            {
+                MonsterObject ob = attacker.Pets[i];
+
+                if (IsAttackTarget(ob)) ob.Target = this;
             }
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);

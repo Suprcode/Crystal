@@ -189,8 +189,8 @@ namespace Server.MirObjects
             }
         }
 
-        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime;
+        public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000, MovementDelay = 2000;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime, MovementTime;
 
         public byte ChatTick;
 
@@ -569,6 +569,8 @@ namespace Server.MirObjects
                 for (int j = 0; j <= 2; j++)
                     ((SpellObject)ArcherTrapObjectsArray[i, j]).DetonateTrapNow();
             }
+
+            if (CellTime + 700 < Envir.Time) _stepCounter = 0;
 
             if (Sneaking) CheckSneakRadius();
 
@@ -5304,6 +5306,9 @@ namespace Server.MirObjects
         {
             LogTime = Envir.Time + Globals.LogDelay;
 
+            if (Info.Equipment[(int)EquipmentSlot.Weapon] == null || ((Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape / 100) != 2)) return;
+            if (Functions.InRange(CurrentLocation, location, 9) == false) return;
+
             MapObject target = null;
 
             if (targetID == ObjectID)
@@ -5447,7 +5452,7 @@ namespace Server.MirObjects
                 case Spell.Thrusting:
                 case Spell.FlamingSword:
                     magic = GetMagic(spell);
-                    if (magic == null)
+                    if ((magic == null) || (!FlamingSword && (spell == Spell.FlamingSword)))
                     {
                         spell = Spell.None;
                         break;
@@ -5909,6 +5914,8 @@ namespace Server.MirObjects
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
+
+            if (magic.Info.Range != 0 && Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
 
             if (Hidden)
             {
@@ -7410,10 +7417,12 @@ namespace Server.MirObjects
             }
 
             magic.CastTime = Envir.Time;
+            _stepCounter = 0;
+            ActionTime = Envir.Time + GetDelayTime(MoveDelay);
+
             Enqueue(new S.MagicCast { Spell = magic.Spell });
 
             CellTime = Envir.Time + 500;
-            ActionTime = Envir.Time + GetDelayTime(MoveDelay) / 2;
         }
         private void SlashingBurst(UserMagic magic, out bool cast)
         {
@@ -8251,6 +8260,7 @@ namespace Server.MirObjects
                             ReceiveChat(("You cannot teleport on this map"), ChatType.System);
                             return;
                         }
+                        if (Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
                         if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
                         CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
                         LevelMagic(magic);
@@ -9053,6 +9063,8 @@ namespace Server.MirObjects
 
         public bool CheckMovement(Point location)
         {
+            if (Envir.Time < MovementTime) return false;
+
             //Script triggered coords
             for (int s = 0; s < CurrentMap.Info.ActiveCoords.Count; s++)
             {
@@ -9116,6 +9128,8 @@ namespace Server.MirObjects
 
             CurrentMap.AddObject(this);
 
+            MovementTime = Envir.Time + MovementDelay;
+
             Enqueue(new S.MapChanged
             {
                 FileName = CurrentMap.Info.FileName,
@@ -9156,6 +9170,7 @@ namespace Server.MirObjects
 
                 if (player != null) player.GetRelationship(false);
             }
+
             CheckConquest(true);
         }
 
@@ -9367,9 +9382,9 @@ namespace Server.MirObjects
             {
                 bool target = false;
 
-                for (int i = 0; i < attacker.Pets.Count; i++)
+                for (int i = 0; i < attacker.Master.Pets.Count; i++)
                 {
-                    if (attacker.Pets[i].EXPOwner != this) continue;
+                    if (attacker.Master.Pets[i].Target != this) continue;
 
                     target = true;
                     break;
@@ -9701,7 +9716,7 @@ namespace Server.MirObjects
             MagicShieldTime -= (damage - armour) * 60;
 
             ElementalBarrierTime -= (damage - armour) * 60;
-
+            
             LastHitter = attacker.Master ?? attacker;
             LastHitTime = Envir.Time + 10000;
             RegenTime = Envir.Time + RegenDelay;
@@ -13480,6 +13495,10 @@ namespace Server.MirObjects
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != objectID) continue;
 
+                ob.CheckVisible(this);
+
+                if (!ob.VisibleLog[Info.Index] || !ob.Visible) return;
+
                 ob.Call(this, key.ToUpper());
                 break;
             }
@@ -15745,9 +15764,16 @@ namespace Server.MirObjects
             }
 
             Point fishingPoint = Functions.PointMove(CurrentLocation, Direction, 3);
+
+            if (fishingPoint.X < 0 || fishingPoint.Y < 0 || CurrentMap.Width < fishingPoint.X || CurrentMap.Height < fishingPoint.Y)
+            {
+                Fishing = false;
+                return;
+            }
+
             Cell fishingCell = CurrentMap.Cells[fishingPoint.X, fishingPoint.Y];
 
-            if (fishingCell.FishingAttribute == FishingAttribute.None)
+            if (fishingCell.FishingAttribute < 0)
             {
                 Fishing = false;
                 return;
@@ -15864,7 +15890,7 @@ namespace Server.MirObjects
 
                     int highRate = int.MaxValue;
                     UserItem dropItem = null;
-                    foreach (DropInfo drop in Envir.FishingDrops)
+                    foreach (DropInfo drop in Envir.FishingDrops.Where(x => x.Type == fishingCell.FishingAttribute))
                     {
                         int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate);
 
@@ -17506,7 +17532,7 @@ namespace Server.MirObjects
 
             if (Info.CollectTime > Envir.Time)
             {
-                ReceiveChat(String.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
+                ReceiveChat(string.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -17514,7 +17540,7 @@ namespace Server.MirObjects
 
             if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > MaxBagWeight)
             {
-                ReceiveChat(String.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
+                ReceiveChat(string.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -18353,6 +18379,8 @@ namespace Server.MirObjects
 
         public void GameshopBuy(int GIndex, byte Quantity)
         {
+            if (Quantity < 1) return;
+
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
             

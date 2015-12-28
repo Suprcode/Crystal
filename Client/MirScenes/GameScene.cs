@@ -310,11 +310,6 @@ namespace Client.MirScenes
             bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
             bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
 
-            if(skillMode)
-            {
-
-            }
-
             switch (e.KeyCode)
             {
                 case Keys.F1:
@@ -881,7 +876,7 @@ namespace Client.MirScenes
             if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
             {
                 ShowReviveMessage = false;
-                MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo, false);
 
                 messageBox.YesButton.Click += (o, e) =>
                 {
@@ -5011,8 +5006,13 @@ namespace Client.MirScenes
                     //    InventoryDialog.Grid[i].Item = null;
                     //}
                 }
-            }       
-            
+            }
+
+            for (int i = 0; i < NPCAwakeDialog.ItemsIdx.Length; i++)
+            {
+                NPCAwakeDialog.ItemsIdx[i] = 0;
+            }
+
             MirMessageBox messageBox = null;
 
             switch (p.result)
@@ -8118,6 +8118,7 @@ namespace Client.MirScenes
                 Objects.Add(User);
 
 
+
             MapObject.MouseObject = null;
             MapObject.TargetObject = null;
             MapObject.MagicObject = null;
@@ -8140,7 +8141,6 @@ namespace Client.MirScenes
                 // Do nothing. index was not valid.
             }
 
-
             SetMusic = Music;
             SoundList.Music = Music;
         }
@@ -8159,19 +8159,6 @@ namespace Client.MirScenes
 
             for (int i = Effects.Count - 1; i >= 0; i--)
                 Effects[i].Process();
-            //if (Lightning && CMain.Time > LightningTime)
-            //{
-            //    LightningTime = CMain.Time + CMain.Random.Next(2000, 5000);
-            //    Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
-            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 400, source));
-            //}
-            //if (Fire && CMain.Time > FireTime)
-            //{
-            //    FireTime = CMain.Time + CMain.Random.Next(2000, 5000);
-            //    Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
-            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, source) { Blend = false });
-            //    MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, source));
-            //}
 
             if (MapObject.TargetObject != null && MapObject.TargetObject is MonsterObject && MapObject.TargetObject.AI == 64)
                 MapObject.TargetObject = null;
@@ -8249,6 +8236,7 @@ namespace Client.MirScenes
             if (!FloorValid)
                 DrawFloor();
 
+
             if (ControlTexture != null && !ControlTexture.Disposed && Size != TextureSize)
                 ControlTexture.Dispose();
 
@@ -8264,6 +8252,8 @@ namespace Client.MirScenes
             Surface surface = ControlTexture.GetSurfaceLevel(0);
             DXManager.SetSurface(surface);
             DXManager.Device.Clear(ClearFlags.Target, BackColour, 0, 0);
+
+            DrawBackground();
 
             if (FloorValid)
                 DXManager.Sprite.Draw2D(_floorTexture, Point.Empty, 0F, Point.Empty, Color.White);
@@ -8334,7 +8324,6 @@ namespace Client.MirScenes
 
         private void DrawFloor()
         {
-
             if (_floorTexture == null || _floorTexture.Disposed)
             {
                 _floorTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
@@ -8346,7 +8335,7 @@ namespace Client.MirScenes
             Surface oldSurface = DXManager.CurrentSurface;
 
             DXManager.SetSurface(_floorSurface);
-            DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+            DXManager.Device.Clear(ClearFlags.Target, Color.Empty, 0, 0); //Color.Black
 
             int index;
             int drawY, drawX;
@@ -8409,8 +8398,8 @@ namespace Client.MirScenes
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
                     if (fileIndex == -1) continue;
                     Size s = Libraries.MapLibs[fileIndex].GetSize(index);
-                    if (fileIndex == 200) //could break maps i have no clue anymore :( fixes random bad spots on old school 4.map tho
-                        continue;
+                    if (fileIndex == 200) continue; //fixes random bad spots on old school 4.map
+
                     if (index < 0 || ((s.Width != CellWidth || s.Height != CellHeight) && ((s.Width != CellWidth * 2) || (s.Height != CellHeight * 2)))) continue;
                     Libraries.MapLibs[fileIndex].Draw(index, drawX, drawY);
                 }
@@ -8419,6 +8408,28 @@ namespace Client.MirScenes
             DXManager.SetSurface(oldSurface);
 
             FloorValid = true;
+        }
+
+        private void DrawBackground()
+        {
+            string cleanFilename = FileName.Replace(Settings.MapPath, "");
+
+            if(cleanFilename.StartsWith("ID1") || cleanFilename.StartsWith("ID2"))
+            {
+                Libraries.Background.Draw(10, 0, 0); //mountains
+            }
+            else if(cleanFilename.StartsWith("ID3_013"))
+            {
+                Libraries.Background.Draw(22, 0, 0); //desert
+            }
+            else if (cleanFilename.StartsWith("ID3_015"))
+            {
+                Libraries.Background.Draw(23, 0, 0); //greatwall
+            }
+            else if (cleanFilename.StartsWith("ID3_023") || cleanFilename.StartsWith("ID3_025"))
+            {
+                Libraries.Background.Draw(21, 0, 0); //village entrance
+            }
         }
 
         private void DrawObjects()
@@ -8483,10 +8494,19 @@ namespace Client.MirScenes
                                 {
                                     byte animationTick = M2CellInfo[x, y].MiddleAnimationTick;
                                     index += (AnimationCount % (animation + (animation * animationTick))) / (1 + animationTick);
+
+                                    if (blend && (animation == 10 || animation == 8)) //diamond mines, abyss blends
+                                    {
+                                        Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].DrawUpBlend(index, new Point(drawX, drawY));
+                                    }
+                                    else
+                                    {
+                                        Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].DrawUp(index, drawX, drawY);
+                                    }
                                 }
                             }
                             s = Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].GetSize(index);
-                            if ((s.Width != CellWidth || s.Height != CellHeight) && (s.Width != (CellWidth * 2) || s.Height != (CellHeight * 2)))
+                            if ((s.Width != CellWidth || s.Height != CellHeight) && (s.Width != (CellWidth * 2) || s.Height != (CellHeight * 2)) && !blend)
                             {
                                 Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].DrawUp(index, drawX, drawY);
                             }
@@ -8502,8 +8522,6 @@ namespace Client.MirScenes
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
                     if (fileIndex == -1) continue;
                     animation = M2CellInfo[x, y].FrontAnimationFrame;
-
-
 
                     if ((animation & 0x80) > 0)
                     {
@@ -8607,8 +8625,10 @@ namespace Client.MirScenes
 
             Surface oldSurface = DXManager.CurrentSurface;
             DXManager.SetSurface(_lightSurface);
+
+            #region Night Lights
             Color Darkness = Color.Black;
-            switch (MapDarkLight)//todo fill these with more usefull values :p
+            switch (MapDarkLight)
             {
                 case 1:
                     Darkness = Color.FromArgb(255, 20, 20, 20);
@@ -8629,11 +8649,14 @@ namespace Client.MirScenes
 
             DXManager.Device.Clear(ClearFlags.Target, setting == LightSetting.Night ? Darkness : Color.FromArgb(255, 50, 50, 50), 0, 0);
 
+            #endregion
+
             int light;
             Point p;
             DXManager.SetBlend(true);
             DXManager.Device.RenderState.SourceBlend = Blend.SourceAlpha;
 
+            #region Object Lights (Player/Mob/NPC)
             for (int i = 0; i < Objects.Count; i++)
             {
                 MapObject ob = Objects[i];
@@ -8678,11 +8701,11 @@ namespace Client.MirScenes
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour); // ob is MonsterObject && ob.AI != 6 ? Color.PaleVioletRed : 
+                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour);
                     }
 
                 }
-
+                #region Object Effect Lights
                 if (!Settings.Effect) continue;
                 for (int e = 0; e < ob.Effects.Count; e++)
                 {
@@ -8700,9 +8723,11 @@ namespace Client.MirScenes
                     }
 
                 }
+                #endregion
             }
+            #endregion
 
-
+            #region Map Effect Lights
             if (Settings.Effect)
                 for (int e = 0; e < Effects.Count; e++)
                 {
@@ -8720,8 +8745,9 @@ namespace Client.MirScenes
                         DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
                     }
                 }
+            #endregion
 
-
+            #region Map Lights
             for (int y = MapObject.User.Movement.Y - ViewRangeY - 24; y <= MapObject.User.Movement.Y + ViewRangeY + 24; y++)
             {
                 if (y < 0) continue;
@@ -8731,12 +8757,32 @@ namespace Client.MirScenes
                     if (x < 0) continue;
                     if (x >= Width) break;
                     int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
-                    if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
-                    Color lightIntensity = Color.FromArgb(255, 255, 255, 255);  //Color lightIntensity = Color.FromArgb(255, 97, 200, 200); -- this colour matches mir3
-                    //this code would look great on shanda mir2 maps (give a blue glow to blue town lights), but it'll also give blue glow to mir3 maps
-                    //if (M2CellInfo[x, y].Light == 4) 
-                    //    lightIntensity = Color.FromArgb(255, 100,100,200);
-                    light = M2CellInfo[x, y].Light * 3;
+                    //if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
+                    if (M2CellInfo[x, y].Light == 0) continue;
+
+                    Color lightIntensity;
+
+                    light = (M2CellInfo[x, y].Light % 10) * 3;
+
+                    switch (M2CellInfo[x, y].Light / 10)
+                    {
+                        case 1:
+                            lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                            break;
+                        case 2:
+                            lightIntensity = Color.FromArgb(255, 120, 180, 255);
+                            break;
+                        case 3:
+                            lightIntensity = Color.FromArgb(255, 255, 180, 120);
+                            break;
+                        case 4:
+                            lightIntensity = Color.FromArgb(255, 22, 160, 5);
+                            break;
+                        default:
+                            lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                            break;
+                    }
+
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
 
                     p = new Point(
@@ -8757,6 +8803,7 @@ namespace Client.MirScenes
                     }
                 }
             }
+            #endregion
 
             DXManager.SetBlend(false);
             DXManager.SetSurface(oldSurface);
@@ -8945,7 +8992,6 @@ namespace Client.MirScenes
                         {
                             if (CMain.Time > GameScene.AttackTime)
                             {
-
                                 User.QueuedAction = new QueuedAction { Action = MirAction.AttackRange1, Direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation), Location = User.CurrentLocation, Params = new List<object>() };
                                 User.QueuedAction.Params.Add(MapObject.TargetObject != null ? MapObject.TargetObject.ObjectID : (uint)0);
                                 User.QueuedAction.Params.Add(MapObject.TargetObject.CurrentLocation);
@@ -9230,7 +9276,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            bool isTargetSpell = true;
+            //bool isTargetSpell = true;
 
             MapObject target = null;
 
@@ -9289,19 +9335,19 @@ namespace Client.MirScenes
 
                     if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObject = target;
 
-                    if(magic.Spell == Spell.ElementalShot)
-                    {
-                        isTargetSpell = User.HasElements;
-                    }
+                    //if(magic.Spell == Spell.ElementalShot)
+                    //{
+                    //    isTargetSpell = User.HasElements;
+                    //}
 
-                    switch(magic.Spell)
-                    {
-                        case Spell.SummonVampire:
-                        case Spell.SummonToad:
-                        case Spell.SummonSnakes:
-                            isTargetSpell = false;
-                            break;
-                    }
+                    //switch(magic.Spell)
+                    //{
+                    //    case Spell.SummonVampire:
+                    //    case Spell.SummonToad:
+                    //    case Spell.SummonSnakes:
+                    //        isTargetSpell = false;
+                    //        break;
+                    //}
 
                     break;
                 case Spell.Purification:
@@ -9362,10 +9408,10 @@ namespace Client.MirScenes
                         User.ClearMagic();
                         return;
                     }
-                    isTargetSpell = false;
+                    //isTargetSpell = false;
                     break;
                 default:
-                    isTargetSpell = false;
+                    //isTargetSpell = false;
                         break;
             }
 
@@ -9376,7 +9422,7 @@ namespace Client.MirScenes
             if (magic.Spell == Spell.FlashDash)
                 dir = User.Direction;
 
-            if (!Functions.InRange(User.CurrentLocation, location, 9) && isTargetSpell)
+            if ((magic.Range != 0) && (!Functions.InRange(User.CurrentLocation, location, magic.Range)))
             {
                 if (CMain.Time >= OutputDelay)
                 {
@@ -14597,32 +14643,53 @@ namespace Client.MirScenes
         private void BuyItem()
         {
             if (SelectedItem == null) return;
-            /*
-            if (SelectedItem.StackSize > 1)
-            {
-                UserItem temp = new UserItem(SelectedItem) { Count = SelectedItem.StackSize };
 
-                if (temp.Price() > GameScene.Gold)
+            if (SelectedItem.Info.StackSize > 1)
+            {
+                uint tempCount = SelectedItem.Count;
+                uint maxQuantity = SelectedItem.Info.StackSize;
+
+                SelectedItem.Count = maxQuantity;
+
+                if (usePearls)//pearl currency
                 {
-                    temp.Count = GameScene.Gold / SelectedItem.Price;
-                    if (temp.Count == 0)
+                    if (SelectedItem.Price() > GameScene.User.PearlCount)
+                    {
+                        maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
+                        if (maxQuantity == 0)
+                        {
+                            GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
+                            return;
+                        }              
+                    }
+                }
+
+                else if (SelectedItem.Price() > GameScene.Gold)
+                {            
+                    maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
+                    if (maxQuantity == 0)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do no have enough Gold.", ChatType.System);
                         return;
                     }
                 }
 
-                MapObject.User.GetMaxGain(temp);
+                MapObject.User.GetMaxGain(SelectedItem);
 
-                if (temp.Count == 0) return;
+                if (SelectedItem.Count > tempCount)
+                {
+                    SelectedItem.Count = tempCount;
+                }
 
-                MirAmountBox amountBox = new MirAmountBox("Purchase Amount:", SelectedItem.Image, temp.Count);
+                if (SelectedItem.Count == 0) return;
+
+                MirAmountBox amountBox = new MirAmountBox("Purchase Amount:", SelectedItem.Image, maxQuantity, 0, SelectedItem.Count);
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
                     if (amountBox.Amount > 0)
                     {
-                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = amountBox.Amount });
+                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = amountBox.Amount });
                     }
                 };
 
@@ -14630,7 +14697,7 @@ namespace Client.MirScenes
             }
             else
             {
-                if (SelectedItem.Price > GameScene.Gold)
+                if (SelectedItem.Info.Price > GameScene.Gold)
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
                     return;
@@ -14638,7 +14705,7 @@ namespace Client.MirScenes
 
                 if (SelectedItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do no have enough weight.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
                     return;
                 }
 
@@ -14647,47 +14714,16 @@ namespace Client.MirScenes
                     if (MapObject.User.Inventory[i] == null) break;
                     if (i == MapObject.User.Inventory.Length - 1)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot purchase any more items.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("You cannot purchase any more items.", ChatType.System);
                         return;
                     }
                 }
 
 
-                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.Index, Count = 1 });
-            }
-            */
-            if (usePearls)//pearl currency
-            {
-                if (SelectedItem.Price() > GameScene.User.PearlCount)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
-                    return;
-                }
-            }
-            else if (SelectedItem.Price() > GameScene.Gold)
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat("You don't have enough gold.", ChatType.System);
-                return;
-            }
-
-            if (SelectedItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat("Your bag is over weight.", ChatType.System);
-                return;
-            }
-
-            for (int i = 0; i < MapObject.User.Inventory.Length; i++)
-            {
-                if (MapObject.User.Inventory[i] == null) break;
-                if (i == MapObject.User.Inventory.Length - 1)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Not enough space in your inventory.", ChatType.System);
-                    return;
-                }
-            }
-
-            Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID });
+                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1 });
+            }         
         }
+
         private void NPCGoodsPanel_MouseWheel(object sender, MouseEventArgs e)
         {
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
@@ -15378,6 +15414,7 @@ namespace Client.MirScenes
                 ItemCells[2].Item = null;
             }
 
+            
             NeedItemLabel2.Text = "";
             NeedItemLabel1.Text = "";
             GoldLabel.Text = "";
@@ -15571,6 +15608,11 @@ namespace Client.MirScenes
                     Network.Enqueue(new C.AwakeningLockedItem { UniqueID = item.Item.UniqueID, Locked = false });
                     item.Item = null;
                 }
+            }
+
+            for (int i = 0; i < ItemsIdx.Length; i++)
+            {
+                ItemsIdx[i] = 0;
             }
 
             ItemCell_Click();

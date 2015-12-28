@@ -11,9 +11,9 @@ namespace Client.MirObjects
         public short BackIndex;
         public int BackImage;
         public short MiddleIndex;
-        public short MiddleImage;
+        public int MiddleImage;
         public short FrontIndex;
-        public short FrontImage;
+        public int FrontImage;
 
         public byte DoorIndex;
         public byte DoorOffset;
@@ -128,6 +128,8 @@ namespace Client.MirObjects
                     }
                 return;
             }
+
+
             //c# custom map format
             if ((Bytes[2] == 0x43) && (Bytes[3] == 0x23))
             {
@@ -160,7 +162,7 @@ namespace Client.MirObjects
                 return;
             }
             //shanda's 2012 format and one of shandas(wemades) older formats share same header info, only difference is the filesize
-            if ((Bytes[4] == 0x0F) && (Bytes[18] == 0x0D) && (Bytes[19] == 0x0A))
+            if ((Bytes[4] == 0x0F) || (Bytes[4] == 0x03) && (Bytes[18] == 0x0D) && (Bytes[19] == 0x0A))
             {
                 int W = Bytes[0] + (Bytes[1] << 8);
                 int H = Bytes[2] + (Bytes[3] << 8);
@@ -182,9 +184,9 @@ namespace Client.MirObjects
                 LoadMapType7();
                 return;
             }
+
             //if it's none of the above load the default old school format
             LoadMapType0();
-
         }
 
         private void LoadMapType0()
@@ -218,7 +220,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
 
 
@@ -268,7 +270,7 @@ namespace Client.MirObjects
                             };
                         offSet++;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -309,7 +311,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -356,7 +358,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
 
@@ -402,7 +404,7 @@ namespace Client.MirObjects
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -447,6 +449,7 @@ namespace Client.MirObjects
                         
                         flag = Bytes[offset++];
                         MapCells[x, y].MiddleAnimationFrame = Bytes[offset++];
+
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset] == 255? (byte)0 : Bytes[offset];
                         MapCells[x, y].FrontAnimationFrame &= 0x8F;
                         offset++;
@@ -456,19 +459,22 @@ namespace Client.MirObjects
                         offset++;
                         MapCells[x,y].MiddleIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
                         offset++;
-                        MapCells[x,y].MiddleImage = (short)(BitConverter.ToInt16(Bytes,offset)+1);
+                        MapCells[x,y].MiddleImage = (ushort)(BitConverter.ToInt16(Bytes,offset)+1);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (short)(BitConverter.ToInt16(Bytes, offset)+1);
+                        MapCells[x, y].FrontImage = (ushort)(BitConverter.ToInt16(Bytes, offset)+1);
                         if ((MapCells[x, y].FrontImage == 1) && (MapCells[x, y].FrontIndex == 200))
                             MapCells[x, y].FrontIndex = -1;
                         offset += 2;
                         offset += 3;//mir3 maps dont have doors so dont bother reading the info
                         MapCells[x, y].Light = (byte)(Bytes[offset] & 0x0F);
-                        MapCells[x, y].Light *= 4;//far wants all light on mir3 maps to be maxed :p
                         offset += 2;
                         if ((flag & 0x01) != 1) MapCells[x, y].BackImage |= 0x20000000;
-                        if ((flag & 0x02) != 2) MapCells[x, y].FrontImage = (short)((UInt16)MapCells[x, y].FrontImage | 0x8000);
+                        if ((flag & 0x02) != 2) MapCells[x, y].FrontImage = (ushort)((UInt16)MapCells[x, y].FrontImage | 0x8000);
 
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
+                            MapCells[x, y].FishingCell = true;
+                        else
+                            MapCells[x, y].Light *= 2;//expand general mir3 lighting as default range is small. Might break new colour lights.
                     }
             }
             catch (Exception ex)
@@ -563,7 +569,7 @@ namespace Client.MirObjects
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
                         offset++;
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }
@@ -613,7 +619,7 @@ namespace Client.MirObjects
                         MapCells[x, y].TileAnimationFrames = Bytes[offset++];
                         MapCells[x, y].Light = Bytes[offset++];
 
-                        if (MapCells[x, y].Light == 100 || MapCells[x, y].Light == 101)
+                        if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }
             }

@@ -104,9 +104,8 @@ namespace Server.MirEnvir
 
                     byte light = fileBytes[offSet++];
 
-                    if (light == 100 || light == 101)
-                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
-
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
 
@@ -141,8 +140,8 @@ namespace Server.MirEnvir
 
                     byte light = fileBytes[offSet++];
 
-                    if (light == 100 || light == 101)
-                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
 
                     offSet += 1;
                 }
@@ -174,8 +173,8 @@ namespace Server.MirEnvir
 
                     byte light = fileBytes[offSet++];
 
-                    if (light == 100 || light == 101)
-                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
 
                     offSet += 2;
                 }
@@ -207,8 +206,8 @@ namespace Server.MirEnvir
 
                     byte light = fileBytes[offSet++];
 
-                    if (light == 100 || light == 101)
-                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
 
                     offSet += 17;
                 }
@@ -266,8 +265,8 @@ namespace Server.MirEnvir
 
                     byte light = fileBytes[offSet++];
 
-                    if (light == 100 || light == 101)
-                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
 
@@ -320,8 +319,8 @@ namespace Server.MirEnvir
 
                     byte light = fileBytes[offSet++];
 
-                    if (light == 100 || light == 101)
-                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
 
                     offSet += 2;
                 }
@@ -354,8 +353,8 @@ namespace Server.MirEnvir
 
                     byte light = Bytes[offset++];
 
-                    if (light == 100 || light == 101)
-                        Cells[x, y].FishingAttribute = light == 100 ? FishingAttribute.FreshWater : FishingAttribute.SaltWater;
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
                 
         }
@@ -2124,7 +2123,7 @@ namespace Server.MirEnvir
 
         public List<MapObject> Objects;
         public CellAttribute Attribute;
-        public FishingAttribute FishingAttribute;
+        public sbyte FishingAttribute = -1;
 
         public void Add(MapObject mapObject)
         {

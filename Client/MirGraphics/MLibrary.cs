@@ -29,7 +29,11 @@ namespace Client.MirGraphics
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
             GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill");
-        
+
+        public static readonly MLibrary
+            Background = new MLibrary(Settings.DataPath + "Background");
+
+
 
         public static readonly MLibrary
             Dragon = new MLibrary(Settings.DataPath + "Dragon");
@@ -52,8 +56,8 @@ namespace Client.MirGraphics
                                           CHair = new MLibrary[9],
                                           CHumEffect = new MLibrary[3],
                                           AArmours = new MLibrary[17],
-                                          AWeaponsL = new MLibrary[19],
-                                          AWeaponsR = new MLibrary[19],
+                                          AWeaponsL = new MLibrary[14],
+                                          AWeaponsR = new MLibrary[14],
                                           AHair = new MLibrary[9],
                                           AHumEffect = new MLibrary[3],
                                           ARArmours = new MLibrary[17],
@@ -70,10 +74,6 @@ namespace Client.MirGraphics
                                           TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
                                           TransformWeaponEffect = new MLibrary[1];
-
-        //Extra
-        public static readonly MLibrary
-            ExMagic_MagicEx5 = new MLibrary(Settings.ExtraDataPath + "WemadeMir3\\MagicEx5");
 
         static Libraries()
         {
@@ -243,7 +243,7 @@ namespace Client.MirGraphics
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
-                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 16;
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 17;
 
             Dragon.Initialize();
             Progress++;
@@ -275,6 +275,9 @@ namespace Client.MirGraphics
             Progress++;
 
             GuildSkill.Initialize();
+            Progress++;
+
+            Background.Initialize();
             Progress++;
 
             Deco.Initialize();
