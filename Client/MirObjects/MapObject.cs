@@ -8,6 +8,7 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
+using Client.MirScenes.Dialogs;
 
 namespace Client.MirObjects
 {

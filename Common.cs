@@ -2108,7 +2108,7 @@ public static class Functions
         return false;
     }
 
-    public static string PrintTimeSpanFromSeconds(double secs)
+    public static string PrintTimeSpanFromSeconds(double secs, bool accurate = true)
     {
         TimeSpan t = TimeSpan.FromSeconds(secs);
         string answer;
@@ -2118,15 +2118,15 @@ public static class Functions
         }
         else if (t.TotalHours < 1.0)
         {
-            answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
+            answer = accurate ? string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds) : string.Format("{0}m", t.Minutes);
         }
         else if (t.TotalDays < 1.0)
         {
-            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.Hours, t.Minutes, t.Seconds);
+            answer = accurate ? string.Format("{0}h {1:D2}m {2:D2}s", (int)t.Hours, t.Minutes, t.Seconds) : string.Format("{0}h {1:D2}m", (int)t.TotalHours, t.Minutes);
         }
         else // more than 1 day
         {
-            answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
+            answer = accurate ? string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds) : string.Format("{0}d {1}h {2:D2}m", (int)t.TotalDays, (int)t.Hours, t.Minutes);
         }
 
         return answer;
