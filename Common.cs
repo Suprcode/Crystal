@@ -2349,6 +2349,8 @@ public static class Functions
             return GetClassBasedItem(Origin, job, ItemList);
         if (Origin.LevelBased)
             return GetLevelBasedItem(Origin, Level, ItemList);
+        if (Origin.Generate)
+            return GetGeneratedItem(Origin);
         return Origin;
     }
     public static ItemInfo GetLevelBasedItem(ItemInfo Origin, ushort level, List<ItemInfo> ItemList)
@@ -2361,6 +2363,14 @@ public static class Functions
                 if ((info.RequiredType == RequiredType.Level) && (info.RequiredAmount <= level) && (output.RequiredAmount < info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
                     output = info;
         }
+        return output;
+    }
+    public static ItemInfo GetGeneratedItem(ItemInfo Origin)
+    {
+        ItemInfo output = Origin;
+
+       // output = new ItemInfo { Name = Origin.Name, BagWeight = Origin.BagWeight, Bind = Origin.Bind,    };
+
         return output;
     }
     public static ItemInfo GetClassBasedItem(ItemInfo Origin, MirClass job, List<ItemInfo> ItemList)

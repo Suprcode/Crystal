@@ -2054,54 +2054,51 @@ namespace Server.MirEnvir
             int _dc = 0, sc = 0, mc = 0, ac = 0, mac = 0;
 
 
-            if (item.Info.MaxDC > 0)
-                item.DC -= (item.Info.MaxDC);
-
-            item.DC += 1;
-
-
             int CurrentWeightVal = WeightValue * info.RequiredAmount;
             int MinimumWeight = 15;
 
-            CurrentWeightVal -= (item.Info.MinDC * minDc);
-            CurrentWeightVal -= (item.Info.MinSC * minSc);
-            CurrentWeightVal -= (item.Info.MinMC * minMc);
-            CurrentWeightVal -= (item.Info.MinAC * minAc);
-            CurrentWeightVal -= (item.Info.MinMAC * minMac);
-
             while (CurrentWeightVal > 0)
                 {
-                CurrentWeightVal = 0;
-                switch (SMain.Envir.Random.Next(1, 5))
+                //CurrentWeightVal = 0;
+                switch (SMain.Envir.Random.Next(1, 3))
                 {
                     case 1: //Max DC
-                        //if (info.MaxDC > 0)
-                            //if (CurrentWeightVal >= maxDc)
-                            //{
-                                //item.DC++;
-                                //CurrentWeightVal -= maxDc;
-                            //}
-                            //else if (CurrentWeightVal < MinimumWeight)
-                                //CurrentWeightVal = 0;
+                        if (info.MaxDC > 0)
+                            if (CurrentWeightVal >= maxDc)
+                            {
+                                item.DC++;
+                                CurrentWeightVal -= maxDc;
+                            }
+                            else if (CurrentWeightVal < MinimumWeight)
+                                CurrentWeightVal = 0;
                         break;
                     case 2: //Max SC
-                        //if (info.MaxSC > 0)
-                            //if (CurrentWeightVal >= minSc)
-                            //{
-                                //info.MaxDC++;
-                                //CurrentWeightVal -= maxSc;
-                            //}
-                            //else if (CurrentWeightVal < MinimumWeight)
-                                    //CurrentWeightVal = 0;
+                        if (info.MaxSC > 0)
+                            if (CurrentWeightVal >= minSc)
+                            {
+                                info.MaxDC++;
+                                CurrentWeightVal -= maxSc;
+                            }
+                            else if (CurrentWeightVal < MinimumWeight)
+                                    CurrentWeightVal = 0;
                         break;
-                    case 3: //Min SC
+                    case 3: //Max MC
+                        if (info.MaxMC > 0)
+                            if (CurrentWeightVal >= minMc)
+                            {
+                                info.MaxMC++;
+                                CurrentWeightVal -= maxMc;
+                            }
+                            else if (CurrentWeightVal < MinimumWeight)
+                                CurrentWeightVal = 0;
                         break;
-                    case 4: //Max SC
+                    case 4: //Min DC
                         break;
-                    case 5: //Min MC
+                    case 5: //Max SC
                         break;
-                    case 6: //Max MC
-                            break;
+                    case 6: //Min MC
+                        break;
+                    
                     }
                 }
 
