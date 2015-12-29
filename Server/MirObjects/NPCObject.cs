@@ -1067,7 +1067,10 @@ namespace Server.MirObjects
                 PlayerObject player = CurrentMap.Players[i];
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                {
                     CheckVisible(player, true);
+                    player.CheckStacked();
+                }
             }
         }
 
