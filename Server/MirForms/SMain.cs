@@ -385,6 +385,14 @@ namespace Server
         {
             Envir.Reboot();
         }
+
+        private void respawnsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(7);
+            
+            form.ShowDialog();
+        }
+
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();

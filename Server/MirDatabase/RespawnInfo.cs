@@ -11,17 +11,19 @@ namespace Server.MirDatabase
     {
         public int MonsterIndex;
         public Point Location;
-        public ushort Count, Spread, Delay;
+        public ushort Count, Spread, Delay, RandomDelay;
         public byte Direction;
 
         public string RoutePath = string.Empty;
-
+        public int RespawnIndex;
+        public bool SaveRespawnTime = false;
+        public ushort RespawnTicks; //leave 0 if not using this system!
 
         public RespawnInfo()
         {
 
         }
-        public RespawnInfo(BinaryReader reader)
+        public RespawnInfo(BinaryReader reader, int Version, int Customversion)
         {
             MonsterIndex = reader.ReadInt32();
 
@@ -36,6 +38,18 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion >= 36)
             {
                 RoutePath = reader.ReadString();
+            }
+
+            if (Version > 67)
+            {
+                RandomDelay = reader.ReadUInt16();
+                RespawnIndex = reader.ReadInt32();
+                SaveRespawnTime = reader.ReadBoolean();
+                RespawnTicks = reader.ReadUInt16();
+            }
+            else
+            {
+                RespawnIndex = ++SMain.Envir.RespawnIndex;
             }
         }
 
@@ -59,6 +73,10 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[4], out info.Spread)) return null;
             if (!ushort.TryParse(data[5], out info.Delay)) return null;
             if (!byte.TryParse(data[6], out info.Direction)) return null;
+            if (!ushort.TryParse(data[7], out info.RandomDelay)) return null;
+            if (!int.TryParse(data[8], out info.RespawnIndex)) return null;
+            if (!bool.TryParse(data[9], out info.SaveRespawnTime)) return null;
+            if (!ushort.TryParse(data[10], out info.RespawnTicks)) return null;
 
             return info;
         }
@@ -76,11 +94,16 @@ namespace Server.MirDatabase
             writer.Write(Direction);
 
             writer.Write(RoutePath);
+
+            writer.Write(RandomDelay);
+            writer.Write(RespawnIndex);
+            writer.Write(SaveRespawnTime);
+            writer.Write(RespawnTicks);
         }
 
         public override string ToString()
         {
-            return string.Format("Monster: {0} - {1} - {2} - {3}", MonsterIndex, Functions.PointToString(Location), Count, Delay);
+            return string.Format("Monster: {0} - {1} - {2} - {3} - {4} - {5} - {6} - {7} - {8} - {9}", MonsterIndex, Functions.PointToString(Location), Count, Spread, Delay, Direction, RandomDelay, RespawnIndex, SaveRespawnTime, RespawnTicks);
         }
     }
 

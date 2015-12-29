@@ -1032,8 +1032,6 @@ namespace Server.MirObjects
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
                 if (poison.Owner != null)
                 {
-                    //thedeath
-                    
                     switch (poison.Owner.Race)
                     { 
                         case ObjectType.Player:

@@ -437,7 +437,7 @@ namespace Client.MirObjects
                         for (int i = 0; i < 4; i++)
                         {
                             MapCells[(x * 2) + (i % 2), (y * 2) + (i / 2)].BackIndex = (short)(Bytes[offset] != 255? Bytes[offset]+200 : -1);
-                            MapCells[(x*2) + (i % 2), (y*2) + (i / 2)].BackImage = (int)(BitConverter.ToInt16(Bytes, offset + 1)+1);
+                            MapCells[(x*2) + (i % 2), (y*2) + (i / 2)].BackImage = (int)(BitConverter.ToUInt16(Bytes, offset + 1)+1);
                         }
                         offset += 3;
                     }
@@ -459,9 +459,9 @@ namespace Client.MirObjects
                         offset++;
                         MapCells[x,y].MiddleIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
                         offset++;
-                        MapCells[x,y].MiddleImage = (ushort)(BitConverter.ToInt16(Bytes,offset)+1);
+                        MapCells[x,y].MiddleImage = (ushort)(BitConverter.ToUInt16(Bytes,offset)+1);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (ushort)(BitConverter.ToInt16(Bytes, offset)+1);
+                        MapCells[x, y].FrontImage = (ushort)(BitConverter.ToUInt16(Bytes, offset)+1);
                         if ((MapCells[x, y].FrontImage == 1) && (MapCells[x, y].FrontIndex == 200))
                             MapCells[x, y].FrontIndex = -1;
                         offset += 2;

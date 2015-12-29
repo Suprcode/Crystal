@@ -405,6 +405,9 @@ namespace Server.MirEnvir
                         if (info.Monster == null) continue;
                         info.Map = this;
                         Respawns.Add(info);
+
+                        if ((info.Info.SaveRespawnTime) && (info.Info.RespawnTicks != 0))
+                            SMain.Envir.SavedSpawns.Add(info);
                     }
 
 
@@ -645,18 +648,27 @@ namespace Server.MirEnvir
             for (int i = 0; i < Respawns.Count; i++)
             {
                 MapRespawn respawn = Respawns[i];
-                if (Envir.Time < respawn.RespawnTime) continue;
-                if (respawn.Count < respawn.Info.Count)
+                if ((respawn.Info.RespawnTicks != 0) && (Envir.RespawnTick.CurrentTickcounter < respawn.NextSpawnTick)) continue;
+                if ((respawn.Info.RespawnTicks == 0) && (Envir.Time < respawn.RespawnTime)) continue;
+
+                if (respawn.Count < (respawn.Info.Count * Envir.spawnmultiplyer))
                 {
                     int count = (respawn.Info.Count * Envir.spawnmultiplyer) - respawn.Count;
-                    
+
                     for (int c = 0; c < count; c++)
                         Success = respawn.Spawn();
                 }
                 if (Success)
                 {
                     respawn.ErrorCount = 0;
-                    respawn.RespawnTime = Envir.Time + (respawn.Info.Delay * Settings.Minute);
+                    long delay = Math.Max(1, respawn.Info.Delay - respawn.Info.RandomDelay + Envir.Random.Next(respawn.Info.RandomDelay * 2));
+                    respawn.RespawnTime = Envir.Time + (delay * Settings.Minute);
+                    if (respawn.Info.RespawnTicks != 0)
+                    {
+                        respawn.NextSpawnTick = Envir.RespawnTick.CurrentTickcounter + (ulong)respawn.Info.RespawnTicks;
+                        if (respawn.NextSpawnTick > long.MaxValue)//since nextspawntick is ulong this simple thing allows an easy way of preventing the counter from overflowing
+                            respawn.NextSpawnTick -= long.MaxValue;
+                    }
                 }
                 else
                 {
@@ -2144,6 +2156,7 @@ namespace Server.MirEnvir
         public Map Map;
         public int Count;
         public long RespawnTime;
+        public ulong NextSpawnTick;
         public byte ErrorCount = 0;
 
         public List<RouteInfo> Route;

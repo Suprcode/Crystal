@@ -33,6 +33,7 @@ namespace Server
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.MapTabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
@@ -93,6 +94,10 @@ namespace Server
             this.AddRButton = new System.Windows.Forms.Button();
             this.RespawnInfoListBox = new System.Windows.Forms.ListBox();
             this.RespawnInfoPanel = new System.Windows.Forms.Panel();
+            this.chkrespawnsave = new System.Windows.Forms.CheckBox();
+            this.chkRespawnEnableTick = new System.Windows.Forms.CheckBox();
+            this.Randomtextbox = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.RoutePathTextBox = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
@@ -149,6 +154,7 @@ namespace Server
             this.ImportMongenButton = new System.Windows.Forms.Button();
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -176,7 +182,7 @@ namespace Server
             this.MapTabs.Location = new System.Drawing.Point(207, 62);
             this.MapTabs.Name = "MapTabs";
             this.MapTabs.SelectedIndex = 0;
-            this.MapTabs.Size = new System.Drawing.Size(540, 256);
+            this.MapTabs.Size = new System.Drawing.Size(540, 273);
             this.MapTabs.TabIndex = 8;
             // 
             // tabPage1
@@ -200,7 +206,7 @@ namespace Server
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(532, 230);
+            this.tabPage1.Size = new System.Drawing.Size(532, 247);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Info";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -374,7 +380,7 @@ namespace Server
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(532, 230);
+            this.tabPage6.Size = new System.Drawing.Size(532, 247);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Attributes";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -615,7 +621,7 @@ namespace Server
             this.tabPage3.Controls.Add(this.SafeZoneInfoListBox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(532, 230);
+            this.tabPage3.Size = new System.Drawing.Size(532, 247);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Safe Zones";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -746,7 +752,7 @@ namespace Server
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(532, 230);
+            this.tabPage2.Size = new System.Drawing.Size(532, 247);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Respawns";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -798,7 +804,7 @@ namespace Server
             this.RespawnInfoListBox.Location = new System.Drawing.Point(6, 35);
             this.RespawnInfoListBox.Name = "RespawnInfoListBox";
             this.RespawnInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.RespawnInfoListBox.Size = new System.Drawing.Size(260, 134);
+            this.RespawnInfoListBox.Size = new System.Drawing.Size(260, 147);
             this.RespawnInfoListBox.TabIndex = 14;
             this.RespawnInfoListBox.SelectedIndexChanged += new System.EventHandler(this.RespawnInfoListBox_SelectedIndexChanged);
             // 
@@ -807,6 +813,10 @@ namespace Server
             this.RespawnInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.RespawnInfoPanel.Controls.Add(this.chkrespawnsave);
+            this.RespawnInfoPanel.Controls.Add(this.chkRespawnEnableTick);
+            this.RespawnInfoPanel.Controls.Add(this.Randomtextbox);
+            this.RespawnInfoPanel.Controls.Add(this.label23);
             this.RespawnInfoPanel.Controls.Add(this.label34);
             this.RespawnInfoPanel.Controls.Add(this.RoutePathTextBox);
             this.RespawnInfoPanel.Controls.Add(this.label24);
@@ -826,13 +836,55 @@ namespace Server
             this.RespawnInfoPanel.Enabled = false;
             this.RespawnInfoPanel.Location = new System.Drawing.Point(272, 35);
             this.RespawnInfoPanel.Name = "RespawnInfoPanel";
-            this.RespawnInfoPanel.Size = new System.Drawing.Size(205, 175);
+            this.RespawnInfoPanel.Size = new System.Drawing.Size(254, 205);
             this.RespawnInfoPanel.TabIndex = 11;
+            // 
+            // chkrespawnsave
+            // 
+            this.chkrespawnsave.AutoSize = true;
+            this.chkrespawnsave.Location = new System.Drawing.Point(25, 109);
+            this.chkrespawnsave.Name = "chkrespawnsave";
+            this.chkrespawnsave.Size = new System.Drawing.Size(164, 17);
+            this.chkrespawnsave.TabIndex = 25;
+            this.chkrespawnsave.Text = "Save respawnticks on reboot";
+            this.chkrespawnsave.UseVisualStyleBackColor = true;
+            this.chkrespawnsave.CheckedChanged += new System.EventHandler(this.chkrespawnsave_CheckedChanged);
+            // 
+            // chkRespawnEnableTick
+            // 
+            this.chkRespawnEnableTick.AutoSize = true;
+            this.chkRespawnEnableTick.Location = new System.Drawing.Point(25, 92);
+            this.chkRespawnEnableTick.Name = "chkRespawnEnableTick";
+            this.chkRespawnEnableTick.Size = new System.Drawing.Size(137, 17);
+            this.chkRespawnEnableTick.TabIndex = 24;
+            this.chkRespawnEnableTick.Text = "Use tickbased respawn";
+            this.chkRespawnEnableTick.UseVisualStyleBackColor = true;
+            this.chkRespawnEnableTick.CheckedChanged += new System.EventHandler(this.chkRespawnEnableTick_CheckedChanged);
+            // 
+            // Randomtextbox
+            // 
+            this.Randomtextbox.Location = new System.Drawing.Point(158, 130);
+            this.Randomtextbox.MaxLength = 10;
+            this.Randomtextbox.Multiline = true;
+            this.Randomtextbox.Name = "Randomtextbox";
+            this.Randomtextbox.Size = new System.Drawing.Size(37, 20);
+            this.Randomtextbox.TabIndex = 23;
+            this.toolTip1.SetToolTip(this.Randomtextbox, "Allows random + or - added to each spawn time");
+            this.Randomtextbox.TextChanged += new System.EventHandler(this.RandomTextBox_TextChanged);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(135, 133);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(18, 13);
+            this.label23.TabIndex = 22;
+            this.label23.Text = "R:";
             // 
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(20, 123);
+            this.label34.Location = new System.Drawing.Point(22, 159);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(39, 13);
             this.label34.TabIndex = 21;
@@ -840,7 +892,7 @@ namespace Server
             // 
             // RoutePathTextBox
             // 
-            this.RoutePathTextBox.Location = new System.Drawing.Point(65, 120);
+            this.RoutePathTextBox.Location = new System.Drawing.Point(65, 156);
             this.RoutePathTextBox.Name = "RoutePathTextBox";
             this.RoutePathTextBox.Size = new System.Drawing.Size(130, 20);
             this.RoutePathTextBox.TabIndex = 20;
@@ -849,15 +901,15 @@ namespace Server
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(134, 95);
+            this.label24.Location = new System.Drawing.Point(22, 185);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(18, 13);
+            this.label24.Size = new System.Drawing.Size(23, 13);
             this.label24.TabIndex = 18;
-            this.label24.Text = "D:";
+            this.label24.Text = "Dir:";
             // 
             // DirectionTextBox
             // 
-            this.DirectionTextBox.Location = new System.Drawing.Point(158, 92);
+            this.DirectionTextBox.Location = new System.Drawing.Point(65, 182);
             this.DirectionTextBox.MaxLength = 5;
             this.DirectionTextBox.Name = "DirectionTextBox";
             this.DirectionTextBox.Size = new System.Drawing.Size(37, 20);
@@ -867,7 +919,7 @@ namespace Server
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(22, 95);
+            this.label8.Location = new System.Drawing.Point(22, 133);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(37, 13);
             this.label8.TabIndex = 16;
@@ -875,12 +927,13 @@ namespace Server
             // 
             // DelayTextBox
             // 
-            this.DelayTextBox.Location = new System.Drawing.Point(65, 92);
+            this.DelayTextBox.Location = new System.Drawing.Point(65, 130);
             this.DelayTextBox.MaxLength = 10;
             this.DelayTextBox.Multiline = true;
             this.DelayTextBox.Name = "DelayTextBox";
             this.DelayTextBox.Size = new System.Drawing.Size(62, 20);
             this.DelayTextBox.TabIndex = 15;
+            this.toolTip1.SetToolTip(this.DelayTextBox, "if you use tick based spawn: this is ignored!");
             this.DelayTextBox.TextChanged += new System.EventHandler(this.DelayTextBox_TextChanged);
             // 
             // label7
@@ -983,7 +1036,7 @@ namespace Server
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(532, 230);
+            this.tabPage4.Size = new System.Drawing.Size(532, 247);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Movements";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1166,7 +1219,7 @@ namespace Server
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(532, 230);
+            this.tabPage7.Size = new System.Drawing.Size(532, 247);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "MineZones";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1323,7 +1376,7 @@ namespace Server
             this.MapInfoListBox.Location = new System.Drawing.Point(12, 62);
             this.MapInfoListBox.Name = "MapInfoListBox";
             this.MapInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MapInfoListBox.Size = new System.Drawing.Size(189, 251);
+            this.MapInfoListBox.Size = new System.Drawing.Size(189, 264);
             this.MapInfoListBox.TabIndex = 7;
             this.MapInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MapInfoListBox_SelectedIndexChanged);
             // 
@@ -1400,7 +1453,7 @@ namespace Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(759, 319);
+            this.ClientSize = new System.Drawing.Size(759, 336);
             this.Controls.Add(this.VisualizerButton);
             this.Controls.Add(this.ExportMongenButton);
             this.Controls.Add(this.ImportMongenButton);
@@ -1415,7 +1468,6 @@ namespace Server
             this.Name = "MapInfoForm";
             this.Text = "Map Info";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MapInfoForm_FormClosed);
-            this.Load += new System.EventHandler(this.MapInfoForm_Load);
             this.MapTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -1555,6 +1607,11 @@ namespace Server
         private CheckBox NeedMoveMCheckBox;
         private Label label11;
         private TextBox MusicTextBox;
+        private Label label23;
+        private TextBox Randomtextbox;
+        private ToolTip toolTip1;
+        private CheckBox chkrespawnsave;
+        private CheckBox chkRespawnEnableTick;
 
     }
 }
