@@ -4110,10 +4110,7 @@ namespace Client.MirObjects
 
         public override void Draw()
         {
-            if (Settings.Effect)
-            {
-                DrawBehindEffects();
-            }
+            DrawBehindEffects(Settings.Effect);
 
             float oldOpacity = DXManager.Opacity;
             if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
@@ -4156,26 +4153,28 @@ namespace Client.MirObjects
             //}
         }
 
-        public override void DrawBehindEffects()
+        public override void DrawBehindEffects(bool effectsEnabled)
         {
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (!Effects[i].DrawBehind) continue;
                 if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
-
+                if ((!effectsEnabled) && (!IsVitalEffect(Effects[i]))) continue;
                 Effects[i].Draw();
             }
         }
 
-        public override void DrawEffects()
+        public override void DrawEffects(bool effectsEnabled)
         {
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (Effects[i].DrawBehind) continue;
                 if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
-
+                if ((!effectsEnabled) && (!IsVitalEffect(Effects[i]))) continue;
                 Effects[i].Draw();
             }
+
+            if (!effectsEnabled) return;
 
             switch (CurrentAction)
             {
@@ -4306,6 +4305,15 @@ namespace Client.MirObjects
 
             if (MountLibrary != null)
                 MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
+        }
+
+        private bool IsVitalEffect(Effect effect)
+        {
+            if ((effect.Library == Libraries.Magic) && (effect.BaseIndex == 3890))
+                return true;
+            if ((effect.Library == Libraries.Magic3) && (effect.BaseIndex == 1890))
+                return true;
+            return false;
         }
 
         public void GetBackStepDistance(int magicLevel)

@@ -8569,8 +8569,7 @@ namespace Client.MirScenes
 
             for (int i = 0; i < Objects.Count; i++)
             {
-                if (Settings.Effect)
-                    Objects[i].DrawEffects();
+                Objects[i].DrawEffects(Settings.Effect);
 
                 if (Settings.NameView && !(Objects[i] is ItemObject) && !Objects[i].Dead)
                     Objects[i].DrawName();
@@ -8706,6 +8705,7 @@ namespace Client.MirScenes
 
             #region Map Effect Lights
             if (Settings.Effect)
+            {
                 for (int e = 0; e < Effects.Count; e++)
                 {
                     Effect effect = Effects[e];
@@ -8722,6 +8722,7 @@ namespace Client.MirScenes
                         DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
                     }
                 }
+            }
             #endregion
 
             #region Map Lights

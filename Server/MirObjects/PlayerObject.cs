@@ -2367,6 +2367,11 @@ namespace Server.MirObjects
 
             ExpRateOffset = 0;
             ItemDropRateOffset = 0;
+            MineRate = 0;
+            GemRate = 0;
+            FishRate = 0;
+            CraftRate = 0;
+            GoldDropRateOffset = 0;
 
             MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate) * Level);
 
@@ -10525,13 +10530,13 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (Dead && item.Info.Type != ItemType.Scroll && item.Info.Shape != 6)
+            if (item == null || index == -1 || !CanUseItem(item))
             {
                 Enqueue(p);
                 return;
             }
 
-            if (item == null || index == -1 || !CanUseItem(item))
+            if (Dead && item.Info.Type != ItemType.Scroll && item.Info.Shape != 6)
             {
                 Enqueue(p);
                 return;

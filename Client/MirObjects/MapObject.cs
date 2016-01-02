@@ -392,9 +392,9 @@ namespace Client.MirObjects
             }
         }
 
-        public abstract void DrawBehindEffects();
+        public abstract void DrawBehindEffects(bool effectsEnabled);
 
-        public abstract void DrawEffects();
+        public abstract void DrawEffects(bool effectsEnabled);
 
     }
 

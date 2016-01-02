@@ -1121,39 +1121,24 @@ namespace Client.MirObjects
                 Effects[i].Process();
 
             Color colour = DrawColour;
-
-            switch (Poison)
-            {
-                case PoisonType.None:
-                    DrawColour = Color.White;
-                    break;
-                case PoisonType.Green:
-                    DrawColour = Color.Green;
-                    break;
-                case PoisonType.Red:
-                    DrawColour = Color.Red;
-                    break;
-                case PoisonType.Bleeding:
-                    DrawColour = Color.DarkRed;
-                    break;
-                case PoisonType.Slow:
-                    DrawColour = Color.Purple;
-                    break;
-                case PoisonType.Stun:
-                    DrawColour = Color.Yellow;
-                    break;
-                case PoisonType.Frozen:
-                    DrawColour = Color.Blue;
-                    break;
-                case PoisonType.Paralysis:
-                    DrawColour = Color.Gray;
-                    break;
-                case PoisonType.DelayedExplosion:
-                    DrawColour = Color.Orange;
-                    break;
-            }
-
-
+            if (Poison == PoisonType.None)
+                DrawColour = Color.White;
+            if (Poison.HasFlag(PoisonType.Green))
+                DrawColour = Color.Green;
+            if (Poison.HasFlag(PoisonType.Red))
+                DrawColour = Color.Red;
+            if (Poison.HasFlag(PoisonType.Bleeding))
+                DrawColour = Color.DarkRed;
+            if (Poison.HasFlag(PoisonType.Slow))
+                DrawColour = Color.Purple;
+            if (Poison.HasFlag(PoisonType.Stun))
+                DrawColour = Color.Yellow;
+            if (Poison.HasFlag(PoisonType.Frozen))
+                DrawColour = Color.Blue;
+            if (Poison.HasFlag(PoisonType.Paralysis))
+                DrawColour = Color.Gray;
+            if (Poison.HasFlag(PoisonType.DelayedExplosion))
+                DrawColour = Color.Orange;
             if (colour != DrawColour) GameScene.Scene.MapControl.TextureValid = false;
         }
 
@@ -2536,12 +2521,14 @@ namespace Client.MirObjects
             return MapControl.MapLocation == CurrentLocation || BodyLibrary != null && BodyLibrary.VisiblePixel(DrawFrame, p.Subtract(FinalDrawLocation), false);
         }
 
-        public override void DrawBehindEffects()
+        public override void DrawBehindEffects(bool effectsEnabled)
         {
         }
 
-        public override void DrawEffects()
+        public override void DrawEffects(bool effectsEnabled)
         {
+            if (!effectsEnabled) return;
+
             for (int i = 0; i < Effects.Count; i++)
                 Effects[i].Draw();
 
