@@ -1745,24 +1745,16 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsAttackTarget(player))
                                         {
-                                            int chance = Envir.Random.Next(6);
+                                            int chance = Envir.Random.Next(15);
                                             PoisonType poison;
-
-                                            switch (chance)
-                                            {
-                                                case 0:
-                                                    poison = PoisonType.Slow;
-                                                    break;
-                                                case 1:
-                                                    poison = PoisonType.Frozen;
-                                                    break;
-                                                case 2:
-                                                    poison = (PoisonType)data[4];
-                                                    break;
-                                                default:
-                                                    poison = PoisonType.None;
-                                                    break;
-                                            }
+                                            if (new int[] { 0, 1, 3 }.Contains(chance)) //3 in 15 chances it'll slow
+                                                poison = PoisonType.Slow;
+                                            else if (new int[] { 3, 4 }.Contains(value)) //2 in 15 chances it'll freeze
+                                                poison = PoisonType.Frozen;
+                                            else if (new int[] { 5, 6, 7, 8, 9 }.Contains(value)) //5 in 15 chances it'll red/green
+                                                poison = (PoisonType)data[4];
+                                            else //5 in 15 chances it'll do nothing
+                                                poison = PoisonType.None;
 
                                             int tempValue = 0;
 
@@ -1777,7 +1769,7 @@ namespace Server.MirEnvir
 
                                             if (poison != PoisonType.None)
                                             {
-                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
                                             }
                                             
                                             if (target.Race == ObjectType.Player)

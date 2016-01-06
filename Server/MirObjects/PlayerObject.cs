@@ -548,6 +548,7 @@ namespace Server.MirObjects
                 MagicShieldLv = 0;
                 MagicShieldTime = 0;
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, CurrentLocation);
+                RemoveBuff(BuffType.MagicShield);
             }
 
             if (ElementalBarrier && Envir.Time > ElementalBarrierTime)
@@ -5918,7 +5919,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (magic.Info.Range != 0 && Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
+            if ((location.X != 0) && (location.Y != 0) && magic.Info.Range != 0 && Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
 
             if (Hidden)
             {
@@ -7410,6 +7411,17 @@ namespace Server.MirObjects
                 {
                     Enqueue(new S.UserDash { Direction = Direction, Location = Front });
                     Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
+
+                    SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
+
+                    if (szi != null)
+                    {
+                        BindLocation = szi.Location;
+                        BindMapIndex = CurrentMapIndex;
+                        InSafeZone = true;
+                    }
+                    else
+                        InSafeZone = false;
                 }
                 else
                     Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
@@ -7418,6 +7430,7 @@ namespace Server.MirObjects
                 Broadcast(new S.ObjectDashFail { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 ReceiveChat("Not enough pushing Power.", ChatType.System);
             }
+
 
             magic.CastTime = Envir.Time;
             _stepCounter = 0;
@@ -8332,6 +8345,7 @@ namespace Server.MirObjects
                     MagicShieldLv = magic.Level;
                     MagicShieldTime = Envir.Time + (int)data[1] * 1000;
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, CurrentLocation);
+                    AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
                     LevelMagic(magic);
                     break;
 
@@ -9561,7 +9575,11 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            MagicShieldTime -= (damage - armour) * 60;
+            if (MagicShield)
+            {
+                MagicShieldTime -= (damage - armour) * 60;
+                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
+            }
 
             ElementalBarrierTime -= (damage - armour) * 60;
 
@@ -9716,7 +9734,11 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            MagicShieldTime -= (damage - armour) * 60;
+            if (MagicShield)
+            {
+                MagicShieldTime -= (damage - armour) * 60;
+                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
+            }
 
             ElementalBarrierTime -= (damage - armour) * 60;
             
@@ -9786,7 +9808,11 @@ namespace Server.MirObjects
 
             if (armour >= damage) return 0;
 
-            MagicShieldTime -= (damage - armour) * 60;
+            if (MagicShield)
+            {
+                MagicShieldTime -= (damage - armour) * 60;
+                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
+            }
 
             ElementalBarrierTime -= (damage - armour) * 60;
             RegenTime = Envir.Time + RegenDelay;
@@ -9801,16 +9827,27 @@ namespace Server.MirObjects
             ChangeHP(armour - damage);
             return damage - armour;
         }
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             if ((Caster != null) && (!NoResist))
                 if (((Caster.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonResistWeight) < PoisonResist))
                     return;
 
+            if (!ignoreDefence && (p.PType == PoisonType.Green))
+            {
+                int armour = GetAttackPower(MinMAC, MaxMAC);
+
+                if (p.Value > armour)
+                    p.PType = PoisonType.None;
+                else
+                    p.Value -= armour;
+            }
+
             if (p.Owner != null && p.Owner.Race == ObjectType.Player && Envir.Time > BrownTime && PKPoints < 200)
                 p.Owner.BrownTime = Envir.Time + Settings.Minute;
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - PoisonRecovery);
             if (p.Duration == 0) return;
+
 
             for (int i = 0; i < PoisonList.Count; i++)
             {

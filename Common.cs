@@ -1138,7 +1138,7 @@ public enum SpellEffect : byte
 
 public enum BuffType : byte
 {
-    None,
+    None = 0,
 
     //magics
     TemporalFlux,
@@ -1164,9 +1164,10 @@ public enum BuffType : byte
     MagicBooster,
     PetEnhancer,
     ImmortalSkin,
+    MagicShield,
 
     //special
-    GameMaster,
+    GameMaster = 100,
     General,
     Exp,
     Drop,
@@ -1181,7 +1182,7 @@ public enum BuffType : byte
     Rested,
 
     //stats
-    Impact,
+    Impact = 200,
     Magic,
     Taoist,
     Storm,
@@ -1209,6 +1210,7 @@ public enum ServerPacketIds : short
     Connected,
     ClientVersion,
     Disconnect,
+    KeepAlive,
     NewAccount,
     ChangePassword,
     ChangePasswordBanned,
@@ -4585,6 +4587,8 @@ public abstract class Packet
                 return new S.ClientVersion();
             case (short)ServerPacketIds.Disconnect:
                 return new S.Disconnect();
+            case (short)ServerPacketIds.KeepAlive:
+                return new S.KeepAlive();
             case (short)ServerPacketIds.NewAccount:
                 return new S.NewAccount();
             case (short)ServerPacketIds.ChangePassword:
@@ -4610,7 +4614,7 @@ public abstract class Packet
             case (short)ServerPacketIds.StartGameBanned:
                 return new S.StartGameBanned();
             case (short)ServerPacketIds.StartGameDelay:
-                return new S.StartGameDelay();
+                return new S.StartGameDelay();       
             case (short)ServerPacketIds.MapInformation:
                 return new S.MapInformation();
             case (short)ServerPacketIds.UserInformation:

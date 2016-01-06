@@ -264,7 +264,7 @@ namespace Client.MirObjects
             if (TransformType > -1)
             {
                 #region Transform
-
+                
                 switch (TransformType)
                 {
                     case 4:
@@ -326,13 +326,17 @@ namespace Client.MirObjects
                 if (TransformType == 19)
                 {
                     WingEffect = 2;
-
                     WingLibrary = WingEffect - 1 < Libraries.TransformEffect.Length ? Libraries.TransformEffect[WingEffect - 1] : null;
                 }
                 else
                 {
                     WingLibrary = null;
                 }
+
+                HairOffSet = 0;
+                WeaponOffSet = 0;
+                WingOffset = 0;
+                MountOffset = 0;
 
                 #endregion
             }
@@ -687,6 +691,12 @@ namespace Client.MirObjects
         public override void Process()
         {
             bool update = CMain.Time >= NextMotion || GameScene.CanMove;
+
+            if (this == User)
+            {
+                if (CMain.Time - GameScene.LastRunTime > 699)
+                    GameScene.CanRun = false;
+            }
 
             SkipFrames = this != User && ActionFeed.Count > 1;
 
@@ -1294,6 +1304,7 @@ namespace Client.MirObjects
                         case MirAction.Walking:
                         case MirAction.MountWalking:
                         case MirAction.Sneek:
+                            GameScene.LastRunTime = CMain.Time;
                             Network.Enqueue(new C.Walk { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
                             GameScene.CanRun = true;
@@ -1301,11 +1312,13 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Running:
                         case MirAction.MountRunning:
+                            GameScene.LastRunTime = CMain.Time;
                             Network.Enqueue(new C.Run { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.NextAction = CMain.Time + (Sprint ? 1000 : 2500);
                             break;
                         case MirAction.Pushed:
+                            GameScene.LastRunTime = CMain.Time;
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.InputDelay = CMain.Time + 500;
                             break;
@@ -1313,7 +1326,9 @@ namespace Client.MirObjects
                         case MirAction.DashR:
                         case MirAction.Jump:
                         case MirAction.DashAttack:
+                            GameScene.LastRunTime = CMain.Time;
                             GameScene.Scene.MapControl.FloorValid = false;
+                            GameScene.CanRun = false;
                             //CanSetAction = false;
                             break;
                         case MirAction.Mine:

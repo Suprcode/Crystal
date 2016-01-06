@@ -33,7 +33,7 @@ namespace Client.MirScenes.Dialogs
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel;
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
 
         public MainDialog()
         {
@@ -41,6 +41,16 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Prguse;
             Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), Settings.ScreenHeight - Size.Height);
             PixelDetect = true;
+
+            PingLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.Yellow,
+                OutLineColour = Color.Black,
+                Parent = this,
+                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -265),
+                Visible = false
+            };
 
             LeftCap = new MirImageControl
             {
@@ -386,6 +396,16 @@ namespace Client.MirScenes.Dialogs
                 case PetMode.None:
                     PModeLabel.Text = "[Pet: Do Not Attack or Move]";
                     break;
+            }
+
+            if ((GameScene.Scene.PingTime) > 100)
+            {
+                PingLabel.Text = string.Format("Ping: {0}", GameScene.Scene.PingTime);
+                PingLabel.Visible = true;
+            }
+            else
+            {
+                PingLabel.Visible = false;
             }
 
             switch (Settings.SkillMode)
@@ -3100,7 +3120,8 @@ namespace Client.MirScenes.Dialogs
             (GameScene.Scene.MiniMapDialog.Size.Height + 165) - Settings.ScreenHeight);
             GameScene.Scene.MainDialog.PModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
             (GameScene.Scene.MiniMapDialog.Size.Height + 180) - Settings.ScreenHeight);
-
+            GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+            (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
             if (GameScene.Scene.NewMail)
             {
                 double time = (CMain.Time) / 100D;

@@ -2063,7 +2063,7 @@ namespace Server.MirObjects
             return damage - armour;
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             if (p.Owner != null && p.Owner.IsAttackTarget(this))
                 Target = p.Owner;
@@ -2072,6 +2072,16 @@ namespace Server.MirObjects
             {
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
                     p.Owner.BrownTime = Envir.Time + Settings.Minute;
+            }
+
+            if (!ignoreDefence && (p.PType == PoisonType.Green))
+            {
+                int armour = GetAttackPower(MinMAC, MaxMAC);
+
+                if (p.Value > armour)
+                    p.PType = PoisonType.None;
+                else
+                    p.Value -= armour;
             }
 
             for (int i = 0; i < PoisonList.Count; i++)

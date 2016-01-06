@@ -47,7 +47,7 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
-        public static long MoveTime, AttackTime, NextRunTime, LogTime;
+        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
         public static bool CanMove, CanRun;
 
         public MapControl MapControl;
@@ -156,6 +156,9 @@ namespace Client.MirScenes
 
         public static Point DoorPoint;
         public static long DoorTime;
+
+        public long PingTime;
+        public long NextPing;
 
         public MirLabel[] OutputLines = new MirLabel[10];
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
@@ -805,6 +808,13 @@ namespace Client.MirScenes
             else
                 CanMove = false;
 
+
+            if (CMain.Time >= NextPing)
+            {
+                NextPing = CMain.Time + 60000;
+                Network.Enqueue(new C.KeepAlive() { Time = CMain.Time });
+            }
+
             MirItemCell cell = MouseControl as MirItemCell;
 
             if (cell != null && HoverItem != cell.Item)
@@ -922,6 +932,9 @@ namespace Client.MirScenes
         {
             switch (p.Index)
             {
+                case (short)ServerPacketIds.KeepAlive:
+                    KeepAlive((S.KeepAlive)p);
+                    break;
                 case (short)ServerPacketIds.MapInformation: //MapInfo
                     MapInformation((S.MapInformation)p);
                     break;
@@ -1668,6 +1681,8 @@ namespace Client.MirScenes
 
                 case BuffType.MagicBooster:
                     return 73;
+                case BuffType.MagicShield:
+                    return 30;
 
                 case BuffType.Hiding:
                     return 17;
@@ -1756,7 +1771,11 @@ namespace Client.MirScenes
                     return 0;
             }
         }
-
+        private void KeepAlive(S.KeepAlive p)
+        {
+            if (p.Time == 0) return;
+            PingTime = (CMain.Time - p.Time);
+        }
         private void MapInformation(S.MapInformation p)
         {
             if (MapControl != null && !MapControl.IsDisposed)
@@ -7927,6 +7946,7 @@ namespace Client.MirScenes
                 MoveTime = 0;
                 AttackTime = 0;
                 NextRunTime = 0;
+                LastRunTime = 0;
                 CanMove = false;
                 CanRun = false;
 
@@ -9846,6 +9866,9 @@ namespace Client.MirScenes
                     break;
                 case BuffType.MagicBooster:
                     text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
+                    break;
+                case BuffType.MagicShield:
+                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", Values[0]);
                     break;
 
                 //special
