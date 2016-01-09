@@ -97,7 +97,10 @@ public enum StatType : byte
     Freezing = 20,
     Holy = 21,
     Durability = 22,
-    Unknown = 23
+    Unknown = 23,
+    MinDC = 24,
+    MinMC = 25,
+    MinSC = 26
 }
 public enum RefinedValue : byte
 {
@@ -2369,7 +2372,7 @@ public static class Functions
     {
         ItemInfo output = Origin;
 
-       // output = new ItemInfo { Name = Origin.Name, BagWeight = Origin.BagWeight, Bind = Origin.Bind,    };
+        output = new ItemInfo { Name = Origin.Name, BagWeight = Origin.BagWeight, Bind = Origin.Bind, CanAwakening = Origin.CanAwakening, CanMine = Origin.CanMine, Durability = Origin.Durability, Effect = Origin.Effect, Generate = Origin.Generate, HandWeight = Origin.HandWeight, Image = Origin.Image, Index = Origin.Index, NeedIdentify = Origin.NeedIdentify, RequiredAmount = Origin.RequiredAmount, RequiredClass = Origin.RequiredClass, RequiredGender = Origin.RequiredGender, RequiredType = Origin.RequiredType, Unique = Origin.Unique, Price = Origin.Price, Shape = Origin.Shape, ToolTip = Origin.ToolTip, WearWeight = Origin.WearWeight, Weight = Origin.Weight, CanFastRun = Origin.CanFastRun, Type = Origin.Type, StackSize = 1, Strong = Origin.Strong };
 
         return output;
     }
@@ -2898,7 +2901,7 @@ public class UserItem
     public ushort CurrentDura, MaxDura;
     public uint Count = 1, GemCount = 0;
 
-    public ushort AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
+    public ushort MinAC, AC, MinMAC, MAC, MinDC, DC, MinMC, MC, MinSC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
     public sbyte AttackSpeed, Luck;
 
     public RefinedValue RefinedValue = RefinedValue.None;
@@ -2922,7 +2925,7 @@ public class UserItem
     {
         get
         {
-            return AC != 0 || MAC != 0 || DC != 0 || MC != 0 || SC != 0 || Accuracy != 0 || Agility != 0 || HP != 0 || MP != 0 || AttackSpeed != 0 || Luck != 0 || Strong != 0 || MagicResist != 0 || PoisonResist != 0 ||
+            return AC != 0 || MinAC != 0 || MAC != 0 || MinMAC != 0 || DC != 0 || MinDC != 0 || MC != 0 || MinMC != 0 || SC != 0 || MinSC != 0 || Accuracy != 0 || Agility != 0 || HP != 0 || MP != 0 || AttackSpeed != 0 || Luck != 0 || Strong != 0 || MagicResist != 0 || PoisonResist != 0 ||
                 HealthRecovery != 0 || ManaRecovery != 0 || PoisonRecovery != 0 || CriticalRate != 0 || CriticalDamage != 0 || Freezing != 0 || PoisonAttack != 0;
         }
     }
@@ -2985,8 +2988,15 @@ public class UserItem
             MP = (ushort)reader.ReadByte();
         }
 
+        if (version > 68)
+        {
+            MinAC = reader.ReadUInt16();
+            MinMAC = reader.ReadUInt16();
+            MinDC = reader.ReadUInt16();
+            MinMC = reader.ReadUInt16();
+            MinSC = reader.ReadUInt16();
+        }
         
-
         AttackSpeed = reader.ReadSByte();
         Luck = reader.ReadSByte();
 
@@ -3077,6 +3087,12 @@ public class UserItem
         writer.Write(Agility);
         writer.Write(HP);
         writer.Write(MP);
+
+        writer.Write(MinAC);
+        writer.Write(MinMAC);
+        writer.Write(MinDC);
+        writer.Write(MinMC);
+        writer.Write(MinSC);
 
         writer.Write(AttackSpeed);
         writer.Write(Luck);
@@ -3288,10 +3304,15 @@ public class UserItem
             Count = Count,
 
             AC = AC,
+            MinAC = MinAC,
             MAC = MAC,
+            MinMAC = MinMAC,
             DC = DC,
+            MinDC = MinDC,
             MC = MC,
+            MinMC = MinMC,
             SC = SC,
+            MinSC = MinSC,
             Accuracy = Accuracy,
             Agility = Agility,
             HP = HP,

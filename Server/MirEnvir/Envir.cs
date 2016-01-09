@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 68;
+        public const int Version = 69;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -2047,6 +2047,15 @@ namespace Server.MirEnvir
                 MaxDura = info.Durability,
                 CurrentDura = (ushort)Math.Min(info.Durability, Random.Next(info.Durability) + 1000)
             };
+            
+            List<int> Stats = new List<int>();
+
+            if (info.MaxDC > 0) for (int i = 0; i < info.MaxDC; i++) Stats.Add((byte)StatType.DC);
+            if (info.MaxSC > 0) for (int i = 0; i < info.MaxSC; i++) Stats.Add((byte)StatType.SC);
+            if (info.MaxMC > 0) for (int i = 0; i < info.MaxMC; i++) Stats.Add((byte)StatType.MC);
+            if (info.MinDC > 0) for (int i = 0; i < info.MinDC; i++) Stats.Add((byte)StatType.MinDC);
+            if (info.MinSC > 0) for (int i = 0; i < info.MinSC; i++) Stats.Add((byte)StatType.MinSC);
+            if (info.MinMC > 0) for (int i = 0; i < info.MinMC; i++) Stats.Add((byte)StatType.MinMC);
 
             int WeightValue = 10;
 
@@ -2054,62 +2063,62 @@ namespace Server.MirEnvir
             int _dc = 0, sc = 0, mc = 0, ac = 0, mac = 0;
 
 
-            int CurrentWeightVal = WeightValue * info.RequiredAmount;
+            int CurrentWeightVal = (WeightValue * info.RequiredAmount) * 10;
             int MinimumWeight = 15;
 
             while (CurrentWeightVal > 0)
+            {
+                if (Stats.Count == 0) CurrentWeightVal = 0;
+
+                switch (Stats[SMain.Envir.Random.Next(0, Stats.Count)])
                 {
-                //CurrentWeightVal = 0;
-                switch (SMain.Envir.Random.Next(1, 3))
-                {
-                    case 1: //Max DC
-                        if (info.MaxDC > 0)
-                            if (CurrentWeightVal >= maxDc)
-                            {
-                                item.DC++;
-                                CurrentWeightVal -= maxDc;
-                            }
-                            else if (CurrentWeightVal < MinimumWeight)
-                                CurrentWeightVal = 0;
+                    case (byte)StatType.DC: //Max DC
+                          if (CurrentWeightVal >= maxDc)
+                          {
+                              item.DC++;
+                              CurrentWeightVal -= maxDc;
+                          }
                         break;
-                    case 2: //Max SC
-                        if (info.MaxSC > 0)
-                            if (CurrentWeightVal >= minSc)
+                    case (byte)StatType.SC: //Max SC
+                            if (CurrentWeightVal >= maxSc)
                             {
-                                info.MaxDC++;
+                                item.SC++;
                                 CurrentWeightVal -= maxSc;
                             }
-                            else if (CurrentWeightVal < MinimumWeight)
-                                    CurrentWeightVal = 0;
                         break;
-                    case 3: //Max MC
-                        if (info.MaxMC > 0)
-                            if (CurrentWeightVal >= minMc)
+                    case (byte)StatType.MC: //Max MC
+                            if (CurrentWeightVal >= maxMc)
                             {
-                                info.MaxMC++;
+                                item.MC++;
                                 CurrentWeightVal -= maxMc;
                             }
-                            else if (CurrentWeightVal < MinimumWeight)
-                                CurrentWeightVal = 0;
                         break;
-                    case 4: //Min DC
+                    case (byte)StatType.MinDC: 
+                        if (CurrentWeightVal >= minDc)
+                        {
+                            item.MinDC++;
+                            CurrentWeightVal -= minDc;
+                        }
                         break;
-                    case 5: //Max SC
+                    case (byte)StatType.MinSC: 
+                        if (CurrentWeightVal >= minSc)
+                        {
+                            item.MinSC++;
+                            CurrentWeightVal -= minSc;
+                        }
                         break;
-                    case 6: //Min MC
+                    case (byte)StatType.MinMC: 
+                        if (CurrentWeightVal >= minMc)
+                        {
+                            item.MinMC++;
+                            CurrentWeightVal -= minMc;
+                        }
                         break;
-                    
-                    }
                 }
 
-            //info.MinDC = (byte)minDc;
-            //info.MaxDC = (byte)maxDc;
-            //info.MinSC = (byte)minSc;
-            //info.MaxSC = (byte)maxSc;
-            //info.MinMC = (byte)minMc;
-            //info.MaxMC = (byte)maxMc;
-
-            
+                if (CurrentWeightVal < MinimumWeight)
+                    CurrentWeightVal = 0;
+            }
 
             //UpgradeItem(item);
 
