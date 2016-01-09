@@ -429,8 +429,6 @@ namespace Server.MirObjects
         public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null)
         {
             if (winningGuild == null && (player == null || player.MyGuild == null || player.MyGuild.Conquest != null)) return;
-            if (winningGuild != null && winningGuild.Conquest != null) return;
-            if (player != null && player.MyGuild != null && player.MyGuild.Conquest != null) return;
 
             GuildObject tmpPrevious = null;
 
