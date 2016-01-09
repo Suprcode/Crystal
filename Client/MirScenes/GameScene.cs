@@ -158,7 +158,7 @@ namespace Client.MirScenes
         public static long DoorTime;
 
         public long PingTime;
-        public long NextPing;
+        public long NextPing = 10000;
 
         public MirLabel[] OutputLines = new MirLabel[10];
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
