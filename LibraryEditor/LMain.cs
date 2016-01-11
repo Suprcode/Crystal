@@ -174,7 +174,7 @@ namespace LibraryEditor
 
             List<string> fileNames = new List<string>(ImportImageDialog.FileNames);
 
-            fileNames.Sort();
+            //fileNames.Sort();
             toolStripProgressBar.Value = 0;
             toolStripProgressBar.Maximum = fileNames.Count;
 
@@ -459,14 +459,14 @@ namespace LibraryEditor
 
             List<string> fileNames = new List<string>(ImportImageDialog.FileNames);
 
-            fileNames.Sort();
+            //fileNames.Sort();
 
             int index = PreviewListView.SelectedIndices[0];
 
             toolStripProgressBar.Value = 0;
             toolStripProgressBar.Maximum = fileNames.Count;
 
-            for (int i = 0; i < fileNames.Count; i++)
+            for (int i = fileNames.Count - 1; i >= 0; i--)
             {
                 string fileName = fileNames[i];
 
@@ -587,35 +587,42 @@ namespace LibraryEditor
             if (_library.FileName == null) return;
             if (PreviewListView.SelectedIndices.Count == 0) return;
 
-            if (ImageBox.Image != null)
+            string _fileName = Path.GetFileName(OpenLibraryDialog.FileName);
+            string _newName = _fileName.Remove(_fileName.IndexOf('.'));
+            string _folder = Application.StartupPath + "\\Exported\\" + _newName + "\\";
+
+            Bitmap blank = new Bitmap(1, 1);
+
+            // Create the folder if it doesn't exist.
+            (new FileInfo(_folder)).Directory.Create();
+
+            ListView.SelectedIndexCollection _col = PreviewListView.SelectedIndices;
+
+            toolStripProgressBar.Value = 0;
+            toolStripProgressBar.Maximum = _col.Count;
+
+            for (int i = _col[0]; i < (_col[0] + _col.Count); i++)
             {
-                string _fileName = Path.GetFileName(OpenLibraryDialog.FileName);
-                string _newName = _fileName.Remove(_fileName.IndexOf('.'));
-                string _folder = Application.StartupPath + "\\Exported\\" + _newName + "\\";
-
-                // Create the folder if it doesn't exist.
-                (new FileInfo(_folder)).Directory.Create();
-
-                ListView.SelectedIndexCollection _col = PreviewListView.SelectedIndices;
-
-                toolStripProgressBar.Value = 0;
-                toolStripProgressBar.Maximum = _col.Count;
-
-                for (int i = _col[0]; i < (_col[0] + _col.Count); i++)
+                _exportImage = _library.GetMImage(i);
+                if (_exportImage.Image == null)
                 {
-                    _exportImage = _library.GetMImage(i);
+                    blank.Save(_folder + i.ToString() + ".bmp", ImageFormat.Bmp);
+                }
+                else
+                {
                     _exportImage.Image.Save(_folder + i.ToString() + ".bmp", ImageFormat.Bmp);
-                    toolStripProgressBar.Value++;
-
-                    if(!Directory.Exists(_folder + "/Placements/"))
-                        Directory.CreateDirectory(_folder + "/Placements/");
-
-                    File.WriteAllLines(_folder + "/Placements/" + i.ToString() + ".txt", new string[] { _exportImage.X.ToString(), _exportImage.Y.ToString()});
                 }
 
-                toolStripProgressBar.Value = 0;
-                MessageBox.Show("Saving to " + _folder + "...", "Image Saved", MessageBoxButtons.OK);
+                toolStripProgressBar.Value++;
+
+                if (!Directory.Exists(_folder + "/Placements/"))
+                    Directory.CreateDirectory(_folder + "/Placements/");
+
+                File.WriteAllLines(_folder + "/Placements/" + i.ToString() + ".txt", new string[] { _exportImage.X.ToString(), _exportImage.Y.ToString() });
             }
+
+            toolStripProgressBar.Value = 0;
+            MessageBox.Show("Saving to " + _folder + "...", "Image Saved", MessageBoxButtons.OK);
         }
 
         // Don't let the splitter go out of sight on resizing.

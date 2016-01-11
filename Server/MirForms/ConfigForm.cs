@@ -36,7 +36,7 @@ namespace Server
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
 
             ServerVersionLabel.Text = Application.ProductVersion;
-            DBVersionLabel.Text = Server.MirEnvir.Envir.Version.ToString();
+            DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
         }
 
         private void ConfigForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -129,6 +129,16 @@ namespace Server
         }
 
         private void tabPage3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SafeZoneBorderCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SafeZoneHealingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
         }

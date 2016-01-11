@@ -55,6 +55,7 @@ namespace Server
             this.controlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rebootServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.closeServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +80,9 @@ namespace Server
             this.refiningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.relationshipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mentorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.conquestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.respawnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
             this.PlayersOnlineListView = new Server.ListViewNF();
             this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -86,7 +90,6 @@ namespace Server
             this.levelHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.classHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.genderHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.gemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -284,6 +287,7 @@ namespace Server
             this.controlToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startServerToolStripMenuItem,
             this.stopServerToolStripMenuItem,
+            this.rebootServerToolStripMenuItem,
             this.toolStripMenuItem1,
             this.closeServerToolStripMenuItem});
             this.controlToolStripMenuItem.Name = "controlToolStripMenuItem";
@@ -293,26 +297,33 @@ namespace Server
             // startServerToolStripMenuItem
             // 
             this.startServerToolStripMenuItem.Name = "startServerToolStripMenuItem";
-            this.startServerToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.startServerToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.startServerToolStripMenuItem.Text = "Start Server";
             this.startServerToolStripMenuItem.Click += new System.EventHandler(this.startServerToolStripMenuItem_Click);
             // 
             // stopServerToolStripMenuItem
             // 
             this.stopServerToolStripMenuItem.Name = "stopServerToolStripMenuItem";
-            this.stopServerToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.stopServerToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.stopServerToolStripMenuItem.Text = "Stop Server";
             this.stopServerToolStripMenuItem.Click += new System.EventHandler(this.stopServerToolStripMenuItem_Click);
+            // 
+            // rebootServerToolStripMenuItem
+            // 
+            this.rebootServerToolStripMenuItem.Name = "rebootServerToolStripMenuItem";
+            this.rebootServerToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.rebootServerToolStripMenuItem.Text = "Reboot Server";
+            this.rebootServerToolStripMenuItem.Click += new System.EventHandler(this.rebootServerToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(135, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(144, 6);
             // 
             // closeServerToolStripMenuItem
             // 
             this.closeServerToolStripMenuItem.Name = "closeServerToolStripMenuItem";
-            this.closeServerToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.closeServerToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.closeServerToolStripMenuItem.Text = "Close Server";
             this.closeServerToolStripMenuItem.Click += new System.EventHandler(this.closeServerToolStripMenuItem_Click);
             // 
@@ -422,7 +433,9 @@ namespace Server
             this.refiningToolStripMenuItem,
             this.relationshipToolStripMenuItem,
             this.mentorToolStripMenuItem,
-            this.gemToolStripMenuItem});
+            this.gemToolStripMenuItem,
+            this.conquestToolStripMenuItem,
+            this.respawnsToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
             this.systemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.systemToolStripMenuItem.Text = "System";
@@ -490,6 +503,27 @@ namespace Server
             this.mentorToolStripMenuItem.Text = "Mentor";
             this.mentorToolStripMenuItem.Click += new System.EventHandler(this.mentorToolStripMenuItem_Click);
             // 
+            // gemToolStripMenuItem
+            // 
+            this.gemToolStripMenuItem.Name = "gemToolStripMenuItem";
+            this.gemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gemToolStripMenuItem.Text = "Gem";
+            this.gemToolStripMenuItem.Click += new System.EventHandler(this.gemToolStripMenuItem_Click);
+            // 
+            // conquestToolStripMenuItem
+            // 
+            this.conquestToolStripMenuItem.Name = "conquestToolStripMenuItem";
+            this.conquestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.conquestToolStripMenuItem.Text = "Conquest";
+            this.conquestToolStripMenuItem.Click += new System.EventHandler(this.conquestToolStripMenuItem_Click);
+            // 
+            // respawnsToolStripMenuItem
+            // 
+            this.respawnsToolStripMenuItem.Name = "respawnsToolStripMenuItem";
+            this.respawnsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.respawnsToolStripMenuItem.Text = "SpawnTick";
+            this.respawnsToolStripMenuItem.Click += new System.EventHandler(this.respawnsToolStripMenuItem_Click);
+            // 
             // InterfaceTimer
             // 
             this.InterfaceTimer.Enabled = true;
@@ -542,13 +576,6 @@ namespace Server
             // 
             this.genderHeader.Text = "Gender";
             this.genderHeader.Width = 98;
-            // 
-            // gemToolStripMenuItem
-            // 
-            this.gemToolStripMenuItem.Name = "gemToolStripMenuItem";
-            this.gemToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.gemToolStripMenuItem.Text = "Gem";
-            this.gemToolStripMenuItem.Click += new System.EventHandler(this.gemToolStripMenuItem_Click);
             // 
             // SMain
             // 
@@ -639,6 +666,9 @@ namespace Server
         private ToolStripMenuItem mentorToolStripMenuItem;
         private ToolStripMenuItem gameshopToolStripMenuItem;
         private ToolStripMenuItem gemToolStripMenuItem;
+        private ToolStripMenuItem conquestToolStripMenuItem;
+        private ToolStripMenuItem rebootServerToolStripMenuItem;
+        private ToolStripMenuItem respawnsToolStripMenuItem;
     }
 }
 

@@ -128,7 +128,7 @@ namespace Server.MirEnvir
 
             if (item != null)
             {
-                task = string.Format("Purchased {1} x {0} for {2} Credits and {3} Gold.", item.Info.FriendlyName, amount, CreditCost, GoldCost );
+                task = string.Format("Purchased {1} x{0} for {2} Credits and {3} Gold.", item.Info.FriendlyName, amount, CreditCost, GoldCost );
             }
 
             Action action = new Action { Source = source, Task = task };

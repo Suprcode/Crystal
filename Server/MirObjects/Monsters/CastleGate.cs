@@ -110,12 +110,13 @@ namespace Server.MirObjects.Monsters
 
         public abstract void CloseDoor();
 
-        public abstract void RepairWall(int level);
+        public abstract void RepairGate();
 
         protected virtual void ActiveDoorWall(bool closed)
         {
             foreach (var obj in BlockingObjects)
             {
+                if (obj == null) continue;
                 if (closed)
                     obj.Show();
                 else

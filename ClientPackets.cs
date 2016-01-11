@@ -43,11 +43,14 @@ namespace ClientPackets
         {
             get { return (short)ClientPacketIds.KeepAlive; }
         }
+        public long Time;
         protected override void ReadPacket(BinaryReader reader)
         {
+            Time = reader.ReadInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(Time);
         }
     }
     public sealed class NewAccount: Packet

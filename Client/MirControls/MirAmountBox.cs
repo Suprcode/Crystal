@@ -15,7 +15,7 @@ namespace Client.MirControls
         public int ImageIndex;
         public uint Amount, MinAmount, MaxAmount;
 
-        public MirAmountBox(string title, int image, uint max, uint min = 0)
+        public MirAmountBox(string title, int image, uint max, uint min = 0, uint defaultAmount = 0)
         {
             ImageIndex = image;
             MaxAmount = max;
@@ -27,7 +27,7 @@ namespace Client.MirControls
             Index = 238;
             Library = Libraries.Prguse;
 
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);
 
             TitleLabel = new MirLabel
             {
@@ -91,7 +91,7 @@ namespace Client.MirControls
             InputTextBox.SetFocus();
             InputTextBox.TextBox.KeyPress += MirInputBox_KeyPress;
             InputTextBox.TextBox.TextChanged += TextBox_TextChanged;
-            InputTextBox.Text = MaxAmount.ToString();
+            InputTextBox.Text = (defaultAmount > 0 && defaultAmount <= MaxAmount) ? defaultAmount.ToString() : MaxAmount.ToString();
             InputTextBox.TextBox.SelectionStart = 0;
             InputTextBox.TextBox.SelectionLength = InputTextBox.Text.Length;
 

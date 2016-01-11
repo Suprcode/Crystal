@@ -270,6 +270,7 @@ namespace Server.MirDatabase
         public ItemInfo Item;
         public uint Gold;
 
+        public byte Type;
         public bool QuestRequired;
 
         public static DropInfo FromLine(string s)
