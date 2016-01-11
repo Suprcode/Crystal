@@ -34,6 +34,7 @@ namespace Client
                             ExtraDataPath = @".\Data\Extra\",
                             ShadersPath = @".\Data\Shaders\",
                             MonsterPath = @".\Data\Monster\",
+                            GatePath = @".\Data\Gate\",
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",

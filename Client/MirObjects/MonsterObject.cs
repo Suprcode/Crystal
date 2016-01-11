@@ -131,22 +131,20 @@ namespace Client.MirObjects
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
-                    BodyLibrary = Libraries.Effect;
-                    break;
                 case Monster.PalaceWallLeft:
                 case Monster.PalaceWall1:
                 case Monster.PalaceWall2:
                     BodyLibrary = Libraries.Effect;
                     break;
-                case Monster.GiGateSouth:
-                case Monster.GiGateEast:
-                case Monster.GiGateWest:
-                    BodyLibrary = Libraries.Monsters[405];
-                    break;
                 case Monster.SSabukWall1:
                 case Monster.SSabukWall2:
                 case Monster.SSabukWall3:
-                    BodyLibrary = Libraries.Monsters[404];
+                    BodyLibrary = Libraries.Gates[0];
+                    break;
+                case Monster.GiGateSouth:
+                case Monster.GiGateEast:
+                case Monster.GiGateWest:
+                    BodyLibrary = Libraries.Gates[1];
                     break;
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];

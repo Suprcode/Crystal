@@ -454,7 +454,8 @@ namespace Server.MirEnvir
                             Spell = Spell.TrapHexagon,
                             TickSpeed = int.MaxValue,
                             CurrentLocation = new Point(x, y),
-                            CurrentMap = this
+                            CurrentMap = this,
+                            Decoration = true
                         };
 
                         Cells[x, y].Add(spell);

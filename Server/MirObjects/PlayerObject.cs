@@ -5937,7 +5937,10 @@ namespace Server.MirObjects
 
             AttackTime = Envir.Time + MoveDelay;
             SpellTime = Envir.Time + 1800; //Spell Delay
-            ActionTime = Envir.Time + MoveDelay;
+
+            if (spell != Spell.ShoulderDash)
+                ActionTime = Envir.Time + MoveDelay;
+
             LogTime = Envir.Time + Globals.LogDelay;
 
             long delay = magic.GetDelay();
@@ -7260,10 +7263,9 @@ namespace Server.MirObjects
         }
         private void ShoulderDash(UserMagic magic)
         {
-            ActionTime = Envir.Time; //allow an immediate next action
-
             if (InTrapRock) return;
             if (!CanWalk) return;
+            ActionTime = Envir.Time + MoveDelay;
 
             int dist = Envir.Random.Next(2) + magic.Level + 2;
             int travel = 0;
@@ -7392,6 +7394,7 @@ namespace Server.MirObjects
 
             if (travel > 0)
             {
+                ActionTime = Envir.Time + (travel * MoveDelay);
 
                 Cell cell = CurrentMap.GetCell(CurrentLocation);
                 for (int i = 0; i < cell.Objects.Count; i++)
@@ -9106,6 +9109,12 @@ namespace Server.MirObjects
                     if (cell.Objects == null ||
                         cell.Objects.Where(ob => ob.Race == ObjectType.Spell).All(ob => ((SpellObject)ob).Spell != Spell.DigOutZombie))
                         continue;
+                }
+
+                if (info.ConquestIndex > 0)
+                {
+                    if (MyGuild == null || MyGuild.Conquest == null) continue;
+                    if (MyGuild.Conquest.Info.Index != info.ConquestIndex) continue;
                 }
 
                 if (info.NeedMove) //use with ENTERMAP npc command

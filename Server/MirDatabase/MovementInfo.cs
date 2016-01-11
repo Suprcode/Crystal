@@ -13,6 +13,7 @@ namespace Server.MirDatabase
         public int MapIndex;
         public Point Source, Destination;
         public bool NeedHole, NeedMove;
+        public int ConquestIndex;
 
         public MovementInfo()
         {
@@ -30,6 +31,9 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion < 48) return;
             NeedMove = reader.ReadBoolean();
+
+            if (Envir.LoadVersion < 69) return;
+            ConquestIndex = reader.ReadInt32();
         }
         public void Save(BinaryWriter writer)
         {
@@ -40,6 +44,7 @@ namespace Server.MirDatabase
             writer.Write(Destination.Y);
             writer.Write(NeedHole);
             writer.Write(NeedMove);
+            writer.Write(ConquestIndex);
         }
 
 

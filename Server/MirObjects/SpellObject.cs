@@ -33,7 +33,7 @@ namespace Server.MirObjects
         public int Value, TickSpeed;
         public Spell Spell;
         public Point CastLocation;
-        public bool Show;
+        public bool Show, Decoration;
 
         //ExplosiveTrap
         public int ExplosiveTrapID;
@@ -56,6 +56,8 @@ namespace Server.MirObjects
 
         public override void Process()
         {
+            if (Decoration) return;
+
             if (Caster != null && Caster.Node == null) Caster = null;
 
             if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.ExplosiveTrap) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))

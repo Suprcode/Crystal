@@ -1383,7 +1383,7 @@ namespace Server.MirObjects
             for (int i = 0; i < cell.Objects.Count; i++)
             {
                 MapObject ob = cell.Objects[i];
-                if (!ob.Blocking) continue;
+                if (!ob.Blocking || Race == ObjectType.Creature) continue;
 
                 return false;
             }
@@ -1700,6 +1700,7 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || attacker == this) return false;
+            if (attacker.Race == ObjectType.Creature) return false;
 
             if (attacker.Info.AI == 6) // Guard
             {

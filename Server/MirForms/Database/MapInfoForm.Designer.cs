@@ -155,6 +155,8 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.ConquestComboBox = new System.Windows.Forms.ComboBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -1066,6 +1068,8 @@ namespace Server
             this.MovementInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.MovementInfoPanel.Controls.Add(this.label25);
+            this.MovementInfoPanel.Controls.Add(this.ConquestComboBox);
             this.MovementInfoPanel.Controls.Add(this.NeedMoveMCheckBox);
             this.MovementInfoPanel.Controls.Add(this.NeedHoleMCheckBox);
             this.MovementInfoPanel.Controls.Add(this.label22);
@@ -1081,7 +1085,7 @@ namespace Server
             this.MovementInfoPanel.Enabled = false;
             this.MovementInfoPanel.Location = new System.Drawing.Point(239, 35);
             this.MovementInfoPanel.Name = "MovementInfoPanel";
-            this.MovementInfoPanel.Size = new System.Drawing.Size(256, 175);
+            this.MovementInfoPanel.Size = new System.Drawing.Size(256, 205);
             this.MovementInfoPanel.TabIndex = 14;
             // 
             // NeedMoveMCheckBox
@@ -1449,6 +1453,25 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
+            // ConquestComboBox
+            // 
+            this.ConquestComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConquestComboBox.FormattingEnabled = true;
+            this.ConquestComboBox.Location = new System.Drawing.Point(64, 168);
+            this.ConquestComboBox.Name = "ConquestComboBox";
+            this.ConquestComboBox.Size = new System.Drawing.Size(182, 21);
+            this.ConquestComboBox.TabIndex = 19;
+            this.ConquestComboBox.SelectedIndexChanged += new System.EventHandler(this.ConquestComboBox_SelectedIndexChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(3, 171);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(55, 13);
+            this.label25.TabIndex = 20;
+            this.label25.Text = "Conquest:";
+            // 
             // MapInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1612,6 +1635,7 @@ namespace Server
         private ToolTip toolTip1;
         private CheckBox chkrespawnsave;
         private CheckBox chkRespawnEnableTick;
-
+        private ComboBox ConquestComboBox;
+        private Label label25;
     }
 }
