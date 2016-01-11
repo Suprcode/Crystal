@@ -48,7 +48,7 @@ namespace Server.MirDatabase
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
-                Respawns.Add(new RespawnInfo(reader));
+                Respawns.Add(new RespawnInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
 
             if (Envir.LoadVersion <= 33)
             {
@@ -187,7 +187,7 @@ namespace Server.MirDatabase
 
         public void CreateRespawnInfo()
         {
-            Respawns.Add(new RespawnInfo());
+            Respawns.Add(new RespawnInfo { RespawnIndex = ++SMain.EditEnvir.RespawnIndex });
         }
 
         public override string ToString()
@@ -279,6 +279,9 @@ namespace Server.MirDatabase
                 if (!ushort.TryParse(data[start + 4 + (i * 7)], out temp.Spread)) return;
                 if (!ushort.TryParse(data[start + 5 + (i * 7)], out temp.Delay)) return;
                 if (!byte.TryParse(data[start + 6 + (i * 7)], out temp.Direction)) return;
+                if (!int.TryParse(data[start + 7 + (i * 7)], out temp.RespawnIndex)) return;
+                if (!bool.TryParse(data[start + 8 + (i * 7)], out temp.SaveRespawnTime)) return;
+                if (!ushort.TryParse(data[start + 9 + (i * 7)], out temp.RespawnTicks)) return;
 
                 info.Respawns.Add(temp);
             }

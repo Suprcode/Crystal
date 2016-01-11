@@ -66,6 +66,7 @@ namespace Client.MirGraphics
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
                                           Monsters = new MLibrary[406],
+                                          Gates = new MLibrary[2],
                                           Mounts = new MLibrary[12],
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
@@ -125,6 +126,9 @@ namespace Client.MirGraphics
             //Other
             for (int i = 0; i < Monsters.Length; i++)
                 Monsters[i] = new MLibrary(Settings.MonsterPath + i.ToString("000"));
+
+            for (int i = 0; i < Gates.Length; i++)
+                Gates[i] = new MLibrary(Settings.GatePath + i.ToString("00"));
 
             for (int i = 0; i < NPCs.Length; i++)
                 NPCs[i] = new MLibrary(Settings.NPCPath + i.ToString("00"));
@@ -239,7 +243,7 @@ namespace Client.MirGraphics
 
         private static void LoadGameLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
+            Count = MapLibs.Length + Monsters.Length + Gates.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
@@ -305,6 +309,11 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
+            for (int i = 0; i < Gates.Length; i++)
+            {
+                Gates[i].Initialize();
+                Progress++;
+            }
 
             for (int i = 0; i < NPCs.Length; i++)
             {

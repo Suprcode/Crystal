@@ -1383,7 +1383,7 @@ namespace Server.MirObjects
             for (int i = 0; i < cell.Objects.Count; i++)
             {
                 MapObject ob = cell.Objects[i];
-                if (!ob.Blocking) continue;
+                if (!ob.Blocking || Race == ObjectType.Creature) continue;
 
                 return false;
             }
@@ -1700,6 +1700,7 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || attacker == this) return false;
+            if (attacker.Race == ObjectType.Creature) return false;
 
             if (attacker.Info.AI == 6) // Guard
             {
@@ -2063,7 +2064,7 @@ namespace Server.MirObjects
             return damage - armour;
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             if (p.Owner != null && p.Owner.IsAttackTarget(this))
                 Target = p.Owner;
@@ -2072,6 +2073,16 @@ namespace Server.MirObjects
             {
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
                     p.Owner.BrownTime = Envir.Time + Settings.Minute;
+            }
+
+            if (!ignoreDefence && (p.PType == PoisonType.Green))
+            {
+                int armour = GetAttackPower(MinMAC, MaxMAC);
+
+                if (p.Value > armour)
+                    p.PType = PoisonType.None;
+                else
+                    p.Value -= armour;
             }
 
             for (int i = 0; i < PoisonList.Count; i++)

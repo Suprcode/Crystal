@@ -264,7 +264,7 @@ namespace Client.MirObjects
             if (TransformType > -1)
             {
                 #region Transform
-
+                
                 switch (TransformType)
                 {
                     case 4:
@@ -326,13 +326,17 @@ namespace Client.MirObjects
                 if (TransformType == 19)
                 {
                     WingEffect = 2;
-
                     WingLibrary = WingEffect - 1 < Libraries.TransformEffect.Length ? Libraries.TransformEffect[WingEffect - 1] : null;
                 }
                 else
                 {
                     WingLibrary = null;
                 }
+
+                HairOffSet = 0;
+                WeaponOffSet = 0;
+                WingOffset = 0;
+                MountOffset = 0;
 
                 #endregion
             }
@@ -687,6 +691,12 @@ namespace Client.MirObjects
         public override void Process()
         {
             bool update = CMain.Time >= NextMotion || GameScene.CanMove;
+
+            if (this == User)
+            {
+                if (CMain.Time - GameScene.LastRunTime > 699)
+                    GameScene.CanRun = false;
+            }
 
             SkipFrames = this != User && ActionFeed.Count > 1;
 
@@ -1294,6 +1304,7 @@ namespace Client.MirObjects
                         case MirAction.Walking:
                         case MirAction.MountWalking:
                         case MirAction.Sneek:
+                            GameScene.LastRunTime = CMain.Time;
                             Network.Enqueue(new C.Walk { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
                             GameScene.CanRun = true;
@@ -1301,11 +1312,13 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Running:
                         case MirAction.MountRunning:
+                            GameScene.LastRunTime = CMain.Time;
                             Network.Enqueue(new C.Run { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.NextAction = CMain.Time + (Sprint ? 1000 : 2500);
                             break;
                         case MirAction.Pushed:
+                            GameScene.LastRunTime = CMain.Time;
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.InputDelay = CMain.Time + 500;
                             break;
@@ -1313,7 +1326,9 @@ namespace Client.MirObjects
                         case MirAction.DashR:
                         case MirAction.Jump:
                         case MirAction.DashAttack:
+                            GameScene.LastRunTime = CMain.Time;
                             GameScene.Scene.MapControl.FloorValid = false;
+                            GameScene.CanRun = false;
                             //CanSetAction = false;
                             break;
                         case MirAction.Mine:
@@ -4110,10 +4125,7 @@ namespace Client.MirObjects
 
         public override void Draw()
         {
-            if (Settings.Effect)
-            {
-                DrawBehindEffects();
-            }
+            DrawBehindEffects(Settings.Effect);
 
             float oldOpacity = DXManager.Opacity;
             if (Hidden && !DXManager.Blending) DXManager.SetOpacity(0.5F);
@@ -4156,26 +4168,28 @@ namespace Client.MirObjects
             //}
         }
 
-        public override void DrawBehindEffects()
+        public override void DrawBehindEffects(bool effectsEnabled)
         {
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (!Effects[i].DrawBehind) continue;
                 if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
-
+                if ((!effectsEnabled) && (!IsVitalEffect(Effects[i]))) continue;
                 Effects[i].Draw();
             }
         }
 
-        public override void DrawEffects()
+        public override void DrawEffects(bool effectsEnabled)
         {
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (Effects[i].DrawBehind) continue;
                 if (!Settings.LevelEffect && (Effects[i] is SpecialEffect) && ((SpecialEffect)Effects[i]).EffectType == 1) continue;
-
+                if ((!effectsEnabled) && (!IsVitalEffect(Effects[i]))) continue;
                 Effects[i].Draw();
             }
+
+            if (!effectsEnabled) return;
 
             switch (CurrentAction)
             {
@@ -4306,6 +4320,15 @@ namespace Client.MirObjects
 
             if (MountLibrary != null)
                 MountLibrary.Draw(DrawFrame - 416 + MountOffset, DrawLocation, DrawColour, true);
+        }
+
+        private bool IsVitalEffect(Effect effect)
+        {
+            if ((effect.Library == Libraries.Magic) && (effect.BaseIndex == 3890))
+                return true;
+            if ((effect.Library == Libraries.Magic3) && (effect.BaseIndex == 1890))
+                return true;
+            return false;
         }
 
         public void GetBackStepDistance(int magicLevel)

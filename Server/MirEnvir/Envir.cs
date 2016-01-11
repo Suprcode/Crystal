@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 67;
+        public const int Version = 69;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -70,6 +70,7 @@ namespace Server.MirEnvir
         public readonly Stopwatch Stopwatch = Stopwatch.StartNew();
 
         public long Time { get; private set; }
+        public RespawnTimer RespawnTick = new RespawnTimer();
 
         public DateTime Now
         {
@@ -104,7 +105,7 @@ namespace Server.MirEnvir
         
 
         //Server DB
-        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex;
+        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex, RespawnIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
@@ -157,6 +158,7 @@ namespace Server.MirEnvir
         public List<DropInfo> BlackstoneDrops = new List<DropInfo>();
 
         public List<GuildAtWar> GuildsAtWar = new List<GuildAtWar>();
+        public List<MapRespawn> SavedSpawns = new List<MapRespawn>();
 
         static Envir()
         {
@@ -358,9 +360,10 @@ namespace Server.MirEnvir
                 long conTime = Time;
                 long saveTime = Time + Settings.SaveDelay * Settings.Minute;
                 long userTime = Time + Settings.Minute * 5;
-
+                long SpawnTime = Time;
                 long processTime = Time + 1000;
                 long StartTime = Time;
+
                 int processCount = 0;
                 int processRealCount = 0;
 
@@ -522,6 +525,12 @@ namespace Server.MirEnvir
                                     Message = string.Format("Online Players: {0}", Players.Count),
                                     Type = ChatType.Hint
                                 });
+                        }
+
+                        if (Time >= SpawnTime)
+                        {
+                            SpawnTime = Time + (Settings.Second * 10);//technicaly this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
+                            SMain.Envir.RespawnTick.Process();
                         }
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
@@ -754,6 +763,7 @@ namespace Server.MirEnvir
                 writer.Write(QuestIndex);
                 writer.Write(GameshopIndex);
                 writer.Write(ConquestIndex);
+                writer.Write(RespawnIndex);
 
                 writer.Write(MapInfoList.Count);
                 for (int i = 0; i < MapInfoList.Count; i++)
@@ -787,6 +797,8 @@ namespace Server.MirEnvir
                 writer.Write(ConquestInfos.Count);
                 for (int i = 0; i < ConquestInfos.Count; i++)
                     ConquestInfos[i].Save(writer);
+
+                RespawnTick.Save(writer);
             }
         }
         public void SaveAccounts()
@@ -841,6 +853,13 @@ namespace Server.MirEnvir
                 {
                     writer.Write(item.Key);
                     writer.Write(item.Value);
+                }
+
+                writer.Write(SavedSpawns.Count);
+                foreach (MapRespawn Spawn in SavedSpawns)
+                {
+                    RespawnSave Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = (Spawn.Count >= (Spawn.Info.Count * spawnmultiplyer)) };
+                    Save.save(writer);
                 }
             }
         }
@@ -1058,6 +1077,7 @@ namespace Server.MirEnvir
                     MapIndex = reader.ReadInt32();
                     ItemIndex = reader.ReadInt32();
                     MonsterIndex = reader.ReadInt32();
+
                     if (LoadVersion > 33)
                     {
                         NPCIndex = reader.ReadInt32();
@@ -1072,6 +1092,10 @@ namespace Server.MirEnvir
                     {
                         ConquestIndex = reader.ReadInt32();
                     }
+
+                    if (LoadVersion >= 68)
+                        RespawnIndex = reader.ReadInt32();
+
 
                     int count = reader.ReadInt32();
                     MapInfoList.Clear();
@@ -1139,7 +1163,11 @@ namespace Server.MirEnvir
                             ConquestInfos.Add(new ConquestInfo(reader));
                         }
                     }
+
+                    if (LoadVersion > 67)
+                        RespawnTick = new RespawnTimer(reader);
                 }
+
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
 
@@ -1228,6 +1256,31 @@ namespace Server.MirEnvir
                         }
 
                         if (ResetGS) ClearGameshopLog();
+                    }
+
+                    if (LoadVersion >= 68)
+                    {
+                        int SaveCount = reader.ReadInt32();
+                        for (int i = 0; i < SaveCount; i++)
+                        {
+                            RespawnSave Saved = new RespawnSave(reader);
+                            foreach (MapRespawn Respawn in SavedSpawns)
+                            {
+                                if (Respawn.Info.RespawnIndex == Saved.RespawnIndex)
+                                {
+                                    Respawn.NextSpawnTick = Saved.NextSpawnTick;
+                                    if ((Saved.Spawned) && ((Respawn.Info.Count * spawnmultiplyer) > Respawn.Count))
+                                    {
+                                        int mobcount = (Respawn.Info.Count * spawnmultiplyer) - Respawn.Count;
+                                        for (int j = 0; j < mobcount; j++)
+                                        {
+                                            Respawn.Spawn();
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
                     }
                 }
             }

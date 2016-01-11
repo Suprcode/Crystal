@@ -385,120 +385,19 @@ namespace Server
         {
             Envir.Reboot();
         }
+
+        private void respawnsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(7);
+            
+            form.ShowDialog();
+        }
+
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();
             form.ShowDialog();
         }
-
-        //private void synchroniseMapInfoToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    var mapInfo = @"C:\MapInfo.txt";
-        //    var lines = System.IO.File.ReadAllLines(mapInfo);
-        //    var patternMap = new Regex(@"^\[(?<filename>[^\s]+)\s+(?<title>[^\s]+)\s+(?<mmap>[^\s]+)\](?<attributes>.*)$", RegexOptions.Singleline);
-        //    var patternMovement = new Regex(@"^(?<srcmap>[^\s]+)\s+(?<srcx>[\d]+),(?<srcy>[\d]+)\s+->\s+(?<dstmap>[^\s]+)\s+(?<dstx>[\d]+),(?<dsty>[\d]+)", RegexOptions.Singleline);
-
-        //    var maps = EditEnvir.MapInfoList;
-
-        //    foreach (var line in lines)
-        //    {
-        //        if (line.Contains(";")) continue;
-
-        //        if (patternMap.IsMatch(line))
-        //        {
-        //            var match = patternMap.Match(line);
-        //            var filename = match.Groups["filename"].Value;
-        //            var title = match.Groups["title"].Value;
-        //            var attrs = match.Groups["attributes"].Value;
-        //            ushort minimap;
-
-        //            ushort.TryParse(match.Groups["mmap"].Value, out minimap);
-
-        //            var mapDb = (from m in maps
-        //                         where m.FileName.ToUpperInvariant().Equals(filename.ToUpperInvariant())
-        //                         select m).FirstOrDefault();
-
-        //            byte light = 0;
-        //            bool needHole = false;
-
-        //            //Day setting
-        //            if (attrs.Contains("DAY"))
-        //                light = 2;
-        //            else if (attrs.Contains("DARK"))
-        //                light = 4;
-
-        //            //Needhole
-        //            if (attrs.Contains("NEEDHOLE"))
-        //                needHole = true;
-
-        //            if (mapDb != null)
-        //            {
-        //                if (mapDb.Title != title)
-        //                {
-        //                    mapDb.Title = title;
-        //                    mapDb.Light = (LightSetting)light;
-        //                    mapDb.MiniMap = minimap;
-        //                    mapDb.NeedHole = needHole;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                MapInfo newMapInfo = new MapInfo
-        //                {
-        //                    Index = ++Envir.MapIndex,
-        //                    Title = title,
-        //                    Light = (LightSetting)light,
-        //                    FileName = filename,
-        //                    NeedHole = needHole
-        //                };
-        //                EditEnvir.MapInfoList.Add(newMapInfo);
-        //            }
-        //        }
-        //        else if (patternMovement.IsMatch(line))
-        //        {
-        //            var match = patternMovement.Match(line);
-
-        //            var srcfilename = match.Groups["srcmap"].Value;
-        //            var srcx = short.Parse(match.Groups["srcx"].Value);
-        //            var srcy = short.Parse(match.Groups["srcy"].Value);
-
-        //            var dstfilename = match.Groups["dstmap"].Value;
-        //            var dstx = short.Parse(match.Groups["dstx"].Value);
-        //            var dsty = short.Parse(match.Groups["dsty"].Value);
-
-        //            var srcMapDb = (from m in maps
-        //                            where m.FileName.ToUpperInvariant().Equals(srcfilename.ToUpperInvariant())
-        //                            select m).FirstOrDefault();
-
-        //            var dstMapDb = (from m in maps
-        //                            where m.FileName.ToUpperInvariant().Equals(dstfilename.ToUpperInvariant())
-        //                            select m).FirstOrDefault();
-
-        //            if (srcMapDb == null || dstMapDb == null) continue;
-
-        //            var movement = (from m in srcMapDb.Movements
-        //                            where 
-        //                                  m.MapIndex == dstMapDb.Index
-        //                                  && m.Source.X == srcx
-        //                                  && m.Source.Y == srcy
-        //                                  && m.Destination.X == dstx
-        //                                  && m.Destination.Y == dsty
-        //                            select m).FirstOrDefault();
-
-        //            if (movement == null)
-        //            {
-        //                srcMapDb.Movements.Add(new MovementInfo
-        //                {
-        //                    Source = new System.Drawing.Point(srcx, srcy),
-        //                    MapIndex = dstMapDb.Index,
-        //                    Destination = new System.Drawing.Point(dstx, dsty)
-        //                });
-        //            }
-        //        }
-        //    }
-
-        //    EditEnvir.SaveDB();
-        //}
 
     }
 }

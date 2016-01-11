@@ -5,6 +5,24 @@ using System.IO;
 
 namespace ServerPackets
 {
+    public sealed class KeepAlive : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.KeepAlive; }
+        }
+        public long Time;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Time = reader.ReadInt64();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Time);
+        }
+    }
     public sealed class Connected : Packet
     {
         public override short Index

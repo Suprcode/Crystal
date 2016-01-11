@@ -1067,7 +1067,10 @@ namespace Server.MirObjects
                 PlayerObject player = CurrentMap.Players[i];
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                {
                     CheckVisible(player, true);
+                    player.CheckStacked();
+                }
             }
         }
 
@@ -1086,7 +1089,7 @@ namespace Server.MirObjects
             };
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             throw new NotSupportedException();
         }
@@ -1410,5 +1413,6 @@ namespace Server.MirObjects
         AffordSiege,
         CheckPermission,
         ConquestAvailable,
-        ConquestOwner,    }
+        ConquestOwner
+    }
 }

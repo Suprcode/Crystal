@@ -29,15 +29,18 @@ namespace Server
         {
             InitializeComponent();
 
-            MineComboBox.Items.Add(new ListItem {Text = "Disabled", Value = "0"});
+            MineComboBox.Items.Add(new ListItem { Text = "Disabled", Value = "0" });
             for (int i = 0; i < Settings.MineSetList.Count; i++) MineComboBox.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
 
-            MineZoneComboBox.Items.Add(new ListItem ("Disabled", "0"));
+            MineZoneComboBox.Items.Add(new ListItem("Disabled", "0"));
             for (int i = 0; i < Settings.MineSetList.Count; i++) MineZoneComboBox.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
 
             LightsComboBox.Items.AddRange(Enum.GetValues(typeof(LightSetting)).Cast<object>().ToArray());
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterInfoComboBox.Items.Add(Envir.MonsterInfoList[i]);
-            
+
+            ConquestComboBox.Items.Add(new ListItem("None", "0"));
+            for (int i = 0; i < Envir.ConquestInfos.Count; i++) ConquestComboBox.Items.Add(Envir.ConquestInfos[i]);
+
             UpdateInterface();
         }
         private void MapInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -61,7 +64,7 @@ namespace Server
                     DestMapComboBox.Items.Add(Envir.MapInfoList[i]);
                 }
             }
-            
+
             _selectedMapInfos = MapInfoListBox.SelectedItems.Cast<MapInfo>().ToList();
 
             if (_selectedMapInfos == null || _selectedMapInfos.Count == 0)
@@ -132,7 +135,7 @@ namespace Server
             NoFightCheckbox.Checked = mi.NoFight;
             FireCheckbox.Checked = mi.Fire;
             FireTextbox.Text = mi.FireDamage.ToString();
-            LightningCheckbox.Checked = mi.Lightning;                      
+            LightningCheckbox.Checked = mi.Lightning;
             LightningTextbox.Text = mi.LightningDamage.ToString();
             MapDarkLighttextBox.Text = mi.MapDarkLight.ToString();
 
@@ -170,7 +173,7 @@ namespace Server
                 if (NoFightCheckbox.Checked != mi.NoFight) NoFightCheckbox.Checked = false;
                 if (FireCheckbox.Checked != mi.Fire) FireCheckbox.Checked = false;
                 if (FireTextbox.Text != mi.FireDamage.ToString()) FireTextbox.Text = string.Empty;
-                if (LightningCheckbox.Checked != mi.Lightning) LightningCheckbox.Checked = false;                             
+                if (LightningCheckbox.Checked != mi.Lightning) LightningCheckbox.Checked = false;
                 if (LightningTextbox.Text != mi.LightningDamage.ToString()) LightningTextbox.Text = string.Empty;
                 if (MapDarkLighttextBox.Text != mi.MapDarkLight.ToString()) MapDarkLighttextBox.Text = string.Empty;
 
@@ -259,8 +262,12 @@ namespace Server
                 CountTextBox.Text = string.Empty;
                 SpreadTextBox.Text = string.Empty;
                 DelayTextBox.Text = string.Empty;
+                chkrespawnsave.Enabled = false;
+                chkRespawnEnableTick.Checked = false;
+                chkrespawnsave.Checked = false;
                 DirectionTextBox.Text = string.Empty;
                 RoutePathTextBox.Text = string.Empty;
+                Randomtextbox.Text = string.Empty;
                 return;
             }
 
@@ -287,8 +294,12 @@ namespace Server
                 CountTextBox.Text = string.Empty;
                 SpreadTextBox.Text = string.Empty;
                 DelayTextBox.Text = string.Empty;
+                chkrespawnsave.Enabled = false;
+                chkRespawnEnableTick.Checked = false;
+                chkrespawnsave.Checked = false;
                 DirectionTextBox.Text = string.Empty;
                 RoutePathTextBox.Text = string.Empty;
+                Randomtextbox.Text = string.Empty;
                 return;
             }
 
@@ -300,9 +311,14 @@ namespace Server
             RYTextBox.Text = info.Location.Y.ToString();
             CountTextBox.Text = info.Count.ToString();
             SpreadTextBox.Text = info.Spread.ToString();
-            DelayTextBox.Text = info.Delay.ToString();
+            DelayTextBox.Text = info.RespawnTicks == 0 ? info.Delay.ToString() : info.RespawnTicks.ToString();
+            chkrespawnsave.Enabled = info.RespawnTicks != 0;
+            chkRespawnEnableTick.Checked = info.RespawnTicks != 0;
+            chkrespawnsave.Checked = ((info.RespawnTicks != 0) && (info.SaveRespawnTime)) ? true : false;
             DirectionTextBox.Text = info.Direction.ToString();
             RoutePathTextBox.Text = info.RoutePath;
+            Randomtextbox.Enabled = info.RespawnTicks == 0;
+            Randomtextbox.Text = info.RandomDelay.ToString();
 
             for (int i = 1; i < _selectedRespawnInfos.Count; i++)
             {
@@ -313,7 +329,34 @@ namespace Server
                 if (RYTextBox.Text != info.Location.Y.ToString()) RYTextBox.Text = string.Empty;
                 if (CountTextBox.Text != info.Count.ToString()) CountTextBox.Text = string.Empty;
                 if (SpreadTextBox.Text != info.Spread.ToString()) SpreadTextBox.Text = string.Empty;
-                if (DelayTextBox.Text != info.Delay.ToString()) DelayTextBox.Text = string.Empty;
+                if (chkRespawnEnableTick.Checked != (info.RespawnTicks == 0))
+                {
+                    DelayTextBox.Text = string.Empty;
+                    chkrespawnsave.Enabled = false;
+                    chkrespawnsave.Checked = false;
+                    Randomtextbox.Text = string.Empty;
+                }
+                else
+                {
+                    if (chkRespawnEnableTick.Checked)
+                    {
+                        if (DelayTextBox.Text != info.RespawnTicks.ToString()) DelayTextBox.Text = string.Empty;
+                        if (chkrespawnsave.Checked != info.SaveRespawnTime)
+                        {
+                            chkrespawnsave.Enabled = false;
+                            chkrespawnsave.Checked = false;
+                        }
+                        Randomtextbox.Enabled = false;
+                        Randomtextbox.Text = string.Empty;
+                    }
+                    else
+                    {
+                        if (DelayTextBox.Text != info.Delay.ToString()) DelayTextBox.Text = string.Empty;
+                        chkrespawnsave.Enabled = false;
+                        chkrespawnsave.Checked = false;
+                        if (Randomtextbox.Text != info.RandomDelay.ToString()) Randomtextbox.Text = string.Empty;
+                    }
+                }
                 if (DirectionTextBox.Text != info.Direction.ToString()) DirectionTextBox.Text = string.Empty;
                 if (RoutePathTextBox.Text != info.RoutePath) RoutePathTextBox.Text = string.Empty;
             }
@@ -332,6 +375,7 @@ namespace Server
                 SourceXTextBox.Text = string.Empty;
                 SourceYTextBox.Text = string.Empty;
                 DestMapComboBox.SelectedItem = null;
+                ConquestComboBox.SelectedIndex = 0;
                 DestXTextBox.Text = string.Empty;
                 DestYTextBox.Text = string.Empty;
                 return;
@@ -359,6 +403,7 @@ namespace Server
                 NeedHoleMCheckBox.Checked = false;
                 NeedMoveMCheckBox.Checked = false;
                 DestMapComboBox.SelectedItem = null;
+                ConquestComboBox.SelectedIndex = 0;
                 DestXTextBox.Text = string.Empty;
                 DestYTextBox.Text = string.Empty;
                 return;
@@ -375,7 +420,9 @@ namespace Server
             DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
             DestXTextBox.Text = info.Destination.X.ToString();
             DestYTextBox.Text = info.Destination.Y.ToString();
-            
+
+            ConquestComboBox.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex);
+            if (ConquestComboBox.SelectedItem == null) ConquestComboBox.SelectedIndex = 0;
 
             for (int i = 1; i < _selectedMovementInfos.Count; i++)
             {
@@ -386,6 +433,7 @@ namespace Server
                 DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
                 DestXTextBox.Text = info.Destination.X.ToString();
                 DestYTextBox.Text = info.Destination.Y.ToString();
+                ConquestComboBox.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex);
 
                 if (SourceXTextBox.Text != info.Source.X.ToString()) SourceXTextBox.Text = string.Empty;
                 if (SourceYTextBox.Text != info.Source.Y.ToString()) SourceYTextBox.Text = string.Empty;
@@ -394,6 +442,8 @@ namespace Server
 
                 if (DestXTextBox.Text != info.Destination.X.ToString()) DestXTextBox.Text = string.Empty;
                 if (DestYTextBox.Text != info.Destination.Y.ToString()) DestYTextBox.Text = string.Empty;
+
+                if (ConquestComboBox.SelectedItem != Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex)) ConquestComboBox.SelectedItem = null;
             }
 
         }
@@ -403,7 +453,7 @@ namespace Server
             if (_selectedMapInfos.Count != 1)
             {
                 MZListlistBox.Items.Clear();
-                
+
                 if (_selectedMineZones != null && _selectedMineZones.Count > 0)
                     _selectedMineZones.Clear();
                 _info = null;
@@ -442,7 +492,7 @@ namespace Server
             MZXtextBox.Text = info.Location.X.ToString();
             MZYtextBox.Text = info.Location.Y.ToString();
             MineZoneComboBox.SelectedIndex = info.Mine;
-            MZSizetextBox.Text = info.Size.ToString();   
+            MZSizetextBox.Text = info.Size.ToString();
 
             for (int i = 1; i < _selectedMineZones.Count; i++)
             {
@@ -552,7 +602,7 @@ namespace Server
         private void FileNameTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            
+
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].FileName = ActiveControl.Text;
         }
@@ -600,7 +650,7 @@ namespace Server
         }
         private void RemoveSZButton_Click(object sender, EventArgs e)
         {
-            if(_selectedSafeZoneInfos.Count == 0) return;
+            if (_selectedSafeZoneInfos.Count == 0) return;
 
             if (MessageBox.Show("Are you sure you want to remove the selected SafeZones?", "Remove SafeZones?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
@@ -709,7 +759,7 @@ namespace Server
             if (info == null) return;
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
-                    _selectedRespawnInfos[i].MonsterIndex = info.Index;
+                _selectedRespawnInfos[i].MonsterIndex = info.Index;
 
             RefreshRespawnList();
 
@@ -792,7 +842,6 @@ namespace Server
         }
         private void DelayTextBox_TextChanged(object sender, EventArgs e)
         {
-
             if (ActiveControl != sender) return;
 
             ushort temp;
@@ -806,7 +855,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
-                _selectedRespawnInfos[i].Delay = temp;
+            {
+                if (chkRespawnEnableTick.Checked)
+                {
+                    _selectedRespawnInfos[i].RespawnTicks = Math.Max((ushort)1, temp);//you can never have respawnticks set to 0 or it would bug the entire thing really
+                    _selectedRespawnInfos[i].Delay = 0;
+                }
+                else
+                {
+                    _selectedRespawnInfos[i].Delay = temp;
+                    _selectedRespawnInfos[i].RespawnTicks = 0;
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -844,7 +904,7 @@ namespace Server
         private void RPasteButton_Click(object sender, EventArgs e)
         {
             if (_info == null) return;
-            
+
             string data = Clipboard.GetText();
 
             if (!data.StartsWith("Respawn", StringComparison.OrdinalIgnoreCase))
@@ -854,13 +914,13 @@ namespace Server
             }
 
 
-            string[] respawns = data.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] respawns = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
             for (int i = 1; i < respawns.Length; i++)
             {
                 RespawnInfo info = RespawnInfo.FromText(respawns[i]);
-                
+
                 if (info == null) continue;
 
                 _info.Respawns.Add(info);
@@ -871,7 +931,7 @@ namespace Server
         //RCopy
 
 
-        
+
 
         private void AddMButton_Click(object sender, EventArgs e)
         {
@@ -1517,7 +1577,7 @@ namespace Server
             {
                 try
                 {
-                    int monsterIndex = Envir.MonsterInfoList.FindIndex(a => a.Name.Replace(" ","") == MirForms.ConvertMonGenInfo.monGenList[i].Name.Replace('*', ' '));
+                    int monsterIndex = Envir.MonsterInfoList.FindIndex(a => a.Name.Replace(" ", "") == MirForms.ConvertMonGenInfo.monGenList[i].Name.Replace('*', ' '));
                     if (monsterIndex == -1) continue;
 
                     RespawnInfo respawnInfo = new RespawnInfo
@@ -1527,7 +1587,8 @@ namespace Server
                         Count = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Count,
                         Spread = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Range,
                         Delay = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Delay,
-                        Direction = (byte)MirForms.ConvertMonGenInfo.monGenList[i].Direction
+                        Direction = (byte)MirForms.ConvertMonGenInfo.monGenList[i].Direction,
+                        RespawnIndex = ++Envir.RespawnIndex
                     };
 
                     int index = Envir.MapInfoList.FindIndex(a => a.FileName == MirForms.ConvertMonGenInfo.monGenList[i].Map);
@@ -1568,7 +1629,7 @@ namespace Server
                         MonsterInfo mob = Envir.GetMonsterInfo(_selectedMapInfos[i].Respawns[j].MonsterIndex);
 
                         if (mob == null) continue;
-                        
+
                         string Output = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}",
                             _selectedMapInfos[i].FileName,
                             _selectedMapInfos[i].Respawns[j].Location.X,
@@ -1659,9 +1720,76 @@ namespace Server
                 _selectedMapInfos[i].Music = temp;
         }
 
-        private void MapInfoForm_Load(object sender, EventArgs e)
+        private void RandomTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (ActiveControl != sender) return;
 
+            ushort temp;
+
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+                _selectedRespawnInfos[i].RandomDelay = temp;
+
+            RefreshRespawnList();
+        }
+
+        private void chkRespawnEnableTick_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (chkRespawnEnableTick.Checked)
+            {
+                chkrespawnsave.Enabled = true;
+                for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+                {
+                    _selectedRespawnInfos[i].RespawnTicks = _selectedRespawnInfos[i].Delay;
+                    _selectedRespawnInfos[i].Delay = 0;
+                }
+            }
+            else
+            {
+                chkrespawnsave.Enabled = false;
+                for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+                {
+                    _selectedRespawnInfos[i].Delay = _selectedRespawnInfos[i].RespawnTicks;
+                    _selectedRespawnInfos[i].RespawnTicks = 0;
+                }
+            }
+            RefreshRespawnList();
+
+        }
+
+        private void chkrespawnsave_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (chkRespawnEnableTick.Checked)
+            {
+                for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+                {
+                    _selectedRespawnInfos[i].SaveRespawnTime = chkrespawnsave.Checked;
+                }
+            }
+            RefreshRespawnList();
+        }
+
+        private void ConquestComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            ConquestInfo info = ConquestComboBox.SelectedItem as ConquestInfo;
+
+            if (info == null) return;
+
+            for (int i = 0; i < _selectedMovementInfos.Count; i++)
+                _selectedMovementInfos[i].ConquestIndex = info.Index;
+
+            RefreshMovementList();
         }
     }
 }

@@ -405,6 +405,9 @@ namespace Server.MirEnvir
                         if (info.Monster == null) continue;
                         info.Map = this;
                         Respawns.Add(info);
+
+                        if ((info.Info.SaveRespawnTime) && (info.Info.RespawnTicks != 0))
+                            SMain.Envir.SavedSpawns.Add(info);
                     }
 
 
@@ -451,7 +454,8 @@ namespace Server.MirEnvir
                             Spell = Spell.TrapHexagon,
                             TickSpeed = int.MaxValue,
                             CurrentLocation = new Point(x, y),
-                            CurrentMap = this
+                            CurrentMap = this,
+                            Decoration = true
                         };
 
                         Cells[x, y].Add(spell);
@@ -645,18 +649,27 @@ namespace Server.MirEnvir
             for (int i = 0; i < Respawns.Count; i++)
             {
                 MapRespawn respawn = Respawns[i];
-                if (Envir.Time < respawn.RespawnTime) continue;
-                if (respawn.Count < respawn.Info.Count)
+                if ((respawn.Info.RespawnTicks != 0) && (Envir.RespawnTick.CurrentTickcounter < respawn.NextSpawnTick)) continue;
+                if ((respawn.Info.RespawnTicks == 0) && (Envir.Time < respawn.RespawnTime)) continue;
+
+                if (respawn.Count < (respawn.Info.Count * Envir.spawnmultiplyer))
                 {
                     int count = (respawn.Info.Count * Envir.spawnmultiplyer) - respawn.Count;
-                    
+
                     for (int c = 0; c < count; c++)
                         Success = respawn.Spawn();
                 }
                 if (Success)
                 {
                     respawn.ErrorCount = 0;
-                    respawn.RespawnTime = Envir.Time + (respawn.Info.Delay * Settings.Minute);
+                    long delay = Math.Max(1, respawn.Info.Delay - respawn.Info.RandomDelay + Envir.Random.Next(respawn.Info.RandomDelay * 2));
+                    respawn.RespawnTime = Envir.Time + (delay * Settings.Minute);
+                    if (respawn.Info.RespawnTicks != 0)
+                    {
+                        respawn.NextSpawnTick = Envir.RespawnTick.CurrentTickcounter + (ulong)respawn.Info.RespawnTicks;
+                        if (respawn.NextSpawnTick > long.MaxValue)//since nextspawntick is ulong this simple thing allows an easy way of preventing the counter from overflowing
+                            respawn.NextSpawnTick -= long.MaxValue;
+                    }
                 }
                 else
                 {
@@ -1733,24 +1746,16 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsAttackTarget(player))
                                         {
-                                            int chance = Envir.Random.Next(6);
+                                            int chance = Envir.Random.Next(15);
                                             PoisonType poison;
-
-                                            switch (chance)
-                                            {
-                                                case 0:
-                                                    poison = PoisonType.Slow;
-                                                    break;
-                                                case 1:
-                                                    poison = PoisonType.Frozen;
-                                                    break;
-                                                case 2:
-                                                    poison = (PoisonType)data[4];
-                                                    break;
-                                                default:
-                                                    poison = PoisonType.None;
-                                                    break;
-                                            }
+                                            if (new int[] { 0, 1, 3 }.Contains(chance)) //3 in 15 chances it'll slow
+                                                poison = PoisonType.Slow;
+                                            else if (new int[] { 3, 4 }.Contains(value)) //2 in 15 chances it'll freeze
+                                                poison = PoisonType.Frozen;
+                                            else if (new int[] { 5, 6, 7, 8, 9 }.Contains(value)) //5 in 15 chances it'll red/green
+                                                poison = (PoisonType)data[4];
+                                            else //5 in 15 chances it'll do nothing
+                                                poison = PoisonType.None;
 
                                             int tempValue = 0;
 
@@ -1765,7 +1770,7 @@ namespace Server.MirEnvir
 
                                             if (poison != PoisonType.None)
                                             {
-                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
                                             }
                                             
                                             if (target.Race == ObjectType.Player)
@@ -2144,6 +2149,7 @@ namespace Server.MirEnvir
         public Map Map;
         public int Count;
         public long RespawnTime;
+        public ulong NextSpawnTick;
         public byte ErrorCount = 0;
 
         public List<RouteInfo> Route;

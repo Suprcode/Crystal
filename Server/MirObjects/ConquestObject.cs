@@ -364,16 +364,16 @@ namespace Server.MirObjects
                     {
                         if (AttackerID != -1)
                         {
-                            WarIsOn = true;
                             GameType = Info.Game;
                             StartType = Info.Type;
+                            WarIsOn = true;
                         }
                     }
                     else
                     {
-                        WarIsOn = true;
                         GameType = Info.Game;
                         StartType = Info.Type;
+                        WarIsOn = true;
                     }
 
                 }
@@ -429,6 +429,8 @@ namespace Server.MirObjects
         public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null)
         {
             if (winningGuild == null && (player == null || player.MyGuild == null || player.MyGuild.Conquest != null)) return;
+            if (winningGuild != null && winningGuild.Conquest != null) return;
+            if (player != null && player.MyGuild != null && player.MyGuild.Conquest != null) return;
 
             GuildObject tmpPrevious = null;
 
@@ -527,10 +529,11 @@ namespace Server.MirObjects
                     SpellObject spell = new SpellObject
                     {
                         ExpireTime = long.MaxValue,
-                        Spell = Spell.Trap,
+                        Spell = Spell.TrapHexagon,
                         TickSpeed = int.MaxValue,
                         CurrentLocation = new Point(x, y),
                         CurrentMap = ConquestMap,
+                        Decoration = true
                     };
 
                     ConquestMap.Cells[x, y].Add(spell);
