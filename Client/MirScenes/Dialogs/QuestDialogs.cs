@@ -1917,6 +1917,4 @@ namespace Client.MirScenes.Dialogs
         }
     }
 
-
-
 }

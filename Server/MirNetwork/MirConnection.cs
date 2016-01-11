@@ -216,7 +216,8 @@ namespace Server.MirNetwork
                     Disconnect(22);
                     break;
                 case (short)ClientPacketIds.KeepAlive: // Keep Alive
-                    return;
+                    ClientKeepAlive((C.KeepAlive)p);
+                    break;
                 case (short)ClientPacketIds.NewAccount:
                     NewAccount((C.NewAccount) p);
                     break;
@@ -666,6 +667,13 @@ namespace Server.MirNetwork
             Enqueue(new S.ClientVersion { Result = 1 });
 
             Stage = GameStage.Login;
+        }
+        private void ClientKeepAlive(C.KeepAlive p)
+        {
+            Enqueue(new S.KeepAlive
+            {
+                Time = p.Time
+            });
         }
         private void NewAccount(C.NewAccount p)
         {

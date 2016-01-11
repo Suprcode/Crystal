@@ -150,7 +150,9 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);          
+                    return new Football(info);    
+                    
+                //unfinished START      
                 case 69:
                     return new Behemoth(info);
                 case 70:
@@ -173,11 +175,20 @@ namespace Server.MirObjects
                     return new HellKeeper(info);
                 case 79:
                     return new ManectricClaw(info);
+                //unfinished END
+
+                case 80:
+                    return new ConquestArcher(info);
+                case 81:
+                    return new Gate(info);
+                case 82:
+                    return new Wall(info);
 
                 case 200://custom
                     return new Runaway(info);
                 case 201://custom
                     return new TalkingMonster(info);
+
                 default:
                     return new MonsterObject(info);
             }
@@ -245,9 +256,22 @@ namespace Server.MirObjects
         public virtual uint Experience 
         { 
             get { return Info.Experience; } 
-        }     
-
-        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, DeadDelay = 180000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
+        }
+        public int DeadDelay
+        {
+            get
+            {
+                switch (Info.AI)
+                {
+                    case 81:
+                    case 82:
+                        return int.MaxValue;
+                    default:
+                        return 180000;
+                }
+            }
+        }
+        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
         public bool BindingShotCenter;
@@ -1222,7 +1246,20 @@ namespace Server.MirObjects
                                     PlayerObject playerob = (PlayerObject)ob;
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level) || Envir.Time < HallucinationTime) continue;
+
                                     Target = ob;
+
+                                    if (Master != null)
+                                    {
+                                        for (int j = 0; j < playerob.Pets.Count; j++)
+                                        {
+                                            MonsterObject pet = playerob.Pets[j];
+
+                                            if (!pet.IsAttackTarget(this)) continue;
+                                            Target = pet;
+                                            break;
+                                        }
+                                    }
                                     return;
                                 default:
                                     continue;
@@ -1346,7 +1383,7 @@ namespace Server.MirObjects
             for (int i = 0; i < cell.Objects.Count; i++)
             {
                 MapObject ob = cell.Objects[i];
-                if (!ob.Blocking) continue;
+                if (!ob.Blocking || Race == ObjectType.Creature) continue;
 
                 return false;
             }
@@ -1663,6 +1700,7 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || attacker == this) return false;
+            if (attacker.Race == ObjectType.Creature) return false;
 
             if (attacker.Info.AI == 6) // Guard
             {
@@ -1707,6 +1745,12 @@ namespace Server.MirObjects
                 for (int i = 0; i < Master.Pets.Count; i++)
                     if (Master.Pets[i].EXPOwner == attacker.Master) return true;
 
+                for (int i = 0; i < attacker.Master.Pets.Count; i++)
+                {
+                    MonsterObject ob = attacker.Master.Pets[i];
+                    if (ob == Target || ob.Target == this) return true;
+                }
+
                 return Master.LastHitter == attacker.Master;
             }
             else if (attacker.Master != null) //Pet Attacking Wild Monster
@@ -1720,7 +1764,7 @@ namespace Server.MirObjects
                     if (ob == Target || ob.Target == this) return true;
                 }
 
-                if (Target == attacker.Master )
+                if (Target == attacker.Master)
                     return true;
             }
 
@@ -1758,7 +1802,6 @@ namespace Server.MirObjects
 
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-
             if (Target == null && attacker.IsAttackTarget(this))
             {
                 Target = attacker;
@@ -1895,6 +1938,13 @@ namespace Server.MirObjects
                 }
             }
 
+            for (int i = 0; i < attacker.Pets.Count; i++)
+            {
+                MonsterObject ob = attacker.Pets[i];
+
+                if (IsAttackTarget(ob)) ob.Target = this;
+            }
+
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
             ChangeHP(armour - damage);
@@ -2014,7 +2064,7 @@ namespace Server.MirObjects
             return damage - armour;
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             if (p.Owner != null && p.Owner.IsAttackTarget(this))
                 Target = p.Owner;
@@ -2023,6 +2073,16 @@ namespace Server.MirObjects
             {
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
                     p.Owner.BrownTime = Envir.Time + Settings.Minute;
+            }
+
+            if (!ignoreDefence && (p.PType == PoisonType.Green))
+            {
+                int armour = GetAttackPower(MinMAC, MaxMAC);
+
+                if (p.Value > armour)
+                    p.PType = PoisonType.None;
+                else
+                    p.Value -= armour;
             }
 
             for (int i = 0; i < PoisonList.Count; i++)

@@ -146,7 +146,7 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
-                if (old.FileName == System.AppDomain.CurrentDomain.FriendlyName)
+                if ((old.FileName.Contains(System.AppDomain.CurrentDomain.FriendlyName)))
                 {
                     File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + oldClientName);
                     Restart = true;
@@ -162,7 +162,7 @@ namespace Launcher
             string fileName = info.FileName.Replace(@"\", "/");
 
             if (fileName != "PList.gz")
-                fileName += Path.GetExtension(fileName);
+                fileName += ".gz";
 
             try
             {
@@ -200,7 +200,7 @@ namespace Launcher
 
 
                     _stopwatch = Stopwatch.StartNew();
-                    client.DownloadDataAsync(new Uri(Settings.P_Host + Path.ChangeExtension("/" + fileName, ".gz")));
+                    client.DownloadDataAsync(new Uri(Settings.P_Host + fileName));
                 }
             }
             catch

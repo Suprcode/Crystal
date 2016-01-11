@@ -88,7 +88,9 @@
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
     <Compile Include="MirDatabase\MailInfo.cs" />
+    <Compile Include="MirDatabase\ConquestInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
+    <Compile Include="MirEnvir\RespawnTimer.cs" />
     <Compile Include="MirForms\Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +114,12 @@
     </Compile>
     <Compile Include="MirForms\Database\MagicInfoForm.Designer.cs">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\Systems\ConquestInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Systems\ConquestInfoForm.Designer.cs">
+      <DependentUpon>ConquestInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirForms\Systems\DragonInfoForm.cs">
       <SubType>Form</SubType>
@@ -225,6 +233,7 @@
     </Compile>
     <Compile Include="MirNetwork\MirConnection.cs" />
     <Compile Include="MirNetwork\MirStatusConnection.cs" />
+    <Compile Include="MirObjects\ConquestObject.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\DelayedAction.cs" />
     <Compile Include="MirObjects\GuildObject.cs" />
@@ -245,6 +254,7 @@
     <Compile Include="MirObjects\Monsters\BombSpider.cs" />
     <Compile Include="MirObjects\Monsters\BlackFoxman.cs" />
     <Compile Include="MirObjects\Monsters\CharmedSnake.cs" />
+    <Compile Include="MirObjects\Monsters\ConquestArcher.cs" />
     <Compile Include="MirObjects\Monsters\CrazyManworm.cs" />
     <Compile Include="MirObjects\Monsters\DarkDevourer.cs" />
     <Compile Include="MirObjects\Monsters\DreamDevourer.cs" />
@@ -265,8 +275,9 @@
     <Compile Include="MirObjects\Monsters\LightTurtle.cs" />
     <Compile Include="MirObjects\Monsters\ManectricClaw.cs" />
     <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
+    <Compile Include="MirObjects\Monsters\Wall.cs" />
     <Compile Include="MirObjects\Monsters\Runaway.cs" />
-    <Compile Include="MirObjects\Monsters\SabukGate.cs" />
+    <Compile Include="MirObjects\Monsters\Gate.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
     <Compile Include="MirObjects\Monsters\StoningStatue.cs" />
@@ -369,6 +380,9 @@
     <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Systems\ConquestInfoForm.resx">
+      <DependentUpon>ConquestInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\DragonInfoForm.resx">
       <DependentUpon>DragonInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -380,6 +394,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\DropBuilder\DropBuilderForm.resx">
       <DependentUpon>DropBuilderForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\GuildInfoForm.resx">
       <DependentUpon>GuildInfoForm.cs</DependentUpon>

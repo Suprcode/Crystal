@@ -5,6 +5,24 @@ using System.IO;
 
 namespace ServerPackets
 {
+    public sealed class KeepAlive : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.KeepAlive; }
+        }
+        public long Time;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Time = reader.ReadInt64();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Time);
+        }
+    }
     public sealed class Connected : Packet
     {
         public override short Index
@@ -2184,6 +2202,28 @@ namespace ServerPackets
         {
             writer.Write(ObjectID);
             writer.Write(NameColour.ToArgb());
+        }
+    }
+    public sealed class ObjectGuildNameChanged : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ObjectGuildNameChanged; }
+        }
+
+        public uint ObjectID;
+        public string GuildName;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+            GuildName = reader.ReadString();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(GuildName);
         }
     }
     public sealed class GainExperience : Packet
