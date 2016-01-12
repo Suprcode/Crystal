@@ -47,3 +47,7 @@ Legend of Mir.v11.suo
 Legend of Mir.v12.suo
 Legend of Mir.sln.DotSettings.user
 Client/Client.csproj
+/LibraryViewer/obj
+/LibraryEditor/obj
+/AutoPatcherAdmin/obj
+/AutoPatcher/obj
