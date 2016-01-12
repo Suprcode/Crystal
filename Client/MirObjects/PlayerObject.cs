@@ -694,7 +694,7 @@ namespace Client.MirObjects
 
             if (this == User)
             {
-                if (CMain.Time - GameScene.LastRunTime > 699)
+                if (CMain.Time - GameScene.LastRunTime > 899)
                     GameScene.CanRun = false;
             }
 
