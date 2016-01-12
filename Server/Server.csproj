@@ -87,10 +87,6 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
-    <Compile Include="MirDatabase\ConquestArcherInfo.cs" />
-    <Compile Include="MirDatabase\ConquestGateInfo.cs" />
-    <Compile Include="MirDatabase\ConquestSiegeInfo.cs" />
-    <Compile Include="MirDatabase\ConquestWallInfo.cs" />
     <Compile Include="MirDatabase\MailInfo.cs" />
     <Compile Include="MirDatabase\ConquestInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
@@ -123,12 +119,6 @@
     </Compile>
     <Compile Include="MirForms\Systems\ConquestInfoForm.Designer.cs">
       <DependentUpon>ConquestInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MirForms\Systems\ProfForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MirForms\Systems\ProfForm.Designer.cs">
-      <DependentUpon>ProfForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirForms\Systems\DragonInfoForm.cs">
       <SubType>Form</SubType>
@@ -201,8 +191,14 @@
     <Compile Include="MirForms\Systems\ProfessionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MirForms\Systems\ProfessionsForm.Designer.cs">
+    <Compile Include="MirForms\Systems\ProfessionsForm.designer.cs">
       <DependentUpon>ProfessionsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\Systems\ProfForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Systems\ProfForm.designer.cs">
+      <DependentUpon>ProfForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirForms\Systems\SystemInfoForm.cs">
       <SubType>Form</SubType>
@@ -398,9 +394,6 @@
     <EmbeddedResource Include="MirForms\Systems\ConquestInfoForm.resx">
       <DependentUpon>ConquestInfoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MirForms\Systems\ProfForm.resx">
-      <DependentUpon>ProfForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\DragonInfoForm.resx">
       <DependentUpon>DragonInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -422,6 +415,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\ProfessionsForm.resx">
       <DependentUpon>ProfessionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Systems\ProfForm.resx">
+      <DependentUpon>ProfForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\SystemInfoForm.resx">
       <DependentUpon>SystemInfoForm.cs</DependentUpon>
