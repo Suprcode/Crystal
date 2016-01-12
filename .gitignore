@@ -59,3 +59,5 @@ Client/obj/Debug/Client.exe
 *.exe
 *.pdb
 *.pdb
+/Server/obj
+/Client/obj
