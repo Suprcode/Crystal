@@ -5418,27 +5418,55 @@ namespace Client.MirScenes
             Effects = Item.PoisonAttack + Item.PoisonRecovery + Item.PoisonResist + Item.Freezing + Item.CriticalDamage + Item.CriticalRate;
             TotalStats = Defense + Physical + Magical + Holy + Health + Effects;
 
+            int bDefense = 0, bPhysical = 0, bMagical = 0, bHoly = 0, bHealth = 0, bEffects = 0;
+
+
             Highest = 0;
-            if (Defense > (TotalStats * 0.3))
+            if (Defense > (TotalStats * 0.7))
             {
-                Highest = 1;
-                HighestCount++;
+                return Item.Info.FriendlyName + " of Defense";
+                //Highest = 1;
+                //HighestCount++;
             }
-            if (Physical > (TotalStats * 0.3))
+
+            if (Physical > (TotalStats * 0.65))
             {
-                Highest = 2;
-                HighestCount++;
+                if (Physical > (TotalStats * 0.85))
+                    bPhysical = 3;
+                else if (Physical > (TotalStats * 0.75))
+                    bPhysical = 2;
+                else
+                    bPhysical = 1;
             }
-            if (Magical > (TotalStats * 0.3))
+            if (Magical > (TotalStats * 0.65))
             {
-                Highest = 3;
-                HighestCount++;
+                if (Magical > (TotalStats * 0.85))
+                    bMagical = 3;
+                else if (Magical > (TotalStats * 0.75))
+                    bMagical = 2;
+                else
+                    bMagical = 1;
             }
-            if (Holy > (TotalStats * 0.3))
+            if (Holy > (TotalStats * 0.65))
             {
-                Highest = 4;
-                HighestCount++;
+                if (Holy > (TotalStats * 0.85))
+                    bHoly = 3;
+                else if (Holy > (TotalStats * 0.75))
+                    bHoly = 2;
+                else
+                    bHoly = 1;
             }
+
+
+
+            if (bPhysical == 3 || bMagical == 3 || bHoly == 3)
+            {
+               
+            }
+
+
+
+            /*
             if (Health > (TotalStats * 0.3))
             {
                 Highest = 5;
@@ -5463,21 +5491,10 @@ namespace Client.MirScenes
                     return Item.Info.FriendlyName + " of Defense";
                     break;
                 case 2: // Physical
-                    if (Physical > (TotalStats * 0.85))
-                        return Item.Info.FriendlyName + " of Impact";
-                    else if (Physical > (TotalStats * 0.65))
-                        return "Strong " + Item.Info.FriendlyName;
-                    else 
-                        return "Sharpened " + Item.Info.FriendlyName;
+                    
                     break;
                 case 3: // Magical
-                    if (Magical > (TotalStats * 0.85))
-                        return Item.Info.FriendlyName + " of Destruction";
-                    else if (Magical > (TotalStats * 0.65))
-                        return "Magical " + Item.Info.FriendlyName;
-                    else
-                        return "Enchanted " + Item.Info.FriendlyName;
-                    break;
+                    
                 case 4: // Holy
                     if (Holy > (TotalStats * 0.85))
                         return Item.Info.FriendlyName + " of the Heavens";
@@ -5507,7 +5524,7 @@ namespace Client.MirScenes
             }
 
 
-            return Item.Info.FriendlyName + " of Far";
+            return Item.Info.FriendlyName + " of Far"; */
         }
 
         public void DisposeItemLabel()

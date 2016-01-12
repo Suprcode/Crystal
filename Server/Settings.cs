@@ -167,6 +167,24 @@ namespace Server
 
         public static string RefineOreName = "BlackIronOre";
 
+        //Item Generating Settings
+        public static int MinDC = 20, MaxDC = 20,
+                MinSC = 20, MaxSC = 20,
+                MinMC = 20, MaxMC = 20,
+                MinAC = 20, MaxAC = 20,
+                MinMAC = 20, MaxMAC = 20,
+                ACC = 20, AGIL = 20, ASPEED = 20,
+                CritDam = 20, CritRate = 20,
+                Freezing = 20,
+                HPRecov = 20, HP = 20,
+                MagicRes = 20,
+                MPRecov = 20, MP = 20,
+                PoisAttack = 20, PoisRecov = 20, PoisResist = 20,
+                Strong = 20;
+
+        public static int WeightPerLev = 10;
+        public static double WeaponDC = 0.5;
+
         //Marriage Settings
         public static int LoverEXPBonus = 5;
         public static int MarriageCooldown = 7;
@@ -435,6 +453,7 @@ namespace Server
             LoadFishing();
             LoadMail();
             LoadRefine();
+            LoadGenerate();
             LoadMarriage();
             LoadMentor();
             LoadGoods();
@@ -1136,6 +1155,82 @@ namespace Server
             reader.Write("Config", "RefineCost", RefineCost);
 
             reader.Write("Ore", "OreName", RefineOreName);
+
+        }
+
+        public static void LoadGenerate()
+        {
+            if (!File.Exists(ConfigPath + @".\ItemGenSystem.ini"))
+            {
+                SaveGenerate();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\ItemGenSystem.ini");
+
+            WeightPerLev = reader.ReadInt32("Config", "WeightPerLevel", WeightPerLev);
+            WeaponDC = reader.ReadDouble("Config", "WeaponDC", WeaponDC);
+
+            MinDC = reader.ReadInt32("Weights", "MinDC", MinDC);
+            MaxDC = reader.ReadInt32("Weights", "MaxDC", MaxDC);
+            MinMC = reader.ReadInt32("Weights", "MinMC", MinMC);
+            MaxMC = reader.ReadInt32("Weights", "MaxMC", MaxMC);
+            MinSC = reader.ReadInt32("Weights", "MinSC", MinSC);
+            MaxSC = reader.ReadInt32("Weights", "MaxSC", MaxSC);
+            MinAC = reader.ReadInt32("Weights", "MinAC", MinAC);
+            MaxAC = reader.ReadInt32("Weights", "MaxAC", MaxAC);
+            MinMAC = reader.ReadInt32("Weights", "MinMAC", MinMAC);
+            MaxMAC = reader.ReadInt32("Weights", "MaxMAC", MaxMAC);
+            ACC = reader.ReadInt32("Weights", "MinDC", ACC);
+            AGIL = reader.ReadInt32("Weights", "AGIL", AGIL);
+            ASPEED = reader.ReadInt32("Weights", "ASPEED", ASPEED);
+            CritDam = reader.ReadInt32("Weights", "CritDam", CritDam);
+            CritRate = reader.ReadInt32("Weights", "CritRate", CritRate);
+            Freezing = reader.ReadInt32("Weights", "Freezing", Freezing);
+            HPRecov = reader.ReadInt32("Weights", "HPRecov", HPRecov);
+            HP = reader.ReadInt32("Weights", "HP", HP);
+            MagicRes = reader.ReadInt32("Weights", "MagicRes", MagicRes);
+            MPRecov = reader.ReadInt32("Weights", "MPRecov", MPRecov);
+            MP = reader.ReadInt32("Weights", "MP", MP);
+            PoisAttack = reader.ReadInt32("Weights", "PoisAttack", PoisAttack);
+            PoisRecov = reader.ReadInt32("Weights", "PoisRecov", PoisRecov);
+            PoisResist = reader.ReadInt32("Weights", "PoisResist", PoisResist);
+            Strong = reader.ReadInt32("Weights", "Strong", Strong);
+        }
+
+        public static void SaveGenerate()
+        {
+            File.Delete(ConfigPath + @".\ItemGenSystem.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\ItemGenSystem.ini");
+
+            reader.Write("Config", "WeightPerLevel", WeightPerLev);
+            reader.Write("Config", "WeaponDC", WeaponDC);
+
+            reader.Write("Weights", "MinDC", MinDC);
+            reader.Write("Weights", "MaxDC", MaxDC);
+            reader.Write("Weights", "MinMC", MinMC);
+            reader.Write("Weights", "MaxMC", MaxMC);
+            reader.Write("Weights", "MinSC", MinSC);
+            reader.Write("Weights", "MaxSC", MaxSC);
+            reader.Write("Weights", "MinAC", MinAC);
+            reader.Write("Weights", "MaxAC", MaxAC);
+            reader.Write("Weights", "MinMAC", MinMAC);
+            reader.Write("Weights", "MaxMAC", MaxMAC);
+            reader.Write("Weights", "MinDC", ACC);
+            reader.Write("Weights", "AGIL", AGIL);
+            reader.Write("Weights", "ASPEED", ASPEED);
+            reader.Write("Weights", "CritDam", CritDam);
+            reader.Write("Weights", "CritRate", CritRate);
+            reader.Write("Weights", "Freezing", Freezing);
+            reader.Write("Weights", "HPRecov", HPRecov);
+            reader.Write("Weights", "HP", HP);
+            reader.Write("Weights", "MagicRes", MagicRes);
+            reader.Write("Weights", "MPRecov", MPRecov);
+            reader.Write("Weights", "MP", MP);
+            reader.Write("Weights", "PoisAttack", PoisAttack);
+            reader.Write("Weights", "PoisRecov", PoisRecov);
+            reader.Write("Weights", "PoisResist", PoisResist);
+            reader.Write("Weights", "Strong", Strong);
 
         }
 

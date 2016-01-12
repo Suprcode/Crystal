@@ -20,6 +20,7 @@ namespace Server
         public byte SelectedClassID = 0;
         public bool RandomItemStatsChanged = false;
         public bool GuildsChanged = false;
+        public bool ItemGenChanged = false;
 
         public BalanceConfigForm()
         {
@@ -43,6 +44,8 @@ namespace Server
                 Settings.SaveRandomItemStats();
             if (GuildsChanged)
                 Settings.SaveGuildSettings();
+            if (ItemGenChanged)
+                Settings.SaveGenerate();
         }
 
         private void ClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -52,8 +55,41 @@ namespace Server
             UpdateInterface();
         }
 
+        private void ItemGenInterface()
+        {
+            WeightPerLev_tb.Text = Settings.WeightPerLev.ToString();
+            WepDC_tb.Text = Settings.WeaponDC.ToString();
+            MinDC_tb.Text = Settings.MinDC.ToString();
+            MaxDC_tb.Text = Settings.MaxDC.ToString();
+            MinMC_tb.Text = Settings.MinMC.ToString();
+            MaxMC_tb.Text = Settings.MaxMC.ToString();
+            MinSC_tb.Text = Settings.MinSC.ToString();
+            MaxSC_tb.Text = Settings.MaxSC.ToString();
+            MinAC_tb.Text = Settings.MinAC.ToString();
+            MaxAC_tb.Text = Settings.MaxAC.ToString();
+            MinMAC_tb.Text = Settings.MinMAC.ToString();
+            MaxMAC_tb.Text = Settings.MaxMAC.ToString();
+            ACC_tb.Text = Settings.ACC.ToString();
+            AGIL_tb.Text = Settings.AGIL.ToString();
+            ASPEED_tb.Text = Settings.ASPEED.ToString();
+            CritDam_tb.Text = Settings.CritDam.ToString();
+            CritRate_tb.Text = Settings.CritRate.ToString();
+            Freeze_tb.Text = Settings.Freezing.ToString();
+            HPRec_tb.Text = Settings.HPRecov.ToString();
+            HP_tb.Text = Settings.HP.ToString();
+            MPRec_tb.Text = Settings.MPRecov.ToString();
+            MP_tb.Text = Settings.MP.ToString();
+            MagRes_tb.Text = Settings.MagicRes.ToString();
+            PoisAtt_tb.Text = Settings.PoisAttack.ToString();
+            PoisRec_tb.Text = Settings.PoisRecov.ToString();
+            PoisRes_tb.Text = Settings.PoisResist.ToString();
+            Strong_tb.Text = Settings.Strong.ToString();
+        }
+
         private void UpdateInterface()
         {
+
+            ItemGenInterface();
             if (ClassComboBox.SelectedItem == null)
             {
                 HpGaintextBox.Text = string.Empty;
@@ -1957,8 +1993,414 @@ namespace Server
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CurseChance = temp;
         }
 
-        
+        private void BalanceConfigForm_Load(object sender, EventArgs e)
+        {
 
-        
+        }
+
+        private void WeightPerLev_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.WeightPerLev = temp;
+        }
+
+        private void MinDC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MinDC = temp;
+        }
+
+        private void MaxDC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MaxDC = temp;
+        }
+
+        private void MinMC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MinMC = temp;
+        }
+
+        private void MaxMC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MaxMC = temp;
+        }
+
+        private void MinSC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MinSC = temp;
+        }
+
+        private void MaxSC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MaxSC = temp;
+        }
+
+        private void MinAC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MinAC = temp;
+        }
+
+        private void MaxAC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MaxAC = temp;
+        }
+
+        private void MinMAC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MinMAC = temp;
+        }
+
+        private void MaxMAC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MaxMAC = temp;
+        }
+
+        private void ACC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.ACC = temp;
+        }
+
+        private void AGIL_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.AGIL = temp;
+        }
+
+        private void ASPEED_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.ASPEED = temp;
+        }
+
+        private void CritDam_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.CritDam = temp;
+        }
+
+        private void CritRate_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.CritRate = temp;
+        }
+
+        private void Freeze_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.Freezing = temp;
+        }
+
+        private void HPRec_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.HPRecov = temp;
+        }
+
+        private void HP_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.HP = temp;
+        }
+
+        private void MPRec_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MPRecov = temp;
+        }
+
+        private void MP_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MP = temp;
+        }
+
+        private void MagRes_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.MagicRes = temp;
+        }
+
+        private void PoisAtt_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.PoisAttack = temp;
+        }
+
+        private void PoisRec_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.PoisRecov = temp;
+        }
+
+        private void PoisRes_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.PoisResist = temp;
+        }
+
+        private void Strong_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+            if ((!int.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.Strong = temp;
+        }
+
+        private void WepDC_tb_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            double temp;
+            if ((!double.TryParse(ActiveControl.Text, out temp)))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            ItemGenChanged = true;
+            Settings.WeaponDC = temp;
+        }
     }
 }

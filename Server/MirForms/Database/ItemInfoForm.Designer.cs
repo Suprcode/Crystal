@@ -187,6 +187,7 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
+            this.Generate_cb = new System.Windows.Forms.CheckBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -222,6 +223,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.Generate_cb);
             this.tabPage1.Controls.Add(this.CanAwaken);
             this.tabPage1.Controls.Add(this.label56);
             this.tabPage1.Controls.Add(this.TooltipTextBox);
@@ -1853,6 +1855,17 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
+            // Generate_cb
+            // 
+            this.Generate_cb.AutoSize = true;
+            this.Generate_cb.Location = new System.Drawing.Point(365, 317);
+            this.Generate_cb.Name = "Generate_cb";
+            this.Generate_cb.Size = new System.Drawing.Size(70, 17);
+            this.Generate_cb.TabIndex = 124;
+            this.Generate_cb.Text = "Generate";
+            this.Generate_cb.UseVisualStyleBackColor = true;
+            this.Generate_cb.CheckedChanged += new System.EventHandler(this.Generate_cb_CheckedChanged);
+            // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2050,6 +2063,6 @@
         private System.Windows.Forms.CheckBox CanAwaken;
         private System.Windows.Forms.CheckBox BreakOnDeathcheckbox;
         private System.Windows.Forms.Button Gameshop_button;
-
+        private System.Windows.Forms.CheckBox Generate_cb;
     }
 }

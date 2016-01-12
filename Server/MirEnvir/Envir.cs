@@ -2050,74 +2050,290 @@ namespace Server.MirEnvir
             
             List<int> Stats = new List<int>();
 
+            if (info.Type == ItemType.Weapon)
+                item.DC = (ushort)(info.RequiredAmount * Settings.WeaponDC);
+
             if (info.MaxDC > 0) for (int i = 0; i < info.MaxDC; i++) Stats.Add((byte)StatType.DC);
             if (info.MaxSC > 0) for (int i = 0; i < info.MaxSC; i++) Stats.Add((byte)StatType.SC);
             if (info.MaxMC > 0) for (int i = 0; i < info.MaxMC; i++) Stats.Add((byte)StatType.MC);
             if (info.MinDC > 0) for (int i = 0; i < info.MinDC; i++) Stats.Add((byte)StatType.MinDC);
             if (info.MinSC > 0) for (int i = 0; i < info.MinSC; i++) Stats.Add((byte)StatType.MinSC);
             if (info.MinMC > 0) for (int i = 0; i < info.MinMC; i++) Stats.Add((byte)StatType.MinMC);
+            if (info.MaxAC > 0) for (int i = 0; i < info.MaxAC; i++) Stats.Add((byte)StatType.AC);
+            if (info.MinAC > 0) for (int i = 0; i < info.MinAC; i++) Stats.Add((byte)StatType.MinAC);
+            if (info.MaxMAC > 0) for (int i = 0; i < info.MaxMAC; i++) Stats.Add((byte)StatType.MAC);
+            if (info.MinMAC > 0) for (int i = 0; i < info.MinMAC; i++) Stats.Add((byte)StatType.MinMAC);
+            if (info.Accuracy > 0) for (int i = 0; i < info.Accuracy; i++) Stats.Add((byte)StatType.Accuracy);
+            if (info.Agility > 0) for (int i = 0; i < info.Agility; i++) Stats.Add((byte)StatType.Agility);
+            if (info.AttackSpeed > 0) for (int i = 0; i < info.AttackSpeed; i++) Stats.Add((byte)StatType.ASpeed);
+            if (info.CriticalDamage > 0) for (int i = 0; i < info.CriticalDamage; i++) Stats.Add((byte)StatType.CritDamage);
+            if (info.CriticalRate > 0) for (int i = 0; i < info.CriticalRate; i++) Stats.Add((byte)StatType.CritRate);
+            if (info.Freezing > 0) for (int i = 0; i < info.Freezing; i++) Stats.Add((byte)StatType.Freezing);
+            if (info.HealthRecovery > 0) for (int i = 0; i < info.HealthRecovery; i++) Stats.Add((byte)StatType.HP_Regen);
+            if (info.HP > 0) for (int i = 0; i < info.HP; i++) Stats.Add((byte)StatType.HP);
+            if (info.MagicResist > 0) for (int i = 0; i < info.MagicResist; i++) Stats.Add((byte)StatType.MagicResist);
+            if (info.MPrate > 0) for (int i = 0; i < info.MPrate; i++) Stats.Add((byte)StatType.MP_Regen);
+            if (info.MP > 0) for (int i = 0; i < info.MP; i++) Stats.Add((byte)StatType.MP);
+            if (info.PoisonAttack > 0) for (int i = 0; i < info.PoisonAttack; i++) Stats.Add((byte)StatType.PoisonAttack);
+            if (info.PoisonRecovery > 0) for (int i = 0; i < info.PoisonRecovery; i++) Stats.Add((byte)StatType.PoisonRegen);
+            if (info.PoisonResist > 0) for (int i = 0; i < info.PoisonResist; i++) Stats.Add((byte)StatType.PoisonResist);
+            if (info.Strong > 0) for (int i = 0; i < info.Strong; i++) Stats.Add((byte)StatType.Strong);
 
-            int WeightValue = 10;
+            int WeightValue = Settings.WeightPerLev;
 
-            int minDc = 20, maxDc = 15, minSc = 20, maxSc = 15, minMc = 20, maxMc = 15, minAc = 15, maxAc = 12, minMac = 15, maxMac = 12;
-            int _dc = 0, sc = 0, mc = 0, ac = 0, mac = 0;
+            /*int MinDC = 20, MaxDC = 20,
+                MinSC = 20, MaxSC = 20,
+                MinMC = 20, MaxMC = 20,
+                MinAC = 20, MaxAC = 20,
+                MinMAC = 20, MaxMAC = 20,
+                ACC = 20, AGIL = 20, ASPEED = 20,
+                CritDam = 20, CritRate = 20,
+                Freezing = 20,
+                HPRecov = 20, HP = 20,
+                MagicRes = 20,
+                MPRecov = 20, MP = 20,
+                PoisAttack = 20, PoisRecov = 20, PoisResist = 20,
+                Strong = 20;*/
 
 
-            int CurrentWeightVal = (WeightValue * info.RequiredAmount) * 10;
-            int MinimumWeight = 15;
+            int CurrentWeightVal = (WeightValue * info.RequiredAmount);
+
+            int MinimumWeight = 20;
 
             while (CurrentWeightVal > 0)
             {
                 if (Stats.Count == 0) CurrentWeightVal = 0;
+                if (CurrentWeightVal < MinimumWeight)
+                    CurrentWeightVal = 0;
 
                 switch (Stats[SMain.Envir.Random.Next(0, Stats.Count)])
                 {
-                    case (byte)StatType.DC: //Max DC
-                          if (CurrentWeightVal >= maxDc)
+                    case (byte)StatType.DC:
+                          if (CurrentWeightVal >= Settings.MaxDC)
                           {
                               item.DC++;
-                              CurrentWeightVal -= maxDc;
+                              CurrentWeightVal -= Settings.MaxDC;
                           }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.DC);
                         break;
-                    case (byte)StatType.SC: //Max SC
-                            if (CurrentWeightVal >= maxSc)
+                    case (byte)StatType.SC:
+                            if (CurrentWeightVal >= Settings.MaxSC)
                             {
                                 item.SC++;
-                                CurrentWeightVal -= maxSc;
+                                CurrentWeightVal -= Settings.MaxSC;
                             }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.SC);
                         break;
-                    case (byte)StatType.MC: //Max MC
-                            if (CurrentWeightVal >= maxMc)
+                    case (byte)StatType.MC:
+                            if (CurrentWeightVal >= Settings.MaxMC)
                             {
                                 item.MC++;
-                                CurrentWeightVal -= maxMc;
+                                CurrentWeightVal -= Settings.MaxMC;
                             }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MC);
                         break;
                     case (byte)StatType.MinDC: 
-                        if (CurrentWeightVal >= minDc)
+                        if (CurrentWeightVal >= Settings.MinDC)
                         {
                             item.MinDC++;
-                            CurrentWeightVal -= minDc;
+                            CurrentWeightVal -= Settings.MinDC;
                         }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MinDC);
                         break;
                     case (byte)StatType.MinSC: 
-                        if (CurrentWeightVal >= minSc)
+                        if (CurrentWeightVal >= Settings.MinSC)
                         {
                             item.MinSC++;
-                            CurrentWeightVal -= minSc;
+                            CurrentWeightVal -= Settings.MinSC;
                         }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MinSC);
                         break;
                     case (byte)StatType.MinMC: 
-                        if (CurrentWeightVal >= minMc)
+                        if (CurrentWeightVal >= Settings.MinMC)
                         {
                             item.MinMC++;
-                            CurrentWeightVal -= minMc;
+                            CurrentWeightVal -= Settings.MinMC;
                         }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MinMC);
+                        break;
+                    case (byte)StatType.MinAC:
+                        if (CurrentWeightVal >= Settings.MinAC)
+                        {
+                            item.MinAC++;
+                            CurrentWeightVal -= Settings.MinAC;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MinAC);
+                        break;
+                    case (byte)StatType.AC:
+                        if (CurrentWeightVal >= Settings.MaxAC)
+                        {
+                            item.AC++;
+                            CurrentWeightVal -= Settings.MaxAC;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.AC);
+                        break;
+                    case (byte)StatType.MinMAC:
+                        if (CurrentWeightVal >= Settings.MinMAC)
+                        {
+                            item.MinMAC++;
+                            CurrentWeightVal -= Settings.MinMAC;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MinMAC);
+                        break;
+                    case (byte)StatType.MAC:
+                        if (CurrentWeightVal >= Settings.MaxMAC)
+                        {
+                            item.MAC++;
+                            CurrentWeightVal -= Settings.MaxMAC;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MAC);
+                        break;
+                    case (byte)StatType.Accuracy:
+                        if (CurrentWeightVal >= Settings.ACC)
+                        {
+                            item.Accuracy++;
+                            CurrentWeightVal -= Settings.ACC;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.Accuracy);
+                        break;
+                    case (byte)StatType.Agility:
+                        if (CurrentWeightVal >= Settings.AGIL)
+                        {
+                            item.Agility++;
+                            CurrentWeightVal -= Settings.AGIL;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.Agility);
+                        break;
+                    case (byte)StatType.ASpeed:
+                        if (CurrentWeightVal >= Settings.ASPEED)
+                        {
+                            item.AttackSpeed++;
+                            CurrentWeightVal -= Settings.ASPEED;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.ASpeed);
+                        break;
+                    case (byte)StatType.CritDamage:
+                        if (CurrentWeightVal >= Settings.CritDam)
+                        {
+                            item.CriticalDamage++;
+                            CurrentWeightVal -= Settings.CritDam;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.CritDamage);
+                        break;
+                    case (byte)StatType.CritRate:
+                        if (CurrentWeightVal >= Settings.CritRate)
+                        {
+                            item.CriticalRate++;
+                            CurrentWeightVal -= Settings.CritRate;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.CritRate);
+                        break;
+                    case (byte)StatType.Freezing:
+                        if (CurrentWeightVal >= Settings.Freezing)
+                        {
+                            item.Freezing++;
+                            CurrentWeightVal -= Settings.Freezing;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.Freezing);
+                        break;
+                    case (byte)StatType.HP_Regen:
+                        if (CurrentWeightVal >= Settings.HPRecov)
+                        {
+                            item.HealthRecovery++;
+                            CurrentWeightVal -= Settings.HPRecov;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.HP_Regen);
+                        break;
+                    case (byte)StatType.HP:
+                        if (CurrentWeightVal >= Settings.HP)
+                        {
+                            item.HP++;
+                            CurrentWeightVal -= Settings.HP;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.HP);
+                        break;
+                    case (byte)StatType.MagicResist:
+                        if (CurrentWeightVal >= Settings.MagicRes)
+                        {
+                            item.MagicResist++;
+                            CurrentWeightVal -= Settings.MagicRes;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MagicResist);
+                        break;
+                    case (byte)StatType.MP_Regen:
+                        if (CurrentWeightVal >= Settings.MPRecov)
+                        {
+                            item.ManaRecovery++;
+                            CurrentWeightVal -= Settings.MPRecov;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MP_Regen);
+                        break;
+                    case (byte)StatType.MP:
+                        if (CurrentWeightVal >= Settings.MP)
+                        {
+                            item.MP++;
+                            CurrentWeightVal -= Settings.MP;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.MP);
+                        break;
+                    case (byte)StatType.PoisonAttack:
+                        if (CurrentWeightVal >= Settings.PoisAttack)
+                        {
+                            item.PoisonAttack++;
+                            CurrentWeightVal -= Settings.PoisAttack;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.PoisonAttack);
+                        break;
+                    case (byte)StatType.PoisonRegen:
+                        if (CurrentWeightVal >= Settings.PoisRecov)
+                        {
+                            item.PoisonRecovery++;
+                            CurrentWeightVal -= Settings.PoisRecov;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.PoisonRegen);
+                        break;
+                    case (byte)StatType.PoisonResist:
+                        if (CurrentWeightVal >= Settings.PoisResist)
+                        {
+                            item.PoisonResist++;
+                            CurrentWeightVal -= Settings.PoisResist;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.PoisonResist);
+                        break;
+                    case (byte)StatType.Strong:
+                        if (CurrentWeightVal >= Settings.Strong)
+                        {
+                            item.Strong++;
+                            CurrentWeightVal -= Settings.Strong;
+                        }
+                        else
+                            Stats.RemoveAll(val => val == (byte)StatType.Strong);
                         break;
                 }
-
-                if (CurrentWeightVal < MinimumWeight)
-                    CurrentWeightVal = 0;
             }
 
             //UpgradeItem(item);

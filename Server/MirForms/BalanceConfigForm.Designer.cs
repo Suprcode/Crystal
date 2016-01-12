@@ -214,6 +214,64 @@
             this.RISMaxDuraChancetextBox = new System.Windows.Forms.TextBox();
             this.label40 = new System.Windows.Forms.Label();
             this.RISIndexcomboBox = new System.Windows.Forms.ComboBox();
+            this.ItemGen_tab = new System.Windows.Forms.TabPage();
+            this.MinDC_tb = new System.Windows.Forms.TextBox();
+            this.MinMC_tb = new System.Windows.Forms.TextBox();
+            this.MinAC_tb = new System.Windows.Forms.TextBox();
+            this.MinSC_tb = new System.Windows.Forms.TextBox();
+            this.MinMAC_tb = new System.Windows.Forms.TextBox();
+            this.CritRate_tb = new System.Windows.Forms.TextBox();
+            this.CritDam_tb = new System.Windows.Forms.TextBox();
+            this.ASPEED_tb = new System.Windows.Forms.TextBox();
+            this.AGIL_tb = new System.Windows.Forms.TextBox();
+            this.ACC_tb = new System.Windows.Forms.TextBox();
+            this.MP_tb = new System.Windows.Forms.TextBox();
+            this.MPRec_tb = new System.Windows.Forms.TextBox();
+            this.HP_tb = new System.Windows.Forms.TextBox();
+            this.HPRec_tb = new System.Windows.Forms.TextBox();
+            this.Freeze_tb = new System.Windows.Forms.TextBox();
+            this.Strong_tb = new System.Windows.Forms.TextBox();
+            this.PoisRes_tb = new System.Windows.Forms.TextBox();
+            this.PoisRec_tb = new System.Windows.Forms.TextBox();
+            this.PoisAtt_tb = new System.Windows.Forms.TextBox();
+            this.MagRes_tb = new System.Windows.Forms.TextBox();
+            this.MaxMAC_tb = new System.Windows.Forms.TextBox();
+            this.MaxAC_tb = new System.Windows.Forms.TextBox();
+            this.MaxSC_tb = new System.Windows.Forms.TextBox();
+            this.MaxMC_tb = new System.Windows.Forms.TextBox();
+            this.MaxDC_tb = new System.Windows.Forms.TextBox();
+            this.label64 = new System.Windows.Forms.Label();
+            this.label65 = new System.Windows.Forms.Label();
+            this.label66 = new System.Windows.Forms.Label();
+            this.label67 = new System.Windows.Forms.Label();
+            this.label68 = new System.Windows.Forms.Label();
+            this.label69 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.label71 = new System.Windows.Forms.Label();
+            this.label72 = new System.Windows.Forms.Label();
+            this.label73 = new System.Windows.Forms.Label();
+            this.label74 = new System.Windows.Forms.Label();
+            this.label75 = new System.Windows.Forms.Label();
+            this.label76 = new System.Windows.Forms.Label();
+            this.label77 = new System.Windows.Forms.Label();
+            this.label78 = new System.Windows.Forms.Label();
+            this.label79 = new System.Windows.Forms.Label();
+            this.label80 = new System.Windows.Forms.Label();
+            this.label81 = new System.Windows.Forms.Label();
+            this.label82 = new System.Windows.Forms.Label();
+            this.label83 = new System.Windows.Forms.Label();
+            this.label84 = new System.Windows.Forms.Label();
+            this.label85 = new System.Windows.Forms.Label();
+            this.label86 = new System.Windows.Forms.Label();
+            this.label87 = new System.Windows.Forms.Label();
+            this.label88 = new System.Windows.Forms.Label();
+            this.Settings_gb = new System.Windows.Forms.GroupBox();
+            this.label89 = new System.Windows.Forms.Label();
+            this.WeightPerLev_tb = new System.Windows.Forms.TextBox();
+            this.label90 = new System.Windows.Forms.Label();
+            this.label91 = new System.Windows.Forms.Label();
+            this.WepDC_tb = new System.Windows.Forms.TextBox();
+            this.label92 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -224,6 +282,8 @@
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.ItemGen_tab.SuspendLayout();
+            this.Settings_gb.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -375,6 +435,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.ItemGen_tab);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -2097,6 +2158,588 @@
             this.RISIndexcomboBox.TabIndex = 7;
             this.RISIndexcomboBox.SelectedIndexChanged += new System.EventHandler(this.RISIndexcomboBox_SelectedIndexChanged);
             // 
+            // ItemGen_tab
+            // 
+            this.ItemGen_tab.Controls.Add(this.Settings_gb);
+            this.ItemGen_tab.Controls.Add(this.label84);
+            this.ItemGen_tab.Controls.Add(this.label85);
+            this.ItemGen_tab.Controls.Add(this.label86);
+            this.ItemGen_tab.Controls.Add(this.label87);
+            this.ItemGen_tab.Controls.Add(this.label88);
+            this.ItemGen_tab.Controls.Add(this.label79);
+            this.ItemGen_tab.Controls.Add(this.label80);
+            this.ItemGen_tab.Controls.Add(this.label81);
+            this.ItemGen_tab.Controls.Add(this.label82);
+            this.ItemGen_tab.Controls.Add(this.label83);
+            this.ItemGen_tab.Controls.Add(this.label74);
+            this.ItemGen_tab.Controls.Add(this.label75);
+            this.ItemGen_tab.Controls.Add(this.label76);
+            this.ItemGen_tab.Controls.Add(this.label77);
+            this.ItemGen_tab.Controls.Add(this.label78);
+            this.ItemGen_tab.Controls.Add(this.label69);
+            this.ItemGen_tab.Controls.Add(this.label70);
+            this.ItemGen_tab.Controls.Add(this.label71);
+            this.ItemGen_tab.Controls.Add(this.label72);
+            this.ItemGen_tab.Controls.Add(this.label73);
+            this.ItemGen_tab.Controls.Add(this.label68);
+            this.ItemGen_tab.Controls.Add(this.label67);
+            this.ItemGen_tab.Controls.Add(this.label66);
+            this.ItemGen_tab.Controls.Add(this.label65);
+            this.ItemGen_tab.Controls.Add(this.label64);
+            this.ItemGen_tab.Controls.Add(this.MaxMAC_tb);
+            this.ItemGen_tab.Controls.Add(this.MaxAC_tb);
+            this.ItemGen_tab.Controls.Add(this.MaxSC_tb);
+            this.ItemGen_tab.Controls.Add(this.MaxMC_tb);
+            this.ItemGen_tab.Controls.Add(this.MaxDC_tb);
+            this.ItemGen_tab.Controls.Add(this.Strong_tb);
+            this.ItemGen_tab.Controls.Add(this.PoisRes_tb);
+            this.ItemGen_tab.Controls.Add(this.PoisRec_tb);
+            this.ItemGen_tab.Controls.Add(this.PoisAtt_tb);
+            this.ItemGen_tab.Controls.Add(this.MagRes_tb);
+            this.ItemGen_tab.Controls.Add(this.MP_tb);
+            this.ItemGen_tab.Controls.Add(this.MPRec_tb);
+            this.ItemGen_tab.Controls.Add(this.HP_tb);
+            this.ItemGen_tab.Controls.Add(this.HPRec_tb);
+            this.ItemGen_tab.Controls.Add(this.Freeze_tb);
+            this.ItemGen_tab.Controls.Add(this.CritRate_tb);
+            this.ItemGen_tab.Controls.Add(this.CritDam_tb);
+            this.ItemGen_tab.Controls.Add(this.ASPEED_tb);
+            this.ItemGen_tab.Controls.Add(this.AGIL_tb);
+            this.ItemGen_tab.Controls.Add(this.ACC_tb);
+            this.ItemGen_tab.Controls.Add(this.MinMAC_tb);
+            this.ItemGen_tab.Controls.Add(this.MinAC_tb);
+            this.ItemGen_tab.Controls.Add(this.MinSC_tb);
+            this.ItemGen_tab.Controls.Add(this.MinMC_tb);
+            this.ItemGen_tab.Controls.Add(this.MinDC_tb);
+            this.ItemGen_tab.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ItemGen_tab.Location = new System.Drawing.Point(4, 22);
+            this.ItemGen_tab.Name = "ItemGen_tab";
+            this.ItemGen_tab.Size = new System.Drawing.Size(624, 663);
+            this.ItemGen_tab.TabIndex = 4;
+            this.ItemGen_tab.Text = "Item Generation";
+            this.ItemGen_tab.UseVisualStyleBackColor = true;
+            // 
+            // MinDC_tb
+            // 
+            this.MinDC_tb.Location = new System.Drawing.Point(101, 64);
+            this.MinDC_tb.Name = "MinDC_tb";
+            this.MinDC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MinDC_tb.TabIndex = 0;
+            this.MinDC_tb.TextChanged += new System.EventHandler(this.MinDC_tb_TextChanged);
+            // 
+            // MinMC_tb
+            // 
+            this.MinMC_tb.Location = new System.Drawing.Point(101, 91);
+            this.MinMC_tb.Name = "MinMC_tb";
+            this.MinMC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MinMC_tb.TabIndex = 1;
+            this.MinMC_tb.TextChanged += new System.EventHandler(this.MinMC_tb_TextChanged);
+            // 
+            // MinAC_tb
+            // 
+            this.MinAC_tb.Location = new System.Drawing.Point(101, 145);
+            this.MinAC_tb.Name = "MinAC_tb";
+            this.MinAC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MinAC_tb.TabIndex = 3;
+            this.MinAC_tb.TextChanged += new System.EventHandler(this.MinAC_tb_TextChanged);
+            // 
+            // MinSC_tb
+            // 
+            this.MinSC_tb.Location = new System.Drawing.Point(101, 118);
+            this.MinSC_tb.Name = "MinSC_tb";
+            this.MinSC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MinSC_tb.TabIndex = 2;
+            this.MinSC_tb.TextChanged += new System.EventHandler(this.MinSC_tb_TextChanged);
+            // 
+            // MinMAC_tb
+            // 
+            this.MinMAC_tb.Location = new System.Drawing.Point(101, 172);
+            this.MinMAC_tb.Name = "MinMAC_tb";
+            this.MinMAC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MinMAC_tb.TabIndex = 4;
+            this.MinMAC_tb.TextChanged += new System.EventHandler(this.MinMAC_tb_TextChanged);
+            // 
+            // CritRate_tb
+            // 
+            this.CritRate_tb.Location = new System.Drawing.Point(101, 307);
+            this.CritRate_tb.Name = "CritRate_tb";
+            this.CritRate_tb.Size = new System.Drawing.Size(56, 21);
+            this.CritRate_tb.TabIndex = 9;
+            this.CritRate_tb.TextChanged += new System.EventHandler(this.CritRate_tb_TextChanged);
+            // 
+            // CritDam_tb
+            // 
+            this.CritDam_tb.Location = new System.Drawing.Point(101, 280);
+            this.CritDam_tb.Name = "CritDam_tb";
+            this.CritDam_tb.Size = new System.Drawing.Size(56, 21);
+            this.CritDam_tb.TabIndex = 8;
+            this.CritDam_tb.TextChanged += new System.EventHandler(this.CritDam_tb_TextChanged);
+            // 
+            // ASPEED_tb
+            // 
+            this.ASPEED_tb.Location = new System.Drawing.Point(101, 253);
+            this.ASPEED_tb.Name = "ASPEED_tb";
+            this.ASPEED_tb.Size = new System.Drawing.Size(56, 21);
+            this.ASPEED_tb.TabIndex = 7;
+            this.ASPEED_tb.TextChanged += new System.EventHandler(this.ASPEED_tb_TextChanged);
+            // 
+            // AGIL_tb
+            // 
+            this.AGIL_tb.Location = new System.Drawing.Point(101, 226);
+            this.AGIL_tb.Name = "AGIL_tb";
+            this.AGIL_tb.Size = new System.Drawing.Size(56, 21);
+            this.AGIL_tb.TabIndex = 6;
+            this.AGIL_tb.TextChanged += new System.EventHandler(this.AGIL_tb_TextChanged);
+            // 
+            // ACC_tb
+            // 
+            this.ACC_tb.Location = new System.Drawing.Point(101, 199);
+            this.ACC_tb.Name = "ACC_tb";
+            this.ACC_tb.Size = new System.Drawing.Size(56, 21);
+            this.ACC_tb.TabIndex = 5;
+            this.ACC_tb.TextChanged += new System.EventHandler(this.ACC_tb_TextChanged);
+            // 
+            // MP_tb
+            // 
+            this.MP_tb.Location = new System.Drawing.Point(101, 442);
+            this.MP_tb.Name = "MP_tb";
+            this.MP_tb.Size = new System.Drawing.Size(56, 21);
+            this.MP_tb.TabIndex = 14;
+            this.MP_tb.TextChanged += new System.EventHandler(this.MP_tb_TextChanged);
+            // 
+            // MPRec_tb
+            // 
+            this.MPRec_tb.Location = new System.Drawing.Point(101, 415);
+            this.MPRec_tb.Name = "MPRec_tb";
+            this.MPRec_tb.Size = new System.Drawing.Size(56, 21);
+            this.MPRec_tb.TabIndex = 13;
+            this.MPRec_tb.TextChanged += new System.EventHandler(this.MPRec_tb_TextChanged);
+            // 
+            // HP_tb
+            // 
+            this.HP_tb.Location = new System.Drawing.Point(101, 388);
+            this.HP_tb.Name = "HP_tb";
+            this.HP_tb.Size = new System.Drawing.Size(56, 21);
+            this.HP_tb.TabIndex = 12;
+            this.HP_tb.TextChanged += new System.EventHandler(this.HP_tb_TextChanged);
+            // 
+            // HPRec_tb
+            // 
+            this.HPRec_tb.Location = new System.Drawing.Point(101, 361);
+            this.HPRec_tb.Name = "HPRec_tb";
+            this.HPRec_tb.Size = new System.Drawing.Size(56, 21);
+            this.HPRec_tb.TabIndex = 11;
+            this.HPRec_tb.TextChanged += new System.EventHandler(this.HPRec_tb_TextChanged);
+            // 
+            // Freeze_tb
+            // 
+            this.Freeze_tb.Location = new System.Drawing.Point(101, 334);
+            this.Freeze_tb.Name = "Freeze_tb";
+            this.Freeze_tb.Size = new System.Drawing.Size(56, 21);
+            this.Freeze_tb.TabIndex = 10;
+            this.Freeze_tb.TextChanged += new System.EventHandler(this.Freeze_tb_TextChanged);
+            // 
+            // Strong_tb
+            // 
+            this.Strong_tb.Location = new System.Drawing.Point(101, 577);
+            this.Strong_tb.Name = "Strong_tb";
+            this.Strong_tb.Size = new System.Drawing.Size(56, 21);
+            this.Strong_tb.TabIndex = 19;
+            this.Strong_tb.TextChanged += new System.EventHandler(this.Strong_tb_TextChanged);
+            // 
+            // PoisRes_tb
+            // 
+            this.PoisRes_tb.Location = new System.Drawing.Point(101, 550);
+            this.PoisRes_tb.Name = "PoisRes_tb";
+            this.PoisRes_tb.Size = new System.Drawing.Size(56, 21);
+            this.PoisRes_tb.TabIndex = 18;
+            this.PoisRes_tb.TextChanged += new System.EventHandler(this.PoisRes_tb_TextChanged);
+            // 
+            // PoisRec_tb
+            // 
+            this.PoisRec_tb.Location = new System.Drawing.Point(101, 523);
+            this.PoisRec_tb.Name = "PoisRec_tb";
+            this.PoisRec_tb.Size = new System.Drawing.Size(56, 21);
+            this.PoisRec_tb.TabIndex = 17;
+            this.PoisRec_tb.TextChanged += new System.EventHandler(this.PoisRec_tb_TextChanged);
+            // 
+            // PoisAtt_tb
+            // 
+            this.PoisAtt_tb.Location = new System.Drawing.Point(101, 496);
+            this.PoisAtt_tb.Name = "PoisAtt_tb";
+            this.PoisAtt_tb.Size = new System.Drawing.Size(56, 21);
+            this.PoisAtt_tb.TabIndex = 16;
+            this.PoisAtt_tb.TextChanged += new System.EventHandler(this.PoisAtt_tb_TextChanged);
+            // 
+            // MagRes_tb
+            // 
+            this.MagRes_tb.Location = new System.Drawing.Point(101, 469);
+            this.MagRes_tb.Name = "MagRes_tb";
+            this.MagRes_tb.Size = new System.Drawing.Size(56, 21);
+            this.MagRes_tb.TabIndex = 15;
+            this.MagRes_tb.TextChanged += new System.EventHandler(this.MagRes_tb_TextChanged);
+            // 
+            // MaxMAC_tb
+            // 
+            this.MaxMAC_tb.Location = new System.Drawing.Point(218, 172);
+            this.MaxMAC_tb.Name = "MaxMAC_tb";
+            this.MaxMAC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MaxMAC_tb.TabIndex = 24;
+            this.MaxMAC_tb.TextChanged += new System.EventHandler(this.MaxMAC_tb_TextChanged);
+            // 
+            // MaxAC_tb
+            // 
+            this.MaxAC_tb.Location = new System.Drawing.Point(218, 145);
+            this.MaxAC_tb.Name = "MaxAC_tb";
+            this.MaxAC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MaxAC_tb.TabIndex = 23;
+            this.MaxAC_tb.TextChanged += new System.EventHandler(this.MaxAC_tb_TextChanged);
+            // 
+            // MaxSC_tb
+            // 
+            this.MaxSC_tb.Location = new System.Drawing.Point(218, 118);
+            this.MaxSC_tb.Name = "MaxSC_tb";
+            this.MaxSC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MaxSC_tb.TabIndex = 22;
+            this.MaxSC_tb.TextChanged += new System.EventHandler(this.MaxSC_tb_TextChanged);
+            // 
+            // MaxMC_tb
+            // 
+            this.MaxMC_tb.Location = new System.Drawing.Point(218, 91);
+            this.MaxMC_tb.Name = "MaxMC_tb";
+            this.MaxMC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MaxMC_tb.TabIndex = 21;
+            this.MaxMC_tb.TextChanged += new System.EventHandler(this.MaxMC_tb_TextChanged);
+            // 
+            // MaxDC_tb
+            // 
+            this.MaxDC_tb.Location = new System.Drawing.Point(218, 64);
+            this.MaxDC_tb.Name = "MaxDC_tb";
+            this.MaxDC_tb.Size = new System.Drawing.Size(56, 21);
+            this.MaxDC_tb.TabIndex = 20;
+            this.MaxDC_tb.TextChanged += new System.EventHandler(this.MaxDC_tb_TextChanged);
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(52, 67);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(37, 13);
+            this.label64.TabIndex = 25;
+            this.label64.Text = "MinDC";
+            this.label64.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label65
+            // 
+            this.label65.AutoSize = true;
+            this.label65.Location = new System.Drawing.Point(52, 94);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(38, 13);
+            this.label65.TabIndex = 26;
+            this.label65.Text = "MinMC";
+            this.label65.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label66
+            // 
+            this.label66.AutoSize = true;
+            this.label66.Location = new System.Drawing.Point(52, 121);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(36, 13);
+            this.label66.TabIndex = 27;
+            this.label66.Text = "MinSC";
+            this.label66.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label67
+            // 
+            this.label67.AutoSize = true;
+            this.label67.Location = new System.Drawing.Point(52, 148);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(37, 13);
+            this.label67.TabIndex = 28;
+            this.label67.Text = "MinAC";
+            this.label67.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(52, 175);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(45, 13);
+            this.label68.TabIndex = 29;
+            this.label68.Text = "MinMAC";
+            this.label68.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(52, 310);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(47, 13);
+            this.label69.TabIndex = 34;
+            this.label69.Text = "CritRate";
+            this.label69.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(52, 283);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(45, 13);
+            this.label70.TabIndex = 33;
+            this.label70.Text = "CritDam";
+            this.label70.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Location = new System.Drawing.Point(52, 256);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(45, 13);
+            this.label71.TabIndex = 32;
+            this.label71.Text = "ASPEED";
+            this.label71.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Location = new System.Drawing.Point(52, 229);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(30, 13);
+            this.label72.TabIndex = 31;
+            this.label72.Text = "AGIL";
+            this.label72.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label73
+            // 
+            this.label73.AutoSize = true;
+            this.label73.Location = new System.Drawing.Point(52, 202);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(28, 13);
+            this.label73.TabIndex = 30;
+            this.label73.Text = "ACC";
+            this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Location = new System.Drawing.Point(52, 445);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(21, 13);
+            this.label74.TabIndex = 39;
+            this.label74.Text = "MP";
+            this.label74.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(52, 418);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(39, 13);
+            this.label75.TabIndex = 38;
+            this.label75.Text = "MPRec";
+            this.label75.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(52, 391);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(20, 13);
+            this.label76.TabIndex = 37;
+            this.label76.Text = "HP";
+            this.label76.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Location = new System.Drawing.Point(52, 364);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(38, 13);
+            this.label77.TabIndex = 36;
+            this.label77.Text = "HPRec";
+            this.label77.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Location = new System.Drawing.Point(52, 337);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(40, 13);
+            this.label78.TabIndex = 35;
+            this.label78.Text = "Freeze";
+            this.label78.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Location = new System.Drawing.Point(52, 580);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(39, 13);
+            this.label79.TabIndex = 44;
+            this.label79.Text = "Strong";
+            this.label79.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(52, 553);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(44, 13);
+            this.label80.TabIndex = 43;
+            this.label80.Text = "PoisRes";
+            this.label80.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(52, 526);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(44, 13);
+            this.label81.TabIndex = 42;
+            this.label81.Text = "PoisRec";
+            this.label81.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Location = new System.Drawing.Point(52, 499);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(41, 13);
+            this.label82.TabIndex = 41;
+            this.label82.Text = "PoisAtt";
+            this.label82.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(52, 472);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(45, 13);
+            this.label83.TabIndex = 40;
+            this.label83.Text = "MagRes";
+            this.label83.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(169, 175);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(49, 13);
+            this.label84.TabIndex = 49;
+            this.label84.Text = "MaxMAC";
+            this.label84.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(169, 148);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(41, 13);
+            this.label85.TabIndex = 48;
+            this.label85.Text = "MaxAC";
+            this.label85.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(169, 121);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(40, 13);
+            this.label86.TabIndex = 47;
+            this.label86.Text = "MaxSC";
+            this.label86.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(169, 94);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(42, 13);
+            this.label87.TabIndex = 46;
+            this.label87.Text = "MaxMC";
+            this.label87.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(169, 67);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(41, 13);
+            this.label88.TabIndex = 45;
+            this.label88.Text = "MaxDC";
+            this.label88.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Settings_gb
+            // 
+            this.Settings_gb.Controls.Add(this.label92);
+            this.Settings_gb.Controls.Add(this.label91);
+            this.Settings_gb.Controls.Add(this.WepDC_tb);
+            this.Settings_gb.Controls.Add(this.label90);
+            this.Settings_gb.Controls.Add(this.label89);
+            this.Settings_gb.Controls.Add(this.WeightPerLev_tb);
+            this.Settings_gb.Location = new System.Drawing.Point(411, 12);
+            this.Settings_gb.Name = "Settings_gb";
+            this.Settings_gb.Size = new System.Drawing.Size(200, 154);
+            this.Settings_gb.TabIndex = 50;
+            this.Settings_gb.TabStop = false;
+            this.Settings_gb.Text = "Settings";
+            // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(17, 33);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(83, 13);
+            this.label89.TabIndex = 52;
+            this.label89.Text = "Points Per Level";
+            this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // WeightPerLev_tb
+            // 
+            this.WeightPerLev_tb.Location = new System.Drawing.Point(106, 30);
+            this.WeightPerLev_tb.Name = "WeightPerLev_tb";
+            this.WeightPerLev_tb.Size = new System.Drawing.Size(56, 21);
+            this.WeightPerLev_tb.TabIndex = 51;
+            this.WeightPerLev_tb.TextChanged += new System.EventHandler(this.WeightPerLev_tb_TextChanged);
+            // 
+            // label90
+            // 
+            this.label90.AutoSize = true;
+            this.label90.Location = new System.Drawing.Point(17, 55);
+            this.label90.Name = "label90";
+            this.label90.Size = new System.Drawing.Size(103, 13);
+            this.label90.TabIndex = 53;
+            this.label90.Text = "(item required level)";
+            this.label90.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label91
+            // 
+            this.label91.AutoSize = true;
+            this.label91.Location = new System.Drawing.Point(17, 94);
+            this.label91.Name = "label91";
+            this.label91.Size = new System.Drawing.Size(64, 13);
+            this.label91.TabIndex = 55;
+            this.label91.Text = "Weapon DC";
+            this.label91.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // WepDC_tb
+            // 
+            this.WepDC_tb.Location = new System.Drawing.Point(106, 91);
+            this.WepDC_tb.Name = "WepDC_tb";
+            this.WepDC_tb.Size = new System.Drawing.Size(56, 21);
+            this.WepDC_tb.TabIndex = 54;
+            this.WepDC_tb.TextChanged += new System.EventHandler(this.WepDC_tb_TextChanged);
+            // 
+            // label92
+            // 
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(17, 115);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(80, 13);
+            this.label92.TabIndex = 56;
+            this.label92.Text = "(level required)";
+            this.label92.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // BalanceConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2106,6 +2749,7 @@
             this.Name = "BalanceConfigForm";
             this.Text = "BalanceConfigForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BalanceConfigForm_FormClosed);
+            this.Load += new System.EventHandler(this.BalanceConfigForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -2124,6 +2768,10 @@
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.ItemGen_tab.ResumeLayout(false);
+            this.ItemGen_tab.PerformLayout();
+            this.Settings_gb.ResumeLayout(false);
+            this.Settings_gb.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2316,5 +2964,63 @@
         private System.Windows.Forms.Button RISAddIndexbutton;
         private System.Windows.Forms.TextBox RISCurseChancetextBox;
         private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.TabPage ItemGen_tab;
+        private System.Windows.Forms.Label label84;
+        private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.Label label86;
+        private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.Label label88;
+        private System.Windows.Forms.Label label79;
+        private System.Windows.Forms.Label label80;
+        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.Label label83;
+        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.Label label76;
+        private System.Windows.Forms.Label label77;
+        private System.Windows.Forms.Label label78;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.Label label73;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.Label label67;
+        private System.Windows.Forms.Label label66;
+        private System.Windows.Forms.Label label65;
+        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.TextBox MaxMAC_tb;
+        private System.Windows.Forms.TextBox MaxAC_tb;
+        private System.Windows.Forms.TextBox MaxSC_tb;
+        private System.Windows.Forms.TextBox MaxMC_tb;
+        private System.Windows.Forms.TextBox MaxDC_tb;
+        private System.Windows.Forms.TextBox Strong_tb;
+        private System.Windows.Forms.TextBox PoisRes_tb;
+        private System.Windows.Forms.TextBox PoisRec_tb;
+        private System.Windows.Forms.TextBox PoisAtt_tb;
+        private System.Windows.Forms.TextBox MagRes_tb;
+        private System.Windows.Forms.TextBox MP_tb;
+        private System.Windows.Forms.TextBox MPRec_tb;
+        private System.Windows.Forms.TextBox HP_tb;
+        private System.Windows.Forms.TextBox HPRec_tb;
+        private System.Windows.Forms.TextBox Freeze_tb;
+        private System.Windows.Forms.TextBox CritRate_tb;
+        private System.Windows.Forms.TextBox CritDam_tb;
+        private System.Windows.Forms.TextBox ASPEED_tb;
+        private System.Windows.Forms.TextBox AGIL_tb;
+        private System.Windows.Forms.TextBox ACC_tb;
+        private System.Windows.Forms.TextBox MinMAC_tb;
+        private System.Windows.Forms.TextBox MinAC_tb;
+        private System.Windows.Forms.TextBox MinSC_tb;
+        private System.Windows.Forms.TextBox MinMC_tb;
+        private System.Windows.Forms.TextBox MinDC_tb;
+        private System.Windows.Forms.GroupBox Settings_gb;
+        private System.Windows.Forms.Label label92;
+        private System.Windows.Forms.Label label91;
+        private System.Windows.Forms.TextBox WepDC_tb;
+        private System.Windows.Forms.Label label90;
+        private System.Windows.Forms.Label label89;
+        private System.Windows.Forms.TextBox WeightPerLev_tb;
     }
 }

@@ -100,7 +100,11 @@ public enum StatType : byte
     Unknown = 23,
     MinDC = 24,
     MinMC = 25,
-    MinSC = 26
+    MinSC = 26,
+    MinAC = 27,
+    MinMAC = 28,
+    CritDamage = 29,
+    CritRate = 30,
 }
 public enum RefinedValue : byte
 {
@@ -2540,7 +2544,7 @@ public class ItemInfo
     public RandomItemStat RandomStats;
     public string ToolTip = string.Empty;
 
-    public bool Generate = true;
+    public bool Generate = false;
 
     public bool IsConsumable
     {

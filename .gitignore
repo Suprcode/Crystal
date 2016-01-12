@@ -47,3 +47,15 @@ Legend of Mir.v11.suo
 Legend of Mir.v12.suo
 Legend of Mir.sln.DotSettings.user
 Client/Client.csproj
+*.cache
+Server/obj/Debug/Server.csproj.GenerateResource.Cache
+*.exe
+Client/obj/Debug/Client.pdb
+*.dll
+Server/obj/Debug/Server.pdb
+*.pdb
+*.exe
+Client/obj/Debug/Client.exe
+*.exe
+*.pdb
+*.pdb

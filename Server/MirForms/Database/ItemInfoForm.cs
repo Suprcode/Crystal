@@ -207,6 +207,7 @@ namespace Server
                 FastRunCheckBox.Checked = false;
                 CanAwaken.Checked = false;
                 TooltipTextBox.Text = string.Empty;
+                Generate_cb.Checked = false;
                 return;
             }
 
@@ -311,6 +312,7 @@ namespace Server
             FastRunCheckBox.Checked = info.CanFastRun;
             CanAwaken.Checked = info.CanAwakening;
             TooltipTextBox.Text = info.ToolTip;
+            Generate_cb.Checked = info.Generate;
 
             for (int i = 1; i < _selectedItemInfos.Count; i++)
             {
@@ -377,6 +379,7 @@ namespace Server
                 if (CriticalDamagetextBox.Text != info.CriticalDamage.ToString()) CriticalDamagetextBox.Text = string.Empty;
                 if (ReflecttextBox.Text != info.Reflect.ToString()) ReflecttextBox.Text = string.Empty;
                 if (LevelBasedcheckbox.Checked != info.LevelBased) LevelBasedcheckbox.CheckState = CheckState.Indeterminate;
+                if (Generate_cb.Checked != info.Generate) Generate_cb.CheckState = CheckState.Indeterminate;
                 if (ClassBasedcheckbox.Checked != info.ClassBased) ClassBasedcheckbox.CheckState = CheckState.Indeterminate;
                 if (Bind_dontstorecheckbox.Checked != info.Bind.HasFlag(BindMode.DontStore)) Bind_dontstorecheckbox.CheckState = CheckState.Indeterminate;
                 if (Bind_dontupgradecheckbox.Checked != info.Bind.HasFlag(BindMode.DontUpgrade)) Bind_dontupgradecheckbox.CheckState = CheckState.Indeterminate;
@@ -1721,6 +1724,14 @@ namespace Server
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 Envir.AddToGameShop(_selectedItemInfos[i]);
             Envir.SaveDB();
+        }
+
+        private void Generate_cb_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Generate = Generate_cb.Checked;
         }
     }
 }
