@@ -59,6 +59,8 @@
             this.GuildLevelListcomboBox = new System.Windows.Forms.ComboBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.BuffPanel = new System.Windows.Forms.Panel();
+            this.bufftxtIcon = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.BufftxtActivationCost = new System.Windows.Forms.TextBox();
             this.BufftxtTimeLimit = new System.Windows.Forms.TextBox();
             this.BufftxtPointsReq = new System.Windows.Forms.TextBox();
@@ -118,10 +120,7 @@
             this.WarLengthTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label28 = new System.Windows.Forms.Label();
-            this.bufftxtIcon = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox10.SuspendLayout();
@@ -191,7 +190,6 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(11, 41);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -446,6 +444,23 @@
             this.BuffPanel.Name = "BuffPanel";
             this.BuffPanel.Size = new System.Drawing.Size(550, 298);
             this.BuffPanel.TabIndex = 3;
+            // 
+            // bufftxtIcon
+            // 
+            this.bufftxtIcon.Location = new System.Drawing.Point(133, 152);
+            this.bufftxtIcon.Name = "bufftxtIcon";
+            this.bufftxtIcon.Size = new System.Drawing.Size(42, 20);
+            this.bufftxtIcon.TabIndex = 13;
+            this.bufftxtIcon.TextChanged += new System.EventHandler(this.bufftxtIcon_TextChanged);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(10, 155);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(28, 13);
+            this.label28.TabIndex = 12;
+            this.label28.Text = "Icon";
             // 
             // BufftxtActivationCost
             // 
@@ -1000,32 +1015,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Length : ";
             // 
-            // tabPage5
-            // 
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(726, 345);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Conquest";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(10, 155);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(28, 13);
-            this.label28.TabIndex = 12;
-            this.label28.Text = "Icon";
-            // 
-            // bufftxtIcon
-            // 
-            this.bufftxtIcon.Location = new System.Drawing.Point(133, 152);
-            this.bufftxtIcon.Name = "bufftxtIcon";
-            this.bufftxtIcon.Size = new System.Drawing.Size(42, 20);
-            this.bufftxtIcon.TabIndex = 13;
-            this.bufftxtIcon.TextChanged += new System.EventHandler(this.bufftxtIcon_TextChanged);
-            // 
             // GuildInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1093,7 +1082,6 @@
         private System.Windows.Forms.ComboBox GuildLevelListcomboBox;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox WarCostTextBox;
         private System.Windows.Forms.TextBox WarLengthTextBox;
