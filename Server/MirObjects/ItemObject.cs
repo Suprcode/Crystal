@@ -378,7 +378,7 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             throw new NotSupportedException();
         }

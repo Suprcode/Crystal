@@ -19,7 +19,7 @@ namespace Server
             get { return SMain.EditEnvir; }
         }
 
-        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false;
+        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false, SpawnChanged = false;
 
         public SystemInfoForm()
         {
@@ -41,6 +41,7 @@ namespace Server
             UpdateMarriage();
             UpdateMentor();
             UpdateGem();
+            UpdateSpawnTick();
         }
 
         #region Update
@@ -119,6 +120,37 @@ namespace Server
         {
             GemStatCheckBox.Checked = Settings.GemStatIndependent;
         }
+
+        private void UpdateSpawnTick()
+        {
+            txtSpawnTickDefault.Text = Envir.RespawnTick.BaseSpawnRate.ToString();
+            if (lbSpawnTickList.Items.Count != Envir.RespawnTick.Respawn.Count)
+            {
+                lbSpawnTickList.ClearSelected();
+                lbSpawnTickList.Items.Clear();
+                foreach (RespawnTickOption Option in Envir.RespawnTick.Respawn)
+                    lbSpawnTickList.Items.Add(Option);
+                pnlSpawnTickConfig.Enabled = false;
+                txtSpawnTickSpeed.Text = string.Empty;
+                txtSpawnTickUsers.Text = string.Empty;
+            }
+            else
+            {
+                if (lbSpawnTickList.SelectedIndex == -1)
+                {
+                    pnlSpawnTickConfig.Enabled = false;
+                    txtSpawnTickSpeed.Text = string.Empty;
+                    txtSpawnTickUsers.Text = string.Empty;
+                }
+                else
+                {
+                    pnlSpawnTickConfig.Enabled = true;
+                    RespawnTickOption Option = (RespawnTickOption)lbSpawnTickList.SelectedItem;
+                    txtSpawnTickSpeed.Text = string.Format("{0:0.0}", Option.DelayLoss);
+                    txtSpawnTickUsers.Text = Option.UserCount.ToString();
+                }
+            }
+        }
         #endregion
 
         private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -143,6 +175,8 @@ namespace Server
 
             if (GemChanged)
                 Settings.SaveGem();
+            if (SpawnChanged)
+                Envir.SaveDB();
         }
 
         #region Fishing
@@ -233,7 +267,7 @@ namespace Server
 
             MirDatabase.MonsterInfo mob = Envir.MonsterInfoList[FishingMobIndexComboBox.SelectedIndex];
 
-            if(mob == null) return;
+            if (mob == null) return;
 
             Settings.FishingMonster = mob.Name;
 
@@ -676,5 +710,85 @@ namespace Server
             GemChanged = true;
         }
         #endregion
+
+        private void txtSpawnTickDefault_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Envir.RespawnTick.BaseSpawnRate = temp;
+            SpawnChanged = true;
+        }
+
+        private void btnSpawnTickAdd_Click(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            RespawnTickOption Option = new RespawnTickOption();
+            Envir.RespawnTick.Respawn.Add(Option);
+            lbSpawnTickList.Items.Add(Option);
+            lbSpawnTickList.SelectedIndex = Envir.RespawnTick.Respawn.Count - 1;
+            UpdateSpawnTick();
+            SpawnChanged = true;
+        }
+
+        private void btnSpawnTickRemove_Click(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (lbSpawnTickList.SelectedIndex == -1) return;
+            if (MessageBox.Show("Are you sure you want to delete the index?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            Envir.RespawnTick.Respawn.RemoveAt(lbSpawnTickList.SelectedIndex);
+            //lbSpawnTickList.Items.RemoveAt(lbSpawnTickList.SelectedIndex);
+
+            UpdateSpawnTick();
+            SpawnChanged = true;
+        }
+
+        private void lbSpawnTickList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSpawnTick();
+        }
+
+        private void txtSpawnTickUsers_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (lbSpawnTickList.SelectedIndex == -1) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp) || (temp < 0))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            Envir.RespawnTick.Respawn[lbSpawnTickList.SelectedIndex].UserCount = temp;
+            lbSpawnTickList.Items[lbSpawnTickList.SelectedIndex] = lbSpawnTickList.SelectedItem;//need this to update the string displayed
+            //lbSpawnTickList.Refresh();
+            txtSpawnTickUsers.Focus();
+            txtSpawnTickUsers.SelectionStart = txtSpawnTickUsers.Text.Length;
+            SpawnChanged = true;
+        }
+
+        private void txtSpawnTickSpeed_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (lbSpawnTickList.SelectedIndex == -1) return;
+            double temp;
+
+            if (!double.TryParse(ActiveControl.Text, out temp) || (temp <= 0) || (temp > 1.0))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            Envir.RespawnTick.Respawn[lbSpawnTickList.SelectedIndex].DelayLoss = temp;
+            SpawnChanged = true;
+        }
     }
 }

@@ -415,7 +415,7 @@ namespace Server.MirObjects
 
         public virtual bool Harvest(PlayerObject player) { return false; }
 
-        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false);
+        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
         public virtual void AddBuff(Buff b)
         {
             switch (b.Type)

@@ -76,6 +76,11 @@ namespace Server.MirObjects
             }
         }
 
+        public override ObjectType Race
+        {
+            get { return ObjectType.Creature; }
+        }
+
 
         protected internal IntelligentCreatureObject(MonsterInfo info)
             : base(info)
@@ -767,7 +772,7 @@ namespace Server.MirObjects
             return 0;
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             //FindTarget();
         }

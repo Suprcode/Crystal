@@ -77,6 +77,7 @@ namespace Server
                  txtDmgBaseMax.Text = (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus).ToString();
                  txtDmgBonusMin.Text = _selectedMagicInfo.MPowerBase.ToString();
                  txtDmgBonusMax.Text = (_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus).ToString();
+                 txtRange.Text = _selectedMagicInfo.Range.ToString();
                  ItemInfo Book = Envir.GetBook((short)_selectedMagicInfo.Spell);
                  if (Book != null)
                  {
@@ -151,6 +152,8 @@ namespace Server
             this.label1 = new System.Windows.Forms.Label();
             this.lblBookValid = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.txtRange = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -213,7 +216,7 @@ namespace Server
             this.panel5.Controls.Add(this.lblDamageExample);
             this.panel5.Location = new System.Drawing.Point(14, 315);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(480, 28);
+            this.panel5.Size = new System.Drawing.Size(455, 28);
             this.panel5.TabIndex = 7;
             // 
             // lblDamageExample
@@ -326,6 +329,8 @@ namespace Server
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.label20);
+            this.panel3.Controls.Add(this.txtRange);
             this.panel3.Controls.Add(this.txtDelayReduction);
             this.panel3.Controls.Add(this.txtDelayBase);
             this.panel3.Controls.Add(this.label14);
@@ -598,6 +603,23 @@ namespace Server
             this.lblBookValid.TabIndex = 0;
             this.lblBookValid.Text = "Searching for books";
             // 
+            // txtRange
+            // 
+            this.txtRange.Location = new System.Drawing.Point(121, 74);
+            this.txtRange.Name = "txtRange";
+            this.txtRange.Size = new System.Drawing.Size(79, 20);
+            this.txtRange.TabIndex = 14;
+            this.txtRange.TextChanged += new System.EventHandler(this.txtRange_TextChanged);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(12, 77);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(101, 13);
+            this.label20.TabIndex = 15;
+            this.label20.Text = "Range (0 No target)";
+            // 
             // MagicInfoForm
             // 
             this.ClientSize = new System.Drawing.Size(927, 542);
@@ -822,6 +844,16 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.DelayReduction = temp;
+        }
+
+        private void txtRange_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp = 0;
+            if (!IsValid(ref temp)) return;
+            
+            ActiveControl.BackColor = SystemColors.Window;
+            _selectedMagicInfo.Range = temp;
         }
     }
 }

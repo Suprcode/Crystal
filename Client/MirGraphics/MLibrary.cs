@@ -29,7 +29,11 @@ namespace Client.MirGraphics
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
             GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill");
-        
+
+        public static readonly MLibrary
+            Background = new MLibrary(Settings.DataPath + "Background");
+
+
 
         public static readonly MLibrary
             Dragon = new MLibrary(Settings.DataPath + "Dragon");
@@ -52,8 +56,8 @@ namespace Client.MirGraphics
                                           CHair = new MLibrary[9],
                                           CHumEffect = new MLibrary[3],
                                           AArmours = new MLibrary[17],
-                                          AWeaponsL = new MLibrary[19],
-                                          AWeaponsR = new MLibrary[19],
+                                          AWeaponsL = new MLibrary[14],
+                                          AWeaponsR = new MLibrary[14],
                                           AHair = new MLibrary[9],
                                           AHumEffect = new MLibrary[3],
                                           ARArmours = new MLibrary[17],
@@ -61,7 +65,8 @@ namespace Client.MirGraphics
                                           ARWeaponsS = new MLibrary[19],
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
-                                          Monsters = new MLibrary[403],
+                                          Monsters = new MLibrary[406],
+                                          Gates = new MLibrary[2],
                                           Mounts = new MLibrary[12],
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
@@ -70,10 +75,6 @@ namespace Client.MirGraphics
                                           TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
                                           TransformWeaponEffect = new MLibrary[1];
-
-        //Extra
-        public static readonly MLibrary
-            ExMagic_MagicEx5 = new MLibrary(Settings.ExtraDataPath + "WemadeMir3\\MagicEx5");
 
         static Libraries()
         {
@@ -125,6 +126,9 @@ namespace Client.MirGraphics
             //Other
             for (int i = 0; i < Monsters.Length; i++)
                 Monsters[i] = new MLibrary(Settings.MonsterPath + i.ToString("000"));
+
+            for (int i = 0; i < Gates.Length; i++)
+                Gates[i] = new MLibrary(Settings.GatePath + i.ToString("00"));
 
             for (int i = 0; i < NPCs.Length; i++)
                 NPCs[i] = new MLibrary(Settings.NPCPath + i.ToString("00"));
@@ -239,11 +243,11 @@ namespace Client.MirGraphics
 
         private static void LoadGameLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + NPCs.Length + CArmours.Length +
+            Count = MapLibs.Length + Monsters.Length + Gates.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
-                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 16;
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 17;
 
             Dragon.Initialize();
             Progress++;
@@ -277,6 +281,9 @@ namespace Client.MirGraphics
             GuildSkill.Initialize();
             Progress++;
 
+            Background.Initialize();
+            Progress++;
+
             Deco.Initialize();
             Progress++;
 
@@ -302,6 +309,11 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
+            for (int i = 0; i < Gates.Length; i++)
+            {
+                Gates[i].Initialize();
+                Progress++;
+            }
 
             for (int i = 0; i < NPCs.Length; i++)
             {
@@ -893,7 +905,7 @@ namespace Client.MirGraphics
                 
                 int index = (y * (w << 2)) + (x << 2) ; //(y * (w * 4)) + (x * 4);
 
-                //int col0 = (Data[index + 1] << 8 | Data[index]), col1 = (Data[index + 3] << 8 | Data[index + 2]);
+                int col0 = (Data[index + 1] << 8 | Data[index]), col1 = (Data[index + 3] << 8 | Data[index + 2]);
 
                 //if (col0 == 0 && col1 == 0) return false;
                 byte col = Data[index];
@@ -903,11 +915,11 @@ namespace Client.MirGraphics
 
                 //if (!acurrate || col1 < col0) return true;
 
-                //x = p.X;// % 4;
-                //y = p.Y;// % 4;
+                x = p.X;// % 4;
+                y = p.Y;// % 4;
                 //x *= 2;
 
-                //result = ((Data[index + 4 + y] & 1 << x) >> x) != 1 || ((Data[index + 4 + y] & 1 << x + 1) >> x + 1) != 1;
+                //result = ((Data[index + y] & 1 << x) >> x) != 1 || ((Data[index + y] & 1 << x + 1) >> x + 1) != 1;
             }
             return result;
         }

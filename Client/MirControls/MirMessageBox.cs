@@ -12,15 +12,16 @@ namespace Client.MirControls
         public MirLabel Label;
         public MirButton OKButton, CancelButton, NoButton, YesButton;
         public MirMessageBoxButtons Buttons;
+        public bool AllowKeyPress = true;
 
-
-        public MirMessageBox(string message, MirMessageBoxButtons b = MirMessageBoxButtons.OK)
+        public MirMessageBox(string message, MirMessageBoxButtons b = MirMessageBoxButtons.OK, bool allowKeys = true)
         {
             DrawImage = true;
             ForeColour = Color.White;
             Buttons = b;
             Modal = true;
             Movable = false;
+            AllowKeyPress = allowKeys;
 
             Index = 360;
             Library = Libraries.Prguse;
@@ -163,51 +164,60 @@ namespace Client.MirControls
 
         public override void OnKeyDown(KeyEventArgs e)
         {
-            base.OnKeyDown(e);
-            e.Handled = true;
+            if (AllowKeyPress)
+            {
+                base.OnKeyDown(e);
+                e.Handled = true;
+            }
         }
         public override void OnKeyUp(KeyEventArgs e)
         {
-            base.OnKeyUp(e);
-            e.Handled = true;
+            if (AllowKeyPress)
+            {
+                base.OnKeyUp(e);
+                e.Handled = true;
+            }
         }
         public override void OnKeyPress(KeyPressEventArgs e)
         {
             base.OnKeyPress(e);
 
-            if (e.KeyChar == (char)Keys.Escape)
+            if (AllowKeyPress)
             {
-                switch (Buttons)
+                if (e.KeyChar == (char)Keys.Escape)
                 {
-                    case MirMessageBoxButtons.OK:
-                        if (OKButton != null && !OKButton.IsDisposed) OKButton.InvokeMouseClick(null);
-                        break;
-                    case MirMessageBoxButtons.OKCancel:
-                    case MirMessageBoxButtons.YesNoCancel:
-                        if (CancelButton != null && !CancelButton.IsDisposed) CancelButton.InvokeMouseClick(null);
-                        break;
-                    case MirMessageBoxButtons.YesNo:
-                        if (NoButton != null && !NoButton.IsDisposed) NoButton.InvokeMouseClick(null);
-                        break;
+                    switch (Buttons)
+                    {
+                        case MirMessageBoxButtons.OK:
+                            if (OKButton != null && !OKButton.IsDisposed) OKButton.InvokeMouseClick(null);
+                            break;
+                        case MirMessageBoxButtons.OKCancel:
+                        case MirMessageBoxButtons.YesNoCancel:
+                            if (CancelButton != null && !CancelButton.IsDisposed) CancelButton.InvokeMouseClick(null);
+                            break;
+                        case MirMessageBoxButtons.YesNo:
+                            if (NoButton != null && !NoButton.IsDisposed) NoButton.InvokeMouseClick(null);
+                            break;
+                    }
                 }
-            }
 
-            else if (e.KeyChar == (char)Keys.Enter)
-            {
-                switch (Buttons)
+                else if (e.KeyChar == (char)Keys.Enter)
                 {
-                    case MirMessageBoxButtons.OK:
-                    case MirMessageBoxButtons.OKCancel:
-                        if (OKButton != null && !OKButton.IsDisposed) OKButton.InvokeMouseClick(null);
-                        break;
-                    case MirMessageBoxButtons.YesNoCancel:
-                    case MirMessageBoxButtons.YesNo:
-                        if (YesButton != null && !YesButton.IsDisposed) YesButton.InvokeMouseClick(null);
-                        break;
+                    switch (Buttons)
+                    {
+                        case MirMessageBoxButtons.OK:
+                        case MirMessageBoxButtons.OKCancel:
+                            if (OKButton != null && !OKButton.IsDisposed) OKButton.InvokeMouseClick(null);
+                            break;
+                        case MirMessageBoxButtons.YesNoCancel:
+                        case MirMessageBoxButtons.YesNo:
+                            if (YesButton != null && !YesButton.IsDisposed) YesButton.InvokeMouseClick(null);
+                            break;
 
+                    }
                 }
+                e.Handled = true;
             }
-            e.Handled = true;
         }
 
 

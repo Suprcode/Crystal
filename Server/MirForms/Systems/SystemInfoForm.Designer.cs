@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -104,6 +105,20 @@
             this.MenteeSkillBoost_checkbox = new System.Windows.Forms.CheckBox();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.GemStatCheckBox = new System.Windows.Forms.CheckBox();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.txtSpawnTickDefault = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.pnlSpawnTickConfig = new System.Windows.Forms.Panel();
+            this.txtSpawnTickSpeed = new System.Windows.Forms.TextBox();
+            this.txtSpawnTickUsers = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.lbSpawnTickList = new System.Windows.Forms.ListBox();
+            this.btnSpawnTickRemove = new System.Windows.Forms.Button();
+            this.btnSpawnTickAdd = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.lbltickmins = new System.Windows.Forms.Label();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -114,6 +129,9 @@
             this.tabPage5.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage7.SuspendLayout();
+            this.tabPage8.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.pnlSpawnTickConfig.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -130,7 +148,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(365, 229);
+            this.tabPage1.Size = new System.Drawing.Size(399, 229);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Fishing";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -261,10 +279,11 @@
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage7);
+            this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(373, 255);
+            this.tabControl1.Size = new System.Drawing.Size(407, 255);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage2
@@ -278,7 +297,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(365, 229);
+            this.tabPage2.Size = new System.Drawing.Size(399, 229);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Mail";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -372,7 +391,7 @@
             this.tabPage3.Controls.Add(this.GoodsOnCheckBox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(365, 229);
+            this.tabPage3.Size = new System.Drawing.Size(399, 229);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Goods";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -462,7 +481,7 @@
             this.tabPage4.Controls.Add(this.WeaponOnly_checkbox);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(365, 229);
+            this.tabPage4.Size = new System.Drawing.Size(399, 229);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Refining";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -645,7 +664,7 @@
             this.tabPage5.Controls.Add(this.LoverRecall_checkbox);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(365, 229);
+            this.tabPage5.Size = new System.Drawing.Size(399, 229);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Relationship";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -745,7 +764,7 @@
             this.tabPage6.Controls.Add(this.MenteeSkillBoost_checkbox);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(365, 229);
+            this.tabPage6.Size = new System.Drawing.Size(399, 229);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Mentor";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -853,7 +872,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(365, 229);
+            this.tabPage7.Size = new System.Drawing.Size(399, 229);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "Gem";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -870,11 +889,141 @@
             this.GemStatCheckBox.UseVisualStyleBackColor = true;
             this.GemStatCheckBox.CheckedChanged += new System.EventHandler(this.GemStatCheckBox_CheckedChanged);
             // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.panel1);
+            this.tabPage8.Controls.Add(this.pnlSpawnTickConfig);
+            this.tabPage8.Controls.Add(this.lbSpawnTickList);
+            this.tabPage8.Controls.Add(this.btnSpawnTickRemove);
+            this.tabPage8.Controls.Add(this.btnSpawnTickAdd);
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(399, 229);
+            this.tabPage8.TabIndex = 7;
+            this.tabPage8.Text = "SpawnTick";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lbltickmins);
+            this.panel1.Controls.Add(this.txtSpawnTickDefault);
+            this.panel1.Controls.Add(this.label32);
+            this.panel1.Location = new System.Drawing.Point(152, 6);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(241, 100);
+            this.panel1.TabIndex = 4;
+            // 
+            // txtSpawnTickDefault
+            // 
+            this.txtSpawnTickDefault.Location = new System.Drawing.Point(116, 2);
+            this.txtSpawnTickDefault.Name = "txtSpawnTickDefault";
+            this.txtSpawnTickDefault.Size = new System.Drawing.Size(55, 20);
+            this.txtSpawnTickDefault.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.txtSpawnTickDefault, "how long is 1 tick with no users onilne?\r\n(default suggested value = 20)\r\ntime in" +
+        " minutes!");
+            this.txtSpawnTickDefault.TextChanged += new System.EventHandler(this.txtSpawnTickDefault_TextChanged);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(3, 6);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(93, 13);
+            this.label32.TabIndex = 0;
+            this.label32.Text = "Default tickspeed:";
+            // 
+            // pnlSpawnTickConfig
+            // 
+            this.pnlSpawnTickConfig.Controls.Add(this.txtSpawnTickSpeed);
+            this.pnlSpawnTickConfig.Controls.Add(this.txtSpawnTickUsers);
+            this.pnlSpawnTickConfig.Controls.Add(this.label31);
+            this.pnlSpawnTickConfig.Controls.Add(this.label30);
+            this.pnlSpawnTickConfig.Location = new System.Drawing.Point(152, 160);
+            this.pnlSpawnTickConfig.Name = "pnlSpawnTickConfig";
+            this.pnlSpawnTickConfig.Size = new System.Drawing.Size(241, 61);
+            this.pnlSpawnTickConfig.TabIndex = 3;
+            // 
+            // txtSpawnTickSpeed
+            // 
+            this.txtSpawnTickSpeed.Location = new System.Drawing.Point(116, 34);
+            this.txtSpawnTickSpeed.Name = "txtSpawnTickSpeed";
+            this.txtSpawnTickSpeed.Size = new System.Drawing.Size(100, 20);
+            this.txtSpawnTickSpeed.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.txtSpawnTickSpeed, "1.0 = normal speed\r\nlower value = ticks go faster (= faster respawn)\r\nfor example" +
+        ":\r\n0.9 with a 20 minute default tick = now it\'s 18minutes/tick");
+            this.txtSpawnTickSpeed.TextChanged += new System.EventHandler(this.txtSpawnTickSpeed_TextChanged);
+            // 
+            // txtSpawnTickUsers
+            // 
+            this.txtSpawnTickUsers.Location = new System.Drawing.Point(116, 8);
+            this.txtSpawnTickUsers.Name = "txtSpawnTickUsers";
+            this.txtSpawnTickUsers.Size = new System.Drawing.Size(100, 20);
+            this.txtSpawnTickUsers.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.txtSpawnTickUsers, "At least how many users should bere be online to be using this rate?");
+            this.txtSpawnTickUsers.TextChanged += new System.EventHandler(this.txtSpawnTickUsers_TextChanged);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(3, 37);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(92, 13);
+            this.label31.TabIndex = 1;
+            this.label31.Text = "Spawntick speed:";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(3, 11);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(68, 13);
+            this.label30.TabIndex = 0;
+            this.label30.Text = "Users online:";
+            // 
+            // lbSpawnTickList
+            // 
+            this.lbSpawnTickList.FormattingEnabled = true;
+            this.lbSpawnTickList.Location = new System.Drawing.Point(6, 35);
+            this.lbSpawnTickList.Name = "lbSpawnTickList";
+            this.lbSpawnTickList.Size = new System.Drawing.Size(140, 186);
+            this.lbSpawnTickList.TabIndex = 2;
+            this.lbSpawnTickList.SelectedIndexChanged += new System.EventHandler(this.lbSpawnTickList_SelectedIndexChanged);
+            // 
+            // btnSpawnTickRemove
+            // 
+            this.btnSpawnTickRemove.Location = new System.Drawing.Point(79, 6);
+            this.btnSpawnTickRemove.Name = "btnSpawnTickRemove";
+            this.btnSpawnTickRemove.Size = new System.Drawing.Size(67, 23);
+            this.btnSpawnTickRemove.TabIndex = 1;
+            this.btnSpawnTickRemove.Text = "Remove";
+            this.btnSpawnTickRemove.UseVisualStyleBackColor = true;
+            this.btnSpawnTickRemove.Click += new System.EventHandler(this.btnSpawnTickRemove_Click);
+            // 
+            // btnSpawnTickAdd
+            // 
+            this.btnSpawnTickAdd.Location = new System.Drawing.Point(6, 6);
+            this.btnSpawnTickAdd.Name = "btnSpawnTickAdd";
+            this.btnSpawnTickAdd.Size = new System.Drawing.Size(67, 23);
+            this.btnSpawnTickAdd.TabIndex = 0;
+            this.btnSpawnTickAdd.Text = "Add";
+            this.btnSpawnTickAdd.UseVisualStyleBackColor = true;
+            this.btnSpawnTickAdd.Click += new System.EventHandler(this.btnSpawnTickAdd_Click);
+            // 
+            // lbltickmins
+            // 
+            this.lbltickmins.AutoSize = true;
+            this.lbltickmins.Location = new System.Drawing.Point(175, 6);
+            this.lbltickmins.Name = "lbltickmins";
+            this.lbltickmins.Size = new System.Drawing.Size(54, 13);
+            this.lbltickmins.TabIndex = 2;
+            this.lbltickmins.Text = "in minutes";
+            // 
             // SystemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(394, 279);
+            this.ClientSize = new System.Drawing.Size(431, 284);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -902,8 +1051,12 @@
             this.tabPage6.PerformLayout();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.pnlSpawnTickConfig.ResumeLayout(false);
+            this.pnlSpawnTickConfig.PerformLayout();
             this.ResumeLayout(false);
-
 
         }
 
@@ -985,5 +1138,19 @@
         private System.Windows.Forms.TextBox MenteeExpBank_textbox;
         private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.CheckBox GemStatCheckBox;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.Button btnSpawnTickRemove;
+        private System.Windows.Forms.Button btnSpawnTickAdd;
+        private System.Windows.Forms.ListBox lbSpawnTickList;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox txtSpawnTickDefault;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Panel pnlSpawnTickConfig;
+        private System.Windows.Forms.TextBox txtSpawnTickSpeed;
+        private System.Windows.Forms.TextBox txtSpawnTickUsers;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label lbltickmins;
     }
 }

@@ -18,6 +18,8 @@ namespace Server
             get { return SMain.EditEnvir; }
         }
         public byte SelectedClassID = 0;
+
+        public bool BaseStatsChanged = false;
         public bool RandomItemStatsChanged = false;
         public bool GuildsChanged = false;
         public bool ItemGenChanged = false;
@@ -38,7 +40,8 @@ namespace Server
         private void BalanceConfigForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             //save configs
-            Settings.Save();
+            if (BaseStatsChanged)
+                Settings.SaveBaseStats();
             SMain.Envir.RequiresBaseStatUpdate();
             if (RandomItemStatsChanged)
                 Settings.SaveRandomItemStats();
@@ -530,6 +533,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].HpGain = temp;
         }
 
@@ -544,6 +548,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].HpGainRate = temp;
         }
 
@@ -558,6 +563,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MpGainRate = temp;
         }
 
@@ -572,6 +578,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].BagWeightGain = temp;
         }
 
@@ -586,6 +593,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].WearWeightGain = temp;
         }
 
@@ -600,6 +608,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].HandWeightGain = temp;
         }
 
@@ -614,6 +623,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MinAc = temp;
         }
 
@@ -628,6 +638,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MaxAc = temp;
         }
 
@@ -642,6 +653,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MinMac = temp;
         }
 
@@ -656,6 +668,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MaxMac = temp;
         }
 
@@ -670,6 +683,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MinDc = temp;
         }
 
@@ -684,6 +698,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MaxDc = temp;
         }
 
@@ -698,6 +713,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MinMc = temp;
         }
 
@@ -712,6 +728,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MaxMc = temp;
         }
 
@@ -726,6 +743,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MinSc = temp;
         }
 
@@ -740,6 +758,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].MaxSc = temp;
         }
 
@@ -754,6 +773,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].StartAccuracy = temp;
         }
 
@@ -768,6 +788,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].StartAgility = temp;
         }
 
@@ -782,6 +803,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].StartCriticalRate = temp;
         }
 
@@ -796,6 +818,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].StartCriticalDamage = temp;
         }
 
@@ -810,6 +833,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].CritialRateGain = temp;
         }
 
@@ -824,6 +848,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ClassBaseStats[SelectedClassID].CriticalDamageGain = temp;
         }
 
@@ -838,6 +863,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.MaxHealthRegen = temp;
         }
 
@@ -852,6 +878,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.HealthRegenWeight = temp;
         }
 
@@ -866,6 +893,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.MaxManaRegen = temp;
         }
 
@@ -880,6 +908,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.ManaRegenWeight = temp;
         }
 
@@ -894,6 +923,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
+            BaseStatsChanged = true;
             Settings.MaxPoisonRecovery = temp;
         }
 
