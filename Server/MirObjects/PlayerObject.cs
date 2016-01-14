@@ -7437,7 +7437,7 @@ namespace Server.MirObjects
 
             magic.CastTime = Envir.Time;
             _stepCounter = 0;
-            ActionTime = Envir.Time + GetDelayTime(MoveDelay);
+            //ActionTime = Envir.Time + GetDelayTime(MoveDelay);
 
             Enqueue(new S.MagicCast { Spell = magic.Spell });
 

@@ -449,6 +449,11 @@ namespace Client.MirScenes
                     RefineDialog.Hide();
                     BigMapDialog.Visible = false;
                     if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+                    MailComposeLetterDialog.Hide();
+                    MailComposeParcelDialog.Hide();
+                    MailListDialog.Hide();
+                    MailReadLetterDialog.Hide();
+                    MailReadParcelDialog.Hide();
 
 
 

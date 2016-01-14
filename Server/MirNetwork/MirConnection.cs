@@ -1040,9 +1040,14 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            //if (p.ObjectID == Player.DefaultNPC.ObjectID)
-            //    Player.CallDefaultNPC(p.Type);
-            //else
+
+            if (p.ObjectID == Player.DefaultNPC.ObjectID)
+            {
+                DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, p.ObjectID, p.Key);
+                Player.ActionList.Add(action);
+                return;
+            }
+
             Player.CallNPC(p.ObjectID, p.Key);
         }
 
@@ -1610,6 +1615,7 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.NPCInputStr = p.Value;
+
             Player.CallNPC(Player.NPCID, p.PageName);
         }
 
