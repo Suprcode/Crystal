@@ -168,22 +168,22 @@ namespace Server
         public static string RefineOreName = "BlackIronOre";
 
         //Item Generating Settings
-        public static int MinDC = 20, MaxDC = 20,
-                MinSC = 20, MaxSC = 20,
-                MinMC = 20, MaxMC = 20,
-                MinAC = 20, MaxAC = 20,
-                MinMAC = 20, MaxMAC = 20,
-                ACC = 20, AGIL = 20, ASPEED = 20,
-                CritDam = 20, CritRate = 20,
-                Freezing = 20,
-                HPRecov = 20, HP = 20,
-                MagicRes = 20,
-                MPRecov = 20, MP = 20,
-                PoisAttack = 20, PoisRecov = 20, PoisResist = 20,
-                Strong = 20;
+        public static int IGMinDC = 20, IGMaxDC = 20,
+                IGMinSC = 20, IGMaxSC = 20,
+                IGMinMC = 20, IGMaxMC = 20,
+                IGMinAC = 20, IGMaxAC = 20,
+                IGMinMAC = 20, IGMaxMAC = 20,
+                IGACC = 20, IGAGIL = 20, IGASPEED = 20,
+                IGCritDam = 20, IGCritRate = 20,
+                IGFreezing = 20,
+                IGHPRecov = 20, IGHP = 20,
+                IGMagicRes = 20,
+                IGMPRecov = 20, IGMP = 20,
+                IGPoisAttack = 20, IGPoisRecov = 20, IGPoisResist = 20,
+                IGStrong = 20;
 
-        public static int WeightPerLev = 10;
-        public static double WeaponDC = 0.5;
+        public static int IGWeightPerLev = 10;
+        public static double IGWeaponDC = 0.5;
 
         //Marriage Settings
         public static int LoverEXPBonus = 5;
@@ -1168,34 +1168,34 @@ namespace Server
 
             InIReader reader = new InIReader(ConfigPath + @".\ItemGenSystem.ini");
 
-            WeightPerLev = reader.ReadInt32("Config", "WeightPerLevel", WeightPerLev);
-            WeaponDC = reader.ReadDouble("Config", "WeaponDC", WeaponDC);
+            IGWeightPerLev = reader.ReadInt32("Config", "WeightPerLevel", IGWeightPerLev);
+            IGWeaponDC = reader.ReadDouble("Config", "WeaponDC", IGWeaponDC);
 
-            MinDC = reader.ReadInt32("Weights", "MinDC", MinDC);
-            MaxDC = reader.ReadInt32("Weights", "MaxDC", MaxDC);
-            MinMC = reader.ReadInt32("Weights", "MinMC", MinMC);
-            MaxMC = reader.ReadInt32("Weights", "MaxMC", MaxMC);
-            MinSC = reader.ReadInt32("Weights", "MinSC", MinSC);
-            MaxSC = reader.ReadInt32("Weights", "MaxSC", MaxSC);
-            MinAC = reader.ReadInt32("Weights", "MinAC", MinAC);
-            MaxAC = reader.ReadInt32("Weights", "MaxAC", MaxAC);
-            MinMAC = reader.ReadInt32("Weights", "MinMAC", MinMAC);
-            MaxMAC = reader.ReadInt32("Weights", "MaxMAC", MaxMAC);
-            ACC = reader.ReadInt32("Weights", "MinDC", ACC);
-            AGIL = reader.ReadInt32("Weights", "AGIL", AGIL);
-            ASPEED = reader.ReadInt32("Weights", "ASPEED", ASPEED);
-            CritDam = reader.ReadInt32("Weights", "CritDam", CritDam);
-            CritRate = reader.ReadInt32("Weights", "CritRate", CritRate);
-            Freezing = reader.ReadInt32("Weights", "Freezing", Freezing);
-            HPRecov = reader.ReadInt32("Weights", "HPRecov", HPRecov);
-            HP = reader.ReadInt32("Weights", "HP", HP);
-            MagicRes = reader.ReadInt32("Weights", "MagicRes", MagicRes);
-            MPRecov = reader.ReadInt32("Weights", "MPRecov", MPRecov);
-            MP = reader.ReadInt32("Weights", "MP", MP);
-            PoisAttack = reader.ReadInt32("Weights", "PoisAttack", PoisAttack);
-            PoisRecov = reader.ReadInt32("Weights", "PoisRecov", PoisRecov);
-            PoisResist = reader.ReadInt32("Weights", "PoisResist", PoisResist);
-            Strong = reader.ReadInt32("Weights", "Strong", Strong);
+            IGMinDC = reader.ReadInt32("Weights", "MinDC", IGMinDC);
+            IGMaxDC = reader.ReadInt32("Weights", "MaxDC", IGMaxDC);
+            IGMinMC = reader.ReadInt32("Weights", "MinMC", IGMinMC);
+            IGMaxMC = reader.ReadInt32("Weights", "MaxMC", IGMaxMC);
+            IGMinSC = reader.ReadInt32("Weights", "MinSC", IGMinSC);
+            IGMaxSC = reader.ReadInt32("Weights", "MaxSC", IGMaxSC);
+            IGMinAC = reader.ReadInt32("Weights", "MinAC", IGMinAC);
+            IGMaxAC = reader.ReadInt32("Weights", "MaxAC", IGMaxAC);
+            IGMinMAC = reader.ReadInt32("Weights", "MinMAC", IGMinMAC);
+            IGMaxMAC = reader.ReadInt32("Weights", "MaxMAC", IGMaxMAC);
+            IGACC = reader.ReadInt32("Weights", "MinDC", IGACC);
+            IGAGIL = reader.ReadInt32("Weights", "AGIL", IGAGIL);
+            IGASPEED = reader.ReadInt32("Weights", "ASPEED", IGASPEED);
+            IGCritDam = reader.ReadInt32("Weights", "CritDam", IGCritDam);
+            IGCritRate = reader.ReadInt32("Weights", "CritRate", IGCritRate);
+            IGFreezing = reader.ReadInt32("Weights", "Freezing", IGFreezing);
+            IGHPRecov = reader.ReadInt32("Weights", "HPRecov", IGHPRecov);
+            IGHP = reader.ReadInt32("Weights", "HP", IGHP);
+            IGMagicRes = reader.ReadInt32("Weights", "MagicRes", IGMagicRes);
+            IGMPRecov = reader.ReadInt32("Weights", "MPRecov", IGMPRecov);
+            IGMP = reader.ReadInt32("Weights", "MP", IGMP);
+            IGPoisAttack = reader.ReadInt32("Weights", "PoisAttack", IGPoisAttack);
+            IGPoisRecov = reader.ReadInt32("Weights", "PoisRecov", IGPoisRecov);
+            IGPoisResist = reader.ReadInt32("Weights", "PoisResist", IGPoisResist);
+            IGStrong = reader.ReadInt32("Weights", "Strong", IGStrong);
         }
 
         public static void SaveGenerate()
@@ -1203,34 +1203,34 @@ namespace Server
             File.Delete(ConfigPath + @".\ItemGenSystem.ini");
             InIReader reader = new InIReader(ConfigPath + @".\ItemGenSystem.ini");
 
-            reader.Write("Config", "WeightPerLevel", WeightPerLev);
-            reader.Write("Config", "WeaponDC", WeaponDC);
+            reader.Write("Config", "WeightPerLevel", IGWeightPerLev);
+            reader.Write("Config", "WeaponDC", IGWeaponDC);
 
-            reader.Write("Weights", "MinDC", MinDC);
-            reader.Write("Weights", "MaxDC", MaxDC);
-            reader.Write("Weights", "MinMC", MinMC);
-            reader.Write("Weights", "MaxMC", MaxMC);
-            reader.Write("Weights", "MinSC", MinSC);
-            reader.Write("Weights", "MaxSC", MaxSC);
-            reader.Write("Weights", "MinAC", MinAC);
-            reader.Write("Weights", "MaxAC", MaxAC);
-            reader.Write("Weights", "MinMAC", MinMAC);
-            reader.Write("Weights", "MaxMAC", MaxMAC);
-            reader.Write("Weights", "MinDC", ACC);
-            reader.Write("Weights", "AGIL", AGIL);
-            reader.Write("Weights", "ASPEED", ASPEED);
-            reader.Write("Weights", "CritDam", CritDam);
-            reader.Write("Weights", "CritRate", CritRate);
-            reader.Write("Weights", "Freezing", Freezing);
-            reader.Write("Weights", "HPRecov", HPRecov);
-            reader.Write("Weights", "HP", HP);
-            reader.Write("Weights", "MagicRes", MagicRes);
-            reader.Write("Weights", "MPRecov", MPRecov);
-            reader.Write("Weights", "MP", MP);
-            reader.Write("Weights", "PoisAttack", PoisAttack);
-            reader.Write("Weights", "PoisRecov", PoisRecov);
-            reader.Write("Weights", "PoisResist", PoisResist);
-            reader.Write("Weights", "Strong", Strong);
+            reader.Write("Weights", "MinDC", IGMinDC);
+            reader.Write("Weights", "MaxDC", IGMaxDC);
+            reader.Write("Weights", "MinMC", IGMinMC);
+            reader.Write("Weights", "MaxMC", IGMaxMC);
+            reader.Write("Weights", "MinSC", IGMinSC);
+            reader.Write("Weights", "MaxSC", IGMaxSC);
+            reader.Write("Weights", "MinAC", IGMinAC);
+            reader.Write("Weights", "MaxAC", IGMaxAC);
+            reader.Write("Weights", "MinMAC", IGMinMAC);
+            reader.Write("Weights", "MaxMAC", IGMaxMAC);
+            reader.Write("Weights", "MinDC", IGACC);
+            reader.Write("Weights", "AGIL", IGAGIL);
+            reader.Write("Weights", "ASPEED", IGASPEED);
+            reader.Write("Weights", "CritDam", IGCritDam);
+            reader.Write("Weights", "CritRate", IGCritRate);
+            reader.Write("Weights", "Freezing", IGFreezing);
+            reader.Write("Weights", "HPRecov", IGHPRecov);
+            reader.Write("Weights", "HP", IGHP);
+            reader.Write("Weights", "MagicRes", IGMagicRes);
+            reader.Write("Weights", "MPRecov", IGMPRecov);
+            reader.Write("Weights", "MP", IGMP);
+            reader.Write("Weights", "PoisAttack", IGPoisAttack);
+            reader.Write("Weights", "PoisRecov", IGPoisRecov);
+            reader.Write("Weights", "PoisResist", IGPoisResist);
+            reader.Write("Weights", "Strong", IGStrong);
 
         }
 

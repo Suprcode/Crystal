@@ -2049,7 +2049,7 @@ namespace Server.MirEnvir
             
             List<int> Stats = new List<int>();
 
-            int WeightValue = Settings.WeightPerLev;
+            int WeightValue = Settings.IGWeightPerLev;
             int CurrentWeightVal = (WeightValue * info.RequiredAmount);
 
             if (info.MaxDC > 0) for (int i = 0; i < info.MaxDC; i++) Stats.Add((byte)StatType.DC);
@@ -2087,226 +2087,226 @@ namespace Server.MirEnvir
                 switch (Stats[SMain.Envir.Random.Next(0, Stats.Count)])
                 {
                     case (byte)StatType.DC:
-                          if (CurrentWeightVal >= Settings.MaxDC)
+                          if (CurrentWeightVal >= Settings.IGMaxDC)
                           {
                               item.DC++;
-                              CurrentWeightVal -= Settings.MaxDC;
+                              CurrentWeightVal -= Settings.IGMaxDC;
                           }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.DC);
                         break;
                     case (byte)StatType.SC:
-                            if (CurrentWeightVal >= Settings.MaxSC)
+                            if (CurrentWeightVal >= Settings.IGMaxSC)
                             {
                                 item.SC++;
-                                CurrentWeightVal -= Settings.MaxSC;
+                                CurrentWeightVal -= Settings.IGMaxSC;
                             }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.SC);
                         break;
                     case (byte)StatType.MC:
-                            if (CurrentWeightVal >= Settings.MaxMC)
+                            if (CurrentWeightVal >= Settings.IGMaxMC)
                             {
                                 item.MC++;
-                                CurrentWeightVal -= Settings.MaxMC;
+                                CurrentWeightVal -= Settings.IGMaxMC;
                             }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MC);
                         break;
                     case (byte)StatType.MinDC: 
-                        if (CurrentWeightVal >= Settings.MinDC)
+                        if (CurrentWeightVal >= Settings.IGMinDC)
                         {
                             item.MinDC++;
-                            CurrentWeightVal -= Settings.MinDC;
+                            CurrentWeightVal -= Settings.IGMinDC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MinDC);
                         break;
                     case (byte)StatType.MinSC: 
-                        if (CurrentWeightVal >= Settings.MinSC)
+                        if (CurrentWeightVal >= Settings.IGMinSC)
                         {
                             item.MinSC++;
-                            CurrentWeightVal -= Settings.MinSC;
+                            CurrentWeightVal -= Settings.IGMinSC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MinSC);
                         break;
                     case (byte)StatType.MinMC: 
-                        if (CurrentWeightVal >= Settings.MinMC)
+                        if (CurrentWeightVal >= Settings.IGMinMC)
                         {
                             item.MinMC++;
-                            CurrentWeightVal -= Settings.MinMC;
+                            CurrentWeightVal -= Settings.IGMinMC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MinMC);
                         break;
                     case (byte)StatType.MinAC:
-                        if (CurrentWeightVal >= Settings.MinAC)
+                        if (CurrentWeightVal >= Settings.IGMinAC)
                         {
                             item.MinAC++;
-                            CurrentWeightVal -= Settings.MinAC;
+                            CurrentWeightVal -= Settings.IGMinAC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MinAC);
                         break;
                     case (byte)StatType.AC:
-                        if (CurrentWeightVal >= Settings.MaxAC)
+                        if (CurrentWeightVal >= Settings.IGMaxAC)
                         {
                             item.AC++;
-                            CurrentWeightVal -= Settings.MaxAC;
+                            CurrentWeightVal -= Settings.IGMaxAC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.AC);
                         break;
                     case (byte)StatType.MinMAC:
-                        if (CurrentWeightVal >= Settings.MinMAC)
+                        if (CurrentWeightVal >= Settings.IGMinMAC)
                         {
                             item.MinMAC++;
-                            CurrentWeightVal -= Settings.MinMAC;
+                            CurrentWeightVal -= Settings.IGMinMAC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MinMAC);
                         break;
                     case (byte)StatType.MAC:
-                        if (CurrentWeightVal >= Settings.MaxMAC)
+                        if (CurrentWeightVal >= Settings.IGMaxMAC)
                         {
                             item.MAC++;
-                            CurrentWeightVal -= Settings.MaxMAC;
+                            CurrentWeightVal -= Settings.IGMaxMAC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MAC);
                         break;
                     case (byte)StatType.Accuracy:
-                        if (CurrentWeightVal >= Settings.ACC)
+                        if (CurrentWeightVal >= Settings.IGACC)
                         {
                             item.Accuracy++;
-                            CurrentWeightVal -= Settings.ACC;
+                            CurrentWeightVal -= Settings.IGACC;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.Accuracy);
                         break;
                     case (byte)StatType.Agility:
-                        if (CurrentWeightVal >= Settings.AGIL)
+                        if (CurrentWeightVal >= Settings.IGAGIL)
                         {
                             item.Agility++;
-                            CurrentWeightVal -= Settings.AGIL;
+                            CurrentWeightVal -= Settings.IGAGIL;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.Agility);
                         break;
                     case (byte)StatType.ASpeed:
-                        if (CurrentWeightVal >= Settings.ASPEED)
+                        if (CurrentWeightVal >= Settings.IGASPEED)
                         {
                             item.AttackSpeed++;
-                            CurrentWeightVal -= Settings.ASPEED;
+                            CurrentWeightVal -= Settings.IGASPEED;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.ASpeed);
                         break;
                     case (byte)StatType.CritDamage:
-                        if (CurrentWeightVal >= Settings.CritDam)
+                        if (CurrentWeightVal >= Settings.IGCritDam)
                         {
                             item.CriticalDamage++;
-                            CurrentWeightVal -= Settings.CritDam;
+                            CurrentWeightVal -= Settings.IGCritDam;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.CritDamage);
                         break;
                     case (byte)StatType.CritRate:
-                        if (CurrentWeightVal >= Settings.CritRate)
+                        if (CurrentWeightVal >= Settings.IGCritRate)
                         {
                             item.CriticalRate++;
-                            CurrentWeightVal -= Settings.CritRate;
+                            CurrentWeightVal -= Settings.IGCritRate;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.CritRate);
                         break;
                     case (byte)StatType.Freezing:
-                        if (CurrentWeightVal >= Settings.Freezing)
+                        if (CurrentWeightVal >= Settings.IGFreezing)
                         {
                             item.Freezing++;
-                            CurrentWeightVal -= Settings.Freezing;
+                            CurrentWeightVal -= Settings.IGFreezing;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.Freezing);
                         break;
                     case (byte)StatType.HP_Regen:
-                        if (CurrentWeightVal >= Settings.HPRecov)
+                        if (CurrentWeightVal >= Settings.IGHPRecov)
                         {
                             item.HealthRecovery++;
-                            CurrentWeightVal -= Settings.HPRecov;
+                            CurrentWeightVal -= Settings.IGHPRecov;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.HP_Regen);
                         break;
                     case (byte)StatType.HP:
-                        if (CurrentWeightVal >= Settings.HP)
+                        if (CurrentWeightVal >= Settings.IGHP)
                         {
                             item.HP++;
-                            CurrentWeightVal -= Settings.HP;
+                            CurrentWeightVal -= Settings.IGHP;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.HP);
                         break;
                     case (byte)StatType.MagicResist:
-                        if (CurrentWeightVal >= Settings.MagicRes)
+                        if (CurrentWeightVal >= Settings.IGMagicRes)
                         {
                             item.MagicResist++;
-                            CurrentWeightVal -= Settings.MagicRes;
+                            CurrentWeightVal -= Settings.IGMagicRes;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MagicResist);
                         break;
                     case (byte)StatType.MP_Regen:
-                        if (CurrentWeightVal >= Settings.MPRecov)
+                        if (CurrentWeightVal >= Settings.IGMPRecov)
                         {
                             item.ManaRecovery++;
-                            CurrentWeightVal -= Settings.MPRecov;
+                            CurrentWeightVal -= Settings.IGMPRecov;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MP_Regen);
                         break;
                     case (byte)StatType.MP:
-                        if (CurrentWeightVal >= Settings.MP)
+                        if (CurrentWeightVal >= Settings.IGMP)
                         {
                             item.MP++;
-                            CurrentWeightVal -= Settings.MP;
+                            CurrentWeightVal -= Settings.IGMP;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.MP);
                         break;
                     case (byte)StatType.PoisonAttack:
-                        if (CurrentWeightVal >= Settings.PoisAttack)
+                        if (CurrentWeightVal >= Settings.IGPoisAttack)
                         {
                             item.PoisonAttack++;
-                            CurrentWeightVal -= Settings.PoisAttack;
+                            CurrentWeightVal -= Settings.IGPoisAttack;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.PoisonAttack);
                         break;
                     case (byte)StatType.PoisonRegen:
-                        if (CurrentWeightVal >= Settings.PoisRecov)
+                        if (CurrentWeightVal >= Settings.IGPoisRecov)
                         {
                             item.PoisonRecovery++;
-                            CurrentWeightVal -= Settings.PoisRecov;
+                            CurrentWeightVal -= Settings.IGPoisRecov;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.PoisonRegen);
                         break;
                     case (byte)StatType.PoisonResist:
-                        if (CurrentWeightVal >= Settings.PoisResist)
+                        if (CurrentWeightVal >= Settings.IGPoisResist)
                         {
                             item.PoisonResist++;
-                            CurrentWeightVal -= Settings.PoisResist;
+                            CurrentWeightVal -= Settings.IGPoisResist;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.PoisonResist);
                         break;
                     case (byte)StatType.Strong:
-                        if (CurrentWeightVal >= Settings.Strong)
+                        if (CurrentWeightVal >= Settings.IGStrong)
                         {
                             item.Strong++;
-                            CurrentWeightVal -= Settings.Strong;
+                            CurrentWeightVal -= Settings.IGStrong;
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.Strong);
@@ -2319,7 +2319,7 @@ namespace Server.MirEnvir
             item.Name = ItemGenName(item);
 
             if (info.Type == ItemType.Weapon)
-                item.DC += (ushort)(info.RequiredAmount * Settings.WeaponDC);
+                item.DC += (ushort)(info.RequiredAmount * Settings.IGWeaponDC);
 
             return item;
         }
@@ -2331,19 +2331,19 @@ namespace Server.MirEnvir
 
             int MagDef, PhyDef, MagDam, PhyDam, HolDam, HP, MP, Speed, Crit, Pois, Freeze;
 
-            MagDef = (Item.MinMAC * Settings.MinMAC) + (Item.MAC * Settings.MaxMAC) + (Item.MagicResist * Settings.MagicRes);
-            PhyDef = (Item.MinAC * Settings.MinAC) + (Item.AC * Settings.MaxAC) + (Item.Agility * Settings.AGIL);
+            MagDef = (Item.MinMAC * Settings.IGMinMAC) + (Item.MAC * Settings.IGMaxMAC) + (Item.MagicResist * Settings.IGMagicRes);
+            PhyDef = (Item.MinAC * Settings.IGMinAC) + (Item.AC * Settings.IGMaxAC) + (Item.Agility * Settings.IGAGIL);
 
-            MagDam = (Item.MinMC * Settings.MinMC) + (Item.MC * Settings.MaxMC);
-            PhyDam = (Item.MinDC * Settings.MinDC) + (Item.DC * Settings.MaxDC);
-            HolDam = (Item.MinSC * Settings.MinSC) + (Item.SC * Settings.MaxSC);
+            MagDam = (Item.MinMC * Settings.IGMinMC) + (Item.MC * Settings.IGMaxMC);
+            PhyDam = (Item.MinDC * Settings.IGMinDC) + (Item.DC * Settings.IGMaxDC);
+            HolDam = (Item.MinSC * Settings.IGMinSC) + (Item.SC * Settings.IGMaxSC);
 
-            HP = (Item.HealthRecovery * Settings.HPRecov) + (Item.HP * Settings.HP);
-            MP = (Item.ManaRecovery * Settings.MPRecov) + (Item.MP * Settings.MP);
-            Speed = (Item.AttackSpeed * Settings.ASPEED);
-            Crit = (Item.CriticalDamage * Settings.CritDam) + (Item.CriticalRate * Settings.CritRate);
-            Pois = (Item.PoisonAttack * Settings.PoisAttack) + (Item.PoisonRecovery * Settings.PoisRecov) + (Item.PoisonResist * Settings.PoisResist);
-            Freeze = (Item.Freezing * Settings.Freezing);
+            HP = (Item.HealthRecovery * Settings.IGHPRecov) + (Item.HP * Settings.IGHP);
+            MP = (Item.ManaRecovery * Settings.IGMPRecov) + (Item.MP * Settings.IGMP);
+            Speed = (Item.AttackSpeed * Settings.IGASPEED);
+            Crit = (Item.CriticalDamage * Settings.IGCritDam) + (Item.CriticalRate * Settings.IGCritRate);
+            Pois = (Item.PoisonAttack * Settings.IGPoisAttack) + (Item.PoisonRecovery * Settings.IGPoisRecov) + (Item.PoisonResist * Settings.IGPoisResist);
+            Freeze = (Item.Freezing * Settings.IGFreezing);
 
             Defense = MagDef + PhyDef;
             Damage = MagDam + PhyDam + HolDam;

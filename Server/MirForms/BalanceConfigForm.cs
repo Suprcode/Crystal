@@ -57,33 +57,33 @@ namespace Server
 
         private void ItemGenInterface()
         {
-            WeightPerLev_tb.Text = Settings.WeightPerLev.ToString();
-            WepDC_tb.Text = Settings.WeaponDC.ToString();
-            MinDC_tb.Text = Settings.MinDC.ToString();
-            MaxDC_tb.Text = Settings.MaxDC.ToString();
-            MinMC_tb.Text = Settings.MinMC.ToString();
-            MaxMC_tb.Text = Settings.MaxMC.ToString();
-            MinSC_tb.Text = Settings.MinSC.ToString();
-            MaxSC_tb.Text = Settings.MaxSC.ToString();
-            MinAC_tb.Text = Settings.MinAC.ToString();
-            MaxAC_tb.Text = Settings.MaxAC.ToString();
-            MinMAC_tb.Text = Settings.MinMAC.ToString();
-            MaxMAC_tb.Text = Settings.MaxMAC.ToString();
-            ACC_tb.Text = Settings.ACC.ToString();
-            AGIL_tb.Text = Settings.AGIL.ToString();
-            ASPEED_tb.Text = Settings.ASPEED.ToString();
-            CritDam_tb.Text = Settings.CritDam.ToString();
-            CritRate_tb.Text = Settings.CritRate.ToString();
-            Freeze_tb.Text = Settings.Freezing.ToString();
-            HPRec_tb.Text = Settings.HPRecov.ToString();
-            HP_tb.Text = Settings.HP.ToString();
-            MPRec_tb.Text = Settings.MPRecov.ToString();
-            MP_tb.Text = Settings.MP.ToString();
-            MagRes_tb.Text = Settings.MagicRes.ToString();
-            PoisAtt_tb.Text = Settings.PoisAttack.ToString();
-            PoisRec_tb.Text = Settings.PoisRecov.ToString();
-            PoisRes_tb.Text = Settings.PoisResist.ToString();
-            Strong_tb.Text = Settings.Strong.ToString();
+            WeightPerLev_tb.Text = Settings.IGWeightPerLev.ToString();
+            WepDC_tb.Text = Settings.IGWeaponDC.ToString();
+            MinDC_tb.Text = Settings.IGMinDC.ToString();
+            MaxDC_tb.Text = Settings.IGMaxDC.ToString();
+            MinMC_tb.Text = Settings.IGMinMC.ToString();
+            MaxMC_tb.Text = Settings.IGMaxMC.ToString();
+            MinSC_tb.Text = Settings.IGMinSC.ToString();
+            MaxSC_tb.Text = Settings.IGMaxSC.ToString();
+            MinAC_tb.Text = Settings.IGMinAC.ToString();
+            MaxAC_tb.Text = Settings.IGMaxAC.ToString();
+            MinMAC_tb.Text = Settings.IGMinMAC.ToString();
+            MaxMAC_tb.Text = Settings.IGMaxMAC.ToString();
+            ACC_tb.Text = Settings.IGACC.ToString();
+            AGIL_tb.Text = Settings.IGAGIL.ToString();
+            ASPEED_tb.Text = Settings.IGASPEED.ToString();
+            CritDam_tb.Text = Settings.IGCritDam.ToString();
+            CritRate_tb.Text = Settings.IGCritRate.ToString();
+            Freeze_tb.Text = Settings.IGFreezing.ToString();
+            HPRec_tb.Text = Settings.IGHPRecov.ToString();
+            HP_tb.Text = Settings.IGHP.ToString();
+            MPRec_tb.Text = Settings.IGMPRecov.ToString();
+            MP_tb.Text = Settings.IGMP.ToString();
+            MagRes_tb.Text = Settings.IGMagicRes.ToString();
+            PoisAtt_tb.Text = Settings.IGPoisAttack.ToString();
+            PoisRec_tb.Text = Settings.IGPoisRecov.ToString();
+            PoisRes_tb.Text = Settings.IGPoisResist.ToString();
+            Strong_tb.Text = Settings.IGStrong.ToString();
         }
 
         private void UpdateInterface()
@@ -2010,7 +2010,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.WeightPerLev = temp;
+            Settings.IGWeightPerLev = temp;
         }
 
         private void MinDC_tb_TextChanged(object sender, EventArgs e)
@@ -2025,7 +2025,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MinDC = temp;
+            Settings.IGMinDC = temp;
         }
 
         private void MaxDC_tb_TextChanged(object sender, EventArgs e)
@@ -2040,7 +2040,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MaxDC = temp;
+            Settings.IGMaxDC = temp;
         }
 
         private void MinMC_tb_TextChanged(object sender, EventArgs e)
@@ -2055,7 +2055,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MinMC = temp;
+            Settings.IGMinMC = temp;
         }
 
         private void MaxMC_tb_TextChanged(object sender, EventArgs e)
@@ -2070,7 +2070,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MaxMC = temp;
+            Settings.IGMaxMC = temp;
         }
 
         private void MinSC_tb_TextChanged(object sender, EventArgs e)
@@ -2085,7 +2085,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MinSC = temp;
+            Settings.IGMinSC = temp;
         }
 
         private void MaxSC_tb_TextChanged(object sender, EventArgs e)
@@ -2100,7 +2100,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MaxSC = temp;
+            Settings.IGMaxSC = temp;
         }
 
         private void MinAC_tb_TextChanged(object sender, EventArgs e)
@@ -2115,7 +2115,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MinAC = temp;
+            Settings.IGMinAC = temp;
         }
 
         private void MaxAC_tb_TextChanged(object sender, EventArgs e)
@@ -2130,7 +2130,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MaxAC = temp;
+            Settings.IGMaxAC = temp;
         }
 
         private void MinMAC_tb_TextChanged(object sender, EventArgs e)
@@ -2145,7 +2145,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MinMAC = temp;
+            Settings.IGMinMAC = temp;
         }
 
         private void MaxMAC_tb_TextChanged(object sender, EventArgs e)
@@ -2160,7 +2160,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MaxMAC = temp;
+            Settings.IGMaxMAC = temp;
         }
 
         private void ACC_tb_TextChanged(object sender, EventArgs e)
@@ -2175,7 +2175,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.ACC = temp;
+            Settings.IGACC = temp;
         }
 
         private void AGIL_tb_TextChanged(object sender, EventArgs e)
@@ -2190,7 +2190,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.AGIL = temp;
+            Settings.IGAGIL = temp;
         }
 
         private void ASPEED_tb_TextChanged(object sender, EventArgs e)
@@ -2205,7 +2205,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.ASPEED = temp;
+            Settings.IGASPEED = temp;
         }
 
         private void CritDam_tb_TextChanged(object sender, EventArgs e)
@@ -2220,7 +2220,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.CritDam = temp;
+            Settings.IGCritDam = temp;
         }
 
         private void CritRate_tb_TextChanged(object sender, EventArgs e)
@@ -2235,7 +2235,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.CritRate = temp;
+            Settings.IGCritRate = temp;
         }
 
         private void Freeze_tb_TextChanged(object sender, EventArgs e)
@@ -2250,7 +2250,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.Freezing = temp;
+            Settings.IGFreezing = temp;
         }
 
         private void HPRec_tb_TextChanged(object sender, EventArgs e)
@@ -2265,7 +2265,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.HPRecov = temp;
+            Settings.IGHPRecov = temp;
         }
 
         private void HP_tb_TextChanged(object sender, EventArgs e)
@@ -2280,7 +2280,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.HP = temp;
+            Settings.IGHP = temp;
         }
 
         private void MPRec_tb_TextChanged(object sender, EventArgs e)
@@ -2295,7 +2295,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MPRecov = temp;
+            Settings.IGMPRecov = temp;
         }
 
         private void MP_tb_TextChanged(object sender, EventArgs e)
@@ -2310,7 +2310,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MP = temp;
+            Settings.IGMP = temp;
         }
 
         private void MagRes_tb_TextChanged(object sender, EventArgs e)
@@ -2325,7 +2325,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.MagicRes = temp;
+            Settings.IGMagicRes = temp;
         }
 
         private void PoisAtt_tb_TextChanged(object sender, EventArgs e)
@@ -2340,7 +2340,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.PoisAttack = temp;
+            Settings.IGPoisAttack = temp;
         }
 
         private void PoisRec_tb_TextChanged(object sender, EventArgs e)
@@ -2355,7 +2355,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.PoisRecov = temp;
+            Settings.IGPoisRecov = temp;
         }
 
         private void PoisRes_tb_TextChanged(object sender, EventArgs e)
@@ -2370,7 +2370,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.PoisResist = temp;
+            Settings.IGPoisResist = temp;
         }
 
         private void Strong_tb_TextChanged(object sender, EventArgs e)
@@ -2385,7 +2385,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.Strong = temp;
+            Settings.IGStrong = temp;
         }
 
         private void WepDC_tb_TextChanged(object sender, EventArgs e)
@@ -2400,7 +2400,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             ItemGenChanged = true;
-            Settings.WeaponDC = temp;
+            Settings.IGWeaponDC = temp;
         }
     }
 }
