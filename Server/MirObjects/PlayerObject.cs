@@ -11065,7 +11065,7 @@ namespace Server.MirObjects
 
                     // Gem is only affected by the stat applied.
                     // Drop rate per gem won't work if gems add more than 1 stat, i.e. DC + 2 per gem.
-                    if (Settings.GemStatIndependent)
+                    if (Settings.GemStatIndependent && !tempTo.Info.Generate)
                     {
                         StatType GemType = GetGemType(tempFrom);
 
