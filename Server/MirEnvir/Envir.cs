@@ -2029,7 +2029,11 @@ namespace Server.MirEnvir
                     CurrentDura = (ushort) Math.Min(info.Durability, Random.Next(info.Durability) + 1000)
                 };
 
-            UpgradeItem(item);
+
+            if (item.Info.Generate)
+                item = GenerateStats(item);
+            else
+                UpgradeItem(item);
 
             UpdateItemExpiry(item);
 
@@ -2037,21 +2041,16 @@ namespace Server.MirEnvir
             return item;
         }
 
-        public UserItem RandomDropItem(ItemInfo info)
+        public UserItem GenerateStats(UserItem item)
         {
-            if (info == null) return null;
+            if (item == null) return null;
 
-            UserItem item = new UserItem(info)
-            {
-                UniqueID = ++NextUserItemID,
-                MaxDura = info.Durability,
-                CurrentDura = (ushort)Math.Min(info.Durability, Random.Next(info.Durability) + 1000)
-            };
+            ItemInfo info = item.Info;
             
             List<int> Stats = new List<int>();
 
-            if (info.Type == ItemType.Weapon)
-                item.DC = (ushort)(info.RequiredAmount * Settings.WeaponDC);
+            int WeightValue = Settings.WeightPerLev;
+            int CurrentWeightVal = (WeightValue * info.RequiredAmount);
 
             if (info.MaxDC > 0) for (int i = 0; i < info.MaxDC; i++) Stats.Add((byte)StatType.DC);
             if (info.MaxSC > 0) for (int i = 0; i < info.MaxSC; i++) Stats.Add((byte)StatType.SC);
@@ -2079,32 +2078,11 @@ namespace Server.MirEnvir
             if (info.PoisonResist > 0) for (int i = 0; i < info.PoisonResist; i++) Stats.Add((byte)StatType.PoisonResist);
             if (info.Strong > 0) for (int i = 0; i < info.Strong; i++) Stats.Add((byte)StatType.Strong);
 
-            int WeightValue = Settings.WeightPerLev;
-
-            /*int MinDC = 20, MaxDC = 20,
-                MinSC = 20, MaxSC = 20,
-                MinMC = 20, MaxMC = 20,
-                MinAC = 20, MaxAC = 20,
-                MinMAC = 20, MaxMAC = 20,
-                ACC = 20, AGIL = 20, ASPEED = 20,
-                CritDam = 20, CritRate = 20,
-                Freezing = 20,
-                HPRecov = 20, HP = 20,
-                MagicRes = 20,
-                MPRecov = 20, MP = 20,
-                PoisAttack = 20, PoisRecov = 20, PoisResist = 20,
-                Strong = 20;*/
-
-
-            int CurrentWeightVal = (WeightValue * info.RequiredAmount);
-
-            int MinimumWeight = 20;
 
             while (CurrentWeightVal > 0)
             {
-                if (Stats.Count == 0) CurrentWeightVal = 0;
-                if (CurrentWeightVal < MinimumWeight)
-                    CurrentWeightVal = 0;
+                //if (CurrentWeightVal < MinimumWeight)
+                    //CurrentWeightVal = 0;
 
                 switch (Stats[SMain.Envir.Random.Next(0, Stats.Count)])
                 {
@@ -2332,17 +2310,116 @@ namespace Server.MirEnvir
                         }
                         else
                             Stats.RemoveAll(val => val == (byte)StatType.Strong);
-                        break;
+                        break;                   
+                }
+
+                if (Stats.Count == 0) CurrentWeightVal = 0;
+            }
+
+            item.Name = ItemGenName(item);
+
+            if (info.Type == ItemType.Weapon)
+                item.DC += (ushort)(info.RequiredAmount * Settings.WeaponDC);
+
+            return item;
+        }
+
+        public string ItemGenName(UserItem Item)
+        {
+            int Defense, Damage, Speedy, Poison, Freezing, Recovery;
+            int TotalStats;
+
+            int MagDef, PhyDef, MagDam, PhyDam, HolDam, HP, MP, Speed, Crit, Pois, Freeze;
+
+            MagDef = (Item.MinMAC * Settings.MinMAC) + (Item.MAC * Settings.MaxMAC) + (Item.MagicResist * Settings.MagicRes);
+            PhyDef = (Item.MinAC * Settings.MinAC) + (Item.AC * Settings.MaxAC) + (Item.Agility * Settings.AGIL);
+
+            MagDam = (Item.MinMC * Settings.MinMC) + (Item.MC * Settings.MaxMC);
+            PhyDam = (Item.MinDC * Settings.MinDC) + (Item.DC * Settings.MaxDC);
+            HolDam = (Item.MinSC * Settings.MinSC) + (Item.SC * Settings.MaxSC);
+
+            HP = (Item.HealthRecovery * Settings.HPRecov) + (Item.HP * Settings.HP);
+            MP = (Item.ManaRecovery * Settings.MPRecov) + (Item.MP * Settings.MP);
+            Speed = (Item.AttackSpeed * Settings.ASPEED);
+            Crit = (Item.CriticalDamage * Settings.CritDam) + (Item.CriticalRate * Settings.CritRate);
+            Pois = (Item.PoisonAttack * Settings.PoisAttack) + (Item.PoisonRecovery * Settings.PoisRecov) + (Item.PoisonResist * Settings.PoisResist);
+            Freeze = (Item.Freezing * Settings.Freezing);
+
+            Defense = MagDef + PhyDef;
+            Damage = MagDam + PhyDam + HolDam;
+            Speedy = Speed;
+            Poison = Pois;
+            Freezing = Freeze;
+            Recovery = HP + MP;
+
+            TotalStats = Defense + Damage + Speedy + Poison + Freezing + Recovery;
+
+
+            if (Speedy > (TotalStats * 0.3))
+            {
+                return Item.Info.FriendlyName + " of Haste";
+            }
+            if (Poison > (TotalStats * 0.3))
+            {
+                return "Poison coated " + Item.Info.FriendlyName;
+            }
+            if (Freezing > (TotalStats * 0.3))
+            {
+                return "Chilling " + Item.Info.FriendlyName;
+            }
+            if (Recovery > (TotalStats * 0.3))
+            {
+                if (HP > (Recovery * 0.75))
+                {
+                    return Item.Info.FriendlyName + " of Recovery";
+                }
+                else if (MP > (Recovery * 0.75))
+                {
+                    return Item.Info.FriendlyName + " of Replenishment";
+                }
+                else
+                {
+                    return "Regenerating " + Item.Info.FriendlyName;
                 }
             }
 
-            //UpgradeItem(item);
+            if (Defense > (TotalStats * 0.7))
+            {
+                if (MagDef > (Defense * 0.75))
+                {
+                    return Item.Info.FriendlyName + " of Resistance";
+                }
+                else if (PhyDef > (Defense * 0.75))
+                {
+                    return Item.Info.FriendlyName + " of Protection";
+                }
+                else
+                {
+                    return Item.Info.FriendlyName + " of Defense";
+                }
+            }
 
-            UpdateItemExpiry(item);
+            if (Damage > (TotalStats * 0.7))
+            {
+                if (MagDam > (Damage * 0.75))
+                {
+                    return "Magical " + Item.Info.FriendlyName;
+                }
+                else if (HolDam > (Damage * 0.75))
+                {
+                    return "Divine " + Item.Info.FriendlyName;
+                }
+                else if (PhyDam > (Damage * 0.75))
+                {
+                    return "Sharpened " + Item.Info.FriendlyName;
+                }
+                else if (HolDam + PhyDam > (Damage * 0.9))
+                {
+                    return Item.Info.FriendlyName + " of Valor";
+                }
+            }
 
-            if (!info.NeedIdentify) item.Identified = true;
-
-            return item;
+            return Item.Info.FriendlyName;
         }
 
         public void UpdateItemExpiry(UserItem item)

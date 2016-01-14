@@ -2918,6 +2918,8 @@ public class UserItem
 
     public int WeddingRing = -1;
 
+    private string CustomName = "";
+
     public UserItem[] Slots = new UserItem[5];
 
     public DateTime BuybackExpiryDate;
@@ -2941,13 +2943,24 @@ public class UserItem
 
     public string Name
     {
-        get { return Count > 1 ? string.Format("{0} ({1})", Info.Name, Count) : Info.Name; }   
+        get
+        {
+            return Count > 1 ? CustomName != "" ? string.Format("{0} ({1})", CustomName, Count) : string.Format("{0} ({1})", Info.Name, Count) : CustomName != "" ? CustomName : Info.Name;
+        }   
+        set
+        {
+            CustomName = value;
+        }
     }
     
     public string FriendlyName
     {
-        get { return Count > 1 ? string.Format("{0} ({1})", Info.FriendlyName, Count) : Info.FriendlyName; }
+        get
+        {
+            return Count > 1 ? CustomName != "" ? string.Format("{0} ({1})", CustomName, Count) : string.Format("{0} ({1})", Info.FriendlyName, Count) : CustomName != "" ? CustomName : Info.FriendlyName;
+        }
     }
+
 
     public UserItem(ItemInfo info)
     {
@@ -2999,6 +3012,7 @@ public class UserItem
             MinDC = reader.ReadUInt16();
             MinMC = reader.ReadUInt16();
             MinSC = reader.ReadUInt16();
+            CustomName = reader.ReadString();
         }
         
         AttackSpeed = reader.ReadSByte();
@@ -3097,6 +3111,7 @@ public class UserItem
         writer.Write(MinDC);
         writer.Write(MinMC);
         writer.Write(MinSC);
+        writer.Write(CustomName);
 
         writer.Write(AttackSpeed);
         writer.Write(Luck);
@@ -3321,6 +3336,7 @@ public class UserItem
             Agility = Agility,
             HP = HP,
             MP = MP,
+            CustomName = CustomName,
 
             AttackSpeed = AttackSpeed,
             Luck = Luck,

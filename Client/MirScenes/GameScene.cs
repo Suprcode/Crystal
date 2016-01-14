@@ -5400,133 +5400,6 @@ namespace Client.MirScenes
             }
         }
 
-        public String ItemName(UserItem Item)
-        {
-            if (!Item.Info.Generate) return Item.Info.FriendlyName;
-
-            int Defense, Physical, Magical, Holy, Health, Effects;
-            int Highest;
-            int HighestCount = 0;
-            int TotalStats;
-
-
-            Defense = Item.MinAC + Item.AC + Item.MinMAC + Item.MAC + Item.Agility;
-            Physical = Item.MinDC + Item.DC + Item.Accuracy + Item.AttackSpeed;
-            Magical = Item.MinMC + Item.MC;
-            Holy = Item.MinSC + Item.SC;
-            Health = Item.HealthRecovery + Item.HP + Item.ManaRecovery + Item.MP + Item.MagicResist;
-            Effects = Item.PoisonAttack + Item.PoisonRecovery + Item.PoisonResist + Item.Freezing + Item.CriticalDamage + Item.CriticalRate;
-            TotalStats = Defense + Physical + Magical + Holy + Health + Effects;
-
-            int bDefense = 0, bPhysical = 0, bMagical = 0, bHoly = 0, bHealth = 0, bEffects = 0;
-
-
-            Highest = 0;
-            if (Defense > (TotalStats * 0.7))
-            {
-                return Item.Info.FriendlyName + " of Defense";
-                //Highest = 1;
-                //HighestCount++;
-            }
-
-            if (Physical > (TotalStats * 0.65))
-            {
-                if (Physical > (TotalStats * 0.85))
-                    bPhysical = 3;
-                else if (Physical > (TotalStats * 0.75))
-                    bPhysical = 2;
-                else
-                    bPhysical = 1;
-            }
-            if (Magical > (TotalStats * 0.65))
-            {
-                if (Magical > (TotalStats * 0.85))
-                    bMagical = 3;
-                else if (Magical > (TotalStats * 0.75))
-                    bMagical = 2;
-                else
-                    bMagical = 1;
-            }
-            if (Holy > (TotalStats * 0.65))
-            {
-                if (Holy > (TotalStats * 0.85))
-                    bHoly = 3;
-                else if (Holy > (TotalStats * 0.75))
-                    bHoly = 2;
-                else
-                    bHoly = 1;
-            }
-
-
-
-            if (bPhysical == 3 || bMagical == 3 || bHoly == 3)
-            {
-               
-            }
-
-
-
-            /*
-            if (Health > (TotalStats * 0.3))
-            {
-                Highest = 5;
-                HighestCount++;
-            }
-            if (Effects > (TotalStats * 0.3))
-            {
-                Highest = 6;
-                HighestCount++;
-            }
-
-            if (HighestCount > 1)
-                Highest = 7;
-
-
-            switch (Highest)
-            {
-                case 0: // None
-                    return Item.Info.FriendlyName;
-                    break;
-                case 1: // Defense
-                    return Item.Info.FriendlyName + " of Defense";
-                    break;
-                case 2: // Physical
-                    
-                    break;
-                case 3: // Magical
-                    
-                case 4: // Holy
-                    if (Holy > (TotalStats * 0.85))
-                        return Item.Info.FriendlyName + " of the Heavens";
-                    else if (Holy > (TotalStats * 0.65))
-                        return "Holy " + Item.Info.FriendlyName;
-                    else
-                        return "Pure " + Item.Info.FriendlyName;
-                    break;
-                case 5: // Health
-                    return Item.Info.FriendlyName + " of Recovery";
-                    break;
-                case 6: // Effects
-                    return Item.Info.FriendlyName + " Soaked in Acid";
-                    break;
-                case 7: // Matches 4+ cases.
-                    if (HighestCount >= 4)
-                        return "Fars " + Item.Info.FriendlyName;
-                    else if (HighestCount == 2)
-                    {
-                        return "Regular " + Item.Info.FriendlyName;
-                    }
-                    else if (HighestCount == 3)
-                    {
-                        return "Universal " + Item.Info.FriendlyName;
-                    }
-                    break;
-            }
-
-
-            return Item.Info.FriendlyName + " of Far"; */
-        }
-
         public void DisposeItemLabel()
         {
             if (ItemLabel != null && !ItemLabel.IsDisposed)
@@ -5566,8 +5439,8 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Grade != ItemGrade.None ? ItemName(HoverItem) + "\n" + HoverItem.Info.Grade.ToString() : 
-                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : ItemName(HoverItem),
+                Text = HoverItem.Info.Grade != ItemGrade.None ? HoverItem.FriendlyName + "\n" + HoverItem.Info.Grade.ToString() : 
+                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.FriendlyName,
             };
 
             if (HoverItem.RefineAdded > 0)

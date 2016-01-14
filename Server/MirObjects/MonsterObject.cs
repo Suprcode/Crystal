@@ -649,10 +649,7 @@ namespace Server.MirObjects
                 {
                     UserItem item;
 
-                    if (drop.Item.Generate)
-                        item = Envir.RandomDropItem(drop.Item);
-                    else
-                        item = Envir.CreateDropItem(drop.Item);
+                    item = Envir.CreateDropItem(drop.Item);
 
                     if (item == null) continue;
 
