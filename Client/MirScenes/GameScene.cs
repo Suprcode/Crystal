@@ -115,6 +115,7 @@ namespace Client.MirScenes
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
+        public static List<ItemInfo> ItemGenInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
         public static List<ChatItem> ChatItemList = new List<ChatItem>();
         public static List<ClientQuestInfo> QuestInfoList = new List<ClientQuestInfo>();
@@ -5480,7 +5481,7 @@ namespace Client.MirScenes
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
-            ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
+            ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList, ItemGenInfoList);
 
             MirLabel nameLabel = new MirLabel
             {

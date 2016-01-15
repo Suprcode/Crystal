@@ -2370,7 +2370,7 @@ public static class Functions
                 return dir;
         }
     }
-    public static ItemInfo GetRealItem(ItemInfo Origin, ushort Level, MirClass job, List<ItemInfo> ItemList)
+    public static ItemInfo GetRealItem(ItemInfo Origin, ushort Level, MirClass job, List<ItemInfo> ItemList, List<ItemInfo> EmptyList)
     {
         if (Origin.ClassBased && Origin.LevelBased)
             return GetClassAndLevelBasedItem(Origin, job, Level, ItemList);
@@ -2379,7 +2379,7 @@ public static class Functions
         if (Origin.LevelBased)
             return GetLevelBasedItem(Origin, Level, ItemList);
         if (Origin.Generate)
-            return GetGeneratedItem(Origin);
+            return GetGeneratedItem(Origin, EmptyList);
         return Origin;
     }
     public static ItemInfo GetLevelBasedItem(ItemInfo Origin, ushort level, List<ItemInfo> ItemList)
@@ -2394,12 +2394,18 @@ public static class Functions
         }
         return output;
     }
-    public static ItemInfo GetGeneratedItem(ItemInfo Origin)
+    public static ItemInfo GetGeneratedItem(ItemInfo Origin, List<ItemInfo> ItemList)
     {
         ItemInfo output = Origin;
-
-        output = new ItemInfo { Name = Origin.Name, BagWeight = Origin.BagWeight, Bind = Origin.Bind, CanAwakening = Origin.CanAwakening, CanMine = Origin.CanMine, Durability = Origin.Durability, Effect = Origin.Effect, Generate = Origin.Generate, HandWeight = Origin.HandWeight, Image = Origin.Image, Index = Origin.Index, NeedIdentify = Origin.NeedIdentify, RequiredAmount = Origin.RequiredAmount, RequiredClass = Origin.RequiredClass, RequiredGender = Origin.RequiredGender, RequiredType = Origin.RequiredType, Unique = Origin.Unique, Price = Origin.Price, Shape = Origin.Shape, ToolTip = Origin.ToolTip, WearWeight = Origin.WearWeight, Weight = Origin.Weight, CanFastRun = Origin.CanFastRun, Type = Origin.Type, StackSize = 1, Strong = Origin.Strong };
-
+        for (int i = 0; i < ItemList.Count; i++)
+        {
+            ItemInfo info = ItemList[i];
+            if (info.Index == Origin.Index)
+            {
+                output = info;
+                break;
+            }
+        }
         return output;
     }
     public static ItemInfo GetClassBasedItem(ItemInfo Origin, MirClass job, List<ItemInfo> ItemList)
@@ -3027,7 +3033,7 @@ public class UserItem
             MP = (ushort)reader.ReadByte();
         }
 
-        if (version > 68)
+        if (version > 65)
         {
             MinAC = reader.ReadUInt16();
             MinMAC = reader.ReadUInt16();

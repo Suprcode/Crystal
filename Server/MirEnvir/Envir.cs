@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 69;
+        public const int Version = 66;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -108,6 +108,7 @@ namespace Server.MirEnvir
         public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex, RespawnIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
+        public List<ItemInfo> ItemGenInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
         public List<MagicInfo> MagicInfoList = new List<MagicInfo>();
         public List<NPCInfo> NPCInfoList = new List<NPCInfo>();
@@ -1104,6 +1105,7 @@ namespace Server.MirEnvir
 
                     count = reader.ReadInt32();
                     ItemInfoList.Clear();
+                    ItemGenInfoList.Clear();
                     for (int i = 0; i < count; i++)
                     {
                         ItemInfoList.Add(new ItemInfo(reader, LoadVersion, LoadCustomVersion));
@@ -1111,6 +1113,7 @@ namespace Server.MirEnvir
                         {
                             ItemInfoList[i].RandomStats = Settings.RandomItemStatsList[ItemInfoList[i].RandomStatsId];
                         }
+                        ItemGenInfoList.Add(EmptyItemInfo(ItemInfoList[ItemInfoList.Count]));
                     }
                     count = reader.ReadInt32();
                     MonsterInfoList.Clear();
@@ -3093,6 +3096,15 @@ namespace Server.MirEnvir
             ResetGS = false;
             SMain.Enqueue("Gameshop Purchase Logs Cleared.");
 
+        }
+
+        public ItemInfo EmptyItemInfo(ItemInfo Origin)
+        {
+            ItemInfo output;
+
+            output = new ItemInfo { Name = Origin.Name, BagWeight = Origin.BagWeight, Bind = Origin.Bind, CanAwakening = Origin.CanAwakening, CanMine = Origin.CanMine, Durability = Origin.Durability, Effect = Origin.Effect, Generate = Origin.Generate, HandWeight = Origin.HandWeight, Image = Origin.Image, Index = Origin.Index, NeedIdentify = Origin.NeedIdentify, RequiredAmount = Origin.RequiredAmount, RequiredClass = Origin.RequiredClass, RequiredGender = Origin.RequiredGender, RequiredType = Origin.RequiredType, Unique = Origin.Unique, Price = Origin.Price, Shape = Origin.Shape, ToolTip = Origin.ToolTip, WearWeight = Origin.WearWeight, Weight = Origin.Weight, CanFastRun = Origin.CanFastRun, Type = Origin.Type, StackSize = 1, Strong = Origin.Strong };
+
+            return output;
         }
     }
 }
