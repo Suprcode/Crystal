@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 66;
+        public const int Version = 70;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -2631,7 +2631,7 @@ namespace Server.MirEnvir
             item.Name = ItemGenName(item);
 
             if (info.Type == ItemType.Weapon)
-                item.DC += (ushort)(info.RequiredAmount * Settings.IGWeaponDC);
+                item.DC += (byte)(info.RequiredAmount * Settings.IGWeaponDC);
 
             return item;
         }
