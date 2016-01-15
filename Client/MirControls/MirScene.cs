@@ -196,6 +196,7 @@ namespace Client.MirControls
         private void NewItemInfo(S.NewItemInfo info)
         {
             GameScene.ItemInfoList.Add(info.Info);
+            GameScene.ItemGenInfoList.Add(Functions.EmptyItemInfo(info.Info));
         }
 
         private void NewQuestInfo(S.NewQuestInfo info)

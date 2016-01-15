@@ -2838,7 +2838,7 @@ namespace Server.MirObjects
                 UserItem temp = Slots[i];
                 if (temp == null) continue;
 
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
+                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList, Envir.ItemGenInfoList);
 
                 CurrentWearWeight = (ushort)Math.Min(ushort.MaxValue, CurrentWearWeight + temp.Weight);
 
@@ -4466,7 +4466,7 @@ namespace Server.MirObjects
                             {
                                 if (temp == null) continue;
 
-                                ItemInfo realItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
+                                ItemInfo realItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList, Envir.ItemGenInfoList);
 
                                 if (realItem.Type == type)
                                 {
@@ -4505,7 +4505,7 @@ namespace Server.MirObjects
                             {
                                 if (temp == null) continue;
 
-                                ItemInfo realItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
+                                ItemInfo realItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList, Envir.ItemGenInfoList);
 
                                 if (realItem.Type == type)
                                 {
@@ -15852,7 +15852,7 @@ namespace Server.MirObjects
             {
                 if (temp == null) continue;
 
-                ItemInfo realItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
+                ItemInfo realItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList, Envir.ItemGenInfoList);
 
                 switch (realItem.Type)
                 {

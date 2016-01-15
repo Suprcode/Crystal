@@ -2408,6 +2408,16 @@ public static class Functions
         }
         return output;
     }
+
+    public static ItemInfo EmptyItemInfo(ItemInfo Origin)
+    {
+        ItemInfo output;
+
+        output = new ItemInfo { Name = Origin.Name, BagWeight = Origin.BagWeight, Bind = Origin.Bind, CanAwakening = Origin.CanAwakening, CanMine = Origin.CanMine, Durability = Origin.Durability, Effect = Origin.Effect, Generate = Origin.Generate, HandWeight = Origin.HandWeight, Image = Origin.Image, Index = Origin.Index, NeedIdentify = Origin.NeedIdentify, RequiredAmount = Origin.RequiredAmount, RequiredClass = Origin.RequiredClass, RequiredGender = Origin.RequiredGender, RequiredType = Origin.RequiredType, Unique = Origin.Unique, Price = Origin.Price, Shape = Origin.Shape, ToolTip = Origin.ToolTip, WearWeight = Origin.WearWeight, Weight = Origin.Weight, CanFastRun = Origin.CanFastRun, Type = Origin.Type, StackSize = 1, Strong = Origin.Strong };
+
+        return output;
+    }
+
     public static ItemInfo GetClassBasedItem(ItemInfo Origin, MirClass job, List<ItemInfo> ItemList)
     {
         for (int i = 0; i < ItemList.Count; i++)

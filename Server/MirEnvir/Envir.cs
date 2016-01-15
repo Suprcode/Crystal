@@ -1113,7 +1113,7 @@ namespace Server.MirEnvir
                         {
                             ItemInfoList[i].RandomStats = Settings.RandomItemStatsList[ItemInfoList[i].RandomStatsId];
                         }
-                        ItemGenInfoList.Add(EmptyItemInfo(ItemInfoList[ItemInfoList.Count]));
+                        if (ItemInfoList[ItemInfoList.Count - 1].Generate) ItemGenInfoList.Add(Functions.EmptyItemInfo(ItemInfoList[ItemInfoList.Count - 1]));
                     }
                     count = reader.ReadInt32();
                     MonsterInfoList.Clear();
@@ -3096,15 +3096,6 @@ namespace Server.MirEnvir
             ResetGS = false;
             SMain.Enqueue("Gameshop Purchase Logs Cleared.");
 
-        }
-
-        public ItemInfo EmptyItemInfo(ItemInfo Origin)
-        {
-            ItemInfo output;
-
-            output = new ItemInfo { Name = Origin.Name, BagWeight = Origin.BagWeight, Bind = Origin.Bind, CanAwakening = Origin.CanAwakening, CanMine = Origin.CanMine, Durability = Origin.Durability, Effect = Origin.Effect, Generate = Origin.Generate, HandWeight = Origin.HandWeight, Image = Origin.Image, Index = Origin.Index, NeedIdentify = Origin.NeedIdentify, RequiredAmount = Origin.RequiredAmount, RequiredClass = Origin.RequiredClass, RequiredGender = Origin.RequiredGender, RequiredType = Origin.RequiredType, Unique = Origin.Unique, Price = Origin.Price, Shape = Origin.Shape, ToolTip = Origin.ToolTip, WearWeight = Origin.WearWeight, Weight = Origin.Weight, CanFastRun = Origin.CanFastRun, Type = Origin.Type, StackSize = 1, Strong = Origin.Strong };
-
-            return output;
         }
     }
 }
