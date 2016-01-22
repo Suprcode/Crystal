@@ -706,7 +706,7 @@ namespace ServerPackets
             Light = reader.ReadByte();
             Weapon = reader.ReadInt16();
             Armour = reader.ReadInt16();
-            Poison = (PoisonType)reader.ReadByte();
+            Poison = (PoisonType)reader.ReadUInt16();
             Dead = reader.ReadBoolean();
             Hidden = reader.ReadBoolean();
             Effect = (SpellEffect)reader.ReadByte();
@@ -748,7 +748,7 @@ namespace ServerPackets
             writer.Write(Light);
             writer.Write(Weapon);
             writer.Write(Armour);
-            writer.Write((byte)Poison);
+            writer.Write((ushort)Poison);
             writer.Write(Dead);
             writer.Write(Hidden);
             writer.Write((byte)Effect);
@@ -1905,7 +1905,7 @@ namespace ServerPackets
             Light = reader.ReadByte();
             Dead = reader.ReadBoolean();
             Skeleton = reader.ReadBoolean();
-            Poison = (PoisonType)reader.ReadByte();
+            Poison = (PoisonType)reader.ReadUInt16();
             Hidden = reader.ReadBoolean();
             ShockTime = reader.ReadInt64();
             BindingShotCenter = reader.ReadBoolean();
@@ -1927,7 +1927,7 @@ namespace ServerPackets
             writer.Write(Light);
             writer.Write(Dead);
             writer.Write(Skeleton);
-            writer.Write((byte)Poison);
+            writer.Write((ushort)Poison);
             writer.Write(Hidden);
             writer.Write(ShockTime);
             writer.Write(BindingShotCenter);
@@ -2448,11 +2448,11 @@ namespace ServerPackets
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            Poison = (PoisonType)reader.ReadByte();
+            Poison = (PoisonType)reader.ReadUInt16();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write((byte)Poison);
+            writer.Write((ushort)Poison);
         }
     }
     public sealed class ObjectPoisoned : Packet
@@ -2465,12 +2465,12 @@ namespace ServerPackets
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
-            Poison = (PoisonType)reader.ReadByte();
+            Poison = (PoisonType)reader.ReadUInt16();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(ObjectID);
-            writer.Write((byte)Poison);
+            writer.Write((ushort)Poison);
         }
     }
     public sealed class MapChanged : Packet

@@ -901,6 +901,7 @@ namespace Client.MirScenes
                 messageBox.Show();
             }
 
+
             //if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
             //{
             //    MapControl.CloseDoor(GameScene.DoorPoint);
@@ -3226,7 +3227,7 @@ namespace Client.MirScenes
         private void Poisoned(S.Poisoned p)
         {
             User.Poison = p.Poison;
-            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis))
+            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis) || p.Poison.HasFlag(PoisonType.LRParalysis))
             {
                     User.ClearMagic();
             }
@@ -5743,7 +5744,11 @@ namespace Client.MirScenes
             {
                 count++;
 
-                if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
+                if(realItem.Type == ItemType.Pets && realItem.Shape == 28)
+                {
+                    text = string.Format("BagWeight + {0}% ", minValue + addValue);
+                }
+                else if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
                 {
                     text = string.Format("Exp + {0}% ", minValue + addValue);
                 }
@@ -8191,6 +8196,8 @@ namespace Client.MirScenes
                         {
                             if (ob.Dead)
                             {
+                                if (!Settings.TargetDead) continue;
+
                                 bestmouseobject = ob;
                                 //continue;
                             }
@@ -8971,7 +8978,7 @@ namespace Client.MirScenes
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
             if (!CanRideAttack()) AutoHit = false;
             
-            if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
+            if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.LRParalysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
             
             if (User.NextMagic != null && !User.RidingMount)
             {
@@ -9163,6 +9170,7 @@ namespace Client.MirScenes
                         }
                         if (CanWalk(direction))
                         {
+
                             //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
                             //{
                             //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));

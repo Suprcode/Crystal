@@ -546,13 +546,14 @@ namespace Server.MirObjects
             {
                 for (int i = 0; i < WarEffects.Count; i++)
                 {
-                    if (WarEffects[i].CurrentLocation != null)
-                    {
+                    //if (WarEffects[i].CurrentLocation != null)
+                    //{
                         WarEffects[i].Despawn();
                         ConquestMap.RemoveObject(WarEffects[i]);
-                    }                
+                    //}                
                         
                 }
+                WarEffects.Clear();
             }
 
         }
@@ -580,7 +581,8 @@ namespace Server.MirObjects
                                 else if (points < 15)
                                     Points[ConquestMap.Players[i].MyGuild] += 1;
 
-                                foreach (var item in Points.Keys)
+                                List<GuildObject> tempList = Points.Keys.ToList();
+                                foreach (var item in tempList)
                                 {
                                     if (ConquestMap.Players[i].MyGuild == item) continue;
                                     Points.TryGetValue(ConquestMap.Players[i].MyGuild, out points);

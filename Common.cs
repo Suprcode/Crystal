@@ -860,7 +860,7 @@ public enum PetMode : byte
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum PoisonType : byte
+public enum PoisonType : ushort
 {
     None = 0,
     Green = 1,
@@ -870,7 +870,8 @@ public enum PoisonType : byte
     Stun = 16,
     Paralysis = 32,
     DelayedExplosion = 64,
-    Bleeding = 128
+    Bleeding = 128,
+    LRParalysis = 256
 }
 
 [Flags]
