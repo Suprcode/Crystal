@@ -901,6 +901,7 @@ namespace Client.MirScenes
                 messageBox.Show();
             }
 
+
             //if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
             //{
             //    MapControl.CloseDoor(GameScene.DoorPoint);
@@ -9169,6 +9170,7 @@ namespace Client.MirScenes
                         }
                         if (CanWalk(direction))
                         {
+
                             //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
                             //{
                             //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
