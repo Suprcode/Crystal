@@ -158,21 +158,21 @@ namespace Server.MirObjects
 
         public bool CanMove
         {
-            get { return !Dead && Envir.Time >= ActionTime && !Fishing; }
+            get { return !Dead && Envir.Time >= ActionTime && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
         }
         public bool CanWalk
         {
-            get { return !Dead && Envir.Time >= ActionTime && !InTrapRock && !Fishing; }
+            get { return !Dead && Envir.Time >= ActionTime && !InTrapRock && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
         }
         public bool CanRun
         {
-            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= MaxBagWeight; }
+            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= MaxBagWeight && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
         }
         public bool CanAttack
         {
             get
             {
-                return !Dead && Envir.Time >= ActionTime && Envir.Time >= AttackTime && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
+                return !Dead && Envir.Time >= ActionTime && Envir.Time >= AttackTime && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
             }
         }
 
@@ -2642,20 +2642,23 @@ namespace Server.MirObjects
                         break;
                     case ItemSet.RedFlower:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 50);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP - 50);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP - 25);
                         break;
                     case ItemSet.Smash:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 3);
+                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
                         break;
                     case ItemSet.HwanDevil:
                         MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
+                        MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
                         break;
                     case ItemSet.Purity:
                         MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + 1);
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
-                        //holy +2;
+                        Holy = (byte)Math.Min(ushort.MaxValue, Holy + 3);
                         break;
                     case ItemSet.FiveString:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + (((double)MaxHP / 100) * 30));
@@ -9607,6 +9610,15 @@ namespace Server.MirObjects
                 }
             }
 
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
+
+
             LastHitter = attacker;
             LastHitTime = Envir.Time + 10000;
             RegenTime = Envir.Time + RegenDelay;
@@ -9750,7 +9762,15 @@ namespace Server.MirObjects
             }
 
             ElementalBarrierTime -= (damage - armour) * 60;
-            
+
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
+
             LastHitter = attacker.Master ?? attacker;
             LastHitTime = Envir.Time + 10000;
             RegenTime = Envir.Time + RegenDelay;
@@ -9863,7 +9883,7 @@ namespace Server.MirObjects
                 if (PoisonList[i].PType != p.PType) continue;
                 if ((PoisonList[i].PType == PoisonType.Green) && (PoisonList[i].Value > p.Value)) return;//cant cast weak poison to cancel out strong poison
                 if ((PoisonList[i].PType != PoisonType.Green) && ((PoisonList[i].Duration - PoisonList[i].Time) > p.Duration)) return;//cant cast 1 second poison to make a 1minute poison go away!
-                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis)) return;//prevents mobs from being perma frozen/slowed
+                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis) || (PoisonList[i].PType == PoisonType.LRParalysis)) return;//prevents mobs from being perma frozen/slowed
                 if (p.PType == PoisonType.DelayedExplosion) return;
                 ReceiveChat("You have been poisoned.", ChatType.System2);
                 PoisonList[i] = p;
@@ -14087,6 +14107,12 @@ namespace Server.MirObjects
 
                 Awake awake = item.Awake;
 
+                if (!item.Info.CanAwakening)
+                {
+                    Enqueue(new S.Awakening { result = -1, removeID = -1 });
+                    return;
+                }
+
                 if (awake.IsMaxLevel())
                 {
                     Enqueue(new S.Awakening { result = -2, removeID = -1 });
@@ -15902,6 +15928,8 @@ namespace Server.MirObjects
 
             if (cast)
             {
+                if (Fishing) return;
+
                 _fishCounter = 0;
                 FishFound = false;
 
@@ -15925,12 +15953,17 @@ namespace Server.MirObjects
                 }
                 Fishing = false;
 
+                if(!FishFound)
+                {
+                    return;
+                }
+
                 if (FishingProgress > 99)
                 {
                     FishingChanceCounter++;
                 }
 
-                int getChance = FishingChance + (FishFound ? Envir.Random.Next(10, 24) : 0) + (FishingProgress < 99 ? flexibilityStat / 2 : 0);
+                int getChance = FishingChance + Envir.Random.Next(10, 24) + (FishingProgress > 50 ? flexibilityStat / 2 : 0);
                 getChance = Math.Min(100, Math.Max(0, getChance));
 
                 if (Envir.Random.Next(0, 100) <= getChance)
@@ -16991,6 +17024,7 @@ namespace Server.MirObjects
         {
             int highRate = int.MaxValue;
             UserItem dropItem = null;
+
             foreach (DropInfo drop in Envir.StrongboxDrops)
             {
                 int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate);
@@ -17001,6 +17035,12 @@ namespace Server.MirObjects
                     highRate = rate;
                     dropItem = Envir.CreateFreshItem(drop.Item);
                 }
+            }
+
+            if (dropItem == null)
+            {
+                ReceiveChat("Nothing found.", ChatType.System);
+                return;
             }
 
             if (dropItem.Info.Type == ItemType.Pets && dropItem.Info.Shape == 26)
@@ -17727,28 +17767,42 @@ namespace Server.MirObjects
             }
         }
 
-        public void MakeWeddingRing()
+        public bool CheckMakeWeddingRing()
         {
             if (Info.Married == 0)
             {
                 ReceiveChat(string.Format("You need to be married to make a Wedding Ring."), ChatType.System);
-                return;
+                return false;
             }
 
             if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
             {
                 ReceiveChat(string.Format("You need to wear a ring on your left finger to make a Wedding Ring."), ChatType.System);
-                return;
+                return false;
             }
 
             if (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1)
             {
                 ReceiveChat(string.Format("You're already wearing a Wedding Ring."), ChatType.System);
-                return;
+                return false;
             }
 
-            Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Married;
-            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+            if (Info.Equipment[(int)EquipmentSlot.RingL].Info.Unique != SpecialItemMode.None)
+            {
+                ReceiveChat(string.Format("You cannot use this type of ring."), ChatType.System);
+                return false;
+            }
+
+            return true;
+        }
+
+        public void MakeWeddingRing()
+        {
+            if (CheckMakeWeddingRing())
+            {
+                Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Married;
+                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+            }
         }
 
         public void ReplaceWeddingRing(ulong uniqueID)

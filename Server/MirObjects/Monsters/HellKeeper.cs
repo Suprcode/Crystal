@@ -64,6 +64,14 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
+
             if (attacker.Info.AI == 6)
                 EXPOwner = null;
             else if (attacker.Master != null)
@@ -112,6 +120,14 @@ namespace Server.MirObjects.Monsters
                 attacker.DamageWeapon();
 
             ShockTime = 0;
+
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
 
             if (Master != null && Master != attacker)
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)

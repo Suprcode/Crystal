@@ -303,7 +303,7 @@ namespace Server.MirObjects
             {
                 return !Dead && Envir.Time > MoveTime && Envir.Time > ActionTime && Envir.Time > ShockTime &&
                        (Master == null || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.Both) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
-                      && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
+                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
         protected virtual bool CanAttack
@@ -312,7 +312,7 @@ namespace Server.MirObjects
             {
                 return !Dead && Envir.Time > AttackTime && Envir.Time > ActionTime &&
                      (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
-                      && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
+                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
 
@@ -1879,6 +1879,14 @@ namespace Server.MirObjects
             if (BindingShotCenter) ReleaseBindingShot();
             ShockTime = 0;
 
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
+
             if (Master != null && Master != attacker)
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
                     attacker.BrownTime = Envir.Time + Settings.Minute;
@@ -2005,6 +2013,14 @@ namespace Server.MirObjects
             if (BindingShotCenter) ReleaseBindingShot();
             ShockTime = 0;
 
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
+
             if (attacker.Info.AI == 6 || attacker.Info.AI == 58)
                 EXPOwner = null;
 
@@ -2091,7 +2107,7 @@ namespace Server.MirObjects
                 if ((PoisonList[i].PType == PoisonType.Green) && (PoisonList[i].Value > p.Value)) return;//cant cast weak poison to cancel out strong poison
                 if ((PoisonList[i].PType != PoisonType.Green) && ((PoisonList[i].Duration - PoisonList[i].Time) > p.Duration)) return;//cant cast 1 second poison to make a 1minute poison go away!
                 if (p.PType == PoisonType.DelayedExplosion) return;
-                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis)) return;//prevents mobs from being perma frozen/slowed
+                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis) || (PoisonList[i].PType == PoisonType.LRParalysis)) return;//prevents mobs from being perma frozen/slowed
                 PoisonList[i] = p;
                 return;
             }
