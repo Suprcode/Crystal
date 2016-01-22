@@ -1069,7 +1069,11 @@ namespace Server.MirObjects
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                 {
                     CheckVisible(player, true);
-                    player.CheckStacked();
+                    if(player.CheckStacked())
+                    {
+                        player.StackingTime = Envir.Time + 1000;
+                        player.Stacking = true;
+                    }
                 }
             }
         }

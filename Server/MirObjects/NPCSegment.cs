@@ -624,7 +624,7 @@ namespace Server.MirObjects
                 case "REMOVESKILL":
                     if (parts.Length < 2) return;
                     
-                    acts.Add(new NPCActions(ActionType.GiveSkill, parts[1]));
+                    acts.Add(new NPCActions(ActionType.RemoveSkill, parts[1]));
                     break;
 
                 //cant use stored var
@@ -1652,10 +1652,7 @@ namespace Server.MirObjects
                         }
                         break;
                     case CheckType.CheckWeddingRing:
-                        if ((player.Info.Equipment[(int)EquipmentSlot.RingL] == null) || (player.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1))
-                        {
-                            failed = true;
-                        }
+                        failed = !player.CheckMakeWeddingRing();
                         break;
                     case CheckType.CheckPet:
 

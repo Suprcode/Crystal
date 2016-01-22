@@ -417,6 +417,7 @@ namespace Client.MirObjects
                     DrawColour = Color.Blue;
                     break;
                 case PoisonType.Paralysis:
+                case PoisonType.LRParalysis:
                     DrawColour = Color.Gray;
                     break;
             }

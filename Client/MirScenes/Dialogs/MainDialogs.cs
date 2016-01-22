@@ -671,9 +671,14 @@ namespace Client.MirScenes.Dialogs
                             Settings.LevelEffect = !Settings.LevelEffect;
                         }
 
+                        if (msg.ToUpper() == "@TARGETDEAD")
+                        {
+                            Settings.TargetDead = !Settings.TargetDead;
+                        }
+
                         Network.Enqueue(new C.Chat
                         {
-                            Message = msg,
+                            Message = msg
                         });
 
                         if (ChatTextBox.Text[0] == '/')

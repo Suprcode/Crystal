@@ -1196,8 +1196,8 @@ namespace Server.MirEnvir
                                 MapObject target = cell.Objects[i];
                                 if (target.Race != ObjectType.Monster) continue;
                                 //Only targets
-                                if (!target.IsAttackTarget(player) || player.Level + 10 < target.Level) continue;
-                                target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
+                                if (!target.IsAttackTarget(player) || player.Level + 3 < target.Level) continue;
+                                target.ApplyPoison(new Poison { PType = PoisonType.LRParalysis, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
                                 target.OperateTime = 0;
                                 train = true;
                             }

@@ -419,20 +419,23 @@ namespace Client.MirObjects
                         break;
                     case ItemSet.RedFlower:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 50);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP - 50);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP - 25);
                         break;
                     case ItemSet.Smash:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 3);
+                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
                         break;
                     case ItemSet.HwanDevil:
                         MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
+                        MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
                         break;
                     case ItemSet.Purity:
                         MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + 1);
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
-                        //holy +2;
+                        Holy = (byte)Math.Min(ushort.MaxValue, Holy + 3);
                         break;
                     case ItemSet.FiveString:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + ((MaxHP / 100) * 30));

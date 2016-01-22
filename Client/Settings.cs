@@ -124,7 +124,8 @@ namespace Client
             NameView = true,
             HPView = true,
             TransparentChat = false,
-            DisplayDamage = true;
+            DisplayDamage = true,
+            TargetDead = false;
 
 
         //Chat
@@ -206,6 +207,7 @@ namespace Client
             FontName = Reader.ReadString("Game", "FontName", FontName);
             TransparentChat = Reader.ReadBoolean("Game", "TransparentChat", TransparentChat);
             DisplayDamage = Reader.ReadBoolean("Game", "DisplayDamage", DisplayDamage);
+            TargetDead = Reader.ReadBoolean("Game", "TargetDead", TargetDead);
 
             //Chat
             ShowNormalChat = Reader.ReadBoolean("Chat", "ShowNormalChat", ShowNormalChat);
@@ -269,6 +271,7 @@ namespace Client
             Reader.Write("Game", "FontName", FontName);
             Reader.Write("Game", "TransparentChat", TransparentChat);
             Reader.Write("Game", "DisplayDamage", DisplayDamage);
+            Reader.Write("Game", "TargetDead", TargetDead);
 
             //Chat
             Reader.Write("Chat", "ShowNormalChat", ShowNormalChat);
