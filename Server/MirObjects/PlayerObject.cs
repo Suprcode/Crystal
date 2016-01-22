@@ -1264,7 +1264,7 @@ namespace Server.MirObjects
 
             CallDefaultNPC(DefaultNPCType.Die);
 
-            Report.Died();
+            Report.Died(CurrentMap.Info.FileName);
         }
 
         private void DeathDrop(MapObject killer)
@@ -15951,6 +15951,7 @@ namespace Server.MirObjects
                     Enqueue(GetFishInfo());
                     return;
                 }
+
                 Fishing = false;
 
                 if(!FishFound)
