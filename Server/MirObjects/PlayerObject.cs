@@ -244,7 +244,7 @@ namespace Server.MirObjects
 
         public uint NPCID;
         public NPCPage NPCPage;
-        public bool NPCSuccess;
+        public Dictionary<NPCSegment, bool> NPCSuccess = new Dictionary<NPCSegment, bool>();
         public bool NPCDelayed;
         public List<string> NPCSpeech = new List<string>();
         public Map NPCMoveMap;
@@ -12051,6 +12051,8 @@ namespace Server.MirObjects
                         if (bagItem == null || bagItem.Info != items[i].Info) continue;
 
                         if (bagItem.Count + count > bagItem.Info.StackSize) stackOffset++;
+
+                        break;
                     }
                 }
             }
@@ -13590,7 +13592,7 @@ namespace Server.MirObjects
 
        public void TalkMonster(uint objectID)
         {
-            TalkingMonster talkMonster = (TalkingMonster)FindObject(objectID, Globals.DataRange);
+            TalkingMonster talkMonster = FindObject(objectID, Globals.DataRange) as TalkingMonster;
 
             if (talkMonster == null) return;
 
@@ -14098,6 +14100,9 @@ namespace Server.MirObjects
 
         public void Awakening(ulong UniqueID, AwakeType type)
         {
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.AwakeningKey, StringComparison.CurrentCultureIgnoreCase))
+                return;
+
             if (type == AwakeType.None) return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -14156,6 +14161,9 @@ namespace Server.MirObjects
 
         public void DowngradeAwakening(ulong UniqueID)
         {
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.DowngradeKey, StringComparison.CurrentCultureIgnoreCase))
+                return;
+
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
                 UserItem item = Info.Inventory[i];
@@ -14195,6 +14203,9 @@ namespace Server.MirObjects
 
         public void DisassembleItem(ulong UniqueID)
         {
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.DisassembleKey, StringComparison.CurrentCultureIgnoreCase))
+                return;
+
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
                 UserItem item = Info.Inventory[i];
@@ -14240,6 +14251,9 @@ namespace Server.MirObjects
 
         public void ResetAddedItem(ulong UniqueID)
         {
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ResetKey, StringComparison.CurrentCultureIgnoreCase))
+                return;
+
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
                 UserItem item = Info.Inventory[i];
@@ -16103,7 +16117,19 @@ namespace Server.MirObjects
 
             QuestInfo info = Envir.QuestInfoList.FirstOrDefault(d => d.Index == index);
 
-            if (info == null || !info.CanAccept(this))
+            NPCObject npc = null;
+
+            for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
+            {
+                if (CurrentMap.NPCs[i].ObjectID != info.NpcIndex) continue;
+
+                if (!Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange)) break;
+                npc = CurrentMap.NPCs[i];
+                break;
+            }
+            if (npc == null || !npc.VisibleLog[Info.Index] || !npc.Visible) return;
+
+            if (!info.CanAccept(this))
             {
                 canAccept = false;
             }
@@ -16186,6 +16212,18 @@ namespace Server.MirObjects
             QuestProgressInfo quest = CurrentQuests.FirstOrDefault(e => e.Info.Index == questIndex);
 
             if (quest == null || !quest.Completed) return;
+
+            NPCObject npc = null;
+
+            for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
+            {
+                if (CurrentMap.NPCs[i].ObjectID != quest.Info.FinishNpcIndex) continue;
+
+                if (!Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange)) break;
+                npc = CurrentMap.NPCs[i];
+                break;
+            }
+            if (npc == null || !npc.VisibleLog[Info.Index] || !npc.Visible) return;
 
             List<UserItem> rewardItems = new List<UserItem>();
 
@@ -17231,6 +17269,8 @@ namespace Server.MirObjects
 
         public void AddMemo(int index, string memo)
         {
+            if (memo.Length > 200) return;
+
             FriendInfo friend = Info.Friends.FirstOrDefault(e => e.Index == index);
 
             if (friend == null)
@@ -17412,6 +17452,8 @@ namespace Server.MirObjects
                 index = i;
                 break;
             }
+
+            if (index == -1) return;
 
             if (Info.Inventory[index].RefineAdded != 0)
             {
@@ -17680,6 +17722,8 @@ namespace Server.MirObjects
                 break;
             }
 
+            if (index == -1) return;
+
             if (Info.Inventory[index].RefineAdded == 0)
             {
                 ReceiveChat(String.Format("{0} doesn't need to be checked as it hasn't been refined yet.", Info.Inventory[index].FriendlyName), ChatType.System);
@@ -17836,6 +17880,8 @@ namespace Server.MirObjects
                 index = i;
                 break;
             }
+
+            if (index == -1) return;
 
             temp = Info.Inventory[index];
 
@@ -18350,6 +18396,8 @@ namespace Server.MirObjects
 
         public void MentorReply(bool accept)
         {
+            if (MentorRequest == null) return;
+
             if (!accept)
             {
                 MentorRequest.ReceiveChat(string.Format("{0} has refused to Mentor you.", Info.Name), ChatType.System);

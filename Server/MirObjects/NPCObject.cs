@@ -628,22 +628,20 @@ namespace Server.MirObjects
 
                     bool found = false;
 
-                    if (player.NPCSuccess)
+                    foreach (NPCSegment segment in player.NPCPage.SegmentList)
                     {
-                        foreach (NPCSegment segment in player.NPCPage.SegmentList)
-                        {
-                            if (segment.Buttons.Any(c => c.ToUpper().Contains(key))) found = true;
-                        }
-                    }
-                    else
-                    {
-                        foreach (NPCSegment segment in player.NPCPage.SegmentList)
-                        {
-                            if (!segment.ElseButtons.Any(c => c.ToUpper().Contains(key))) found = true;
-                        }
+                        bool result;
+                        if (!player.NPCSuccess.TryGetValue(segment, out result)) break; //no result for segement ?
+
+                        if ((result ? segment.Buttons : segment.ElseButtons).Any(s => s.ToUpper() == key)) //key is already uppercase
+                            found = true;
                     }
 
-                    if (!found) return;
+                    if (!found)
+                    {
+                        SMain.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' ", player.Name, key));
+                        return;
+                    }
                 }
             }
             else
@@ -664,6 +662,7 @@ namespace Server.MirObjects
                 if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
 
                 player.NPCSpeech = new List<string>();
+                player.NPCSuccess.Clear();
 
                 foreach (NPCSegment segment in page.SegmentList)
                 {
@@ -693,9 +692,10 @@ namespace Server.MirObjects
         private void ProcessSegment(PlayerObject player, NPCPage page, NPCSegment segment)
         {
             player.NPCID = ObjectID;
-            player.NPCSuccess = segment.Check(player);
+            player.NPCSuccess.Add(segment, segment.Check(player));
             player.NPCPage = page;
         }
+
         private void ProcessSpecial(PlayerObject player, NPCPage page)
         {
             List<UserItem> allGoods = new List<UserItem>();
