@@ -4142,12 +4142,23 @@ namespace Client.MirObjects
 
             DrawBody();
 
-            DrawHead();
-
-            if (this != User)
+            if (Direction == MirDirection.Up || Direction == MirDirection.UpLeft || Direction == MirDirection.UpRight || Direction == MirDirection.Right || Direction == MirDirection.Left)
             {
-                DrawWings();
+                DrawHead();
+                if (this != User)
+                {
+                    DrawWings();
+                }
             }
+            else
+            {
+                if (this != User)
+                {
+                    DrawWings();
+                }
+                DrawHead();
+            }
+            
 
             if (!RidingMount)
             {
@@ -4161,11 +4172,6 @@ namespace Client.MirObjects
             }
 
             DXManager.SetOpacity(oldOpacity);
-
-            //if (Settings.Effect && this != User)
-            //{
-            //    DrawEffects();  
-            //}
         }
 
         public override void DrawBehindEffects(bool effectsEnabled)

@@ -8588,8 +8588,21 @@ namespace Client.MirScenes
             //MapObject.User.DrawMount();
 
             MapObject.User.DrawBody();
-            MapObject.User.DrawHead();
-            MapObject.User.DrawWings();
+
+            if ((MapObject.User.Direction == MirDirection.Up) ||
+                (MapObject.User.Direction == MirDirection.UpLeft) ||
+                (MapObject.User.Direction == MirDirection.UpRight) ||
+                (MapObject.User.Direction == MirDirection.Right) ||
+                (MapObject.User.Direction == MirDirection.Left))
+            {
+                MapObject.User.DrawHead();
+                MapObject.User.DrawWings();
+            }
+            else
+            {
+                MapObject.User.DrawWings();
+                MapObject.User.DrawHead();
+            }
 
             DXManager.SetOpacity(oldOpacity);
 
