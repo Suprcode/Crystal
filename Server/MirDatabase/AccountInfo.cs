@@ -28,6 +28,7 @@ namespace Server.MirDatabase
         public bool Banned;
         public string BanReason = string.Empty;
         public DateTime ExpiryDate;
+        public int WrongPasswordCount;
 
         public string LastIP = string.Empty;
         public DateTime LastDate;

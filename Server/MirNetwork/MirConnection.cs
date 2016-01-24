@@ -1040,6 +1040,11 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
+            if (p.Key.Length > 30) //No NPC Key should be that long.
+            {
+                SendDisconnect(2);
+                return;
+            }
 
             if (p.ObjectID == Player.DefaultNPC.ObjectID)
             {

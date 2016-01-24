@@ -2084,9 +2084,24 @@ namespace Server.MirEnvir
 
             if (String.CompareOrdinal(account.Password, p.Password) != 0)
             {
+                if (account.WrongPasswordCount++ >= 5)
+                {
+                    account.Banned = true;
+                    account.BanReason = "Too many Wrong Login Attempts.";
+                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
+
+                    c.Enqueue(new ServerPackets.LoginBanned
+                    {
+                        Reason = account.BanReason,
+                        ExpiryDate = account.ExpiryDate
+                    });
+                    return;
+                }
+
                 c.Enqueue(new ServerPackets.Login { Result = 4 });
                 return;
             }
+            account.WrongPasswordCount = 0;
 
             lock (AccountLock)
             {

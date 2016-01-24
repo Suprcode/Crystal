@@ -200,9 +200,16 @@ namespace Server.MirEnvir
             RecordAction(action);
         }
 
-        public void Died()
+        public void Died(string map = "")
         {
-            Action action = new Action { Task = "Died" };
+            string info = "";
+
+            if(!string.IsNullOrEmpty(map))
+            {
+                string.Format("Map {0}", map);
+            }
+
+            Action action = new Action { Task = "Died", AddedInfo = info };
 
             RecordAction(action);
         }
