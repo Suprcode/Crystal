@@ -146,6 +146,7 @@
     <Compile Include="Config.designer.cs">
       <DependentUpon>Config.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyBindSettings.cs" />
     <Compile Include="MirControls\MirGameShopCell.cs" />
     <Compile Include="MirControls\MirAmountBox.cs" />
     <Compile Include="MirControls\MirAnimatedButton.cs" />

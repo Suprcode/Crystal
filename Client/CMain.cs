@@ -39,6 +39,7 @@ namespace Client
         public static int FPS;
 
         public static bool Shift, Alt, Ctrl, Tilde;
+        public static KeyBindSettings InputKeys = new KeyBindSettings();
 
         public CMain()
         {
@@ -166,9 +167,23 @@ namespace Client
             if (e.KeyCode == Keys.Oem8)
                 CMain.Tilde = false;
 
-            if (e.KeyCode == Keys.PrintScreen)
+            foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
+            {
+                if (KeyCheck.function != KeybindOptions.Screenshot) continue;
+                if (KeyCheck.Key != e.KeyCode)
+                    continue;
+                if ((KeyCheck.RequireAlt != 2) && (KeyCheck.RequireAlt != (Alt ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireShift != 2) && (KeyCheck.RequireShift != (Shift ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireCtrl != 2) && (KeyCheck.RequireCtrl != (Ctrl ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireTilde != 2) && (KeyCheck.RequireTilde != (Tilde ? 1 : 0)))
+                    continue;
                 Program.Form.CreateScreenShot();
+                break;
 
+            }
             try
             {
                 if (MirScene.ActiveScene != null)
