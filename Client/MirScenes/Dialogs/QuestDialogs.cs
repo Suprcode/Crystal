@@ -895,13 +895,15 @@ namespace Client.MirScenes.Dialogs
             Show();
         }
 
-        public void AddQuest(ClientQuestProgress quest)
+        public void AddQuest(ClientQuestProgress quest, bool New = false)
         {
             if (TrackedQuestsIds.Any(d => d == quest.Id) || TrackedQuestsIds.Count >= 5) return;
 
             TrackedQuestsIds.Add(quest.Id);
 
             DisplayQuests();
+            if (!New)
+                UpdateTrackedQuests();
         }
 
         public void RemoveQuest(ClientQuestProgress quest)
@@ -909,6 +911,18 @@ namespace Client.MirScenes.Dialogs
             TrackedQuestsIds.Remove(quest.Id);
 
             DisplayQuests();
+            UpdateTrackedQuests();
+        }
+
+        public void UpdateTrackedQuests()
+        {
+            for (int i = 0; i < TrackedQuestsIds.Count; i++)
+            {
+                if (i < Settings.TrackedQuests.Length)
+                    Settings.TrackedQuests[i] = TrackedQuestsIds[i];
+            }
+            Settings.Save();
+            CMain.InputKeys.Save();
         }
 
         public void Hide()
@@ -1725,6 +1739,7 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = 0; i < Quests.Count; i++)
             {
+                bool Track = Settings.TrackedQuests.Contains(Quests[i].Id) ? true : false;
                 QuestSingleQuestItem singleQuest = new QuestSingleQuestItem(Quests[i])
                 {
                     Parent = this,

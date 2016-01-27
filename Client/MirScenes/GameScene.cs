@@ -82,7 +82,8 @@ namespace Client.MirScenes
         public TradeDialog TradeDialog;
         public GuestTradeDialog GuestTradeDialog;
 
-        public SkillBarDialog SkillBarDialog;
+        //public SkillBarDialog SkillBarDialog;
+        public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
         public ChatOptionDialog ChatOptionDialog;
         public ChatNoticeDialog ChatNoticeDialog;
 
@@ -217,7 +218,11 @@ namespace Client.MirScenes
             TradeDialog = new TradeDialog { Parent = this, Visible = false };
             GuestTradeDialog = new GuestTradeDialog { Parent = this, Visible = false };
 
-            SkillBarDialog = new SkillBarDialog { Parent = this, Visible = false };
+            //SkillBarDialog = new SkillBarDialog { Parent = this, Visible = false };
+            SkillBarDialog Bar1 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 0 };
+            SkillBarDialogs.Add(Bar1);
+            SkillBarDialog Bar2 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 1 };
+            SkillBarDialogs.Add(Bar2);
             ChatOptionDialog = new ChatOptionDialog { Parent = this, Visible = false };
             ChatNoticeDialog = new ChatNoticeDialog { Parent = this, Visible = false };
 
@@ -305,232 +310,228 @@ namespace Client.MirScenes
         }
         private void GameScene_KeyDown(object sender, KeyEventArgs e)
         {
-            bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
-            bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
+            //bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
+            //bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
 
-            switch (e.KeyCode)
+            foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
             {
-                case Keys.F1:
-                    UseSpell(altBind ? 9 : 1);
-                    break;
-                case Keys.F2:
-                    UseSpell(altBind ? 10 : 2);
-                    break;
-                case Keys.F3:
-                    UseSpell(altBind ? 11 : 3);
-                    break;
-                case Keys.F4:
-                    UseSpell(altBind ? 12 : 4);
-                    break;
-                case Keys.F5:
-                    UseSpell(altBind ? 13 : 5);
-                    break;
-                case Keys.F6:
-                    UseSpell(altBind ? 14 : 6);
-                    break;
-                case Keys.F7:
-                    UseSpell(altBind ? 15 : 7);
-                    break;
-                case Keys.F8:
-                    UseSpell(altBind ? 16 : 8);
-                    break;
-                case Keys.I:
-                case Keys.F9:
-                    if (!InventoryDialog.Visible) InventoryDialog.Show();
-                    else InventoryDialog.Hide();
-                    break;
-                case Keys.C:
-                case Keys.F10:
-                    if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
-                    {
-                        CharacterDialog.Show();
-                        CharacterDialog.ShowCharacterPage();
-                    }
-                    else CharacterDialog.Hide();
-                    break;
-                case Keys.S:
-                case Keys.F11:
-                    if (!CharacterDialog.Visible || !CharacterDialog.SkillPage.Visible)
-                    {
-                        CharacterDialog.Show();
-                        CharacterDialog.ShowSkillPage();
-                    }
-                    else CharacterDialog.Hide();
-                    break;
-                case Keys.E:
-                    if (!IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Show();
-                    else IntelligentCreatureDialog.Hide();
-                    break;
+                if (KeyCheck.Key == Keys.None)
+                    continue;
+                if (KeyCheck.Key != e.KeyCode)
+                    continue;
+                if ((KeyCheck.RequireAlt != 2) && (KeyCheck.RequireAlt != (CMain.Alt ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireShift != 2) && (KeyCheck.RequireShift != (CMain.Shift ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireCtrl != 2) && (KeyCheck.RequireCtrl != (CMain.Ctrl ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireTilde != 2) && (KeyCheck.RequireTilde != (CMain.Tilde ? 1 : 0)))
+                    continue;
+                //now run the real code
+                switch (KeyCheck.function)
+                {
+                    case KeybindOptions.Bar1Skill1: UseSpell(1); break;
+                    case KeybindOptions.Bar1Skill2: UseSpell(2); break;
+                    case KeybindOptions.Bar1Skill3: UseSpell(3); break;
+                    case KeybindOptions.Bar1Skill4: UseSpell(4); break;
+                    case KeybindOptions.Bar1Skill5: UseSpell(5); break;
+                    case KeybindOptions.Bar1Skill6: UseSpell(6); break;
+                    case KeybindOptions.Bar1Skill7: UseSpell(7); break;
+                    case KeybindOptions.Bar1Skill8: UseSpell(8); break;
+                    case KeybindOptions.Bar2Skill1: UseSpell(9); break;
+                    case KeybindOptions.Bar2Skill2: UseSpell(10); break;
+                    case KeybindOptions.Bar2Skill3: UseSpell(11); break;
+                    case KeybindOptions.Bar2Skill4: UseSpell(12); break;
+                    case KeybindOptions.Bar2Skill5: UseSpell(13); break;
+                    case KeybindOptions.Bar2Skill6: UseSpell(14); break;
+                    case KeybindOptions.Bar2Skill7: UseSpell(15); break;
+                    case KeybindOptions.Bar2Skill8: UseSpell(16); break;
+                    case KeybindOptions.Inventory:
+                    case KeybindOptions.Inventory2:
+                        if (!InventoryDialog.Visible) InventoryDialog.Show();
+                        else InventoryDialog.Hide();
+                        break;
+                    case KeybindOptions.Equipment:
+                    case KeybindOptions.Equipment2:
+                        if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
+                        {
+                            CharacterDialog.Show();
+                            CharacterDialog.ShowCharacterPage();
+                        }
+                        else CharacterDialog.Hide();
+                        break;
+                    case KeybindOptions.Skills:
+                    case KeybindOptions.Skills2:
+                        if (!CharacterDialog.Visible || !CharacterDialog.SkillPage.Visible)
+                        {
+                            CharacterDialog.Show();
+                            CharacterDialog.ShowSkillPage();
+                        }
+                        else CharacterDialog.Hide();
+                        break;
+                    case KeybindOptions.Creature:
+                        if (!IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Show();
+                        else IntelligentCreatureDialog.Hide();
+                        break;
+                    case KeybindOptions.MountWindow:
+                        if (!MountDialog.Visible) MountDialog.Show();
+                        else MountDialog.Hide();
+                        break;
 
-                case Keys.J:
-                    if (!MountDialog.Visible) MountDialog.Show();
-                    else MountDialog.Hide();
-                    break;
+                    case KeybindOptions.GameShop:
+                        if (!GameShopDialog.Visible) GameShopDialog.Show();
+                        else GameShopDialog.Hide();
+                        break;
+                    case KeybindOptions.Fishing:
+                        if (!FishingDialog.Visible) FishingDialog.Show();
+                        else FishingDialog.Hide();
+                        break;
+                    case KeybindOptions.Skillbar:
+                        if (!Settings.SkillBar)
+                            foreach (SkillBarDialog Bar in SkillBarDialogs)
+                                Bar.Show();
+                        else
+                            foreach (SkillBarDialog Bar in SkillBarDialogs)
+                                Bar.Hide();
+                        break;
+                    case KeybindOptions.Mount:
+                        if (GameScene.Scene.MountDialog.CanRide())
+                            GameScene.Scene.MountDialog.Ride();
+                        break;
+                    case KeybindOptions.Mentor:
+                        if (!MentorDialog.Visible) MentorDialog.Show();
+                        else MentorDialog.Hide();
+                        break;
+                    case KeybindOptions.Relationship:
+                        if (!RelationshipDialog.Visible) RelationshipDialog.Show();
+                        else RelationshipDialog.Hide();
+                        break;
+                    case KeybindOptions.Friends:
+                        if (!FriendDialog.Visible) FriendDialog.Show();
+                        else FriendDialog.Hide();
+                        break;
+                    case KeybindOptions.Guilds:
+                        if (!GuildDialog.Visible) GuildDialog.Show();
+                        else
+                        {
+                            GuildDialog.Hide();
+                        }
+                        break;
 
-                case Keys.N:
-                    if (!FishingDialog.Visible) FishingDialog.Show();
-                    else FishingDialog.Hide();
-                    break;
 
-                case Keys.R:
-                    if (!SkillBarDialog.Visible) SkillBarDialog.Show();
-                    else SkillBarDialog.Hide();
-                    break;
-                    
-                case Keys.M:
-                //case Keys.Space:
-                    if (GameScene.Scene.MountDialog.CanRide())
-                        GameScene.Scene.MountDialog.Ride();
-                    break;
-
-                case Keys.Y:
-                    if (!GameShopDialog.Visible) GameShopDialog.Show();
-                    else GameShopDialog.Hide();
-                    break;
-
-                case Keys.W:
-                    if (!MentorDialog.Visible) MentorDialog.Show();
-                    else MentorDialog.Hide();
-                    break;
-
-                case Keys.L:
-                    if (!RelationshipDialog.Visible) RelationshipDialog.Show();
-                    else RelationshipDialog.Hide();
-                    break;
-
-                case Keys.F:
-                    if (!FriendDialog.Visible) FriendDialog.Show();
-                    else FriendDialog.Hide();
-                    break;
-
-                case Keys.G:
-                    if (!GuildDialog.Visible) GuildDialog.Show();
-                    else GuildDialog.Hide();
-                    break;
-
-                case Keys.Q:
-                    if (CMain.Alt)
-                    {
+                    case KeybindOptions.Quests:
+                        if (!QuestLogDialog.Visible) QuestLogDialog.Show();
+                        else QuestLogDialog.Hide();
+                        break;
+                    case KeybindOptions.Exit:
                         QuitGame();
                         return;
-                    }
-                    if (!QuestLogDialog.Visible) QuestLogDialog.Show();
-                    else QuestLogDialog.Hide();
-                    break;
 
-                case Keys.Escape:
-                    InventoryDialog.Hide();
-                    CharacterDialog.Hide();
-                    OptionDialog.Hide();
-                    MenuDialog.Hide();
-                    if(NPCDialog.Visible) NPCDialog.Hide();
-                    HelpDialog.Hide();
-                    KeyboardLayoutDialog.Hide();
-                    RankingDialog.Hide();
-                    IntelligentCreatureDialog.Hide();
-                    IntelligentCreatureOptionsDialog.Hide();
-                    IntelligentCreatureOptionsGradeDialog.Hide();
-                    MountDialog.Hide();
-                    FishingDialog.Hide();
-                    FriendDialog.Hide();
-                    RelationshipDialog.Hide();
-                    MentorDialog.Hide();
-                    GameShopDialog.Hide();
-                    GroupDialog.Hide();
-                    GuildDialog.Hide();
-                    InspectDialog.Hide();
-                    StorageDialog.Hide();
-                    TrustMerchantDialog.Hide();
-                    //CharacterDuraPanel.Hide();
-                    QuestListDialog.Hide();
-                    QuestDetailDialog.Hide();
-                    QuestLogDialog.Hide();
-                    NPCAwakeDialog.Hide();
-                    RefineDialog.Hide();
-                    BigMapDialog.Visible = false;
-                    if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
-                    MailComposeLetterDialog.Hide();
-                    MailComposeParcelDialog.Hide();
-                    MailListDialog.Hide();
-                    MailReadLetterDialog.Hide();
-                    MailReadParcelDialog.Hide();
+                    case KeybindOptions.Closeall:
+                        InventoryDialog.Hide();
+                        CharacterDialog.Hide();
+                        OptionDialog.Hide();
+                        MenuDialog.Hide();
+                        if (NPCDialog.Visible) NPCDialog.Hide();
+                        HelpDialog.Hide();
+                        KeyboardLayoutDialog.Hide();
+                        RankingDialog.Hide();
+                        IntelligentCreatureDialog.Hide();
+                        IntelligentCreatureOptionsDialog.Hide();
+                        IntelligentCreatureOptionsGradeDialog.Hide();
+                        MountDialog.Hide();
+                        FishingDialog.Hide();
+                        FriendDialog.Hide();
+                        RelationshipDialog.Hide();
+                        MentorDialog.Hide();
+                        GameShopDialog.Hide();
+                        GroupDialog.Hide();
+                        GuildDialog.Hide();
+                        InspectDialog.Hide();
+                        StorageDialog.Hide();
+                        TrustMerchantDialog.Hide();
+                        //CharacterDuraPanel.Hide();
+                        QuestListDialog.Hide();
+                        QuestDetailDialog.Hide();
+                        QuestLogDialog.Hide();
+                        NPCAwakeDialog.Hide();
+                        RefineDialog.Hide();
+                        BigMapDialog.Visible = false;
+                        if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+                        MailComposeLetterDialog.Hide();
+                        MailComposeParcelDialog.Hide();
+                        MailListDialog.Hide();
+                        MailReadLetterDialog.Hide();
+                        MailReadParcelDialog.Hide();
 
 
 
-                    GameScene.Scene.DisposeItemLabel();
-                    break;
-                case Keys.O:
-                case Keys.F12:
-                    if (!OptionDialog.Visible) OptionDialog.Show();
-                    else OptionDialog.Hide();
-                    break;
-                case Keys.P:
-                    if (!GroupDialog.Visible) GroupDialog.Show();
-                    else GroupDialog.Hide();
-                    break;
-                case Keys.Z:
-                    if (CMain.Ctrl) BeltDialog.Flip();
-                    else
-                    {
+                        GameScene.Scene.DisposeItemLabel();
+                        break;
+                    case KeybindOptions.Options:
+                    case KeybindOptions.Options2:
+                        if (!OptionDialog.Visible) OptionDialog.Show();
+                        else OptionDialog.Hide();
+                        break;
+                    case KeybindOptions.Group:
+                        if (!GroupDialog.Visible) GroupDialog.Show();
+                        else GroupDialog.Hide();
+                        break;
+                    case KeybindOptions.Belt:
                         if (!BeltDialog.Visible) BeltDialog.Show();
                         else BeltDialog.Hide();
-                    }
-                    break;
-                case Keys.Tab:
-                    if (CMain.Time > PickUpTime)
-                    {
-                        PickUpTime = CMain.Time + 200;
-                        Network.Enqueue(new C.PickUp());
-                    }
-                    break;
-                case Keys.NumPad1:
-                case Keys.D1:
-                    if (CMain.Shift) return;
-                    BeltDialog.Grid[0].UseItem();
-                    break;
-                case Keys.NumPad2:
-                case Keys.D2:
-                    if (CMain.Shift) return;
-                    BeltDialog.Grid[1].UseItem();
-                    break;
-                case Keys.NumPad3:
-                case Keys.D3:
-                    if (CMain.Shift) return;
-                    BeltDialog.Grid[2].UseItem();
-                    break;
-                case Keys.NumPad4:
-                case Keys.D4:
-                    if (CMain.Shift) return;
-                    BeltDialog.Grid[3].UseItem();
-                    break;
-                case Keys.NumPad5:
-                case Keys.D5:
-                    if (CMain.Shift) return;
-                    BeltDialog.Grid[4].UseItem();
-                    break;
-                case Keys.NumPad6:
-                case Keys.D6:
-                    if (CMain.Shift) return;
-                    BeltDialog.Grid[5].UseItem();
-                    break;
-                case Keys.X:
-                    //IntelligentCreature mousepickup mode              MapObject.MouseObject.CurrentLocation
-                    if (!CMain.Ctrl && !CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
-                    if (!CMain.Alt) break;
-                    LogOut();
-                    break;
-                case Keys.V:
-                    MiniMapDialog.Toggle();
-                    break;
-                case Keys.B:
-                    BigMapDialog.Toggle();
-                    break;
-                case Keys.T:
-                    Network.Enqueue(new C.TradeRequest());
-                    break;
-                case Keys.A:
-                    if (CMain.Ctrl)
-                    {
+                        break;
+                    case KeybindOptions.BeltFlip:
+                        BeltDialog.Flip();
+                        break;
+                    case KeybindOptions.Pickup:
+                        if (CMain.Time > PickUpTime)
+                        {
+                            PickUpTime = CMain.Time + 200;
+                            Network.Enqueue(new C.PickUp());
+                        }
+                        break;
+                    case KeybindOptions.Belt1:
+                    case KeybindOptions.Belt1Alt:
+                        BeltDialog.Grid[0].UseItem();
+                        break;
+                    case KeybindOptions.Belt2:
+                    case KeybindOptions.Belt2Alt:
+                        BeltDialog.Grid[1].UseItem();
+                        break;
+                    case KeybindOptions.Belt3:
+                    case KeybindOptions.Belt3Alt:
+                        BeltDialog.Grid[2].UseItem();
+                        break;
+                    case KeybindOptions.Belt4:
+                    case KeybindOptions.Belt4Alt:
+                        BeltDialog.Grid[3].UseItem();
+                        break;
+                    case KeybindOptions.Belt5:
+                    case KeybindOptions.Belt5Alt:
+                        BeltDialog.Grid[4].UseItem();
+                        break;
+                    case KeybindOptions.Belt6:
+                    case KeybindOptions.Belt6Alt:
+                        BeltDialog.Grid[5].UseItem();
+                        break;
+
+                    case KeybindOptions.CreaturePickup:
+                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
+                        break;
+                    case KeybindOptions.Logout:
+                        LogOut();
+                        break;
+                    case KeybindOptions.Minimap:
+                        MiniMapDialog.Toggle();
+                        break;
+                    case KeybindOptions.Bigmap:
+                        BigMapDialog.Toggle();
+                        break;
+                    case KeybindOptions.Trade:
+                        Network.Enqueue(new C.TradeRequest());
+                        break;
+                    case KeybindOptions.ChangePetmode:
                         switch (PMode)
                         {
                             case PetMode.Both:
@@ -546,13 +547,23 @@ namespace Client.MirScenes
                                 Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
                                 return;
                         }
-                    }
-
-                    if (!CMain.Alt) Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
-                    break;
-                case Keys.H:
-                    if (CMain.Ctrl)
-                    {
+                        break;
+                    case KeybindOptions.PetmodeBoth:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
+                        return;
+                    case KeybindOptions.PetmodeMoveonly:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
+                        return;
+                    case KeybindOptions.PetmodeAttackonly:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
+                        return;
+                    case KeybindOptions.PetmodeNone:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
+                        return;
+                    case KeybindOptions.CreatureAutoPickup://semiauto!
+                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
+                        break;
+                    case KeybindOptions.ChangeAttackmode:
                         switch (AMode)
                         {
                             case AttackMode.Peace:
@@ -574,40 +585,61 @@ namespace Client.MirScenes
                                 Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
                                 return;
                         }
-                    }
-                    if (!HelpDialog.Visible) HelpDialog.Show();
-                    else HelpDialog.Hide();
-                    break;
-                case Keys.D:
-                    MapControl.AutoRun = !MapControl.AutoRun;
-                    break;
-                case Keys.Insert:
-                    if (!MainDialog.Visible)
-                    {
-                        MainDialog.Show();
-                        ChatDialog.Show();
-                        BeltDialog.Show();
-                        ChatControl.Show();
-                        MiniMapDialog.Show();
-                        CharacterDuraPanel.Show();
-                        DuraStatusPanel.Show();
-                    }
-                    else
-                    {
-                        MainDialog.Hide();
-                        ChatDialog.Hide();
-                        BeltDialog.Hide();
-                        ChatControl.Hide();
-                        MiniMapDialog.Hide();
-                        CharacterDuraPanel.Hide();
-                        DuraStatusPanel.Hide();
-                    }
-                    break;
+                        break;
+                    case KeybindOptions.AttackmodePeace:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
+                        return;
+                    case KeybindOptions.AttackmodeGroup:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
+                        return;
+                    case KeybindOptions.AttackmodeGuild:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
+                        return;
+                    case KeybindOptions.AttackmodeEnemyguild:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
+                        return;
+                    case KeybindOptions.AttackmodeRedbrown:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
+                        return;
+                    case KeybindOptions.AttackmodeAll:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
+                        return;
 
+                    case KeybindOptions.Help:
+                        if (!HelpDialog.Visible) HelpDialog.Show();
+                        else HelpDialog.Hide();
+                        break;
+                    case KeybindOptions.Autorun:
+                        MapControl.AutoRun = !MapControl.AutoRun;
+                        break;
+                    case KeybindOptions.Cameramode:
+
+                        if (!MainDialog.Visible)
+                        {
+                            MainDialog.Show();
+                            ChatDialog.Show();
+                            BeltDialog.Show();
+                            ChatControl.Show();
+                            MiniMapDialog.Show();
+                            CharacterDuraPanel.Show();
+                            DuraStatusPanel.Show();
+                        }
+                        else
+                        {
+                            MainDialog.Hide();
+                            ChatDialog.Hide();
+                            BeltDialog.Hide();
+                            ChatControl.Hide();
+                            MiniMapDialog.Hide();
+                            CharacterDuraPanel.Hide();
+                            DuraStatusPanel.Hide();
+                        }
+                        break;
+                }
             }
         }
 
-        private void UseSpell(int key)
+        public void UseSpell(int key)
         {
             if (User.RidingMount || User.Fishing) return;
 
@@ -915,7 +947,8 @@ namespace Client.MirScenes
             InventoryDialog.Process();
             GameShopDialog.Process();
             MiniMapDialog.Process();
-            SkillBarDialog.Process();
+            foreach (SkillBarDialog Bar in Scene.SkillBarDialogs)
+                Bar.Process();
 
             DialogProcess();
 
@@ -926,12 +959,25 @@ namespace Client.MirScenes
         {
             if(Settings.SkillBar)
             {
-                Scene.SkillBarDialog.Show();
+                foreach (SkillBarDialog Bar in Scene.SkillBarDialogs)
+                    Bar.Show();
             }
             else
             {
-                Scene.SkillBarDialog.Hide();
+                foreach (SkillBarDialog Bar in Scene.SkillBarDialogs)
+                    Bar.Hide();
             }
+
+            for (int i = 0; i < Scene.SkillBarDialogs.Count; i++)
+            {
+                if (i * 2 > Settings.SkillbarLocation.Length) break;
+                if ((Settings.SkillbarLocation[i, 0] > Settings.Resolution - 100) || (Settings.SkillbarLocation[i, 1] > 700)) continue;//in theory you'd want the y coord to be validated based on resolution, but since client only allows for wider screens and not higher :(
+                Scene.SkillBarDialogs[i].Location = new Point(Settings.SkillbarLocation[i, 0], Settings.SkillbarLocation[i, 1]);
+            }
+            if (Settings.DuraView)
+                CharacterDuraPanel.Show();
+            else
+                CharacterDuraPanel.Hide();
         }
 
         public override void ProcessPacket(Packet p)
@@ -1799,6 +1845,8 @@ namespace Client.MirScenes
             Credit = p.Credit;
 
             InventoryDialog.RefreshInventory();
+            foreach (SkillBarDialog Bar in SkillBarDialogs)
+                Bar.Update();
         }
         private void UserLocation(S.UserLocation p)
         {
@@ -2518,6 +2566,10 @@ namespace Client.MirScenes
 
                     foreach (ClientQuestProgress quest in User.CurrentQuests)
                         BindQuest(quest);
+                    if (Settings.TrackedQuests.Contains(p.Quest.Id))
+                    {
+                        GameScene.Scene.QuestTrackingDialog.AddQuest(p.Quest, true);
+                    }
 
                     if (p.TrackQuest)
                     {
@@ -3550,12 +3602,16 @@ namespace Client.MirScenes
 
             User.Magics.Add(magic);
             User.RefreshStats();
+            foreach (SkillBarDialog Bar in SkillBarDialogs)
+                Bar.Update();
         }
 
         private void RemoveMagic(S.RemoveMagic p)
         {
             User.Magics.RemoveAt(p.PlaceId);
             User.RefreshStats();
+            foreach (SkillBarDialog Bar in SkillBarDialogs)
+                Bar.Update();
         }
 
         private void MagicLeveled(S.MagicLeveled p)
