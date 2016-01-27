@@ -101,12 +101,12 @@ namespace Client
 
     public class KeyBindSettings
     {
-        private static InIReader Reader = new InIReader(@".\KeyBibnds.ini");
+        private static InIReader Reader = new InIReader(@".\KeyBinds.ini");
         public List<KeyBind> Keylist = new List<KeyBind>();
         public KeyBindSettings()
         {
             New();
-            if (!File.Exists(@".\KeyBibnds.ini"))
+            if (!File.Exists(@".\KeyBinds.ini"))
             {
                 Save();
                 return;

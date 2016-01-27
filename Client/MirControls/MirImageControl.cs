@@ -151,15 +151,7 @@ namespace Client.MirControls
 
         protected internal override void DrawControl()
         {
-
             base.DrawControl();
-
-            if (DrawImage && Library != null)
-            {
-
-                if (Blending) Library.DrawBlend(Index, DisplayLocation, ForeColour, false, 1F);
-                else Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
-            }
 
             if (DrawImage && Library != null)
             {
