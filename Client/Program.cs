@@ -47,6 +47,7 @@ namespace Client
                 else Application.Run(Form = new CMain());
 
                 Settings.Save();
+                CMain.InputKeys.Save();
 
                 if (Restart)
                 {

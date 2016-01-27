@@ -3544,11 +3544,6 @@ namespace Server.MirObjects
 
                             if (ushort.TryParse(parts[2], out level))
                             {
-                                parts[2] = ushort.MaxValue.ToString();
-                            }
-
-                            if (ushort.TryParse(parts[2], out level))
-                            {
                                 if (level == 0) return;
                                 player = Envir.GetPlayer(parts[1]);
                                 if (player == null) return;
@@ -18556,7 +18551,7 @@ namespace Server.MirObjects
             if (Product == null)
             {
                 ReceiveChat("You're trying to buy an item that isn't in the shop.", ChatType.System);
-                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Item isn't in the shop.");
+                SMain.EnqueueDebugging(Info.Name + " is trying to buy Something that doesn't exist.");
                 return;
             }
 
