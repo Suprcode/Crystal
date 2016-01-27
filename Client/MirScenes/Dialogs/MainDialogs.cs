@@ -33,7 +33,7 @@ namespace Client.MirScenes.Dialogs
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
 
         public MainDialog()
         {
@@ -84,7 +84,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1905,
                 Sound = SoundList.ButtonA,
-                Hint = "Inventory (I)"
+                Hint = "Inventory (" + CMain.InputKeys.GetKey(KeybindOptions.Inventory) + ")"
             };
             InventoryButton.Click += (o, e) =>
             {
@@ -103,7 +103,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1902,
                 Sound = SoundList.ButtonA,
-                Hint = "Character (C)"
+                Hint = "Character (" + CMain.InputKeys.GetKey(KeybindOptions.Equipment) + ")"
             };
             CharacterButton.Click += (o, e) =>
             {
@@ -125,7 +125,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1908,
                 Sound = SoundList.ButtonA,
-                Hint = "Skills (S)"
+                Hint = "Skills (" + CMain.InputKeys.GetKey(KeybindOptions.Skills) + ")"
             };
             SkillButton.Click += (o, e) =>
             {
@@ -147,7 +147,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1911,
                 Sound = SoundList.ButtonA,
-                Hint = "Quests (Q)"
+                Hint = "Quests (" + CMain.InputKeys.GetKey(KeybindOptions.Quests) + ")"
             };
             QuestButton.Click += (o, e) =>
             {
@@ -165,7 +165,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1914,
                 Sound = SoundList.ButtonA,
-                Hint = "Options (O)"
+                Hint = "Options (" + CMain.InputKeys.GetKey(KeybindOptions.Options) + ")"
             };
             OptionButton.Click += (o, e) =>
             {
@@ -200,7 +200,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 828,
                 Sound = SoundList.ButtonC,
-                Hint = "Game Shop"
+                Hint = "Game Shop (" + CMain.InputKeys.GetKey(KeybindOptions.GameShop) + ")"
             };
             GameShopButton.Click += (o, e) =>
             {
@@ -314,9 +314,17 @@ namespace Client.MirScenes.Dialogs
             WeightLabel = new MirLabel
             {
                 Parent = this,
+                Location = new Point(this.Size.Width - 105, 101),
+                Size = new Size(26, 14),
+            };
+
+            SpaceLabel = new MirLabel
+            {
+                Parent = this,
                 Location = new Point(this.Size.Width - 30, 101),
                 Size = new Size(26, 14),
             };
+
 
             AModeLabel = new MirLabel
             {
@@ -438,7 +446,8 @@ namespace Client.MirScenes.Dialogs
             ExperienceLabel.Location = new Point((ExperienceBar.Size.Width / 2) - 20, -10);
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
             CharacterName.Text = User.Name;
-            WeightLabel.Text = User.Inventory.Count(t => t == null).ToString();
+            SpaceLabel.Text = User.Inventory.Count(t => t == null).ToString();
+            WeightLabel.Text = (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight).ToString();
         }
 
         private void Label_SizeChanged(object sender, EventArgs e)
@@ -1767,7 +1776,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1925,
                 Sound = SoundList.ButtonA,
-                Hint = "Close (Z)"
+                Hint = "Close (" + CMain.InputKeys.GetKey(KeybindOptions.Belt) + ")"
             };
             CloseButton.Click += (o, e) => Hide();
 
@@ -1869,6 +1878,8 @@ namespace Client.MirScenes.Dialogs
         private readonly MirButton _switchBindsButton;
 
         public bool AltBind;
+        public bool HasSkill = false;
+        public byte BarIndex;
 
         //public bool TopBind = !Settings.SkillMode;
         public MirImageControl[] Cells = new MirImageControl[8];
@@ -1883,7 +1894,7 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point(0, 0);
+            Location = new Point(0, BarIndex * 20);
             Visible = true;
 
             BeforeDraw += MagicKeyDialog_BeforeDraw;
@@ -1899,7 +1910,7 @@ namespace Client.MirScenes.Dialogs
             };
             _switchBindsButton.Click += (o, e) =>
             {
-                Settings.SkillSet = !Settings.SkillSet;
+                //Settings.SkillSet = !Settings.SkillSet;
 
                 Update();
             };
@@ -1913,6 +1924,11 @@ namespace Client.MirScenes.Dialogs
                     Parent = this,
                     Location = new Point(i * 25 + 15, 3),
                 };
+                int j = i + 1;
+                Cells[i].Click += (o, e) =>
+                    {
+                        GameScene.Scene.UseSpell(j + (8 * BarIndex));
+                    };
 
                 CoolDowns[i] = new MirAnimatedControl
                 {
@@ -1951,7 +1967,54 @@ namespace Client.MirScenes.Dialogs
                     NotControl = true
                 };
             }
+            OnMoving += SkillBar_OnMoving;
         }
+
+        private void SkillBar_OnMoving(object sender, MouseEventArgs e)
+        {
+            if (BarIndex * 2 >= Settings.SkillbarLocation.Length) return;
+            Settings.SkillbarLocation[BarIndex, 0] = this.Location.X;
+            Settings.SkillbarLocation[BarIndex, 1] = this.Location.Y;
+        }
+
+        private string GetKey(int barindex, int i)
+        {
+            //KeybindOptions Type = KeybindOptions.Bar1Skill1;
+            if ((barindex == 0) && (i == 1))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill1);
+            if ((barindex == 0) && (i == 2))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill2);
+            if ((barindex == 0) && (i == 3))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill3);
+            if ((barindex == 0) && (i == 4))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill4);
+            if ((barindex == 0) && (i == 5))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill5);
+            if ((barindex == 0) && (i == 6))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill6);
+            if ((barindex == 0) && (i == 7))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill7);
+            if ((barindex == 0) && (i == 8))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar1Skill8);
+            if ((barindex == 1) && (i == 1))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill1);
+            if ((barindex == 1) && (i == 2))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill2);
+            if ((barindex == 1) && (i == 3))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill3);
+            if ((barindex == 1) && (i == 4))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill4);
+            if ((barindex == 1) && (i == 5))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill5);
+            if ((barindex == 1) && (i == 6))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill6);
+            if ((barindex == 1) && (i == 7))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill7);
+            if ((barindex == 1) && (i == 8))
+                return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill8);
+            return "";
+        }
+                    
 
         void MagicKeyDialog_BeforeDraw(object sender, EventArgs e)
         {
@@ -1960,41 +2023,36 @@ namespace Client.MirScenes.Dialogs
 
         public void Update()
         {
+            HasSkill = false;
+            foreach (var m in GameScene.User.Magics)
+            {
+                if ((m.Key < (BarIndex * 8)+1) || (m.Key > ((BarIndex + 1) * 8)+1)) continue;
+                HasSkill = true;
+            }
             if (!Visible) return;
-
-            if (Settings.SkillSet)
-            {
-                Index = 2190;
-                _switchBindsButton.Index = 2247;
-                BindNumberLabel.Text = "1";
-                BindNumberLabel.Location = new Point(0, 1);
-            }
-            else
-            {
-                Index = 2191;
-                _switchBindsButton.Index = 2248;
-                BindNumberLabel.Text = "2";
-                BindNumberLabel.Location = new Point(0, 10);
-            }
+            Index = 2190;
+            _switchBindsButton.Index = 2247;
+            BindNumberLabel.Text = (BarIndex + 1).ToString();
+            BindNumberLabel.Location = new Point(0, 1);
 
             for (var i = 1; i <= 8; i++)
             {
                 Cells[i - 1].Index = -1;
 
-                int offset = Settings.SkillSet ? 0 : 8;
-
-                KeyNameLabels[i - 1].Text = (Settings.SkillSet ? "" : "Ctrl\n") + "F" + i;
+                int offset = BarIndex * 8;
+                string key = GetKey(BarIndex, i);
+                KeyNameLabels[i - 1].Text = key;
 
                 foreach (var m in GameScene.User.Magics)
                 {
                     if (m.Key != i + offset) continue;
-
+                    HasSkill = true;
                     ClientMagic magic = MapObject.User.GetMagic(m.Spell);
                     if (magic == null) continue;
 
-                    string key = m.Key > 8 ? string.Format("CTRL F{0}", i) : string.Format("F{0}", m.Key);
+                    //string key = m.Key > 8 ? string.Format("CTRL F{0}", i) : string.Format("F{0}", m.Key);
 
-                    Cells[i - 1].Index = magic.Icon * 2;
+                    Cells[i - 1].Index = magic.Icon*2;
                     Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nCooldown: {2}\nKey: {3}", magic.Spell,
                         (magic.BaseCost + (magic.LevelCost * magic.Level)), Functions.PrintTimeSpanFromMilliSeconds(magic.Delay), key);
 
@@ -2015,7 +2073,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (!Visible) return;
 
-            int offset = Settings.SkillSet ? 0 : 8;
+            int offset = BarIndex * 8;
 
             for (int i = 0; i < Cells.Length; i++)
             {
@@ -2063,6 +2121,7 @@ namespace Client.MirScenes.Dialogs
         public void Show()
         {
             if (Visible) return;
+            if (!HasSkill) return;
             Settings.SkillBar = true;
             Visible = true;
             Update();
@@ -2855,7 +2914,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(25, 131),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "BigMap (B)"
+                Hint = "BigMap (" + CMain.InputKeys.GetKey(KeybindOptions.Bigmap) +")"
             };
             BigMapButton.Click += (o, e) => GameScene.Scene.BigMapDialog.Toggle();
 
@@ -2868,7 +2927,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(109, 3),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "MiniMap (V)"
+                Hint = "MiniMap (" + CMain.InputKeys.GetKey(KeybindOptions.Minimap) + ")"
             };
             ToggleButton.Click += (o, e) => Toggle();
 
@@ -3575,6 +3634,7 @@ namespace Client.MirScenes.Dialogs
             };
             CloseButton.Click += (o, e) => Hide();
 
+            //tilde option
             SkillModeOn = new MirButton
             {
                 Library = Libraries.Prguse2,
@@ -3588,8 +3648,10 @@ namespace Client.MirScenes.Dialogs
             {
                 Settings.SkillMode = true;
                 GameScene.Scene.ChatDialog.ReceiveChat("<SkillMode 2>", ChatType.Hint);
+                ToggleSkillButtons(false);
             };
 
+            //ctrl option
             SkillModeOff = new MirButton
             {
                 Library = Libraries.Prguse2,
@@ -3603,6 +3665,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Settings.SkillMode = false;
                 GameScene.Scene.ChatDialog.ReceiveChat("<SkillMode 1>", ChatType.Hint);
+                ToggleSkillButtons(true);
             };
 
             SkillBarOn = new MirButton
@@ -3769,7 +3832,19 @@ namespace Client.MirScenes.Dialogs
         }
 
 
-
+        private void ToggleSkillButtons(bool Ctrl)
+        {
+            foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
+            {
+                if (KeyCheck.Key == Keys.None)
+                    continue;
+                if ((KeyCheck.function < KeybindOptions.Bar1Skill1) || (KeyCheck.function > KeybindOptions.Bar2Skill8)) continue;
+                //need to test this 
+                if ((KeyCheck.RequireCtrl != 1) && (KeyCheck.RequireTilde != 1)) continue;
+                KeyCheck.RequireCtrl = (byte)(Ctrl ? 1 : 0);
+                KeyCheck.RequireTilde = (byte)(Ctrl ? 0 : 1);
+            }
+        }
 
         private void SoundBar_MouseMove(object sender, MouseEventArgs e)
         {
@@ -3978,7 +4053,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 12),
                 PressedIndex = 635,
-                Hint = "Exit (Alt + Q)"
+                Hint = "Exit (" + CMain.InputKeys.GetKey(KeybindOptions.Exit) + ")"
             };
             ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
@@ -3990,7 +4065,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 31),
                 PressedIndex = 638,
-                Hint = "Log Out (Alt + X)"
+                Hint = "Log Out (" + CMain.InputKeys.GetKey(KeybindOptions.Logout) + ")"
             };
             LogOutButton.Click += (o, e) => GameScene.Scene.LogOut();
 
@@ -4003,7 +4078,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 50),
-                Hint = "Help (H)"
+                Hint = "Help (" + CMain.InputKeys.GetKey(KeybindOptions.Help) + ")"
             };
             HelpButton.Click += (o, e) =>
             {
@@ -4069,7 +4144,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse2,
                 Location = new Point(3, 126),
-                Hint = "Creatures (E)"
+                Hint = "Creatures (" + CMain.InputKeys.GetKey(KeybindOptions.Creature) + ")"
             };
             IntelligentCreatureButton.Click += (o, e) =>
             {
@@ -4085,7 +4160,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 145),
-                Hint = "Mount (J)"
+                Hint = "Mount (" + CMain.InputKeys.GetKey(KeybindOptions.MountWindow) + ")"
             };
             RideButton.Click += (o, e) =>
             {
@@ -4102,7 +4177,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 164),
-                Hint = "Fishing (N)"
+                Hint = "Fishing (" + CMain.InputKeys.GetKey(KeybindOptions.Fishing) + ")"
             };
             FishingButton.Click += (o, e) =>
             {
@@ -4120,7 +4195,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
                 Visible = true,
-                Hint = "Friends (F)"
+                Hint = "Friends (" + CMain.InputKeys.GetKey(KeybindOptions.Friends) + ")"
             };
             FriendButton.Click += (o, e) =>
             {
@@ -4138,7 +4213,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 202),
                 Visible = true,
-                Hint = "Mentor (W)"
+                Hint = "Mentor (" + CMain.InputKeys.GetKey(KeybindOptions.Mentor) + ")"
             };
             MentorButton.Click += (o, e) =>
             {
@@ -4157,7 +4232,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
                 Visible = true,
-                Hint = "Relationship (L)"
+                Hint = "Relationship (" + CMain.InputKeys.GetKey(KeybindOptions.Relationship) + ")"
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -4174,7 +4249,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 240),
-                Hint = "Groups (P)"
+                Hint = "Groups (" + CMain.InputKeys.GetKey(KeybindOptions.Group) + ")"
             };
             GroupButton.Click += (o, e) =>
             {
@@ -4191,7 +4266,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 259),
-                Hint = "Guild (G)"
+                Hint = "Guild (" + CMain.InputKeys.GetKey(KeybindOptions.Guilds) + ")"
             };
             GuildButton.Click += (o, e) =>
             {
@@ -4444,8 +4519,8 @@ namespace Client.MirScenes.Dialogs
 
                 Network.Enqueue(new C.MagicKey { Spell = Magic.Spell, Key = Key });
                 Magic.Key = Key;
-
-                GameScene.Scene.SkillBarDialog.Update();
+                foreach (SkillBarDialog Bar in GameScene.Scene.SkillBarDialogs)
+                    Bar.Update();
 
                 Dispose();
             };

@@ -142,7 +142,7 @@ namespace Server.MirObjects
                     if (ob.Dead) return;
                     if (Caster.ActiveBlizzard == false) return;
                     if (!ob.IsAttackTarget(Caster)) return;
-                    ob.Attacked(Caster, Value, DefenceType.MACAgility, false);
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     if (!ob.Dead && Envir.Random.Next(8) == 0)
                         ob.ApplyPoison(new Poison
                         {
@@ -157,7 +157,7 @@ namespace Server.MirObjects
                     if (ob.Dead) return;
                     if (Caster.ActiveBlizzard == false) return;
                     if (!ob.IsAttackTarget(Caster)) return;
-                    ob.Attacked(Caster, Value, DefenceType.MACAgility, false);
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     break;
                 case Spell.ExplosiveTrap:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;

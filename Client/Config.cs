@@ -34,10 +34,12 @@ namespace Launcher
             Res1_pb.Image = Client.Properties.Resources.Radio_Unactive;
             Res2_pb.Image = Client.Properties.Resources.Radio_Unactive;
             Res3_pb.Image = Client.Properties.Resources.Radio_Unactive;
+            Res4_pb.Image = Client.Properties.Resources.Radio_Unactive;
 
             if (res == 800) Res1_pb.Image = Client.Properties.Resources.Config_Radio_On;
             else if (res == 1024) Res2_pb.Image = Client.Properties.Resources.Config_Radio_On;
             else if (res == 1366) Res3_pb.Image = Client.Properties.Resources.Config_Radio_On;
+            else if (res == 1280) Res4_pb.Image = Client.Properties.Resources.Config_Radio_On;
 
             Settings.Resolution = res;
 
@@ -175,5 +177,11 @@ namespace Launcher
             Program.PForm._workThread = new Thread(Program.PForm.Start) { IsBackground = true };
             Program.PForm._workThread.Start();
         }
+
+        private void Res4_pb_Click(object sender, EventArgs e)
+        {
+            resolutionChoice(1280);
+        }
+
     }
 }
