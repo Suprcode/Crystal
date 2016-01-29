@@ -84,7 +84,8 @@ namespace Client
         Help,
         Autorun,
         Cameramode,
-        Screenshot
+        Screenshot,
+        DropView,
 
     }
 
@@ -304,6 +305,8 @@ namespace Client
             InputKey = new KeyBind { function = KeybindOptions.Cameramode, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Insert };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Screenshot, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.PrintScreen };
+            Keylist.Add(InputKey);
+            InputKey = new KeyBind { function = KeybindOptions.DropView, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Tab };
             Keylist.Add(InputKey);
         }
         public string GetKey(KeybindOptions Option)
