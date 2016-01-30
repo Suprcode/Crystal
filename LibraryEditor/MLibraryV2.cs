@@ -429,7 +429,7 @@ namespace LibraryEditor
 
                         Marshal.Copy(dest, 0, data.Scan0, dest.Length);
 
-                        Image.UnlockBits(data);
+                        MaskImage.UnlockBits(data);
                     }
                     catch(Exception ex)
                     {

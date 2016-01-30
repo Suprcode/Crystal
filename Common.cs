@@ -5477,6 +5477,11 @@ public class ItemSets
                 case ItemSet.Mundane:
                 case ItemSet.NokChi:
                 case ItemSet.TaoProtect:
+                case ItemSet.Whisker1:
+                case ItemSet.Whisker2:
+                case ItemSet.Whisker3:
+                case ItemSet.Whisker4:
+                case ItemSet.Whisker5:
                     return 2;
                 case ItemSet.RedOrchid:
                 case ItemSet.RedFlower:
@@ -5496,11 +5501,6 @@ public class ItemSets
                 case ItemSet.RedJadeH:
                 case ItemSet.Nephrite:
                 case ItemSet.NephriteH:
-                case ItemSet.Whisker1:
-                case ItemSet.Whisker2:
-                case ItemSet.Whisker3:
-                case ItemSet.Whisker4:
-                case ItemSet.Whisker5:
                 case ItemSet.Hyeolryong:
                 case ItemSet.Monitor:
                 case ItemSet.Oppressive:

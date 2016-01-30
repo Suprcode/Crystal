@@ -131,7 +131,7 @@ namespace Client.MirScenes
 
         public static bool PickedUpGold;
         public MirControl ItemLabel, MailLabel, MemoLabel, GuildBuffLabel;
-        public static long UseItemTime, PickUpTime;
+        public static long UseItemTime, PickUpTime, DropViewTime;
         public static uint Gold, Credit;
         public static long InspectTime;
         public bool ShowReviveMessage;
@@ -634,6 +634,10 @@ namespace Client.MirScenes
                             CharacterDuraPanel.Hide();
                             DuraStatusPanel.Hide();
                         }
+                        break;
+                    case KeybindOptions.DropView:
+                        if (CMain.Time > DropViewTime)
+                            DropViewTime = CMain.Time + 500;
                         break;
                 }
             }
@@ -1804,7 +1808,7 @@ namespace Client.MirScenes
                 case BuffType.Impact:
                     return 249;
                 case BuffType.Magic:
-                    return 183;
+                    return 165;
                 case BuffType.Taoist:
                     return 250;
                 case BuffType.Storm:
@@ -8342,7 +8346,7 @@ namespace Client.MirScenes
             if (setting != LightSetting.Day)
                 DrawLights(setting);
 
-            if (Settings.DropView)
+            if (Settings.DropView || GameScene.DropViewTime > CMain.Time)
             {
                 for (int i = 0; i < Objects.Count; i++)
                 {

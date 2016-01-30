@@ -866,7 +866,7 @@ namespace Client.MirGraphics
                 h = Height;// + (4 - Height % 4) % 4;
 
                 MaskImage = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-                stream = Image.LockRectangle(0, LockFlags.Discard);
+                stream = MaskImage.LockRectangle(0, LockFlags.Discard);
 
                 decomp = DecompressImage(reader.ReadBytes(Length));
 

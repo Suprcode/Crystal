@@ -84,7 +84,8 @@ namespace Client
         Help,
         Autorun,
         Cameramode,
-        Screenshot
+        Screenshot,
+        DropView,
 
     }
 
@@ -101,12 +102,12 @@ namespace Client
 
     public class KeyBindSettings
     {
-        private static InIReader Reader = new InIReader(@".\KeyBibnds.ini");
+        private static InIReader Reader = new InIReader(@".\KeyBinds.ini");
         public List<KeyBind> Keylist = new List<KeyBind>();
         public KeyBindSettings()
         {
             New();
-            if (!File.Exists(@".\KeyBibnds.ini"))
+            if (!File.Exists(@".\KeyBinds.ini"))
             {
                 Save();
                 return;
@@ -304,6 +305,8 @@ namespace Client
             InputKey = new KeyBind { function = KeybindOptions.Cameramode, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Insert };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Screenshot, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.PrintScreen };
+            Keylist.Add(InputKey);
+            InputKey = new KeyBind { function = KeybindOptions.DropView, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Tab };
             Keylist.Add(InputKey);
         }
         public string GetKey(KeybindOptions Option)

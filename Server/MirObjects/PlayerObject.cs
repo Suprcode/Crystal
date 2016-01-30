@@ -2374,6 +2374,8 @@ namespace Server.MirObjects
             CraftRate = 0;
             GoldDropRateOffset = 0;
 
+            AttackBonus = 0;
+
             MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate) * Level);
 
             MinAC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MinAc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MinAc : 0);
@@ -3541,11 +3543,6 @@ namespace Server.MirObjects
                         if (parts.Length >= 3)
                         {
                             if (!IsGM) return;
-
-                            if (ushort.TryParse(parts[2], out level))
-                            {
-                                parts[2] = ushort.MaxValue.ToString();
-                            }
 
                             if (ushort.TryParse(parts[2], out level))
                             {
@@ -18556,7 +18553,7 @@ namespace Server.MirObjects
             if (Product == null)
             {
                 ReceiveChat("You're trying to buy an item that isn't in the shop.", ChatType.System);
-                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Item isn't in the shop.");
+                SMain.EnqueueDebugging(Info.Name + " is trying to buy Something that doesn't exist.");
                 return;
             }
 
