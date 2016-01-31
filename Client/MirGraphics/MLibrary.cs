@@ -895,6 +895,17 @@ namespace Client.MirGraphics
             if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
                 return false;
 
+            //if(!acurrate)
+            //{
+            //    Size trueSize = GetTrueSize();
+
+            //    int widthDiff = (Width - trueSize.Width) / 2;
+            //    int heightDiff = (Height - trueSize.Height ) /2 ;
+
+            //    if (p.X < widthDiff || p.X > Width + widthDiff || p.Y < heightDiff || p.Y > Height + heightDiff) return false;
+            //    return true;
+            //}
+
             int w = Width;// +(4 - Width % 4) % 4;
 
             bool result = false;
