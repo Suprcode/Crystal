@@ -132,8 +132,11 @@ namespace Server.MirEnvir
         }
         public void LevelUp()
         {
-            Drop(Info.Level);
+            Drop(Info.Level);//i would suggest having the max level drop be empty or 'trash' > that way you stop ppl from exploiting it
             if (Info.Level < Globals.MaxDragonLevel) Info.Level = (byte)(Math.Max(1, (Info.Level + 1)));
+            //if it reaches max level > make it stay that level for 6*deleveldelay and then reset to 0, rather then letting ppl farm it by making it drop every hour
+            if (Info.Level == Globals.MaxDragonLevel)
+                DeLevelTime = Envir.Time + (6 * DeLevelDelay);
         }
         public void LevelDown()
         {
@@ -209,6 +212,13 @@ namespace Server.MirEnvir
             if (Envir.Time < ProcessTime) return;
 
             ProcessTime = Envir.Time + ProcessDelay;
+
+            if ((Info.Level >= Globals.MaxDragonLevel) && (Envir.Time > DeLevelTime))
+            {
+                Info.Level = (byte)1;
+                Info.Experience = 0;
+                DeLevelTime = Envir.Time + DeLevelDelay;
+            }
 
             if (Info.Level > 1 && Envir.Time > DeLevelTime)
             {

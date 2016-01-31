@@ -2104,6 +2104,11 @@ namespace Client.MirObjects
                                             case Monster.EvilMir:
                                                 missile = CreateProjectile(60, Libraries.Dragon, true, 10, 10, 0);
 
+                                                if (missile.Direction > 12)
+                                                    missile.Direction = 12;
+                                                if (missile.Direction < 7)
+                                                    missile.Direction = 7;
+
                                                 if (missile.Target != null)
                                                 {
                                                     missile.Complete += (o, e) =>

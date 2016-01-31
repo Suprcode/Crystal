@@ -62,7 +62,7 @@ namespace Server.MirObjects.Monsters
 
                     }
                 }
-                Envir.DragonSystem.GainExp(Envir.Random.Next(1, 50));
+                Envir.DragonSystem.GainExp(Envir.Random.Next(1, 40));
                 return 1;
             }
 
@@ -86,7 +86,7 @@ namespace Server.MirObjects.Monsters
                 if (damageWeapon)
                     attacker.DamageWeapon();
 
-                Envir.DragonSystem.GainExp(Envir.Random.Next(1, 50));
+                Envir.DragonSystem.GainExp(Envir.Random.Next(1, 40));
                 return 1;
             }
 
