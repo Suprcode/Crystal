@@ -4740,7 +4740,9 @@ namespace Client.MirScenes
                 GuildDialog.MembersChanged = true;
             }
             if (p.GuildName == "")
+            {
                 GuildDialog.Hide();
+            }
 
             if ((User.GuildName == p.GuildName) && (GuildDialog.Level < p.Level))
             {
@@ -4761,6 +4763,11 @@ namespace Client.MirScenes
             GuildDialog.StatusChanged(p.MyOptions);
             GuildDialog.MyRankId = p.MyRankId;
             GuildDialog.UpdateMembers();
+            //reset guildbuffs
+            GuildDialog.EnabledBuffs.Clear();
+            GuildDialog.UpdateActiveStats();
+            RemoveBuff(new S.RemoveBuff { ObjectID = User.ObjectID, Type = BuffType.Guild });
+            User.RefreshStats();
         }
 
         private void GuildExpGain(S.GuildExpGain p)
@@ -4948,10 +4955,14 @@ namespace Client.MirScenes
 
         private void GuildBuffList(S.GuildBuffList p)
         {
+            //getting the list of all guildbuffs on server?
+            if (p.GuildBuffs.Count > 0)
+                GuildDialog.GuildBuffInfos.Clear();
             for (int i = 0; i < p.GuildBuffs.Count; i++)
             {
                 GuildDialog.GuildBuffInfos.Add(p.GuildBuffs[i]);
             }
+            //getting the list of all active/removedbuffs?
             for (int i = 0; i < p.ActiveBuffs.Count; i++)
             {
                 //if (p.ActiveBuffs[i].ActiveTimeRemaining > 0)
