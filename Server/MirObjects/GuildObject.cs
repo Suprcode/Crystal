@@ -253,7 +253,8 @@ namespace Server.MirObjects
             GuildMember Member = new GuildMember() { name = newmember.Info.Name, Player = newmember, Id = newmember.Info.Index, LastLogin = Envir.Now, Online = true };
             currentrank.Members.Add(Member);
             PlayerLogged(newmember, true, true);
-            
+            newmember.RefreshStats();
+            newmember.Enqueue(new ServerPackets.GuildBuffList() { ActiveBuffs = BuffList });
             Membercount++;
             NeedSave = true;
         }
@@ -448,6 +449,11 @@ namespace Server.MirObjects
             }
             AllOk:
             MemberDeleted(membername, (PlayerObject)Member.Player, Member.name == Kicker.Info.Name);
+            if (Member.Player != null)
+            {
+                PlayerObject LeavingMember = (PlayerObject)Member.Player;
+                LeavingMember.RefreshStats();
+            }
             MemberRank.Members.Remove(Member);
             NeedSave = true;
             Membercount--;
@@ -473,6 +479,7 @@ namespace Server.MirObjects
                 formermember.MyGuild = null;
                 formermember.MyGuildRank = null;
                 formermember.ReceiveChat(kickself ? "You have left your guild." : "You have been removed from your guild.", ChatType.Guild);
+                formermember.RefreshStats();
                 formermember.Enqueue(new ServerPackets.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (RankOptions)0 });
                 formermember.BroadcastInfo();
             }
@@ -655,6 +662,8 @@ namespace Server.MirObjects
                         player.RefreshStats();
                 }
         }
+
+
         public void Process()
         {
             //guild buffs
