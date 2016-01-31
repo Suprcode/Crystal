@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Server.MirDatabase;
+using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
@@ -124,6 +125,46 @@ namespace Server.MirObjects.Monsters
             }          
         }
 
+        public override void Die()
+        {
+            if (Dead) return;
+            ChangeGuardianState(false);
+            base.Die();
+        }
+
+        public override void Spawned()
+        {
+            base.Spawned();
+            ChangeGuardianState(true);
+        }
+
+        private void ChangeGuardianState(bool Active)
+        {
+            int ExpectedDistance = 20;
+            for (int y = CurrentLocation.Y - ExpectedDistance; y <= CurrentLocation.Y + ExpectedDistance; y++)
+            {
+                if (y < 0) continue;
+                if (y >= CurrentMap.Height) break;
+
+                for (int x = CurrentLocation.X - ExpectedDistance; x <= CurrentLocation.X + ExpectedDistance; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= CurrentMap.Width) break;
+
+                    Cell cell = CurrentMap.GetCell(x, y);
+
+                    if (!cell.Valid || cell.Objects == null) continue;
+
+                    for (int i = 0; i < cell.Objects.Count; i++)
+                    {
+                        GuardianRock target = cell.Objects[i] as GuardianRock;
+                        if (target == null) continue;
+                        target.Active = Active;
+                    }
+                }
+            }
+        }
+        
         public override Packet GetInfo()
         {
             return new S.ObjectMonster

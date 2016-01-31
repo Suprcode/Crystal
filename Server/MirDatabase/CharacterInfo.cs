@@ -197,7 +197,11 @@ namespace Server.MirDatabase
                 if (magic.Info == null) continue;
                 Magics.Add(magic);
             }
-
+            //reset all magic cooldowns on char loading < stops ppl from having none working skills after a server crash
+            for (int i = 0; i < Magics.Count; i++)
+            {
+                Magics[i].CastTime = 0;
+            }
 
             if (Envir.LoadVersion < 2) return;
 
