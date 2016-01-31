@@ -157,7 +157,8 @@ namespace Server.MirDatabase
                     Experience = Experience,
                     IsTempSpell = IsTempSpell,
                     Delay = GetDelay(),
-                    Range = Info.Range
+                    Range = Info.Range,
+                    CastTime = SMain.Envir.Time > CastTime? SMain.Envir.Time - CastTime: 0
             };
         }
 

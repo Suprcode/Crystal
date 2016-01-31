@@ -409,13 +409,13 @@ namespace Server.MirObjects
                 }
             }
             Pets.Clear();
-            //reset cast times to zero - in the future this should be saved and passed back to the client
-            //cast time should remove the server time on logout, then add it back on login - this should make it only count down when in game
-            //ignore if less than zero already
-            //client should then add the existing client time to its value - this should keep the count down in sync with the new time
+            
             for (int i = 0; i < Info.Magics.Count; i++)
             {
-                Info.Magics[i].CastTime = 0;
+                if (Envir.Time < (Info.Magics[i].CastTime + Info.Magics[i].GetDelay()))
+                    Info.Magics[i].CastTime = Info.Magics[i].GetDelay() + Info.Magics[i].CastTime - Envir.Time;
+                else
+                    Info.Magics[i].CastTime = 0;
             }
 
             if (MyGuild != null) MyGuild.PlayerLogged(this, false);
@@ -1840,6 +1840,18 @@ namespace Server.MirObjects
         private void StartGameSuccess()
         {
             Connection.Stage = GameStage.Game;
+            for (int i = 0; i < Info.Magics.Count; i++)
+            {
+                if (Info.Magics[i].CastTime == 0) continue;
+                long TimeSpend = Info.Magics[i].GetDelay() - Info.Magics[i].CastTime;
+                if (TimeSpend < 0)
+                {
+                    Info.Magics[i].CastTime = 0; 
+                    continue;
+                    //avoid having server owners lower the delays and bug it :p
+                }
+                Info.Magics[i].CastTime = Envir.Time > TimeSpend ? Envir.Time - TimeSpend : 0;
+            }
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
             ReceiveChat("Welcome to the Legend of Mir 2 Crystal Server.", ChatType.Hint);
 
@@ -1903,7 +1915,7 @@ namespace Server.MirObjects
             GetObjectsPassive();
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });
-            if (Class == MirClass.Wizard || Class == MirClass.Taoist)
+            //if (Class == MirClass.Wizard || Class == MirClass.Taoist)//why could an war, sin, archer not have pets?
                 Enqueue(new S.ChangePMode { Mode = PMode });
             Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
 

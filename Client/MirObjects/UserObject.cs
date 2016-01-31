@@ -96,6 +96,11 @@ namespace Client.MirObjects
             QuestInventory = info.QuestInventory;
 
             Magics = info.Magics;
+            for (int i = 0; i < Magics.Count; i++ )
+            {
+                if (Magics[i].CastTime > 0)
+                    Magics[i].CastTime = CMain.Time - Magics[i].CastTime;
+            }
 
             IntelligentCreatures = info.IntelligentCreatures;//IntelligentCreature
             SummonedCreatureType = info.SummonedCreatureType;//IntelligentCreature

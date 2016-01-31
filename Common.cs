@@ -3655,6 +3655,7 @@ public class ClientMagic
         Delay = reader.ReadInt64();
 
         Range = reader.ReadByte();
+        CastTime = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -3678,6 +3679,7 @@ public class ClientMagic
         writer.Write(Delay);
 
         writer.Write(Range);
+        writer.Write(CastTime);
     }
    
 }
