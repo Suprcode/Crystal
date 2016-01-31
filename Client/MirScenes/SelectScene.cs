@@ -80,7 +80,6 @@ namespace Client.MirScenes
                     Location = new Point(230, 568),
                     Parent = Background,
                     PressedIndex = 345,
-                    GrayScale = true
                 };
             NewCharacterButton.Click += (o, e) => _character = new NewCharacterDialog { Parent = this };
 
