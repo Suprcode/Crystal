@@ -111,7 +111,11 @@ namespace Server.MirObjects.Monsters
         {
             return 0;
         }
-
+        public override void ChangeHP(int amount)
+        {
+            if (Sleeping) return;
+            base.ChangeHP(amount);
+        }
         public override void Die()
         {
             if (Dead || Sleeping) return;

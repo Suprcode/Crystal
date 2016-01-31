@@ -7,6 +7,7 @@ namespace Server.MirObjects.Monsters
 {
     class GuardianRock : MonsterObject
     {
+        public bool Active = true;
         protected override bool CanMove { get { return false; } }
 
         protected internal GuardianRock(MonsterInfo info)
@@ -56,7 +57,7 @@ namespace Server.MirObjects.Monsters
         protected override void ProcessTarget()
         {
             if (Target == null) return;
-
+            if (!Active) return;
             if (InAttackRange() && CanAttack)
             {
                 ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
@@ -83,6 +84,11 @@ namespace Server.MirObjects.Monsters
         public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
         {
             return 0;
+        }
+
+        public override void ChangeHP(int amount)
+        {
+            //make it immune to green poison lol
         }
     }
 }
