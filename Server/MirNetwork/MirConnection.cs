@@ -1052,6 +1052,7 @@ namespace Server.MirNetwork
             if (p.ObjectID == Player.DefaultNPC.ObjectID)
             {
                 Player.CallDefaultNPC(p.ObjectID, p.Key);
+                return;
             }
 
             Player.CallNPC(p.ObjectID, p.Key);
