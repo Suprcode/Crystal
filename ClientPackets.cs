@@ -2080,4 +2080,19 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(ImageChunk);
         }
     }
+    public sealed class GetRanking : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.GetRanking; } }
+        public byte RankIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            RankIndex = reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(RankIndex);
+        }
+    }
 }

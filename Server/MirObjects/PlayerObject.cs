@@ -316,6 +316,8 @@ namespace Server.MirObjects
         public bool TradeLocked = false;
         public uint TradeGoldAmount = 0;
 
+        private long LastRankUpdate = Envir.Time;
+
         public List<QuestProgressInfo> CurrentQuests
         {
             get { return Info.CurrentQuests; }
@@ -1590,6 +1592,16 @@ namespace Server.MirObjects
             Experience = experience;
 
             LevelUp();
+
+            if (IsGM) return;
+            if ((LastRankUpdate + 3600 * 1000) > Envir.Time)
+            {
+                LastRankUpdate = Envir.Time;
+                if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+                {
+                    SMain.Envir.CheckRankUpdate(Info);
+                }
+            }
         }
 
         public void LevelUp()
@@ -1615,8 +1627,13 @@ namespace Server.MirObjects
                 if (Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange))
                     CurrentMap.NPCs[i].CheckVisible(this);
             }
-
             Report.Levelled(Level);
+            if (IsGM) return;
+            if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+            {
+
+                SMain.Envir.CheckRankUpdate(Info);
+            }
         }
 
         private static int FreeSpace(IList<UserItem> array)
@@ -1997,6 +2014,13 @@ namespace Server.MirObjects
             Report.Connected(Connection.IPAddress);
 
             SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
+            
+            if (IsGM) return;
+            LastRankUpdate = Envir.Time;
+            if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+            {
+                SMain.Envir.CheckRankUpdate(Info);
+            }
 
         }
         private void StartGameFailed()
@@ -13566,6 +13590,15 @@ namespace Server.MirObjects
 
             Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.ObjectID });
         }
+
+        public void CallDefaultNPC(uint objectID, string key)
+        {
+            if (DefaultNPC == null) return;
+            DefaultNPC.Call(this, key.ToUpper());
+            CallNPCNextPage();
+            return;
+        }
+
         public void CallNPC(uint objectID, string key)
         {
             if (Dead) return;
@@ -18786,6 +18819,18 @@ namespace Server.MirObjects
             RefreshNameColour();
         }
         #endregion
+
+        private long[] LastRankRequest = new long[6];
+        public void GetRanking(byte RankType)
+        {
+            if (RankType > 6) return;
+            if ((LastRankRequest[RankType] != 0) && ((LastRankRequest[RankType] + 300 * 1000) > Envir.Time)) return;
+            LastRankRequest[RankType] = Envir.Time;
+            if (RankType == 0)
+                Enqueue(new S.Rankings { Listings = Envir.RankTop20, RankType = RankType });
+            else
+                Enqueue(new S.Rankings { Listings = Envir.RankClass20[RankType -1], RankType = RankType });
+        }
     }
 }
 
