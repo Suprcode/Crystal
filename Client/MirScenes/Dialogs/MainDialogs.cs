@@ -4112,7 +4112,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 88),
-                Visible = false
+                //Visible = false
             };
             RankingButton.Click += (o, e) =>
             {

@@ -160,6 +160,10 @@ namespace Server.MirEnvir
         public List<GuildAtWar> GuildsAtWar = new List<GuildAtWar>();
         public List<MapRespawn> SavedSpawns = new List<MapRespawn>();
 
+        public List<Rank_Character_Info> RankTop20 = new List<Rank_Character_Info>();
+        public List<Rank_Character_Info>[] RankClass20 = new List<Rank_Character_Info>[5];
+        public int[] RankBottomLevel = new int[6];
+
         static Envir()
         {
             AccountIDReg =
@@ -1175,6 +1179,21 @@ namespace Server.MirEnvir
 
         public void LoadAccounts()
         {
+            //reset ranking
+            for (int i = 0; i < RankClass20.Count(); i++)
+            {
+                if (RankClass20[i] != null)
+                    RankClass20[i].Clear();
+                else
+                    RankClass20[i] = new List<Rank_Character_Info>();
+            }
+            RankTop20.Clear();
+            for (int i = 0; i < RankBottomLevel.Count(); i++)
+            {
+                RankBottomLevel[i] = 0;
+            }
+
+
             lock (LoadLock)
             {
                 if (!File.Exists(AccountPath))
@@ -2723,6 +2742,119 @@ namespace Server.MirEnvir
             ResetGS = false;
             SMain.Enqueue("Gameshop Purchase Logs Cleared.");
 
+        }
+
+        public bool InsertRank(List<Rank_Character_Info> Ranking, Rank_Character_Info NewRank)
+        {
+            bool output = false;
+            if (Ranking.Count == 0)
+            {
+                Ranking.Add(NewRank);
+                return true;
+            }
+            for (int i = 0; i < Ranking.Count; i++)
+            {
+                if (Ranking[i] == null)
+                {
+                    Ranking.Insert(i, NewRank);
+                    output = true;
+                    break;
+                }
+               //if level is lower
+               if (Ranking[i].level < NewRank.level)
+               {
+                    Ranking.Insert(i, NewRank);
+                    output = true;
+                    break;
+                }
+                //if exp is lower but level = same
+                if ((Ranking[i].level == NewRank.level) && (Ranking[i].Experience < NewRank.Experience))
+                {
+                   Ranking.Insert(i, NewRank);
+                   output = true;
+                   break;
+                }
+            }
+            if ((Ranking.Count < 20) && (!output))
+            {
+                Ranking.Add(NewRank);
+                return true;
+            }
+            return output;
+        }
+
+        public bool UpdateRank(List<Rank_Character_Info> Ranking, CharacterInfo info)
+        {
+            for (int i = 0; i < Ranking.Count; i++ )
+            {
+                if (Ranking[i] == null) break;//safety first
+                if (Ranking[i].Name == info.Name)
+                {
+                    Ranking[i].level = info.Level;
+                    Ranking[i].Experience = info.Experience;
+                    int NewRank = -1;
+                    for(int j = i-1; j >= 0; j--)
+                    {
+                        if (Ranking[j] == null) break;//safety first
+                        if ((Ranking[j].level > Ranking[i].level) || (Ranking[j].Experience > Ranking[i].Experience)) break;
+                        NewRank = j;
+                    }
+                    if (NewRank > -1)
+                    {
+                        Ranking.Insert(NewRank, Ranking[i]);
+                        Ranking.RemoveAt(i + 1);
+                    }
+                    
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void CheckRankUpdate(CharacterInfo info)
+        {
+            List<Rank_Character_Info> Ranking;
+            //first check overall top 20
+            Rank_Character_Info NewRank;
+            if (info.Level >= RankBottomLevel[0])
+            {
+                Ranking = RankTop20;
+                if (!UpdateRank(Ranking, info))
+                {
+                    NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level/*, rank = 1*/, PlayerId = info.Index };
+                    if (InsertRank(Ranking, NewRank))
+                    {
+                        if (Ranking.Count > 20)
+                            Ranking.RemoveAt(20);
+                    }
+                }
+                if (Ranking.Count >= 20)
+                { 
+                    NewRank = Ranking.Last();
+                    if (NewRank != null)
+                        RankBottomLevel[0] = NewRank.level;
+                }
+            }
+            //now check class top 20
+            if (info.Level >= RankBottomLevel[(byte)info.Class + 1])
+            {
+                Ranking = RankClass20[(byte)info.Class];
+                if (!UpdateRank(Ranking, info))
+                {
+                    NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level/*, rank = 1*/, PlayerId = info.Index };
+                    if (InsertRank(Ranking, NewRank))
+                    {
+                        if (Ranking.Count > 20)
+                            Ranking.RemoveAt(20);
+                    }
+                }
+                if (Ranking.Count >= 20)
+                {
+                    NewRank = Ranking.Last();
+                    if (NewRank != null)
+                        RankBottomLevel[(byte)info.Class + 1] = NewRank.level;
+                }
+            }
         }
     }
 }
