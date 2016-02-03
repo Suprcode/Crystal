@@ -1593,6 +1593,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.GameShopStock:
                     GameShopStock((S.GameShopStock)p);
                     break;
+                case (short)ServerPacketIds.Rankings:
+                    Rankings((S.Rankings)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -8013,6 +8016,11 @@ namespace Client.MirScenes
             public string Message;
             public long ExpireTime;
             public OutputMessageType Type;
+        }
+
+        public void Rankings(S.Rankings p)
+        {
+            RankingDialog.RecieveRanks(p.Listings, p.RankType);
         }
 
         #region Disposable

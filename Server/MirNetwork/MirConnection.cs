@@ -572,6 +572,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ReportIssue:
                     ReportIssue((C.ReportIssue)p);
                     break;
+                case (short)ClientPacketIds.GetRanking:
+                    GetRanking((C.GetRanking)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1048,8 +1051,7 @@ namespace Server.MirNetwork
 
             if (p.ObjectID == Player.DefaultNPC.ObjectID)
             {
-                DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, p.ObjectID, p.Key);
-                Player.ActionList.Add(action);
+                Player.CallDefaultNPC(p.ObjectID, p.Key);
                 return;
             }
 
@@ -1640,6 +1642,11 @@ namespace Server.MirNetwork
                 image.Save("Reported-" + Player.Name + "-" + DateTime.Now.ToString("yyMMddHHmmss") + ".jpg");
                 Image.Clear();
             }
+        }
+        private void GetRanking(C.GetRanking p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.GetRanking(p.RankIndex);
         }
     }
 }

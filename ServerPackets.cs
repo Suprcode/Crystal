@@ -5241,4 +5241,29 @@ namespace ServerPackets
             writer.Write(PageName);
         }
     }
+
+    public sealed class Rankings : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.Rankings; } }
+
+        public byte RankType = 0;
+        public List<Rank_Character_Info> Listings = new List<Rank_Character_Info>();
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            RankType = reader.ReadByte();
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                Listings.Add(new Rank_Character_Info(reader));
+            }
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(RankType);
+            writer.Write(Listings.Count);
+            for (int i = 0; i < Listings.Count; i++)
+                Listings[i].Save(writer);
+        }
+    }
 }

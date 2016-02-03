@@ -1430,6 +1430,7 @@ public enum ServerPacketIds : short
     NPCRequestInput,
     GameShopInfo,
     GameShopStock,
+    Rankings,
 }
 
 public enum ClientPacketIds : short
@@ -1559,7 +1560,8 @@ public enum ClientPacketIds : short
     NPCConfirmInput,
     GameshopBuy,
 
-    ReportIssue
+    ReportIssue,
+    GetRanking,
 }
 
 public enum ConquestType : byte
@@ -4575,6 +4577,8 @@ public abstract class Packet
                 return new C.NPCConfirmInput();
             case (short)ClientPacketIds.ReportIssue:
                 return new C.ReportIssue();
+            case (short)ClientPacketIds.GetRanking:
+                return new C.GetRanking();
             default:
                 return null;
         }
@@ -5020,6 +5024,8 @@ public abstract class Packet
                 return new S.GameShopStock();
             case (short)ServerPacketIds.NPCRequestInput:
                 return new S.NPCRequestInput();
+            case (short)ServerPacketIds .Rankings:
+                return new S.Rankings();
             default:
                 return null;
         }
@@ -6053,4 +6059,38 @@ public class GuildBuffOld
     }
 }
 
+#endregion
+
+#region Ranking Pete107|Petesn00beh 15/1/2016
+public class Rank_Character_Info
+{
+    public long PlayerId;
+    public string Name;
+    public MirClass Class;
+    public int level;
+    //public int rank;
+    public long Experience;//clients shouldnt care about this only server
+
+    public Rank_Character_Info()
+    {
+
+    }
+    public Rank_Character_Info(BinaryReader reader)
+    {
+        //rank = reader.ReadInt32();
+        PlayerId = reader.ReadInt64();
+        Name = reader.ReadString();
+        level = reader.ReadInt32();
+        Class = (MirClass)reader.ReadByte();
+
+    }
+    public void Save(BinaryWriter writer)
+    {
+        //writer.Write(rank);
+        writer.Write(PlayerId);
+        writer.Write(Name);
+        writer.Write(level);
+        writer.Write((byte)Class);
+    }
+}
 #endregion
