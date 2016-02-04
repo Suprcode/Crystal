@@ -71,6 +71,7 @@ namespace Server.MirEnvir
 
         public long Time { get; private set; }
         public RespawnTimer RespawnTick = new RespawnTimer();
+        private static List<string> DisabledCharNames = new List<string>();
 
         public DateTime Now
         {
@@ -174,6 +175,23 @@ namespace Server.MirEnvir
             CharacterReg =
                 new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength +
                           "}$");
+
+            string path = Path.Combine(Settings.EnvirPath,  "DisabledChars.txt");
+            DisabledCharNames.Clear();
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path,"");
+            }
+            else
+            {
+                string[] lines = File.ReadAllLines(path);
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+                    DisabledCharNames.Add(lines[i].ToUpper());
+                }
+            }
         }
 
         public static int LastCount = 0, LastRealCount = 0;
@@ -2139,7 +2157,7 @@ namespace Server.MirEnvir
             SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
-        public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c)
+        public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c, bool IsGm)
         {
             if (!Settings.AllowNewCharacter)
             {
@@ -2150,6 +2168,12 @@ namespace Server.MirEnvir
             if (!CharacterReg.IsMatch(p.Name))
             {
                 c.Enqueue(new ServerPackets.NewCharacter {Result = 1});
+                return;
+            }
+
+            if ((!IsGm) && (DisabledCharNames.Contains(p.Name.ToUpper())))
+            {
+                c.Enqueue(new ServerPackets.NewCharacter { Result = 1 });
                 return;
             }
 

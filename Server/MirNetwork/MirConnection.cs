@@ -703,7 +703,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Select) return;
 
-            SMain.Envir.NewCharacter(p, this);
+            SMain.Envir.NewCharacter(p, this, Account.AdminAccount);
         }
         private void DeleteCharacter(C.DeleteCharacter p)
         {
