@@ -13607,7 +13607,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != objectID) continue;
-
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
                 ob.CheckVisible(this);
 
                 if (!ob.VisibleLog[Info.Index] || !ob.Visible) return;
