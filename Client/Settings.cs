@@ -220,13 +220,6 @@ namespace Client
                 SkillbarLocation[i, 1] = Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "Y", SkillbarLocation[i, 1]);
             }
 
-
-            //Quests
-            for (int i = 0; i < TrackedQuests.Length; i++)
-            {
-                TrackedQuests[i] = Reader.ReadInt32("Quests", i.ToString(), 0);
-            }
-
             //Chat
             ShowNormalChat = Reader.ReadBoolean("Chat", "ShowNormalChat", ShowNormalChat);
             ShowYellChat = Reader.ReadBoolean("Chat", "ShowYellChat", ShowYellChat);
@@ -299,12 +292,6 @@ namespace Client
                 Reader.Write("Game", "Skillbar" + i.ToString() + "Y", SkillbarLocation[i, 1]);
             }
 
-            //Quests
-            for (int i = 0; i < TrackedQuests.Length; i++)
-            {
-                Reader.Write("Quests", i.ToString(), TrackedQuests[i]);
-            }
-
             //Chat
             Reader.Write("Chat", "ShowNormalChat", ShowNormalChat);
             Reader.Write("Chat", "ShowYellChat", ShowYellChat);
@@ -334,6 +321,23 @@ namespace Client
             Reader.Write("Launcher", "ServerName", P_ServerName);
             Reader.Write("Launcher", "Browser", P_BrowserAddress);
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
+        }
+
+        public static void LoadTrackedQuests(string Charname)
+        {
+            //Quests
+            for (int i = 0; i < TrackedQuests.Length; i++)
+            {
+                TrackedQuests[i] = Reader.ReadInt32("Q-" + Charname, "Quest-" + i.ToString(), 0);
+            }
+        }
+        public static void SaveTrackedQuests(string Charname)
+        {
+            //Quests
+            for (int i = 0; i < TrackedQuests.Length; i++)
+            {
+                Reader.Write("Q-" + Charname, "Quest-" + i.ToString(), TrackedQuests[i]);
+            }
         }
     }
 }

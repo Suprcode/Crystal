@@ -198,7 +198,8 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long dayTime, warTime, mailTime, guildTime, conquestTime;
+        private long warTime, mailTime, guildTime, conquestTime;
+        private int DailyTime = DateTime.Now.Day;
 
         private bool MagicExists(Spell spell)
         {
@@ -705,9 +706,11 @@ namespace Server.MirEnvir
 
         public void Process()
         {
-            if (Time >= dayTime)
+            
+            //if we get to a new day : reset daily's
+            if (Now.Day != DailyTime)
             {
-                dayTime = Time + Settings.Day;
+                DailyTime = Now.Day;
                 ProcessNewDay();
             }
 
