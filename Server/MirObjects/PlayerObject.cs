@@ -316,6 +316,8 @@ namespace Server.MirObjects
         public bool TradeLocked = false;
         public uint TradeGoldAmount = 0;
 
+        private long LastRankUpdate = Envir.Time;
+
         public List<QuestProgressInfo> CurrentQuests
         {
             get { return Info.CurrentQuests; }
@@ -1590,6 +1592,16 @@ namespace Server.MirObjects
             Experience = experience;
 
             LevelUp();
+
+            if (IsGM) return;
+            if ((LastRankUpdate + 3600 * 1000) > Envir.Time)
+            {
+                LastRankUpdate = Envir.Time;
+                if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+                {
+                    SMain.Envir.CheckRankUpdate(Info);
+                }
+            }
         }
 
         public void LevelUp()
@@ -1615,8 +1627,13 @@ namespace Server.MirObjects
                 if (Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange))
                     CurrentMap.NPCs[i].CheckVisible(this);
             }
-
             Report.Levelled(Level);
+            if (IsGM) return;
+            if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+            {
+
+                SMain.Envir.CheckRankUpdate(Info);
+            }
         }
 
         private static int FreeSpace(IList<UserItem> array)
@@ -1997,6 +2014,13 @@ namespace Server.MirObjects
             Report.Connected(Connection.IPAddress);
 
             SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
+            
+            if (IsGM) return;
+            LastRankUpdate = Envir.Time;
+            if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+            {
+                SMain.Envir.CheckRankUpdate(Info);
+            }
 
         }
         private void StartGameFailed()
@@ -3231,6 +3255,7 @@ namespace Server.MirObjects
                     IsGM = true;
                     SMain.Enqueue(string.Format("{0} is now a GM", Name));
                     ReceiveChat("You have been made a GM", ChatType.System);
+                    Envir.RemoveRank(Info);//remove gm chars from ranking to avoid causing bugs in rank list
                 }
                 else
                 {
@@ -12743,32 +12768,50 @@ namespace Server.MirObjects
             PlayerObject player = CurrentMap.Players.SingleOrDefault(x => x.ObjectID == id || x.Pets.Count(y => y.ObjectID == id && y is Monsters.HumanWizard) > 0);
 
             if (player == null) return;
-
+            Inspect(player.Info.Index);
+        }
+        public void Inspect(int id)
+        {
+            if (ObjectID == id) return;
+            CharacterInfo player = Envir.GetCharacterInfo(id);
+            if (player == null) return;
             CharacterInfo Lover = null;
             string loverName = "";
-            if (player.Info.Married != 0) Lover = Envir.GetCharacterInfo(player.Info.Married);
+            if (player.Married != 0) Lover = Envir.GetCharacterInfo(player.Married);
 
             if (Lover != null)
                 loverName = Lover.Name;
 
-            for (int i = 0; i < player.Info.Equipment.Length; i++)
+            for (int i = 0; i < player.Equipment.Length; i++)
             {
-                UserItem u = player.Info.Equipment[i];
+                UserItem u = player.Equipment[i];
                 if (u == null) continue;
 
                 CheckItem(u);
             }
             string guildname = "";
             string guildrank = "";
-            if (player.MyGuild != null)
+            GuildObject Guild = null;
+            Rank GuildRank = null;
+            if (player.GuildIndex != -1)
             {
-                guildname = player.MyGuild.Name;
-                guildrank = player.MyGuildRank.Name;
+                Guild = Envir.GetGuild(player.GuildIndex);
+                if (Guild != null)
+                {
+                    GuildRank = Guild.FindRank(player.Name);
+                    if (GuildRank == null)
+                        Guild = null;
+                    else
+                    {
+                        guildname = Guild.Name;
+                        guildrank = GuildRank.Name;
+                    }
+                }
             }
             Enqueue(new S.PlayerInspect
             {
                 Name = player.Name,
-                Equipment = player.Info.Equipment,
+                Equipment = player.Equipment,
                 GuildName = guildname,
                 GuildRank = guildrank,
                 Hair = player.Hair,
@@ -13566,6 +13609,15 @@ namespace Server.MirObjects
 
             Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.ObjectID });
         }
+
+        public void CallDefaultNPC(uint objectID, string key)
+        {
+            if (DefaultNPC == null) return;
+            DefaultNPC.Call(this, key.ToUpper());
+            CallNPCNextPage();
+            return;
+        }
+
         public void CallNPC(uint objectID, string key)
         {
             if (Dead) return;
@@ -13574,7 +13626,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != objectID) continue;
-
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
                 ob.CheckVisible(this);
 
                 if (!ob.VisibleLog[Info.Index] || !ob.Visible) return;
@@ -16600,6 +16652,12 @@ namespace Server.MirObjects
 
                     if (item == null || items[j] != item.UniqueID) continue;
 
+                    if(item.Info.Bind.HasFlag(BindMode.DontTrade))
+                    {
+                        ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
+                        return;
+                    }
+
                     giftItems.Add(item);
 
                     Info.Inventory[i] = null;
@@ -18786,6 +18844,22 @@ namespace Server.MirObjects
             RefreshNameColour();
         }
         #endregion
+
+        private long[] LastRankRequest = new long[6];
+        public void GetRanking(byte RankType)
+        {
+            if (RankType > 6) return;
+            if ((LastRankRequest[RankType] != 0) && ((LastRankRequest[RankType] + 300 * 1000) > Envir.Time)) return;
+            LastRankRequest[RankType] = Envir.Time;
+            if (RankType == 0)
+            {
+                Enqueue(new S.Rankings { Listings = Envir.RankTop, RankType = RankType, MyRank = Info.Rank[0]});
+            }
+            else
+            {
+                Enqueue(new S.Rankings { Listings = Envir.RankClass[RankType - 1], RankType = RankType, MyRank = (byte)Class == (RankType -1)?Info.Rank[1]: 0});
+            }
+        }
     }
 }
 

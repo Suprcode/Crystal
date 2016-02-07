@@ -572,6 +572,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ReportIssue:
                     ReportIssue((C.ReportIssue)p);
                     break;
+                case (short)ClientPacketIds.GetRanking:
+                    GetRanking((C.GetRanking)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -700,7 +703,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Select) return;
 
-            SMain.Envir.NewCharacter(p, this);
+            SMain.Envir.NewCharacter(p, this, Account.AdminAccount);
         }
         private void DeleteCharacter(C.DeleteCharacter p)
         {
@@ -731,6 +734,7 @@ namespace Server.MirNetwork
 
             temp.Deleted = true;
             temp.DeleteDate = SMain.Envir.Now;
+            SMain.Envir.RemoveRank(temp);
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
         private void StartGame(C.StartGame p)
@@ -981,8 +985,10 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-
-            Player.Inspect(p.ObjectID);
+            if (p.Ranking)
+                Player.Inspect((int)p.ObjectID);
+            else
+                Player.Inspect(p.ObjectID);
         }
         private void ChangeAMode(C.ChangeAMode p)
         {
@@ -1048,8 +1054,7 @@ namespace Server.MirNetwork
 
             if (p.ObjectID == Player.DefaultNPC.ObjectID)
             {
-                DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, p.ObjectID, p.Key);
-                Player.ActionList.Add(action);
+                Player.CallDefaultNPC(p.ObjectID, p.Key);
                 return;
             }
 
@@ -1640,6 +1645,11 @@ namespace Server.MirNetwork
                 image.Save("Reported-" + Player.Name + "-" + DateTime.Now.ToString("yyMMddHHmmss") + ".jpg");
                 Image.Clear();
             }
+        }
+        private void GetRanking(C.GetRanking p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.GetRanking(p.RankIndex);
         }
     }
 }

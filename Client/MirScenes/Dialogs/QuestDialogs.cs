@@ -921,7 +921,7 @@ namespace Client.MirScenes.Dialogs
                 if (i < Settings.TrackedQuests.Length)
                     Settings.TrackedQuests[i] = TrackedQuestsIds[i];
             }
-            Settings.Save();
+            Settings.SaveTrackedQuests(GameScene.User.Name);
             CMain.InputKeys.Save();
         }
 
