@@ -1319,7 +1319,7 @@ namespace Server.MirObjects
                         UserItem temp2 = Envir.CreateFreshItem(temp.Info);
                         temp2.Count = count;
 
-                        if (DropItem(temp2, Settings.DropRange))
+                        if (DropItem(temp2, Settings.DropRange, true))
                         {
                             if (count == temp.Count)
                                 Info.Equipment[i] = null;
@@ -1332,7 +1332,7 @@ namespace Server.MirObjects
                     }
                     else if (Envir.Random.Next(30) == 0)
                     {
-                        if (DropItem(temp, Settings.DropRange))
+                        if (DropItem(temp, Settings.DropRange, true))
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
@@ -1365,7 +1365,7 @@ namespace Server.MirObjects
                     UserItem temp2 = Envir.CreateFreshItem(temp.Info);
                     temp2.Count = count;
 
-                    if (DropItem(temp2, Settings.DropRange))
+                    if (DropItem(temp2, Settings.DropRange, true))
                     {
                         if (count == temp.Count)
                             Info.Inventory[i] = null;
@@ -1378,7 +1378,7 @@ namespace Server.MirObjects
                 }
                 else if (Envir.Random.Next(10) == 0)
                 {
-                    if (DropItem(temp, Settings.DropRange))
+                    if (DropItem(temp, Settings.DropRange, true))
                     {
                         Info.Inventory[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
@@ -1424,7 +1424,7 @@ namespace Server.MirObjects
                         UserItem temp2 = Envir.CreateFreshItem(temp.Info);
                         temp2.Count = count;
 
-                        if (DropItem(temp2, Settings.DropRange))
+                        if (DropItem(temp2, Settings.DropRange, true))
                         {
                             if (count == temp.Count)
                                 Info.Equipment[i] = null;
@@ -1437,7 +1437,7 @@ namespace Server.MirObjects
                     }
                     else if (Envir.Random.Next(10) == 0)
                     {
-                        if (DropItem(temp, Settings.DropRange))
+                        if (DropItem(temp, Settings.DropRange, true))
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
@@ -1457,7 +1457,7 @@ namespace Server.MirObjects
                 if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
                 if (temp.WeddingRing != -1) continue;
 
-                if (!DropItem(temp, Settings.DropRange)) continue;
+                if (!DropItem(temp, Settings.DropRange, true)) continue;
 
                 Info.Inventory[i] = null;
                 Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
@@ -12137,9 +12137,9 @@ namespace Server.MirObjects
             mail.Send();
         }
 
-        private bool DropItem(UserItem item, int range = 1)
+        private bool DropItem(UserItem item, int range = 1, bool DeathDrop = false)
         {
-            ItemObject ob = new ItemObject(this, item);
+            ItemObject ob = new ItemObject(this, item, DeathDrop);
 
             if (!ob.Drop(range)) return false;
 
