@@ -6070,6 +6070,7 @@ public class Rank_Character_Info
     public int level;
     //public int rank;
     public long Experience;//clients shouldnt care about this only server
+    public object info;//again only keep this on server!
 
     public Rank_Character_Info()
     {

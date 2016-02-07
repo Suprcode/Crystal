@@ -95,10 +95,10 @@ namespace Server.MirDatabase
         public MountInfo Mount;
 
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
+        public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
 
         public CharacterInfo()
         {
-
         }
 
         public CharacterInfo(ClientPackets.NewCharacter p, MirConnection c)

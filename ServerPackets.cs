@@ -5247,11 +5247,13 @@ namespace ServerPackets
         public override short Index { get { return (short)ServerPacketIds.Rankings; } }
 
         public byte RankType = 0;
+        public int MyRank = 0;
         public List<Rank_Character_Info> Listings = new List<Rank_Character_Info>();
 
         protected override void ReadPacket(BinaryReader reader)
         {
             RankType = reader.ReadByte();
+            MyRank = reader.ReadInt32();
             int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
@@ -5261,6 +5263,7 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(RankType);
+            writer.Write(MyRank);
             writer.Write(Listings.Count);
             for (int i = 0; i < Listings.Count; i++)
                 Listings[i].Save(writer);
