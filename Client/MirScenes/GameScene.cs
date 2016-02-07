@@ -8020,7 +8020,7 @@ namespace Client.MirScenes
 
         public void Rankings(S.Rankings p)
         {
-            RankingDialog.RecieveRanks(p.Listings, p.RankType);
+            RankingDialog.RecieveRanks(p.Listings, p.RankType, p.MyRank);
         }
 
         #region Disposable

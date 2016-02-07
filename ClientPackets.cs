@@ -609,15 +609,18 @@ namespace ClientPackets
         }
 
         public uint ObjectID;
+        public bool Ranking = false;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
+            Ranking = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(ObjectID);
+            writer.Write(Ranking);
         }
     }
     public sealed class ChangeAMode : Packet
