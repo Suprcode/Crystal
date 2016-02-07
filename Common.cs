@@ -880,17 +880,18 @@ public enum PoisonType : ushort
 public enum BindMode : short
 {
     none = 0,
-    DontDeathdrop = 1,
-    DontDrop = 2,
-    DontSell = 4,
-    DontStore = 8,
-    DontTrade = 16,
-    DontRepair = 32,
-    DontUpgrade = 64,
-    DestroyOnDrop = 128,
-    BreakOnDeath = 256,
-    BindOnEquip = 512,
-    NoSRepair = 1024,
+    DontDeathdrop = 1,//0x0001
+    DontDrop = 2,//0x0002
+    DontSell = 4,//0x0004
+    DontStore = 8,//0x0008
+    DontTrade = 16,//0x0010
+    DontRepair = 32,//0x0020
+    DontUpgrade = 64,//0x0040
+    DestroyOnDrop = 128,//0x0080
+    BreakOnDeath = 256,//0x0100
+    BindOnEquip = 512,//0x0200
+    NoSRepair = 1024,//0x0400
+    NoWeddingRing = 2048,//0x0800
 }
 
 [Flags]
@@ -908,7 +909,7 @@ public enum SpecialItemMode : short
     Healing = 0x0080,
     Probe = 0x0100,
     Skill = 0x0200,
-    NoDuraLoss = 0x0400
+    NoDuraLoss = 0x0400,
 }
 
 [Flags]
@@ -2688,6 +2689,11 @@ public class ItemInfo
             bool isTooltip = reader.ReadBoolean();
             if (isTooltip)
                 ToolTip = reader.ReadString();
+        }
+        if (version < 70) //before db version 70 all specialitems had wedding rings disabled, after that it became a server option
+        {
+            if ((Type == ItemType.Ring) &&  (Unique != SpecialItemMode.None))
+                Bind |= BindMode.NoWeddingRing;
         }
     }
 

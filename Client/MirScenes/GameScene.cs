@@ -7272,6 +7272,27 @@ namespace Client.MirScenes
 
             #endregion
 
+            #region NoWeddingRing
+
+            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.NoWeddingRing))
+            {
+                count++;
+                MirLabel No_WedLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Yellow,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("Cannot be a weddingring")
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, No_WedLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, No_WedLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
             #region BIND_ON_EQUIP
 
             if ((HoverItem.Info.Bind.HasFlag(BindMode.BindOnEquip)) & HoverItem.SoulBoundId == -1)
