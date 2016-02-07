@@ -17893,7 +17893,7 @@ namespace Server.MirObjects
                 return false;
             }
 
-            if (Info.Equipment[(int)EquipmentSlot.RingL].Info.Unique != SpecialItemMode.None)
+            if (Info.Equipment[(int)EquipmentSlot.RingL].Info.Bind.HasFlag(BindMode.NoWeddingRing))
             {
                 ReceiveChat(string.Format("You cannot use this type of ring."), ChatType.System);
                 return false;
@@ -17956,6 +17956,12 @@ namespace Server.MirObjects
             if (!CanEquipItem(temp, (int)EquipmentSlot.RingL))
             {
                 ReceiveChat(string.Format("You can't equip the item you're trying to use."), ChatType.System);
+                return;
+            }
+
+            if (temp.Info.Bind.HasFlag(BindMode.NoWeddingRing))
+            {
+                ReceiveChat(string.Format("You cannot use this type of ring."), ChatType.System);
                 return;
             }
 
