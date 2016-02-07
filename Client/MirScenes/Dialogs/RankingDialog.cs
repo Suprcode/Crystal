@@ -13,14 +13,18 @@ namespace Client.MirScenes.Dialogs
     //thx to Pete107/Petesn00beh for the base of this :p
     public class RankingDialog : MirImageControl
     {
-        public MirButton AllButton, WarButton, WizButton, TaoButton, SinButton, ArchButton, Tab7;
+        public MirButton AllButton, WarButton, WizButton, TaoButton, SinButton, ArchButton, Tab7, NextButton, PrevButton;
         public MirButton CloseButton;
+        public MirLabel MyRank;
 
         public byte RankType = 0;
+        public int RowOffset = 0;
         public RankingRow[] Rows = new RankingRow[20];
         public List<Rank_Character_Info>[] RankList = new List<Rank_Character_Info>[6];
+        public int[] Rank = new int[6];
 
         public long[] LastRequest = new long[6];
+
 
         public RankingDialog()
         {
@@ -117,9 +121,52 @@ namespace Client.MirScenes.Dialogs
             };
             ArchButton.Click += (o, e) => RequestRanks(5);
 
+            NextButton = new MirButton
+            {
+                Index = 207,
+                HoverIndex = 208,
+                PressedIndex = 209,
+                Library = Libraries.Prguse2,
+                Location = new Point(299, 386),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            NextButton.Click += (o, e) => Move(1);
+            
+            PrevButton = new MirButton
+            {
+                Index = 197,
+                HoverIndex = 198,
+                PressedIndex = 199,
+                Library = Libraries.Prguse2,
+                Location = new Point(299, 100),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            PrevButton.Click += (o, e) => Move(-1);
+
+            MyRank = new MirLabel
+            {
+                Text = "",
+                Parent = this,
+                Font = new Font(Settings.FontName, 10F, FontStyle.Bold),
+                ForeColour = Color.BurlyWood,
+                Location = new Point(229, 36),
+                Size = new Size(82,22),
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                //AutoSize = true
+            };
+            MyRank.Click += (o, e) => GoToMyRank();
+
+
             for (int i = 0; i < Rows.Count(); i++)
             {
-                Rows[i] = new RankingRow() { Parent = this, Location = new Point(32, 32 + i * 15) };
+                Rows[i] = new RankingRow() 
+                { 
+                    Parent = this, 
+                    Location = new Point(32, 98 + i * 15),
+                    Size = new Size(285,15),
+                };
             }
             for (int i = 0; i < RankList.Length; i++)
             {
@@ -148,6 +195,24 @@ namespace Client.MirScenes.Dialogs
                 Hide();
         }
 
+        public void GoToMyRank()
+        {
+
+        }
+
+        public void Move(int distance)
+        {
+            if (distance > 0)
+            {//go down
+                RowOffset = RowOffset < RankList[RankType].Count - 20 ? ++RowOffset : RowOffset;
+            }
+            else
+            {//go up
+                RowOffset = RowOffset > 0 ? --RowOffset : RowOffset;
+            }
+            UpdateRanks();
+        }
+
         public void RequestRanks(byte RankType)
         {
             if (RankType > 6) return;
@@ -157,14 +222,15 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
             LastRequest[RankType] = CMain.Time;
-            MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankIndex = RankType });
+            MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankIndex = RankType});
         }
 
-        public void RecieveRanks(List<Rank_Character_Info> Ranking, byte rankType)
+        public void RecieveRanks(List<Rank_Character_Info> Ranking, byte rankType, int MyRank)
         {
             RankList[rankType].Clear();
             RankList[rankType] = Ranking;
-            SelectRank(rankType);
+            Rank[rankType] = MyRank;
+            SelectRank(rankType);            
         }
 
         public void SelectRank(byte rankType)
@@ -174,13 +240,23 @@ namespace Client.MirScenes.Dialogs
             {
                 Rows[i].Clear();
             }
-            for (int i = 0; i < RankList[RankType].Count; i++)
-            {
-                if (i > Rows.Count()) break;
-                Rows[i].Update(RankList[RankType][i], i + 1);
-            }
+            RowOffset = 0;
+            UpdateRanks();            
         }
 
+        public void UpdateRanks()
+        {
+            for (int i = 0; i < Rows.Count(); i++)
+            {
+                if (RowOffset + i >= RankList[RankType].Count) break;
+                Rows[i].Update(RankList[RankType][RowOffset + i], RowOffset + i + 1);
+            }
+            if (Rank[RankType] == 0)
+                MyRank.Text = "Not Listed";
+            else
+                MyRank.Text = string.Format("Ranked: {0}", Rank[RankType]); ;
+
+        }
 
         public sealed class RankingRow : MirControl
         {
@@ -193,10 +269,11 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA;
                 BorderColour = Color.Lime;
                 Visible = false;
+                Click += (o, e) => Inspect();
 
                 RankLabel = new MirLabel
                 {
-                    Location = new Point(0, 64),
+                    Location = new Point(0, 0),
                     AutoSize = true,
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     Parent = this,
@@ -204,7 +281,7 @@ namespace Client.MirScenes.Dialogs
                 };
                 NameLabel = new MirLabel
                 {
-                    Location = new Point(55, 64),
+                    Location = new Point(55, 0),
                     AutoSize = true,
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     Parent = this,
@@ -213,7 +290,7 @@ namespace Client.MirScenes.Dialogs
 
                 ClassLabel = new MirLabel
                 {
-                    Location = new Point(150, 64),
+                    Location = new Point(150, 0),
                     AutoSize = true,
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     Parent = this,
@@ -222,12 +299,21 @@ namespace Client.MirScenes.Dialogs
 
                 LevelLabel = new MirLabel
                 {
-                    Location = new Point(220, 64),
+                    Location = new Point(220, 0),
                     AutoSize = true,
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     Parent = this,
                     NotControl = true,
                 };
+            }
+
+            public void Inspect()
+            {
+                if (CMain.Time <= GameScene.InspectTime/* && Index == InspectDialog.InspectID*/) return;
+
+                GameScene.InspectTime = CMain.Time + 500;
+                InspectDialog.InspectID = (uint)Index;
+                MirNetwork.Network.Enqueue(new ClientPackets.Inspect { ObjectID = (uint)Index, Ranking = true });
             }
 
             public void Clear()
