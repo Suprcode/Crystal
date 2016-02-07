@@ -1433,6 +1433,12 @@ namespace Client.MirControls
                                 return;
                             }
 
+                            if (GameScene.SelectedCell.Item.Info.Bind.HasFlag(BindMode.DontTrade))
+                            {
+                                GameScene.Scene.ChatDialog.ReceiveChat("You cannot mail this item.", ChatType.System);
+                                return;
+                            }
+
                             if (ItemArray[ItemSlot] == null)
                             {
                                 Item = GameScene.SelectedCell.Item;
