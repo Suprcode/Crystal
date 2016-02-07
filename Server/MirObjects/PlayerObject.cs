@@ -16633,6 +16633,12 @@ namespace Server.MirObjects
 
                     if (item == null || items[j] != item.UniqueID) continue;
 
+                    if(item.Info.Bind.HasFlag(BindMode.DontTrade))
+                    {
+                        ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
+                        return;
+                    }
+
                     giftItems.Add(item);
 
                     Info.Inventory[i] = null;
