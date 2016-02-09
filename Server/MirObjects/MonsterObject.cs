@@ -387,7 +387,7 @@ namespace Server.MirObjects
             ActionTime = Envir.Time + 2000;
             if (Info.HasSpawnScript && (SMain.Envir.MonsterNPC != null))
             {
-                SMain.Envir.MonsterNPC.Call(string.Format("[@_SPAWN({0})]", Info.Index));
+                SMain.Envir.MonsterNPC.Call(this,string.Format("[@_SPAWN({0})]", Info.Index));
             }
         }
 
@@ -568,7 +568,7 @@ namespace Server.MirObjects
 
             if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))
             {
-                SMain.Envir.MonsterNPC.Call(string.Format("[@_DIE({0})]", Info.Index));
+                SMain.Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
             }
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)

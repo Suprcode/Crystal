@@ -180,7 +180,7 @@ namespace Server.MirObjects.Monsters
             {
                 if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))
                 {
-                    SMain.Envir.MonsterNPC.Call(string.Format("[@_DIE({0})]", Info.Index));
+                    SMain.Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
                 }
                 Envir.DragonSystem.GainExp(250);//why would hitting em give you so little 'points', while hitting them gives so much
                 Sleeping = true;
