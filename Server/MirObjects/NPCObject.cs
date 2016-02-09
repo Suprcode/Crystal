@@ -176,34 +176,61 @@ namespace Server.MirObjects
             for (int i = 0; i < lines.Count; i++)
             {
                 if (!lines[i].ToUpper().StartsWith("[@_")) continue;
-
-                if (lines[i].ToUpper().Contains("MAPCOORD"))
+                if (Name == "DefaultNPC")
                 {
-                    Regex regex = new Regex(@"\((.*?),([0-9]{1,3}),([0-9]{1,3})\)");
-                    Match match = regex.Match(lines[i]);
-
-                    if (!match.Success) continue;
-
-                    Map map = Envir.MapList.FirstOrDefault(m => m.Info.FileName == match.Groups[1].Value);
-
-                    if (map == null) continue;
-
-                    Point point = new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value));
-
-                    if (!map.Info.ActiveCoords.Contains(point))
+                    if (lines[i].ToUpper().Contains("MAPCOORD"))
                     {
-                        map.Info.ActiveCoords.Add(point);
+                        Regex regex = new Regex(@"\((.*?),([0-9]{1,3}),([0-9]{1,3})\)");
+                        Match match = regex.Match(lines[i]);
+
+                        if (!match.Success) continue;
+
+                        Map map = Envir.MapList.FirstOrDefault(m => m.Info.FileName == match.Groups[1].Value);
+
+                        if (map == null) continue;
+
+                        Point point = new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value));
+
+                        if (!map.Info.ActiveCoords.Contains(point))
+                        {
+                            map.Info.ActiveCoords.Add(point);
+                        }
+                    }
+
+                    if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
+                    {
+                        Regex regex = new Regex(@"\((.*?)\)");
+                        Match match = regex.Match(lines[i]);
+
+                        if (!match.Success) continue;
+
+                        SMain.Envir.CustomCommands.Add(match.Groups[1].Value);
                     }
                 }
 
-                if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
+                else if (Name == "MonsterNPC")
                 {
-                    Regex regex = new Regex(@"\((.*?)\)");
-                    Match match = regex.Match(lines[i]);
+                    MonsterInfo MobInfo;
+                    if (lines[i].ToUpper().Contains("SPAWN"))
+                    {
+                        Regex regex = new Regex(@"\((.*?)\)");
+                        Match match = regex.Match(lines[i]);
 
-                    if (!match.Success) continue;
+                        if (!match.Success) continue;
+                        MobInfo = Envir.GetMonsterInfo(Convert.ToInt16(match.Groups[1].Value));
+                        if (MobInfo == null) continue;
+                        MobInfo.HasSpawnScript = true;
+                    }
+                    if (lines[i].ToUpper().Contains("DIE"))
+                    {
+                        Regex regex = new Regex(@"\((.*?)\)");
+                        Match match = regex.Match(lines[i]);
 
-                    SMain.Envir.CustomCommands.Add(match.Groups[1].Value);
+                        if (!match.Success) continue;
+                        MobInfo = Envir.GetMonsterInfo(Convert.ToInt16(match.Groups[1].Value));
+                        if (MobInfo == null) continue;
+                        MobInfo.HasDieScript = true;
+                    }
                 }
 
                 NPCPages.AddRange(ParsePages(lines, lines[i]));
@@ -616,6 +643,51 @@ namespace Server.MirObjects
             }
         }
 
+        public void Call(MonsterObject Monster, string key)//run a semi limited npc script (wont let you do stuff like checkgroup/guild etc)
+        {
+            key = key.ToUpper();
+
+            for (int i = 0; i < NPCPages.Count; i++)
+            {
+                NPCPage page = NPCPages[i];
+                if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                foreach (NPCSegment segment in page.SegmentList)
+                {
+                    if (page.BreakFromSegments)
+                    {
+                        page.BreakFromSegments = false;
+                        break;
+                    }
+
+                    ProcessSegment(Monster, page, segment);
+                }
+            }
+        }
+
+        public void Call(string key) //run a verry limited npc script (should really only be used to spawn mobs or something)
+        {
+            key = key.ToUpper();
+
+            for (int i = 0; i < NPCPages.Count; i++)
+            {
+                NPCPage page = NPCPages[i];
+                if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                foreach (NPCSegment segment in page.SegmentList)
+                {
+                    if (page.BreakFromSegments)
+                    {
+                        page.BreakFromSegments = false;
+                        break;
+                    }
+
+                    ProcessSegment(page, segment);
+                }
+            }
+        }
+
+
         public void Call(PlayerObject player, string key)
         {
             key = key.ToUpper();
@@ -695,6 +767,17 @@ namespace Server.MirObjects
             player.NPCSuccess.Add(segment, segment.Check(player));
             player.NPCPage = page;
         }
+
+        private void ProcessSegment(MonsterObject Monster, NPCPage page, NPCSegment segment)
+        {
+            segment.Check(Monster);
+        }
+
+        private void ProcessSegment(NPCPage page, NPCSegment segment)
+        {
+            segment.Check();
+        }
+
 
         private void ProcessSpecial(PlayerObject player, NPCPage page)
         {

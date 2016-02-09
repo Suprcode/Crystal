@@ -46,6 +46,7 @@ namespace Server
 	    public static string AwakeningDropFilename = "00Awakening";
         public static string StrongboxDropFilename = "00Strongbox";
         public static string BlackstoneDropFilename = "00Blackstone";
+        public static string MonsterNPCFilename = "00Monster";
 
         //Network
         public static string IPAddress = "127.0.0.1";
@@ -406,6 +407,14 @@ namespace Server
                 Directory.CreateDirectory(LogPath);
 
             string fileName = Path.Combine(Settings.NPCPath, DefaultNPCFilename + ".txt");
+
+            if (!File.Exists(fileName))
+            {
+                FileStream NewFile = File.Create(fileName);
+                NewFile.Close();
+            }
+
+            fileName = Path.Combine(Settings.NPCPath, MonsterNPCFilename + ".txt");
 
             if (!File.Exists(fileName))
             {
