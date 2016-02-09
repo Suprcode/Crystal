@@ -251,7 +251,6 @@ namespace Server.MirObjects
         public Point NPCMoveCoord;
         public string NPCInputStr;
 
-        public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
 
         public bool UserMatch;
         public string MatchName;

@@ -58,7 +58,7 @@ namespace Server.MirObjects
             return words;
         }
 
-        public void AddVariable(PlayerObject player, string key, string value)
+        public void AddVariable(MapObject player, string key, string value)
         {
             Regex regex = new Regex(@"[A-Za-z][0-9]");
 
@@ -74,7 +74,7 @@ namespace Server.MirObjects
             player.NPCVar.Add(new KeyValuePair<string, string>(key, value));
         }
 
-        public string FindVariable(PlayerObject player, string key)
+        public string FindVariable(MapObject player, string key)
         {
             Regex regex = new Regex(@"\%[A-Za-z][0-9]");
 
@@ -89,6 +89,22 @@ namespace Server.MirObjects
 
             return key;
         }
+        public string FindVariable(string key)
+        {
+            Regex regex = new Regex(@"\%[A-Za-z][0-9]");
+
+            if (!regex.Match(key).Success) return key;
+
+            string tempKey = key.Substring(1);
+            /* //hoping i truly dont need that :p
+            foreach (KeyValuePair<string, string> t in player.NPCVar)
+            {
+                if (String.Equals(t.Key, tempKey, StringComparison.CurrentCultureIgnoreCase)) return t.Value;
+            }
+            */
+            return key;
+        }
+
 
         public void ParseCheck(string line)
         {
@@ -1228,6 +1244,428 @@ namespace Server.MirObjects
             if (string.IsNullOrEmpty(newValue)) return param;
 
             return param.Replace(match.Value, newValue);
+        }
+        public string ReplaceValue(MonsterObject Monster, string param)
+        {
+            var regex = new Regex(@"\<\$(.*)\>");
+            var varRegex = new Regex(@"(.*?)\(([A-Z][0-9])\)");
+
+            var match = regex.Match(param);
+
+            if (!match.Success) return param;
+
+            string innerMatch = match.Groups[1].Captures[0].Value.ToUpper();
+
+            Match varMatch = varRegex.Match(innerMatch);
+
+            if (varRegex.Match(innerMatch).Success)
+                innerMatch = innerMatch.Replace(varMatch.Groups[2].Captures[0].Value.ToUpper(), "");
+
+            string newValue = string.Empty;
+
+            switch (innerMatch)
+            {
+                case "OUTPUT()":
+                    newValue = FindVariable(Monster, "%" + varMatch.Groups[2].Captures[0].Value.ToUpper());
+                    break;
+                case "USERNAME":
+                    newValue = Monster.Name;
+                    break;
+                case "LEVEL":
+                    newValue = Monster.Level.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "MAP":
+                    newValue = Monster.CurrentMap.Info.FileName;
+                    break;
+                case "X_COORD":
+                    newValue = Monster.CurrentLocation.X.ToString();
+                    break;
+                case "Y_COORD":
+                    newValue = Monster.CurrentLocation.Y.ToString();
+                    break;
+                case "HP":
+                    newValue = Monster.HP.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "MAXHP":
+                    newValue = Monster.MaxHP.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "DATE":
+                    newValue = DateTime.Now.ToShortDateString();
+                    break;
+                case "USERCOUNT":
+                    newValue = SMain.Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case "GUILDWARTIME":
+                    newValue = Settings.Guild_WarTime.ToString();
+                    break;
+                case "GUILDWARFEE":
+                    newValue = Settings.Guild_WarCost.ToString();
+                    break;
+                default:
+                    newValue = string.Empty;
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(newValue)) return param;
+
+            return param.Replace(match.Value, newValue);
+        }
+
+        public bool Check()
+        {
+            var failed = false;
+
+            for (int i = 0; i < CheckList.Count; i++)
+            {
+                NPCChecks check = CheckList[i];
+                List<string> param = check.Params.Select(t => FindVariable(t)).ToList();
+
+                uint tempUint;
+                int tempInt;
+                int tempInt2;
+                Map map;
+                switch (check.Type)
+                {
+                    case CheckType.CheckDay:
+                        var day = DateTime.Now.DayOfWeek.ToString().ToUpper();
+                        var dayToCheck = param[0].ToUpper();
+
+                        failed = day != dayToCheck;
+                        break;
+
+                    case CheckType.CheckHour:
+                        if (!uint.TryParse(param[0], out tempUint))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        var hour = DateTime.Now.Hour;
+                        var hourToCheck = tempUint;
+
+                        failed = hour != hourToCheck;
+                        break;
+
+                    case CheckType.CheckMinute:
+                        if (!uint.TryParse(param[0], out tempUint))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        var minute = DateTime.Now.Minute;
+                        var minuteToCheck = tempUint;
+
+                        failed = minute != minuteToCheck;
+                        break;
+
+                    case CheckType.CheckHum:
+                        if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        if (map == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = !Compare(param[0], map.Players.Count(), tempInt);
+
+                        break;
+
+                    case CheckType.CheckMon:
+                        if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        if (map == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = !Compare(param[0], map.MonsterCount, tempInt);
+
+                        break;
+
+                    case CheckType.CheckExactMon:
+                        if (SMain.Envir.GetMonsterInfo(param[0]) == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        if (!int.TryParse(param[2], out tempInt) || !int.TryParse(param[4], out tempInt2))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[3], tempInt2);
+                        if (map == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = (!Compare(param[1], SMain.Envir.Objects.Count((
+                            d => d.CurrentMap == map &&
+                                d.Race == ObjectType.Monster &&
+                                string.Equals(d.Name.Replace(" ", ""), param[0], StringComparison.OrdinalIgnoreCase) &&
+                                !d.Dead)), tempInt));
+
+                        break;
+
+                    case CheckType.Random:
+                        if (!int.TryParse(param[0], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = 0 != SMain.Envir.Random.Next(0, tempInt);
+                        break;
+                    case CheckType.CheckCalc:
+                        int left;
+                        int right;
+
+                        if (!int.TryParse(param[0], out left) || !int.TryParse(param[2], out right))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        try
+                        {
+                            failed = !Compare(param[1], left, right);
+                        }
+                        catch (ArgumentException)
+                        {
+                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                            return true;
+                        }
+                        break;
+                }
+
+                if (!failed) continue;
+
+                Failed();
+                return false;
+            }
+
+            Success();
+            return true;
+
+        }
+
+        public bool Check(MonsterObject Monster)
+        {
+            var failed = false;
+
+            for (int i = 0; i < CheckList.Count; i++)
+            {
+                NPCChecks check = CheckList[i];
+                List<string> param = check.Params.Select(t => FindVariable(Monster, t)).ToList();
+
+                for (int j = 0; j < param.Count; j++)
+                {
+                    var parts = param[j].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length == 0) continue;
+
+                    foreach (var part in parts)
+                    {
+                        param[j] = param[j].Replace(part, ReplaceValue(Monster, part));
+                    }
+                }
+
+                byte tempByte;
+                uint tempUint;
+                int tempInt;
+                int tempInt2;
+                Map map;
+
+                switch (check.Type)
+                {
+                    case CheckType.Level:
+                        if (!byte.TryParse(param[1], out tempByte))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        try
+                        {
+                            failed = !Compare(param[0], Monster.Level, tempByte);
+                        }
+                        catch (ArgumentException)
+                        {
+                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            return true;
+                        }
+                        break;
+                    case CheckType.CheckDay:
+                        var day = DateTime.Now.DayOfWeek.ToString().ToUpper();
+                        var dayToCheck = param[0].ToUpper();
+
+                        failed = day != dayToCheck;
+                        break;
+
+                    case CheckType.CheckHour:
+                        if (!uint.TryParse(param[0], out tempUint))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        var hour = DateTime.Now.Hour;
+                        var hourToCheck = tempUint;
+
+                        failed = hour != hourToCheck;
+                        break;
+
+                    case CheckType.CheckMinute:
+                        if (!uint.TryParse(param[0], out tempUint))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        var minute = DateTime.Now.Minute;
+                        var minuteToCheck = tempUint;
+
+                        failed = minute != minuteToCheck;
+                        break;
+
+                    case CheckType.CheckRange:
+                        int x, y, range;
+                        if (!int.TryParse(param[0], out x) || !int.TryParse(param[1], out y) || !int.TryParse(param[2], out range))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        var target = new Point { X = x, Y = y };
+
+                        failed = !Functions.InRange(Monster.CurrentLocation, target, range);
+                        break;
+
+                    case CheckType.CheckMap:
+                        map = SMain.Envir.GetMapByNameAndInstance(param[0]);
+
+                        failed = Monster.CurrentMap != map;
+                        break;
+                    case CheckType.CheckHum:
+                        if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        if (map == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = !Compare(param[0], map.Players.Count(), tempInt);
+
+                        break;
+
+                    case CheckType.CheckMon:
+                        if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        if (map == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = !Compare(param[0], map.MonsterCount, tempInt);
+
+                        break;
+
+                    case CheckType.CheckExactMon:
+                        if (SMain.Envir.GetMonsterInfo(param[0]) == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        if (!int.TryParse(param[2], out tempInt) || !int.TryParse(param[4], out tempInt2))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[3], tempInt2);
+                        if (map == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = (!Compare(param[1], SMain.Envir.Objects.Count((
+                            d => d.CurrentMap == map &&
+                                d.Race == ObjectType.Monster &&
+                                string.Equals(d.Name.Replace(" ", ""), param[0], StringComparison.OrdinalIgnoreCase) &&
+                                !d.Dead)), tempInt));
+
+                        break;
+
+                    case CheckType.Random:
+                        if (!int.TryParse(param[0], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        failed = 0 != SMain.Envir.Random.Next(0, tempInt);
+                        break;
+                    case CheckType.CheckCalc:
+                        int left;
+                        int right;
+
+                        if (!int.TryParse(param[0], out left) || !int.TryParse(param[2], out right))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        try
+                        {
+                            failed = !Compare(param[1], left, right);
+                        }
+                        catch (ArgumentException)
+                        {
+                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                            return true;
+                        }
+                        break;
+                }
+
+                if (!failed) continue;
+
+                Failed(Monster);
+                return false;
+            }
+
+            Success(Monster);
+            return true;
+
         }
 
         public bool Check(PlayerObject player)
@@ -2887,6 +3325,324 @@ namespace Server.MirObjects
                 }
             }
         }
+        private void Act(IList<NPCActions> acts, MonsterObject Monster)
+        {
+
+            for (var i = 0; i < acts.Count; i++)
+            {
+                string tempString = string.Empty;
+                int tempInt;
+                byte tempByte;
+                long tempLong;
+                bool tempBool;
+                Packet p;
+
+                MonsterInfo monInfo;
+
+                NPCActions act = acts[i];
+                List<string> param = act.Params.Select(t => FindVariable(Monster, t)).ToList();
+
+                for (int j = 0; j < param.Count; j++)
+                {
+                    var parts = param[j].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (parts.Length == 0) continue;
+
+                    foreach (var part in parts)
+                    {
+                        param[j] = param[j].Replace(part, ReplaceValue(Monster, part));
+                    }
+                }
+                Map map;
+                ChatType chatType;
+                switch (act.Type)
+                {
+                    case ActionType.GiveHP:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+                        Monster.ChangeHP(tempInt);
+                        break;
+                    case ActionType.GlobalMessage:
+                        if (!Enum.TryParse(param[1], true, out chatType)) return;
+
+                        p = new S.Chat { Message = param[0], Type = chatType };
+                        SMain.Envir.Broadcast(p);
+                        break;
+
+                    /* //mobs have no real "delayed" npc code so not added this yet
+                                        case ActionType.Goto:
+                                            DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
+                                            player.ActionList.Add(action);
+                                            break;
+                    */
+                    case ActionType.Break:
+                        Page.BreakFromSegments = true;
+                        break;
+
+                    case ActionType.Param1:
+                        if (!int.TryParse(param[1], out tempInt)) return;
+
+                        Param1 = param[0];
+                        Param1Instance = tempInt;
+                        break;
+
+                    case ActionType.Param2:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        Param2 = tempInt;
+                        break;
+
+                    case ActionType.Param3:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        Param3 = tempInt;
+                        break;
+
+                    case ActionType.Mongen:
+                        if (Param1 == null || Param2 == 0 || Param3 == 0) return;
+                        if (!byte.TryParse(param[1], out tempByte)) return;
+
+                        map = SMain.Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                        if (map == null) return;
+
+                        monInfo = SMain.Envir.GetMonsterInfo(param[0]);
+                        if (monInfo == null) return;
+
+                        for (int j = 0; j < tempByte; j++)
+                        {
+                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
+                            if (monster == null) return;
+                            monster.Direction = 0;
+                            monster.ActionTime = SMain.Envir.Time + 1000;
+                            monster.Spawn(map, new Point(Param2, Param3));
+                        }
+                        break;
+                    case ActionType.MonClear:
+                        if (!int.TryParse(param[1], out tempInt)) return;
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[0], tempInt);
+                        if (map == null) return;
+
+                        foreach (var cell in map.Cells)
+                        {
+                            if (cell == null || cell.Objects == null) continue;
+
+                            for (int j = 0; j < cell.Objects.Count(); j++)
+                            {
+                                MapObject ob = cell.Objects[j];
+
+                                if (ob.Race != ObjectType.Monster) continue;
+                                if (ob.Dead) continue;
+                                ob.Die();
+                            }
+                        }
+                        break;
+
+                    case ActionType.Mov:
+                        string value = param[0];
+                        AddVariable(Monster, value, param[1]);
+                        break;
+
+                    case ActionType.Calc:
+                        int left;
+                        int right;
+
+                        bool resultLeft = int.TryParse(param[0], out left);
+                        bool resultRight = int.TryParse(param[2], out right);
+
+                        if (resultLeft && resultRight)
+                        {
+                            try
+                            {
+                                int result = Calculate(param[1], left, right);
+                                AddVariable(Monster, param[3].Replace("-", ""), result.ToString());
+                            }
+                            catch (ArgumentException)
+                            {
+                                SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                            }
+                        }
+                        else
+                        {
+                            AddVariable(Monster, param[3].Replace("-", ""), param[0] + param[2]);
+                        }
+                        break;
+
+                    case ActionType.GiveBuff:
+
+                        if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
+
+                        tempBool = false;
+                        bool tempBool2 = false;
+
+                        long.TryParse(param[1], out tempLong);
+
+                        string[] stringValues = param[2].Split(',');
+
+                        if (stringValues.Length < 1) return;
+
+                        int[] intValues = new int[stringValues.Length];
+
+                        for (int j = 0; j < intValues.Length; j++)
+                        {
+                            int.TryParse(stringValues[j], out intValues[j]);
+                        }
+
+                        if (intValues.Length < 1) return;
+
+                        if (param[3].Length > 0)
+                            bool.TryParse(param[3], out tempBool);
+
+                        if (param[4].Length > 0)
+                            bool.TryParse(param[4], out tempBool2);
+
+                        Buff buff = new Buff
+                        {
+                            Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
+                            Caster = Monster,
+                            ExpireTime = SMain.Envir.Time + tempLong * 1000,
+                            Values = intValues,
+                            Infinite = tempBool,
+                            Visible = tempBool2
+                        };
+
+                        Monster.AddBuff(buff);
+                        break;
+
+                    case ActionType.RemoveBuff:
+                        if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
+
+                        BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
+
+                        for (int j = 0; j < Monster.Buffs.Count; j++)
+                        {
+                            if (Monster.Buffs[j].Type != bType) continue;
+
+                            Monster.Buffs[j].Infinite = false;
+                            Monster.Buffs[j].ExpireTime = SMain.Envir.Time;
+                        }
+                        break;
+
+                    case ActionType.LoadValue:
+                        string val = param[0];
+                        string filePath = param[1];
+                        string header = param[2];
+                        string key = param[3];
+
+                        InIReader reader = new InIReader(filePath);
+                        string loadedString = reader.ReadString(header, key, "");
+
+                        if (loadedString == "") break;
+                        AddVariable(Monster, val, loadedString);
+                        break;
+
+                    case ActionType.SaveValue:
+                        filePath = param[0];
+                        header = param[1];
+                        key = param[2];
+                        val = param[3];
+
+                        reader = new InIReader(filePath);
+                        reader.Write(header, key, val);
+                        break;
+                }
+            }
+        }
+        private void Act(IList<NPCActions> acts)
+        {
+
+            for (var i = 0; i < acts.Count; i++)
+            {
+                string tempString = string.Empty;
+                int tempInt;
+                byte tempByte;
+                Packet p;
+
+                MonsterInfo monInfo;
+
+                NPCActions act = acts[i];
+                List<string> param = act.Params.Select(t => FindVariable(t)).ToList();
+                Map map;
+                ChatType chatType;
+                switch (act.Type)
+                {
+                    case ActionType.ClearNameList:
+                        tempString = param[0];
+                        File.WriteAllLines(tempString, new string[] { });
+                        break;
+
+                    case ActionType.GlobalMessage:
+                        if (!Enum.TryParse(param[1], true, out chatType)) return;
+
+                        p = new S.Chat { Message = param[0], Type = chatType };
+                        SMain.Envir.Broadcast(p);
+                        break;
+
+                    case ActionType.Break:
+                        Page.BreakFromSegments = true;
+                        break;
+
+                    case ActionType.Param1:
+                        if (!int.TryParse(param[1], out tempInt)) return;
+
+                        Param1 = param[0];
+                        Param1Instance = tempInt;
+                        break;
+
+                    case ActionType.Param2:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        Param2 = tempInt;
+                        break;
+
+                    case ActionType.Param3:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        Param3 = tempInt;
+                        break;
+
+                    case ActionType.Mongen:
+                        if (Param1 == null || Param2 == 0 || Param3 == 0) return;
+                        if (!byte.TryParse(param[1], out tempByte)) return;
+
+                        map = SMain.Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                        if (map == null) return;
+
+                        monInfo = SMain.Envir.GetMonsterInfo(param[0]);
+                        if (monInfo == null) return;
+
+                        for (int j = 0; j < tempByte; j++)
+                        {
+                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
+                            if (monster == null) return;
+                            monster.Direction = 0;
+                            monster.ActionTime = SMain.Envir.Time + 1000;
+                            monster.Spawn(map, new Point(Param2, Param3));
+                        }
+                        break;
+
+                    case ActionType.MonClear:
+                        if (!int.TryParse(param[1], out tempInt)) return;
+
+                        map = SMain.Envir.GetMapByNameAndInstance(param[0], tempInt);
+                        if (map == null) return;
+
+                        foreach (var cell in map.Cells)
+                        {
+                            if (cell == null || cell.Objects == null) continue;
+
+                            for (int j = 0; j < cell.Objects.Count(); j++)
+                            {
+                                MapObject ob = cell.Objects[j];
+
+                                if (ob.Race != ObjectType.Monster) continue;
+                                if (ob.Dead) continue;
+                                ob.Die();
+                            }
+                        }
+                        break;
+                }
+            }
+        }
         private void Success(PlayerObject player)
         {
             Act(ActList, player);
@@ -2907,6 +3663,26 @@ namespace Server.MirObjects
 
             player.NPCSpeech.AddRange(parseElseSay);
             //player.Enqueue(new S.NPCResponse { Page = parseElseSay });
+        }
+
+        private void Success(MonsterObject Monster)
+        {
+            Act(ActList, Monster);
+        }
+
+        private void Failed(MonsterObject Monster)
+        {
+            Act(ElseActList, Monster);
+        }
+
+        private void Success()
+        {
+            Act(ActList);
+        }
+
+        private void Failed()
+        {
+            Act(ElseActList);
         }
 
 

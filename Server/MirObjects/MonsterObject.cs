@@ -385,6 +385,10 @@ namespace Server.MirObjects
         {
             base.Spawned();
             ActionTime = Envir.Time + 2000;
+            if (Info.HasSpawnScript && (SMain.Envir.MonsterNPC != null))
+            {
+                SMain.Envir.MonsterNPC.Call(string.Format("[@_SPAWN({0})]", Info.Index));
+            }
         }
 
         protected virtual void RefreshBase()
@@ -561,6 +565,11 @@ namespace Server.MirObjects
             DeadTime = Envir.Time + DeadDelay;
 
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))
+            {
+                SMain.Envir.MonsterNPC.Call(string.Format("[@_DIE({0})]", Info.Index));
+            }
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
             {

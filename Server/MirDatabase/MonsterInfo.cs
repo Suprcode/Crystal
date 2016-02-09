@@ -28,6 +28,9 @@ namespace Server.MirDatabase
 
         public bool CanTame = true, CanPush = true, AutoRev = true, Undead = false;
 
+        public bool HasSpawnScript;
+        public bool HasDieScript;
+
         public MonsterInfo()
         {
         }
