@@ -112,7 +112,7 @@ namespace Server.MirObjects.Monsters
                 }
                 if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))
                 {
-                    SMain.Envir.MonsterNPC.Call(string.Format("[@_DIE({0})]", Info.Index));
+                    SMain.Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
                 }
 
 
