@@ -1277,9 +1277,8 @@ namespace Server.MirEnvir
                         location = (Point)data[2];
                         MirDirection direction = (MirDirection)data[3];
 
-                        int criticalDamage = (int)data[4];
-                        int nearDamage = (int)data[5];
-                        int farDamage = (int)data[6];
+                        int nearDamage = (int)data[4];
+                        int farDamage = (int)data[5];
 
                         int col = 3;
                         int row = 3;
