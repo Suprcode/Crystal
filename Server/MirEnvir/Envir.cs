@@ -1830,6 +1830,7 @@ namespace Server.MirEnvir
             MapList.Clear();
             GameshopLog.Clear();
             CustomCommands.Clear();
+            MonsterCount = 0;
 
             LoadDB();
 
