@@ -5345,8 +5345,10 @@ namespace Server.MirObjects
         public void RangeAttack(MirDirection dir, Point location, uint targetID)
         {
             LogTime = Envir.Time + Globals.LogDelay;
-
-            if (Info.Equipment[(int)EquipmentSlot.Weapon] == null || ((Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape / 100) != 2)) return;
+            //bug: when you wear a mirbow the shape is actualy from the old item :p
+            if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
+            ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
+            if ((RealItem.Shape / 100) != 2) return;
             if (Functions.InRange(CurrentLocation, location, 9) == false) return;
 
             MapObject target = null;
