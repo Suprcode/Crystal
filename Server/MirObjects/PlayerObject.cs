@@ -15084,6 +15084,10 @@ namespace Server.MirObjects
             PendingGuildInvite = null;
             EnableGuildInvite = false;
             GuildCanRequestItems = true;
+            //refresh guildbuffs
+            RefreshStats();
+            if (MyGuild.BuffList.Count > 0)
+                Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
         }
         public void RequestGuildInfo(byte Type)
         {
