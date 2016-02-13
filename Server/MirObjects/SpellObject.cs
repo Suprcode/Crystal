@@ -126,7 +126,7 @@ namespace Server.MirObjects
                     if (ob.Dead) return;
 
                     if (!ob.IsAttackTarget(Caster)) return;
-                    ob.Attacked(Caster, Value, DefenceType.None, false);
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     if (!ob.Dead)
                     ob.ApplyPoison(new Poison
                         {

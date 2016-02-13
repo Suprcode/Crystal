@@ -18,6 +18,7 @@ namespace Server.MirDatabase
         public uint DelayBase = 1800, DelayReduction;
         public ushort PowerBase, PowerBonus;
         public ushort MPowerBase, MPowerBonus;
+        public float MultiplierBase = 1.0f, MultiplierBonus;
         public byte Range = 9;
 
         public override string ToString()
@@ -52,6 +53,11 @@ namespace Server.MirDatabase
 
             if (version > 66)
                 Range = reader.ReadByte();
+            if (version > 70)
+            {
+                MultiplierBase = reader.ReadSingle();
+                MultiplierBonus = reader.ReadSingle();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -74,6 +80,8 @@ namespace Server.MirDatabase
             writer.Write(MPowerBase);
             writer.Write(MPowerBonus);
             writer.Write(Range);
+            writer.Write(MultiplierBase);
+            writer.Write(MultiplierBonus);
         }
     }
 
@@ -158,10 +166,19 @@ namespace Server.MirDatabase
                     IsTempSpell = IsTempSpell,
                     Delay = GetDelay(),
                     Range = Info.Range,
-                    CastTime = SMain.Envir.Time > CastTime? SMain.Envir.Time - CastTime: 0
+                    CastTime = (CastTime != 0) && (SMain.Envir.Time > CastTime)? SMain.Envir.Time - CastTime: 0
             };
         }
 
+        public int GetDamage(int DamageBase)
+        {
+            return (int)((DamageBase + GetPower()) * GetMultiplier());
+        }
+
+        public float GetMultiplier()
+        {
+            return (Info.MultiplierBase + (Level * Info.MultiplierBonus));
+        }
 
         public int GetPower()
         {

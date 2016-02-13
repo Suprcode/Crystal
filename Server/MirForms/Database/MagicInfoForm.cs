@@ -29,7 +29,7 @@ namespace Server
             UpdateMagicForm();
         }
 
-        private void UpdateMagicForm()
+        private void UpdateMagicForm(byte field = 0)
         {
              _selectedMagicInfo = (MagicInfo)MagiclistBox.SelectedItem;
 
@@ -41,6 +41,7 @@ namespace Server
                  lblBookValid.Text = "Searching";
                  lblSelected.Text = "Selected Skill: none";
                  lblDamageExample.Text = "";
+                 lblDamageExplained.Text = "";
                  txtSkillIcon.Text = "0";
                  txtSkillLvl1Points.Text = "0";
                  txtSkillLvl1Req.Text = "0";
@@ -62,6 +63,7 @@ namespace Server
                  tabControl1.Enabled = true;
                  lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
                  lblDamageExample.Text = string.Format("Damage @ Skill level 0: {0:000}-{1:000}   |||   level 1: {2:000}-{3:000}   |||   level 2: {4:000}-{5:000}   |||   level 3: {6:000}-{7:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3));
+                 lblDamageExplained.Text = string.Format("Damage: {{Random(minstat-maxstat) + [<(random({0}-{1})/4) X (skill level +1)> + random<{2}-{3}>]}}  X  {{{4} + (skill level * {5})}}", _selectedMagicInfo.MPowerBase, _selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus, _selectedMagicInfo.PowerBase, _selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase, _selectedMagicInfo.MultiplierBase, _selectedMagicInfo.MultiplierBonus);
                  txtSkillIcon.Text = _selectedMagicInfo.Icon.ToString();
                  txtSkillLvl1Points.Text = _selectedMagicInfo.Need1.ToString();
                  txtSkillLvl1Req.Text = _selectedMagicInfo.Level1.ToString();
@@ -77,6 +79,10 @@ namespace Server
                  txtDmgBaseMax.Text = (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus).ToString();
                  txtDmgBonusMin.Text = _selectedMagicInfo.MPowerBase.ToString();
                  txtDmgBonusMax.Text = (_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus).ToString();
+                 if (field != 1)
+                    txtDmgMultBase.Text = _selectedMagicInfo.MultiplierBase.ToString();
+                 if (field != 2)
+                 txtDmgMultBoost.Text = _selectedMagicInfo.MultiplierBonus.ToString();
                  txtRange.Text = _selectedMagicInfo.Range.ToString();
                  ItemInfo Book = Envir.GetBook((short)_selectedMagicInfo.Spell);
                  if (Book != null)
@@ -95,12 +101,12 @@ namespace Server
         private int GetMaxPower(byte level)
         {
             if (_selectedMagicInfo == null) return 0;
-            return (int)Math.Round(((_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus) / 4F) * (level + 1) + (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus));
+            return (int)Math.Round((((_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus) / 4F) * (level + 1) + (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus))* (_selectedMagicInfo.MultiplierBase + (level * _selectedMagicInfo.MultiplierBonus)));
         }
         private int GetMinPower(byte level)
         {
             if (_selectedMagicInfo == null) return 0;
-            return (int)Math.Round((_selectedMagicInfo.MPowerBase / 4F) * (level + 1) + _selectedMagicInfo.PowerBase);
+            return (int)Math.Round(((_selectedMagicInfo.MPowerBase / 4F) * (level + 1) + _selectedMagicInfo.PowerBase) * (_selectedMagicInfo.MultiplierBase + (level * _selectedMagicInfo.MultiplierBonus)));
         }
 
         private void InitializeComponent()
@@ -110,7 +116,6 @@ namespace Server
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.lblSelected = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.lblDamageExample = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtDmgBonusMax = new System.Windows.Forms.TextBox();
@@ -123,6 +128,8 @@ namespace Server
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label20 = new System.Windows.Forms.Label();
+            this.txtRange = new System.Windows.Forms.TextBox();
             this.txtDelayReduction = new System.Windows.Forms.TextBox();
             this.txtDelayBase = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -152,11 +159,13 @@ namespace Server
             this.label1 = new System.Windows.Forms.Label();
             this.lblBookValid = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.txtRange = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
+            this.txtDmgMultBoost = new System.Windows.Forms.TextBox();
+            this.txtDmgMultBase = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.lblDamageExplained = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -185,8 +194,9 @@ namespace Server
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lblDamageExample);
+            this.tabPage1.Controls.Add(this.lblDamageExplained);
             this.tabPage1.Controls.Add(this.lblSelected);
-            this.tabPage1.Controls.Add(this.panel5);
             this.tabPage1.Controls.Add(this.panel4);
             this.tabPage1.Controls.Add(this.panel3);
             this.tabPage1.Controls.Add(this.panel2);
@@ -211,25 +221,22 @@ namespace Server
             this.lblSelected.TabIndex = 8;
             this.lblSelected.Text = "Selected skill: ";
             // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.lblDamageExample);
-            this.panel5.Location = new System.Drawing.Point(14, 315);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(455, 28);
-            this.panel5.TabIndex = 7;
-            // 
             // lblDamageExample
             // 
             this.lblDamageExample.AutoSize = true;
-            this.lblDamageExample.Location = new System.Drawing.Point(8, 8);
+            this.lblDamageExample.Location = new System.Drawing.Point(11, 394);
             this.lblDamageExample.Name = "lblDamageExample";
-            this.lblDamageExample.Size = new System.Drawing.Size(0, 13);
+            this.lblDamageExample.Size = new System.Drawing.Size(89, 13);
             this.lblDamageExample.TabIndex = 0;
+            this.lblDamageExample.Text = "Damage example";
             // 
             // panel4
             // 
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.txtDmgMultBoost);
+            this.panel4.Controls.Add(this.txtDmgMultBase);
+            this.panel4.Controls.Add(this.label21);
+            this.panel4.Controls.Add(this.label22);
             this.panel4.Controls.Add(this.txtDmgBonusMax);
             this.panel4.Controls.Add(this.txtDmgBonusMin);
             this.panel4.Controls.Add(this.label18);
@@ -241,7 +248,7 @@ namespace Server
             this.panel4.Controls.Add(this.label15);
             this.panel4.Location = new System.Drawing.Point(14, 166);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(233, 143);
+            this.panel4.Size = new System.Drawing.Size(233, 191);
             this.panel4.TabIndex = 6;
             // 
             // txtDmgBonusMax
@@ -338,9 +345,26 @@ namespace Server
             this.panel3.Controls.Add(this.label12);
             this.panel3.Location = new System.Drawing.Point(253, 166);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(216, 143);
+            this.panel3.Size = new System.Drawing.Size(216, 191);
             this.panel3.TabIndex = 5;
             this.toolTip1.SetToolTip(this.panel3, "delay = <base delay> - (skill level * <decrease>)");
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(12, 77);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(91, 13);
+            this.label20.TabIndex = 15;
+            this.label20.Text = "Range (0 No limit)";
+            // 
+            // txtRange
+            // 
+            this.txtRange.Location = new System.Drawing.Point(121, 74);
+            this.txtRange.Name = "txtRange";
+            this.txtRange.Size = new System.Drawing.Size(79, 20);
+            this.txtRange.TabIndex = 14;
+            this.txtRange.TextChanged += new System.EventHandler(this.txtRange_TextChanged);
             // 
             // txtDelayReduction
             // 
@@ -603,22 +627,50 @@ namespace Server
             this.lblBookValid.TabIndex = 0;
             this.lblBookValid.Text = "Searching for books";
             // 
-            // txtRange
+            // txtDmgMultBoost
             // 
-            this.txtRange.Location = new System.Drawing.Point(121, 74);
-            this.txtRange.Name = "txtRange";
-            this.txtRange.Size = new System.Drawing.Size(79, 20);
-            this.txtRange.TabIndex = 14;
-            this.txtRange.TextChanged += new System.EventHandler(this.txtRange_TextChanged);
+            this.txtDmgMultBoost.Location = new System.Drawing.Point(168, 157);
+            this.txtDmgMultBoost.Name = "txtDmgMultBoost";
+            this.txtDmgMultBoost.Size = new System.Drawing.Size(46, 20);
+            this.txtDmgMultBoost.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.txtDmgMultBoost, "extra multiplyer apply\'d for every skill level");
+            this.txtDmgMultBoost.TextChanged += new System.EventHandler(this.txtDmgMultBoost_TextChanged);
             // 
-            // label20
+            // txtDmgMultBase
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(12, 77);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(101, 13);
-            this.label20.TabIndex = 15;
-            this.label20.Text = "Range (0 No target)";
+            this.txtDmgMultBase.Location = new System.Drawing.Point(168, 131);
+            this.txtDmgMultBase.Name = "txtDmgMultBase";
+            this.txtDmgMultBase.Size = new System.Drawing.Size(46, 20);
+            this.txtDmgMultBase.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.txtDmgMultBase, "multiplier apply\'d to total skill dmg");
+            this.txtDmgMultBase.TextChanged += new System.EventHandler(this.txtDmgMultBase_TextChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(12, 160);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(154, 13);
+            this.label21.TabIndex = 12;
+            this.label21.Text = "Damage multiplyer boost/skilllvl";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(12, 134);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(119, 13);
+            this.label22.TabIndex = 11;
+            this.label22.Text = "Damage multiplyer base";
+            // 
+            // lblDamageExplained
+            // 
+            this.lblDamageExplained.AutoSize = true;
+            this.lblDamageExplained.Location = new System.Drawing.Point(11, 366);
+            this.lblDamageExplained.Name = "lblDamageExplained";
+            this.lblDamageExplained.Size = new System.Drawing.Size(50, 13);
+            this.lblDamageExplained.TabIndex = 9;
+            this.lblDamageExplained.Text = "Damage:";
             // 
             // MagicInfoForm
             // 
@@ -631,8 +683,6 @@ namespace Server
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -678,6 +728,16 @@ namespace Server
         private bool IsValid(ref uint input)
         {
             if (!uint.TryParse(ActiveControl.Text, out input))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return false;
+            }
+            return true;
+        }
+
+        private bool IsValid(ref float input)
+        {
+            if (!float.TryParse(ActiveControl.Text, out input))
             {
                 ActiveControl.BackColor = Color.Red;
                 return false;
@@ -797,7 +857,8 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-            _selectedMagicInfo.PowerBonus = temp;
+            _selectedMagicInfo.PowerBonus =  (ushort)(temp - _selectedMagicInfo.PowerBase);
+            UpdateMagicForm();
         }
 
         private void txtDmgBonusMin_TextChanged(object sender, EventArgs e)
@@ -823,7 +884,8 @@ namespace Server
             }
 
             ActiveControl.BackColor = SystemColors.Window;
-            _selectedMagicInfo.MPowerBonus = temp;
+            _selectedMagicInfo.MPowerBonus = (ushort)(temp - _selectedMagicInfo.MPowerBase);
+            UpdateMagicForm();
         }
 
         private void txtDelayBase_TextChanged(object sender, EventArgs e)
@@ -854,6 +916,29 @@ namespace Server
             
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Range = temp;
+        }
+
+        private void txtDmgMultBase_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            float temp = 0;
+            if (!IsValid(ref temp)) return;
+
+
+            ActiveControl.BackColor = SystemColors.Window;
+            _selectedMagicInfo.MultiplierBase = temp;
+            UpdateMagicForm(1);
+        }
+
+        private void txtDmgMultBoost_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            float temp = 0;
+            if (!IsValid(ref temp)) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+            _selectedMagicInfo.MultiplierBonus = temp;
+            UpdateMagicForm(2);
         }
     }
 }
