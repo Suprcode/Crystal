@@ -4751,6 +4751,7 @@ namespace Client.MirScenes
             {
                 //guild leveled
             }
+            bool GuildChange = User.GuildName != p.GuildName;
             User.GuildName = p.GuildName;
             User.GuildRankName = p.GuildRankName;
             GuildDialog.Level = p.Level;
@@ -4767,10 +4768,13 @@ namespace Client.MirScenes
             GuildDialog.MyRankId = p.MyRankId;
             GuildDialog.UpdateMembers();
             //reset guildbuffs
-            GuildDialog.EnabledBuffs.Clear();
-            GuildDialog.UpdateActiveStats();
-            RemoveBuff(new S.RemoveBuff { ObjectID = User.ObjectID, Type = BuffType.Guild });
-            User.RefreshStats();
+            if (GuildChange)
+            {
+                GuildDialog.EnabledBuffs.Clear();
+                GuildDialog.UpdateActiveStats();
+                RemoveBuff(new S.RemoveBuff { ObjectID = User.ObjectID, Type = BuffType.Guild });
+                User.RefreshStats();
+            }
         }
 
         private void GuildExpGain(S.GuildExpGain p)

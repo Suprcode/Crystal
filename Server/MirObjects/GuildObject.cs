@@ -253,8 +253,6 @@ namespace Server.MirObjects
             GuildMember Member = new GuildMember() { name = newmember.Info.Name, Player = newmember, Id = newmember.Info.Index, LastLogin = Envir.Now, Online = true };
             currentrank.Members.Add(Member);
             PlayerLogged(newmember, true, true);
-            newmember.RefreshStats();
-            newmember.Enqueue(new ServerPackets.GuildBuffList() { ActiveBuffs = BuffList });
             Membercount++;
             NeedSave = true;
         }
