@@ -411,7 +411,14 @@ namespace Client
                     //text += "\r\n";
                     text += string.Format(", Objects: {0}", MapControl.Objects.Count);
                 }
-
+                if (MirObjects.MapObject.MouseObject != null)
+                {
+                    text += string.Format(", Target: {0}", MirObjects.MapObject.MouseObject.Name);
+                }
+                else
+                {
+                    text += string.Format(", Target: none");
+                }
             }
             else
             {

@@ -787,9 +787,21 @@ namespace Client.MirGraphics
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
-        public bool VisiblePixel(int index, Point point, bool accuate)
+        public bool VisiblePixel(int index, Point point, bool accurate)
         {
-            return CheckImage(index) && _images[index].VisiblePixel(point, accuate);
+            if (!CheckImage(index)) return false;
+            bool output = false;
+            output = _images[index].VisiblePixel(point, accurate);
+            Point targetpoint;
+            if (!accurate) //allow for some extra space arround your mouse
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    targetpoint = Functions.PointMove(point, (MirDirection)i, 1);
+                    output |= _images[index].VisiblePixel(targetpoint, accurate);
+                }
+            }
+            return output;
         }
 
     }
