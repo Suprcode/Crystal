@@ -795,9 +795,14 @@ namespace Client.MirGraphics
             Point targetpoint;
             if (!accurate) //allow for some extra space arround your mouse
             {
-                for (int i = 0; i < 8; i++)
+                int[] realRanges = new int[]{0,1,3,6,10,15,21};//do not edit this
+                //edit this to set how big you want the 'inaccuracy' to be (bear in mind bigger = takes more for your client to calculate)
+                //dont make it higher then 6 tho (or add more value sin realranges)
+                int range = 2;
+                
+                for (int i = 0; i < (8 * realRanges[range]); i++)
                 {
-                    targetpoint = Functions.PointMove(point, (MirDirection)i, 1);
+                    targetpoint = Functions.PointMove(point, (MirDirection)i, (int)(i/8));
                     output |= _images[index].VisiblePixel(targetpoint, accurate);
                 }
             }
