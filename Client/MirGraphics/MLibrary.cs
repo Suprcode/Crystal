@@ -792,6 +792,7 @@ namespace Client.MirGraphics
             if (!CheckImage(index)) return false;
             bool output = false;
             output = _images[index].VisiblePixel(point, accurate);
+            if (output) return true;
             Point targetpoint;
             if (!accurate) //allow for some extra space arround your mouse
             {
@@ -804,6 +805,7 @@ namespace Client.MirGraphics
                 {
                     targetpoint = Functions.PointMove(point, (MirDirection)(i % 8), (int)(i/8));
                     output |= _images[index].VisiblePixel(targetpoint, accurate);
+                    if (output) return true;
                 }
             }
             return output;
