@@ -575,6 +575,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GetRanking:
                     GetRanking((C.GetRanking)p);
                     break;
+                case (short)ClientPacketIds.Opendoor:
+                    Opendoor((C.Opendoor)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1650,6 +1653,12 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
             Player.GetRanking(p.RankIndex);
+        }
+
+        private void Opendoor(C.Opendoor p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.Opendoor(p.DoorIndex);
         }
     }
 }

@@ -4917,7 +4917,7 @@ namespace Server.MirObjects
                     SpellObject ob = (SpellObject)cell.Objects[i];
 
                     ob.ProcessSpell(this);
-                    break;
+                    //break;
                 }
 
                 if (TradePartner != null) TradeCancel();
@@ -4997,6 +4997,11 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (!CurrentMap.CheckDoorOpen(location))
+            {
+                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                return;
+            }
 
 
             Cell cell = CurrentMap.GetCell(location);
@@ -5089,103 +5094,18 @@ namespace Server.MirObjects
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
-                break;
+                //break;
             }
 
         }
         public void Run(MirDirection dir)
         {
-            var steps = 2;
+            var steps = RidingMount || ActiveSwiftFeet && !Sneaking? 3 : 2;
 
             if (!CanMove || !CanWalk || !CanRun)
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
-            }
-
-            Point location = Functions.PointMove(CurrentLocation, dir, 1);
-
-            if (!CurrentMap.ValidPoint(location))
-            {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-                return;
-            }
-
-            Cell cell = CurrentMap.GetCell(location);
-
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
-                    MapObject ob = cell.Objects[i];
-
-                    if (ob.Race == ObjectType.Merchant)
-                    {
-                        NPCObject NPC = (NPCObject)ob;
-                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
-                    }
-                    else
-                    if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
-
-                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-                    return;
-                }
-            location = Functions.PointMove(CurrentLocation, dir, steps);
-
-            if (!CurrentMap.ValidPoint(location))
-            {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-                return;
-            }
-
-            cell = CurrentMap.GetCell(location);
-
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
-                    MapObject ob = cell.Objects[i];
-
-                    if (ob.Race == ObjectType.Merchant)
-                    {
-                        NPCObject NPC = (NPCObject)ob;
-                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
-                    }
-                    else
-                    if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
-
-                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-                    return;
-                }
-
-            if (RidingMount || ActiveSwiftFeet && !Sneaking)
-            {
-                steps = 3;
-                location = Functions.PointMove(CurrentLocation, dir, steps);
-
-                if (!CurrentMap.ValidPoint(location))
-                {
-                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-                    return;
-                }
-
-                cell = CurrentMap.GetCell(location);
-
-                if (cell.Objects != null)
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
-                        MapObject ob = cell.Objects[i];
-
-                        if (ob.Race == ObjectType.Merchant)
-                        {
-                            NPCObject NPC = (NPCObject)ob;
-                            if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
-                        }
-                        else
-                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
-                        Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-                        return;
-                    }
-
-                DecreaseMountLoyalty(2);
             }
 
             if (Concentrating)
@@ -5199,6 +5119,7 @@ namespace Server.MirObjects
                     UpdateConcentration();//Update & send to client
                 }
             }
+            if (TradePartner != null) TradeCancel();
 
             if (Hidden && !HasClearRing && !Sneaking)
             {
@@ -5216,11 +5137,56 @@ namespace Server.MirObjects
             }
 
             Direction = dir;
-            if (CheckMovement(location)) return;
+            Point location = Functions.PointMove(CurrentLocation, dir, 1);
+            for (int j = 1; j <= steps; j++)
+            {
+                location = Functions.PointMove(CurrentLocation, dir, j);
+                if (!CurrentMap.ValidPoint(location))
+                {
+                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                    return;
+                }
+                if (!CurrentMap.CheckDoorOpen(location))
+                {
+                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                    return;
+                }
+                Cell cell = CurrentMap.GetCell(location);
+
+                if (cell.Objects != null)
+                {
+                    for (int i = 0; i < cell.Objects.Count; i++)
+                    {
+                        MapObject ob = cell.Objects[i];
+
+                        if (ob.Race == ObjectType.Merchant)
+                        {
+                            NPCObject NPC = (NPCObject)ob;
+                            if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                        }
+                        else
+                            if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
+
+                        Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                        return;
+                    }
+
+                    
+                }
+                if (CheckMovement(location)) return;
+
+            }
+            if (RidingMount && !Sneaking)
+            {
+                DecreaseMountLoyalty(2);
+            }
+
+            Direction = dir;
 
             CurrentMap.GetCell(CurrentLocation).Remove(this);
             RemoveObjects(dir, steps);
 
+            Point OldLocation = CurrentLocation;
             CurrentLocation = location;
             CurrentMap.GetCell(CurrentLocation).Add(this);
             AddObjects(dir, steps);
@@ -5254,23 +5220,24 @@ namespace Server.MirObjects
                 ChangeHP(-1);
             }
 
-            if (TradePartner != null) TradeCancel();
-
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
 
-            cell = CurrentMap.GetCell(CurrentLocation);
-
-            for (int i = 0; i < cell.Objects.Count; i++)
+            for (int j = 1; j <= steps; j++)
             {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                SpellObject ob = (SpellObject)cell.Objects[i];
+                location = Functions.PointMove(OldLocation, dir, j);
+                Cell cell = CurrentMap.GetCell(location);
+                if (cell.Objects == null) continue;
+                for (int i = 0; i < cell.Objects.Count; i++)
+                {
+                    if (cell.Objects[i].Race != ObjectType.Spell) continue;
+                    SpellObject ob = (SpellObject)cell.Objects[i];
 
-                ob.ProcessSpell(this);
-                break;
+                    ob.ProcessSpell(this);
+                    //break;
+                }
             }
-
 
         }
         public override int Pushed(MapObject pusher, MirDirection dir, int distance)
@@ -5334,7 +5301,7 @@ namespace Server.MirObjects
                     SpellObject ob = (SpellObject)cell.Objects[i];
 
                     ob.ProcessSpell(this);
-                    break;
+                    //break;
                 }
             }
 
@@ -18881,6 +18848,16 @@ namespace Server.MirObjects
             else
             {
                 Enqueue(new S.Rankings { Listings = Envir.RankClass[RankType - 1], RankType = RankType, MyRank = (byte)Class == (RankType -1)?Info.Rank[1]: 0});
+            }
+        }
+
+        public void Opendoor(byte Doorindex)
+        {
+            //todo: add check for sw doors
+            if (CurrentMap.OpenDoor(Doorindex))
+            {
+                Enqueue(new S.Opendoor() { DoorIndex = Doorindex });
+                Broadcast(new S.Opendoor() { DoorIndex = Doorindex });
             }
         }
     }

@@ -1432,6 +1432,7 @@ public enum ServerPacketIds : short
     GameShopInfo,
     GameShopStock,
     Rankings,
+    Opendoor,
 }
 
 public enum ClientPacketIds : short
@@ -1563,6 +1564,7 @@ public enum ClientPacketIds : short
 
     ReportIssue,
     GetRanking,
+    Opendoor,
 }
 
 public enum ConquestType : byte
@@ -4585,6 +4587,8 @@ public abstract class Packet
                 return new C.ReportIssue();
             case (short)ClientPacketIds.GetRanking:
                 return new C.GetRanking();
+            case (short)ClientPacketIds.Opendoor:
+                return new C.Opendoor();
             default:
                 return null;
         }
@@ -5030,8 +5034,10 @@ public abstract class Packet
                 return new S.GameShopStock();
             case (short)ServerPacketIds.NPCRequestInput:
                 return new S.NPCRequestInput();
-            case (short)ServerPacketIds .Rankings:
+            case (short)ServerPacketIds.Rankings:
                 return new S.Rankings();
+            case (short)ServerPacketIds.Opendoor:
+                return new S.Opendoor();
             default:
                 return null;
         }
@@ -6101,3 +6107,12 @@ public class Rank_Character_Info
     }
 }
 #endregion
+
+public class Door
+{
+    public byte index;
+    public byte DoorState;//0: closed, 1: opening, 2: open, 3: closing
+    public byte ImageIndex;
+    public long LastTick;
+    public Point Location;
+}
