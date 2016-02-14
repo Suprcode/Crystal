@@ -787,9 +787,26 @@ namespace Client.MirGraphics
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
-        public bool VisiblePixel(int index, Point point, bool accuate)
+        public bool VisiblePixel(int index, Point point, bool accurate)
         {
-            return CheckImage(index) && _images[index].VisiblePixel(point, accuate);
+            if (!CheckImage(index)) return false;
+            bool output = false;
+            output = _images[index].VisiblePixel(point, accurate);
+            Point targetpoint;
+            if (!accurate) //allow for some extra space arround your mouse
+            {
+                int[] realRanges = new int[]{0,1,3,6,10,15,21};//do not edit this
+                //edit this to set how big you want the 'inaccuracy' to be (bear in mind bigger = takes more for your client to calculate)
+                //dont make it higher then 6 tho (or add more value sin realranges)
+                int range = 2;
+                
+                for (int i = 0; i < (8 * realRanges[range]); i++)
+                {
+                    targetpoint = Functions.PointMove(point, (MirDirection)(i % 8), (int)(i/8));
+                    output |= _images[index].VisiblePixel(targetpoint, accurate);
+                }
+            }
+            return output;
         }
 
     }
