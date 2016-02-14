@@ -274,7 +274,7 @@ namespace Server.MirObjects
         public const int RegenDelay = 10000, EXPOwnerDelay = 5000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
-        public bool BindingShotCenter;
+        public bool BindingShotCenter, PoisonStopRegen = true;
 
         public byte PetLevel;
         public uint PetExperience;
@@ -554,6 +554,12 @@ namespace Server.MirObjects
 
            // HealthChanged = true;
             BroadcastHealthChange();
+        }
+
+        //use this so you can have mobs take no/reduced poison damage
+        public virtual void PoisonDamage(int amount, MapObject Attacker)
+        {
+            ChangeHP(amount);
         }
         public override void Die()
         {
@@ -981,9 +987,10 @@ namespace Server.MirObjects
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
-                        ChangeHP(-poison.Value);
-                            
-                        RegenTime = Envir.Time + RegenDelay;
+                        //ChangeHP(-poison.Value);
+                        PoisonDamage(-poison.Value, poison.Owner);
+                        if (PoisonStopRegen)
+                            RegenTime = Envir.Time + RegenDelay;
                     }
 
                     if (poison.PType == PoisonType.DelayedExplosion)

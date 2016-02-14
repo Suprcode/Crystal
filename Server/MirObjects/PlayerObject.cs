@@ -964,7 +964,8 @@ namespace Server.MirObjects
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
-                        ChangeHP(-poison.Value);
+                        //ChangeHP(-poison.Value);
+                        PoisonDamage(-poison.Value, poison.Owner);
 
                         if (Dead) break;
                         RegenTime = Envir.Time + RegenDelay;
@@ -1163,6 +1164,11 @@ namespace Server.MirObjects
             // HealthChanged = true;
             Enqueue(new S.HealthChanged { HP = HP, MP = MP });
             BroadcastHealthChange();
+        }
+        //use this so you can have mobs take no/reduced poison damage
+        public void PoisonDamage(int amount, MapObject Attacker)
+        {
+            ChangeHP(amount);
         }
         public void ChangeMP(int amount)
         {
