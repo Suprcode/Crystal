@@ -802,7 +802,7 @@ namespace Client.MirGraphics
                 
                 for (int i = 0; i < (8 * realRanges[range]); i++)
                 {
-                    targetpoint = Functions.PointMove(point, (MirDirection)i, (int)(i/8));
+                    targetpoint = Functions.PointMove(point, (MirDirection)(i % 8), (int)(i/8));
                     output |= _images[index].VisiblePixel(targetpoint, accurate);
                 }
             }
