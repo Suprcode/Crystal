@@ -155,9 +155,6 @@ namespace Client.MirScenes
         public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
         public static long SpellTime;
 
-        public static Point DoorPoint;
-        public static long DoorTime;
-
         public long PingTime;
         public long NextPing = 10000;
 
@@ -936,14 +933,7 @@ namespace Client.MirScenes
 
                 messageBox.Show();
             }
-
-
-            //if(GameScene.DoorTime > 0 && GameScene.DoorTime + 5000 < CMain.Time)
-            //{
-            //    MapControl.CloseDoor(GameScene.DoorPoint);
-            //    GameScene.DoorTime = 0;
-            //}
-
+            
             
             UpdateBuffs();
             MapControl.Process();
@@ -1595,6 +1585,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.Rankings:
                     Rankings((S.Rankings)p);
+                    break;
+                case (short)ServerPacketIds.Opendoor:
+                    Opendoor((S.Opendoor)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -8048,6 +8041,11 @@ namespace Client.MirScenes
             RankingDialog.RecieveRanks(p.Listings, p.RankType, p.MyRank);
         }
 
+        public void Opendoor(S.Opendoor p)
+        {
+            MapControl.OpenDoor(p.DoorIndex, p.Close);
+        }
+
         #region Disposable
 
         protected override void Dispose(bool disposing)
@@ -8153,6 +8151,7 @@ namespace Client.MirScenes
         public static long NextAction;
 
         public CellInfo[,] M2CellInfo;
+        public List<Door> Doors = new List<Door>();
         public int Width, Height;
 
         public string FileName = String.Empty;
@@ -8224,6 +8223,7 @@ namespace Client.MirScenes
             GameScene.Scene.NPCDialog.Hide();
             Objects.Clear();
             Effects.Clear();
+            Doors.Clear();
 
             if (User != null)
                 Objects.Add(User);
@@ -8258,6 +8258,7 @@ namespace Client.MirScenes
 
         public void Process()
         {
+            Processdoors();
             User.Process();
 
             for (int i = Objects.Count - 1; i >= 0; i--)
@@ -8512,6 +8513,22 @@ namespace Client.MirScenes
                     if (fileIndex == -1) continue;
                     Size s = Libraries.MapLibs[fileIndex].GetSize(index);
                     if (fileIndex == 200) continue; //fixes random bad spots on old school 4.map
+                    if (M2CellInfo[x, y].DoorIndex > 0)
+                    {
+                        Door DoorInfo = GetDoor(M2CellInfo[x, y].DoorIndex);
+                        if (DoorInfo == null)
+                        {
+                            DoorInfo = new Door() { index = M2CellInfo[x, y].DoorIndex, DoorState = 0, ImageIndex = 0, LastTick = CMain.Time };
+                            Doors.Add(DoorInfo);
+                        }
+                        else
+                        {
+                            if (DoorInfo.DoorState != 0)
+                            {
+                                index += (DoorInfo.ImageIndex + 1) * M2CellInfo[x, y].DoorOffset;//'bad' code if you want to use animation but it's gonna depend on the animation > has to be custom designed for the animtion
+                            }
+                        }
+                    }
 
                     if (index < 0 || ((s.Width != CellWidth || s.Height != CellHeight) && ((s.Width != CellWidth * 2) || (s.Height != CellHeight * 2)))) continue;
                     Libraries.MapLibs[fileIndex].Draw(index, drawX, drawY);
@@ -8574,7 +8591,6 @@ namespace Client.MirScenes
                     byte animation;
                     bool blend;
                     Size s;
-
                     #region Draw shanda's tile animation layer
                     index = M2CellInfo[x, y].TileAnimationImage;
                     animation = M2CellInfo[x, y].TileAnimationFrames;
@@ -8651,15 +8667,23 @@ namespace Client.MirScenes
                         index += (AnimationCount % (animation + (animation * animationTick))) / (1 + animationTick);
                     }
 
-
-                    if ((M2CellInfo[x, y].DoorOffset & 0x80) > 0)
+                    
+                    if (M2CellInfo[x, y].DoorIndex > 0)
                     {
-                        if ((M2CellInfo[x, y].DoorIndex & 0x7F) > 0)
+                        Door DoorInfo = GetDoor(M2CellInfo[x, y].DoorIndex);
+                        if (DoorInfo == null)
                         {
-                            index += (M2CellInfo[x, y].DoorOffset & 0x7F);
+                            DoorInfo = new Door() { index = M2CellInfo[x, y].DoorIndex, DoorState = 0, ImageIndex = 0, LastTick = CMain.Time };
+                            Doors.Add(DoorInfo);
+                        }
+                        else
+                        {
+                            if (DoorInfo.DoorState != 0)
+                            {
+                                index += (DoorInfo.ImageIndex + 1) * M2CellInfo[x, y].DoorOffset;//'bad' code if you want to use animation but it's gonna depend on the animation > has to be custom designed for the animtion
+                            }
                         }
                     }
-
 
                     s = Libraries.MapLibs[fileIndex].GetSize(index);
                     if (s.Width == CellWidth && s.Height == CellHeight && animation == 0) continue;
@@ -9165,22 +9189,21 @@ namespace Client.MirScenes
                 {
                     if (GameScene.CanRun && CanRun(direction) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && (!User.Sneaking || (User.Sneaking && User.Sprint))) //slow remove
                     {
-                        User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, User.RidingMount || User.Sprint && !User.Sneaking ? 3 : 2) };
-                        return;
+                        int distance = User.RidingMount || User.Sprint && !User.Sneaking ? 3 : 2;
+                        bool fail = false;
+                        for (int i = 1; i <= distance; i++ )
+                        {
+                            if (!CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, i)))
+                                fail = true;
+                        }
+                        if (!fail)
+                        {
+                            User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, distance) };
+                            return;
+                        }
                     }
-                    if (CanWalk(direction))
+                    if ((CanWalk(direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
                     {
-                        //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
-                        //{
-                        //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
-                        //    return;
-                        //}
-                        //else
-                        //{
-                        //    User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                        //    return;
-                        //}
-
                         User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
                         return;
                     }
@@ -9285,20 +9308,8 @@ namespace Client.MirScenes
                                 return;
                             }
                         }
-                        if (CanWalk(direction))
+                        if ((CanWalk(direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
                         {
-
-                            //if (GetDoor(Functions.PointMove(User.CurrentLocation, direction, 1)) > 0)
-                            //{
-                            //    OpenDoor(Functions.PointMove(User.CurrentLocation, direction, 1));
-                            //    return;
-                            //}
-                            //else
-                            //{
-                            //    //if (MapObject.MouseObject != null) return;
-                            //    User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
-                            //    return;
-                            //}
 
                             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
                             return;
@@ -9333,10 +9344,20 @@ namespace Client.MirScenes
 
                         if (GameScene.CanRun && CanRun(direction) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && (!User.Sneaking || (User.Sneaking && User.Sprint))) //slow removed
                         {
-                            User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, User.RidingMount || (User.Sprint && !User.Sneaking) ? 3 : 2) };
-                            return;
+                            int distance = User.RidingMount || User.Sprint && !User.Sneaking ? 3 : 2;
+                            bool fail = false;
+                            for (int i = 0; i <= distance; i++ )
+                            {
+                                if (!CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, i)))
+                                    fail = true;
+                            }
+                            if (!fail)
+                            {
+                                User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, User.RidingMount || (User.Sprint && !User.Sneaking) ? 3 : 2) };
+                                return;
+                            }
                         }
-                        if (CanWalk(direction))
+                        if ((CanWalk(direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
                         {
                             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
                             return;
@@ -9648,6 +9669,23 @@ namespace Client.MirScenes
             return EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 1)) && !User.InTrapRock;
         }
 
+        private bool CheckDoorOpen(Point p)
+        {
+            if (M2CellInfo[p.X, p.Y].DoorIndex == 0) return true;
+            Door DoorInfo = GetDoor(M2CellInfo[p.X, p.Y].DoorIndex);
+            if (DoorInfo == null) return false;//if the door doesnt excist then it isnt even being shown on screen (and cant be open lol)
+            if ((DoorInfo.DoorState == 0) || (DoorInfo.DoorState == 3))
+            {
+                Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+                return false;
+            }
+            if ((DoorInfo.DoorState == 2) && (DoorInfo.LastTick + 4000 > CMain.Time))
+            {
+                Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+            }
+            return true;
+        }
+
 
         private bool CanRun(MirDirection dir)
         {
@@ -9709,79 +9747,6 @@ namespace Client.MirScenes
             return true;
         }
 
-        public int GetDoor(Point target)
-        {
-            int result = 0;
-
-            Point nTarget = target;// Functions.PointMove(target, MirDirection.UpLeft, 1);
-
-            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
-            {
-                result = (M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x7F);
-            }
-
-            return result;
-        }
-
-        public void OpenDoor(Point target)
-        {
-            int idx;
-
-            Point nTarget = target;// Functions.PointMove(target, MirDirection.UpLeft, 1);
-
-            if (nTarget.X < 0 || nTarget.Y < 0) return;
-
-            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
-            {
-                idx = (M2CellInfo[target.X, target.Y].DoorIndex & 0x7F);
-
-                for (int x = nTarget.X - 10; x < nTarget.X + 10; x++)
-                {
-                    for (int y = nTarget.Y - 10; y < nTarget.Y + 10; y++)
-                    {
-                        if (x > 0 && y > 0)
-                        {
-                            if ((M2CellInfo[x, y].DoorIndex & 0x7F) == idx)
-                            {
-                                M2CellInfo[x, y].DoorOffset = (byte)(M2CellInfo[x, y].DoorOffset | 0x80);
-                                GameScene.DoorPoint = nTarget;
-                                GameScene.DoorTime = 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public void CloseDoor(Point target)
-        {
-            int idx;
-
-            Point nTarget = target;//Functions.PointMove(target, MirDirection.UpLeft, 1);
-
-            if (nTarget.X < 0 || nTarget.Y < 0) return;
-
-            if ((M2CellInfo[nTarget.X, nTarget.Y].DoorIndex & 0x80) > 0)
-            {
-                idx = (M2CellInfo[target.X, target.Y].DoorIndex & 0x7F);
-
-                for (int x = nTarget.X - 10; x < nTarget.X + 10; x++)
-                {
-                    for (int y = nTarget.Y - 10; y < nTarget.Y + 10; y++)
-                    {
-                        if (x > 0 && y > 0)
-                        {
-                            if ((M2CellInfo[x, y].DoorIndex & 0x7F) == idx)
-                            {
-                                M2CellInfo[x, y].DoorOffset = (byte)(M2CellInfo[x, y].DoorOffset | 0x7F);
-                                GameScene.DoorPoint = new Point(0,0);
-                                GameScene.DoorTime = 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         public bool ValidPoint(Point p)
         {
@@ -9889,6 +9854,53 @@ namespace Client.MirScenes
         public void SortObject(MapObject ob)
         {
             M2CellInfo[ob.MapLocation.X, ob.MapLocation.Y].Sort();
+        }
+
+        public Door GetDoor(byte Index)
+        {
+            for (int i = 0; i < Doors.Count; i++)
+            {
+                if (Doors[i].index == Index)
+                    return Doors[i];
+            }
+            return null;
+        }
+        public void Processdoors()
+        {
+            for (int i = 0; i < Doors.Count; i++)
+            {
+                if ((Doors[i].DoorState == 1) || (Doors[i].DoorState == 3))
+                {
+                    if (Doors[i].LastTick + 50 < CMain.Time)
+                    {
+                        Doors[i].LastTick = CMain.Time;
+                        Doors[i].ImageIndex++;
+                        if (Doors[i].ImageIndex == 1)//change the 1 if you want to actualy animate doors opening/closing
+                        {
+                            Doors[i].ImageIndex = 0;
+                            Doors[i].DoorState = (byte)(++Doors[i].DoorState % 4);
+                        }
+                        FloorValid = false;
+                    }
+                }
+                if (Doors[i].DoorState == 2)
+                {
+                    if (Doors[i].LastTick + 5000 < CMain.Time)
+                    {
+                        Doors[i].LastTick = CMain.Time;
+                        Doors[i].DoorState = 3;
+                        FloorValid = false;
+                    }
+                }
+            }
+        }
+        public void OpenDoor(byte Index, bool Closed)
+        {
+            Door Info = GetDoor(Index);
+            if (Info == null) return;
+            Info.DoorState = (byte)(Closed? 3: Info.DoorState == 2? 2: 1);
+            Info.ImageIndex = 0;
+            Info.LastTick = CMain.Time;
         }
     }
 

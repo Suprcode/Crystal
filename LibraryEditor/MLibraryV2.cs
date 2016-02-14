@@ -388,7 +388,7 @@ namespace LibraryEditor
 
                 if (w == 0 || h == 0)
                     return;
-
+                if ((w < 2) || (h < 2)) return;
                 Image = new Bitmap(w, h);
 
                 BitmapData data = Image.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite,

@@ -5269,4 +5269,24 @@ namespace ServerPackets
                 Listings[i].Save(writer);
         }
     }
+
+    public sealed class Opendoor : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.Opendoor; } }
+
+        public bool Close = false;
+        public byte DoorIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            DoorIndex = reader.ReadByte();
+            Close = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(DoorIndex);
+            writer.Write(Close);
+        }
+    }
+
 }

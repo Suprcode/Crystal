@@ -211,7 +211,7 @@ namespace Client.MirObjects
                         offset += 2;
                         MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].DoorIndex = Bytes[offset++];
+                        MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset++];
                         MapCells[x, y].FrontAnimationTick = Bytes[offset++];
@@ -260,7 +260,7 @@ namespace Client.MirObjects
                                 MiddleIndex = 1,
                                 MiddleImage = (short)(BitConverter.ToInt16(Bytes, offSet += 4) ^ xor),
                                 FrontImage = (short)(BitConverter.ToInt16(Bytes, offSet += 2) ^ xor),
-                                DoorIndex = Bytes[offSet += 2],
+                                DoorIndex = (byte)(Bytes[offSet += 2] & 0x7F),
                                 DoorOffset = Bytes[++offSet],
                                 FrontAnimationFrame = Bytes[++offSet],
                                 FrontAnimationTick = Bytes[++offSet],
@@ -300,7 +300,7 @@ namespace Client.MirObjects
                         offset += 2;
                         MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].DoorIndex = Bytes[offset++];
+                        MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset++];
                         MapCells[x, y].FrontAnimationTick = Bytes[offset++];
@@ -342,7 +342,7 @@ namespace Client.MirObjects
                         offset += 2;
                         MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].DoorIndex = Bytes[offset++];
+                        MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset++];
                         MapCells[x, y].FrontAnimationTick = Bytes[offset++];
@@ -395,7 +395,7 @@ namespace Client.MirObjects
                         offset += 2;
                         MapCells[x, y].FrontImage = (short)(BitConverter.ToInt16(Bytes, offset) ^xor);
                         offset += 2;
-                        MapCells[x, y].DoorIndex = Bytes[offset++];
+                        MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset++];
                         MapCells[x, y].FrontAnimationTick = Bytes[offset++];
@@ -557,7 +557,7 @@ namespace Client.MirObjects
                             MiddleIndex = 1,
                             MiddleImage = (short)BitConverter.ToInt16(Bytes, offset += 4),
                             FrontImage = (short)BitConverter.ToInt16(Bytes, offset += 2),
-                            DoorIndex = Bytes[offset += 2],
+                            DoorIndex = (byte)(Bytes[offset += 2] & 0x7F),
                             DoorOffset = Bytes[++offset],
                             FrontAnimationFrame = Bytes[++offset],
                             FrontAnimationTick = Bytes[++offset],
@@ -596,7 +596,7 @@ namespace Client.MirObjects
                         MapCells[x, y] = new CellInfo();
                         MapCells[x, y].BackIndex = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].BackImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].BackImage = (short)BitConverter.ToInt16(Bytes, offset);//should probably be toint32
                         offset += 4;
                         MapCells[x, y].MiddleIndex = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
@@ -606,7 +606,7 @@ namespace Client.MirObjects
                         offset += 2;
                         MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].DoorIndex = Bytes[offset++];
+                        MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset++];
                         MapCells[x, y].FrontAnimationTick = Bytes[offset++];
@@ -628,5 +628,7 @@ namespace Client.MirObjects
                 if (Settings.LogErrors) CMain.SaveError(ex.ToString());
             }
         }
+
     }
+
 }
