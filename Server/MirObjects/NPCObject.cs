@@ -1482,6 +1482,7 @@ namespace Server.MirObjects
         Random,
         Groupleader,
         GroupCount,
+        GroupCheckNearbye,
         PetLevel,
         PetCount,
         CheckCalc,
@@ -1500,6 +1501,6 @@ namespace Server.MirObjects
         AffordSiege,
         CheckPermission,
         ConquestAvailable,
-        ConquestOwner
+        ConquestOwner,
     }
 }
