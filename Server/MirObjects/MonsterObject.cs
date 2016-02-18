@@ -1205,6 +1205,7 @@ namespace Server.MirObjects
         protected virtual void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
+            if (Target.InSafeZone || Target.CurrentMap.Info.NoFight) return;
 
             if (InAttackRange())
             {
