@@ -2098,4 +2098,20 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(RankIndex);
         }
     }
+
+    public sealed class Opendoor : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.Opendoor; } }
+        public byte DoorIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            DoorIndex = reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(DoorIndex);
+        }
+    }
 }

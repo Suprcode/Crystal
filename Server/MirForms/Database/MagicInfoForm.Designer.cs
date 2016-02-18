@@ -38,7 +38,6 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label lblDamageExample;
         private System.Windows.Forms.TextBox txtDmgBonusMax;
         private System.Windows.Forms.TextBox txtDmgBonusMin;
@@ -51,5 +50,10 @@
         private System.Windows.Forms.Label lblSelected;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox txtRange;
+        private System.Windows.Forms.Label lblDamageExplained;
+        private System.Windows.Forms.TextBox txtDmgMultBoost;
+        private System.Windows.Forms.TextBox txtDmgMultBase;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
     }
 }

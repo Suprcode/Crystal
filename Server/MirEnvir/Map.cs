@@ -21,6 +21,8 @@ namespace Server.MirEnvir
 
         public int Width, Height;
         public Cell[,] Cells;
+        public Door[,] DoorIndex;
+        public List<Door> Doors = new List<Door>();
         public MineSpot[,] Mine;
         public long LightningTime, FireTime, InactiveTime;
         public int MonsterCount, InactiveCount;
@@ -37,6 +39,29 @@ namespace Server.MirEnvir
         {
             Info = info;
             Thread = Envir.Random.Next(Settings.ThreadLimit);
+        }
+
+        public Door AddDoor(byte DoorIndex, Point location)
+        {
+            DoorIndex = (byte)(DoorIndex & 0x7F);
+            for (int i = 0; i < Doors.Count; i++)
+                if (Doors[i].index == DoorIndex)
+                    return Doors[i];
+            Door DoorInfo = new Door() { index = DoorIndex, Location = location };
+            Doors.Add(DoorInfo);
+            return DoorInfo;
+        }
+        
+        public bool OpenDoor(byte DoorIndex)
+        {
+            for (int i = 0; i < Doors.Count; i++)
+                if (Doors[i].index == DoorIndex)
+                {
+                    Doors[i].DoorState = 2;
+                    Doors[i].LastTick = Envir.Time;
+                    return true;
+                }
+            return false;
         }
 
         private byte FindType(byte[] input)
@@ -85,6 +110,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 52;
 
@@ -99,8 +125,11 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-
-                    offSet += 9;
+                    offSet += 2;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x,y] = AddDoor(fileBytes[offSet], new Point(x,y));
+                    
+                    offSet += 7;
 
                     byte light = fileBytes[offSet++];
 
@@ -121,6 +150,7 @@ namespace Server.MirEnvir
             Width = w ^ xor;
             Height = h ^ xor;
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 54;
 
@@ -135,8 +165,10 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-
-                    offSet += 7;
+                    offSet += 2;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 5;
 
                     byte light = fileBytes[offSet++];
 
@@ -154,6 +186,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 52;
 
@@ -169,7 +202,10 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 9;
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 5;
 
                     byte light = fileBytes[offSet++];
 
@@ -187,6 +223,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 52;
 
@@ -201,8 +238,10 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-
-                    offSet += 16;
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 12;
 
                     byte light = fileBytes[offSet++];
 
@@ -224,6 +263,7 @@ namespace Server.MirEnvir
             Width = w ^ xor;
             Height = h ^ xor;
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 64;
 
@@ -238,8 +278,10 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-
-                    offSet += 10;
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 6;
                 }
         }
 
@@ -250,6 +292,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 28 + (3 * ((Width / 2) + (Width % 2)) * (Height / 2));
             for (int x = 0; x < Width; x++)
@@ -277,6 +320,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 40;
 
@@ -300,6 +344,7 @@ namespace Server.MirEnvir
             offSet += 4;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 54;
 
@@ -314,8 +359,10 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-
-                    offSet += 10;
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 6;
 
                     byte light = fileBytes[offSet++];
 
@@ -334,6 +381,7 @@ namespace Server.MirEnvir
             offset += 2;
             Height = BitConverter.ToInt16(Bytes, offset);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offset = 8;
 
@@ -348,8 +396,10 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-
-                    offset += 13;
+                    offset += 2;
+                    if (Bytes[offset] > 0)
+                        DoorIndex[x, y] = AddDoor(Bytes[offset], new Point(x, y));
+                    offset += 11;
 
                     byte light = Bytes[offset++];
 
@@ -550,9 +600,27 @@ namespace Server.MirEnvir
             return x >= 0 && x < Width && y >= 0 && y < Height && GetCell(x, y).Valid;
         }
 
+        public bool CheckDoorOpen(Point location)
+        {
+            if (DoorIndex[location.X, location.Y] == null) return true;
+            if (DoorIndex[location.X, location.Y].DoorState != 2) return false;
+            return true;
+        }
+
         public void Process()
         {
             ProcessRespawns();
+            //process doors
+            for (int i = 0; i < Doors.Count; i++)
+            {
+                if ((Doors[i].DoorState == 2) && (Doors[i].LastTick + 5000 < Envir.Time))
+                {
+                    Doors[i].DoorState = 0;
+                    //broadcast that door is closed
+                    Broadcast(new S.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
+
+                }
+            }
 
             if ((Info.Lightning) && Envir.Time > LightningTime)
             {
@@ -1277,9 +1345,8 @@ namespace Server.MirEnvir
                         location = (Point)data[2];
                         MirDirection direction = (MirDirection)data[3];
 
-                        int criticalDamage = (int)data[4];
-                        int nearDamage = (int)data[5];
-                        int farDamage = (int)data[6];
+                        int nearDamage = (int)data[4];
+                        int farDamage = (int)data[5];
 
                         int col = 3;
                         int row = 3;

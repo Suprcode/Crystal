@@ -274,7 +274,7 @@ namespace Server.MirObjects
         public const int RegenDelay = 10000, EXPOwnerDelay = 5000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
-        public bool BindingShotCenter;
+        public bool BindingShotCenter, PoisonStopRegen = true;
 
         public byte PetLevel;
         public uint PetExperience;
@@ -385,6 +385,10 @@ namespace Server.MirObjects
         {
             base.Spawned();
             ActionTime = Envir.Time + 2000;
+            if (Info.HasSpawnScript && (SMain.Envir.MonsterNPC != null))
+            {
+                SMain.Envir.MonsterNPC.Call(this,string.Format("[@_SPAWN({0})]", Info.Index));
+            }
         }
 
         protected virtual void RefreshBase()
@@ -551,6 +555,12 @@ namespace Server.MirObjects
            // HealthChanged = true;
             BroadcastHealthChange();
         }
+
+        //use this so you can have mobs take no/reduced poison damage
+        public virtual void PoisonDamage(int amount, MapObject Attacker)
+        {
+            ChangeHP(amount);
+        }
         public override void Die()
         {
             if (Dead) return;
@@ -561,6 +571,11 @@ namespace Server.MirObjects
             DeadTime = Envir.Time + DeadDelay;
 
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))
+            {
+                SMain.Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
+            }
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
             {
@@ -652,7 +667,7 @@ namespace Server.MirObjects
                     SpellObject ob = (SpellObject)cell.Objects[i];
 
                     ob.ProcessSpell(this);
-                    break;
+                    //break;
                 }
             }
 
@@ -972,9 +987,10 @@ namespace Server.MirObjects
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
-                        ChangeHP(-poison.Value);
-                            
-                        RegenTime = Envir.Time + RegenDelay;
+                        //ChangeHP(-poison.Value);
+                        PoisonDamage(-poison.Value, poison.Owner);
+                        if (PoisonStopRegen)
+                            RegenTime = Envir.Time + RegenDelay;
                     }
 
                     if (poison.PType == PoisonType.DelayedExplosion)
@@ -1189,6 +1205,7 @@ namespace Server.MirObjects
         protected virtual void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
+            if (Target.InSafeZone || Target.CurrentMap.Info.NoFight) return;
 
             if (InAttackRange())
             {
@@ -1361,7 +1378,7 @@ namespace Server.MirObjects
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
-                break;
+                //break;
             }
 
 
@@ -1429,7 +1446,7 @@ namespace Server.MirObjects
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
-                break;
+                //break;
             }
 
             return true;
