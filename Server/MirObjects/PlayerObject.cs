@@ -15791,7 +15791,7 @@ namespace Server.MirObjects
                             }
                             else //Send item to mailbox if it can no longer be stored
                             {
-                                GainItemMail(temp, 1);
+                                TradePair[p].GainItemMail(temp, 1);
 
                                 TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             }

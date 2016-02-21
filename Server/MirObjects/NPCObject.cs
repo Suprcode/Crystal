@@ -1482,7 +1482,7 @@ namespace Server.MirObjects
         Random,
         Groupleader,
         GroupCount,
-        GroupCheckNearbye,
+        GroupCheckNearby,
         PetLevel,
         PetCount,
         CheckCalc,
