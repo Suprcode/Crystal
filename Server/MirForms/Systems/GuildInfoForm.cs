@@ -214,6 +214,8 @@ namespace Server
         private void GuildItemNamecomboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
+            if (GuildLevelListcomboBox.SelectedItem == null) return;
+
             if (GuildItemNamecomboBox.SelectedIndex == 0)
             {
                 Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item = null;

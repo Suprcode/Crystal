@@ -1,5 +1,14 @@
 In development features - may need revisiting / refactoring / finishing
 
 -NPC $INPUTSTR, method it sets page names and calls (would be better in ProcessPage? bool AwaitingInput at top)
--MONSTER AI 69, runaway mob
+
+
+-MONSTER AI 200, runaway mob
+-MONSTER AI 201, Talking mob
+-MONSTER AI 69-79 - Mostly broken and incomplete
+
+-Object dead code draw. Currently drawn before anything else with an exception for sabuk wall - do another way?
+
+-Map doors don't open/close, basic code added but not complete
+
 -Character deletion code after x days, or under x level after y days

@@ -21,6 +21,8 @@ namespace Server.MirEnvir
 
         public int Width, Height;
         public Cell[,] Cells;
+        public Door[,] DoorIndex;
+        public List<Door> Doors = new List<Door>();
         public MineSpot[,] Mine;
         public long LightningTime, FireTime, InactiveTime;
         public int MonsterCount, InactiveCount;
@@ -30,10 +32,36 @@ namespace Server.MirEnvir
         public List<MapRespawn> Respawns = new List<MapRespawn>();
         public List<DelayedAction> ActionList = new List<DelayedAction>();
 
+        public List<ConquestObject> Conquest = new List<ConquestObject>();
+        public ConquestObject tempConquest;
+
         public Map(MapInfo info)
         {
             Info = info;
             Thread = Envir.Random.Next(Settings.ThreadLimit);
+        }
+
+        public Door AddDoor(byte DoorIndex, Point location)
+        {
+            DoorIndex = (byte)(DoorIndex & 0x7F);
+            for (int i = 0; i < Doors.Count; i++)
+                if (Doors[i].index == DoorIndex)
+                    return Doors[i];
+            Door DoorInfo = new Door() { index = DoorIndex, Location = location };
+            Doors.Add(DoorInfo);
+            return DoorInfo;
+        }
+        
+        public bool OpenDoor(byte DoorIndex)
+        {
+            for (int i = 0; i < Doors.Count; i++)
+                if (Doors[i].index == DoorIndex)
+                {
+                    Doors[i].DoorState = 2;
+                    Doors[i].LastTick = Envir.Time;
+                    return true;
+                }
+            return false;
         }
 
         private byte FindType(byte[] input)
@@ -82,6 +110,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 52;
 
@@ -96,9 +125,16 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
+                    offSet += 2;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x,y] = AddDoor(fileBytes[offSet], new Point(x,y));
+                    
+                    offSet += 7;
 
+                    byte light = fileBytes[offSet++];
 
-                    offSet += 10;
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
 
@@ -114,6 +150,7 @@ namespace Server.MirEnvir
             Width = w ^ xor;
             Height = h ^ xor;
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 54;
 
@@ -128,12 +165,17 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
+                    offSet += 2;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 5;
 
-                    offSet += 6;
+                    byte light = fileBytes[offSet++];
 
-                    //fish/light check
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
 
-                    offSet += 3;
+                    offSet += 1;
                 }
         }
 
@@ -144,6 +186,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 52;
 
@@ -159,7 +202,17 @@ namespace Server.MirEnvir
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 12;
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 5;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
+
+                    offSet += 2;
                 }
         }
 
@@ -170,6 +223,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 52;
 
@@ -184,8 +238,17 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 12;
 
-                    offSet += 34;
+                    byte light = fileBytes[offSet++];
+
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
+
+                    offSet += 17;
                 }
         }
 
@@ -200,6 +263,7 @@ namespace Server.MirEnvir
             Width = w ^ xor;
             Height = h ^ xor;
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 64;
 
@@ -214,8 +278,10 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-
-                    offSet += 10;
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 6;
                 }
         }
 
@@ -226,6 +292,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 28 + (3 * ((Width / 2) + (Width % 2)) * (Height / 2));
             for (int x = 0; x < Width; x++)
@@ -237,7 +304,12 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall;
                     else
                         Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-                    offSet += 14;
+                    offSet += 13;
+
+                    byte light = fileBytes[offSet++];
+
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
 
@@ -248,6 +320,7 @@ namespace Server.MirEnvir
             offSet += 2;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 40;
 
@@ -271,6 +344,7 @@ namespace Server.MirEnvir
             offSet += 4;
             Height = BitConverter.ToInt16(fileBytes, offSet);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offSet = 54;
 
@@ -285,8 +359,17 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
+                    offSet += 4;
+                    if (fileBytes[offSet] > 0)
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+                    offSet += 6;
 
-                    offSet += 13;
+                    byte light = fileBytes[offSet++];
+
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
+
+                    offSet += 2;
                 }
         }
 
@@ -298,6 +381,7 @@ namespace Server.MirEnvir
             offset += 2;
             Height = BitConverter.ToInt16(Bytes, offset);
             Cells = new Cell[Width, Height];
+            DoorIndex = new Door[Width, Height];
 
             offset = 8;
 
@@ -312,8 +396,15 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
+                    offset += 2;
+                    if (Bytes[offset] > 0)
+                        DoorIndex[x, y] = AddDoor(Bytes[offset], new Point(x, y));
+                    offset += 11;
 
-                    offset += 14;
+                    byte light = Bytes[offset++];
+
+                    if (light >= 100 && light <= 119)
+                        Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
                 
         }
@@ -364,6 +455,9 @@ namespace Server.MirEnvir
                         if (info.Monster == null) continue;
                         info.Map = this;
                         Respawns.Add(info);
+
+                        if ((info.Info.SaveRespawnTime) && (info.Info.RespawnTicks != 0))
+                            SMain.Envir.SavedSpawns.Add(info);
                     }
 
 
@@ -410,7 +504,8 @@ namespace Server.MirEnvir
                             Spell = Spell.TrapHexagon,
                             TickSpeed = int.MaxValue,
                             CurrentLocation = new Point(x, y),
-                            CurrentMap = this
+                            CurrentMap = this,
+                            Decoration = true
                         };
 
                         Cells[x, y].Add(spell);
@@ -505,9 +600,27 @@ namespace Server.MirEnvir
             return x >= 0 && x < Width && y >= 0 && y < Height && GetCell(x, y).Valid;
         }
 
+        public bool CheckDoorOpen(Point location)
+        {
+            if (DoorIndex[location.X, location.Y] == null) return true;
+            if (DoorIndex[location.X, location.Y].DoorState != 2) return false;
+            return true;
+        }
+
         public void Process()
         {
             ProcessRespawns();
+            //process doors
+            for (int i = 0; i < Doors.Count; i++)
+            {
+                if ((Doors[i].DoorState == 2) && (Doors[i].LastTick + 5000 < Envir.Time))
+                {
+                    Doors[i].DoorState = 0;
+                    //broadcast that door is closed
+                    Broadcast(new S.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
+
+                }
+            }
 
             if ((Info.Lightning) && Envir.Time > LightningTime)
             {
@@ -604,18 +717,27 @@ namespace Server.MirEnvir
             for (int i = 0; i < Respawns.Count; i++)
             {
                 MapRespawn respawn = Respawns[i];
-                if (Envir.Time < respawn.RespawnTime) continue;
-                if (respawn.Count < respawn.Info.Count)
+                if ((respawn.Info.RespawnTicks != 0) && (Envir.RespawnTick.CurrentTickcounter < respawn.NextSpawnTick)) continue;
+                if ((respawn.Info.RespawnTicks == 0) && (Envir.Time < respawn.RespawnTime)) continue;
+
+                if (respawn.Count < (respawn.Info.Count * Envir.spawnmultiplyer))
                 {
                     int count = (respawn.Info.Count * Envir.spawnmultiplyer) - respawn.Count;
-                    
+
                     for (int c = 0; c < count; c++)
                         Success = respawn.Spawn();
                 }
                 if (Success)
                 {
                     respawn.ErrorCount = 0;
-                    respawn.RespawnTime = Envir.Time + (respawn.Info.Delay * Settings.Minute);
+                    long delay = Math.Max(1, respawn.Info.Delay - respawn.Info.RandomDelay + Envir.Random.Next(respawn.Info.RandomDelay * 2));
+                    respawn.RespawnTime = Envir.Time + (delay * Settings.Minute);
+                    if (respawn.Info.RespawnTicks != 0)
+                    {
+                        respawn.NextSpawnTick = Envir.RespawnTick.CurrentTickcounter + (ulong)respawn.Info.RespawnTicks;
+                        if (respawn.NextSpawnTick > long.MaxValue)//since nextspawntick is ulong this simple thing allows an easy way of preventing the counter from overflowing
+                            respawn.NextSpawnTick -= long.MaxValue;
+                    }
                 }
                 else
                 {
@@ -658,6 +780,8 @@ namespace Server.MirEnvir
             bool train = false;
             PlayerObject player = (PlayerObject)data[0];
             UserMagic magic = (UserMagic)data[1];
+
+            if (player == null || player.Info == null) return;
 
             int value, value2;
             Point location;
@@ -710,16 +834,25 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonSkeleton
+                #region SummonSkeleton, SummonShinsu, SummonHolyDeva, ArcherSummons
 
                 case Spell.SummonSkeleton:
+                case Spell.SummonShinsu:
+                case Spell.SummonHolyDeva:
+                case Spell.SummonVampire:
+                case Spell.SummonToad:
+                case Spell.SummonSnakes:
                     monster = (MonsterObject)data[2];
                     front = (Point)data[3];
+
+                    if (monster.Master.Dead) return;
 
                     if (ValidPoint(front))
                         monster.Spawn(this, front);
                     else
                         monster.Spawn(player.CurrentMap, player.CurrentLocation);
+
+                    monster.Master.Pets.Add(monster);
                     break;
 
                 #endregion
@@ -1107,20 +1240,6 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonShinsu
-
-                case Spell.SummonShinsu:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
-                    break;
-
-                #endregion
-
                 #region LionRoar
 
                 case Spell.LionRoar:
@@ -1145,8 +1264,8 @@ namespace Server.MirEnvir
                                 MapObject target = cell.Objects[i];
                                 if (target.Race != ObjectType.Monster) continue;
                                 //Only targets
-                                if (!target.IsAttackTarget(player) || player.Level + 10 < target.Level) continue;
-                                target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
+                                if (!target.IsAttackTarget(player) || player.Level + 3 < target.Level) continue;
+                                target.ApplyPoison(new Poison { PType = PoisonType.LRParalysis, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
                                 target.OperateTime = 0;
                                 train = true;
                             }
@@ -1226,9 +1345,8 @@ namespace Server.MirEnvir
                         location = (Point)data[2];
                         MirDirection direction = (MirDirection)data[3];
 
-                        int criticalDamage = (int)data[4];
-                        int nearDamage = (int)data[5];
-                        int farDamage = (int)data[6];
+                        int nearDamage = (int)data[4];
+                        int farDamage = (int)data[5];
 
                         int col = 3;
                         int row = 3;
@@ -1560,21 +1678,6 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonHolyDeva
-
-                case Spell.SummonHolyDeva:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
-                    break;
-
-                #endregion
-
                 #region Curse
 
                 case Spell.Curse:
@@ -1710,24 +1813,16 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsAttackTarget(player))
                                         {
-                                            int chance = Envir.Random.Next(6);
+                                            int chance = Envir.Random.Next(15);
                                             PoisonType poison;
-
-                                            switch (chance)
-                                            {
-                                                case 0:
-                                                    poison = PoisonType.Slow;
-                                                    break;
-                                                case 1:
-                                                    poison = PoisonType.Frozen;
-                                                    break;
-                                                case 2:
-                                                    poison = (PoisonType)data[4];
-                                                    break;
-                                                default:
-                                                    poison = PoisonType.None;
-                                                    break;
-                                            }
+                                            if (new int[] { 0, 1, 3 }.Contains(chance)) //3 in 15 chances it'll slow
+                                                poison = PoisonType.Slow;
+                                            else if (new int[] { 3, 4 }.Contains(value)) //2 in 15 chances it'll freeze
+                                                poison = PoisonType.Frozen;
+                                            else if (new int[] { 5, 6, 7, 8, 9 }.Contains(value)) //5 in 15 chances it'll red/green
+                                                poison = (PoisonType)data[4];
+                                            else //5 in 15 chances it'll do nothing
+                                                poison = PoisonType.None;
 
                                             int tempValue = 0;
 
@@ -1742,7 +1837,7 @@ namespace Server.MirEnvir
 
                                             if (poison != PoisonType.None)
                                             {
-                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player);
+                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
                                             }
                                             
                                             if (target.Race == ObjectType.Player)
@@ -1897,22 +1992,6 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region ArcherSummons
-
-                case Spell.SummonVampire:
-                case Spell.SummonToad:
-                case Spell.SummonSnakes:
-                    monster = (MonsterObject)data[2];
-                    front = (Point)data[3];
-
-                    if (ValidPoint(front))
-                        monster.Spawn(this, front);
-                    else
-                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
-                    break;
-
-                #endregion
-
                 #region Portal
 
                 case Spell.Portal:                  
@@ -2009,7 +2088,8 @@ namespace Server.MirEnvir
                 Players.Add((PlayerObject)ob);
                 InactiveTime = Envir.Time;
             }
-            if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
+            if (ob.Race == ObjectType.Merchant)
+                NPCs.Add((NPCObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
         }
@@ -2030,6 +2110,28 @@ namespace Server.MirEnvir
                 SafeZoneInfo szi = Info.SafeZones[i];
                 if (Functions.InRange(szi.Location, location, szi.Size))
                     return szi;
+            }
+            return null;
+        }
+
+        public ConquestObject GetConquest(Point location)
+        {
+            for (int i = 0; i < Conquest.Count; i++)
+            {
+                ConquestObject swi = Conquest[i];
+                if (Functions.InRange(swi.Info.Location, location, swi.Info.Size) && swi.WarIsOn)
+                    return swi;
+            }
+            return null;
+        }
+
+        public ConquestObject GetInnerConquest(Point location)
+        {
+            for (int i = 0; i < Conquest.Count; i++)
+            {
+                ConquestObject swi = Conquest[i];
+                if (Functions.InRange(swi.Info.ObjectLoc, location, swi.Info.ObjectSize) && swi.WarIsOn)
+                    return swi;
             }
             return null;
         }
@@ -2093,8 +2195,7 @@ namespace Server.MirEnvir
 
         public List<MapObject> Objects;
         public CellAttribute Attribute;
-
-        public bool FishingCell;
+        public sbyte FishingAttribute = -1;
 
         public void Add(MapObject mapObject)
         {
@@ -2115,6 +2216,7 @@ namespace Server.MirEnvir
         public Map Map;
         public int Count;
         public long RespawnTime;
+        public ulong NextSpawnTick;
         public byte ErrorCount = 0;
 
         public List<RouteInfo> Route;

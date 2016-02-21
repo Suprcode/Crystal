@@ -3,6 +3,9 @@ using System.Collections.Concurrent;
 using System.Windows.Forms;
 using Server.MirEnvir;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Linq;
+using Server.MirDatabase;
 
 namespace Server
 {
@@ -371,10 +374,30 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void conquestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConquestInfoForm form = new ConquestInfoForm();
+
+            form.ShowDialog();
+        }
+
+        private void rebootServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.Reboot();
+        }
+
+        private void respawnsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(7);
+            
+            form.ShowDialog();
+        }
+
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();
             form.ShowDialog();
         }
+
     }
 }

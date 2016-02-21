@@ -10,7 +10,7 @@ namespace Server.MirDatabase
 {
     public class MagicInfo
     {
-        public String Name;
+        public string Name;
         public Spell Spell;
         public byte BaseCost, LevelCost, Icon;
         public byte Level1, Level2, Level3;
@@ -18,6 +18,8 @@ namespace Server.MirDatabase
         public uint DelayBase = 1800, DelayReduction;
         public ushort PowerBase, PowerBonus;
         public ushort MPowerBase, MPowerBonus;
+        public float MultiplierBase = 1.0f, MultiplierBonus;
+        public byte Range = 9;
 
         public override string ToString()
         {
@@ -48,6 +50,14 @@ namespace Server.MirDatabase
             PowerBonus = reader.ReadUInt16();
             MPowerBase = reader.ReadUInt16();
             MPowerBonus = reader.ReadUInt16();
+
+            if (version > 66)
+                Range = reader.ReadByte();
+            if (version > 70)
+            {
+                MultiplierBase = reader.ReadSingle();
+                MultiplierBonus = reader.ReadSingle();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -69,6 +79,9 @@ namespace Server.MirDatabase
             writer.Write(PowerBonus);
             writer.Write(MPowerBase);
             writer.Write(MPowerBonus);
+            writer.Write(Range);
+            writer.Write(MultiplierBase);
+            writer.Write(MultiplierBonus);
         }
     }
 
@@ -151,10 +164,21 @@ namespace Server.MirDatabase
                     Key = Key,
                     Experience = Experience,
                     IsTempSpell = IsTempSpell,
-                    Delay = GetDelay()
-                };
+                    Delay = GetDelay(),
+                    Range = Info.Range,
+                    CastTime = (CastTime != 0) && (SMain.Envir.Time > CastTime)? SMain.Envir.Time - CastTime: 0
+            };
         }
 
+        public int GetDamage(int DamageBase)
+        {
+            return (int)((DamageBase + GetPower()) * GetMultiplier());
+        }
+
+        public float GetMultiplier()
+        {
+            return (Info.MultiplierBase + (Level * Info.MultiplierBonus));
+        }
 
         public int GetPower()
         {

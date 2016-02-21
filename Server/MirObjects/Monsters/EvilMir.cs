@@ -91,7 +91,7 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null) return;
 
-            List<MapObject> targets = MassAttack ? FindAllTargets(7, CurrentLocation) : FindAllTargets(2, Target.CurrentLocation);
+            List<MapObject> targets = MassAttack ? FindAllTargets(17/*huge range so it even hits ppl with bigger resolutions*/, CurrentLocation, false) : FindAllTargets(2, Target.CurrentLocation, false);
             if (targets.Count == 0) return;
 
             for (int i = 0; i < targets.Count; i++)
@@ -106,16 +106,22 @@ namespace Server.MirObjects.Monsters
             if (!CanAttack || !InAttackRange()) return;
 
             ShockTime = 0;
-            if (DragonLink) Envir.DragonSystem.DeLevelTime = Envir.Time + Envir.DragonSystem.DeLevelDelay;
+            if (DragonLink)
+            {
+                if (Envir.DragonSystem.Info.Level < Globals.MaxDragonLevel)
+                    Envir.DragonSystem.DeLevelTime = Envir.Time + Envir.DragonSystem.DeLevelDelay;
+                else
+                    Envir.DragonSystem.DeLevelTime = Envir.Time + (6 * Envir.DragonSystem.DeLevelDelay);
+            }
 
             byte random = DragonLink ? (byte)(Envir.DragonSystem.MaxLevel + 3 - Envir.DragonSystem.Info.Level) : (byte)8;
 
-            if (Envir.Random.Next(random) > 0 && Target.CurrentLocation.Y >= CurrentLocation.Y - 1)
+            if (Envir.Random.Next(random) > 0 /*&& Target.CurrentLocation.Y >= CurrentLocation.Y - 1*/)//in theory it shouldnt fire 'behind' it, but it should shoot at stuff in it's top left corner (and this code made it only hit below him not 'infront' of him)
             {
                 MassAttack = false;
                 Direction = SetDirection(Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation));
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 620; //50 MS per Step
 
                 ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + delay));
             }
@@ -132,6 +138,8 @@ namespace Server.MirObjects.Monsters
         protected override void Attack()
         {
             int damage = GetAttackPower(MinDC, DragonLink ? MaxDC + (Envir.DragonSystem.Info.Level - 1 * 10) : MaxDC);
+            if (!MassAttack)
+                damage = (int)(damage * 0.75);//make mass attacking do slightly more dmg then targeted
             if (damage == 0) return;
 
             if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
@@ -159,7 +167,7 @@ namespace Server.MirObjects.Monsters
 
         public override void ChangeHP(int amount)
         {
-            if (DragonLink && amount < 0) Envir.DragonSystem.GainExp(Envir.Random.Next(1, 50));
+            if (DragonLink && amount < 0) Envir.DragonSystem.GainExp(Envir.Random.Next(1, 40));
             base.ChangeHP(amount);
         }
 
@@ -170,7 +178,11 @@ namespace Server.MirObjects.Monsters
             if (!DragonLink) base.Die();
             else
             {
-                Envir.DragonSystem.GainExp(150);
+                if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))
+                {
+                    SMain.Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
+                }
+                Envir.DragonSystem.GainExp(250);//why would hitting em give you so little 'points', while hitting them gives so much
                 Sleeping = true;
                 WakeUpTime = Envir.Time + 5 * (60 * 1000);
             }

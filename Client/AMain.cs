@@ -146,7 +146,7 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
-                if (old.FileName == System.AppDomain.CurrentDomain.FriendlyName)
+                if ((old.FileName.Contains(System.AppDomain.CurrentDomain.FriendlyName)))
                 {
                     File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + oldClientName);
                     Restart = true;
@@ -162,7 +162,7 @@ namespace Launcher
             string fileName = info.FileName.Replace(@"\", "/");
 
             if (fileName != "PList.gz")
-                fileName += Path.GetExtension(fileName);
+                fileName += ".gz";
 
             try
             {
@@ -190,7 +190,7 @@ namespace Launcher
                             if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
                                 Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
 
-                            File.WriteAllBytes(Settings.P_Client + info.FileName, Decompress(e.Result));
+                            File.WriteAllBytes(Settings.P_Client + info.FileName, e.Result);
                             File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
                             }
                             BeginDownload();
@@ -200,7 +200,7 @@ namespace Launcher
 
 
                     _stopwatch = Stopwatch.StartNew();
-                    client.DownloadDataAsync(new Uri(Settings.P_Host + Path.ChangeExtension("/" + fileName, ".gz")));
+                    client.DownloadDataAsync(new Uri(Settings.P_Host + fileName));
                 }
             }
             catch
@@ -225,7 +225,7 @@ namespace Launcher
                     else
                         client.Credentials = new NetworkCredential("", "");
 
-                    return Decompress(client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz")));
+                    return client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz"));
                 }
             }
             catch

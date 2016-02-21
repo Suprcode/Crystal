@@ -28,6 +28,9 @@ namespace Server.MirDatabase
 
         public bool CanTame = true, CanPush = true, AutoRev = true, Undead = false;
 
+        public bool HasSpawnScript;
+        public bool HasDieScript;
+
         public MonsterInfo()
         {
         }
@@ -270,6 +273,7 @@ namespace Server.MirDatabase
         public ItemInfo Item;
         public uint Gold;
 
+        public byte Type;
         public bool QuestRequired;
 
         public static DropInfo FromLine(string s)

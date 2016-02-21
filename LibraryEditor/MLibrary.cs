@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LibraryEditor
@@ -15,7 +16,7 @@ namespace LibraryEditor
         public const int LibVersion = 1;
         public static bool Load = true;
         public string FileName;
-
+        
         public List<MImage> Images = new List<MImage>();
         public List<int> IndexList = new List<int>();
         public int Count;
@@ -126,6 +127,52 @@ namespace LibraryEditor
                 _stream.Seek(IndexList[index] + 12, SeekOrigin.Begin);
                 mi.CreateTexture(_reader);
             }
+        }
+
+        public void ToMLibrary()
+        {
+            string fileName = Path.ChangeExtension(FileName, ".Lib");
+
+            string file = Path.GetFileNameWithoutExtension(fileName);
+            fileName = fileName.Replace(file, file + "-converted");
+
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            MLibraryV2 library = new MLibraryV2(fileName) { Images = new List<MLibraryV2.MImage>(), IndexList = new List<int>(), Count = Images.Count };
+            //library.Save();
+
+            for (int i = 0; i < library.Count; i++)
+                library.Images.Add(null);
+
+            ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
+
+            try
+            {
+                Parallel.For(0, Images.Count, options, i =>
+                {
+                    MImage image = Images[i];
+                    if (image.HasMask)
+                        library.Images[i] = new MLibraryV2.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow, MaskX = image.X, MaskY = image.Y };
+                    else
+                        library.Images[i] = new MLibraryV2.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow };
+                });
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                library.Save();
+            }
+
+            // Operation finished.
+            // System.Windows.Forms.MessageBox.Show("Converted " + fileName + " successfully.",
+            //    "Wemade Information",
+            //        System.Windows.Forms.MessageBoxButtons.OK,
+            //            System.Windows.Forms.MessageBoxIcon.Information,
+            //                System.Windows.Forms.MessageBoxDefaultButton.Button1);
         }
 
         public Point GetOffSet(int index)

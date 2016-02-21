@@ -69,6 +69,7 @@ namespace Client.MirObjects
         {
             Id = info.RealId;
             Name = info.Name;
+            Settings.LoadTrackedQuests(info.Name);
             NameColour = info.NameColour;
             GuildName = info.GuildName;
             GuildRankName = info.GuildRank;
@@ -96,6 +97,11 @@ namespace Client.MirObjects
             QuestInventory = info.QuestInventory;
 
             Magics = info.Magics;
+            for (int i = 0; i < Magics.Count; i++ )
+            {
+                if (Magics[i].CastTime > 0)
+                    Magics[i].CastTime = CMain.Time - Magics[i].CastTime;
+            }
 
             IntelligentCreatures = info.IntelligentCreatures;//IntelligentCreature
             SummonedCreatureType = info.SummonedCreatureType;//IntelligentCreature
@@ -419,20 +425,23 @@ namespace Client.MirObjects
                         break;
                     case ItemSet.RedFlower:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 50);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP - 50);
+                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP - 25);
                         break;
                     case ItemSet.Smash:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 3);
+                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
                         break;
                     case ItemSet.HwanDevil:
                         MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
+                        MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
                         break;
                     case ItemSet.Purity:
                         MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + 1);
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
-                        //holy +2;
+                        Holy = (byte)Math.Min(ushort.MaxValue, Holy + 3);
                         break;
                     case ItemSet.FiveString:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + ((MaxHP / 100) * 30));
@@ -624,6 +633,10 @@ namespace Client.MirObjects
                     case BuffType.Haste:
                     case BuffType.Fury:
                         ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
+                        break;
+                    case BuffType.ImmortalSkin:
+                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
+                        MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - buff.Values[1]);
                         break;
                     case BuffType.SwiftFeet:
                         Sprint = true;

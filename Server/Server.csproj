@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -39,6 +39,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -86,7 +88,9 @@
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
     <Compile Include="MirDatabase\MailInfo.cs" />
+    <Compile Include="MirDatabase\ConquestInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
+    <Compile Include="MirEnvir\RespawnTimer.cs" />
     <Compile Include="MirForms\Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +114,12 @@
     </Compile>
     <Compile Include="MirForms\Database\MagicInfoForm.Designer.cs">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\Systems\ConquestInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Systems\ConquestInfoForm.Designer.cs">
+      <DependentUpon>ConquestInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MirForms\Systems\DragonInfoForm.cs">
       <SubType>Form</SubType>
@@ -223,6 +233,7 @@
     </Compile>
     <Compile Include="MirNetwork\MirConnection.cs" />
     <Compile Include="MirNetwork\MirStatusConnection.cs" />
+    <Compile Include="MirObjects\ConquestObject.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\DelayedAction.cs" />
     <Compile Include="MirObjects\GuildObject.cs" />
@@ -231,18 +242,29 @@
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
     <Compile Include="MirObjects\Monsters\AxeSkeleton.cs" />
+    <Compile Include="MirObjects\Monsters\Behemoth.cs" />
+    <Compile Include="MirObjects\Monsters\BlockingObject.cs" />
     <Compile Include="MirObjects\Monsters\BoneFamiliar.cs" />
     <Compile Include="MirObjects\Monsters\BugBagMaggot.cs" />
     <Compile Include="MirObjects\Monsters\CannibalPlant.cs" />
+    <Compile Include="MirObjects\Monsters\CastleGate.cs" />
     <Compile Include="MirObjects\Monsters\CaveMaggot.cs" />
     <Compile Include="MirObjects\Monsters\BoneSpearman.cs" />
     <Compile Include="MirObjects\Monsters\BoneLord.cs" />
     <Compile Include="MirObjects\Monsters\BombSpider.cs" />
     <Compile Include="MirObjects\Monsters\BlackFoxman.cs" />
     <Compile Include="MirObjects\Monsters\CharmedSnake.cs" />
+    <Compile Include="MirObjects\Monsters\ConquestArcher.cs" />
     <Compile Include="MirObjects\Monsters\CrazyManworm.cs" />
     <Compile Include="MirObjects\Monsters\DarkDevourer.cs" />
+    <Compile Include="MirObjects\Monsters\DreamDevourer.cs" />
+    <Compile Include="MirObjects\Monsters\FinialTurtle.cs" />
+    <Compile Include="MirObjects\Monsters\FlameTiger.cs" />
+    <Compile Include="MirObjects\Monsters\FlamingMutant.cs" />
     <Compile Include="MirObjects\Monsters\Football.cs" />
+    <Compile Include="MirObjects\Monsters\HellBolt.cs" />
+    <Compile Include="MirObjects\Monsters\HellKeeper.cs" />
+    <Compile Include="MirObjects\Monsters\HellPirate.cs" />
     <Compile Include="MirObjects\Monsters\HumanAssassin.cs" />
     <Compile Include="MirObjects\Monsters\HumanWizard.cs" />
     <Compile Include="MirObjects\Monsters\DragonStatue.cs" />
@@ -250,16 +272,22 @@
     <Compile Include="MirObjects\Monsters\EvilMir.cs" />
     <Compile Include="MirObjects\Monsters\HedgeKekTal.cs" />
     <Compile Include="MirObjects\Monsters\GreatFoxSpirit.cs" />
+    <Compile Include="MirObjects\Monsters\LightTurtle.cs" />
+    <Compile Include="MirObjects\Monsters\ManectricClaw.cs" />
     <Compile Include="MirObjects\Monsters\MutatedManworm.cs" />
+    <Compile Include="MirObjects\Monsters\Wall.cs" />
     <Compile Include="MirObjects\Monsters\Runaway.cs" />
+    <Compile Include="MirObjects\Monsters\Gate.cs" />
     <Compile Include="MirObjects\Monsters\SnakeTotem.cs" />
     <Compile Include="MirObjects\Monsters\SpittingToad.cs" />
+    <Compile Include="MirObjects\Monsters\StoningStatue.cs" />
     <Compile Include="MirObjects\Monsters\TalkingMonster.cs" />
     <Compile Include="MirObjects\Monsters\ThunderElement.cs" />
     <Compile Include="MirObjects\Monsters\GuardianRock.cs" />
     <Compile Include="MirObjects\Monsters\TownArcher.cs" />
     <Compile Include="MirObjects\Monsters\Trainer.cs" />
     <Compile Include="MirObjects\Monsters\TrapRock.cs" />
+    <Compile Include="MirObjects\Monsters\TurtleKing.cs" />
     <Compile Include="MirObjects\Monsters\VampireSpider.cs" />
     <Compile Include="MirObjects\Monsters\WhiteFoxman.cs" />
     <Compile Include="MirObjects\Monsters\RedFoxman.cs" />
@@ -352,6 +380,9 @@
     <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Systems\ConquestInfoForm.resx">
+      <DependentUpon>ConquestInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\DragonInfoForm.resx">
       <DependentUpon>DragonInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -363,6 +394,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\DropBuilder\DropBuilderForm.resx">
       <DependentUpon>DropBuilderForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\GuildInfoForm.resx">
       <DependentUpon>GuildInfoForm.cs</DependentUpon>

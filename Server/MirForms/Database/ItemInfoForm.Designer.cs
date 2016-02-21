@@ -187,6 +187,7 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
+            this.NoWeddingRingcheckbox = new System.Windows.Forms.CheckBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -1459,6 +1460,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.NoWeddingRingcheckbox);
             this.tabPage3.Controls.Add(this.BreakOnDeathcheckbox);
             this.tabPage3.Controls.Add(this.Bind_DontSpecialRepaircheckBox);
             this.tabPage3.Controls.Add(this.Bind_dontdropcheckbox);
@@ -1853,6 +1855,17 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
+            // NoWeddingRingcheckbox
+            // 
+            this.NoWeddingRingcheckbox.AutoSize = true;
+            this.NoWeddingRingcheckbox.Location = new System.Drawing.Point(21, 274);
+            this.NoWeddingRingcheckbox.Name = "NoWeddingRingcheckbox";
+            this.NoWeddingRingcheckbox.Size = new System.Drawing.Size(130, 17);
+            this.NoWeddingRingcheckbox.TabIndex = 115;
+            this.NoWeddingRingcheckbox.Text = "Disabled Weddingring";
+            this.NoWeddingRingcheckbox.UseVisualStyleBackColor = true;
+            this.NoWeddingRingcheckbox.CheckedChanged += new System.EventHandler(this.NoWeddingRingcheckbox_CheckedChanged);
+            // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2050,6 +2063,7 @@
         private System.Windows.Forms.CheckBox CanAwaken;
         private System.Windows.Forms.CheckBox BreakOnDeathcheckbox;
         private System.Windows.Forms.Button Gameshop_button;
+        private System.Windows.Forms.CheckBox NoWeddingRingcheckbox;
 
     }
 }

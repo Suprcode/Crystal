@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
+using System.Linq;
+
+public enum BlendMode : sbyte
+{
+    NONE = -1,
+    NORMAL = 0,
+    LIGHT = 1,
+    LIGHTINV = 2,
+    INVNORMAL = 3,
+    INVLIGHT = 4,
+    INVLIGHTINV = 5,
+    INVCOLOR = 6,
+    INVBACKGROUND = 7
+}
 
 public enum DamageType : byte
 {
@@ -96,7 +111,8 @@ public enum QuestType : byte
 {
     General = 0,
     Daily = 1,
-    Repeatable = 2
+    Repeatable = 2,
+    Story = 3
 }
 
 public enum QuestIcon : byte
@@ -106,7 +122,9 @@ public enum QuestIcon : byte
     ExclamationYellow = 2,
     QuestionYellow = 3,
     ExclamationBlue = 5,
-    QuestionBlue = 6
+    QuestionBlue = 6,
+    ExclamationGreen = 7,
+    QuestionGreen = 8
 }
 
 public enum QuestState : byte
@@ -306,7 +324,6 @@ public enum Monster : ushort
     DarkDustPile = 147,
     DarkBrownWolf = 148,
     Football = 149,
-
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -315,9 +332,10 @@ public enum Monster : ushort
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
+
     Behemoth = 158,
     DarkDevourer = 159,//LIB BROKE??
-    PoisonHugger = 160,
+    PoisonHugger = 160, //DONE
     Hugger = 161,
     MutatedHugger = 162,//BROKE
     DreamDevourer = 163,//LIB BROKE??
@@ -332,14 +350,14 @@ public enum Monster : ushort
     Catapult = 172, //not added frames //special 3 states in 1 
     SabukWallSection = 173, //not added frames
     NammandWallSection = 174, //not added frames
-    //BLANK_175 = 175,
+    SiegeRepairman = 175, //not added frames
     BlueSanta = 176,//FRAMES BROKE
     BattleStandard = 177,
-    ArcherGuard2 = 178, //NO FRAMES
+    ArcherGuard2 = 178,
     RedYimoogi = 179,
-    //BLANK_180 = 180,
-    //BLANK_181 = 181,
-    //BLANK_182 = 182,
+    LionRiderMale = 180, //frames not added
+    LionRiderFemale = 181, //frames not added
+    Tornado = 182, //frames not added
     FlameTiger = 183,
     WingedTigerLord = 184,//FRAMES BROKE
     TowerTurtle = 185,
@@ -558,17 +576,29 @@ public enum Monster : ushort
     AntCommander = 394,
     CargoBoxwithlogo = 395,
     Doe = 396,
-    //BLANK_397 = 397,
+    Reindeer = 397, //frames not added
     AngryReindeer = 398,
     CargoBox = 399,
     
     Ram1 = 400,
     Ram2 = 401,
-    Kite = 403,
+    Kite = 402,
+    
 
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
+
+    SabukGate = 950,
+    PalaceWallLeft = 951,
+    PalaceWall1 = 952,
+    PalaceWall2 = 953,
+    GiGateSouth = 954,
+    GiGateEast = 955,
+    GiGateWest = 956,
+    SSabukWall1 = 957,
+    SSabukWall2 = 958,
+    SSabukWall3 = 959,
 
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special
@@ -580,7 +610,7 @@ public enum Monster : ushort
     BabyDragon = 10007,//unknown
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
-    Frog = 10010//unknown
+    Frog = 10010,//unknown
 }
 
 public enum MirAction : byte
@@ -640,6 +670,7 @@ public enum CellAttribute : byte
     HighWall = 1,
     LowWall = 2,
 }
+
 public enum LightSetting : byte
 {
     Normal = 0,
@@ -685,7 +716,8 @@ public enum ObjectType : byte
     Merchant = 3,
     Spell = 4,
     Monster = 5,
-    Deco = 6
+    Deco = 6,
+    Creature = 7
 }
 
 public enum ChatType : byte
@@ -828,7 +860,7 @@ public enum PetMode : byte
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum PoisonType : byte
+public enum PoisonType : ushort
 {
     None = 0,
     Green = 1,
@@ -838,7 +870,8 @@ public enum PoisonType : byte
     Stun = 16,
     Paralysis = 32,
     DelayedExplosion = 64,
-    Bleeding = 128
+    Bleeding = 128,
+    LRParalysis = 256
 }
 
 [Flags]
@@ -847,17 +880,18 @@ public enum PoisonType : byte
 public enum BindMode : short
 {
     none = 0,
-    DontDeathdrop = 1,
-    DontDrop = 2,
-    DontSell = 4,
-    DontStore = 8,
-    DontTrade = 16,
-    DontRepair = 32,
-    DontUpgrade = 64,
-    DestroyOnDrop = 128,
-    BreakOnDeath = 256,
-    BindOnEquip = 512,
-    NoSRepair = 1024,
+    DontDeathdrop = 1,//0x0001
+    DontDrop = 2,//0x0002
+    DontSell = 4,//0x0004
+    DontStore = 8,//0x0008
+    DontTrade = 16,//0x0010
+    DontRepair = 32,//0x0020
+    DontUpgrade = 64,//0x0040
+    DestroyOnDrop = 128,//0x0080
+    BreakOnDeath = 256,//0x0100
+    BindOnEquip = 512,//0x0200
+    NoSRepair = 1024,//0x0400
+    NoWeddingRing = 2048,//0x0800
 }
 
 [Flags]
@@ -875,7 +909,7 @@ public enum SpecialItemMode : short
     Healing = 0x0080,
     Probe = 0x0100,
     Skill = 0x0200,
-    NoDuraLoss = 0x0400
+    NoDuraLoss = 0x0400,
 }
 
 [Flags]
@@ -1106,7 +1140,7 @@ public enum SpellEffect : byte
 
 public enum BuffType : byte
 {
-    None,
+    None = 0,
 
     //magics
     TemporalFlux,
@@ -1131,9 +1165,11 @@ public enum BuffType : byte
     EnergyShield,
     MagicBooster,
     PetEnhancer,
+    ImmortalSkin,
+    MagicShield,
 
     //special
-    GameMaster,
+    GameMaster = 100,
     General,
     Exp,
     Drop,
@@ -1148,7 +1184,7 @@ public enum BuffType : byte
     Rested,
 
     //stats
-    Impact,
+    Impact = 200,
     Magic,
     Taoist,
     Storm,
@@ -1176,6 +1212,7 @@ public enum ServerPacketIds : short
     Connected,
     ClientVersion,
     Disconnect,
+    KeepAlive,
     NewAccount,
     ChangePassword,
     ChangePasswordBanned,
@@ -1243,6 +1280,7 @@ public enum ServerPacketIds : short
     ObjectDied,
     ColourChanged,
     ObjectColourChanged,
+    ObjectGuildNameChanged,
     GainExperience,
     LevelChanged,
     ObjectLeveled,
@@ -1393,6 +1431,8 @@ public enum ServerPacketIds : short
     NPCRequestInput,
     GameShopInfo,
     GameShopStock,
+    Rankings,
+    Opendoor,
 }
 
 public enum ClientPacketIds : short
@@ -1521,6 +1561,25 @@ public enum ClientPacketIds : short
     GuildBuffUpdate,
     NPCConfirmInput,
     GameshopBuy,
+
+    ReportIssue,
+    GetRanking,
+    Opendoor,
+}
+
+public enum ConquestType : byte
+{
+    Request = 0,
+    Auto = 1,
+    Forced = 2,
+}
+
+public enum ConquestGame : byte
+{
+    CapturePalace = 0,
+    KingOfHill = 1,
+    Random = 2,
+    Classic = 3,
 }
 
 public class InIReader
@@ -2057,7 +2116,7 @@ public static class Functions
         return false;
     }
 
-    public static string PrintTimeSpanFromSeconds(double secs)
+    public static string PrintTimeSpanFromSeconds(double secs, bool accurate = true)
     {
         TimeSpan t = TimeSpan.FromSeconds(secs);
         string answer;
@@ -2067,15 +2126,15 @@ public static class Functions
         }
         else if (t.TotalHours < 1.0)
         {
-            answer = string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds);
+            answer = accurate ? string.Format("{0}m {1:D2}s", t.Minutes, t.Seconds) : string.Format("{0}m", t.Minutes);
         }
         else if (t.TotalDays < 1.0)
         {
-            answer = string.Format("{0}h {1:D2}m {2:D2}s", (int)t.Hours, t.Minutes, t.Seconds);
+            answer = accurate ? string.Format("{0}h {1:D2}m {2:D2}s", (int)t.Hours, t.Minutes, t.Seconds) : string.Format("{0}h {1:D2}m", (int)t.TotalHours, t.Minutes);
         }
         else // more than 1 day
         {
-            answer = string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds);
+            answer = accurate ? string.Format("{0}d {1:D2}h {2:D2}m {3:D2}s", (int)t.Days, (int)t.Hours, t.Minutes, t.Seconds) : string.Format("{0}d {1}h {2:D2}m", (int)t.TotalDays, (int)t.Hours, t.Minutes);
         }
 
         return answer;
@@ -2380,6 +2439,43 @@ public static class Functions
 
         return newString;
     }
+
+    public static byte[] ImageToByteArray(Image imageIn)
+    {
+        MemoryStream ms = new MemoryStream();
+        imageIn.Save(ms, ImageFormat.Gif);
+        return ms.ToArray();
+    }
+
+    public static Image ByteArrayToImage(byte[] byteArrayIn)
+    {
+        MemoryStream ms = new MemoryStream(byteArrayIn);
+        Image returnImage = Image.FromStream(ms);
+        return returnImage;
+    }
+
+    public static IEnumerable<byte[]> SplitArray(byte[] value, int bufferLength)
+    {
+        int countOfArray = value.Length / bufferLength;
+        if (value.Length % bufferLength > 0)
+            countOfArray++;
+        for (int i = 0; i < countOfArray; i++)
+        {
+            yield return value.Skip(i * bufferLength).Take(bufferLength).ToArray();
+        }
+    }
+
+    public static byte[] CombineArray(List<byte[]> arrays)
+    {
+        byte[] rv = new byte[arrays.Sum(x => x.Length)];
+        int offset = 0;
+        foreach (byte[] array in arrays)
+        {
+            System.Buffer.BlockCopy(array, 0, rv, offset, array.Length);
+            offset += array.Length;
+        }
+        return rv;
+    }
 }
 
 public class SelectInfo
@@ -2595,6 +2691,11 @@ public class ItemInfo
             bool isTooltip = reader.ReadBoolean();
             if (isTooltip)
                 ToolTip = reader.ReadString();
+        }
+        if (version < 70) //before db version 70 all specialitems had wedding rings disabled, after that it became a server option
+        {
+            if ((Type == ItemType.Ring) &&  (Unique != SpecialItemMode.None))
+                Bind |= BindMode.NoWeddingRing;
         }
     }
 
@@ -3533,7 +3634,7 @@ public class ClientMagic
     public byte Level1, Level2, Level3;
     public ushort Need1, Need2, Need3;
 
-    public byte Level, Key;
+    public byte Level, Key, Range;
     public ushort Experience;
 
     public bool IsTempSpell;
@@ -3562,6 +3663,9 @@ public class ClientMagic
         Experience = reader.ReadUInt16();
 
         Delay = reader.ReadInt64();
+
+        Range = reader.ReadByte();
+        CastTime = reader.ReadInt64();
     }
 
     public void Save(BinaryWriter writer)
@@ -3583,6 +3687,9 @@ public class ClientMagic
         writer.Write(Experience);
 
         writer.Write(Delay);
+
+        writer.Write(Range);
+        writer.Write(CastTime);
     }
    
 }
@@ -3752,6 +3859,14 @@ public class ClientQuestInfo
                     icon = QuestIcon.QuestionWhite;
                 else
                     icon = QuestIcon.ExclamationBlue;
+                break;
+            case QuestType.Story:
+                if (completed)
+                    icon = QuestIcon.QuestionGreen;
+                else if (taken)
+                    icon = QuestIcon.QuestionWhite;
+                else
+                    icon = QuestIcon.ExclamationGreen;
                 break;
         }
 
@@ -4170,21 +4285,24 @@ public abstract class Packet
 
         int length = (rawBytes[1] << 8) + rawBytes[0];
 
-        if (length > rawBytes.Length) return null;
+        if (length > rawBytes.Length || length < 2) return null;
 
         using (MemoryStream stream = new MemoryStream(rawBytes, 2, length - 2))
         using (BinaryReader reader = new BinaryReader(stream))
         {
-            short id = reader.ReadInt16();
-
-            p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
             try
             {
+                short id = reader.ReadInt16();
+
+                p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
+                if (p == null) return null;
+
                 p.ReadPacket(reader);
             }
             catch
             {
                 return null;
+                //return new C.Disconnect();
             }
         }
 
@@ -4465,8 +4583,14 @@ public abstract class Packet
                 return new C.GameshopBuy();
             case (short)ClientPacketIds.NPCConfirmInput:
                 return new C.NPCConfirmInput();
+            case (short)ClientPacketIds.ReportIssue:
+                return new C.ReportIssue();
+            case (short)ClientPacketIds.GetRanking:
+                return new C.GetRanking();
+            case (short)ClientPacketIds.Opendoor:
+                return new C.Opendoor();
             default:
-                throw new NotImplementedException();
+                return null;
         }
 
     }
@@ -4480,6 +4604,8 @@ public abstract class Packet
                 return new S.ClientVersion();
             case (short)ServerPacketIds.Disconnect:
                 return new S.Disconnect();
+            case (short)ServerPacketIds.KeepAlive:
+                return new S.KeepAlive();
             case (short)ServerPacketIds.NewAccount:
                 return new S.NewAccount();
             case (short)ServerPacketIds.ChangePassword:
@@ -4505,7 +4631,7 @@ public abstract class Packet
             case (short)ServerPacketIds.StartGameBanned:
                 return new S.StartGameBanned();
             case (short)ServerPacketIds.StartGameDelay:
-                return new S.StartGameDelay();
+                return new S.StartGameDelay();       
             case (short)ServerPacketIds.MapInformation:
                 return new S.MapInformation();
             case (short)ServerPacketIds.UserInformation:
@@ -4612,6 +4738,8 @@ public abstract class Packet
                 return new S.ColourChanged();
             case (short)ServerPacketIds.ObjectColourChanged:
                 return new S.ObjectColourChanged();
+            case (short)ServerPacketIds.ObjectGuildNameChanged:
+                return new S.ObjectGuildNameChanged();
             case (short)ServerPacketIds.GainExperience:
                 return new S.GainExperience();
             case (short)ServerPacketIds.LevelChanged:
@@ -4906,8 +5034,12 @@ public abstract class Packet
                 return new S.GameShopStock();
             case (short)ServerPacketIds.NPCRequestInput:
                 return new S.NPCRequestInput();
+            case (short)ServerPacketIds.Rankings:
+                return new S.Rankings();
+            case (short)ServerPacketIds.Opendoor:
+                return new S.Opendoor();
             default:
-                throw new NotImplementedException();
+                return null;
         }
     }
 }
@@ -5365,6 +5497,11 @@ public class ItemSets
                 case ItemSet.Mundane:
                 case ItemSet.NokChi:
                 case ItemSet.TaoProtect:
+                case ItemSet.Whisker1:
+                case ItemSet.Whisker2:
+                case ItemSet.Whisker3:
+                case ItemSet.Whisker4:
+                case ItemSet.Whisker5:
                     return 2;
                 case ItemSet.RedOrchid:
                 case ItemSet.RedFlower:
@@ -5384,11 +5521,6 @@ public class ItemSets
                 case ItemSet.RedJadeH:
                 case ItemSet.Nephrite:
                 case ItemSet.NephriteH:
-                case ItemSet.Whisker1:
-                case ItemSet.Whisker2:
-                case ItemSet.Whisker3:
-                case ItemSet.Whisker4:
-                case ItemSet.Whisker5:
                 case ItemSet.Hyeolryong:
                 case ItemSet.Monitor:
                 case ItemSet.Oppressive:
@@ -5940,3 +6072,47 @@ public class GuildBuffOld
 }
 
 #endregion
+
+#region Ranking Pete107|Petesn00beh 15/1/2016
+public class Rank_Character_Info
+{
+    public long PlayerId;
+    public string Name;
+    public MirClass Class;
+    public int level;
+    //public int rank;
+    public long Experience;//clients shouldnt care about this only server
+    public object info;//again only keep this on server!
+
+    public Rank_Character_Info()
+    {
+
+    }
+    public Rank_Character_Info(BinaryReader reader)
+    {
+        //rank = reader.ReadInt32();
+        PlayerId = reader.ReadInt64();
+        Name = reader.ReadString();
+        level = reader.ReadInt32();
+        Class = (MirClass)reader.ReadByte();
+
+    }
+    public void Save(BinaryWriter writer)
+    {
+        //writer.Write(rank);
+        writer.Write(PlayerId);
+        writer.Write(Name);
+        writer.Write(level);
+        writer.Write((byte)Class);
+    }
+}
+#endregion
+
+public class Door
+{
+    public byte index;
+    public byte DoorState;//0: closed, 1: opening, 2: open, 3: closing
+    public byte ImageIndex;
+    public long LastTick;
+    public Point Location;
+}

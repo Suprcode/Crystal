@@ -76,6 +76,8 @@ namespace Server.MirObjects
         
         public bool Dead, Undead, Harvested, AutoRev;
 
+        public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
+
         public virtual int PKPoints { get; set; }
 
         public ushort PotHealthAmount, PotManaAmount, HealAmount, VampAmount;
@@ -382,7 +384,7 @@ namespace Server.MirObjects
         {
             Broadcast(GetInfo());
             return;
-        }
+        } 
 
         public abstract bool IsAttackTarget(PlayerObject attacker);
         public abstract bool IsAttackTarget(MonsterObject attacker);
@@ -415,7 +417,7 @@ namespace Server.MirObjects
 
         public virtual bool Harvest(PlayerObject player) { return false; }
 
-        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false);
+        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
         public virtual void AddBuff(Buff b)
         {
             switch (b.Type)

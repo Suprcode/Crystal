@@ -143,7 +143,7 @@ namespace Server.MirObjects.Monsters
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
-                break;
+                //break;
             }
 
             return true;

@@ -15,6 +15,7 @@ namespace Server
                             MapPath = @".\Maps\",
                             ExportPath = @".\Exports\",
                             GuildPath = @".\Guilds\",
+                            ConquestsPath = @".\Conquests\",
                             NPCPath = EnvirPath + @".\NPCs\",
                             GoodsPath = EnvirPath + @".\Goods\",
                             QuestPath = EnvirPath + @".\Quests\",
@@ -38,12 +39,14 @@ namespace Server
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
         public static bool TestServer = false;
+        public static bool EnforceDBChecks = true;
 
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
 	    public static string AwakeningDropFilename = "00Awakening";
         public static string StrongboxDropFilename = "00Strongbox";
         public static string BlackstoneDropFilename = "00Blackstone";
+        public static string MonsterNPCFilename = "00Monster";
 
         //Network
         public static string IPAddress = "127.0.0.1";
@@ -86,6 +89,7 @@ namespace Server
         public static float DropRate = 1F, ExpRate = 1F;
 
         public static int ItemTimeOut = 30,
+                          PlayerDiedItemTimeOut = 120,
                           DropRange = 4,
                           DropStackSize = 5,
                           PKDelay = 12;
@@ -95,7 +99,8 @@ namespace Server
 
         public static int RestedPeriod = 60,
                           RestedBuffLength = 10,
-                          RestedExpBonus = 5;
+                          RestedExpBonus = 5,
+                          RestedMaxBonus = 24;
 
         public static string SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
@@ -107,6 +112,11 @@ namespace Server
                              Zuma5 = "ZumaArcher3",
                              Zuma6 = "ZumaStatue3",
                              Zuma7 = "ZumaGuardian3",
+                             Turtle1 = "RedTurtle",
+                             Turtle2 = "GreenTurtle",
+                             Turtle3 = "BlueTurtle",
+                             Turtle4 = "TowerTurtle",
+                             Turtle5 = "FinialTurtle",
                              BoneMonster1 = "BoneSpearman",
                              BoneMonster2 = "BoneBlademan",
                              BoneMonster3 = "BoneArcher",
@@ -257,6 +267,7 @@ namespace Server
             Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
             ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
+            EnforceDBChecks = Reader.ReadBoolean("General", "EnforceDBChecks", EnforceDBChecks);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -290,6 +301,7 @@ namespace Server
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
             ExpRate = Reader.ReadSingle("Game", "ExpRate", ExpRate);
             ItemTimeOut = Reader.ReadInt32("Game", "ItemTimeOut", ItemTimeOut);
+            PlayerDiedItemTimeOut = Reader.ReadInt32("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             PetTimeOut = Reader.ReadInt64("Game", "PetTimeOut", PetTimeOut);
             PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
             PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
@@ -303,6 +315,11 @@ namespace Server
             Zuma5 = Reader.ReadString("Game", "Zuma5", Zuma5);
             Zuma6 = Reader.ReadString("Game", "Zuma6", Zuma6);
             Zuma7 = Reader.ReadString("Game", "Zuma7", Zuma7);
+            Turtle1 = Reader.ReadString("Game", "Turtle1", Turtle1);
+            Turtle2 = Reader.ReadString("Game", "Turtle2", Turtle2);
+            Turtle3 = Reader.ReadString("Game", "Turtle3", Turtle3);
+            Turtle4 = Reader.ReadString("Game", "Turtle4", Turtle4);
+            Turtle5 = Reader.ReadString("Game", "Turtle5", Turtle5);
             BoneMonster1 = Reader.ReadString("Game", "BoneMonster1", BoneMonster1);
             BoneMonster2 = Reader.ReadString("Game", "BoneMonster2", BoneMonster2);
             BoneMonster3 = Reader.ReadString("Game", "BoneMonster3", BoneMonster3);
@@ -322,6 +339,7 @@ namespace Server
             RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
             RestedBuffLength = Reader.ReadInt32("Rested", "BuffLength", RestedBuffLength);
             RestedExpBonus = Reader.ReadInt32("Rested", "ExpBonus", RestedExpBonus);
+            RestedMaxBonus = Reader.ReadInt32("Rested", "MaxBonus", RestedMaxBonus);
 
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
@@ -334,32 +352,6 @@ namespace Server
 
             DropGold = Reader.ReadBoolean("DropGold", "DropGold", DropGold);
             MaxDropGold = Reader.ReadUInt32("DropGold", "MaxDropGold", MaxDropGold);
-
-            for (int i = 0; i < ClassBaseStats.Length; i++)
-            {
-                ClassBaseStats[i].HpGain = Reader.ReadFloat(BaseStatClassNames[i], "HpGain", ClassBaseStats[i].HpGain);
-                ClassBaseStats[i].HpGainRate = Reader.ReadFloat(BaseStatClassNames[i], "HpGainRate", ClassBaseStats[i].HpGainRate);
-                ClassBaseStats[i].MpGainRate = Reader.ReadFloat(BaseStatClassNames[i], "MpGainRate", ClassBaseStats[i].MpGainRate);
-                ClassBaseStats[i].BagWeightGain = Reader.ReadFloat(BaseStatClassNames[i], "BagWeightGain", ClassBaseStats[i].BagWeightGain);
-                ClassBaseStats[i].WearWeightGain = Reader.ReadFloat(BaseStatClassNames[i], "WearWeightGain", ClassBaseStats[i].WearWeightGain);
-                ClassBaseStats[i].HandWeightGain = Reader.ReadFloat(BaseStatClassNames[i], "HandWeightGain", ClassBaseStats[i].HandWeightGain);
-                ClassBaseStats[i].MinAc = Reader.ReadByte(BaseStatClassNames[i], "MinAc", ClassBaseStats[i].MinAc);
-                ClassBaseStats[i].MaxAc = Reader.ReadByte(BaseStatClassNames[i], "MaxAc", ClassBaseStats[i].MaxAc);
-                ClassBaseStats[i].MinMac = Reader.ReadByte(BaseStatClassNames[i], "MinMac", ClassBaseStats[i].MinMac);
-                ClassBaseStats[i].MaxMac = Reader.ReadByte(BaseStatClassNames[i], "MaxMac", ClassBaseStats[i].MaxMac);
-                ClassBaseStats[i].MinDc = Reader.ReadByte(BaseStatClassNames[i], "MinDc", ClassBaseStats[i].MinDc);
-                ClassBaseStats[i].MaxDc = Reader.ReadByte(BaseStatClassNames[i], "MaxDc", ClassBaseStats[i].MaxDc);
-                ClassBaseStats[i].MinMc = Reader.ReadByte(BaseStatClassNames[i], "MinMc", ClassBaseStats[i].MinMc);
-                ClassBaseStats[i].MaxMc = Reader.ReadByte(BaseStatClassNames[i], "MaxMc", ClassBaseStats[i].MaxMc);
-                ClassBaseStats[i].MinSc = Reader.ReadByte(BaseStatClassNames[i], "MinSc", ClassBaseStats[i].MinSc);
-                ClassBaseStats[i].MaxSc = Reader.ReadByte(BaseStatClassNames[i], "MaxSc", ClassBaseStats[i].MaxSc);
-                ClassBaseStats[i].StartAgility = Reader.ReadByte(BaseStatClassNames[i], "StartAgility", ClassBaseStats[i].StartAgility);
-                ClassBaseStats[i].StartAccuracy = Reader.ReadByte(BaseStatClassNames[i], "StartAccuracy", ClassBaseStats[i].StartAccuracy);
-                ClassBaseStats[i].StartCriticalRate = Reader.ReadByte(BaseStatClassNames[i], "StartCriticalRate", ClassBaseStats[i].StartCriticalRate);
-                ClassBaseStats[i].StartCriticalDamage = Reader.ReadByte(BaseStatClassNames[i], "StartCriticalDamage", ClassBaseStats[i].StartCriticalDamage);
-                ClassBaseStats[i].CritialRateGain = Reader.ReadByte(BaseStatClassNames[i], "CritialRateGain", ClassBaseStats[i].CritialRateGain);
-                ClassBaseStats[i].CriticalDamageGain = Reader.ReadByte(BaseStatClassNames[i], "CriticalDamageGain", ClassBaseStats[i].CriticalDamageGain);
-            }
 
             MaxMagicResist = Reader.ReadByte("Items","MaxMagicResist",MaxMagicResist);
             MagicResistWeight = Reader.ReadByte("Items","MagicResistWeight",MagicResistWeight);
@@ -422,8 +414,17 @@ namespace Server
                 NewFile.Close();
             }
 
+            fileName = Path.Combine(Settings.NPCPath, MonsterNPCFilename + ".txt");
+
+            if (!File.Exists(fileName))
+            {
+                FileStream NewFile = File.Create(fileName);
+                NewFile.Close();
+            }
+
             LoadVersion();
             LoadEXP();
+            LoadBaseStats();
             LoadRandomItemStats();
             LoadMines();
             LoadGuildSettings();
@@ -445,7 +446,8 @@ namespace Server
             Reader.Write("General", "Multithreaded", Multithreaded);
             Reader.Write("General", "ThreadLimit", ThreadLimit);
             Reader.Write("General", "TestServer", TestServer);
-
+            Reader.Write("General", "EnforceDBChecks", EnforceDBChecks);
+            
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
             Reader.Write("Network", "Port", Port);
@@ -478,6 +480,7 @@ namespace Server
             Reader.Write("Game", "DropRate", DropRate);
             Reader.Write("Game", "ExpRate", ExpRate);
             Reader.Write("Game", "ItemTimeOut", ItemTimeOut);
+            Reader.Write("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             Reader.Write("Game", "PetTimeOut", PetTimeOut);
             Reader.Write("Game", "PetSave", PetSave);
             Reader.Write("Game", "PKDelay", PKDelay);
@@ -492,6 +495,12 @@ namespace Server
             Reader.Write("Game", "Zuma5", Zuma5);
             Reader.Write("Game", "Zuma6", Zuma6);
             Reader.Write("Game", "Zuma7", Zuma7);
+
+            Reader.Write("Game", "Turtle1", Turtle1);
+            Reader.Write("Game", "Turtle2", Turtle2);
+            Reader.Write("Game", "Turtle3", Turtle3);
+            Reader.Write("Game", "Turtle4", Turtle4);
+            Reader.Write("Game", "Turtle5", Turtle5);
 
             Reader.Write("Game", "BoneMonster1", BoneMonster1);
             Reader.Write("Game", "BoneMonster2", BoneMonster2);
@@ -512,6 +521,7 @@ namespace Server
             Reader.Write("Rested", "Period", RestedPeriod);
             Reader.Write("Rested", "BuffLength", RestedBuffLength);
             Reader.Write("Rested", "ExpBonus", RestedExpBonus);
+            Reader.Write("Rested", "MaxBonus", RestedMaxBonus);
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);
@@ -522,32 +532,6 @@ namespace Server
 
             Reader.Write("DropGold", "DropGold", DropGold);
             Reader.Write("DropGold", "MaxDropGold", MaxDropGold);
-
-            for (int i = 0; i < ClassBaseStats.Length; i++)
-            {
-                Reader.Write(BaseStatClassNames[i], "HpGain", ClassBaseStats[i].HpGain);
-                Reader.Write(BaseStatClassNames[i], "HpGainRate", ClassBaseStats[i].HpGainRate);
-                Reader.Write(BaseStatClassNames[i], "MpGainRate", ClassBaseStats[i].MpGainRate);
-                Reader.Write(BaseStatClassNames[i], "BagWeightGain", ClassBaseStats[i].BagWeightGain);
-                Reader.Write(BaseStatClassNames[i], "WearWeightGain", ClassBaseStats[i].WearWeightGain);
-                Reader.Write(BaseStatClassNames[i], "HandWeightGain", ClassBaseStats[i].HandWeightGain);
-                Reader.Write(BaseStatClassNames[i], "MinAc", ClassBaseStats[i].MinAc);
-                Reader.Write(BaseStatClassNames[i], "MaxAc", ClassBaseStats[i].MaxAc);
-                Reader.Write(BaseStatClassNames[i], "MinMac", ClassBaseStats[i].MinMac);
-                Reader.Write(BaseStatClassNames[i], "MaxMac", ClassBaseStats[i].MaxMac);
-                Reader.Write(BaseStatClassNames[i], "MinDc", ClassBaseStats[i].MinDc);
-                Reader.Write(BaseStatClassNames[i], "MaxDc", ClassBaseStats[i].MaxDc);
-                Reader.Write(BaseStatClassNames[i], "MinMc", ClassBaseStats[i].MinMc);
-                Reader.Write(BaseStatClassNames[i], "MaxMc", ClassBaseStats[i].MaxMc);
-                Reader.Write(BaseStatClassNames[i], "MinSc", ClassBaseStats[i].MinSc);
-                Reader.Write(BaseStatClassNames[i], "MaxSc", ClassBaseStats[i].MaxSc);
-                Reader.Write(BaseStatClassNames[i], "StartAgility", ClassBaseStats[i].StartAgility);
-                Reader.Write(BaseStatClassNames[i], "StartAccuracy", ClassBaseStats[i].StartAccuracy);
-                Reader.Write(BaseStatClassNames[i], "StartCriticalRate", ClassBaseStats[i].StartCriticalRate);
-                Reader.Write(BaseStatClassNames[i], "StartCriticalDamage", ClassBaseStats[i].StartCriticalDamage);
-                Reader.Write(BaseStatClassNames[i], "CritialRateGain", ClassBaseStats[i].CritialRateGain);
-                Reader.Write(BaseStatClassNames[i], "CriticalDamageGain", ClassBaseStats[i].CriticalDamageGain);
-            }
 
             Reader.Write("Items", "MaxMagicResist", MaxMagicResist);
             Reader.Write("Items", "MagicResistWeight", MagicResistWeight);
@@ -607,6 +591,73 @@ namespace Server
             }
         }
 
+        public static void LoadBaseStats()
+        {
+            if (!File.Exists(ConfigPath + @".\BaseStats.ini"))
+            {
+                SaveBaseStats();
+                return;
+            }
+
+            InIReader reader = new InIReader(ConfigPath + @".\BaseStats.ini");
+
+            for (int i = 0; i < ClassBaseStats.Length; i++)
+            {
+                ClassBaseStats[i].HpGain = reader.ReadFloat(BaseStatClassNames[i], "HpGain", ClassBaseStats[i].HpGain);
+                ClassBaseStats[i].HpGainRate = reader.ReadFloat(BaseStatClassNames[i], "HpGainRate", ClassBaseStats[i].HpGainRate);
+                ClassBaseStats[i].MpGainRate = reader.ReadFloat(BaseStatClassNames[i], "MpGainRate", ClassBaseStats[i].MpGainRate);
+                ClassBaseStats[i].BagWeightGain = reader.ReadFloat(BaseStatClassNames[i], "BagWeightGain", ClassBaseStats[i].BagWeightGain);
+                ClassBaseStats[i].WearWeightGain = reader.ReadFloat(BaseStatClassNames[i], "WearWeightGain", ClassBaseStats[i].WearWeightGain);
+                ClassBaseStats[i].HandWeightGain = reader.ReadFloat(BaseStatClassNames[i], "HandWeightGain", ClassBaseStats[i].HandWeightGain);
+                ClassBaseStats[i].MinAc = reader.ReadByte(BaseStatClassNames[i], "MinAc", ClassBaseStats[i].MinAc);
+                ClassBaseStats[i].MaxAc = reader.ReadByte(BaseStatClassNames[i], "MaxAc", ClassBaseStats[i].MaxAc);
+                ClassBaseStats[i].MinMac = reader.ReadByte(BaseStatClassNames[i], "MinMac", ClassBaseStats[i].MinMac);
+                ClassBaseStats[i].MaxMac = reader.ReadByte(BaseStatClassNames[i], "MaxMac", ClassBaseStats[i].MaxMac);
+                ClassBaseStats[i].MinDc = reader.ReadByte(BaseStatClassNames[i], "MinDc", ClassBaseStats[i].MinDc);
+                ClassBaseStats[i].MaxDc = reader.ReadByte(BaseStatClassNames[i], "MaxDc", ClassBaseStats[i].MaxDc);
+                ClassBaseStats[i].MinMc = reader.ReadByte(BaseStatClassNames[i], "MinMc", ClassBaseStats[i].MinMc);
+                ClassBaseStats[i].MaxMc = reader.ReadByte(BaseStatClassNames[i], "MaxMc", ClassBaseStats[i].MaxMc);
+                ClassBaseStats[i].MinSc = reader.ReadByte(BaseStatClassNames[i], "MinSc", ClassBaseStats[i].MinSc);
+                ClassBaseStats[i].MaxSc = reader.ReadByte(BaseStatClassNames[i], "MaxSc", ClassBaseStats[i].MaxSc);
+                ClassBaseStats[i].StartAgility = reader.ReadByte(BaseStatClassNames[i], "StartAgility", ClassBaseStats[i].StartAgility);
+                ClassBaseStats[i].StartAccuracy = reader.ReadByte(BaseStatClassNames[i], "StartAccuracy", ClassBaseStats[i].StartAccuracy);
+                ClassBaseStats[i].StartCriticalRate = reader.ReadByte(BaseStatClassNames[i], "StartCriticalRate", ClassBaseStats[i].StartCriticalRate);
+                ClassBaseStats[i].StartCriticalDamage = reader.ReadByte(BaseStatClassNames[i], "StartCriticalDamage", ClassBaseStats[i].StartCriticalDamage);
+                ClassBaseStats[i].CritialRateGain = reader.ReadByte(BaseStatClassNames[i], "CritialRateGain", ClassBaseStats[i].CritialRateGain);
+                ClassBaseStats[i].CriticalDamageGain = reader.ReadByte(BaseStatClassNames[i], "CriticalDamageGain", ClassBaseStats[i].CriticalDamageGain);
+            }
+        }
+        public static void SaveBaseStats()
+        {
+            File.Delete(ConfigPath + @".\BaseStats.ini");
+            InIReader reader = new InIReader(ConfigPath + @".\BaseStats.ini");
+
+            for (int i = 0; i < ClassBaseStats.Length; i++)
+            {
+                reader.Write(BaseStatClassNames[i], "HpGain", ClassBaseStats[i].HpGain);
+                reader.Write(BaseStatClassNames[i], "HpGainRate", ClassBaseStats[i].HpGainRate);
+                reader.Write(BaseStatClassNames[i], "MpGainRate", ClassBaseStats[i].MpGainRate);
+                reader.Write(BaseStatClassNames[i], "BagWeightGain", ClassBaseStats[i].BagWeightGain);
+                reader.Write(BaseStatClassNames[i], "WearWeightGain", ClassBaseStats[i].WearWeightGain);
+                reader.Write(BaseStatClassNames[i], "HandWeightGain", ClassBaseStats[i].HandWeightGain);
+                reader.Write(BaseStatClassNames[i], "MinAc", ClassBaseStats[i].MinAc);
+                reader.Write(BaseStatClassNames[i], "MaxAc", ClassBaseStats[i].MaxAc);
+                reader.Write(BaseStatClassNames[i], "MinMac", ClassBaseStats[i].MinMac);
+                reader.Write(BaseStatClassNames[i], "MaxMac", ClassBaseStats[i].MaxMac);
+                reader.Write(BaseStatClassNames[i], "MinDc", ClassBaseStats[i].MinDc);
+                reader.Write(BaseStatClassNames[i], "MaxDc", ClassBaseStats[i].MaxDc);
+                reader.Write(BaseStatClassNames[i], "MinMc", ClassBaseStats[i].MinMc);
+                reader.Write(BaseStatClassNames[i], "MaxMc", ClassBaseStats[i].MaxMc);
+                reader.Write(BaseStatClassNames[i], "MinSc", ClassBaseStats[i].MinSc);
+                reader.Write(BaseStatClassNames[i], "MaxSc", ClassBaseStats[i].MaxSc);
+                reader.Write(BaseStatClassNames[i], "StartAgility", ClassBaseStats[i].StartAgility);
+                reader.Write(BaseStatClassNames[i], "StartAccuracy", ClassBaseStats[i].StartAccuracy);
+                reader.Write(BaseStatClassNames[i], "StartCriticalRate", ClassBaseStats[i].StartCriticalRate);
+                reader.Write(BaseStatClassNames[i], "StartCriticalDamage", ClassBaseStats[i].StartCriticalDamage);
+                reader.Write(BaseStatClassNames[i], "CritialRateGain", ClassBaseStats[i].CritialRateGain);
+                reader.Write(BaseStatClassNames[i], "CriticalDamageGain", ClassBaseStats[i].CriticalDamageGain);
+            }
+        }
         public static void LoadRandomItemStats()
         {
             //note: i could have used a flat file system for this which would be faster, 

@@ -8,6 +8,7 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
+using Client.MirScenes.Dialogs;
 
 namespace Client.MirObjects
 {
@@ -48,7 +49,7 @@ namespace Client.MirObjects
         public List<BuffType> Buffs = new List<BuffType>();
 
         public MLibrary BodyLibrary;
-        public Color DrawColour = Color.White, NameColour = Color.White;
+        public Color DrawColour = Color.White, NameColour = Color.White, LightColour = Color.White;
         public MirLabel NameLabel, ChatLabel, GuildLabel;
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;
@@ -66,6 +67,11 @@ namespace Client.MirObjects
 
         public static List<MirLabel> DamageLabelList = new List<MirLabel>();
         public List<Damage> Damages = new List<Damage>();
+
+        protected Point GlobalDisplayLocationOffset
+        {
+            get { return new Point(0, 0); }
+        }
 
         protected MapObject(uint objectID)
         {
@@ -121,6 +127,9 @@ namespace Client.MirObjects
             {
                 case BuffType.Fury:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 190, 7, 1400, this, true, type) { Repeat = true });
+                    break;
+                case BuffType.ImmortalSkin:
+                    Effects.Add(new BuffEffect(Libraries.Magic3, 570, 5, 1400, this, true, type) { Repeat = true });
                     break;
                 case BuffType.SwiftFeet:
                     if (ob != null) ob.Sprint = true;
@@ -368,7 +377,7 @@ namespace Client.MirObjects
                     DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Blue);
                     poisoncount++;
                 }
-                if (Poison.HasFlag(PoisonType.Paralysis))
+                if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
                 {
                     DXManager.Sprite.Draw2D(DXManager.PoisonDotBackground, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 7 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 21)), Color.Black);
                     DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(DisplayRectangle.X + 8 + (poisoncount * 3)), (int)(DisplayRectangle.Y - 20)), Color.Gray);
@@ -383,9 +392,9 @@ namespace Client.MirObjects
             }
         }
 
-        public abstract void DrawBehindEffects();
+        public abstract void DrawBehindEffects(bool effectsEnabled);
 
-        public abstract void DrawEffects();
+        public abstract void DrawEffects(bool effectsEnabled);
 
     }
 

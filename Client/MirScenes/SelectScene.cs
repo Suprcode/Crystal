@@ -48,7 +48,7 @@ namespace Client.MirScenes
                 Index = 40,
                 Library = Libraries.Title,
                 Parent = this,
-                Location = new Point(322, 6)
+                Location = new Point(364, 12)
             };
 
             ServerLabel = new MirLabel
@@ -79,7 +79,7 @@ namespace Client.MirScenes
                     Library = Libraries.Title,
                     Location = new Point(230, 568),
                     Parent = Background,
-                    PressedIndex = 345
+                    PressedIndex = 345,
                 };
             NewCharacterButton.Click += (o, e) => _character = new NewCharacterDialog { Parent = this };
 
@@ -197,15 +197,15 @@ namespace Client.MirScenes
 
             LastAccessLabel = new MirLabel
             {
-                Location = new Point(140, 510),
+                Location = new Point(140, 509),
                 Parent = Background,
-                Size = new Size(189, 21),
+                Size = new Size(180, 21),
                 DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                 Border = true,
             };
             LastAccessLabelLabel = new MirLabel
                 {
-                    Location = new Point(-80, 0),
+                    Location = new Point(-80, -1),
                     Parent = LastAccessLabel,
                     Text = "Last Online:",
                     Size = new Size(100, 21),
@@ -415,7 +415,8 @@ namespace Client.MirScenes
             if (p.Resolution < Settings.Resolution || Settings.Resolution == 0) Settings.Resolution = p.Resolution;
 
             if (p.Resolution < 1024 || Settings.Resolution < 1024) Settings.Resolution = 800;
-            else if (p.Resolution < 1366 || Settings.Resolution < 1366) Settings.Resolution = 1024;
+            else if (p.Resolution < 1366 || Settings.Resolution < 1280) Settings.Resolution = 1024;
+            else if (p.Resolution < 1366 || Settings.Resolution < 1366) Settings.Resolution = 1280;//not adding an extra setting for 1280 on server cause well it just depends on the aspect ratio of your screen
             else if (p.Resolution >= 1366 && Settings.Resolution >= 1366) Settings.Resolution = 1366;
 
             switch (p.Result)
@@ -435,6 +436,8 @@ namespace Client.MirScenes
                 case 4:
                     if (Settings.Resolution == 1024)
                         CMain.SetResolution(1024, 768);
+                    else if (Settings.Resolution == 1280)
+                        CMain.SetResolution(1280, 800);
                     else if (Settings.Resolution == 1366)
                         CMain.SetResolution(1366, 768);
                     ActiveScene = new GameScene();
@@ -576,18 +579,18 @@ namespace Client.MirScenes
                     {
                         Index = 20,
                         Library = Libraries.Title,
-                        Location = new Point(193, 7),
+                        Location = new Point(206, 11),
                         Parent = this,
                     };
 
                 CancelButton = new MirButton
                     {
-                        HoverIndex = 364,
-                        Index = 363,
+                        HoverIndex = 281,
+                        Index = 280,
                         Library = Libraries.Title,
                         Location = new Point(425, 425),
                         Parent = this,
-                        PressedIndex = 365
+                        PressedIndex = 282
                     };
                 CancelButton.Click += (o, e) => Dispose();
 
@@ -606,9 +609,9 @@ namespace Client.MirScenes
 
                 NameTextBox = new MirTextBox
                     {
-                        Location = new Point(325, 267),
+                        Location = new Point(325, 268),
                         Parent = this,
-                        Size = new Size(241, 20),
+                        Size = new Size(240, 20),
                         MaxLength = Globals.MaxCharacterNameLength
                     };
                 NameTextBox.TextBox.KeyPress += TextBox_KeyPress;

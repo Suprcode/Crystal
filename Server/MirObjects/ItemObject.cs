@@ -54,9 +54,12 @@ namespace Server.MirObjects
             get { throw new NotSupportedException(); }
         }
 
-        public ItemObject(MapObject dropper, UserItem item)
+        public ItemObject(MapObject dropper, UserItem item, bool DeathDrop = false)
         {
-            ExpireTime = Envir.Time + Settings.ItemTimeOut * Settings.Minute;
+            if (DeathDrop)//player dropped it when he died: allow for time to run back and pickup his drops
+                ExpireTime = Envir.Time + Settings.PlayerDiedItemTimeOut * Settings.Minute;
+            else
+                ExpireTime = Envir.Time + Settings.ItemTimeOut * Settings.Minute;
 
             Item = item;
             if (Item.IsAdded)
@@ -378,7 +381,7 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             throw new NotSupportedException();
         }

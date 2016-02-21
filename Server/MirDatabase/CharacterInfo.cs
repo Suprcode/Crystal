@@ -95,10 +95,10 @@ namespace Server.MirDatabase
         public MountInfo Mount;
 
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
+        public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
 
         public CharacterInfo()
         {
-
         }
 
         public CharacterInfo(ClientPackets.NewCharacter p, MirConnection c)
@@ -197,7 +197,11 @@ namespace Server.MirDatabase
                 if (magic.Info == null) continue;
                 Magics.Add(magic);
             }
-
+            //reset all magic cooldowns on char loading < stops ppl from having none working skills after a server crash
+            for (int i = 0; i < Magics.Count; i++)
+            {
+                Magics[i].CastTime = 0;
+            }
 
             if (Envir.LoadVersion < 2) return;
 
