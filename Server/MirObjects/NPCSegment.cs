@@ -272,8 +272,8 @@ namespace Server.MirObjects
                     CheckList.Add(new NPCChecks(CheckType.GroupCount, parts[1], parts[2]));
                     break;
 
-                case "GROUPCHECKNEARBYE":
-                    CheckList.Add(new NPCChecks(CheckType.GroupCheckNearbye));
+                case "GROUPCHECKNEARBY":
+                    CheckList.Add(new NPCChecks(CheckType.GroupCheckNearby));
                     break;
 
                 case "PETCOUNT":
@@ -2015,7 +2015,7 @@ namespace Server.MirObjects
 
                         failed = (player.GroupMembers == null || !Compare(param[0], player.GroupMembers.Count, tempInt));
                         break;
-                    case CheckType.GroupCheckNearbye:
+                    case CheckType.GroupCheckNearby:
                         target = new Point(-1,-1);
                         for (int j = 0; j < player.CurrentMap.NPCs.Count; j++)
                         {
