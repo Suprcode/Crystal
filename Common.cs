@@ -3102,11 +3102,11 @@ public class UserItem
 
         writer.Write(Count);
 
-        writer.Write((ushort)AC);
-        writer.Write((ushort)MAC);
-        writer.Write((ushort)DC);
-        writer.Write((ushort)MC);
-        writer.Write((ushort)SC);
+        writer.Write(AC);
+        writer.Write(MAC);
+        writer.Write(DC);
+        writer.Write(MC);
+        writer.Write(SC);
 
         writer.Write(Accuracy);
         writer.Write(Agility);
