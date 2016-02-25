@@ -6,6 +6,7 @@ using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
 using S = ServerPackets;
+using Server.Custom;
 
 namespace Server.MirObjects
 {
@@ -188,7 +189,10 @@ namespace Server.MirObjects
                     return new Runaway(info);
                 case 201://custom
                     return new TalkingMonster(info);
-
+                #region Monster AI Customizer
+                case 255:
+                    return new MonsterAI(info);
+                #endregion
                 default:
                     return new MonsterObject(info);
             }
@@ -201,7 +205,9 @@ namespace Server.MirObjects
 
         public MonsterInfo Info;
         public MapRespawn Respawn;
-        
+        #region To attach onto the monster. Pete107|Petesn00beh
+        public CustomAI uniqueAI = new CustomAI();
+        #endregion
         public override string Name
         {
             get { return Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name); }
@@ -331,11 +337,27 @@ namespace Server.MirObjects
             RegenTime = Envir.Random.Next(RegenDelay) + Envir.Time;
             SearchTime = Envir.Random.Next(SearchDelay) + Envir.Time;
             RoamTime = Envir.Random.Next(RoamDelay) + Envir.Time;
+            #region AI 255 = Customized Monster Pete107|Petesn00beh
+            if (Info.AI == 255) // This needs to change
+            {
+                uniqueAI = uniqueAI.LoadCustomAI(Info.Name);
+                if (uniqueAI == null) SMain.Enqueue("Error attaching system to monster.");
+                else SMain.Enqueue("Monsters AI has been Loaded");
+            }
+            #endregion
         }
         public bool Spawn(Map temp, Point location)
         {
             if (!temp.ValidPoint(location)) return false;
-
+            #region Can't spawn if the Current time is < than the next respawn time. Pete107|Petesn00beh
+            if (uniqueAI != null && uniqueAI.UseKillTimer)
+            {
+                DateTime timeKilled = new DateTime(uniqueAI.LastKillYear, uniqueAI.LastKillMonth, uniqueAI.LastKillDay, uniqueAI.LastKillHour, uniqueAI.LastKillMinute, 0, 0);
+                DateTime timeNow = DateTime.Now;
+                if (timeNow.CompareTo(timeKilled) < 0)
+                    return false;
+            }
+            #endregion
             CurrentMap = temp;
             CurrentLocation = location;
 
@@ -354,7 +376,15 @@ namespace Server.MirObjects
             Respawn = respawn;
 
             if (Respawn.Map == null) return false;
-
+            #region Can't spawn if the Current time is < than the next respawn time. Pete107|Petesn00beh
+            if (uniqueAI != null && uniqueAI.UseKillTimer)
+            {
+                DateTime timeKilled = new DateTime(uniqueAI.LastKillYear, uniqueAI.LastKillMonth, uniqueAI.LastKillDay, uniqueAI.LastKillHour, uniqueAI.LastKillMinute, 0, 0);
+                DateTime timeNow = DateTime.Now;
+                if (timeNow.CompareTo(timeKilled) < 0)
+                    return false;
+            }
+            #endregion
             for (int i = 0; i < 10; i++)
             {
                 CurrentLocation = new Point(Respawn.Info.Location.X + Envir.Random.Next(-Respawn.Info.Spread, Respawn.Info.Spread + 1),
@@ -966,6 +996,17 @@ namespace Server.MirObjects
 
                 if (Envir.Time > poison.TickTime)
                 {
+
+                    #region Optional remove poison Pete107|Petens00beh
+                    //Remove Poison from monster if Poison Owner is no longer in range or not on the same map. Pete107|Petesn00beh
+                    if ((Settings.RemovePoisonMap && poison.Owner.CurrentMap != CurrentMap) ||
+                        (Settings.RemovePoisonDistance && !Functions.InRange(CurrentLocation, poison.Owner.CurrentLocation, Globals.DataRange)))
+                    {
+                        PoisonList.RemoveAt(i);
+                        continue;
+                    }
+                    #endregion
+
                     poison.Time++;
                     poison.TickTime = Envir.Time + poison.TickSpeed;
 
@@ -1865,12 +1906,12 @@ namespace Server.MirObjects
             if (damageWeapon)
                 attacker.DamageWeapon();
             damage += attacker.AttackBonus;
-
+            bool Crit = false;
             if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
             {
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical});
+                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical });
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
-                BroadcastDamageIndicator(DamageType.Critical);
+                Crit = true;
             }
 
             if (armour >= damage)
@@ -1920,7 +1961,7 @@ namespace Server.MirObjects
             {
                 ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
             }
-            
+
             if (attacker.Freezing > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
                 if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Freezing) && (Envir.Random.Next(LevelOffset) == 0))
@@ -1970,7 +2011,84 @@ namespace Server.MirObjects
                 if (IsAttackTarget(ob)) ob.Target = this;
             }
 
-            BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+            #region Weapon Effects Pete107 26/1/2016
+            UserItem _item = attacker.Info.Equipment[(int)EquipmentSlot.Weapon];
+            Random randy = new Random();
+            if (_item != null && attacker != null && randy.Next(0, 100) >= 90)
+            {
+                switch (_item.Info.Effect)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.FatalSword }, attacker.CurrentLocation);
+                        break;
+                    case 2:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, attacker.CurrentLocation);
+                        break;
+                    case 3:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Healing }, attacker.CurrentLocation);
+                        break;
+                    case 4:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.RedMoonEvil }, attacker.CurrentLocation);
+                        break;
+                    case 5:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.TwinDrakeBlade }, attacker.CurrentLocation);
+                        break;
+                    case 6:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, attacker.CurrentLocation);
+                        break;
+                    case 7:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, attacker.CurrentLocation);
+                        break;
+                    case 8:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.GreatFoxSpirit }, attacker.CurrentLocation);
+                        break;
+                    case 9:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Entrapment }, attacker.CurrentLocation);
+                        break;
+                    case 10:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, attacker.CurrentLocation);
+                        break;
+                    case 11:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, attacker.CurrentLocation);
+                        break;
+                    case 12:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Mine }, attacker.CurrentLocation);
+                        break;
+                    case 13:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, attacker.CurrentLocation);
+                        break;
+                    case 14:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, attacker.CurrentLocation);
+                        break;
+                    case 15:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion }, attacker.CurrentLocation);
+                        break;
+                    case 16:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MPEater }, attacker.CurrentLocation);
+                        break;
+                    case 17:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Hemorrhage }, attacker.CurrentLocation);
+                        break;
+                    case 18:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding }, attacker.CurrentLocation);
+                        break;
+                    case 19:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, attacker.CurrentLocation);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            #endregion
+
+            #region Crit damage indicator change. Pete107|Petesn00beh
+            if (Crit)
+                BroadcastDamageIndicator(DamageType.Critical, armour - damage);
+            else
+                BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+            #endregion
 
             ChangeHP(armour - damage);
             return damage - armour;

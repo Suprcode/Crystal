@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.Custom;
 
 namespace Server
 {
@@ -23,7 +24,9 @@ namespace Server
         public MonsterInfoForm()
         {
             InitializeComponent();
-
+            #region Hide the custom settings button Pete107|Petesn00beh
+            customButton.Hide();
+            #endregion
             ImageComboBox.Items.AddRange(Enum.GetValues(typeof(Monster)).Cast<object>().ToArray());
             UpdateInterface();
         }
@@ -55,7 +58,6 @@ namespace Server
                 for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
                     MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
             }
-
             _selectedMonsterInfos = MonsterInfoListBox.SelectedItems.Cast<MonsterInfo>().ToList();
 
             if (_selectedMonsterInfos.Count == 0)
@@ -139,7 +141,12 @@ namespace Server
             CanTameCheckBox.Checked = info.CanTame;
             AutoRevCheckBox.Checked = info.AutoRev;
             UndeadCheckBox.Checked = info.Undead;
-
+            #region Show the Settings button for Customization. Pete107|Petesn00beh
+            if (AITextBox.Text == "255")
+                customButton.Show();
+            else
+                customButton.Hide();
+            #endregion
             for (int i = 1; i < _selectedMonsterInfos.Count; i++)
             {
                 info = _selectedMonsterInfos[i];
@@ -217,6 +224,14 @@ namespace Server
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
+            #region Show the Custom Setting button. Pete107|Petesn00beh
+            if (temp == 255)
+                customButton.Show();
+            else
+                customButton.Hide();
+            #endregion
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
@@ -711,6 +726,15 @@ namespace Server
             MirForms.DropBuilder.DropGenForm GenForm = new MirForms.DropBuilder.DropGenForm();
 
             GenForm.ShowDialog();
+        }
+
+        private void customButton_Click(object sender, EventArgs e)
+        {
+            #region Show the Form for the Custom Settings. Pete107|Petesn00beh
+            CustomMobAISettings form = new CustomMobAISettings();
+            form.MonsterName = MonsterNameTextBox.Text;
+            form.Show();
+            #endregion
         }
     }
 }

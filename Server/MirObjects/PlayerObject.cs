@@ -918,14 +918,26 @@ namespace Server.MirObjects
                 }
             }
 
-            if (healthRegen > 0) ChangeHP(healthRegen);
+            if (healthRegen > 0)
+            {
+                #region HP Regen Indicator Pete107|Petesn00beh
+                BroadcastDamageIndicator(DamageType.Heal, healthRegen);
+                #endregion
+                ChangeHP(healthRegen);
+            }
             if (HP == MaxHP)
             {
                 PotHealthAmount = 0;
                 HealAmount = 0;
             }
 
-            if (manaRegen > 0) ChangeMP(manaRegen);
+            if (manaRegen > 0)
+            {
+                #region MP Regen Indicator Pete107|Petesn00beh
+                BroadcastDamageIndicator(DamageType.MPHeal, manaRegen);
+                #endregion
+                ChangeMP(manaRegen);
+            }
             if (MP == MaxMP) PotManaAmount = 0;
         }
         private void ProcessPoison()
@@ -948,6 +960,17 @@ namespace Server.MirObjects
 
                 if (Envir.Time > poison.TickTime)
                 {
+
+                    #region Optional Remove poison Pete107|Petesn00beh
+                    //Remove Poison from Player if Poison Owner is no longer in range or not on the same map. Pete107|Petesn00beh
+                    if ((poison.Owner != null && poison.Owner.Node == null && Settings.RemovePoisonMap && poison.Owner.CurrentMap != CurrentMap) ||
+                        (poison.Owner != null && poison.Owner.Node == null && Settings.RemovePoisonDistance && !Functions.InRange(CurrentLocation, poison.Owner.CurrentLocation, Globals.DataRange)))
+                    {
+                        PoisonList.RemoveAt(i);
+                        continue;
+                    }
+                    #endregion
+
                     poison.Time++;
                     poison.TickTime = Envir.Time + poison.TickSpeed;
 
@@ -962,6 +985,7 @@ namespace Server.MirObjects
                         if (poison.PType == PoisonType.Bleeding)
                         {
                             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
+
                         }
 
                         //ChangeHP(-poison.Value);
@@ -4164,6 +4188,52 @@ namespace Server.MirObjects
                         player.GainCredit(count);
                         SMain.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
                         break;
+                    #region DeleteSkill Command. Pete107|Petesn00beh
+                    case "DELETESKILL": // 0
+                        if ((!IsGM) || parts.Length < 2) return;
+                        Spell skill1;
+                        //
+                        if (!Enum.TryParse(parts.Length > 2 ? parts[2] : parts[1], true, out skill1)) return;
+
+                        if (skill1 == Spell.None) return;
+
+                        if (parts.Length > 2)
+                        {
+                            if (!IsGM) return;
+                            player = Envir.GetPlayer(parts[1]);
+
+                            if (player == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found!", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+                        else
+                            player = this;
+
+                        if (player == null) return;
+
+                        var magics = new UserMagic(skill1);
+                        bool removed = false;
+
+                        for (var i = player.Info.Magics.Count - 1; i >= 0; i--)
+                        {
+                            if (player.Info.Magics[i].Spell != skill1) continue;
+
+                            player.Info.Magics.RemoveAt(i);
+                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                            removed = true;
+                        }
+
+                        if (removed)
+                        {
+                            ReceiveChat(string.Format("You have deleted skill {0} from player {1}", skill1.ToString(), player.Name), ChatType.Hint);
+                            player.ReceiveChat(string.Format("{0} has been removed from you.", skill1), ChatType.Hint);
+                        }
+                        else player.ReceiveChat(string.Format("Unable to delete skill for unknown reason."), ChatType.Hint);
+
+                        break;
+                    #endregion
                     case "GIVESKILL":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
@@ -8932,17 +9002,46 @@ namespace Server.MirObjects
             target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = sp });
         }
 
+        #region Auto Equip Amulet Pete107|Petesn00beh
         private UserItem GetAmulet(int count, int shape = 0)
         {
-            for (int i = 0; i < Info.Equipment.Length; i++)
-            {
-                UserItem item = Info.Equipment[i];
-                if (item != null && item.Info.Type == ItemType.Amulet && item.Info.Shape == shape && item.Count >= count)
-                    return item;
-            }
+            UserItem temp = null;
+            UserItem CurrentAmulet = Info.Equipment[(int)EquipmentSlot.Amulet];
+            bool Found = false;
 
-            return null;
+            if (CurrentAmulet != null && CurrentAmulet.Info.Shape == shape && CurrentAmulet.Info.Type == ItemType.Amulet &&
+                CurrentAmulet.Count >= count)
+                return CurrentAmulet;
+
+            int index = -1;
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+
+                if (Info.Inventory[i] != null &&
+                    Info.Inventory[i].Info.Type == ItemType.Amulet &&
+                    Info.Inventory[i].Info.Shape == shape &&
+                    Info.Inventory[i].Count >= count &&
+                    CanEquipItem(Info.Inventory[i], (int)EquipmentSlot.Amulet))
+                {
+                    Found = true;
+                    temp = Info.Inventory[i];
+                    index = i;
+                    break;
+                }
+            }
+            if (!Found)
+                return null;
+            temp = Info.Inventory[index];
+            if (temp.Info.Type == ItemType.Amulet && temp.Info.Shape == shape)
+            {
+                EquipItem(MirGridType.Inventory, temp.UniqueID, (int)EquipmentSlot.Amulet);
+                return Info.Equipment[(int)EquipmentSlot.Amulet];
+            }
+            else
+                return null;
         }
+        #endregion
+
         private UserItem GetPoison(int count, byte shape = 0)
         {
             for (int i = 0; i < Info.Equipment.Length; i++)
@@ -9575,12 +9674,12 @@ namespace Server.MirObjects
                 attacker.DamageWeapon();
 
             damage += attacker.AttackBonus;
-
+            bool Crit = false;
             if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
             {
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
-                BroadcastDamageIndicator(DamageType.Critical);
+                Crit = true;
             }
 
             if (Envir.Random.Next(100) < Reflect)
@@ -9676,7 +9775,84 @@ namespace Server.MirObjects
             Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+            #region Weapon Effects Pete107 26/1/2016
+            UserItem _item = attacker.Info.Equipment[(int)EquipmentSlot.Weapon];
+            Random randy = new Random();
+            if (_item != null && attacker != null && randy.Next(0, 100) >= 90)
+            {
+                switch (_item.Info.Effect)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.FatalSword }, attacker.CurrentLocation);
+                        break;
+                    case 2:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, attacker.CurrentLocation);
+                        break;
+                    case 3:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Healing }, attacker.CurrentLocation);
+                        break;
+                    case 4:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.RedMoonEvil }, attacker.CurrentLocation);
+                        break;
+                    case 5:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.TwinDrakeBlade }, attacker.CurrentLocation);
+                        break;
+                    case 6:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, attacker.CurrentLocation);
+                        break;
+                    case 7:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, attacker.CurrentLocation);
+                        break;
+                    case 8:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.GreatFoxSpirit }, attacker.CurrentLocation);
+                        break;
+                    case 9:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Entrapment }, attacker.CurrentLocation);
+                        break;
+                    case 10:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, attacker.CurrentLocation);
+                        break;
+                    case 11:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, attacker.CurrentLocation);
+                        break;
+                    case 12:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Mine }, attacker.CurrentLocation);
+                        break;
+                    case 13:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, attacker.CurrentLocation);
+                        break;
+                    case 14:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, attacker.CurrentLocation);
+                        break;
+                    case 15:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion }, attacker.CurrentLocation);
+                        break;
+                    case 16:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MPEater }, attacker.CurrentLocation);
+                        break;
+                    case 17:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Hemorrhage }, attacker.CurrentLocation);
+                        break;
+                    case 18:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding }, attacker.CurrentLocation);
+                        break;
+                    case 19:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, attacker.CurrentLocation);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            #endregion
+
+            #region Damage Indicator Change to Crit. Pete107|Petesn00beh
+            if (Crit)
+                BroadcastDamageIndicator(DamageType.Critical, armour - damage);
+            else
+                BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+            #endregion
 
             ChangeHP(armour - damage);
             return damage - armour;

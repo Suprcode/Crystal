@@ -26,7 +26,11 @@ public enum DamageType : byte
 {
     Hit = 0,
     Miss = 1,
-    Critical = 2
+    Critical = 2,
+    #region Regen Indicators Pete107|Petesn00beh
+    Heal = 3,
+    MPHeal = 4
+    #endregion
 }
 
 [Flags]

@@ -236,7 +236,10 @@ namespace Server
         public static float Guild_ExpRate = 0.01f;
         public static uint Guild_WarCost = 3000;
         public static long Guild_WarTime = 180;
-
+        #region Optional Remove poison Pete107|Petesn00beh
+        public static bool RemovePoisonMap = true;
+        public static bool RemovePoisonDistance = true;
+        #endregion
         public static List<ItemVolume> Guild_CreationCostList = new List<ItemVolume>();
         public static List<long> Guild_ExperienceList = new List<long>();
         public static List<int> Guild_MembercapList = new List<int>();
@@ -381,6 +384,10 @@ namespace Server
                 IntelligentCreatureNameList[i] = Reader.ReadString("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
             CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
+            #region Optional Remove Poison Pete107|Petesn00eb
+            RemovePoisonMap = Reader.ReadBoolean("Custom", "RemovePoisonMap", RemovePoisonMap);
+            RemovePoisonDistance = Reader.ReadBoolean("Custom", "RemovePoisonDistance", RemovePoisonDistance);
+            #endregion
             if (!Directory.Exists(EnvirPath))
                 Directory.CreateDirectory(EnvirPath);
             if (!Directory.Exists(ConfigPath))
@@ -560,7 +567,10 @@ namespace Server
             for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
                 Reader.Write("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
-
+            #region Optional Remove poison Pete107|Petesn00beh
+            Reader.Write("Custom", "RemovePoisonMap", RemovePoisonMap);
+            Reader.Write("Custom", "RemovePoisonDistance", RemovePoisonDistance);
+            #endregion
             SaveAwakeAttribute();
         }
 

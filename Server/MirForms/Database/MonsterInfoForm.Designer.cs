@@ -94,6 +94,7 @@
             this.ImportButton = new System.Windows.Forms.Button();
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.DropBuilderButton = new System.Windows.Forms.Button();
+            this.customButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.MonsterInfoPanel.SuspendLayout();
@@ -127,6 +128,7 @@
             this.MonsterInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.MonsterInfoPanel.Controls.Add(this.customButton);
             this.MonsterInfoPanel.Controls.Add(this.UndeadCheckBox);
             this.MonsterInfoPanel.Controls.Add(this.AutoRevCheckBox);
             this.MonsterInfoPanel.Controls.Add(this.ImageComboBox);
@@ -772,6 +774,16 @@
             this.DropBuilderButton.UseVisualStyleBackColor = true;
             this.DropBuilderButton.Click += new System.EventHandler(this.DropBuilderButton_Click);
             // 
+            // customButton
+            // 
+            this.customButton.Location = new System.Drawing.Point(514, 7);
+            this.customButton.Name = "customButton";
+            this.customButton.Size = new System.Drawing.Size(64, 43);
+            this.customButton.TabIndex = 89;
+            this.customButton.Text = "Custom\r\nSettings";
+            this.customButton.UseVisualStyleBackColor = true;
+            this.customButton.Click += new System.EventHandler(this.customButton_Click);
+            // 
             // MonsterInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -866,5 +878,6 @@
         private System.Windows.Forms.CheckBox UndeadCheckBox;
         private System.Windows.Forms.CheckBox AutoRevCheckBox;
         private System.Windows.Forms.Button DropBuilderButton;
+        private System.Windows.Forms.Button customButton;
     }
 }

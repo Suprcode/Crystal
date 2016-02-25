@@ -15,7 +15,10 @@ namespace Server.MirObjects
     public class NPCSegment
     {
         public NPCPage Page;
-
+        public Envir Envir
+        {
+            get { return SMain.EditEnvir; }
+        }
         public readonly string Key;
         public List<NPCChecks> CheckList = new List<NPCChecks>();
         public List<NPCActions> ActList = new List<NPCActions>(), ElseActList = new List<NPCActions>();
@@ -1244,6 +1247,58 @@ namespace Server.MirObjects
                     newValue = string.Empty;
                     break;
             }
+
+            #region Display Respawn Time or Location. Pete107|Petesn00beh
+            // To display the monsters timer you have to put <$MONSTERSNAME> changing MONSTERSNAME with the name of the monster using the kill timer system.
+            if (Envir.MonsterInfoList != null && Envir.MonsterInfoList.Count > 0)
+            {
+                int index = -1;
+                bool found = false;
+                for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
+                {
+                    if (Envir.MonsterInfoList[i].Name.Length > 0 &&
+                        innerMatch.ToLower() == Envir.MonsterInfoList[i].Name.ToLower())
+                    {
+                        if (!found)
+                        {
+                            found = true;
+                            index = i;
+                        }
+                    }
+                }
+                if (found)
+                {
+                    Custom.CustomAI mob = new Custom.CustomAI();
+                    mob = mob.LoadCustomAI(Envir.MonsterInfoList[index].Name);
+                    if (mob != null && mob.UseKillTimer)
+                    {
+                        DateTime timeKilled = new DateTime(mob.LastKillYear, mob.LastKillMonth, mob.LastKillDay, mob.LastKillHour, mob.LastKillMinute, 0, 0);
+                        DateTime timeNow = DateTime.Now;
+                        TimeSpan _difference = timeKilled - timeNow;
+                        if (_difference.CompareTo(TimeSpan.Zero) <= 0) // Alive
+                        {
+                            if (mob.CurrentMap.Length > 0 &&
+                                mob.CurrentX > 0 &&
+                                mob.CurrentY > 0)
+                                newValue = string.Format("{0} is currently Alive in {1} at {2},{3}", mob.Name, mob.CurrentMap, mob.CurrentX, mob.CurrentY);
+                            else // Able to spawn but hasn't spawned yet.
+                                newValue = string.Format("{0} hasn't spawned yet!", mob.Name);
+                        }
+                        else // Dead
+                        {
+                            string temp = _difference.ToString("h'h 'm'm 's's'");
+                            newValue = string.Format("{0} is currently dead and will respawn in {1}.", mob.Name, temp);
+                        }
+                    }
+                    else if (mob == null)
+                        newValue = string.Format("Cannot find Custom Monsters settings.");
+                    else if (!mob.UseKillTimer)
+                        newValue = string.Format("This monster doesn't use the kill timer!");
+                }
+                else
+                    newValue = string.Format("Custom Monster not found!");
+            }
+            #endregion
 
             if (string.IsNullOrEmpty(newValue)) return param;
 
