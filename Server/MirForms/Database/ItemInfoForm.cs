@@ -423,7 +423,13 @@ namespace Server
 
             for (int i = 0; i < ItemInfoListBox.Items.Count; i++) selected.Add(ItemInfoListBox.GetSelected(i));
             ItemInfoListBox.Items.Clear();
-            for (int i = 0; i < Envir.ItemInfoList.Count; i++) ItemInfoListBox.Items.Add(Envir.ItemInfoList[i]);
+            for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+            {
+                if (ITypeFilterComboBox.SelectedItem == null ||
+                    ITypeFilterComboBox.SelectedIndex == ITypeFilterComboBox.Items.Count - 1 ||
+                    Envir.ItemInfoList[i].Type == (ItemType)ITypeFilterComboBox.SelectedItem)
+                    ItemInfoListBox.Items.Add(Envir.ItemInfoList[i]);
+            }
             for (int i = 0; i < selected.Count; i++) ItemInfoListBox.SetSelected(i, selected[i]);
 
             ItemInfoListBox.SelectedIndexChanged += ItemInfoListBox_SelectedIndexChanged;
