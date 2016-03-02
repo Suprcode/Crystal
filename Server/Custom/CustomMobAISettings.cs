@@ -10,7 +10,7 @@ namespace Server.Custom
         {
             get { return SMain.EditEnvir; }
         }
-        public CustomAI monster = new CustomAI();
+        public CustomAI monster;
         private string mobName = "";
         public string MonsterName
         {
@@ -19,11 +19,12 @@ namespace Server.Custom
         }
         string[,] Effects = new string[,]
         {
-            { "None", "SwirlingBlast", "FireWorks" },
-            { "None", "SwirlingBlast", "FireWorks" },
-            { "None", "SwirlingBlast", "FireWorks" },
-            { "None", "SwirlingBlast", "FireWorks" },
-            { "None", "SwirlingBlast", "FireWorks" },
+            //Changed to the correct names of the effects. Pete107|Petesn00beh. Updated 26/02/2016
+            { "None", "Entrapment", "GreatFoxSpiritAura" },
+            { "None", "Entrapment", "GreatFoxSpiritAura" },
+            { "None", "Entrapment", "GreatFoxSpiritAura" },
+            { "None", "Entrapment", "GreatFoxSpiritAura" },
+            { "None", "Entrapment", "GreatFoxSpiritAura" },
         };
         public CustomMobAISettings()
         {
@@ -77,8 +78,32 @@ namespace Server.Custom
 
         private void CustomMobAISettings_Load(object sender, EventArgs e)
         {
-            if (MonsterName != null && MonsterName.Length > 0)
-                monster = monster.LoadCustomAI(MonsterName);
+            //Pete107|Petesn00beh. Updated 02/03/2016
+            if (MonsterName.Length > 0)
+                if (Envir.CustomAIList.Count > 0) // List has values
+                {
+                    bool found = false;
+                    for (int i = 0; i < Envir.CustomAIList.Count; i++)
+                    {
+                        if (Envir.CustomAIList[i].Name == MonsterName) // Find the monster
+                        {
+                            monster = Envir.CustomAIList[i]; // Monster found, assign it to the monster.
+                            found = true;
+                        }
+                    }
+                    if (!found) // Monster wasn't found, create a new one.
+                    {
+                        monster = new CustomAI();
+                        monster = monster.LoadCustomAI(MonsterName);
+                        Envir.CustomAIList.Add(monster);
+                    }
+                }
+                else // List has no values
+                {
+                    monster = new CustomAI();
+                    monster = monster.LoadCustomAI(MonsterName);
+                    Envir.CustomAIList.Add(monster); // Add it to the List within the environment
+                }
             minuteLbl.Hide();
             minuteBox.Hide();
             dayBox.Hide();
@@ -370,11 +395,14 @@ namespace Server.Custom
                 dmgToTargetLbl.Hide();
                 classOption.Hide();
                 targetOption.Hide();
-                monster.Target = targetWeak.Checked;
-                monster.TargetClass = targetClass.SelectedIndex;
-                if (monster.Name.Length <= 0) return;
-                if (!monster.Save(monster))
-                    SMain.Enqueue("ERROR : 03x08");
+                if (monster != null)
+                {
+                    monster.Target = targetWeak.Checked;
+                    monster.TargetClass = targetClass.SelectedIndex;
+                    if (monster.Name.Length <= 0) return;
+                    if (!monster.Save(monster))
+                        SMain.Enqueue("ERROR : 03x08");
+                }
             }
         }
 

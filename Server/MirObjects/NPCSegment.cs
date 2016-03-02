@@ -1243,60 +1243,48 @@ namespace Server.MirObjects
                 case "PARCELAMOUNT":
                     newValue = player.GetMailAwaitingCollectionAmount().ToString();
                     break;
+                
                 default:
                     newValue = string.Empty;
                     break;
             }
 
-            #region Display Respawn Time or Location. Pete107|Petesn00beh
-            // To display the monsters timer you have to put <$MONSTERSNAME> changing MONSTERSNAME with the name of the monster using the kill timer system.
-            if (Envir.MonsterInfoList != null && Envir.MonsterInfoList.Count > 0)
+            #region Display Respawn Time or Location. Pete107|Petesn00beh. Updated 26/02/2016
+            // To display the monsters timer you have to put <$CUSTOMAI(MOBNAME)> changing MOBNAME with the name of the monster using the kill timer system.
+            if (Envir.CustomAIList != null && Envir.CustomAIList.Count > 0)
             {
-                int index = -1;
-                bool found = false;
-                for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
+                for (int i = 0; i < Envir.CustomAIList.Count; i++)
                 {
-                    if (Envir.MonsterInfoList[i].Name.Length > 0 &&
-                        innerMatch.ToLower() == Envir.MonsterInfoList[i].Name.ToLower())
+                    if (Envir.CustomAIList[i].Name.Length > 0 &&
+                        param.ToLower() == "<$customai(" + Envir.CustomAIList[i].Name.ToLower() + ")>" && // using param rather than innerMatch
+                        Envir.CustomAIList[i].UseKillTimer)
                     {
-                        if (!found)
+                        if (Envir.CustomAIList[i].LastKillHour > 0) // 1 check for timeKilled to be valid otherwise it'll crash the server
                         {
-                            found = true;
-                            index = i;
+                            DateTime timeKilled = new DateTime(Envir.CustomAIList[i].LastKillYear, Envir.CustomAIList[i].LastKillMonth, Envir.CustomAIList[i].LastKillDay, Envir.CustomAIList[i].LastKillHour, Envir.CustomAIList[i].LastKillMinute, 0, 0);
+                            DateTime timeNow = DateTime.Now;
+                            TimeSpan _difference = timeKilled - timeNow;
+                            if (_difference.CompareTo(TimeSpan.Zero) <= 0) // Alive
+                            {
+                                if (Envir.CustomAIList[i].CurrentMap.Length > 0 &&
+                                    Envir.CustomAIList[i].CurrentX > 0 &&
+                                    Envir.CustomAIList[i].CurrentY > 0)
+                                    newValue = string.Format("{0} is currently Alive in {1} at {2},{3}", Envir.CustomAIList[i].Name, Envir.CustomAIList[i].CurrentMap, Envir.CustomAIList[i].CurrentX, Envir.CustomAIList[i].CurrentY);
+                                else // Able to spawn but hasn't spawned yet.
+                                    newValue = string.Format("{0} hasn't spawned yet!", Envir.CustomAIList[i].Name);
+                            }
+                            else // Dead
+                            {
+                                string temp = _difference.ToString("h'h 'm'm 's's'");
+                                newValue = string.Format("{0} is currently dead and will respawn in {1}.", Envir.CustomAIList[i].Name, temp);
+                            }
                         }
+                        else
+                            newValue = string.Format("{0} has never been killed!", Envir.CustomAIList[i].Name);
                     }
+                    else if (!Envir.CustomAIList[i].UseKillTimer)
+                        newValue = string.Format("{0} does not use the KillTimer option", Envir.CustomAIList[i].Name);
                 }
-                if (found)
-                {
-                    Custom.CustomAI mob = new Custom.CustomAI();
-                    mob = mob.LoadCustomAI(Envir.MonsterInfoList[index].Name);
-                    if (mob != null && mob.UseKillTimer)
-                    {
-                        DateTime timeKilled = new DateTime(mob.LastKillYear, mob.LastKillMonth, mob.LastKillDay, mob.LastKillHour, mob.LastKillMinute, 0, 0);
-                        DateTime timeNow = DateTime.Now;
-                        TimeSpan _difference = timeKilled - timeNow;
-                        if (_difference.CompareTo(TimeSpan.Zero) <= 0) // Alive
-                        {
-                            if (mob.CurrentMap.Length > 0 &&
-                                mob.CurrentX > 0 &&
-                                mob.CurrentY > 0)
-                                newValue = string.Format("{0} is currently Alive in {1} at {2},{3}", mob.Name, mob.CurrentMap, mob.CurrentX, mob.CurrentY);
-                            else // Able to spawn but hasn't spawned yet.
-                                newValue = string.Format("{0} hasn't spawned yet!", mob.Name);
-                        }
-                        else // Dead
-                        {
-                            string temp = _difference.ToString("h'h 'm'm 's's'");
-                            newValue = string.Format("{0} is currently dead and will respawn in {1}.", mob.Name, temp);
-                        }
-                    }
-                    else if (mob == null)
-                        newValue = string.Format("Cannot find Custom Monsters settings.");
-                    else if (!mob.UseKillTimer)
-                        newValue = string.Format("This monster doesn't use the kill timer!");
-                }
-                else
-                    newValue = string.Format("Custom Monster not found!");
             }
             #endregion
 

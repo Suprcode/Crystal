@@ -35,14 +35,14 @@ namespace Server.Custom
         private int magicAttackEffect = 0;
         private int mapX = 0;
         private int mapY = 0;
-        private int meleeAttackDamage = 0;
+        private int meleeAttackDamage = 100; // 100 Melee damage by default
         private int rangeAttackDamage = 0;
         private int magicAttackDamage = 0;
         private int massAttackDamage = 0;
         private int specialAttackDamage = 0;
         private int targetAttackDamage = 0;
         private int petAttackDamage = 0;
-        private int targetClass = 0; //Warrior by default     
+        private int targetClass = 5; //None by default     
 
 
 
@@ -60,7 +60,7 @@ namespace Server.Custom
         private bool announceDeath = false; // Announce the death
         private bool useMassAttack = false; // Use Mass Attack?
         private bool useSpecialAttack = false; // Use Special Attack?
-        private bool useMeleeAttack = false; // Use Melee Attack?
+        private bool useMeleeAttack = true; // Melee by default
         private bool useRangeAttack = false; // Use Range Attack?
         private bool useMagicAttack = false; // Use Magic Attack?
         private bool targetTarget = false; // Target priority
@@ -71,7 +71,6 @@ namespace Server.Custom
         private bool canGreenPoison = false; // Can green
         private bool canRedPoison = false; // Can red
         private bool spawnSlaves = false; // Can Spawn Slaves
-        private MirClass targetedClass = MirClass.Warrior;
         //Status
         private bool alive = false; // Alive || Dead
         private int currentX = 0;
@@ -113,8 +112,6 @@ namespace Server.Custom
         public int TargetAttackDamage { get { return targetAttackDamage; } set { targetAttackDamage = value; } }
         public int PetAttackDamage { get { return petAttackDamage; } set { petAttackDamage = value; } }
         public int TargetClass { get { return targetClass; } set { targetClass = value; } }
-
-        public MirClass TargetedClass { get { return targetedClass; } set { targetedClass = value; } }
 
         public string Name { get { return name; } set { name = value; } }
         public string KillTimer { get { return killTimer; } set { killTimer = value; } }
@@ -258,8 +255,7 @@ namespace Server.Custom
                 }
                 if (mobAI.Target)
                 {
-                    mobAI.TargetClass = Reader.ReadInt32("Strings", "TargetClass", mobAI.TargetClass); //Default = Warrior
-                    mobAI.TargetedClass = (MirClass)mobAI.TargetClass;
+                    mobAI.TargetClass = Reader.ReadInt32("Strings", "TargetClass", mobAI.TargetClass); //Default = None (5)
                     mobAI.TargetAttackDamage = Reader.ReadInt32("Damage", "TargetDamage", mobAI.TargetAttackDamage);
                 }
                 if (mobAI.DamagePetsMore)
@@ -373,7 +369,7 @@ namespace Server.Custom
             }
             if (mobToSave.Target)
             {
-                Writer.Write("Strings", "TargetClass", mobToSave.TargetClass); //Default = Warrior
+                Writer.Write("Strings", "TargetClass", mobToSave.TargetClass); //Default = None (5)
                 Writer.Write("Damage", "TargetDamage", mobToSave.TargetAttackDamage);
             }
             if (mobToSave.DamagePetsMore || !mobToSave.IgnorePets)
@@ -410,7 +406,25 @@ namespace Server.Custom
             Writer.Write("States", "CurrentMap", mobToSave.CurrentMap);
             Writer.Write("States", "CurrentX", mobToSave.CurrentX);
             Writer.Write("States", "CurrentY", mobToSave.CurrentY);
-
+            // Pete107|Petesn00beh. Updated 02/03/2016
+            #region Update the List held within the Environment
+            if (Envir.CustomAIList.Count > 0)
+            {
+                bool found = false;
+                for (int i = 0; i < Envir.CustomAIList.Count; i++)
+                {
+                    if (Envir.CustomAIList[i].name == mobToSave.name)
+                    {
+                        found = true;
+                        Envir.CustomAIList[i] = mobToSave; // Update the Environment every save
+                    }
+                }
+                if (!found)
+                    Envir.CustomAIList.Add(mobToSave);
+            }
+            else
+                Envir.CustomAIList.Add(mobToSave);
+            #endregion
             return true;
         }
 

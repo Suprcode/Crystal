@@ -205,8 +205,8 @@ namespace Server.MirObjects
 
         public MonsterInfo Info;
         public MapRespawn Respawn;
-        #region To attach onto the monster. Pete107|Petesn00beh
-        public CustomAI uniqueAI = new CustomAI();
+        #region To attach onto the monster. Pete107|Petesn00beh - Updated 26/02/2016
+        public CustomAI uniqueAI;
         #endregion
         public override string Name
         {
@@ -337,25 +337,30 @@ namespace Server.MirObjects
             RegenTime = Envir.Random.Next(RegenDelay) + Envir.Time;
             SearchTime = Envir.Random.Next(SearchDelay) + Envir.Time;
             RoamTime = Envir.Random.Next(RoamDelay) + Envir.Time;
-            #region AI 255 = Customized Monster Pete107|Petesn00beh
-            if (Info.AI == 255) // This needs to change
+            #region AI 255 = Customized Monster Pete107|Petesn00beh - Updated 26/02/2016
+            if (Info.AI == 255)
             {
-                uniqueAI = uniqueAI.LoadCustomAI(Info.Name);
-                if (uniqueAI == null) SMain.Enqueue("Error attaching system to monster.");
-                else SMain.Enqueue("Monsters AI has been Loaded");
+                for (int i = 0; i < Envir.CustomAIList.Count; i++)
+                {
+                    if (Envir.CustomAIList[i].Name == info.Name)
+                        uniqueAI = Envir.CustomAIList[i];
+                }
             }
             #endregion
         }
         public bool Spawn(Map temp, Point location)
         {
             if (!temp.ValidPoint(location)) return false;
-            #region Can't spawn if the Current time is < than the next respawn time. Pete107|Petesn00beh
+            #region Can't spawn if the Current time is < than the next respawn time. Pete107|Petesn00beh - Updated 26/02/2016
             if (uniqueAI != null && uniqueAI.UseKillTimer)
             {
-                DateTime timeKilled = new DateTime(uniqueAI.LastKillYear, uniqueAI.LastKillMonth, uniqueAI.LastKillDay, uniqueAI.LastKillHour, uniqueAI.LastKillMinute, 0, 0);
-                DateTime timeNow = DateTime.Now;
-                if (timeNow.CompareTo(timeKilled) < 0)
-                    return false;
+                if (uniqueAI.LastKillYear > 0) // Checking it's been killed before
+                {
+                    DateTime timeKilled = new DateTime(uniqueAI.LastKillYear, uniqueAI.LastKillMonth, uniqueAI.LastKillDay, uniqueAI.LastKillHour, uniqueAI.LastKillMinute, 0, 0);
+                    DateTime timeNow = DateTime.Now;
+                    if (timeNow.CompareTo(timeKilled) < 0)
+                        return false;
+                }
             }
             #endregion
             CurrentMap = temp;
@@ -376,13 +381,16 @@ namespace Server.MirObjects
             Respawn = respawn;
 
             if (Respawn.Map == null) return false;
-            #region Can't spawn if the Current time is < than the next respawn time. Pete107|Petesn00beh
+            #region Can't spawn if the Current time is < than the next respawn time. Pete107|Petesn00beh - Updated 26/02/2016
             if (uniqueAI != null && uniqueAI.UseKillTimer)
             {
-                DateTime timeKilled = new DateTime(uniqueAI.LastKillYear, uniqueAI.LastKillMonth, uniqueAI.LastKillDay, uniqueAI.LastKillHour, uniqueAI.LastKillMinute, 0, 0);
-                DateTime timeNow = DateTime.Now;
-                if (timeNow.CompareTo(timeKilled) < 0)
-                    return false;
+                if (uniqueAI.LastKillYear > 0) // Checking it's been killed before
+                {
+                    DateTime timeKilled = new DateTime(uniqueAI.LastKillYear, uniqueAI.LastKillMonth, uniqueAI.LastKillDay, uniqueAI.LastKillHour, uniqueAI.LastKillMinute, 0, 0);
+                    DateTime timeNow = DateTime.Now;
+                    if (timeNow.CompareTo(timeKilled) < 0)
+                        return false;
+                }
             }
             #endregion
             for (int i = 0; i < 10; i++)

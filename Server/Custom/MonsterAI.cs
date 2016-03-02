@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using S = ServerPackets;
-using System.Linq;
+using Server.MirEnvir;
 
 namespace Server.Custom
 {
@@ -745,7 +745,6 @@ namespace Server.Custom
                         }
                     }
                     if (uniqueAI.DeadMessage.Contains("{TOPDAMAGE}"))
-
                     {
 
                     }
@@ -791,6 +790,24 @@ namespace Server.Custom
                     if (!uniqueAI.Save(uniqueAI))
                         SMain.Enqueue("Error saving Monsters Kill timer.");
             }
+            #region Updated the KillTimer 02-03-2016 - Pete107|Petesn00beh
+            if (Envir.CustomAIList != null && Envir.CustomAIList.Count > 0)
+            {
+                DateTime tempDateTime = DateTime.Now;
+                tempDateTime = tempDateTime.AddDays(uniqueAI.RespawnDay);
+                tempDateTime = tempDateTime.AddMonths(uniqueAI.RespawnMonth);
+                tempDateTime = tempDateTime.AddYears(uniqueAI.RespawnYear);
+                tempDateTime = tempDateTime.AddHours(uniqueAI.RespawnHour);
+                tempDateTime = tempDateTime.AddMinutes(uniqueAI.RespawnMinute);
+                uniqueAI.LastKillDay = tempDateTime.Day;
+                uniqueAI.LastKillMonth = tempDateTime.Month;
+                uniqueAI.LastKillYear = tempDateTime.Year;
+                uniqueAI.LastKillHour = tempDateTime.Hour;
+                uniqueAI.LastKillMinute = tempDateTime.Minute;
+                if (!uniqueAI.Save(uniqueAI))
+                    SMain.Enqueue(string.Format("ERROR saving KillTimer"));
+            }
+            #endregion
             base.Die();
         }
 
@@ -853,30 +870,23 @@ namespace Server.Custom
 
         public override void Spawned()
         {
-            //Always ensure it's not null
-            if (uniqueAI != null &&
-                uniqueAI.AnnounceSpawn)
+            if (uniqueAI != null)
             {
+                uniqueAI.CurrentMap = CurrentMap.Info.Title; // Update the Envir list of Custom Monster current location in order for the NPC to get the latest location.
                 uniqueAI.CurrentX = CurrentLocation.X;
                 uniqueAI.CurrentY = CurrentLocation.Y;
-                uniqueAI.CurrentMap = CurrentMap.Info.Title;
-                uniqueAI.CurrentMap = CurrentMap.Info.Title;
-                uniqueAI.CurrentX = CurrentLocation.X;
-                uniqueAI.CurrentY = CurrentLocation.Y;
-                if (!uniqueAI.Save(uniqueAI))
-                    SMain.Enqueue("Error saving location");
-                if (uniqueAI.SpawnMessage.Length > 0)
+                if (uniqueAI.AnnounceSpawn &&
+                    uniqueAI.SpawnMessage.Length > 0)
                 {
-                    string origMessage = uniqueAI.SpawnMessage;
-                    if (uniqueAI.SpawnMessage.Contains("{NAME}"))
-                        uniqueAI.SpawnMessage = uniqueAI.SpawnMessage.Replace("{NAME}", Name);
-                    if (uniqueAI.SpawnMessage.Contains("{MAP}"))
-                        uniqueAI.SpawnMessage = uniqueAI.SpawnMessage.Replace("{MAP}", CurrentMap.Info.Title);
-                    if (uniqueAI.SpawnMessage.Contains("{XY}"))
-                        uniqueAI.SpawnMessage = uniqueAI.SpawnMessage.Replace("{XY}", string.Format("{0}:{1}", CurrentLocation.X, CurrentLocation.Y));
-                    Packet p = new S.Chat { Message = uniqueAI.SpawnMessage, Type = ChatType.Announcement };
+                    string tempString = uniqueAI.SpawnMessage;
+                    if (tempString.Contains("{NAME}"))
+                        tempString = tempString.Replace("{NAME}", Info.Name);
+                    if (tempString.Contains("{MAP}"))
+                        tempString = tempString.Replace("{MAP}", CurrentMap.Info.Title);
+                    if (tempString.Contains("{XY}"))
+                        tempString = tempString.Replace("{XY}", CurrentLocation.X.ToString() + ":" + CurrentLocation.Y.ToString());
+                    Packet p = new S.Chat { Message = tempString, Type = ChatType.Announcement };
                     Envir.Broadcast(p);
-                    uniqueAI.SpawnMessage = origMessage;
                 }
             }
             base.Spawned();
