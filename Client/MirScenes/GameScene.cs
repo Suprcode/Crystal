@@ -665,7 +665,7 @@ namespace Client.MirScenes
 
             switch (magic.Spell)
             {
-                case Spell.CounterAttack:
+                case Spell.天务:
                     if ((CMain.Time < magic.CastTime + magic.Delay) && magic.CastTime != 0)
                     {
                         if (CMain.Time >= OutputDelay)
@@ -683,30 +683,30 @@ namespace Client.MirScenes
             int cost;
             switch (magic.Spell)
             {
-                case Spell.Fencing:
+                case Spell.基本剑术:
                 case Spell.FatalSword:
                 case Spell.MPEater:
                 case Spell.Hemorrhage:
                 case Spell.SpiritSword:
-                case Spell.Slaying:
+                case Spell.攻杀剑术:
                 case Spell.Focus:
                 case Spell.Meditation:
                     return;
-                case Spell.Thrusting:
+                case Spell.刺杀剑术:
                     if (CMain.Time < ToggleTime) return;
                     Thrusting = !Thrusting;
                     ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = Thrusting });
                     break;
-                case Spell.HalfMoon:
+                case Spell.半月弯刀:
                     if (CMain.Time < ToggleTime) return;
                     HalfMoon = !HalfMoon;
                     ChatDialog.ReceiveChat(HalfMoon ? "Use Half Moon." : "Do not use Half Moon.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = HalfMoon });
                     break;
-                case Spell.CrossHalfMoon:
+                case Spell.狂风斩:
                     if (CMain.Time < ToggleTime) return;
                     CrossHalfMoon = !CrossHalfMoon;
                     ChatDialog.ReceiveChat(CrossHalfMoon ? "Use Cross Half Moon." : "Do not use Cross Half Moon.", ChatType.Hint);
@@ -720,7 +720,7 @@ namespace Client.MirScenes
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = DoubleSlash });
                     break;
-                case Spell.TwinDrakeBlade:
+                case Spell.双龙斩:
                     if (CMain.Time < ToggleTime) return;
                     ToggleTime = CMain.Time + 500;
 
@@ -734,7 +734,7 @@ namespace Client.MirScenes
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
                     User.Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, User));
                     break;
-                case Spell.FlamingSword:
+                case Spell.烈火剑法:
                     if (CMain.Time < ToggleTime) return;
                     ToggleTime = CMain.Time + 500;
 
@@ -746,7 +746,7 @@ namespace Client.MirScenes
                     }
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
                     break;
-                case Spell.CounterAttack:
+                case Spell.天务:
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
                     if (cost > MapObject.User.MP)
                     {
@@ -754,7 +754,7 @@ namespace Client.MirScenes
                         return;
                     }
 
-                    SoundManager.PlaySound(20000 + (ushort)Spell.CounterAttack * 10);
+                    SoundManager.PlaySound(20000 + (ushort)Spell.天务 * 10);
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
                     break;
                 case Spell.MentalState:
@@ -3956,18 +3956,18 @@ namespace Client.MirScenes
             switch (p.Spell)
             {
                 //Warrior
-                case Spell.Slaying:
+                case Spell.攻杀剑术:
                     Slaying = p.CanUse;
                     break;
-                case Spell.Thrusting:
+                case Spell.刺杀剑术:
                     Thrusting = p.CanUse;
                     ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
                     break;
-                case Spell.HalfMoon:
+                case Spell.半月弯刀:
                     HalfMoon = p.CanUse;
                     ChatDialog.ReceiveChat(HalfMoon ? "Use HalfMoon." : "Do not use HalfMoon.", ChatType.Hint);
                     break;
-                case Spell.CrossHalfMoon:
+                case Spell.狂风斩:
                     CrossHalfMoon = p.CanUse;
                     ChatDialog.ReceiveChat(CrossHalfMoon ? "Use CrossHalfMoon." : "Do not use CrossHalfMoon.", ChatType.Hint);
                     break;
@@ -3975,7 +3975,7 @@ namespace Client.MirScenes
                     DoubleSlash = p.CanUse;
                     ChatDialog.ReceiveChat(DoubleSlash ? "Use DoubleSlash." : "Do not use DoubleSlash.", ChatType.Hint);
                     break;
-                case Spell.FlamingSword:
+                case Spell.烈火剑法:
                     FlamingSword = p.CanUse;
                     if (FlamingSword)
                         ChatDialog.ReceiveChat("Your weapon is glowed by spirit of fire.", ChatType.Hint);
@@ -9443,7 +9443,7 @@ namespace Client.MirScenes
                 case Spell.FrostCrunch:
                 case Spell.Vampirism:
                 case Spell.Revelation:
-                case Spell.Entrapment:
+                case Spell.捕绳剑:
                 case Spell.Hallucination:
                 case Spell.DarkBody:
                     if (User.NextMagicObject != null)

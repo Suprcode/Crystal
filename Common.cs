@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
+using System.ComponentModel;
 
 public enum BlendMode : sbyte
 {
@@ -985,23 +986,40 @@ public enum Spell : byte
     None = 0,
 
     //Warrior
-    Fencing = 1,
-    Slaying = 2,
-    Thrusting = 3,
-    HalfMoon = 4,
-    ShoulderDash = 5,
-    TwinDrakeBlade = 6,
-    Entrapment = 7,
-    FlamingSword = 8,
-    LionRoar = 9,
-    CrossHalfMoon = 10,
-    BladeAvalanche = 11,
-    ProtectionField = 12,
-    Rage = 13,
-    CounterAttack = 14,
-    SlashingBurst = 15,
-    Fury = 16,
-    ImmortalSkin = 17,
+    [Description("基本剑术")]
+    基本剑术 = 1,
+    [Description("攻杀剑术")]
+    攻杀剑术 = 2,
+    [Description("刺杀剑术")]
+    刺杀剑术 = 3,
+    [Description("半月弯刀")]
+    半月弯刀 = 4,
+    [Description("野蛮冲撞")]
+    野蛮冲撞 = 5,
+    [Description("双龙斩")]
+    双龙斩 = 6,
+    [Description("捕绳剑")]
+    捕绳剑 = 7,
+    [Description("烈火剑法")]
+    烈火剑法 = 8,
+    [Description("狮子吼")]
+    狮子吼 = 9,
+    [Description("狂风斩")]
+    狂风斩 = 10,
+    [Description("空破闪")]
+    空破闪 = 11,
+    [Description("护身气幕")]
+    护身气幕 = 12,
+    [Description("剑气爆")]
+    剑气爆 = 13,
+    [Description("天务")]
+    天务 = 14,
+    [Description("日闪")]
+    日闪 = 15,
+    [Description("血龙剑法")]
+    血龙剑法 = 16,
+    [Description("金刚不坏")]
+    金刚不坏 = 17,
 
     //Wizard
     FireBall = 31,
@@ -3690,6 +3708,29 @@ public class ClientMagic
 
         writer.Write(Range);
         writer.Write(CastTime);
+    }
+
+    public static string GetSpellName(Spell spell)
+    {
+        Type type = spell.GetType();
+        var memberInfo = type.GetMember(spell.ToString());
+        if (memberInfo != null && memberInfo.Length > 0)
+        {
+            object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attrs != null && attrs.Length > 0)
+            {
+                return ((DescriptionAttribute)attrs[0]).Description;
+            }
+            else
+            {
+                return spell.ToString();
+            }
+        }
+        else
+        {
+            return spell.ToString();
+        }
     }
    
 }

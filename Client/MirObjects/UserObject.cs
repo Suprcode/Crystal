@@ -606,7 +606,7 @@ namespace Client.MirObjects
                 ClientMagic magic = Magics[i];
                 switch (magic.Spell)
                 {
-                    case Spell.Fencing:
+                    case Spell.基本剑术:
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level * 3);
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + (magic.Level + 1) * 3);
                         break;

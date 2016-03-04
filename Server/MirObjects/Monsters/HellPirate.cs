@@ -29,7 +29,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.HalfMoon, Type = 1 });
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.∞Î‘¬Õ‰µ∂, Type = 1 });
                 Attack2();
             }
 

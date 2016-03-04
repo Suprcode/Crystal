@@ -218,34 +218,34 @@ namespace Server.MirEnvir
                 switch(MagicInfoList[i].Spell)
                 {
                         //warrior
-                    case Spell.Thrusting:
+                    case Spell.刺杀剑术:
                         MagicInfoList[i].MultiplierBase = 0.25f;
                         MagicInfoList[i].MultiplierBonus = 0.25f;
                         break;
-                    case Spell.HalfMoon:
+                    case Spell.半月弯刀:
                         MagicInfoList[i].MultiplierBase = 0.3f;
                         MagicInfoList[i].MultiplierBonus = 0.1f;
                         break;
-                    case Spell.ShoulderDash:
+                    case Spell.野蛮冲撞:
                         MagicInfoList[i].MPowerBase = 4;
                         break;
-                    case Spell.TwinDrakeBlade:
+                    case Spell.双龙斩:
                         MagicInfoList[i].MultiplierBase = 0.8f;
                         MagicInfoList[i].MultiplierBonus = 0.1f;
                         break;
-                    case Spell.FlamingSword:
+                    case Spell.烈火剑法:
                         MagicInfoList[i].MultiplierBase = 1.4f;
                         MagicInfoList[i].MultiplierBonus = 0.4f;
                         break;
-                    case Spell.CrossHalfMoon:
+                    case Spell.狂风斩:
                         MagicInfoList[i].MultiplierBase = 0.4f;
                         MagicInfoList[i].MultiplierBonus = 0.1f;
                         break;
-                    case Spell.BladeAvalanche:
+                    case Spell.空破闪:
                         MagicInfoList[i].MultiplierBase = 1f;
                         MagicInfoList[i].MultiplierBonus = 0.4f;
                         break;
-                    case Spell.SlashingBurst:
+                    case Spell.日闪:
                         MagicInfoList[i].MultiplierBase = 3.25f;
                         MagicInfoList[i].MultiplierBonus = 0.25f;
                         break;
@@ -298,23 +298,23 @@ namespace Server.MirEnvir
         private void FillMagicInfoList()
         {
             //Warrior
-            if (!MagicExists(Spell.Fencing)) MagicInfoList.Add(new MagicInfo {Name = "基本剑术", Spell = Spell.Fencing, Icon = 2, Level1 = 7, Level2 = 9, Level3 = 12, Need1 = 270, Need2 = 600, Need3 = 1300, Range = 0 });
-            if (!MagicExists(Spell.Slaying)) MagicInfoList.Add(new MagicInfo { Name = "攻杀剑术", Spell = Spell.Slaying, Icon = 6, Level1 = 15, Level2 = 17, Level3 = 20, Need1 = 500, Need2 = 1100, Need3 = 1800, Range = 0 });
-            if (!MagicExists(Spell.Thrusting)) MagicInfoList.Add(new MagicInfo { Name = "刺杀剑术", Spell = Spell.Thrusting, Icon = 11, Level1 = 22, Level2 = 24, Level3 = 27, Need1 = 2000, Need2 = 3500, Need3 = 6000, Range = 0, MultiplierBase = 0.25f, MultiplierBonus = 0.25f });
-            if (!MagicExists(Spell.HalfMoon)) MagicInfoList.Add(new MagicInfo { Name = "半月弯刀", Spell = Spell.HalfMoon, Icon = 24, Level1 = 26, Level2 = 28, Level3 = 31, Need1 = 5000, Need2 = 8000, Need3 = 14000, BaseCost = 3, Range = 0, MultiplierBase =0.3f, MultiplierBonus = 0.1f });
-            if (!MagicExists(Spell.ShoulderDash)) MagicInfoList.Add(new MagicInfo { Name = "野蛮冲撞", Spell = Spell.ShoulderDash, Icon = 26, Level1 = 30, Level2 = 32, Level3 = 34, Need1 = 3000, Need2 = 4000, Need3 = 6000, BaseCost = 4, LevelCost = 4, DelayBase = 2500, Range = 0 , MPowerBase = 4});
-            if (!MagicExists(Spell.TwinDrakeBlade)) MagicInfoList.Add(new MagicInfo { Name = "双龙斩", Spell = Spell.TwinDrakeBlade, Icon = 37, Level1 = 32, Level2 = 34, Level3 = 37, Need1 = 4000, Need2 = 6000, Need3 = 10000, BaseCost = 10, Range = 0 , MultiplierBase = 0.8f, MultiplierBonus = 0.1f});
-            if (!MagicExists(Spell.Entrapment)) MagicInfoList.Add(new MagicInfo { Name = "捕绳剑", Spell = Spell.Entrapment, Icon = 46, Level1 = 32, Level2 = 35, Level3 = 37, Need1 = 2000, Need2 = 3500, Need3 = 5500, BaseCost = 15, LevelCost = 3, Range = 9 });
-            if (!MagicExists(Spell.FlamingSword)) MagicInfoList.Add(new MagicInfo { Name = "烈火剑法", Spell = Spell.FlamingSword, Icon = 25, Level1 = 35, Level2 = 37, Level3 = 40, Need1 = 2000, Need2 = 4000, Need3 = 6000, BaseCost = 7, Range = 0, MultiplierBase = 1.4f, MultiplierBonus = 0.4f});
-            if (!MagicExists(Spell.LionRoar)) MagicInfoList.Add(new MagicInfo { Name = "狮子吼", Spell = Spell.LionRoar, Icon = 42, Level1 = 36, Level2 = 39, Level3 = 41, Need1 = 5000, Need2 = 8000, Need3 = 12000, BaseCost = 14, LevelCost = 4, Range = 0 });
-            if (!MagicExists(Spell.CrossHalfMoon)) MagicInfoList.Add(new MagicInfo { Name = "狂风斩", Spell = Spell.CrossHalfMoon, Icon = 33, Level1 = 38, Level2 = 40, Level3 = 42, Need1 = 7000, Need2 = 11000, Need3 = 16000, BaseCost = 6, Range = 0, MultiplierBase = 0.4f, MultiplierBonus = 0.1f });
-            if (!MagicExists(Spell.BladeAvalanche)) MagicInfoList.Add(new MagicInfo { Name = "空破闪", Spell = Spell.BladeAvalanche, Icon = 43, Level1 = 38, Level2 = 41, Level3 = 43, Need1 = 5000, Need2 = 8000, Need3 = 12000, BaseCost = 14, LevelCost = 4, Range = 0, MultiplierBonus = 0.3f});
-            if (!MagicExists(Spell.ProtectionField)) MagicInfoList.Add(new MagicInfo { Name = "护身气幕", Spell = Spell.ProtectionField, Icon = 50, Level1 = 39, Level2 = 42, Level3 = 45, Need1 = 6000, Need2 = 12000, Need3 = 18000, BaseCost = 23, LevelCost = 6, Range = 0 });
-            if (!MagicExists(Spell.Rage)) MagicInfoList.Add(new MagicInfo { Name = "剑气爆", Spell = Spell.Rage, Icon = 49, Level1 = 44, Level2 = 47, Level3 = 50, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 20, LevelCost = 5, Range = 0 });
-            if (!MagicExists(Spell.Fury)) MagicInfoList.Add(new MagicInfo { Name = "血龙剑法", Spell = Spell.Fury, Icon = 76, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
-            if (!MagicExists(Spell.CounterAttack)) MagicInfoList.Add(new MagicInfo { Name = "天务", Spell = Spell.CounterAttack, Icon = 72, Level1 = 47, Level2 = 51, Level3 = 55, Need1 = 7000, Need2 = 11000, Need3 = 15000, BaseCost = 12, LevelCost = 4, DelayBase = 24000, Range = 0 , MultiplierBonus = 0.4f});
-            if (!MagicExists(Spell.SlashingBurst)) MagicInfoList.Add(new MagicInfo { Name = "日闪", Spell = Spell.SlashingBurst, Icon = 55, Level1 = 50, Level2 = 53, Level3 = 56, Need1 = 10000, Need2 = 16000, Need3 = 24000, BaseCost = 25, LevelCost = 4, MPowerBase = 1, PowerBase = 3, DelayBase = 14000, DelayReduction = 4000, Range = 0 , MultiplierBase = 3.25f, MultiplierBonus = 0.25f});
-            if (!MagicExists(Spell.ImmortalSkin)) MagicInfoList.Add(new MagicInfo { Name = "金刚不坏", Spell = Spell.ImmortalSkin, Icon = 80, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 1560, Need2 = 2200, Need3 = 3000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
+            if (!MagicExists(Spell.基本剑术)) MagicInfoList.Add(new MagicInfo {Name = "基本剑术", Spell = Spell.基本剑术, Icon = 2, Level1 = 7, Level2 = 9, Level3 = 12, Need1 = 270, Need2 = 600, Need3 = 1300, Range = 0 });
+            if (!MagicExists(Spell.攻杀剑术)) MagicInfoList.Add(new MagicInfo { Name = "攻杀剑术", Spell = Spell.攻杀剑术, Icon = 6, Level1 = 15, Level2 = 17, Level3 = 20, Need1 = 500, Need2 = 1100, Need3 = 1800, Range = 0 });
+            if (!MagicExists(Spell.刺杀剑术)) MagicInfoList.Add(new MagicInfo { Name = "刺杀剑术", Spell = Spell.刺杀剑术, Icon = 11, Level1 = 22, Level2 = 24, Level3 = 27, Need1 = 2000, Need2 = 3500, Need3 = 6000, Range = 0, MultiplierBase = 0.25f, MultiplierBonus = 0.25f });
+            if (!MagicExists(Spell.半月弯刀)) MagicInfoList.Add(new MagicInfo { Name = "半月弯刀", Spell = Spell.半月弯刀, Icon = 24, Level1 = 26, Level2 = 28, Level3 = 31, Need1 = 5000, Need2 = 8000, Need3 = 14000, BaseCost = 3, Range = 0, MultiplierBase =0.3f, MultiplierBonus = 0.1f });
+            if (!MagicExists(Spell.野蛮冲撞)) MagicInfoList.Add(new MagicInfo { Name = "野蛮冲撞", Spell = Spell.野蛮冲撞, Icon = 26, Level1 = 30, Level2 = 32, Level3 = 34, Need1 = 3000, Need2 = 4000, Need3 = 6000, BaseCost = 4, LevelCost = 4, DelayBase = 2500, Range = 0 , MPowerBase = 4});
+            if (!MagicExists(Spell.双龙斩)) MagicInfoList.Add(new MagicInfo { Name = "双龙斩", Spell = Spell.双龙斩, Icon = 37, Level1 = 32, Level2 = 34, Level3 = 37, Need1 = 4000, Need2 = 6000, Need3 = 10000, BaseCost = 10, Range = 0 , MultiplierBase = 0.8f, MultiplierBonus = 0.1f});
+            if (!MagicExists(Spell.捕绳剑)) MagicInfoList.Add(new MagicInfo { Name = "捕绳剑", Spell = Spell.捕绳剑, Icon = 46, Level1 = 32, Level2 = 35, Level3 = 37, Need1 = 2000, Need2 = 3500, Need3 = 5500, BaseCost = 15, LevelCost = 3, Range = 9 });
+            if (!MagicExists(Spell.烈火剑法)) MagicInfoList.Add(new MagicInfo { Name = "烈火剑法", Spell = Spell.烈火剑法, Icon = 25, Level1 = 35, Level2 = 37, Level3 = 40, Need1 = 2000, Need2 = 4000, Need3 = 6000, BaseCost = 7, Range = 0, MultiplierBase = 1.4f, MultiplierBonus = 0.4f});
+            if (!MagicExists(Spell.狮子吼)) MagicInfoList.Add(new MagicInfo { Name = "狮子吼", Spell = Spell.狮子吼, Icon = 42, Level1 = 36, Level2 = 39, Level3 = 41, Need1 = 5000, Need2 = 8000, Need3 = 12000, BaseCost = 14, LevelCost = 4, Range = 0 });
+            if (!MagicExists(Spell.狂风斩)) MagicInfoList.Add(new MagicInfo { Name = "狂风斩", Spell = Spell.狂风斩, Icon = 33, Level1 = 38, Level2 = 40, Level3 = 42, Need1 = 7000, Need2 = 11000, Need3 = 16000, BaseCost = 6, Range = 0, MultiplierBase = 0.4f, MultiplierBonus = 0.1f });
+            if (!MagicExists(Spell.空破闪)) MagicInfoList.Add(new MagicInfo { Name = "空破闪", Spell = Spell.空破闪, Icon = 43, Level1 = 38, Level2 = 41, Level3 = 43, Need1 = 5000, Need2 = 8000, Need3 = 12000, BaseCost = 14, LevelCost = 4, Range = 0, MultiplierBonus = 0.3f});
+            if (!MagicExists(Spell.护身气幕)) MagicInfoList.Add(new MagicInfo { Name = "护身气幕", Spell = Spell.护身气幕, Icon = 50, Level1 = 39, Level2 = 42, Level3 = 45, Need1 = 6000, Need2 = 12000, Need3 = 18000, BaseCost = 23, LevelCost = 6, Range = 0 });
+            if (!MagicExists(Spell.剑气爆)) MagicInfoList.Add(new MagicInfo { Name = "剑气爆", Spell = Spell.剑气爆, Icon = 49, Level1 = 44, Level2 = 47, Level3 = 50, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 20, LevelCost = 5, Range = 0 });
+            if (!MagicExists(Spell.血龙剑法)) MagicInfoList.Add(new MagicInfo { Name = "血龙剑法", Spell = Spell.血龙剑法, Icon = 76, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
+            if (!MagicExists(Spell.天务)) MagicInfoList.Add(new MagicInfo { Name = "天务", Spell = Spell.天务, Icon = 72, Level1 = 47, Level2 = 51, Level3 = 55, Need1 = 7000, Need2 = 11000, Need3 = 15000, BaseCost = 12, LevelCost = 4, DelayBase = 24000, Range = 0 , MultiplierBonus = 0.4f});
+            if (!MagicExists(Spell.日闪)) MagicInfoList.Add(new MagicInfo { Name = "日闪", Spell = Spell.日闪, Icon = 55, Level1 = 50, Level2 = 53, Level3 = 56, Need1 = 10000, Need2 = 16000, Need3 = 24000, BaseCost = 25, LevelCost = 4, MPowerBase = 1, PowerBase = 3, DelayBase = 14000, DelayReduction = 4000, Range = 0 , MultiplierBase = 3.25f, MultiplierBonus = 0.25f});
+            if (!MagicExists(Spell.金刚不坏)) MagicInfoList.Add(new MagicInfo { Name = "金刚不坏", Spell = Spell.金刚不坏, Icon = 80, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 1560, Need2 = 2200, Need3 = 3000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
 
             //Wizard
             if (!MagicExists(Spell.FireBall)) MagicInfoList.Add(new MagicInfo { Name = "FireBall", Spell = Spell.FireBall, Icon = 0, Level1 = 7, Level2 = 9, Level3 = 11, Need1 = 200, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, MPowerBase = 8, PowerBase = 2, Range = 9 });

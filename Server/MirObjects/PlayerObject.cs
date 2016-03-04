@@ -579,7 +579,7 @@ namespace Server.MirObjects
             if (FlamingSword && Envir.Time >= FlamingSwordTime)
             {
                 FlamingSword = false;
-                Enqueue(new S.SpellToggle { Spell = Spell.FlamingSword, CanUse = false });
+                Enqueue(new S.SpellToggle { Spell = Spell.烈火剑法, CanUse = false });
             }
 
             if (CounterAttack && Envir.Time >= CounterAttackTime)
@@ -1946,9 +1946,9 @@ namespace Server.MirObjects
             Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
             RequestedGuildBuffInfo = true;
 
-            if (Info.Thrusting) Enqueue(new S.SpellToggle { Spell = Spell.Thrusting, CanUse = true });
-            if (Info.HalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.HalfMoon, CanUse = true });
-            if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.CrossHalfMoon, CanUse = true });
+            if (Info.Thrusting) Enqueue(new S.SpellToggle { Spell = Spell.刺杀剑术, CanUse = true });
+            if (Info.HalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.半月弯刀, CanUse = true });
+            if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.狂风斩, CanUse = true });
             if (Info.DoubleSlash) Enqueue(new S.SpellToggle { Spell = Spell.DoubleSlash, CanUse = true });
 
             for (int i = 0; i < Info.Pets.Count; i++)
@@ -2958,7 +2958,7 @@ namespace Server.MirObjects
                 UserMagic magic = Info.Magics[i];
                 switch (magic.Spell)
                 {
-                    case Spell.Fencing:
+                    case Spell.基本剑术:
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level * 3);
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + (magic.Level + 1) * 3);
                         break;
@@ -5407,7 +5407,7 @@ namespace Server.MirObjects
             {
                 switch (spell)
                 {
-                    case Spell.Slaying:
+                    case Spell.攻杀剑术:
                         Slaying = false;
                         break;
                 }
@@ -5443,12 +5443,12 @@ namespace Server.MirObjects
 
             switch (spell)
             {
-                case Spell.Slaying:
+                case Spell.攻杀剑术:
                     if (!Slaying)
                         spell = Spell.None;
                     else
                     {
-                        magic = GetMagic(Spell.Slaying);
+                        magic = GetMagic(Spell.攻杀剑术);
                         level = magic.Level;
                     }
 
@@ -5464,18 +5464,18 @@ namespace Server.MirObjects
                     level = magic.Level;
                     ChangeMP(-(magic.Info.BaseCost + magic.Level * magic.Info.LevelCost));
                     break;
-                case Spell.Thrusting:
-                case Spell.FlamingSword:
+                case Spell.刺杀剑术:
+                case Spell.烈火剑法:
                     magic = GetMagic(spell);
-                    if ((magic == null) || (!FlamingSword && (spell == Spell.FlamingSword)))
+                    if ((magic == null) || (!FlamingSword && (spell == Spell.烈火剑法)))
                     {
                         spell = Spell.None;
                         break;
                     }
                     level = magic.Level;
                     break;
-                case Spell.HalfMoon:
-                case Spell.CrossHalfMoon:
+                case Spell.半月弯刀:
+                case Spell.狂风斩:
                     magic = GetMagic(spell);
                     if (magic == null || magic.Info.BaseCost + (magic.Level * magic.Info.LevelCost) > MP)
                     {
@@ -5485,7 +5485,7 @@ namespace Server.MirObjects
                     level = magic.Level;
                     ChangeMP(-(magic.Info.BaseCost + magic.Level * magic.Info.LevelCost));
                     break;
-                case Spell.TwinDrakeBlade:
+                case Spell.双龙斩:
                     magic = GetMagic(spell);
                     if (!TwinDrakeBlade || magic == null || magic.Info.BaseCost + magic.Level * magic.Info.LevelCost > MP)
                     {
@@ -5503,12 +5503,12 @@ namespace Server.MirObjects
 
             if (!Slaying)
             {
-                magic = GetMagic(Spell.Slaying);
+                magic = GetMagic(Spell.攻杀剑术);
 
                 if (magic != null && Envir.Random.Next(12) <= magic.Level)
                 {
                     Slaying = true;
-                    Enqueue(new S.SpellToggle { Spell = Spell.Slaying, CanUse = Slaying });
+                    Enqueue(new S.SpellToggle { Spell = Spell.攻杀剑术, CanUse = Slaying });
                 }
             }
 
@@ -5544,11 +5544,11 @@ namespace Server.MirObjects
             {
                 switch (spell)
                 {
-                    case Spell.Thrusting:
+                    case Spell.刺杀剑术:
                         goto Thrusting;
-                    case Spell.HalfMoon:
+                    case Spell.半月弯刀:
                         goto HalfMoon;
-                    case Spell.CrossHalfMoon:
+                    case Spell.狂风斩:
                         goto CrossHalfMoon;
                     case Spell.None:
                         Mined = true;
@@ -5563,11 +5563,11 @@ namespace Server.MirObjects
             {
                 switch (spell)
                 {
-                    case Spell.Thrusting:
+                    case Spell.刺杀剑术:
                         goto Thrusting;
-                    case Spell.HalfMoon:
+                    case Spell.半月弯刀:
                         goto HalfMoon;
-                    case Spell.CrossHalfMoon:
+                    case Spell.狂风斩:
                         goto CrossHalfMoon;
                 }
                 return;
@@ -5681,8 +5681,8 @@ namespace Server.MirObjects
                 DelayedAction action;
                 switch (spell)
                 {
-                    case Spell.Slaying:
-                        magic = GetMagic(Spell.Slaying);
+                    case Spell.攻杀剑术:
+                        magic = GetMagic(Spell.攻杀剑术);
                         damageFinal = magic.GetDamage(damageBase);
                         LevelMagic(magic);
                         break;
@@ -5696,20 +5696,20 @@ namespace Server.MirObjects
                         ActionList.Add(action);
                         LevelMagic(magic);
                         break;
-                    case Spell.Thrusting:
-                        magic = GetMagic(Spell.Thrusting);
+                    case Spell.刺杀剑术:
+                        magic = GetMagic(Spell.刺杀剑术);
                         LevelMagic(magic);
                         break;
-                    case Spell.HalfMoon:
-                        magic = GetMagic(Spell.HalfMoon);
+                    case Spell.半月弯刀:
+                        magic = GetMagic(Spell.半月弯刀);
                         LevelMagic(magic);
                         break;
-                    case Spell.CrossHalfMoon:
-                        magic = GetMagic(Spell.CrossHalfMoon);
+                    case Spell.狂风斩:
+                        magic = GetMagic(Spell.狂风斩);
                         LevelMagic(magic);
                         break;
-                    case Spell.TwinDrakeBlade:
-                        magic = GetMagic(Spell.TwinDrakeBlade);
+                    case Spell.双龙斩:
+                        magic = GetMagic(Spell.双龙斩);
                         damageFinal = magic.GetDamage(damageBase);
                         TwinDrakeBlade = false;
                         action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, ob, damageFinal, DefenceType.Agility, false);
@@ -5723,8 +5723,8 @@ namespace Server.MirObjects
                         }
 
                         break;
-                    case Spell.FlamingSword:
-                        magic = GetMagic(Spell.FlamingSword);
+                    case Spell.烈火剑法:
+                        magic = GetMagic(Spell.烈火剑法);
                         damageFinal = magic.GetDamage(damageBase);
                         FlamingSword = false;
                         defence = DefenceType.AC;
@@ -5741,7 +5741,7 @@ namespace Server.MirObjects
             }
 
         Thrusting:
-            if (spell == Spell.Thrusting)
+            if (spell == Spell.刺杀剑术)
             {
                 target = Functions.PointMove(target, dir, 1);
 
@@ -5766,7 +5766,7 @@ namespace Server.MirObjects
 
             }
         HalfMoon:
-            if (spell == Spell.HalfMoon)
+            if (spell == Spell.半月弯刀)
             {
                 dir = Functions.PreviousDir(dir);
 
@@ -5797,7 +5797,7 @@ namespace Server.MirObjects
             }
 
         CrossHalfMoon:
-            if (spell == Spell.CrossHalfMoon)
+            if (spell == Spell.狂风斩)
             {
                 magic = GetMagic(spell);
                 damageFinal = magic.GetDamage(damageBase);
@@ -5954,7 +5954,7 @@ namespace Server.MirObjects
             AttackTime = Envir.Time + MoveDelay;
             SpellTime = Envir.Time + 1800; //Spell Delay
 
-            if (spell != Spell.ShoulderDash)
+            if (spell != Spell.野蛮冲撞)
                 ActionTime = Envir.Time + MoveDelay;
 
             LogTime = Envir.Time + Globals.LogDelay;
@@ -5998,7 +5998,7 @@ namespace Server.MirObjects
             ChangeMP(-cost);
 
             Direction = dir;
-            if (spell != Spell.ShoulderDash && spell != Spell.BackStep && spell != Spell.FlashDash)
+            if (spell != Spell.野蛮冲撞 && spell != Spell.BackStep && spell != Spell.FlashDash)
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
 
             MapObject target = null;
@@ -6059,10 +6059,10 @@ namespace Server.MirObjects
                 case Spell.LightBody:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic));
                     break;
-                case Spell.Fury:
+                case Spell.血龙剑法:
                     FurySpell(magic, out cast);
                     break;
-                case Spell.ImmortalSkin:
+                case Spell.金刚不坏:
                     ImmortalSkin(magic, out cast);
                     break;
                 case Spell.FireBang:
@@ -6088,7 +6088,7 @@ namespace Server.MirObjects
                 case Spell.MassHealing:
                     MassHealing(magic, target == null ? location : target.CurrentLocation);
                     break;
-                case Spell.ShoulderDash:
+                case Spell.野蛮冲撞:
                     ShoulderDash(magic);
                     return;
                 case Spell.ThunderStorm:
@@ -6127,7 +6127,7 @@ namespace Server.MirObjects
                     }
                     Purification(target, magic);
                     break;
-                case Spell.LionRoar:
+                case Spell.狮子吼:
                     CurrentMap.ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, CurrentLocation));
                     break;
                 case Spell.Revelation:
@@ -6136,16 +6136,16 @@ namespace Server.MirObjects
                 case Spell.PoisonCloud:
                     PoisonCloud(magic, location, out cast);
                     break;
-                case Spell.Entrapment:
+                case Spell.捕绳剑:
                     Entrapment(target, magic);
                     break;
-                case Spell.BladeAvalanche:
+                case Spell.空破闪:
                     BladeAvalanche(magic);
                     break;
-                case Spell.SlashingBurst:
+                case Spell.日闪:
                     SlashingBurst(magic, out cast);
                     break;
-                case Spell.Rage:
+                case Spell.剑气爆:
                     Rage(magic);
                     break;
                 case Spell.Mirroring:
@@ -6161,7 +6161,7 @@ namespace Server.MirObjects
                     IceThrust(magic);
                     break;
 
-                case Spell.ProtectionField:
+                case Spell.护身气幕:
                     ProtectionField(magic);
                     break;
                 case Spell.PetEnhancer:
@@ -7538,7 +7538,7 @@ namespace Server.MirObjects
 
             if (Functions.InRange(CurrentLocation, target.CurrentLocation, 1) == false) return;
             if (Envir.Random.Next(10) > magic.Level + 6) return;
-            Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.CounterAttack, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = GetMagic(Spell.CounterAttack).Level, SelfBroadcast = true });
+            Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.天务, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = GetMagic(Spell.天务).Level, SelfBroadcast = true });
             DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, damageFinal, DefenceType.AC, true);
             ActionList.Add(action);
             LevelMagic(magic);
@@ -8336,7 +8336,7 @@ namespace Server.MirObjects
 
                 #region Fury
 
-                case Spell.Fury:
+                case Spell.血龙剑法:
                     AddBuff(new Buff { Type = BuffType.Fury, Caster = this, ExpireTime = Envir.Time + 60000 + magic.Level * 10000, Values = new int[] { 4 }, Visible = true });
                     LevelMagic(magic);
                     break;
@@ -8345,7 +8345,7 @@ namespace Server.MirObjects
 
                 #region ImmortalSkin
 
-                case Spell.ImmortalSkin:
+                case Spell.金刚不坏:
                     int ACvalue = (int)Math.Round(MaxAC * (0.10 + (0.07 * magic.Level)));
                     int DCValue = (int)Math.Round(MaxDC * (0.05 + (0.01 * magic.Level)));
                     AddBuff(new Buff { Type = BuffType.ImmortalSkin, Caster = this, ExpireTime = Envir.Time + 60000 + magic.Level * 1000, Values = new int[] { ACvalue, DCValue }, Visible = true });
@@ -8469,7 +8469,7 @@ namespace Server.MirObjects
 
                 #region Entrapment
 
-                case Spell.Entrapment:
+                case Spell.捕绳剑:
                     value = (int)data[1];
                     target = (MapObject)data[2];
 
@@ -8869,7 +8869,7 @@ namespace Server.MirObjects
             {
                 switch (magic.Spell)
                 {
-                    case Spell.Fencing:
+                    case Spell.基本剑术:
                     case Spell.SpiritSword:
                         LevelMagic(magic);
                         break;
@@ -9671,7 +9671,7 @@ namespace Server.MirObjects
             ActiveBlizzard = false;
             ActiveReincarnation = false;
 
-            CounterAttackCast(GetMagic(Spell.CounterAttack), LastHitter);
+            CounterAttackCast(GetMagic(Spell.天务), LastHitter);
 
             Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -9800,7 +9800,7 @@ namespace Server.MirObjects
             ActiveBlizzard = false;
             ActiveReincarnation = false;
 
-            CounterAttackCast(GetMagic(Spell.CounterAttack), LastHitter);
+            CounterAttackCast(GetMagic(Spell.天务), LastHitter);
 
             Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -13449,19 +13449,19 @@ namespace Server.MirObjects
             int cost;
             switch (spell)
             {
-                case Spell.Thrusting:
+                case Spell.刺杀剑术:
                     Info.Thrusting = use;
                     break;
-                case Spell.HalfMoon:
+                case Spell.半月弯刀:
                     Info.HalfMoon = use;
                     break;
-                case Spell.CrossHalfMoon:
+                case Spell.狂风斩:
                     Info.CrossHalfMoon = use;
                     break;
                 case Spell.DoubleSlash:
                     Info.DoubleSlash = use;
                     break;
-                case Spell.TwinDrakeBlade:
+                case Spell.双龙斩:
                     if (TwinDrakeBlade) return;
                     magic = GetMagic(spell);
                     if (magic == null) return;
@@ -13473,7 +13473,7 @@ namespace Server.MirObjects
 
                     Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell });
                     break;
-                case Spell.FlamingSword:
+                case Spell.烈火剑法:
                     if (FlamingSword || Envir.Time < FlamingSwordTime) return;
                     magic = GetMagic(spell);
                     if (magic == null) return;
@@ -13482,10 +13482,10 @@ namespace Server.MirObjects
 
                     FlamingSword = true;
                     FlamingSwordTime = Envir.Time + 10000;
-                    Enqueue(new S.SpellToggle { Spell = Spell.FlamingSword, CanUse = true });
+                    Enqueue(new S.SpellToggle { Spell = Spell.烈火剑法, CanUse = true });
                     ChangeMP(-cost);
                     break;
-                case Spell.CounterAttack:
+                case Spell.天务:
                     if (CounterAttack || Envir.Time < CounterAttackTime) return;
                     magic = GetMagic(spell);
                     if (magic == null) return;

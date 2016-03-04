@@ -19,6 +19,7 @@ using Effect = Client.MirObjects.Effect;
 
 using Client.MirScenes.Dialogs;
 using System.Drawing.Imaging;
+using System.ComponentModel;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -4378,7 +4379,7 @@ namespace Client.MirScenes.Dialogs
         {
             Magic = magic;
 
-            NameLabel.Text = Magic.Spell.ToString();
+            NameLabel.Text = ClientMagic.GetSpellName(Magic.Spell);
 
             LevelLabel.Text = Magic.Level.ToString();
             switch (Magic.Level)

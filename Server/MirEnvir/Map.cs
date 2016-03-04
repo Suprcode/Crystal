@@ -1242,7 +1242,7 @@ namespace Server.MirEnvir
 
                 #region LionRoar
 
-                case Spell.LionRoar:
+                case Spell.狮子吼:
                     location = (Point)data[2];
 
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)
@@ -1421,7 +1421,7 @@ namespace Server.MirEnvir
 
                 #region SlashingBurst
 
-                case Spell.SlashingBurst:
+                case Spell.日闪:
                     value = (int)data[2];
                     location = (Point)data[3];
                     dir = (MirDirection)data[4];
