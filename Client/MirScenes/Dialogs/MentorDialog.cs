@@ -64,7 +64,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 116,
                 Sound = SoundList.ButtonA,
-                Hint = "Allow/Disallow Mentor Requests",
+                Hint = "允许/拒绝 师徒请求",
             };
             AllowButton.Click += (o, e) =>
             {
@@ -94,17 +94,17 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 215,
                 Sound = SoundList.ButtonA,
-                Hint = "Add Mentor",
+                Hint = "拜师",
             };
             AddButton.Click += (o, e) =>
             {
                 if (MentorLevel != 0)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You already have a Mentor.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你已经有一个师傅了.", ChatType.System);
                     return;
                 }
 
-                string message = "Please enter the name of the person you would like to be your Mentor.";
+                string message = "请输入你要拜师的人名.";
 
                 MirInputBox inputBox = new MirInputBox(message);
 
@@ -127,17 +127,17 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 218,
                 Sound = SoundList.ButtonA,
-                Hint = "Remove Mentor/Mentee",
+                Hint = "移除 师傅/徒弟",
             };
             RemoveButton.Click += (o, e) =>
             {
                 if (MentorName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你没有师徒关系.", ChatType.System);
                     return;
                 }
 
-                MirMessageBox messageBox = new MirMessageBox(string.Format("Cancelling a Mentorship early will cause a cooldown. Are you sure?"), MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(string.Format("移除师徒关系将会有冷却，你确定?"), MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (oo, ee) => Network.Enqueue(new C.CancelMentor { });
                 messageBox.NoButton.Click += (oo, ee) => { messageBox.Dispose(); };
@@ -181,7 +181,7 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
                 Font = new Font(Settings.FontName, 7F),
                 Visible = false,
-                Text = "ONLINE",
+                Text = "在线",
             };
 
             StudentNameLabel = new MirLabel
@@ -219,7 +219,7 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
                 Font = new Font(Settings.FontName, 7F),
                 Visible = false,
-                Text = "ONLINE",
+                Text = "在线",
             };
 
             MentorLabel = new MirLabel
@@ -232,7 +232,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 7F),
-                Text = "MENTOR",
+                Text = "师傅",
             };
 
             StudentLabel = new MirLabel
@@ -245,7 +245,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 7F),
-                Text = "MENTEE",
+                Text = "徒弟",
             };
 
             MenteeEXPLabel = new MirLabel
@@ -311,7 +311,7 @@ namespace Client.MirScenes.Dialogs
                     StudentOnlineLabel.Visible = false;
 
                 MenteeEXPLabel.Visible = true;
-                MenteeEXPLabel.Text = "MENTEE EXP: " + MenteeEXP;
+                MenteeEXPLabel.Text = "徒弟经验: " + MenteeEXP;
             }
             else
             {

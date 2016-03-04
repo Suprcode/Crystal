@@ -259,7 +259,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(266, 3),
                 Sound = SoundList.ButtonA,
             };
-            helpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage("Quests");
+            helpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage("任务");
 
         }
 
@@ -332,7 +332,7 @@ namespace Client.MirScenes.Dialogs
 
         public void RefreshInterface()
         {
-            _availableQuestLabel.Text = string.Format("List: {0}", Quests.Count);
+            _availableQuestLabel.Text = string.Format("列表: {0}", Quests.Count);
 
             int maxIndex = Quests.Count - Rows.Length;
 
