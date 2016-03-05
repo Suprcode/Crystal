@@ -945,8 +945,8 @@ namespace Client.MirGraphics
 
                 //if (!acurrate || col1 < col0) return true;
 
-                x = p.X;// % 4;
-                y = p.Y;// % 4;
+                //x = p.X;// % 4;
+                //y = p.Y;// % 4;
                 //x *= 2;
 
                 //result = ((Data[index + y] & 1 << x) >> x) != 1 || ((Data[index + y] & 1 << x + 1) >> x + 1) != 1;
