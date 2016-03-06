@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Server.MirEnvir
+namespace Server.MirDatabase
 {
     public class MailInfo
     {
