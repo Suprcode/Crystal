@@ -79,6 +79,7 @@ namespace Server
         //Database
         public static int SaveDelay = 5;
         public static short CredxGold = 30;
+        public static bool UseSQLServer = true;
 
         //Game
         public static List<long> ExperienceList = new List<long>();
