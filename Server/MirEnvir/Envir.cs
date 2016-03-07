@@ -11,6 +11,7 @@ using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
 using S = ServerPackets;
+using Server.Custom;
 
 namespace Server.MirEnvir
 {
@@ -116,6 +117,9 @@ namespace Server.MirEnvir
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
         public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
+
+        //Custom AI Pete107|Petesn00beh
+        public static List<CustomAI> CustomAIList = new List<CustomAI>();
 
         //User DB
         public int NextAccountID, NextCharacterID;
@@ -1821,6 +1825,21 @@ namespace Server.MirEnvir
                 Start();
             })).Start();
         }
+
+        public bool LoadCustomAIs()
+        {
+            for (int i = 0; i < MonsterInfoList.Count; i++)
+            {
+                if (MonsterInfoList[i].AI == 255)
+                {
+                    CustomAI mob = new CustomAI();
+                    mob = mob.LoadCustomAI(MonsterInfoList[i].Name);
+                    if (mob != null && mob.Name.Length > 0)
+                        CustomAIList.Add(mob);
+                }
+            }
+            return true;
+        }
         
         private void StartEnvir()
         {
@@ -1833,6 +1852,8 @@ namespace Server.MirEnvir
             MonsterCount = 0;
 
             LoadDB();
+            if (!LoadCustomAIs())
+                SMain.Enqueue("Failed to load Custom AIs");
 
             for (int i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
@@ -1867,6 +1888,7 @@ namespace Server.MirEnvir
             DefaultNPC = new NPCObject(new NPCInfo() { Name = "DefaultNPC", FileName = Settings.DefaultNPCFilename, IsDefault = true });
             MonsterNPC = new NPCObject(new NPCInfo() { Name = "MonsterNPC", FileName = Settings.MonsterNPCFilename, IsDefault = true });
 
+            SMain.Enqueue(string.Format("{0} Custom AI's have been loaded", CustomAIList.Count));
             SMain.Enqueue("Envir Started.");
         }
         private void StartNetwork()

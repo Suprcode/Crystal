@@ -4294,12 +4294,41 @@ namespace Client.MirScenes.Dialogs
         public MirButton SkillButton;
         public MirLabel LevelLabel, NameLabel, ExpLabel, KeyLabel;
         public ClientMagic Magic;
+        public MirLabel SkillDescriptionLabel;
         public MirAnimatedControl CoolDown;
 
         public MagicButton()
         {
             Size = new Size(231, 33);
+            MouseEnter += (o, e) =>
+            {
+                if (SkillDescriptionLabel.Visible == false)
+                {
+                    SkillDescriptionLabel.Visible = true;
+                    Update(Magic);
+                }
+            };
+            MouseLeave += (o, e) =>
+            {
+                if (SkillDescriptionLabel.Visible == true)
+                    SkillDescriptionLabel.Visible = false;
+            };
 
+            SkillDescriptionLabel = new MirLabel
+            {
+                BackColour = Color.FromArgb(255, 50, 50, 50),
+                Border = true,
+                AutoSize = true,
+                BorderColour = Color.Gray,
+                DrawControlTexture = true,
+                NotControl = true,
+                Parent = this,
+                Opacity = 0.7F,
+                Location = new Point(-150, 15),
+                Visible = false,
+                ForeColour = Color.DarkGoldenrod,
+                Font = new Font("Arial", 8, FontStyle.Bold)
+            };
             SkillButton = new MirButton
             {
                 Index = 0,
@@ -4381,21 +4410,57 @@ namespace Client.MirScenes.Dialogs
             NameLabel.Text = Magic.Spell.ToString();
 
             LevelLabel.Text = Magic.Level.ToString();
+
+            long delay = Magic.Delay;
+            if (Magic.Spell == Spell.FlamingSword)
+                delay = 10000;
+            else if (Magic.Spell == Spell.CounterAttack)
+                delay = 7000;
+            else
+                delay = Magic.Delay;
             switch (Magic.Level)
             {
                 case 0:
+                    SkillDescriptionLabel.Text = string.Format("{0}\nLevel : {1}\nExp : {2}/{3}\nCool-down :{4}\nMP Cost : {5}",
+                                            Magic.Spell,
+                                            Magic.Level,
+                                            Magic.Experience, Magic.Need1,
+                                            Functions.PrintTimeSpanFromMilliSeconds(delay),
+                                            Magic.BaseCost +
+                                            Magic.LevelCost);
                     ExpLabel.Text = string.Format("{0}/{1}", Magic.Experience, Magic.Need1);
                     break;
                 case 1:
+                    SkillDescriptionLabel.Text = string.Format("{0}\nLevel : {1}\nExp : {2}/{3}\nCool-down :{4}\nMP Cost : {5}",
+                                            Magic.Spell,
+                                            Magic.Need2,
+                                            Magic.Experience, Magic.Need2,
+                                            Functions.PrintTimeSpanFromMilliSeconds(delay),
+                                            Magic.BaseCost +
+                                            Magic.LevelCost);
                     ExpLabel.Text = string.Format("{0}/{1}", Magic.Experience, Magic.Need2);
                     break;
                 case 2:
+                    SkillDescriptionLabel.Text = string.Format("{0}\nLevel : {1}\nExp : {2}/{3}\nCool-down :{4}\nMP Cost : {5}",
+                                            Magic.Spell,
+                                            Magic.Level,
+                                            Magic.Experience, Magic.Need3,
+                                            Functions.PrintTimeSpanFromMilliSeconds(delay),
+                                            Magic.BaseCost +
+                                            Magic.LevelCost);
                     ExpLabel.Text = string.Format("{0}/{1}", Magic.Experience, Magic.Need3);
                     break;
                 case 3:
-                    ExpLabel.Text = "-";
+                    SkillDescriptionLabel.Text = string.Format("{0}\nLevel : {1}\nCool-down :{2}\nMP Cost : {3}",
+                        Magic.Spell,
+                        Magic.Level,
+                        Functions.PrintTimeSpanFromMilliSeconds(delay),
+                        Magic.BaseCost +
+                        Magic.LevelCost);
+                    ExpLabel.Text = string.Format("-");
                     break;
             }
+            SkillDescriptionLabel.BringToFront();
 
             if (Magic.Key > 8)
             {

@@ -2969,14 +2969,22 @@ namespace Client.MirScenes
                     switch (p.Type)
                     {
                         case DamageType.Hit: //add damage level colours
-                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            obj.Damages.Add(new Damage("HIT " + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Red : Color.Red, 50));
                             break;
                         case DamageType.Miss:
-                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.GreenYellow : Color.GreenYellow, 50));
                             break;
                         case DamageType.Critical:
-                            obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.Red : Color.Red, 50) { Offset = 15 });
+                            obj.Damages.Add(new Damage("Crit " + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.OrangeRed : Color.OrangeRed, 50));
                             break;
+                        #region Regen Indicators Pete107|Petesn00beh
+                        case DamageType.Heal:
+                            obj.Damages.Add(new Damage("HP + " + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Green : Color.Green, 50));
+                            break;
+                        case DamageType.MPHeal:
+                            obj.Damages.Add(new Damage("MP + " + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.Blue, 50) { Offset = 15 });
+                            break;
+                            #endregion
                     }
 
                 }

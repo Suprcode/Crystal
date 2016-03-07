@@ -655,11 +655,37 @@ namespace Client.MirObjects
 
             if (WingEffect >= 100)
             {
-                switch(WingEffect)
+                switch (WingEffect)
                 {
                     case 100: //Oma King Robe effect
                         Effects.Add(new SpecialEffect(Libraries.Effect, 352, 33, 3600, this, true, false, 0) { Repeat = true });
                         break;
+                    #region Armour Effects Pete107|Petesn00beh
+                    case 101: //Blue Dragon
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1210, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1240, 32, 3200, this, true, false, 1) { Repeat = true, Delay = 500 };
+                        effect.SetStart(CMain.Time + 500);
+                        Effects.Add(effect);
+                        break;
+                    case 102: // Red Dragon
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect2 = new SpecialEffect(Libraries.Effect, 1020, 32, 3200, this, true, false, 1) { Repeat = true, Delay = 500 };
+                        effect2.SetStart(CMain.Time + 500);
+                        Effects.Add(effect2);
+                        break;
+                    case 103: // Mist
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 296, 32, 3600, this, true, false, 1) { Repeat = true });
+                        break;
+                    case 104: // Great Fox Spirit aura
+                        Effects.Add(new SpecialEffect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 107: // Part of blue dragon (the swirling)
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 710, 40, 3000, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 108:
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 760, 94, 5000, this, true, true, 0) { Repeat = true });
+                        break;
+                        #endregion
                 }
             }
 

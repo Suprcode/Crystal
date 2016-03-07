@@ -87,6 +87,14 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
+    <Compile Include="Custom\CustomAI.cs" />
+    <Compile Include="Custom\CustomMobAISettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Custom\CustomMobAISettings.Designer.cs">
+      <DependentUpon>CustomMobAISettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom\MonsterAI.cs" />
     <Compile Include="MirDatabase\MailInfo.cs" />
     <Compile Include="MirDatabase\ConquestInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
