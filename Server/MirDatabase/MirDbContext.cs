@@ -25,5 +25,8 @@ namespace Server.MirDatabase
         public DbSet<RespawnInfo> Respawns { get; set; }
         public DbSet<SafeZoneInfo> SafeZones { get; set; }
 
+        public MirDbContext() :base("MirDatabase")
+        { }
+
     }
 }
