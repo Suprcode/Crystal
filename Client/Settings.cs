@@ -70,9 +70,16 @@ namespace Client
         public static bool DebugMode = false;
 
         //Network
+#if DEBUG
         public static bool UseConfig = true;
         public static string IPAddress = "127.0.0.1";
         public static int Port = 7000;
+#else
+        public static bool UseConfig = false;
+        public static string IPAddress = "120.25.250.25";
+        public static int Port = 6843;
+#endif
+
         public const int TimeOut = 5000;
 
         //Sound
@@ -158,11 +165,11 @@ namespace Client
         public static bool P_Patcher = true;
         public static string P_Host = @""; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
-        public static bool P_NeedLogin = false;
-        public static string P_Login = string.Empty;
-        public static string P_Password = string.Empty;
-        public static string P_ServerName = string.Empty;
-        public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
+        public static bool P_NeedLogin = true;
+        public static string P_Login = "mir";
+        public static string P_Password = "mir";
+        public static string P_ServerName = "C#中文版";
+        public static string P_BrowserAddress = "http://baidu.com/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 

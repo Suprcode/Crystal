@@ -2550,7 +2550,7 @@ namespace Client.MirScenes
             
             if (quest == null) return;
 
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} would like to share a quest with you. Do you accept?", p.SharerName), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} 想跟你分享一个任务. 接受?", p.SharerName), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptQuest { NPCIndex = 0, QuestIndex = quest.Index });
 
@@ -3906,16 +3906,16 @@ namespace Client.MirScenes
         private void DeleteGroup()
         {
             GroupDialog.GroupList.Clear();
-            ChatDialog.ReceiveChat("You have left the group.", ChatType.Group);
+            ChatDialog.ReceiveChat("已离开队伍.", ChatType.Group);
         }
         private void DeleteMember(S.DeleteMember p)
         {
             GroupDialog.GroupList.Remove(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has left the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format("-{0} 已离开队伍.", p.Name), ChatType.Group);
         }
         private void GroupInvite(S.GroupInvite p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to group with {0}?", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("你想跟 {0} 组队吗?", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = false });
@@ -3925,7 +3925,7 @@ namespace Client.MirScenes
         private void AddMember(S.AddMember p)
         {
             GroupDialog.GroupList.Add(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has joined the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format("-{0} 已加入队伍.", p.Name), ChatType.Group);
         }
         private void Revived()
         {
@@ -4057,13 +4057,13 @@ namespace Client.MirScenes
                 switch (buff.Values[0])
                 {
                     case 0:
-                        ChatDialog.ReceiveChat("Mentalstate: Agressive.", ChatType.Hint);
+                        ChatDialog.ReceiveChat("师徒状态: Agressive.", ChatType.Hint);
                         break;
                     case 1:
-                        ChatDialog.ReceiveChat("Mentalstate: Trick shot.", ChatType.Hint);
+                        ChatDialog.ReceiveChat("师徒状态: Trick shot.", ChatType.Hint);
                         break;
                     case 2:
-                        ChatDialog.ReceiveChat("Mentalstate: Group mode.", ChatType.Hint);
+                        ChatDialog.ReceiveChat("师徒状态: Group mode.", ChatType.Hint);
                         break;
                 }
 
@@ -4645,12 +4645,12 @@ namespace Client.MirScenes
         private void GuildNameRequest(S.GuildNameRequest p)
         {
             MirInputBox inputBox = new MirInputBox("请输入一个行会名, 3~20 字符.");
-            inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
-            {
-                string Allowed = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                if (!Allowed.Contains(e.KeyChar))
-                    e.Handled = true;
-            };
+            //inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
+            //{
+            //    string Allowed = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            //    if (!Allowed.Contains(e.KeyChar))
+            //        e.Handled = true;
+            //};
             inputBox.OKButton.Click += (o, e) =>
             {
                 if (inputBox.InputTextBox.Text.Contains('\\'))
@@ -5622,7 +5622,7 @@ namespace Client.MirScenes
             }
             else
             {
-                WedRingName = "Wedding Ring" +
+                WedRingName = "结婚戒指" +
                 "\n" + "W " + HoverItem.Weight + text;
             }
 
@@ -8025,7 +8025,7 @@ namespace Client.MirScenes
                     return who.UserName;
             }
             Network.Enqueue(new C.RequestUserName { UserID = id });
-            UserIdList.Add(new UserId() { Id = id, UserName = "Unknown" });
+            UserIdList.Add(new UserId() { Id = id, UserName = "未知" });
             return "";
         }
 
@@ -10059,7 +10059,7 @@ namespace Client.MirScenes
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
                 case BuffType.Rested:
-                    text = string.Format("Rested\n增加经验 {0}%\n", Values[0]);
+                    text = string.Format("精力充沛\n增加经验 {0}%\n", Values[0]);
                     break;
 
                 //stats
