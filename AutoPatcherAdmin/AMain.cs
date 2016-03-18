@@ -377,6 +377,12 @@ namespace AutoPatcherAdmin
             Upload(new FileInformation { FileName = PatchFileName }, CreateNew());
         }
 
+        private void LocalizeLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SourceLinkLabel.LinkVisited = true;
+            Process.Start("https://github.com/zhzhwcn/mir2/tree/cn-master");
+        }
+
         private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SourceLinkLabel.LinkVisited = true;

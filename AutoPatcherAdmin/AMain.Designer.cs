@@ -50,6 +50,7 @@
             this.ListButton = new System.Windows.Forms.Button();
             this.SourceLinkLabel = new System.Windows.Forms.LinkLabel();
             this.AllowCleanCheckBox = new System.Windows.Forms.CheckBox();
+            this.LocalizeLinkLabel = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // ClientTextBox
@@ -122,7 +123,7 @@
             this.ProcessButton.Name = "ProcessButton";
             this.ProcessButton.Size = new System.Drawing.Size(75, 21);
             this.ProcessButton.TabIndex = 9;
-            this.ProcessButton.Text = "Process";
+            this.ProcessButton.Text = "开始";
             this.ProcessButton.UseVisualStyleBackColor = true;
             this.ProcessButton.Click += new System.EventHandler(this.ProcessButton_Click);
             // 
@@ -147,9 +148,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(13, 153);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(47, 12);
+            this.label5.Size = new System.Drawing.Size(35, 12);
             this.label5.TabIndex = 10;
-            this.label5.Text = "Action:";
+            this.label5.Text = "动作:";
             // 
             // progressBar2
             // 
@@ -172,9 +173,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(12, 217);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(41, 12);
+            this.label7.Size = new System.Drawing.Size(35, 12);
             this.label7.TabIndex = 14;
-            this.label7.Text = "Speed:";
+            this.label7.Text = "速度:";
             // 
             // FileLabel
             // 
@@ -192,7 +193,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(35, 12);
             this.label8.TabIndex = 16;
-            this.label8.Text = "File:";
+            this.label8.Text = "文件:";
             // 
             // SizeLabel
             // 
@@ -210,7 +211,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(35, 12);
             this.label10.TabIndex = 18;
-            this.label10.Text = "Size:";
+            this.label10.Text = "大小:";
             // 
             // ListButton
             // 
@@ -218,7 +219,7 @@
             this.ListButton.Name = "ListButton";
             this.ListButton.Size = new System.Drawing.Size(75, 21);
             this.ListButton.TabIndex = 20;
-            this.ListButton.Text = "Create List";
+            this.ListButton.Text = "建文件列表";
             this.ListButton.UseVisualStyleBackColor = true;
             this.ListButton.Click += new System.EventHandler(this.ListButton_Click);
             // 
@@ -238,16 +239,28 @@
             this.AllowCleanCheckBox.AutoSize = true;
             this.AllowCleanCheckBox.Location = new System.Drawing.Point(99, 107);
             this.AllowCleanCheckBox.Name = "AllowCleanCheckBox";
-            this.AllowCleanCheckBox.Size = new System.Drawing.Size(108, 16);
+            this.AllowCleanCheckBox.Size = new System.Drawing.Size(222, 16);
             this.AllowCleanCheckBox.TabIndex = 22;
-            this.AllowCleanCheckBox.Text = "Allow Clean Up";
+            this.AllowCleanCheckBox.Text = "允许清理(将会删除服务器文件,慎用)";
             this.AllowCleanCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // LocalizeLinkLabel
+            // 
+            this.LocalizeLinkLabel.AutoSize = true;
+            this.LocalizeLinkLabel.Location = new System.Drawing.Point(10, 247);
+            this.LocalizeLinkLabel.Name = "LocalizeLinkLabel";
+            this.LocalizeLinkLabel.Size = new System.Drawing.Size(77, 12);
+            this.LocalizeLinkLabel.TabIndex = 23;
+            this.LocalizeLinkLabel.TabStop = true;
+            this.LocalizeLinkLabel.Text = "汉化:zhzhwcn";
+            this.LocalizeLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LocalizeLinkLabel_LinkClicked);
             // 
             // AMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(396, 268);
+            this.Controls.Add(this.LocalizeLinkLabel);
             this.Controls.Add(this.AllowCleanCheckBox);
             this.Controls.Add(this.SourceLinkLabel);
             this.Controls.Add(this.ListButton);
@@ -302,6 +315,7 @@
         private System.Windows.Forms.Button ListButton;
         private System.Windows.Forms.LinkLabel SourceLinkLabel;
         private System.Windows.Forms.CheckBox AllowCleanCheckBox;
+        private System.Windows.Forms.LinkLabel LocalizeLinkLabel;
     }
 }
 

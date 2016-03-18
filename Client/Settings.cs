@@ -75,9 +75,9 @@ namespace Client
         public static string IPAddress = "127.0.0.1";
         public static int Port = 7000;
 #else
-        public static bool UseConfig = false;
-        public static string IPAddress = "120.25.250.25";
-        public static int Port = 6843;
+        public static bool UseConfig = true;
+        public static string IPAddress = "127.0.0.1";
+        public static int Port = 7000;
 #endif
 
         public const int TimeOut = 5000;
