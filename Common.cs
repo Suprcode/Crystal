@@ -163,7 +163,8 @@ public enum IntelligentCreatureType : byte
     BabyDragon = 7,
     OlympicFlame = 8,
     BabySnowMan = 9,
-    Frog = 10
+    Frog = 10,
+    BabyMonkey = 11
 }
 
 //6 blank mob files
@@ -360,11 +361,15 @@ public enum Monster : ushort
     Tornado = 182, //frames not added
     FlameTiger = 183,
     WingedTigerLord = 184,//FRAMES BROKE
+
+    //Turtle Mobs
     TowerTurtle = 185,
     FinialTurtle = 186,
     TurtleKing = 187,//NEEDS AI
     DarkTurtle = 188,
     LightTurtle = 189,
+
+    //Dark Alt Mobs
     DarkSwordOma = 190,
     DarkAxeOma = 191,
     DarkCrossbowOma = 192,
@@ -391,12 +396,16 @@ public enum Monster : ushort
     GreaterWeaver = 212,
     SpiderWarrior = 213,
     SpiderBarbarian = 214,
+
+    //Hell Cave Mob
     HellSlasher = 215,
     HellPirate = 216,
     HellCannibal = 217,
     HellKeeper = 218,
     HellBolt = 219,
     WitchDoctor = 220,
+
+    //Frost Cave Mob
     ManectricHammer = 221,
     ManectricClub = 222,
     ManectricClaw = 223,
@@ -409,6 +418,7 @@ public enum Monster : ushort
     FrozenDoor = 230,
     IcePillar = 231,
     FrostYeti = 232,
+
     ManectricSlave = 233,
     TrollHammer = 234,
     TrollBomber = 235,
@@ -611,6 +621,7 @@ public enum Monster : ushort
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
     Frog = 10010,//unknown
+    Monkey = 10011,//unknown
 }
 
 public enum MirAction : byte

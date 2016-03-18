@@ -128,6 +128,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
+                case Monster.Monkey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -962,6 +963,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
+                case Monster.Monkey:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -1166,6 +1168,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
+                case Monster.Monkey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                     break;
@@ -2499,6 +2502,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
+                case Monster.Monkey:
                     SoundManager.PlaySound(petSound);
                     break;
             }
@@ -3066,6 +3070,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
+                case Monster.Monkey:
                     yOffset = -20;
                     break;
             }
@@ -3137,6 +3142,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
+                case Monster.Monkey:
                     yOffset = 20;
                     break;
             }

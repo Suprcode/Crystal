@@ -2451,6 +2451,18 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(208, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(286, 1, 6, 1000));
 
+            //11 - Monkey
+            HelperPets.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 8, 0, 100));         // pickup??
+            frame.Frames.Add(MirAction.Attack2, new Frame(160, 8, 0, 100));         // sleep
+            frame.Frames.Add(MirAction.Attack3, new Frame(224, 9, 0, 100));         //balance
+            frame.Frames.Add(MirAction.Attack4, new Frame(296, 9, 0, 100));         //backflip
+
+            frame.Frames.Add(MirAction.Die, new Frame(224, 8, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(304, 1, 8, 1000));
+
             #endregion
 
             /*
