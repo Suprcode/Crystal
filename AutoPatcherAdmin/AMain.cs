@@ -53,7 +53,7 @@ namespace AutoPatcherAdmin
                         ParseOld(reader);
                 }
 
-                ActionLabel.Text = "Checking Files...";
+                ActionLabel.Text = "正在检查文件...";
                 Refresh();
                 
                 CheckFiles();
@@ -83,7 +83,7 @@ namespace AutoPatcherAdmin
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-                ActionLabel.Text = "Error...";
+                ActionLabel.Text = "错误...";
             }
 
         }
@@ -98,12 +98,12 @@ namespace AutoPatcherAdmin
 
                 Upload(new FileInformation {FileName = PatchFileName}, CreateNew());
                 UploadList = null;
-                ActionLabel.Text = string.Format("Complete...");
+                ActionLabel.Text = string.Format("已完成...");
                 ProcessButton.Enabled = true;
                 return;
             }
 
-            ActionLabel.Text = string.Format("Uploading... Files: {0}, Total Size: {1:#,##0}MB (Uncompressed)", UploadList.Count, (_totalBytes - _completedBytes)/1048576);
+            ActionLabel.Text = string.Format("上传中... 文件: {0}, 总大小: {1:#,##0}MB (未压缩)", UploadList.Count, (_totalBytes - _completedBytes)/1048576);
 
             progressBar1.Value = (int) (_completedBytes*100/_totalBytes) > 100 ? 100 : (int) (_completedBytes*100/_totalBytes);
 
@@ -258,9 +258,9 @@ namespace AutoPatcherAdmin
 
                         if (info.FileName == PatchFileName)
                         {
-                            FileLabel.Text = "Complete...";
-                            SizeLabel.Text = "Complete...";
-                            SpeedLabel.Text = "Complete...";
+                            FileLabel.Text = "已完成...";
+                            SizeLabel.Text = "已完成...";
+                            SpeedLabel.Text = "已完成...";
                             return;
                         }
 

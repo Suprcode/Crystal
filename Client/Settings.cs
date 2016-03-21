@@ -163,13 +163,13 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_Host = @"ftp://160.16.69.9"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = true;
         public static string P_Login = "mir";
         public static string P_Password = "mir";
         public static string P_ServerName = "C#中文版";
-        public static string P_BrowserAddress = "http://baidu.com/";
+        public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 
