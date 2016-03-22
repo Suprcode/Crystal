@@ -98,13 +98,27 @@ namespace Server.MirObjects.Monsters
 
                 if (Envir.Random.Next(8) == 0)
                 {
-                    Target.ApplyPoison(new Poison
+                    if (Info.Effect == 0)
                     {
-                        Owner = this,
-                        Duration = 5,
-                        PType = PoisonType.Slow,
-                        TickSpeed = 1000,
-                    }, this);
+                        Target.ApplyPoison(new Poison
+                        {
+                            Owner = this,
+                            Duration = 5,
+                            PType = PoisonType.Bleeding,
+                            TickSpeed = 1000,
+                        }, this);
+
+                    }
+                    else if (Info.Effect == 1)
+                    {
+                        Target.ApplyPoison(new Poison
+                        {
+                            Owner = this,
+                            Duration = 5,
+                            PType = PoisonType.Slow,
+                            TickSpeed = 1000,
+                        }, this);
+                    }
                 }
             }
 

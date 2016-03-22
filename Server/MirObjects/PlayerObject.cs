@@ -9245,7 +9245,7 @@ namespace Server.MirObjects
                 Music = CurrentMap.Info.Music
             });
 
-            if (effects) Enqueue(new S.TeleportIn());
+            if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
             if (TradePartner != null) TradeCancel();
 
@@ -9425,7 +9425,7 @@ namespace Server.MirObjects
             if (Dead || attacker.Master == this || GMGameMaster) return false;
             if (attacker.Info.AI == 6 || attacker.Info.AI == 58) return PKPoints >= 200;
             if (attacker.Master == null) return true;
-            if (InSafeZone || attacker.Master.InSafeZone) return false;
+            if (InSafeZone || attacker.InSafeZone || attacker.Master.InSafeZone) return false;
 
             if (LastHitter != attacker.Master && attacker.Master.LastHitter != this)
             {

@@ -250,7 +250,7 @@ namespace Client.MirScenes.Dialogs
         public ShortcutPage2()
         {
             Shortcuts = new List<ShortcutInfo>();
-            Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.ChangePetmode), "Tooggle pet attack pet"));
+            Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.ChangePetmode), "Toggle pet attack pet"));
             //Shortcuts.Add(new ShortcutInfo("Ctrl + F", "Change the font in the chat box"));
             Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.ChangeAttackmode), "Toggle player attack mode"));
             Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.AttackmodePeace), "Peace Mode - Attack monsters only"));
@@ -268,6 +268,8 @@ namespace Client.MirScenes.Dialogs
             Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.Screenshot), "Screen Capture"));
             Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.Fishing), "Open / Close fishing window"));
             Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.Mentor), "Mentor window (open / close)"));
+            Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.CreaturePickup), "Creature Pickup (Multi Mouse Target)"));
+            Shortcuts.Add(new ShortcutInfo(CMain.InputKeys.GetKey(KeybindOptions.CreatureAutoPickup), "Creature Pickup (Single Mouse Target)"));
 
             LoadKeyBinds();
         }
@@ -293,7 +295,7 @@ namespace Client.MirScenes.Dialogs
 
         public ShortcutInfo(string shortcut, string info)
         {
-            Shortcut = shortcut;
+            Shortcut = shortcut.Replace("\n", " + ");
             Information = info;
         }
     }

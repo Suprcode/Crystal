@@ -88,7 +88,7 @@ namespace Server.MirObjects.Monsters
 
         public override void ChangeHP(int amount)
         {
-            //make it immune to green poison lol
+            //make it immune to green poison
         }
     }
 }

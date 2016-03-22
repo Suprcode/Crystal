@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using Server.MirDatabase;
 using S = ServerPackets;
+using System.Drawing;
+using Server.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
     public class TurtleKing : MonsterObject
     {
-        public byte AttackRange = 3;
+        public byte AttackRange = 5;
         private byte _stage = 7;
 
         protected internal TurtleKing(MonsterInfo info)
@@ -25,15 +27,14 @@ namespace Server.MirObjects.Monsters
         protected override void ProcessAI()
         {
             if (Dead) return;
-            
+
             if (MaxHP >= 7)
             {
-                byte stage = (byte)(HP / (MaxHP / 2));
+                byte stage = (byte)(HP / (MaxHP / 7));
 
                 if (stage < _stage) SpawnSlaves();
                 _stage = stage;
             }
-
 
             base.ProcessAI();
         }
@@ -47,88 +48,81 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1); //CurrentLocation == Target.CurrentLocation || 
 
-            if (!ranged)
+            if (Envir.Random.Next(10) > 3)
             {
-                if (Envir.Random.Next(2) > 0)
+                if (!ranged)
                 {
-                    base.Attack();
+                    switch (Envir.Random.Next(2))
+                    {
+                        default:
+                            base.Attack();
+                            break;
+                        case 1:
+                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                            Attack1();
+                            break;
+                    }
+
+                    ShockTime = 0;
+                    ActionTime = Envir.Time + 300;
+                    AttackTime = Envir.Time + AttackSpeed;
                 }
                 else
                 {
-                    if (Envir.Random.Next(2) > 0)
+                    if (!Functions.InRange(CurrentLocation, Target.CurrentLocation, 3) && Envir.Random.Next(5) == 0)
                     {
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                        Attack1();
+                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
+                        Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+                        Target.Teleport(CurrentMap, target, true, 6);
+                    }
+
+                    else if (!Functions.InRange(CurrentLocation, Target.CurrentLocation, 3) && Envir.Random.Next(5) == 0)
+                    {
+                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+
+                        Point target = Functions.PointMove(Target.CurrentLocation, Target.Direction, 1);
+
+                        Teleport(CurrentMap, target, true, 6);
                     }
                     else
                     {
-                        if (Envir.Random.Next(2) > 0)
-                        {
-                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
-                            Attack2();
-                        }
-                        else
-                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 3 });
-                            Attack3(); 
-                        }
+                        MoveTo(Target.CurrentLocation);
+                    }
                 }
-
-                int damage = GetAttackPower(MinDC, MaxDC);
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,});
-                if (damage == 0) return;
-
-                Target.Attacked(this, damage, DefenceType.ACAgility);
-
-                ShockTime = 0;
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
-               
             }
             else
             {
-                if (Envir.Random.Next(2) == 0)
-                {
-                    MoveTo(Target.CurrentLocation);
-                }
-                else
-                {                    
-                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                    int damage = GetAttackPower(MinMC, MaxMC);
-                    if (damage == 0) return;
-                    
-                    ActionTime = Envir.Time + 300;
-                    AttackTime = Envir.Time + AttackSpeed;
-                    
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    ActionList.Add(action);
+                List<MapObject> targets = FindAllTargets(ranged ? AttackRange : 2, CurrentLocation);
+                if (targets.Count == 0) return;
+
+                int damage = GetAttackPower(MinDC, MaxDC);
+                if (damage == 0) return;
+
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    Target = targets[i];
+                    Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.TurtleKing });
+                    if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
+
+                    if (Envir.Random.Next(5) == 0)
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);
+                    if (Envir.Random.Next(15) == 0)
+                        Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
                 }
             }
         }
+        
         private void Attack1()
         {
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
             
-            Target.Attacked(this, damage, DefenceType.ACAgility);
-        }
-        private void Attack2()
-        {
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
-
-            Target.Attacked(this, damage, DefenceType.ACAgility);
-        }
-        private void Attack3()
-        {
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
-
             Target.Attacked(this, damage, DefenceType.ACAgility);
 
             if (Envir.Random.Next(8) == 0)
@@ -136,6 +130,7 @@ namespace Server.MirObjects.Monsters
                 Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 1000, }, this);
             }
         }
+
         private void SpawnSlaves()
         {
             int count = Math.Min(8, 30 - SlaveList.Count);

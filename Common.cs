@@ -335,75 +335,75 @@ public enum Monster : ushort
     TailedLion = 157,
 
     Behemoth = 158,
-    DarkDevourer = 159,//LIB BROKE??
-    PoisonHugger = 160, //DONE
+        DarkDevourer = 159,//LIB BROKE??
+    PoisonHugger = 160, //done
     Hugger = 161,
-    MutatedHugger = 162,//BROKE
-    DreamDevourer = 163,//LIB BROKE??
-    Treasurebox = 164,
-    SnowPile = 165,
-    Snowman = 166,
-    SnowTree = 167,
-    GiantEgg = 168,
-    RedTurtle = 169,
-    GreenTurtle = 170,
-    BlueTurtle = 171,
-    Catapult = 172, //not added frames //special 3 states in 1 
-    SabukWallSection = 173, //not added frames
-    NammandWallSection = 174, //not added frames
-    SiegeRepairman = 175, //not added frames
-    BlueSanta = 176,//FRAMES BROKE
-    BattleStandard = 177,
-    ArcherGuard2 = 178,
-    RedYimoogi = 179,
-    LionRiderMale = 180, //frames not added
-    LionRiderFemale = 181, //frames not added
-    Tornado = 182, //frames not added
+        MutatedHugger = 162,//BROKE
+        DreamDevourer = 163,//LIB BROKE??
+    Treasurebox = 164,//done
+    SnowPile = 165,//done
+    Snowman = 166,//done
+    SnowTree = 167,//done
+    GiantEgg = 168,//done
+    RedTurtle = 169,//done
+    GreenTurtle = 170,//done
+    BlueTurtle = 171,//done
+        Catapult = 172, //not added frames //special 3 states in 1 
+        SabukWallSection = 173, //not added frames
+        NammandWallSection = 174, //not added frames
+        SiegeRepairman = 175, //not added frames
+    BlueSanta = 176,//done
+    BattleStandard = 177,//done
+    ArcherGuard2 = 178,//done
+    RedYimoogi = 179,//done
+        LionRiderMale = 180, //frames not added
+        LionRiderFemale = 181, //frames not added
+    Tornado = 182,//done
     FlameTiger = 183,
-    WingedTigerLord = 184,//FRAMES BROKE
+        WingedTigerLord = 184,//FRAMES BROKE
 
     //Turtle Mobs
-    TowerTurtle = 185,
-    FinialTurtle = 186,
-    TurtleKing = 187,//NEEDS AI
-    DarkTurtle = 188,
-    LightTurtle = 189,
+    TowerTurtle = 185,//done
+    FinialTurtle = 186,//done
+    TurtleKing = 187,//done
+    DarkTurtle = 188,//done
+    LightTurtle = 189,//done
 
     //Dark Alt Mobs
-    DarkSwordOma = 190,
-    DarkAxeOma = 191,
-    DarkCrossbowOma = 192,
-    DarkWingedOma = 193,
-    BoneWhoo = 194,
-    DarkSpider = 195,
-    ViscusWorm = 196,
-    ViscusCrawler = 197,
-    CrawlerLave = 198,
-    DarkYob = 199,
+    DarkSwordOma = 190,//done
+    DarkAxeOma = 191,//done
+    DarkCrossbowOma = 192,//done
+    DarkWingedOma = 193,//done
+    BoneWhoo = 194,//done
+    DarkSpider = 195,//done
+    ViscusWorm = 196,//done
+    ViscusCrawler = 197,//done
+    CrawlerLave = 198,//done
+    DarkYob = 199,//done
 
     FlamingMutant = 200,
     StoningStatue = 201,
     FlyingStatue = 202,
-    ValeBat = 203,
-    Weaver = 204,
-    VenomWeaver = 205,
-    CrackingWeaver = 206,
-    ArmingWeaver = 207,
-    CrystalWeaver = 208,
-    FrozenZumaStatue = 209,
-    FrozenZumaGuardian = 210,
-    FrozenRedZuma = 211,
-    GreaterWeaver = 212,
+    ValeBat = 203,//done
+    Weaver = 204,//done
+    VenomWeaver = 205,//done
+    CrackingWeaver = 206,//done
+    ArmingWeaver = 207,//done
+    CrystalWeaver = 208,//done
+    FrozenZumaStatue = 209,//done
+    FrozenZumaGuardian = 210,//done
+    FrozenRedZuma = 211,//done
+    GreaterWeaver = 212,//done
     SpiderWarrior = 213,
     SpiderBarbarian = 214,
 
     //Hell Cave Mob
-    HellSlasher = 215,
-    HellPirate = 216,
-    HellCannibal = 217,
-    HellKeeper = 218,
-    HellBolt = 219,
-    WitchDoctor = 220,
+    HellSlasher = 215,//done
+    HellPirate = 216,//done
+    HellCannibal = 217,//done
+    HellKeeper = 218, //done
+    HellBolt = 219, //done
+    WitchDoctor = 220,//done
 
     //Frost Cave Mob
     ManectricHammer = 221,
@@ -639,6 +639,7 @@ public enum MirAction : byte
     Attack2,
     Attack3,
     Attack4,
+    Attack5,
     AttackRange1,
     AttackRange2,
     AttackRange3,
@@ -1146,7 +1147,8 @@ public enum SpellEffect : byte
     AwakeningFail,
     AwakeningMiss,
     AwakeningHit,
-    StormEscape
+    StormEscape,
+    TurtleKing
 }
 
 public enum BuffType : byte

@@ -145,8 +145,10 @@ namespace Server.MirObjects.Monsters
             return 1;
         }
 
-        //public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false) { }
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
+        {
 
+        }
         protected override void ProcessTarget()
         {
             if (!CanAttack) return;
@@ -157,12 +159,12 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
 
             Broadcast(new S.ObjectAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
+
             for (int i = 0; i < targets.Count; i++)
             {
                 Target = targets[i];
                 Attack();
             }
-
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -170,28 +172,35 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            
-
             if (Envir.Random.Next(3) > 0)
             {
-                base.Attack();
+                ShockTime = 0;
+
+                if (!Target.IsAttackTarget(this))
+                {
+                    Target = null;
+                    return;
+                }
+
+                ActionTime = Envir.Time + 300;
+                AttackTime = Envir.Time + AttackSpeed;
+
+                int damage = GetAttackPower(MinDC, MaxDC);
+
+                if (damage == 0) return;
+
+                Target.Attacked(this, damage);
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.HalfMoon, Type = 1 });
                 Attack2();
-            }
-
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
-
-            Target.Attacked(this, damage, DefenceType.MAC);
-
-            Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.RedMoonEvil });
-            
+            }   
         }
+
         private void Attack2()
         {
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
             int damage = GetAttackPower(MinMC, MaxMC);
             if (damage == 0) return;
 

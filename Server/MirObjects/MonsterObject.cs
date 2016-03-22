@@ -23,7 +23,7 @@ namespace Server.MirObjects
                 case 3:
                     return new Tree(info);
                 case 4:
-                    return new SpittingSpider(info); //Spider
+                    return new SpittingSpider(info);
                 case 5:
                     return new CannibalPlant(info);
                 case 6:
@@ -153,12 +153,18 @@ namespace Server.MirObjects
                     return new Football(info);    
                     
                 //unfinished START      
-                case 69:
+                case 248:
                     return new Behemoth(info);
-                case 70:
+                case 249:
                     return new DreamDevourer(info);
-                case 71:
-                    return new FlameTiger(info);
+                case 253:
+                    return new FlamingMutant(info);
+                case 254:
+                    return new StoningStatue(info);
+                case 255:
+                    return new ManectricClaw(info);
+                //unfinished END
+
                 case 72:
                     return new FinialTurtle(info);
                 case 73:
@@ -166,16 +172,15 @@ namespace Server.MirObjects
                 case 74:
                     return new LightTurtle(info);
                 case 75:
-                    return new FlamingMutant(info);
+                    return new WitchDoctor(info);
                 case 76:
-                    return new StoningStatue(info);
+                    return new HellSlasher(info);
                 case 77:
                     return new HellPirate(info);
                 case 78:
-                    return new HellKeeper(info);
+                    return new HellCannibal(info);
                 case 79:
-                    return new ManectricClaw(info);
-                //unfinished END
+                    return new HellKeeper(info);
 
                 case 80:
                     return new ConquestArcher(info);
@@ -183,6 +188,7 @@ namespace Server.MirObjects
                     return new Gate(info);
                 case 82:
                     return new Wall(info);
+
 
                 case 200://custom
                     return new Runaway(info);
@@ -266,6 +272,8 @@ namespace Server.MirObjects
                     case 81:
                     case 82:
                         return int.MaxValue;
+                    case 252:
+                        return 5000;
                     default:
                         return 180000;
                 }
@@ -1967,7 +1975,7 @@ namespace Server.MirObjects
             {
                 MonsterObject ob = attacker.Pets[i];
 
-                if (IsAttackTarget(ob)) ob.Target = this;
+                if (IsAttackTarget(ob) && (ob.Target == null)) ob.Target = this;
             }
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);

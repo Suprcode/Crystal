@@ -54,20 +54,14 @@ namespace Server.MirObjects.Monsters
                     }
                 }
 
-                int damage = GetAttackPower(MinDC, MaxDC);
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,});
-                if (damage == 0) return;
-
-                Target.Attacked(this, damage, DefenceType.ACAgility);
-
                 ShockTime = 0;
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
-                if (Envir.Random.Next(15) == 0)
-                    {
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Bleeding, TickSpeed = 1000 }, this);
-                    }
 
+                if (Envir.Random.Next(15) == 0)
+                {
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Bleeding, TickSpeed = 1000 }, this);
+                }
             }
             else
             {
@@ -77,34 +71,34 @@ namespace Server.MirObjects.Monsters
                 }
                 else
                 {
-                    if (Envir.Random.Next(2) > 0)
-                    {
-                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                        int damage = GetAttackPower(MinMC, MaxMC);
-                        if (damage == 0) return;
+                    //if (Envir.Random.Next(2) > 0)
+                    //{
+                    //    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                    //    int damage = GetAttackPower(MinMC, MaxMC);
+                    //    if (damage == 0) return;
 
-                        ActionTime = Envir.Time + 300;
-                        AttackTime = Envir.Time + AttackSpeed;
+                    //    ActionTime = Envir.Time + 300;
+                    //    AttackTime = Envir.Time + AttackSpeed;
 
-                        int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                    //    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                        ActionList.Add(action);
-                    }
-                    else
-                    {
-                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                        int damage = GetAttackPower(MinMC, MaxMC);
-                        if (damage == 0) return;
+                    //    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                    //    ActionList.Add(action);
+                    //}
+                    //else
+                    //{
+                    //    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+                    //    int damage = GetAttackPower(MinMC, MaxMC);
+                    //    if (damage == 0) return;
 
-                        ActionTime = Envir.Time + 300;
-                        AttackTime = Envir.Time + AttackSpeed;
+                    //    ActionTime = Envir.Time + 300;
+                    //    AttackTime = Envir.Time + AttackSpeed;
 
-                        int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                    //    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                        ActionList.Add(action);
-                    }
+                    //    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                    //    ActionList.Add(action);
+                    //}
                 }
             }
         }
@@ -117,15 +111,30 @@ namespace Server.MirObjects.Monsters
         }
         private void Attack2()
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
+            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
 
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+            Cell cell = CurrentMap.GetCell(target);
 
-            if (Envir.Random.Next(8) == 0)
+            if (cell.Objects != null)
             {
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                for (int o = 0; o < cell.Objects.Count; o++)
+                {
+                    MapObject t = cell.Objects[o];
+                    if (t == null || t.Race != ObjectType.Player) continue;
+
+                    if (t.IsAttackTarget(this))
+                    {
+                        t.Pushed(this, Direction, 4);
+
+                        if (Envir.Random.Next(3) == 0)
+                        {
+                            t.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                        }
+                    }
+                    break;
+                }
             }
+            
         }
 
     }
