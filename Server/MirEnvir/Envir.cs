@@ -317,7 +317,7 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.金刚不坏)) MagicInfoList.Add(new MagicInfo { Name = "金刚不坏", Spell = Spell.金刚不坏, Icon = 80, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 1560, Need2 = 2200, Need3 = 3000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
 
             //Wizard
-            if (!MagicExists(Spell.FireBall)) MagicInfoList.Add(new MagicInfo { Name = "FireBall", Spell = Spell.FireBall, Icon = 0, Level1 = 7, Level2 = 9, Level3 = 11, Need1 = 200, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, MPowerBase = 8, PowerBase = 2, Range = 9 });
+            if (!MagicExists(Spell.火球术)) MagicInfoList.Add(new MagicInfo { Name = "FireBall", Spell = Spell.火球术, Icon = 0, Level1 = 7, Level2 = 9, Level3 = 11, Need1 = 200, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, MPowerBase = 8, PowerBase = 2, Range = 9 });
             if (!MagicExists(Spell.Repulsion)) MagicInfoList.Add(new MagicInfo { Name = "Repulsion", Spell = Spell.Repulsion, Icon = 7, Level1 = 12, Level2 = 15, Level3 = 19, Need1 = 500, Need2 = 1300, Need3 = 2200, BaseCost = 2, LevelCost = 2, Range = 0, MPowerBase = 4});
             if (!MagicExists(Spell.ElectricShock)) MagicInfoList.Add(new MagicInfo { Name = "ElectricShock", Spell = Spell.ElectricShock, Icon = 19, Level1 = 13, Level2 = 18, Level3 = 24, Need1 = 530, Need2 = 1100, Need3 = 2200, BaseCost = 3, LevelCost = 1, Range = 9 });
             if (!MagicExists(Spell.GreatFireBall)) MagicInfoList.Add(new MagicInfo { Name = "GreatFireBall", Spell = Spell.GreatFireBall, Icon = 4, Level1 = 15, Level2 = 18, Level3 = 21, Need1 = 2000, Need2 = 2700, Need3 = 3500, BaseCost = 5, LevelCost = 1, MPowerBase = 6, PowerBase = 10, Range = 9 });
@@ -420,38 +420,38 @@ namespace Server.MirEnvir
         {
             if (Settings.EnforceDBChecks)
             {
-                if (StartPoints.Count == 0) return "Cannot start server without start points";
+                if (StartPoints.Count == 0) return "不能在没有出生点的情况下启动服务器";
 
-                if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName;
-                if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName;
-                if (GetMonsterInfo(Settings.BugBatName, true) == null) return "Cannot start server without mob: " + Settings.BugBatName;
-                if (GetMonsterInfo(Settings.Zuma1, true) == null) return "Cannot start server without mob: " + Settings.Zuma1;
-                if (GetMonsterInfo(Settings.Zuma2, true) == null) return "Cannot start server without mob: " + Settings.Zuma2;
-                if (GetMonsterInfo(Settings.Zuma3, true) == null) return "Cannot start server without mob: " + Settings.Zuma3;
-                if (GetMonsterInfo(Settings.Zuma4, true) == null) return "Cannot start server without mob: " + Settings.Zuma4;
-                if (GetMonsterInfo(Settings.Zuma5, true) == null) return "Cannot start server without mob: " + Settings.Zuma5;
-                if (GetMonsterInfo(Settings.Zuma6, true) == null) return "Cannot start server without mob: " + Settings.Zuma6;
-                if (GetMonsterInfo(Settings.Zuma7, true) == null) return "Cannot start server without mob: " + Settings.Zuma7;
-                if (GetMonsterInfo(Settings.Turtle1, true) == null) return "Cannot start server without mob: " + Settings.Turtle1;
-                if (GetMonsterInfo(Settings.Turtle2, true) == null) return "Cannot start server without mob: " + Settings.Turtle2;
-                if (GetMonsterInfo(Settings.Turtle3, true) == null) return "Cannot start server without mob: " + Settings.Turtle3;
-                if (GetMonsterInfo(Settings.Turtle4, true) == null) return "Cannot start server without mob: " + Settings.Turtle4;
-                if (GetMonsterInfo(Settings.Turtle5, true) == null) return "Cannot start server without mob: " + Settings.Turtle5;
-                if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster1;
-                if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster2;
-                if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster3;
-                if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster4;
-                if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return "Cannot start server without mob: " + Settings.WhiteSnake;
-                if (GetMonsterInfo(Settings.AngelName, true) == null) return "Cannot start server without mob: " + Settings.AngelName;
-                if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return "Cannot start server without mob: " + Settings.BombSpiderName;
-                if (GetMonsterInfo(Settings.CloneName, true) == null) return "Cannot start server without mob: " + Settings.CloneName;
-                if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return "Cannot start server without mob: " + Settings.AssassinCloneName;
-                if (GetMonsterInfo(Settings.VampireName, true) == null) return "Cannot start server without mob: " + Settings.VampireName;
-                if (GetMonsterInfo(Settings.ToadName, true) == null) return "Cannot start server without mob: " + Settings.ToadName;
-                if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "Cannot start server without mob: " + Settings.SnakeTotemName;
-                if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "Cannot start server without mob: " + Settings.FishingMonster;
+                if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "不能启动缺少怪物: " + Settings.SkeletonName;
+                if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "不能启动缺少怪物: " + Settings.ShinsuName;
+                if (GetMonsterInfo(Settings.BugBatName, true) == null) return "不能启动缺少怪物: " + Settings.BugBatName;
+                if (GetMonsterInfo(Settings.Zuma1, true) == null) return "不能启动缺少怪物: " + Settings.Zuma1;
+                if (GetMonsterInfo(Settings.Zuma2, true) == null) return "不能启动缺少怪物: " + Settings.Zuma2;
+                if (GetMonsterInfo(Settings.Zuma3, true) == null) return "不能启动缺少怪物: " + Settings.Zuma3;
+                if (GetMonsterInfo(Settings.Zuma4, true) == null) return "不能启动缺少怪物: " + Settings.Zuma4;
+                if (GetMonsterInfo(Settings.Zuma5, true) == null) return "不能启动缺少怪物: " + Settings.Zuma5;
+                if (GetMonsterInfo(Settings.Zuma6, true) == null) return "不能启动缺少怪物: " + Settings.Zuma6;
+                if (GetMonsterInfo(Settings.Zuma7, true) == null) return "不能启动缺少怪物: " + Settings.Zuma7;
+                if (GetMonsterInfo(Settings.Turtle1, true) == null) return "不能启动缺少怪物: " + Settings.Turtle1;
+                if (GetMonsterInfo(Settings.Turtle2, true) == null) return "不能启动缺少怪物: " + Settings.Turtle2;
+                if (GetMonsterInfo(Settings.Turtle3, true) == null) return "不能启动缺少怪物: " + Settings.Turtle3;
+                if (GetMonsterInfo(Settings.Turtle4, true) == null) return "不能启动缺少怪物: " + Settings.Turtle4;
+                if (GetMonsterInfo(Settings.Turtle5, true) == null) return "不能启动缺少怪物: " + Settings.Turtle5;
+                if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster1;
+                if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster2;
+                if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster3;
+                if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster4;
+                if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return "不能启动缺少怪物: " + Settings.WhiteSnake;
+                if (GetMonsterInfo(Settings.AngelName, true) == null) return "不能启动缺少怪物: " + Settings.AngelName;
+                if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return "不能启动缺少怪物: " + Settings.BombSpiderName;
+                if (GetMonsterInfo(Settings.CloneName, true) == null) return "不能启动缺少怪物: " + Settings.CloneName;
+                if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return "不能启动缺少怪物: " + Settings.AssassinCloneName;
+                if (GetMonsterInfo(Settings.VampireName, true) == null) return "不能启动缺少怪物: " + Settings.VampireName;
+                if (GetMonsterInfo(Settings.ToadName, true) == null) return "不能启动缺少怪物: " + Settings.ToadName;
+                if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "不能启动缺少怪物: " + Settings.SnakeTotemName;
+                if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "不能启动缺少怪物: " + Settings.FishingMonster;
 
-                if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
+                if (GetItemInfo(Settings.RefineOreName) == null) return "不能启动缺少物品: " + Settings.RefineOreName;
             }
 
             //add intelligent creature checks?
@@ -630,7 +630,7 @@ namespace Server.MirEnvir
                             userTime = Time + Settings.Minute * 5;
                             Broadcast(new S.Chat
                                 {
-                                    Message = string.Format("Online Players: {0}", Players.Count),
+                                    Message = string.Format("在线玩家: {0}", Players.Count),
                                     Type = ChatType.Hint
                                 });
                         }
@@ -1471,7 +1471,7 @@ namespace Server.MirEnvir
                     DropInfo drop = DropInfo.FromLine(lines[j]);
                     if (drop == null)
                     {
-                        SMain.Enqueue(string.Format("Could not load fishing drop: {0}", lines[j]));
+                        SMain.Enqueue(string.Format("不能加载钓鱼掉率: {0}", lines[j]));
                         continue;
                     }
 
@@ -1514,7 +1514,7 @@ namespace Server.MirEnvir
                 DropInfo drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    SMain.Enqueue(string.Format("Could not load Awakening drop: {0}", lines[i]));
+                    SMain.Enqueue(string.Format("不能加载觉醒掉率: {0}", lines[i]));
                     continue;
                 }
 
@@ -1816,7 +1816,7 @@ namespace Server.MirEnvir
         {
             (new Thread(() =>
             {
-                SMain.Enqueue("Server rebooting...");
+                SMain.Enqueue("服务器重启中...");
                 Stop();
                 Start();
             })).Start();
@@ -1836,7 +1836,7 @@ namespace Server.MirEnvir
 
             for (int i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
-            SMain.Enqueue(string.Format("{0} Maps Loaded.", MapInfoList.Count));
+            SMain.Enqueue(string.Format("{0} 个地图被加载.", MapInfoList.Count));
 
             for (int i = 0; i < ItemInfoList.Count; i++)
             {
@@ -1851,7 +1851,7 @@ namespace Server.MirEnvir
             LoadAwakeningMaterials();
             LoadStrongBoxDrops();
             LoadBlackStoneDrops();
-            SMain.Enqueue("Drops Loaded.");
+            SMain.Enqueue("已经加载掉率.");
 
             if (DragonInfo.Enabled)
             {
@@ -1889,7 +1889,7 @@ namespace Server.MirEnvir
                 _StatusPort.Start();
                 _StatusPort.BeginAcceptTcpClient(StatusConnection, null);
             }
-            SMain.Enqueue("Network Started.");
+            SMain.Enqueue("网络已经启动.");
 
             //FixGuilds();
         }
@@ -1954,7 +1954,7 @@ namespace Server.MirEnvir
 
 
             StatusConnections.Clear();
-            SMain.Enqueue("Network Stopped.");
+            SMain.Enqueue("网络已停止.");
         }
 
         private void CleanUp()
@@ -2216,7 +2216,7 @@ namespace Server.MirEnvir
                 if (account.WrongPasswordCount++ >= 5)
                 {
                     account.Banned = true;
-                    account.BanReason = "Too many Wrong Login Attempts.";
+                    account.BanReason = "错误次数太多.";
                     account.ExpiryDate = DateTime.Now.AddMinutes(2);
 
                     c.Enqueue(new ServerPackets.LoginBanned
@@ -2858,7 +2858,7 @@ namespace Server.MirEnvir
             }
 
             ResetGS = false;
-            SMain.Enqueue("Gameshop Purchase Logs Cleared.");
+            SMain.Enqueue("商城交易记录已清除.");
 
         }
 

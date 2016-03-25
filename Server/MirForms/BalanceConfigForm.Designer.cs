@@ -444,7 +444,7 @@
             this.groupBox1.Size = new System.Drawing.Size(200, 468);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Base Stats";
+            this.groupBox1.Text = "基础属性";
             // 
             // label34
             // 
@@ -1006,7 +1006,7 @@
             this.CanFreezecheckBox.Name = "CanFreezecheckBox";
             this.CanFreezecheckBox.Size = new System.Drawing.Size(72, 16);
             this.CanFreezecheckBox.TabIndex = 2;
-            this.CanFreezecheckBox.Text = "可以麻痹";
+            this.CanFreezecheckBox.Text = "可以减速";
             this.CanFreezecheckBox.UseVisualStyleBackColor = true;
             this.CanFreezecheckBox.CheckedChanged += new System.EventHandler(this.CanFreezecheckBox_CheckedChanged);
             // 
@@ -1102,7 +1102,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(53, 12);
             this.label9.TabIndex = 16;
-            this.label9.Text = "最大麻痹";
+            this.label9.Text = "最大减速";
             // 
             // tabPage4
             // 

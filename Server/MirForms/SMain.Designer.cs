@@ -527,14 +527,14 @@ namespace Server
             // 
             this.goodsToolStripMenuItem.Name = "goodsToolStripMenuItem";
             this.goodsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.goodsToolStripMenuItem.Text = "Goods";
+            this.goodsToolStripMenuItem.Text = "商品";
             this.goodsToolStripMenuItem.Click += new System.EventHandler(this.goodsToolStripMenuItem_Click);
             // 
             // refiningToolStripMenuItem
             // 
             this.refiningToolStripMenuItem.Name = "refiningToolStripMenuItem";
             this.refiningToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.refiningToolStripMenuItem.Text = "Refining";
+            this.refiningToolStripMenuItem.Text = "强化";
             this.refiningToolStripMenuItem.Click += new System.EventHandler(this.refiningToolStripMenuItem_Click);
             // 
             // relationshipToolStripMenuItem

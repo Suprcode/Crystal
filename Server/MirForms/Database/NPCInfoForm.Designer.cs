@@ -158,7 +158,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(50, 80);
+            this.label2.Location = new System.Drawing.Point(43, 81);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 12);
             this.label2.TabIndex = 32;
@@ -177,7 +177,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(24, 32);
+            this.label11.Location = new System.Drawing.Point(34, 33);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(47, 12);
             this.label11.TabIndex = 23;
@@ -241,7 +241,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(43, 56);
+            this.label13.Location = new System.Drawing.Point(46, 57);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(35, 12);
             this.label13.TabIndex = 15;
@@ -268,7 +268,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 6);
+            this.label1.Location = new System.Drawing.Point(19, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 12);
             this.label1.TabIndex = 4;
@@ -279,7 +279,7 @@
             this.NImageTextBox.Location = new System.Drawing.Point(87, 126);
             this.NImageTextBox.MaxLength = 3;
             this.NImageTextBox.Name = "NImageTextBox";
-            this.NImageTextBox.Size = new System.Drawing.Size(28, 21);
+            this.NImageTextBox.Size = new System.Drawing.Size(37, 21);
             this.NImageTextBox.TabIndex = 11;
             this.NImageTextBox.TextChanged += new System.EventHandler(this.NImageTextBox_TextChanged);
             // 
@@ -295,7 +295,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(133, 105);
+            this.label28.Location = new System.Drawing.Point(138, 105);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(35, 12);
             this.label28.TabIndex = 10;
@@ -304,7 +304,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(38, 105);
+            this.label30.Location = new System.Drawing.Point(43, 105);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(35, 12);
             this.label30.TabIndex = 3;
@@ -360,7 +360,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label12.Location = new System.Drawing.Point(41, 83);
+            this.label12.Location = new System.Drawing.Point(29, 83);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(77, 12);
             this.label12.TabIndex = 54;
@@ -370,7 +370,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label10.Location = new System.Drawing.Point(41, 58);
+            this.label10.Location = new System.Drawing.Point(47, 59);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(59, 12);
             this.label10.TabIndex = 53;
@@ -389,7 +389,7 @@
             "Friday",
             "Saturday",
             "Sunday"});
-            this.Day_combo.Location = new System.Drawing.Point(112, 54);
+            this.Day_combo.Location = new System.Drawing.Point(112, 56);
             this.Day_combo.Name = "Day_combo";
             this.Day_combo.Size = new System.Drawing.Size(163, 20);
             this.Day_combo.TabIndex = 52;
@@ -406,7 +406,7 @@
             "Taoist",
             "Assassin",
             "Archer"});
-            this.Class_combo.Location = new System.Drawing.Point(112, 27);
+            this.Class_combo.Location = new System.Drawing.Point(112, 30);
             this.Class_combo.Name = "Class_combo";
             this.Class_combo.Size = new System.Drawing.Size(87, 20);
             this.Class_combo.TabIndex = 51;
@@ -474,7 +474,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label8.Location = new System.Drawing.Point(171, 159);
+            this.label8.Location = new System.Drawing.Point(173, 159);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 12);
             this.label8.TabIndex = 48;
@@ -484,7 +484,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label9.Location = new System.Drawing.Point(54, 159);
+            this.label9.Location = new System.Drawing.Point(47, 159);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(59, 12);
             this.label9.TabIndex = 47;
@@ -542,7 +542,7 @@
             // 
             this.TimeVisible_checkbox.AutoSize = true;
             this.TimeVisible_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.TimeVisible_checkbox.Location = new System.Drawing.Point(59, 108);
+            this.TimeVisible_checkbox.Location = new System.Drawing.Point(29, 107);
             this.TimeVisible_checkbox.Name = "TimeVisible_checkbox";
             this.TimeVisible_checkbox.Size = new System.Drawing.Size(132, 16);
             this.TimeVisible_checkbox.TabIndex = 44;
@@ -554,7 +554,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label7.Location = new System.Drawing.Point(167, 6);
+            this.label7.Location = new System.Drawing.Point(171, 6);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(59, 12);
             this.label7.TabIndex = 43;
@@ -562,7 +562,7 @@
             // 
             // MaxLev_textbox
             // 
-            this.MaxLev_textbox.Location = new System.Drawing.Point(226, 3);
+            this.MaxLev_textbox.Location = new System.Drawing.Point(236, 3);
             this.MaxLev_textbox.MaxLength = 3;
             this.MaxLev_textbox.Name = "MaxLev_textbox";
             this.MaxLev_textbox.Size = new System.Drawing.Size(49, 21);
@@ -573,7 +573,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label6.Location = new System.Drawing.Point(31, 30);
+            this.label6.Location = new System.Drawing.Point(47, 33);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 12);
             this.label6.TabIndex = 40;
@@ -583,7 +583,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label5.Location = new System.Drawing.Point(171, 135);
+            this.label5.Location = new System.Drawing.Point(173, 135);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 12);
             this.label5.TabIndex = 37;
@@ -593,7 +593,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label4.Location = new System.Drawing.Point(54, 135);
+            this.label4.Location = new System.Drawing.Point(47, 135);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 12);
             this.label4.TabIndex = 36;
@@ -603,7 +603,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label3.Location = new System.Drawing.Point(56, 6);
+            this.label3.Location = new System.Drawing.Point(47, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 12);
             this.label3.TabIndex = 34;

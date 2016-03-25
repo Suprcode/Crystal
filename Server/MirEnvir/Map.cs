@@ -480,7 +480,7 @@ namespace Server.MirEnvir
                 SMain.Enqueue(ex);
             }
 
-            SMain.Enqueue("Failed to Load Map: " + Info.FileName);
+            SMain.Enqueue("加载地图失败: " + Info.FileName);
             return false;
         }
 

@@ -9432,7 +9432,7 @@ namespace Client.MirScenes
             //Targeting
             switch (magic.Spell)
             {
-                case Spell.FireBall:
+                case Spell.火球术:
                 case Spell.GreatFireBall:
                 case Spell.ElectricShock:
                 case Spell.Poisoning:

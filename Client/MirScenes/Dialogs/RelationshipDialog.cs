@@ -126,7 +126,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (LoverName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你没有结婚.", ChatType.System);
                     return;
                 }
 
@@ -148,13 +148,13 @@ namespace Client.MirScenes.Dialogs
             {
                 if (LoverName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你没有结婚.", ChatType.System);
                     return;
                 }
 
                 if (MapName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Lover is not online", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("爱人不在线", ChatType.System);
                     return;
                 }
                 GameScene.Scene.ChatDialog.ChatTextBox.SetFocus();
@@ -227,21 +227,21 @@ namespace Client.MirScenes.Dialogs
 
         public void UpdateInterface()
         {
-            LoverNameLabel.Text = "Lover:  " + LoverName;
+            LoverNameLabel.Text = "爱人:  " + LoverName;
 
             if (MapName != "")
             {
-                LoverOnlineLabel.Text = "Location:  " + MapName;
+                LoverOnlineLabel.Text = "位置:  " + MapName;
             }
             else
-                LoverOnlineLabel.Text = "Location:  Offline";
+                LoverOnlineLabel.Text = "位置:  离线";
 
             if ((LoverName == "") && (Date != null))
             {
                 if (Date < new DateTime(2000))
                 {
-                    LoverDateLabel.Text = "Date: ";
-                    LoverLengthLabel.Text = "Length: ";
+                    LoverDateLabel.Text = "时间: ";
+                    LoverLengthLabel.Text = "长度: ";
                 }
                 else
                 {

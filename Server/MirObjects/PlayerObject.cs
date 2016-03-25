@@ -1875,11 +1875,11 @@ namespace Server.MirObjects
                 Info.Magics[i].CastTime = Envir.Time > TimeSpend ? Envir.Time - TimeSpend : 0;
             }
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-            ReceiveChat("Welcome to the Legend of Mir 2 Crystal Server.", ChatType.Hint);
+            ReceiveChat("欢迎来到此服务器.", ChatType.Hint);
 
             if (Settings.TestServer)
             {
-                ReceiveChat("Game is currently in test mode.", ChatType.Hint);
+                ReceiveChat("服务器现在是测试模式.", ChatType.Hint);
                 Chat("@GAMEMASTER");
             }
 
@@ -1889,7 +1889,7 @@ namespace Server.MirObjects
                 if (MyGuild == null)
                 {
                     Info.GuildIndex = -1;
-                    ReceiveChat("You have been removed from the guild.", ChatType.System);
+                    ReceiveChat("你被公会请出.", ChatType.System);
                 }
                 else
                 {
@@ -1898,7 +1898,7 @@ namespace Server.MirObjects
                     {
                         MyGuild = null;
                         Info.GuildIndex = -1;
-                        ReceiveChat("You have been removed from the guild.", ChatType.System);
+                        ReceiveChat("你被公会请出.", ChatType.System);
                     }
                 }
             }
@@ -2018,7 +2018,7 @@ namespace Server.MirObjects
 
             Report.Connected(Connection.IPAddress);
 
-            SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
+            SMain.Enqueue(string.Format("{0} 已连接.", Info.Name));
             
             if (IsGM) return;
             LastRankUpdate = Envir.Time;
@@ -3258,14 +3258,14 @@ namespace Server.MirObjects
                 if (message == GMPassword)
                 {
                     IsGM = true;
-                    SMain.Enqueue(string.Format("{0} is now a GM", Name));
-                    ReceiveChat("You have been made a GM", ChatType.System);
+                    SMain.Enqueue(string.Format("{0} 现在是 GM", Name));
+                    ReceiveChat("你已成为 GM", ChatType.System);
                     Envir.RemoveRank(Info);//remove gm chars from ranking to avoid causing bugs in rank list
                 }
                 else
                 {
-                    SMain.Enqueue(string.Format("{0} attempted a GM login", Name));
-                    ReceiveChat("Incorrect login password", ChatType.System);
+                    SMain.Enqueue(string.Format("{0} 尝试 GM 登录", Name));
+                    ReceiveChat("密码错误", ChatType.System);
                 }
                 GMLogin = false;
                 return;
@@ -3275,7 +3275,7 @@ namespace Server.MirObjects
             {
                 if (Info.ChatBanExpiryDate > DateTime.Now)
                 {
-                    ReceiveChat("You are currently banned from chatting.", ChatType.System);
+                    ReceiveChat("你现在被禁止聊天.", ChatType.System);
                     return;
                 }
 
@@ -3289,7 +3289,7 @@ namespace Server.MirObjects
                     {
                         Info.ChatBanned = true;
                         Info.ChatBanExpiryDate = DateTime.Now.AddMinutes(5);
-                        ReceiveChat("You have been banned from chatting for 5 minutes.", ChatType.System);
+                        ReceiveChat("你被禁止聊天5分钟.", ChatType.System);
                         return;
                     }
 
@@ -3325,19 +3325,19 @@ namespace Server.MirObjects
                         creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
                         return;
                     }
-                    ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
+                    ReceiveChat(string.Format("没有找到 {0}.", parts[0]), ChatType.System);
                     return;
                 }
 
                 if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
                 {
-                    ReceiveChat("Player is not accepting your messages.", ChatType.System);
+                    ReceiveChat("玩家不接受你的消息.", ChatType.System);
                     return;
                 }
 
                 if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
                 {
-                    ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
+                    ReceiveChat("你不能给你黑名单上的人发消息.", ChatType.System);
                     return;
                 }
 
@@ -3391,12 +3391,12 @@ namespace Server.MirObjects
                 //Shout
                 if (Envir.Time < ShoutTime)
                 {
-                    ReceiveChat(string.Format("You cannot shout for another {0} seconds.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
+                    ReceiveChat(string.Format("在 {0} 秒内不能喊话.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
                     return;
                 }
                 if (Level < 8 && (!HasMapShout && !HasServerShout))
                 {
-                    ReceiveChat("You need to be level 8 before you can shout.", ChatType.System);
+                    ReceiveChat("你要到8级才能喊话.", ChatType.System);
                     return;
                 }
 
@@ -3453,7 +3453,7 @@ namespace Server.MirObjects
             
                 if (player == null)
                 {
-                    ReceiveChat(string.Format("{0} isn't online.", Lover.Name), ChatType.System);
+                    ReceiveChat(string.Format("{0} 不在线.", Lover.Name), ChatType.System);
                     return;
                 }
 
@@ -3488,7 +3488,7 @@ namespace Server.MirObjects
                 {
                     case "LOGIN":
                         GMLogin = true;
-                        ReceiveChat("Please type the GM Password", ChatType.Hint);
+                        ReceiveChat("请输入GM密码", ChatType.Hint);
                         return;
 
                     case "KILL":
@@ -3500,7 +3500,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(string.Format("Could not find {0}", parts[0]), ChatType.System);
+                                ReceiveChat(string.Format("没有找到 {0}", parts[0]), ChatType.System);
                                 return;
                             }
                             if (!player.GMNeverDie) player.Die();
@@ -3540,15 +3540,15 @@ namespace Server.MirObjects
 
                         if (data == null)
                         {
-                            ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
+                            ReceiveChat(string.Format("玩家 {0} 没有找到", parts[1]), ChatType.System);
                             return;
                         }
 
                         if (!data.Deleted) return;
                         data.Deleted = false;
 
-                        ReceiveChat(string.Format("Player {0} has been restored by", data.Name), ChatType.System);
-                        SMain.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
+                        ReceiveChat(string.Format("玩家 {0} 已经被恢复", data.Name), ChatType.System);
+                        SMain.Enqueue(string.Format("玩家 {0} 已经被 {1} 恢复", data.Name, Name));
 
                         break;
 
@@ -3569,8 +3569,8 @@ namespace Server.MirObjects
                                 break;
                         }
 
-                        ReceiveChat(string.Format("Player {0} has been changed to {1}", data.Name, data.Gender), ChatType.System);
-                        SMain.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Gender, Name));
+                        ReceiveChat(string.Format("玩家 {0} 被修改为 {1}", data.Name, data.Gender), ChatType.System);
+                        SMain.Enqueue(string.Format("玩家 {0} 被 {2} 修改为 {1} ", data.Name, data.Gender, Name));
 
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
@@ -3595,8 +3595,8 @@ namespace Server.MirObjects
                                 player.Level = level;
                                 player.LevelUp();
 
-                                ReceiveChat(string.Format("Player {0} has been Leveled {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
-                                SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
+                                ReceiveChat(string.Format("玩家 {0} 被升级 {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
+                                SMain.Enqueue(string.Format("玩家 {0} 被 {3} 升级 {1} -> {2}", player.Name, old, player.Level, Name));
                                 return;
                             }
                         }
@@ -3614,8 +3614,8 @@ namespace Server.MirObjects
                                 Level = level;
                                 LevelUp();
 
-                                ReceiveChat(string.Format("Leveled {0} -> {1}.", old, Level), ChatType.System);
-                                SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", Name, old, Level, Name));
+                                ReceiveChat(string.Format("升级 {0} -> {1}.", old, Level), ChatType.System);
+                                SMain.Enqueue(string.Format("玩家 {0} 被 {3} 升级 {1} -> {2}", Name, old, Level, Name));
                                 return;
                             }
                         }
@@ -3654,8 +3654,8 @@ namespace Server.MirObjects
                             GainItem(item);
                         }
 
-                        ReceiveChat(string.Format("{0} x{1} has been created.", iInfo.Name, tempCount), ChatType.System);
-                        SMain.Enqueue(string.Format("Player {0} has attempted to Create {1} x{2}", Name, iInfo.Name, tempCount));
+                        ReceiveChat(string.Format("{0} x{1} 被制造.", iInfo.Name, tempCount), ChatType.System);
+                        SMain.Enqueue(string.Format("玩家 {0} 制程 {1} x{2}", Name, iInfo.Name, tempCount));
                         break;
 
                     case "CLEARBAG":
@@ -3707,7 +3707,7 @@ namespace Server.MirObjects
                         break;
                     case "ALLOWGUILD":
                         EnableGuildInvite = !EnableGuildInvite;
-                        hintstring = EnableGuildInvite ? "Guild invites enabled." : "Guild invites disabled.";
+                        hintstring = EnableGuildInvite ? "允许公会邀请." : "禁止公会邀请.";
                         ReceiveChat(hintstring, ChatType.Hint);
                         break;
                     case "RECALL":
@@ -3722,7 +3722,7 @@ namespace Server.MirObjects
                         break;
                     case "ENABLEGROUPRECALL":
                         EnableGroupRecall = !EnableGroupRecall;
-                        hintstring = EnableGroupRecall ? "Group Recall Enabled." : "Group Recall Disabled.";
+                        hintstring = EnableGroupRecall ? "允许组队召唤." : "禁止组队召唤.";
                         ReceiveChat(hintstring, ChatType.Hint);
                         break;
 
@@ -3732,13 +3732,13 @@ namespace Server.MirObjects
 
                         if (CurrentMap.Info.NoRecall)
                         {
-                            ReceiveChat("You cannot recall people on this map", ChatType.System);
+                            ReceiveChat("此地图不能召唤", ChatType.System);
                             return;
                         }
 
                         if (Envir.Time < LastRecallTime)
                         {
-                            ReceiveChat(string.Format("You cannot recall for another {0} seconds", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
+                            ReceiveChat(string.Format("在 {0} 秒内不能召唤", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
                             return;
                         }
 
@@ -3750,7 +3750,7 @@ namespace Server.MirObjects
                                 if (GroupMembers[i].EnableGroupRecall)
                                     GroupMembers[i].Teleport(CurrentMap, CurrentLocation);
                                 else
-                                    GroupMembers[i].ReceiveChat("A recall was attempted without your permission",
+                                    GroupMembers[i].ReceiveChat("你在没有同意的情况下被召唤",
                                         ChatType.System);
                             }
                         }
@@ -3758,25 +3758,25 @@ namespace Server.MirObjects
                     case "RECALLMEMBER":
                         if (GroupMembers == null || GroupMembers[0] != this)
                         {
-                            ReceiveChat("You are not a group leader.", ChatType.System);
+                            ReceiveChat("你不是队长.", ChatType.System);
                             return;
                         }
 
                         if (Dead)
                         {
-                            ReceiveChat("You cannot recall when you are dead.", ChatType.System);
+                            ReceiveChat("死亡时不能召唤.", ChatType.System);
                             return;
                         }
 
                         if (CurrentMap.Info.NoRecall)
                         {
-                            ReceiveChat("You cannot recall people on this map", ChatType.System);
+                            ReceiveChat("此地图不能召唤", ChatType.System);
                             return;
                         }
 
                         if (Envir.Time < LastRecallTime)
                         {
-                            ReceiveChat(string.Format("You cannot recall for another {0} seconds", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
+                            ReceiveChat(string.Format("在 {0} 秒内不能召唤", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
                             return;
                         }
                         if (ItemSets.Any(set => set.Set == ItemSet.Recall && set.SetComplete))
@@ -3786,14 +3786,14 @@ namespace Server.MirObjects
 
                             if (player == null || !IsMember(player) || this == player)
                             {
-                                ReceiveChat((string.Format("Player {0} could not be found", parts[1])), ChatType.System);
+                                ReceiveChat((string.Format("玩家 {0} 没有找到", parts[1])), ChatType.System);
                                 return;
                             }
                             if (!player.EnableGroupRecall)
                             {
-                                player.ReceiveChat("A recall was attempted without your permission",
+                                player.ReceiveChat("你在没有同意的情况下被召唤",
                                         ChatType.System);
-                                ReceiveChat((string.Format("{0} is blocking grouprecall", player.Name)), ChatType.System);
+                                ReceiveChat((string.Format("{0} 不同意组队召唤", player.Name)), ChatType.System);
                                 return;
                             }
                             LastRecallTime = Envir.Time + 60000;
@@ -3803,7 +3803,7 @@ namespace Server.MirObjects
                         }
                         else
                         {
-                            ReceiveChat("You cannot recall without a recallset.", ChatType.System);
+                            ReceiveChat("不能在没有祈祷套的时候使用召唤.", ChatType.System);
                             return;
                         }
                         break;
@@ -3811,25 +3811,25 @@ namespace Server.MirObjects
                     case "RECALLLOVER":
                         if (Info.Married == 0)
                         {
-                            ReceiveChat("You're not married.", ChatType.System);
+                            ReceiveChat("你没有结婚.", ChatType.System);
                             return;
                         }
 
                         if (Dead)
                         {
-                            ReceiveChat("You can't recall when you are dead.", ChatType.System);
+                            ReceiveChat("死亡时不能召唤.", ChatType.System);
                             return;
                         }
 
                         if (CurrentMap.Info.NoRecall)
                         {
-                            ReceiveChat("You cannot recall people on this map", ChatType.System);
+                            ReceiveChat("此地图不能召唤", ChatType.System);
                             return;
                         }
 
                         if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
                         {
-                            ReceiveChat("You need to be wearing a Wedding Ring for recall.", ChatType.System);
+                            ReceiveChat("召唤时要配带结婚戒指.", ChatType.System);
                             return;
                         }
 
@@ -3844,13 +3844,13 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat((string.Format("{0} is not online.", Lover.Name)), ChatType.System);
+                                ReceiveChat((string.Format("{0} 不在线.", Lover.Name)), ChatType.System);
                                 return;
                             }
 
                             if (player.Dead)
                             {
-                                ReceiveChat("You can't recall a dead player.", ChatType.System);
+                                ReceiveChat("不能召唤已死的玩家.", ChatType.System);
                                 return;
                             }
 
@@ -4229,7 +4229,7 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(parts[1] + " is not online", ChatType.System);
+                            ReceiveChat(parts[1] + " 不在线", ChatType.System);
                             return;
                         }
                         if (player.CurrentMap == null) return;
@@ -4365,7 +4365,7 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(parts[1] + " is not online", ChatType.System);
+                            ReceiveChat(parts[1] + " 不在线", ChatType.System);
                             return;
                         }
 
@@ -4684,7 +4684,7 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(parts[1] + " is not online", ChatType.System);
+                            ReceiveChat(parts[1] + " 不在线", ChatType.System);
                             return;
                         }
 
@@ -4707,7 +4707,7 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(parts[3] + " is not online", ChatType.System);
+                            ReceiveChat(parts[3] + " 不在线", ChatType.System);
                             return;
                         }
 
@@ -6012,7 +6012,7 @@ namespace Server.MirObjects
             byte level = magic.Level;
             switch (spell)
             {
-                case Spell.FireBall:
+                case Spell.火球术:
                 case Spell.GreatFireBall:
                 case Spell.FrostCrunch:
                     if (!Fireball(target, magic)) targetID = 0;
@@ -8118,7 +8118,7 @@ namespace Server.MirObjects
             {
                 #region FireBall, GreatFireBall, ThunderBolt, SoulFireBall, FlameDisruptor
 
-                case Spell.FireBall:
+                case Spell.火球术:
                 case Spell.GreatFireBall:
                 case Spell.ThunderBolt:
                 case Spell.SoulFireBall:
@@ -14922,7 +14922,7 @@ namespace Server.MirObjects
                     PlayerObject player = Envir.GetPlayer(Name);
                     if (player == null)
                     {
-                        ReceiveChat(String.Format("{0} is not online!", Name), ChatType.System);
+                        ReceiveChat(String.Format("{0} 不在线!", Name), ChatType.System);
                         return;
                     }
                     if ((player.MyGuild != null) || (player.MyGuildRank != null) || (player.Info.GuildIndex != -1))
