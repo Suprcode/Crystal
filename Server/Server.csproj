@@ -242,6 +242,11 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
+    <Compile Include="MirObjects\Monsters\ManectricBlest.cs" />
+    <Compile Include="MirObjects\Monsters\WingedTigerLord.cs" />
+    <Compile Include="MirObjects\Monsters\Tornado.cs" />
+    <Compile Include="MirObjects\Monsters\Hugger.cs" />
+    <Compile Include="MirObjects\Monsters\PoisonHugger.cs" />
     <Compile Include="MirObjects\Monsters\WitchDoctor.cs" />
     <Compile Include="MirObjects\Monsters\AxeSkeleton.cs" />
     <Compile Include="MirObjects\Monsters\Behemoth.cs" />
@@ -259,7 +264,6 @@
     <Compile Include="MirObjects\Monsters\ConquestArcher.cs" />
     <Compile Include="MirObjects\Monsters\CrazyManworm.cs" />
     <Compile Include="MirObjects\Monsters\DarkDevourer.cs" />
-    <Compile Include="MirObjects\Monsters\DreamDevourer.cs" />
     <Compile Include="MirObjects\Monsters\FinialTurtle.cs" />
     <Compile Include="MirObjects\Monsters\FlamingMutant.cs" />
     <Compile Include="MirObjects\Monsters\Football.cs" />

@@ -3,12 +3,13 @@ using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
+using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
     public class Behemoth : MonsterObject
     {
-        public byte AttackRange = 5;
+        public byte AttackRange = 10;
 
         protected internal Behemoth(MonsterInfo info)
             : base(info)
@@ -28,35 +29,27 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            ShockTime = 0;
-
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             if (!ranged)
             {
-                if (Envir.Random.Next(2) > 0)
+                switch (Envir.Random.Next(5))
                 {
-                    base.Attack();
+                    case 0:
+                    case 1:
+                    case 2:
+                        base.Attack(); //swipe
+                        break;
+                    case 3:
+                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                        Attack1(); //push back
+                        break;
+                    case 4:
+                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                        Attack2(); //fire circle
+                        break;
                 }
-                else
-                {
-                    if (Envir.Random.Next(2) > 0)
-                    {
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1});
-                        Attack1();
-                    }
-                    else
-                    {
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2});
-                        Attack2();
-                    }
-                }
-
-                ShockTime = 0;
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
 
                 if (Envir.Random.Next(15) == 0)
                 {
@@ -71,44 +64,58 @@ namespace Server.MirObjects.Monsters
                 }
                 else
                 {
-                    //if (Envir.Random.Next(2) > 0)
-                    //{
-                    //    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                    //    int damage = GetAttackPower(MinMC, MaxMC);
-                    //    if (damage == 0) return;
+                    switch (Envir.Random.Next(2))
+                    {
+                        case 0:
+                            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                            SummonSlaves(); //spawn huggers
+                            break;
+                        case 1:
+                            {
+                                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                    //    ActionTime = Envir.Time + 300;
-                    //    AttackTime = Envir.Time + AttackSpeed;
+                                List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
+                                if (targets.Count == 0) return;
 
-                    //    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                                int damage = GetAttackPower(MinDC, MaxDC) * 3;
+                                if (damage == 0) return;
 
-                    //    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    //    ActionList.Add(action);
-                    //}
-                    //else
-                    //{
-                    //    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                    //    int damage = GetAttackPower(MinMC, MaxMC);
-                    //    if (damage == 0) return;
+                                for (int i = 0; i < targets.Count; i++)
+                                {
+                                    Target = targets[i];
+                                    Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Behemoth });
 
-                    //    ActionTime = Envir.Time + 300;
-                    //    AttackTime = Envir.Time + AttackSpeed;
+                                    if (Target.Attacked(this, damage, DefenceType.ACAgility) > 0)
+                                    {
+                                        if (Envir.Random.Next(15) == 0)
+                                            Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+                                    }
+                                }
 
-                    //    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-                    //    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    //    ActionList.Add(action);
-                    //}
+                            }
+                            break;
+                    }
                 }
+
+                ShockTime = 0;
+                ActionTime = Envir.Time + 300;
+                AttackTime = Envir.Time + AttackSpeed;
             }
         }
         private void Attack1()
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
+            List<MapObject> targets = FindAllTargets(2, CurrentLocation);
 
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+            if (targets.Count == 0) return;
+
+            int damage = GetAttackPower(MinDC, MaxDC);
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                targets[i].Attacked(this, damage, DefenceType.AC);
+            }
         }
+
         private void Attack2()
         {
             Point target = Functions.PointMove(CurrentLocation, Direction, 1);
@@ -133,9 +140,41 @@ namespace Server.MirObjects.Monsters
                     }
                     break;
                 }
+
+                SummonSlaves();
             }
-            
         }
 
+        private void SummonSlaves()
+        {
+            List<MapObject> targets = FindAllTargets(10, CurrentLocation);
+            if (targets.Count == 0) return;
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                MonsterObject spawn = null;
+
+                switch(Envir.Random.Next(3))
+                {
+                    case 0:
+                        spawn = GetMonster(Envir.GetMonsterInfo("Hugger"));
+                        break;
+                    case 1:
+                        spawn = GetMonster(Envir.GetMonsterInfo("PoisonHugger"));
+                        break;
+                    case 2:
+                        spawn = GetMonster(Envir.GetMonsterInfo("MutatedHugger"));
+                        break;
+                }
+
+                if (spawn == null) return;
+
+                spawn.Target = targets[i];
+                spawn.ActionTime = Envir.Time + 1000;
+
+                spawn.Spawn(CurrentMap, CurrentLocation);
+               
+            }
+        }
     }
 }

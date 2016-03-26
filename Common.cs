@@ -167,8 +167,8 @@ public enum IntelligentCreatureType : byte
     BabyMonkey = 11
 }
 
-//6 blank mob files
-//4 mob frames not added
+//1 blank mob files
+//7 mob frames not added
 //2 blank frame sets (92, 173)
 //4 mob frames duplicate of other frame sets
 
@@ -334,12 +334,12 @@ public enum Monster : ushort
     MudPile = 156,
     TailedLion = 157,
 
-    Behemoth = 158,
-        DarkDevourer = 159,//LIB BROKE??
-    PoisonHugger = 160, //done
-    Hugger = 161,
-        MutatedHugger = 162,//BROKE
-        DreamDevourer = 163,//LIB BROKE??
+    Behemoth = 158,//done
+    DarkDevourer = 159,//done
+    PoisonHugger = 160,//done
+    Hugger = 161,//done
+    MutatedHugger = 162,//done
+    DreamDevourer = 163,//done
     Treasurebox = 164,//done
     SnowPile = 165,//done
     Snowman = 166,//done
@@ -356,20 +356,16 @@ public enum Monster : ushort
     BattleStandard = 177,//done
     ArcherGuard2 = 178,//done
     RedYimoogi = 179,//done
-        LionRiderMale = 180, //frames not added
-        LionRiderFemale = 181, //frames not added
+    LionRiderMale = 180, //frames not added
+    LionRiderFemale = 181, //frames not added
     Tornado = 182,//done
-    FlameTiger = 183,
-        WingedTigerLord = 184,//FRAMES BROKE
-
-    //Turtle Mobs
+    FlameTiger = 183,//done
+    WingedTigerLord = 184,//FINISH
     TowerTurtle = 185,//done
     FinialTurtle = 186,//done
-    TurtleKing = 187,//done
+    TurtleKing = 187,//FINISH
     DarkTurtle = 188,//done
-    LightTurtle = 189,//done
-
-    //Dark Alt Mobs
+    LightTurtle = 189,//done  
     DarkSwordOma = 190,//done
     DarkAxeOma = 191,//done
     DarkCrossbowOma = 192,//done
@@ -381,9 +377,9 @@ public enum Monster : ushort
     CrawlerLave = 198,//done
     DarkYob = 199,//done
 
-    FlamingMutant = 200,
-    StoningStatue = 201,
-    FlyingStatue = 202,
+    FlamingMutant = 200,//FINISH
+    StoningStatue = 201,//FINISH
+    FlyingStatue = 202,//FINISH
     ValeBat = 203,//done
     Weaver = 204,//done
     VenomWeaver = 205,//done
@@ -394,31 +390,26 @@ public enum Monster : ushort
     FrozenZumaGuardian = 210,//done
     FrozenRedZuma = 211,//done
     GreaterWeaver = 212,//done
-    SpiderWarrior = 213,
-    SpiderBarbarian = 214,
-
-    //Hell Cave Mob
+    SpiderWarrior = 213,//done
+    SpiderBarbarian = 214,//done
     HellSlasher = 215,//done
     HellPirate = 216,//done
     HellCannibal = 217,//done
     HellKeeper = 218, //done
     HellBolt = 219, //done
     WitchDoctor = 220,//done
-
-    //Frost Cave Mob
-    ManectricHammer = 221,
-    ManectricClub = 222,
-    ManectricClaw = 223,
-    ManectricStaff = 224,
-    NamelessGhost = 225,
-    DarkGhost = 226,
-    ChaosGhost = 227,
-    ManectricBlest = 228,
+    ManectricHammer = 221,//done
+    ManectricClub = 222,//done
+    ManectricClaw = 223,//done
+    ManectricStaff = 224,//done
+    NamelessGhost = 225,//done
+    DarkGhost = 226,//done
+    ChaosGhost = 227,//done
+    ManectricBlest = 228,//FINISH
     ManectricKing = 229,
     FrozenDoor = 230,
     IcePillar = 231,
-    FrostYeti = 232,
-
+    FrostYeti = 232,//done
     ManectricSlave = 233,
     TrollHammer = 234,
     TrollBomber = 235,
@@ -1119,7 +1110,7 @@ public enum Spell : byte
     DigOutZombie = 200,
     Rubble = 201,
     MapLightning = 202,
-    MapLava = 203
+    MapLava = 203,
 }
 
 public enum SpellEffect : byte
@@ -1148,7 +1139,9 @@ public enum SpellEffect : byte
     AwakeningMiss,
     AwakeningHit,
     StormEscape,
-    TurtleKing
+    TurtleKing,
+    Behemoth,
+    Stunned
 }
 
 public enum BuffType : byte

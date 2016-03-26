@@ -3,12 +3,15 @@ using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
+using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
     public class StoningStatue : MonsterObject
     {
-        private const byte AttackRange = 6;
+        private long _areaTime = long.MaxValue;
+
+        private const byte AttackRange = 2;
 
         protected internal StoningStatue(MonsterInfo info)
             : base(info)
@@ -25,13 +28,11 @@ namespace Server.MirObjects.Monsters
 
             if (x > 2 || y > 2) return false;
 
-
             return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
         }
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -40,52 +41,51 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-
-            if (!ranged)
+            if (Envir.Time < _areaTime)
             {
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                LineAttack(AttackRange);
+
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
 
-                Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                LineAttack(2);
+                if (Target.Dead)
+                    FindTarget();
 
-            }
-            else
-            {
-                if (Envir.Random.Next(5) == 0)
-                {
-                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-
-                    ActionTime = Envir.Time + 300;
-                    AttackTime = Envir.Time + AttackSpeed;
-
-                    int damage = GetAttackPower(MinMC, MaxMC);
-                    if (damage == 0) return;
-
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    ActionList.Add(action);
-                }
-                else
-                {
-                    MoveTo(Target.CurrentLocation);
-                }
+                return;
             }
 
+            _areaTime = Envir.Time + 5000 + Envir.Random.Next(10) * 1000;
 
-            if (Target.Dead)
-                FindTarget();
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
+            ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 1600));
+
+            ActionTime = Envir.Time + 500;
+            AttackTime = Envir.Time + (AttackSpeed * 2);
         }
+
+        protected override void CompleteAttack(IList<object> data)
+        {
+            List<MapObject> targets = FindAllTargets(1, Functions.PointMove(CurrentLocation, Direction, 2), false);
+            if (targets.Count == 0) return;
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                targets[i].Attacked(this, MaxDC * 3, DefenceType.MACAgility);
+
+                if (Envir.Random.Next(2) == 0)
+                {
+                    Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Stun, Duration = 10, TickSpeed = 1000 }, this);
+                    Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Stunned, Time = 10 * 1000 });
+                }
+            }
+        }
+
         private void LineAttack(int distance)
         {
-
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
             
@@ -122,29 +122,6 @@ namespace Server.MirObjects.Monsters
 
                 }
             }
-        }
-
-
-
-
-        protected override void ProcessTarget()
-        {
-            if (Target == null) return;
-
-            if (InAttackRange() && CanAttack)
-            {
-                Attack();
-                return;
-            }
-
-            if (Envir.Time < ShockTime)
-            {
-                Target = null;
-                return;
-            }
-
-            MoveTo(Target.CurrentLocation);
-
         }
     }
 }

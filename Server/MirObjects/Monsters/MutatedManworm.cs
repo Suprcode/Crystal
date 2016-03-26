@@ -1,46 +1,79 @@
 using Server.MirDatabase;
+using Server.MirEnvir;
+using System.Collections.Generic;
+using System.Drawing;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class MutatedManworm : MonsterObject
+    public class MutatedManworm : CrazyManworm
     {
         protected internal MutatedManworm(MonsterInfo info)
             : base(info)
         {
         }
 
-        protected override void Attack()
+        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-            if (!Target.IsAttackTarget(this))
+            int attackerDamage = base.Attacked(attacker, damage, type, damageWeapon);
+
+            int ownDamage = GetAttackPower(MinDC, MaxDC);
+
+            if (attackerDamage > ownDamage && Envir.Random.Next(2) == 0)
             {
-                Target = null;
-                return;
+                TeleportToWeakerTarget();
             }
 
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-
-            if (Envir.Random.Next(3) > 0)
-            {
-                base.Attack();
-            }
-            else
-            {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                Attack2();
-            }
-
-            ShockTime = 0;
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-
+            return attackerDamage;
         }
-        private void Attack2()
-        {
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
 
-            Target.Attacked(this, damage, DefenceType.MACAgility);
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            int attackerDamage = base.Attacked(attacker, damage, type);
+
+            int ownDamage = GetAttackPower(MinDC, MaxDC);
+
+            if (attackerDamage > ownDamage && Envir.Random.Next(2) == 0)
+            {
+                TeleportToWeakerTarget();
+            }
+
+            return attackerDamage;
+        }
+
+        private void TeleportToWeakerTarget()
+        {
+            List<MapObject> targets = FindAllTargets(10, CurrentLocation);
+
+            if (targets.Count == 0) return;
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].MinDC > Target.MinDC) continue;
+
+                CurrentLocation = targets[i].CurrentLocation;
+                Target = targets[i];
+
+                TeleportRandom(5, 2, CurrentMap);
+            }
+        }
+
+        public override bool TeleportRandom(int attempts, int distance, Map temp = null)
+        {
+            for (int i = 0; i < attempts; i++)
+            {
+                Point location;
+
+                if (distance <= 0)
+                    location = new Point(Envir.Random.Next(CurrentMap.Width), Envir.Random.Next(CurrentMap.Height));
+                else
+                    location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
+                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+
+                if (Teleport(CurrentMap, location, true, 4)) return true;
+            }
+
+            return false;
         }
     }
 }

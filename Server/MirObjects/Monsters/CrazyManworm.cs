@@ -27,20 +27,16 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                Attack2();
+
+                int damage = GetAttackPower(MinDC, MaxDC);
+                if (damage == 0) return;
+
+                Target.Attacked(this, damage, DefenceType.MACAgility);
             }
 
             ShockTime = 0;
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
-
-        }
-        private void Attack2()
-        {
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
-
-            Target.Attacked(this, damage, DefenceType.MACAgility);
         }
     }
 }

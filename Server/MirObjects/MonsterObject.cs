@@ -150,21 +150,13 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);    
-                    
-                //unfinished START      
-                case 248:
+                    return new Football(info);
+                case 69:
+                    return new PoisonHugger(info);
+                case 70:
+                    return new Hugger(info);
+                case 71:
                     return new Behemoth(info);
-                case 249:
-                    return new DreamDevourer(info);
-                case 253:
-                    return new FlamingMutant(info);
-                case 254:
-                    return new StoningStatue(info);
-                case 255:
-                    return new ManectricClaw(info);
-                //unfinished END
-
                 case 72:
                     return new FinialTurtle(info);
                 case 73:
@@ -181,13 +173,29 @@ namespace Server.MirObjects
                     return new HellCannibal(info);
                 case 79:
                     return new HellKeeper(info);
-
                 case 80:
                     return new ConquestArcher(info);
                 case 81:
                     return new Gate(info);
                 case 82:
                     return new Wall(info);
+                case 83:
+                    return new Tornado(info);
+
+
+                case 86:
+                    return new ManectricClaw(info);
+                case 87:
+                    return new ManectricBlest(info);
+
+                //unfinished
+                case 84:
+                    return new WingedTigerLord(info);
+                case 253:
+                    return new FlamingMutant(info);
+                case 254:
+                    return new StoningStatue(info);
+                //unfinished END
 
 
                 case 200://custom
@@ -319,7 +327,7 @@ namespace Server.MirObjects
             get
             {
                 return !Dead && Envir.Time > AttackTime && Envir.Time > ActionTime &&
-                     (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
+                     (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both || !CurrentMap.Info.NoFight) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
                        && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
@@ -1213,7 +1221,6 @@ namespace Server.MirObjects
         protected virtual void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
-            if (Target.CurrentMap.Info.NoFight) return;
 
             if (InAttackRange())
             {

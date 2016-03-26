@@ -107,7 +107,6 @@ namespace Server.MirObjects.Monsters
                             PType = PoisonType.Bleeding,
                             TickSpeed = 1000,
                         }, this);
-
                     }
                     else if (Info.Effect == 1)
                     {

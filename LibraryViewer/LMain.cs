@@ -71,6 +71,7 @@ namespace LibraryViewer
 
             //DebugBox.Text += "Showfront: "+showFrontSide.ToString() + "\r\n";
             //DebugBox.Text += "Prefix: "+Prefix + "\r\n";
+            Program.LoadFailed = false;
 
             MessageBox.Show("This can take a while.\n Press 'OK' to Start.");
 
@@ -83,13 +84,16 @@ namespace LibraryViewer
                 string flName = i.ToString(Prefix) + ".lib";
                 string fullname = PathName + flName;
 
-
                 if (File.Exists(fullname))
                 {
                     //DebugBox.Text += fullname + "\r\n";
 
                     if (_library != null) _library.Close();
                     _library = new MLibraryV2(fullname);
+                    if (Program.LoadFailed)
+                    {
+                        break;
+                    }
 
                     _NameList.Add(Path.GetFileName(fullname));
 

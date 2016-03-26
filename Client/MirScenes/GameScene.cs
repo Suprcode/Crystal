@@ -633,11 +633,11 @@ namespace Client.MirScenes
                         break;
                     case KeybindOptions.DropView:
                         if (CMain.Time > DropViewTime)
-                            DropViewTime = CMain.Time + 500;
+                            DropViewTime = CMain.Time + 5000;
                         break;
                     case KeybindOptions.TargetDead:
                         if (CMain.Time > TargetDeadTime)
-                            TargetDeadTime = CMain.Time + 500;
+                            TargetDeadTime = CMain.Time + 5000;
                         break;
                 }
             }
@@ -3124,6 +3124,8 @@ namespace Client.MirScenes
 
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Die, Direction = p.Direction, Location = p.Location });
             ShowReviveMessage = true;
+
+            LogTime = 0;
         }
         private void ObjectDied(S.ObjectDied p)
         {
@@ -3395,7 +3397,7 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RedFoxman], 253, 10, 500, ob));
                             break;
                         }
-                    case 3: //MutatedManWorm
+                    case 4: //MutatedManWorm
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 278, 7, 500, ob));
                             break;
@@ -3881,6 +3883,19 @@ namespace Client.MirScenes
                                 ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 934, 12, 1200, ob));
                                 break;
                         }
+                        break;
+                    case SpellEffect.Behemoth:
+                        {
+                            MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 788, 10, 1500, ob.CurrentLocation));
+                            MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 778, 10, 1500, ob.CurrentLocation, 0, true) { Blend = false });
+                        }
+                        break;
+                    case SpellEffect.Stunned:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StoningStatue], 632, 10, 1000, ob)
+                        {
+                            Repeat = p.Time > 0,
+                            RepeatUntil = p.Time > 0 ? CMain.Time + p.Time : 0
+                        });
                         break;
                 }
                 return;
@@ -8341,7 +8356,7 @@ namespace Client.MirScenes
                         {
                             if (ob.Dead)
                             {
-                                if (!Settings.DropView && GameScene.TargetDeadTime <= CMain.Time) continue;
+                                if (!Settings.TargetDead && GameScene.TargetDeadTime <= CMain.Time) continue;
 
                                 bestmouseobject = ob;
                                 //continue;

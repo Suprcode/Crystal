@@ -12,7 +12,7 @@ namespace Server.MirObjects.Monsters
     public class TurtleKing : MonsterObject
     {
         public byte AttackRange = 5;
-        private byte _stage = 7;
+        private byte _stage = 5;
 
         protected internal TurtleKing(MonsterInfo info)
             : base(info)
@@ -28,12 +28,15 @@ namespace Server.MirObjects.Monsters
         {
             if (Dead) return;
 
-            if (MaxHP >= 7)
+            if (MaxHP >= 5)
             {
-                byte stage = (byte)(HP / (MaxHP / 7));
+                byte stage = (byte)(HP / (MaxHP / 5));
 
-                if (stage < _stage) SpawnSlaves();
-                _stage = stage;
+                if (stage < _stage)
+                {
+                    SpawnSlaves();
+                    _stage = stage;
+                }
             }
 
             base.ProcessAI();
@@ -46,10 +49,8 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            ShockTime = 0;
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1); //CurrentLocation == Target.CurrentLocation || 
+            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 2);
 
             if (Envir.Random.Next(10) > 3)
             {
@@ -58,17 +59,14 @@ namespace Server.MirObjects.Monsters
                     switch (Envir.Random.Next(2))
                     {
                         default:
-                            base.Attack();
+                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                            LineAttack(2);
                             break;
                         case 1:
                             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                            Attack1();
+                            LineAttack(3);
                             break;
                     }
-
-                    ShockTime = 0;
-                    ActionTime = Envir.Time + 300;
-                    AttackTime = Envir.Time + AttackSpeed;
                 }
                 else
                 {
@@ -116,18 +114,51 @@ namespace Server.MirObjects.Monsters
                         Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
                 }
             }
+
+            ShockTime = 0;
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
         }
         
-        private void Attack1()
+        private void LineAttack(int distance)
         {
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
-            
-            Target.Attacked(this, damage, DefenceType.ACAgility);
 
-            if (Envir.Random.Next(8) == 0)
+            for (int i = 1; i <= distance; i++)
             {
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 1000, }, this);
+                Point target = Functions.PointMove(CurrentLocation, Direction, i);
+
+                if (target == Target.CurrentLocation)
+                {
+                    Target.Attacked(this, damage, DefenceType.ACAgility);
+                }
+                else
+                {
+                    if (!CurrentMap.ValidPoint(target)) continue;
+
+                    Cell cell = CurrentMap.GetCell(target);
+                    if (cell.Objects == null) continue;
+
+                    for (int o = 0; o < cell.Objects.Count; o++)
+                    {
+                        MapObject ob = cell.Objects[o];
+                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                        {
+                            if (!ob.IsAttackTarget(this)) continue;
+
+                            ob.Attacked(this, damage, DefenceType.ACAgility);
+                        }
+                        else continue;
+
+                        break;
+                    }
+                }
+
+                if (Envir.Random.Next(8) == 0)
+                {
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 1000, }, this);
+                }
             }
         }
 
