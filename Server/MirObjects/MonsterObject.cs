@@ -188,6 +188,11 @@ namespace Server.MirObjects
                 case 87:
                     return new ManectricBlest(info);
 
+                case 89:
+                    return new TrollBomber(info);
+                case 90:
+                    return new ManectricKing(info);
+
                 //unfinished
                 case 84:
                     return new WingedTigerLord(info);
@@ -295,6 +300,7 @@ namespace Server.MirObjects
         public byte PetLevel;
         public uint PetExperience;
         public byte MaxPetLevel;
+        public long TameTime;
 
         public int RoutePoint;
         public bool Waiting;
@@ -802,6 +808,13 @@ namespace Server.MirObjects
 
                 Despawn();
                 return;
+            }
+
+            if(Master != null && TameTime > 0 && Envir.Time >= TameTime)
+            {
+                Master.Pets.Remove(this);
+                Master = null;
+                Broadcast(new S.ObjectName { ObjectID = ObjectID, Name = Name });
             }
 
             ProcessAI();
@@ -1626,11 +1639,13 @@ namespace Server.MirObjects
                 {
                     if (y < 0) continue;
                     if (y >= CurrentMap.Height) break;
+                    if ((y < location.Y - d + 1) || (y > location.Y + d - 1)) continue;
 
                     for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
+                        if ((x < location.Y - d + 1) || (x > location.X + d - 1)) continue;
 
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
@@ -1666,7 +1681,7 @@ namespace Server.MirObjects
                     for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
                     {
                         if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
+                        if (x >= CurrentMap.Width) break;                    
 
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
@@ -1976,6 +1991,11 @@ namespace Server.MirObjects
                         damage += ((damage / 100) * Settings.MentorDamageBoost);
                     }
                 }
+            }
+
+            if (Master != null && Master != attacker && Master.Race == ObjectType.Player && Envir.Time > Master.BrownTime && Master.PKPoints < 200 && !((PlayerObject)Master).AtWar(attacker))
+            {
+                attacker.BrownTime = Envir.Time + Settings.Minute;
             }
 
             for (int i = 0; i < attacker.Pets.Count; i++)

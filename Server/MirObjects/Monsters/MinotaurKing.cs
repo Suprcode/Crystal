@@ -23,13 +23,15 @@ namespace Server.MirObjects.Monsters
         {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
-            DefenceType defense = (DefenceType)data[2];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             List<MapObject> targets = FindAllTargets(3, target.CurrentLocation);
 
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].Attacked(this, damage, defense);
+                targets[i].Attacked(this, damage, defence);
             }
         }
 

@@ -597,9 +597,9 @@ namespace Client.MirObjects
                 case Monster.TucsonFighter:
                     Frames = FrameSet.Monsters[91];
                     break;
-
-                //92 blank
-
+                case Monster.FrozenDoor:
+                    Frames = FrameSet.Monsters[92];
+                    break;
                 case Monster.TucsonMage:
                     Frames = FrameSet.Monsters[93];
                     break;
@@ -1429,6 +1429,9 @@ namespace Client.MirObjects
                             case Monster.HellCannibal:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellCannibal], 310 + (int)Direction * 12, 12, 12 * Frame.Interval, this));
                                 break;
+                            case Monster.ManectricKing:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 640 + (int)Direction * 10, 10, 10 * 100, this));
+                                break;
                         }
 
                         if ((ushort)BaseImage >= 10000)
@@ -1501,6 +1504,10 @@ namespace Client.MirObjects
                             case Monster.DreamDevourer:
                                 User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DreamDevourer], 264, 7, 7 * Frame.Interval, User));
                                 break;
+                            case Monster.ManectricKing:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 720, 12, 12 * 100, this));
+                                break;
+
                         }
                         TargetID = (uint)action.Params[0];
                         break;
@@ -1538,8 +1545,8 @@ namespace Client.MirObjects
                     case MirAction.Die:
                         switch (BaseImage)
                         {
-                            case Monster.ManectricKing://stupple 08/04
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 504, 6, Frame.Count * Frame.Interval, this));
+                            case Monster.ManectricKing:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 504, 9, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.DarkDevil:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevil], 336, 6, Frame.Count * Frame.Interval, this));
@@ -1597,6 +1604,9 @@ namespace Client.MirObjects
                                 break;
                             case Monster.SabukGate:
                                 Effects.Add(new Effect(Libraries.Effect, 136, 7, Frame.Count * Frame.Interval, this) { Light = -1 });
+                                break;
+                            case Monster.WingedTigerLord:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 650 + (int)Direction * 5, 5, Frame.Count * FrameInterval, this));
                                 break;
                         }
                         PlayDieSound();
@@ -1901,7 +1911,17 @@ namespace Client.MirObjects
                                         }
                                     }
                                     break;
-                                case 16:
+                                case 10:
+                                    {
+                                        switch(BaseImage)
+                                        {
+                                            case Monster.StoningStatue:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StoningStatue], 642, 15, 15 * 100, this));
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case 19:
                                     {
                                         switch(BaseImage)
                                         {
@@ -1931,18 +1951,34 @@ namespace Client.MirObjects
                         }
                         else
                         {
-                            switch (BaseImage)
+                            switch (FrameIndex)
                             {
-                                case Monster.OlympicFlame:
-                                    if (FrameIndex == 1)
+                                case 1:
+                                    switch (BaseImage)
                                     {
-                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureFlame") < 0)
-                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 280, 4, 800, this), "CreatureFlame"));
+                                        case Monster.OlympicFlame:
+                                            if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureFlame") < 0)
+                                                Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 280, 4, 800, this), "CreatureFlame"));
+                                            break;
                                     }
-                                    if (FrameIndex == 4)
+                                    break;
+                                case 3:
                                     {
-                                        if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureSmoke") < 0)
-                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 256, 3, 1000, this), "CreatureSmoke"));
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.WingedTigerLord:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 632, 8, 600, this, 0, true));
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case 4:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.OlympicFlame:
+                                            if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureSmoke") < 0)
+                                                Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 256, 3, 1000, this), "CreatureSmoke"));
+                                            break;
                                     }
                                     break;
                             }
@@ -1965,20 +2001,6 @@ namespace Client.MirObjects
                         else
                         {
                             NextMotion += FrameInterval;
-
-                            switch (FrameIndex)
-                            {
-                                case 3:
-                                    {
-                                        switch (BaseImage)
-                                        {
-                                            case Monster.WingedTigerLord:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 632, 8, 600, this, 0, true));
-                                                break;
-                                        }
-                                    }
-                                    break;
-                            }
                         }
                     }
                     break;
@@ -2237,6 +2259,27 @@ namespace Client.MirObjects
                                                     }
                                                 }
                                                 break;
+                                            case Monster.TrollBomber:
+                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollBomber], false, 4, 40, -4, false);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TrollBomber], 212, 6, 600, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
+                                            case Monster.TrollStoner:
+                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollStoner], false, 4, 40, -4, false);
+                                                break;
+                                            case Monster.WingedTigerLord:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 640, 10, 800, ob, CMain.Time + 400, false));
+                                                }
+                                                break;
                                         }
                                         break;
                                     }
@@ -2349,34 +2392,36 @@ namespace Client.MirObjects
                         }
                         else
                         {
-                            if (FrameIndex == 1)
+                            switch (FrameIndex)
                             {
-                                switch(BaseImage)
-                                {
-                                    case Monster.PoisonHugger:
-                                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, Frame.Count * FrameInterval, this));
-                                        break;
-                                    case Monster.Hugger:
-                                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Hugger], 256, 8, Frame.Count * FrameInterval, this));
-                                        break;
-                                    case Monster.MutatedHugger:
-                                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedHugger], 128, 7, Frame.Count * FrameInterval, this));
-                                        break;
-                                }
-                            }
-                            else if (FrameIndex == 3)
-                            {
-                                PlayDeadSound();
+                                case 1:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.PoisonHugger:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, Frame.Count * FrameInterval, this));
+                                            break;
+                                        case Monster.Hugger:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Hugger], 256, 8, Frame.Count * FrameInterval, this));
+                                            break;
+                                        case Monster.MutatedHugger:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedHugger], 128, 7, Frame.Count * FrameInterval, this));
+                                            break;
+                                    }
+                                    break;
+                                case 3:
+                                    PlayDeadSound();
 
-                                switch (BaseImage)
-                                {
-                                    case Monster.BoneSpearman:
-                                    case Monster.BoneBlademan:
-                                    case Monster.BoneArcher:
-                                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BoneSpearman], 224, 8, Frame.Count * FrameInterval, this));
-                                        break;
-                                }
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.BoneSpearman:
+                                        case Monster.BoneBlademan:
+                                        case Monster.BoneArcher:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BoneSpearman], 224, 8, Frame.Count * FrameInterval, this));
+                                            break;
+                                    }
+                                    break;
                             }
+
                             NextMotion += FrameInterval;
                         }
                     }
@@ -2866,26 +2911,23 @@ namespace Client.MirObjects
                     }
                     break;
 
-                case Monster.ManectricKing: //stupple 04/08
+                case Monster.ManectricKing:
                     switch (CurrentAction)
                     {
-                        case MirAction.Attack1:
-                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(392 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
-                            break;
-                        case MirAction.Attack2:
-                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(440 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
-                            break;
                         case MirAction.Standing:
                             Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(360 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
                             break;
-                        case MirAction.Pushed:
-                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(352 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(392 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(440 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(576 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                             break;
                         case MirAction.Struck:
                             Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(488 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
-                            break;
-                        case MirAction.AttackRange1:
-                            Libraries.Monsters[(ushort)Monster.ManectricKing].DrawBlend(576 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                             break;
                     }
                     break;            
@@ -2900,11 +2942,11 @@ namespace Client.MirObjects
                 case Monster.ManectricBlest:
                     switch(CurrentAction)
                     {
-                        case MirAction.Attack1:
-                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.ManectricBlest].DrawBlend((328 + FrameIndex + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
-                            break;
                         case MirAction.Attack2:
-                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.ManectricBlest].DrawBlend((360 + FrameIndex + (int)Direction * 5) - 3, DrawLocation, Color.White, true);
+                            if (FrameIndex >= 4) Libraries.Monsters[(ushort)Monster.ManectricBlest].DrawBlend((328 + FrameIndex + (int)Direction * 4) - 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack3:
+                            if (FrameIndex >= 2) Libraries.Monsters[(ushort)Monster.ManectricBlest].DrawBlend((360 + FrameIndex + (int)Direction * 5) - 2, DrawLocation, Color.White, true);
                             break;
                     }
                     break;
@@ -3261,7 +3303,10 @@ namespace Client.MirObjects
                 case Monster.WingedTigerLord:
                     switch (CurrentAction)
                     {
-                        case MirAction.Attack3:
+                        case MirAction.Attack1:
+                            if (FrameIndex >= 2) Libraries.Monsters[(ushort)Monster.WingedTigerLord].DrawBlend(584 + (FrameIndex + (int)Direction * 6) - 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
                             if (FrameIndex >= 2) Libraries.Monsters[(ushort)Monster.WingedTigerLord].DrawBlend(560 + (FrameIndex + (int)Direction * 3) - 2, DrawLocation, Color.White, true);
                             break;
                     }

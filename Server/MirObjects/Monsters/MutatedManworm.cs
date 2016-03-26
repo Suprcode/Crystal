@@ -8,6 +8,8 @@ namespace Server.MirObjects.Monsters
 {
     public class MutatedManworm : CrazyManworm
     {
+        public int AttackRange = 5;
+
         protected internal MutatedManworm(MonsterInfo info)
             : base(info)
         {
@@ -43,7 +45,7 @@ namespace Server.MirObjects.Monsters
 
         private void TeleportToWeakerTarget()
         {
-            List<MapObject> targets = FindAllTargets(10, CurrentLocation);
+            List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
 
             if (targets.Count == 0) return;
 

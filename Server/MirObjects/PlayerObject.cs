@@ -6578,6 +6578,7 @@ namespace Server.MirObjects
             target.ShockTime = 0;
             target.OperateTime = 0;
             target.MaxPetLevel = (byte)(1 + magic.Level * 2);
+            //target.TameTime = Envir.Time + (Settings.Minute * 60);
 
             target.Broadcast(new S.ObjectName { ObjectID = target.ObjectID, Name = target.Name });
         }
@@ -9898,6 +9899,7 @@ namespace Server.MirObjects
 
             if (p.Owner != null && p.Owner.Race == ObjectType.Player && Envir.Time > BrownTime && PKPoints < 200)
                 p.Owner.BrownTime = Envir.Time + Settings.Minute;
+
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - PoisonRecovery);
             if (p.Duration == 0) return;
 

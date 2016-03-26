@@ -39,6 +39,11 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+            if(_areaTime == long.MaxValue)
+            {
+                _areaTime = Envir.Time + 10000;
+            }
+
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
@@ -78,8 +83,10 @@ namespace Server.MirObjects.Monsters
 
                 if (Envir.Random.Next(2) == 0)
                 {
-                    Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Stun, Duration = 10, TickSpeed = 1000 }, this);
-                    Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Stunned, Time = 10 * 1000 });
+                    int poisonLength = GetAttackPower(MinMC, MaxMC);
+
+                    Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
+                    Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
                 }
             }
         }

@@ -29,12 +29,11 @@ namespace Server.MirObjects.Monsters
             for (int i = 0; i < targets.Count; i++)
             {
                 Target = targets[i];
-                if (Target.IsFriendlyTarget(this))
-                {
-                    BuffType bufftype = Info.AI == 41 ? BuffType.BlessedArmour : BuffType.UltimateEnhancer;
-                    Target.AddBuff(new Buff { Type = bufftype, Caster = this, ExpireTime = Envir.Time + 5 * 1000, Values = new int[]{ Target.Level / 7 + 4 } });
-                    Target.OperateTime = 0;
-                }
+                if (Target == null || !Target.IsFriendlyTarget(this) || Target.CurrentMap != CurrentMap || Target.Node == null) continue;
+
+                BuffType bufftype = Info.AI == 41 ? BuffType.BlessedArmour : BuffType.UltimateEnhancer;
+                Target.AddBuff(new Buff { Type = bufftype, Caster = this, ExpireTime = Envir.Time + 5 * 1000, Values = new int[] { Target.Level / 7 + 4 } });
+                Target.OperateTime = 0;
             }
 
         }

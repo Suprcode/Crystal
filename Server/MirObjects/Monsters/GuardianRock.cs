@@ -37,6 +37,8 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+            if (Target.CurrentMap != CurrentMap || Target.Node == null) return;
+
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
             PullAttack();
             ActionTime = Envir.Time + 300;

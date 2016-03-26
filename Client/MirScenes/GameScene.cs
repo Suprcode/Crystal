@@ -6187,7 +6187,7 @@ namespace Client.MirScenes
             }
             return null;
         }
-        public MirControl DefenseInfoLabel(UserItem item, bool Inspect = false)
+        public MirControl DefenceInfoLabel(UserItem item, bool Inspect = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
@@ -7923,8 +7923,8 @@ namespace Client.MirScenes
             outlines[0] = NameInfoLabel(item, Inspect);
             //Attribute Info1 Label - Attack Info
             outlines[1] = AttackInfoLabel(item, Inspect);
-            //Attribute Info2 Label - Defense Info
-            outlines[2] = DefenseInfoLabel(item, Inspect);
+            //Attribute Info2 Label - Defence Info
+            outlines[2] = DefenceInfoLabel(item, Inspect);
             //Attribute Info3 Label - Weight Info
             outlines[3] = WeightInfoLabel(item, Inspect);
             //Awake Info Label

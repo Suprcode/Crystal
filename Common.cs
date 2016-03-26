@@ -360,7 +360,7 @@ public enum Monster : ushort
     LionRiderFemale = 181, //frames not added
     Tornado = 182,//done
     FlameTiger = 183,//done
-    WingedTigerLord = 184,//FINISH
+    WingedTigerLord = 184,//done
     TowerTurtle = 185,//done
     FinialTurtle = 186,//done
     TurtleKing = 187,//FINISH
@@ -405,16 +405,17 @@ public enum Monster : ushort
     NamelessGhost = 225,//done
     DarkGhost = 226,//done
     ChaosGhost = 227,//done
-    ManectricBlest = 228,//FINISH
-    ManectricKing = 229,
-    FrozenDoor = 230,
+    ManectricBlest = 228,//done
+    ManectricKing = 229,//done
+    FrozenDoor = 230,//done
     IcePillar = 231,
     FrostYeti = 232,//done
-    ManectricSlave = 233,
-    TrollHammer = 234,
-    TrollBomber = 235,
-    TrollStoner = 236,
+    ManectricSlave = 233,//done
+    TrollHammer = 234,//done
+    TrollBomber = 235,//done
+    TrollStoner = 236,//done
     TrollKing = 237,
+
     FlameSpear = 238,
     FlameMage = 239,
     FlameScythe = 240,

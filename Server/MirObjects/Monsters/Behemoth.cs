@@ -43,11 +43,13 @@ namespace Server.MirObjects.Monsters
                         break;
                     case 3:
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                        Attack1(); //push back
+                        //fire circle
+                        Attack1();
                         break;
                     case 4:
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
-                        Attack2(); //fire circle
+                        //push back
+                        Attack2();
                         break;
                 }
 
@@ -102,9 +104,10 @@ namespace Server.MirObjects.Monsters
                 AttackTime = Envir.Time + AttackSpeed;
             }
         }
+
         private void Attack1()
         {
-            List<MapObject> targets = FindAllTargets(2, CurrentLocation);
+            List<MapObject> targets = FindAllTargets(1, CurrentLocation);
 
             if (targets.Count == 0) return;
 
