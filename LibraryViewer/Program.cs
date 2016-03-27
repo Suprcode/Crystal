@@ -8,6 +8,8 @@ namespace LibraryViewer
 {
     static class Program
     {
+        public static bool LoadFailed = false;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

@@ -4867,12 +4867,12 @@ namespace Client.MirScenes.Dialogs
                 if (GameScene.Scene.CharacterDuraPanel.Visible == true)
                 {
                     GameScene.Scene.CharacterDuraPanel.Hide();
-                    Character.Index = 2113;
+                    Settings.DuraView = false;
                 }
                 else
                 {
                     GameScene.Scene.CharacterDuraPanel.Show();
-                    Character.Index = 2110;
+                    Settings.DuraView = true;
                 }
             };
         }
@@ -5119,11 +5119,14 @@ namespace Client.MirScenes.Dialogs
         {
             if (!Visible) return;
             Visible = false;
+            GameScene.Scene.DuraStatusPanel.Character.Index = 2113;
         }
         public void Show()
         {
             if (Visible) return;
             Visible = true;
+            GameScene.Scene.DuraStatusPanel.Character.Index = 2110;
+
             GetCharacterDura();
         }
     }

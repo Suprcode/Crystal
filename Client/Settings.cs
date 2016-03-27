@@ -128,7 +128,8 @@ namespace Client
             DisplayDamage = true,
             TargetDead = false;
 
-        public static int[,] SkillbarLocation = new int[2, 2];
+        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
+
         //Quests
         public static int[] TrackedQuests = new int[5];
 

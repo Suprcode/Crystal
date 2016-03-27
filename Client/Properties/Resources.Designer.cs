@@ -65,7 +65,7 @@ namespace Client.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap Blue_Progress {
             get {
-                object obj = ResourceManager.GetObject("Blue Progress", resourceCulture);
+                object obj = ResourceManager.GetObject("Blue_Progress", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -205,7 +205,7 @@ namespace Client.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap Green_Progress {
             get {
-                object obj = ResourceManager.GetObject("Green Progress", resourceCulture);
+                object obj = ResourceManager.GetObject("Green_Progress", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -255,7 +255,7 @@ namespace Client.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap NEW_Progress_End__Blue_ {
             get {
-                object obj = ResourceManager.GetObject("NEW Progress End (Blue)", resourceCulture);
+                object obj = ResourceManager.GetObject("NEW_Progress_End_(Blue)", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -265,7 +265,7 @@ namespace Client.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap NEW_Progress_End__Green_ {
             get {
-                object obj = ResourceManager.GetObject("NEW Progress End (Green)", resourceCulture);
+                object obj = ResourceManager.GetObject("NEW_Progress_End_(Green)", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

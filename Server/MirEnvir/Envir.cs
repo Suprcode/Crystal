@@ -925,7 +925,6 @@ namespace Server.MirEnvir
                 File.Move(AccountPath + "n", AccountPath);
                 if (File.Exists(AccountPath + "o"))
                 File.Delete(AccountPath + "o");
-
             }
             catch (Exception ex)
             {

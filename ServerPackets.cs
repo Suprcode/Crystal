@@ -2942,6 +2942,7 @@ namespace ServerPackets
         public SpellEffect Effect;
         public uint EffectType;
         public uint DelayTime = 0;
+        public uint Time = 0;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -2949,6 +2950,7 @@ namespace ServerPackets
             Effect = (SpellEffect)reader.ReadByte();
             EffectType = reader.ReadUInt32();
             DelayTime = reader.ReadUInt32();
+            Time = reader.ReadUInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2956,6 +2958,7 @@ namespace ServerPackets
             writer.Write((byte)Effect);
             writer.Write(EffectType);
             writer.Write(DelayTime);
+            writer.Write(Time);
         }
     }
     public sealed class RangeAttack : Packet //ArcherTest
