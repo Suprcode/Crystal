@@ -1413,6 +1413,12 @@ namespace Client.MirObjects
                             case Monster.PoisonHugger:
                                 User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, 5 * Frame.Interval, User, 500, false));
                                 break;
+                            case Monster.IcePillar:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 12, 6, 6 * 100, this));
+                                break;
+                            case Monster.TrollKing:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TrollKing], 288, 6, 6 * Frame.Interval, this));
+                                break;
                         }
                         break;
                     case MirAction.Attack2:
@@ -1507,8 +1513,11 @@ namespace Client.MirObjects
                             case Monster.ManectricKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 720, 12, 12 * 100, this));
                                 break;
-
+                            case Monster.IcePillar:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 26, 6, 8 * 100, this) { Start = CMain.Time + 750 });
+                                break;
                         }
+
                         TargetID = (uint)action.Params[0];
                         break;
                     case MirAction.AttackRange2:
@@ -2259,6 +2268,13 @@ namespace Client.MirObjects
                                                     }
                                                 }
                                                 break;
+                                            case Monster.WingedTigerLord:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 640, 10, 800, ob, CMain.Time + 400, false));
+                                                }
+                                                break;
                                             case Monster.TrollBomber:
                                                 missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollBomber], false, 4, 40, -4, false);
 
@@ -2272,13 +2288,6 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.TrollStoner:
                                                 missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollStoner], false, 4, 40, -4, false);
-                                                break;
-                                            case Monster.WingedTigerLord:
-                                                ob = MapControl.GetObject(TargetID);
-                                                if (ob != null)
-                                                {
-                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WingedTigerLord], 640, 10, 800, ob, CMain.Time + 400, false));
-                                                }
                                                 break;
                                         }
                                         break;
@@ -2328,6 +2337,17 @@ namespace Client.MirObjects
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                         missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WhiteFoxman], 362, 15, 1000, missile.Target));
+                                                    };
+                                                }
+                                                break;
+                                            case Monster.TrollKing:
+                                                missile = CreateProjectile(294, Libraries.Monsters[(ushort)Monster.TrollKing], false, 4, 40, -4, false);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TrollKing], 298, 6, 600, missile.Target) { Blend = true });
                                                     };
                                                 }
                                                 break;

@@ -43,7 +43,7 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
 
-                if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) return;
+                if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) continue;
 
                 if (Envir.Random.Next(5) == 0)
                     targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);

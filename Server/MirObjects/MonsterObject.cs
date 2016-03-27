@@ -181,21 +181,23 @@ namespace Server.MirObjects
                     return new Wall(info);
                 case 83:
                     return new Tornado(info);
-
+                case 84:
+                    return new WingedTigerLord(info);
 
                 case 86:
                     return new ManectricClaw(info);
                 case 87:
                     return new ManectricBlest(info);
-
-                case 89:
-                    return new TrollBomber(info);
-                case 90:
+                case 88:
                     return new ManectricKing(info);
+                case 89:
+                    return new IcePillar(info);
+                case 90:
+                    return new TrollBomber(info);
+                case 91:
+                    return new TrollKing(info);
 
                 //unfinished
-                case 84:
-                    return new WingedTigerLord(info);
                 case 253:
                     return new FlamingMutant(info);
                 case 254:

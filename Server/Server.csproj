@@ -190,6 +190,12 @@
     <Compile Include="MirForms\Systems\MiningInfoForm.Designer.cs">
       <DependentUpon>MiningInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MirForms\Systems\MonsterTunerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Systems\MonsterTunerForm.Designer.cs">
+      <DependentUpon>MonsterTunerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MirForms\Systems\SystemInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -242,6 +248,8 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
+    <Compile Include="MirObjects\Monsters\IcePillar.cs" />
+    <Compile Include="MirObjects\Monsters\TrollKing.cs" />
     <Compile Include="MirObjects\Monsters\ManectricKing.cs" />
     <Compile Include="MirObjects\Monsters\TrollBomber.cs" />
     <Compile Include="MirObjects\Monsters\ManectricBlest.cs" />
@@ -409,6 +417,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\MiningInfoForm.resx">
       <DependentUpon>MiningInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Systems\MonsterTunerForm.resx">
+      <DependentUpon>MonsterTunerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\SystemInfoForm.resx">
       <DependentUpon>SystemInfoForm.cs</DependentUpon>

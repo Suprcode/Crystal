@@ -408,13 +408,13 @@ public enum Monster : ushort
     ManectricBlest = 228,//done
     ManectricKing = 229,//done
     FrozenDoor = 230,//done
-    IcePillar = 231,
+    IcePillar = 231,//done
     FrostYeti = 232,//done
     ManectricSlave = 233,//done
     TrollHammer = 234,//done
     TrollBomber = 235,//done
     TrollStoner = 236,//done
-    TrollKing = 237,
+    TrollKing = 237,//done
 
     FlameSpear = 238,
     FlameMage = 239,
@@ -1142,7 +1142,8 @@ public enum SpellEffect : byte
     StormEscape,
     TurtleKing,
     Behemoth,
-    Stunned
+    Stunned,
+    IcePillar
 }
 
 public enum BuffType : byte

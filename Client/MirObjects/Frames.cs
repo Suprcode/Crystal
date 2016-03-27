@@ -792,6 +792,7 @@ namespace Client.MirObjects
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 1, -1, 1000));
             frame.Frames.Add(MirAction.Struck, new Frame(1, 4, -4, 200));
+            frame.Frames.Add(MirAction.Attack1, new Frame(0, 1, -1, 1000));
             frame.Frames.Add(MirAction.Die, new Frame(5, 7, -7, 150));
             frame.Frames.Add(MirAction.Dead, new Frame(11, 1, -1, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(5, 7, -7, 150) { Reverse = true });
@@ -939,6 +940,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(144, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(153, 1, 9, 1000));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(288, 9, 0, 100));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(224, 8, 0, 100));
             frame.Frames.Add(MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true });
 
             //77 - FlameMage, FlameScythe, FlameAssassin

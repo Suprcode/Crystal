@@ -124,7 +124,7 @@
   <data name="textboxes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\textboxes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Blue Progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Blue_Progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Blue Progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Config_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -133,10 +133,10 @@
   <data name="Config_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Config_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Green Progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Green_Progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Green Progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NEW Progress End (Green)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="NEW_Progress_End_(Green)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NEW Progress End (Green).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Cross_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -178,7 +178,7 @@
   <data name="Config_Base1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Config_Base1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NEW Progress End (Blue)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="NEW_Progress_End_(Blue)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NEW Progress End (Blue).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Config_Radio_On" type="System.Resources.ResXFileRef, System.Windows.Forms">

@@ -3897,6 +3897,9 @@ namespace Client.MirScenes
                             RepeatUntil = p.Time > 0 ? CMain.Time + p.Time : 0
                         });
                         break;
+                    case SpellEffect.IcePillar:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 18, 8, 800, ob));
+                        break;
                 }
                 return;
             }

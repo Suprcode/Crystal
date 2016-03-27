@@ -715,9 +715,9 @@
             // 
             // PasteMButton
             // 
-            this.PasteMButton.Location = new System.Drawing.Point(255, 12);
+            this.PasteMButton.Location = new System.Drawing.Point(220, 12);
             this.PasteMButton.Name = "PasteMButton";
-            this.PasteMButton.Size = new System.Drawing.Size(75, 23);
+            this.PasteMButton.Size = new System.Drawing.Size(44, 23);
             this.PasteMButton.TabIndex = 22;
             this.PasteMButton.Text = "Paste";
             this.PasteMButton.UseVisualStyleBackColor = true;
@@ -727,7 +727,7 @@
             // 
             this.CopyMButton.Location = new System.Drawing.Point(174, 12);
             this.CopyMButton.Name = "CopyMButton";
-            this.CopyMButton.Size = new System.Drawing.Size(75, 23);
+            this.CopyMButton.Size = new System.Drawing.Size(44, 23);
             this.CopyMButton.TabIndex = 21;
             this.CopyMButton.Text = "Copy";
             this.CopyMButton.UseVisualStyleBackColor = true;
