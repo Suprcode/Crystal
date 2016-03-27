@@ -23,7 +23,7 @@ namespace Server.MirObjects
                 case 3:
                     return new Tree(info);
                 case 4:
-                    return new SpittingSpider(info); //Spider
+                    return new SpittingSpider(info);
                 case 5:
                     return new CannibalPlant(info);
                 case 6:
@@ -150,15 +150,13 @@ namespace Server.MirObjects
                 case 67:
                     return new DarkDevourer(info);
                 case 68:
-                    return new Football(info);    
-                    
-                //unfinished START      
+                    return new Football(info);
                 case 69:
-                    return new Behemoth(info);
+                    return new PoisonHugger(info);
                 case 70:
-                    return new DreamDevourer(info);
+                    return new Hugger(info);
                 case 71:
-                    return new FlameTiger(info);
+                    return new Behemoth(info);
                 case 72:
                     return new FinialTurtle(info);
                 case 73:
@@ -166,23 +164,46 @@ namespace Server.MirObjects
                 case 74:
                     return new LightTurtle(info);
                 case 75:
-                    return new FlamingMutant(info);
+                    return new WitchDoctor(info);
                 case 76:
-                    return new StoningStatue(info);
+                    return new HellSlasher(info);
                 case 77:
                     return new HellPirate(info);
                 case 78:
-                    return new HellKeeper(info);
+                    return new HellCannibal(info);
                 case 79:
-                    return new ManectricClaw(info);
-                //unfinished END
-
+                    return new HellKeeper(info);
                 case 80:
                     return new ConquestArcher(info);
                 case 81:
                     return new Gate(info);
                 case 82:
                     return new Wall(info);
+                case 83:
+                    return new Tornado(info);
+                case 84:
+                    return new WingedTigerLord(info);
+
+                case 86:
+                    return new ManectricClaw(info);
+                case 87:
+                    return new ManectricBlest(info);
+                case 88:
+                    return new ManectricKing(info);
+                case 89:
+                    return new IcePillar(info);
+                case 90:
+                    return new TrollBomber(info);
+                case 91:
+                    return new TrollKing(info);
+
+                //unfinished
+                case 253:
+                    return new FlamingMutant(info);
+                case 254:
+                    return new StoningStatue(info);
+                //unfinished END
+
 
                 case 200://custom
                     return new Runaway(info);
@@ -266,6 +287,8 @@ namespace Server.MirObjects
                     case 81:
                     case 82:
                         return int.MaxValue;
+                    case 252:
+                        return 5000;
                     default:
                         return 180000;
                 }
@@ -279,6 +302,7 @@ namespace Server.MirObjects
         public byte PetLevel;
         public uint PetExperience;
         public byte MaxPetLevel;
+        public long TameTime;
 
         public int RoutePoint;
         public bool Waiting;
@@ -311,7 +335,7 @@ namespace Server.MirObjects
             get
             {
                 return !Dead && Envir.Time > AttackTime && Envir.Time > ActionTime &&
-                     (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
+                     (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both || !CurrentMap.Info.NoFight) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
                        && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
@@ -788,6 +812,13 @@ namespace Server.MirObjects
                 return;
             }
 
+            if(Master != null && TameTime > 0 && Envir.Time >= TameTime)
+            {
+                Master.Pets.Remove(this);
+                Master = null;
+                Broadcast(new S.ObjectName { ObjectID = ObjectID, Name = Name });
+            }
+
             ProcessAI();
 
             ProcessBuffs();
@@ -1205,7 +1236,6 @@ namespace Server.MirObjects
         protected virtual void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
-            if (Target.CurrentMap.Info.NoFight) return;
 
             if (InAttackRange())
             {
@@ -1611,11 +1641,13 @@ namespace Server.MirObjects
                 {
                     if (y < 0) continue;
                     if (y >= CurrentMap.Height) break;
+                    if ((y < location.Y - d + 1) || (y > location.Y + d - 1)) continue;
 
                     for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
+                        if ((x < location.Y - d + 1) || (x > location.X + d - 1)) continue;
 
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
@@ -1651,7 +1683,7 @@ namespace Server.MirObjects
                     for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
                     {
                         if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
+                        if (x >= CurrentMap.Width) break;                    
 
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
@@ -1963,11 +1995,16 @@ namespace Server.MirObjects
                 }
             }
 
+            if (Master != null && Master != attacker && Master.Race == ObjectType.Player && Envir.Time > Master.BrownTime && Master.PKPoints < 200 && !((PlayerObject)Master).AtWar(attacker))
+            {
+                attacker.BrownTime = Envir.Time + Settings.Minute;
+            }
+
             for (int i = 0; i < attacker.Pets.Count; i++)
             {
                 MonsterObject ob = attacker.Pets[i];
 
-                if (IsAttackTarget(ob)) ob.Target = this;
+                if (IsAttackTarget(ob) && (ob.Target == null)) ob.Target = this;
             }
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);

@@ -6,9 +6,9 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class HellPirate : MonsterObject
+    public class HellSlasher : MonsterObject
     {
-        protected internal HellPirate(MonsterInfo info)
+        protected internal HellSlasher(MonsterInfo info)
             : base(info)
         {
         }
@@ -35,10 +35,10 @@ namespace Server.MirObjects.Monsters
                 Point target;
                 Cell cell;
 
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 4; i++)
                 {
-                    target = Functions.PointMove(CurrentLocation, dir, 1);
-                    dir = Functions.NextDir(dir);
+                    target = Functions.PointMove(CurrentLocation, Direction, 1);
+                    dir = Functions.NextDir(Direction);
                     if (target == Front) continue;
 
                     if (!CurrentMap.ValidPoint(target)) continue;
@@ -53,7 +53,13 @@ namespace Server.MirObjects.Monsters
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                         if (!ob.IsAttackTarget(this)) continue;
 
-                        ob.Attacked(this, MinDC, DefenceType.Agility);
+                        ob.Attacked(this, MinDC, DefenceType.ACAgility);
+                        
+                        if(Envir.Random.Next(5) == 0)
+                        {
+                            ob.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = Envir.Random.Next(1, 4), TickSpeed = 1000 }, this);
+                        }
+                                      
                         break;
                     }
                 }

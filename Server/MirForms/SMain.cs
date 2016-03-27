@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
 using Server.MirDatabase;
+using Server.MirForms.Systems;
 
 namespace Server
 {
@@ -390,6 +391,20 @@ namespace Server
         {
             SystemInfoForm form = new SystemInfoForm(7);
             
+            form.ShowDialog();
+        }
+
+        private void monsterTunerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!SMain.Envir.Running)
+            {
+                MessageBox.Show("Server must be running to tune monsters", "Notice",
+                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
+
+            MonsterTunerForm form = new MonsterTunerForm();
+
             form.ShowDialog();
         }
 

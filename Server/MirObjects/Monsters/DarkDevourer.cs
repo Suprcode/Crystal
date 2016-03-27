@@ -23,45 +23,51 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
                 return;
             }
 
-            ShockTime = 0;
-
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
-
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(MinDC, MaxDC);
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.MACAgility);
+                ActionTime = Envir.Time + AttackSpeed + 300;
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
+                ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                AttackTime = Envir.Time + AttackSpeed + 500;
-                if (damage == 0) return;
 
+                AttackTime = Envir.Time + AttackSpeed + 500;
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
+
+                if(Info.Effect == 1)
+                {
+                    Target.ApplyPoison(new Poison
+                    {
+                        Owner = this,
+                        Duration = 5,
+                        PType = PoisonType.Green,
+                        TickSpeed = 1000,
+                    }, this);
+                }
             }
 
+            ShockTime = 0;
+            AttackTime = Envir.Time + AttackSpeed;
 
             if (Target.Dead)
                 FindTarget();
-
         }
 
         protected override void ProcessTarget()

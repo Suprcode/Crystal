@@ -91,6 +91,8 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null) return;
 
+            if (!Target.IsAttackTarget(this) || Target.CurrentMap != CurrentMap || Target.Node == null) return;
+
             List<MapObject> targets = MassAttack ? FindAllTargets(17/*huge range so it even hits ppl with bigger resolutions*/, CurrentLocation, false) : FindAllTargets(2, Target.CurrentLocation, false);
             if (targets.Count == 0) return;
 

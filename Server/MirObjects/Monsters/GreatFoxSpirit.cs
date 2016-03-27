@@ -122,7 +122,7 @@ namespace Server.MirObjects.Monsters
                     Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);
                 if (Envir.Random.Next(15) == 0)
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
-            }          
+            }
         }
 
         public override void Die()
