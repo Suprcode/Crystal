@@ -480,7 +480,7 @@ namespace Server.MirEnvir
                 SMain.Enqueue(ex);
             }
 
-            SMain.Enqueue("Failed to Load Map: " + Info.FileName);
+            SMain.Enqueue("加载地图失败: " + Info.FileName);
             return false;
         }
 
@@ -1226,7 +1226,14 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (!target.IsAttackTarget(player)) break;
 
-                                        if (target.Attacked(player, magic.Spell == Spell.ThunderStorm && !target.Undead ? value / 10 : value , DefenceType.MAC, false) <= 0) break;
+                                        if (target.Attacked(player, magic.Spell == Spell.ThunderStorm && !target.Undead ? value / 10 : value, DefenceType.MAC, false) <= 0)
+                                        {
+                                            if (target.Undead)
+                                            {
+                                                target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
+                                            }
+                                            break;
+                                        }
 
                                         train = true;
                                         break;

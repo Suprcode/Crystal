@@ -1321,6 +1321,8 @@ namespace Client.MirObjects
                             GameScene.LastRunTime = CMain.Time;
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.InputDelay = CMain.Time + 500;
+                            GameScene.CanRun = false;
+                            GameScene.CanMove = false;
                             break;
                         case MirAction.DashL:
                         case MirAction.DashR:
@@ -1616,7 +1618,7 @@ namespace Client.MirObjects
                         {
                             #region FireBall
 
-                            case Spell.FireBall:
+                            case Spell.火球术:
                                 Effects.Add(new Effect(Libraries.Magic, 0, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
@@ -2861,7 +2863,7 @@ namespace Client.MirObjects
                                 {
                                     #region FireBall
 
-                                    case Spell.FireBall:
+                                    case Spell.火球术:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
                                         missile = CreateProjectile(10, Libraries.Magic, true, 6, 30, 4);
 
@@ -2871,7 +2873,7 @@ namespace Client.MirObjects
                                             {
                                                 if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                 missile.Target.Effects.Add(new Effect(Libraries.Magic, 170, 10, 600, missile.Target));
-                                                SoundManager.PlaySound(20000 + (ushort)Spell.FireBall * 10 + 2);
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.火球术 * 10 + 2);
                                             };
                                         }
                                         break;

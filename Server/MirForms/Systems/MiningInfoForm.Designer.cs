@@ -93,7 +93,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(419, 237);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Stats";
+            this.tabPage1.Text = "属性";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox7
@@ -116,22 +116,22 @@
             this.groupBox7.Size = new System.Drawing.Size(403, 121);
             this.groupBox7.TabIndex = 27;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Mine Base Stat";
+            this.groupBox7.Text = "挖矿基本属性";
             // 
             // label79
             // 
             this.label79.AutoSize = true;
             this.label79.Location = new System.Drawing.Point(8, 19);
             this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(38, 13);
+            this.label79.Size = new System.Drawing.Size(35, 12);
             this.label79.TabIndex = 23;
-            this.label79.Text = "Name:";
+            this.label79.Text = "名称:";
             // 
             // MineNametextBox
             // 
             this.MineNametextBox.Location = new System.Drawing.Point(97, 16);
             this.MineNametextBox.Name = "MineNametextBox";
-            this.MineNametextBox.Size = new System.Drawing.Size(100, 20);
+            this.MineNametextBox.Size = new System.Drawing.Size(100, 21);
             this.MineNametextBox.TabIndex = 22;
             this.MineNametextBox.TextChanged += new System.EventHandler(this.MineNametextBox_TextChanged);
             // 
@@ -139,7 +139,7 @@
             // 
             this.MineSlotstextBox.Location = new System.Drawing.Point(97, 92);
             this.MineSlotstextBox.Name = "MineSlotstextBox";
-            this.MineSlotstextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineSlotstextBox.Size = new System.Drawing.Size(34, 21);
             this.MineSlotstextBox.TabIndex = 10;
             this.MineSlotstextBox.TextChanged += new System.EventHandler(this.MineSlotstextBox_TextChanged);
             // 
@@ -148,7 +148,7 @@
             this.label70.AutoSize = true;
             this.label70.Location = new System.Drawing.Point(6, 95);
             this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(33, 13);
+            this.label70.Size = new System.Drawing.Size(41, 12);
             this.label70.TabIndex = 9;
             this.label70.Text = "Slots:";
             // 
@@ -157,7 +157,7 @@
             this.label69.AutoSize = true;
             this.label69.Location = new System.Drawing.Point(286, 45);
             this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(56, 13);
+            this.label69.Size = new System.Drawing.Size(59, 12);
             this.label69.TabIndex = 8;
             this.label69.Text = "DropRate:";
             // 
@@ -166,7 +166,7 @@
             this.label68.AutoSize = true;
             this.label68.Location = new System.Drawing.Point(286, 19);
             this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(46, 13);
+            this.label68.Size = new System.Drawing.Size(53, 12);
             this.label68.TabIndex = 7;
             this.label68.Text = "HitRate:";
             // 
@@ -174,7 +174,7 @@
             // 
             this.MineDropRatetextBox.Location = new System.Drawing.Point(362, 42);
             this.MineDropRatetextBox.Name = "MineDropRatetextBox";
-            this.MineDropRatetextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineDropRatetextBox.Size = new System.Drawing.Size(34, 21);
             this.MineDropRatetextBox.TabIndex = 6;
             this.MineDropRatetextBox.TextChanged += new System.EventHandler(this.MineDropRatetextBox_TextChanged);
             // 
@@ -182,7 +182,7 @@
             // 
             this.MineHitRatetextBox.Location = new System.Drawing.Point(362, 16);
             this.MineHitRatetextBox.Name = "MineHitRatetextBox";
-            this.MineHitRatetextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineHitRatetextBox.Size = new System.Drawing.Size(34, 21);
             this.MineHitRatetextBox.TabIndex = 5;
             this.MineHitRatetextBox.TextChanged += new System.EventHandler(this.MineHitRatetextBox_TextChanged);
             // 
@@ -190,7 +190,7 @@
             // 
             this.MineAttemptstextBox.Location = new System.Drawing.Point(97, 68);
             this.MineAttemptstextBox.Name = "MineAttemptstextBox";
-            this.MineAttemptstextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineAttemptstextBox.Size = new System.Drawing.Size(34, 21);
             this.MineAttemptstextBox.TabIndex = 4;
             this.MineAttemptstextBox.TextChanged += new System.EventHandler(this.MineAttemptstextBox_TextChanged);
             // 
@@ -198,7 +198,7 @@
             // 
             this.MineRegenDelaytextBox.Location = new System.Drawing.Point(97, 42);
             this.MineRegenDelaytextBox.Name = "MineRegenDelaytextBox";
-            this.MineRegenDelaytextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineRegenDelaytextBox.Size = new System.Drawing.Size(34, 21);
             this.MineRegenDelaytextBox.TabIndex = 3;
             this.MineRegenDelaytextBox.TextChanged += new System.EventHandler(this.MineRegenDelaytextBox_TextChanged);
             // 
@@ -207,7 +207,7 @@
             this.label67.AutoSize = true;
             this.label67.Location = new System.Drawing.Point(8, 71);
             this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(83, 13);
+            this.label67.Size = new System.Drawing.Size(95, 12);
             this.label67.TabIndex = 2;
             this.label67.Text = "Attempts/regen:";
             // 
@@ -216,18 +216,18 @@
             this.label66.AutoSize = true;
             this.label66.Location = new System.Drawing.Point(148, 45);
             this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(49, 13);
+            this.label66.Size = new System.Drawing.Size(41, 12);
             this.label66.TabIndex = 1;
-            this.label66.Text = "(minutes)";
+            this.label66.Text = "(分钟)";
             // 
             // label65
             // 
             this.label65.AutoSize = true;
             this.label65.Location = new System.Drawing.Point(8, 45);
             this.label65.Name = "label65";
-            this.label65.Size = new System.Drawing.Size(70, 13);
+            this.label65.Size = new System.Drawing.Size(59, 12);
             this.label65.TabIndex = 0;
-            this.label65.Text = "Regen delay:";
+            this.label65.Text = "重生延迟:";
             // 
             // tabPage2
             // 
@@ -240,7 +240,7 @@
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Size = new System.Drawing.Size(419, 237);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Drops";
+            this.tabPage2.Text = "掉落";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // label78
@@ -248,7 +248,7 @@
             this.label78.AutoSize = true;
             this.label78.Location = new System.Drawing.Point(7, 40);
             this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(38, 13);
+            this.label78.Size = new System.Drawing.Size(41, 12);
             this.label78.TabIndex = 26;
             this.label78.Text = "Drops:";
             // 
@@ -258,7 +258,7 @@
             this.MineDropsIndexcomboBox.FormattingEnabled = true;
             this.MineDropsIndexcomboBox.Location = new System.Drawing.Point(12, 12);
             this.MineDropsIndexcomboBox.Name = "MineDropsIndexcomboBox";
-            this.MineDropsIndexcomboBox.Size = new System.Drawing.Size(129, 21);
+            this.MineDropsIndexcomboBox.Size = new System.Drawing.Size(129, 20);
             this.MineDropsIndexcomboBox.TabIndex = 22;
             this.MineDropsIndexcomboBox.SelectedIndexChanged += new System.EventHandler(this.MineDropsIndexcomboBox_SelectedIndexChanged);
             // 
@@ -288,7 +288,7 @@
             // 
             this.MineMaxBonustextBox.Location = new System.Drawing.Point(99, 151);
             this.MineMaxBonustextBox.Name = "MineMaxBonustextBox";
-            this.MineMaxBonustextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineMaxBonustextBox.Size = new System.Drawing.Size(34, 21);
             this.MineMaxBonustextBox.TabIndex = 34;
             this.MineMaxBonustextBox.TextChanged += new System.EventHandler(this.MineMaxBonustextBox_TextChanged);
             // 
@@ -297,7 +297,7 @@
             this.label77.AutoSize = true;
             this.label77.Location = new System.Drawing.Point(10, 154);
             this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(84, 13);
+            this.label77.Size = new System.Drawing.Size(83, 12);
             this.label77.TabIndex = 33;
             this.label77.Text = "Maximum Bonus";
             // 
@@ -305,7 +305,7 @@
             // 
             this.MineBonusChancetextBox.Location = new System.Drawing.Point(99, 127);
             this.MineBonusChancetextBox.Name = "MineBonusChancetextBox";
-            this.MineBonusChancetextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineBonusChancetextBox.Size = new System.Drawing.Size(34, 21);
             this.MineBonusChancetextBox.TabIndex = 32;
             this.MineBonusChancetextBox.TextChanged += new System.EventHandler(this.MineBonusChancetextBox_TextChanged);
             // 
@@ -314,7 +314,7 @@
             this.label76.AutoSize = true;
             this.label76.Location = new System.Drawing.Point(10, 130);
             this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(77, 13);
+            this.label76.Size = new System.Drawing.Size(77, 12);
             this.label76.TabIndex = 31;
             this.label76.Text = "Bonus Chance";
             // 
@@ -322,7 +322,7 @@
             // 
             this.MineMaxQualitytextBox.Location = new System.Drawing.Point(99, 104);
             this.MineMaxQualitytextBox.Name = "MineMaxQualitytextBox";
-            this.MineMaxQualitytextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineMaxQualitytextBox.Size = new System.Drawing.Size(34, 21);
             this.MineMaxQualitytextBox.TabIndex = 30;
             this.MineMaxQualitytextBox.TextChanged += new System.EventHandler(this.MineMaxQualitytextBox_TextChanged);
             // 
@@ -331,15 +331,15 @@
             this.label75.AutoSize = true;
             this.label75.Location = new System.Drawing.Point(10, 107);
             this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(86, 13);
+            this.label75.Size = new System.Drawing.Size(53, 12);
             this.label75.TabIndex = 29;
-            this.label75.Text = "Maximum Quality";
+            this.label75.Text = "最大纯度";
             // 
             // MineMinQualitytextBox
             // 
             this.MineMinQualitytextBox.Location = new System.Drawing.Point(99, 81);
             this.MineMinQualitytextBox.Name = "MineMinQualitytextBox";
-            this.MineMinQualitytextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineMinQualitytextBox.Size = new System.Drawing.Size(34, 21);
             this.MineMinQualitytextBox.TabIndex = 28;
             this.MineMinQualitytextBox.TextChanged += new System.EventHandler(this.MineMinQualitytextBox_TextChanged);
             // 
@@ -348,15 +348,15 @@
             this.label74.AutoSize = true;
             this.label74.Location = new System.Drawing.Point(10, 84);
             this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(83, 13);
+            this.label74.Size = new System.Drawing.Size(53, 12);
             this.label74.TabIndex = 27;
-            this.label74.Text = "Minimum Quality";
+            this.label74.Text = "最小纯度";
             // 
             // MineMaxSlottextBox
             // 
             this.MineMaxSlottextBox.Location = new System.Drawing.Point(99, 59);
             this.MineMaxSlottextBox.Name = "MineMaxSlottextBox";
-            this.MineMaxSlottextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineMaxSlottextBox.Size = new System.Drawing.Size(34, 21);
             this.MineMaxSlottextBox.TabIndex = 26;
             this.MineMaxSlottextBox.TextChanged += new System.EventHandler(this.MineMaxSlottextBox_TextChanged);
             // 
@@ -365,7 +365,7 @@
             this.label73.AutoSize = true;
             this.label73.Location = new System.Drawing.Point(10, 62);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(51, 13);
+            this.label73.Size = new System.Drawing.Size(59, 12);
             this.label73.TabIndex = 25;
             this.label73.Text = "Max Slot:";
             // 
@@ -373,7 +373,7 @@
             // 
             this.MineMinSlottextBox.Location = new System.Drawing.Point(99, 36);
             this.MineMinSlottextBox.Name = "MineMinSlottextBox";
-            this.MineMinSlottextBox.Size = new System.Drawing.Size(34, 20);
+            this.MineMinSlottextBox.Size = new System.Drawing.Size(34, 21);
             this.MineMinSlottextBox.TabIndex = 24;
             this.MineMinSlottextBox.TextChanged += new System.EventHandler(this.MineMinSlottextBox_TextChanged);
             // 
@@ -382,7 +382,7 @@
             this.label72.AutoSize = true;
             this.label72.Location = new System.Drawing.Point(10, 39);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(48, 13);
+            this.label72.Size = new System.Drawing.Size(59, 12);
             this.label72.TabIndex = 23;
             this.label72.Text = "Min Slot:";
             // 
@@ -390,7 +390,7 @@
             // 
             this.MineItemNametextBox.Location = new System.Drawing.Point(99, 13);
             this.MineItemNametextBox.Name = "MineItemNametextBox";
-            this.MineItemNametextBox.Size = new System.Drawing.Size(83, 20);
+            this.MineItemNametextBox.Size = new System.Drawing.Size(83, 21);
             this.MineItemNametextBox.TabIndex = 22;
             this.MineItemNametextBox.TextChanged += new System.EventHandler(this.MineItemNametextBox_TextChanged);
             // 
@@ -399,9 +399,9 @@
             this.label71.AutoSize = true;
             this.label71.Location = new System.Drawing.Point(10, 16);
             this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(58, 13);
+            this.label71.Size = new System.Drawing.Size(59, 12);
             this.label71.TabIndex = 21;
-            this.label71.Text = "ItemName:";
+            this.label71.Text = "矿物名称:";
             // 
             // MineRemoveDropbutton
             // 
@@ -449,7 +449,7 @@
             this.MineIndexcomboBox.FormattingEnabled = true;
             this.MineIndexcomboBox.Location = new System.Drawing.Point(91, 6);
             this.MineIndexcomboBox.Name = "MineIndexcomboBox";
-            this.MineIndexcomboBox.Size = new System.Drawing.Size(92, 21);
+            this.MineIndexcomboBox.Size = new System.Drawing.Size(92, 20);
             this.MineIndexcomboBox.TabIndex = 23;
             this.MineIndexcomboBox.SelectedIndexChanged += new System.EventHandler(this.MineIndexcomboBox_SelectedIndexChanged);
             // 
@@ -458,9 +458,9 @@
             this.label64.AutoSize = true;
             this.label64.Location = new System.Drawing.Point(13, 9);
             this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(62, 13);
+            this.label64.Size = new System.Drawing.Size(59, 12);
             this.label64.TabIndex = 24;
-            this.label64.Text = "Mine Index:";
+            this.label64.Text = "挖矿索引:";
             // 
             // MiningInfoForm
             // 

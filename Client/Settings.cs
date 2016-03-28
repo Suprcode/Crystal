@@ -70,9 +70,16 @@ namespace Client
         public static bool DebugMode = false;
 
         //Network
+#if DEBUG
         public static bool UseConfig = true;
         public static string IPAddress = "127.0.0.1";
         public static int Port = 7000;
+#else
+        public static bool UseConfig = true;
+        public static string IPAddress = "127.0.0.1";
+        public static int Port = 7000;
+#endif
+
         public const int TimeOut = 5000;
 
         //Sound
@@ -128,7 +135,8 @@ namespace Client
             DisplayDamage = true,
             TargetDead = false;
 
-        public static int[,] SkillbarLocation = new int[2, 2];
+        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
+
         //Quests
         public static int[] TrackedQuests = new int[5];
 
@@ -156,12 +164,12 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_Host = @"ftp://160.16.69.9"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
-        public static bool P_NeedLogin = false;
-        public static string P_Login = string.Empty;
-        public static string P_Password = string.Empty;
-        public static string P_ServerName = string.Empty;
+        public static bool P_NeedLogin = true;
+        public static string P_Login = "mir";
+        public static string P_Password = "mir";
+        public static string P_ServerName = "C#中文版";
         public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;

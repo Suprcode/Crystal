@@ -98,14 +98,15 @@
             this.ResizeButton});
             this.Tool.Location = new System.Drawing.Point(0, 0);
             this.Tool.Name = "Tool";
-            this.Tool.Size = new System.Drawing.Size(45, 469);
+            this.Tool.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.Tool.Size = new System.Drawing.Size(68, 725);
             this.Tool.TabIndex = 1;
             this.Tool.Text = "toolStrip1";
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(43, 15);
+            this.toolStripLabel1.Size = new System.Drawing.Size(65, 24);
             this.toolStripLabel1.Text = " ";
             // 
             // EndFocus
@@ -124,7 +125,7 @@
             // FocusBreak
             // 
             this.FocusBreak.Name = "FocusBreak";
-            this.FocusBreak.Size = new System.Drawing.Size(43, 6);
+            this.FocusBreak.Size = new System.Drawing.Size(65, 6);
             this.FocusBreak.Visible = false;
             // 
             // SelectButton
@@ -187,9 +188,10 @@
             // 
             this.splitter1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.splitter1.Location = new System.Drawing.Point(689, 0);
+            this.splitter1.Location = new System.Drawing.Point(1033, 0);
+            this.splitter1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(5, 469);
+            this.splitter1.Size = new System.Drawing.Size(8, 725);
             this.splitter1.TabIndex = 3;
             this.splitter1.TabStop = false;
             // 
@@ -199,36 +201,40 @@
             this.tabPage2.Controls.Add(this.toolStrip3);
             this.tabPage2.Controls.Add(this.RespawnsFilter);
             this.tabPage2.Controls.Add(this.RespawnTools);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 29);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(242, 443);
+            this.tabPage2.Size = new System.Drawing.Size(367, 692);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Respawns";
+            this.tabPage2.Text = "刷怪";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // RespawnPanel
             // 
             this.RespawnPanel.AutoScroll = true;
             this.RespawnPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RespawnPanel.Location = new System.Drawing.Point(0, 46);
+            this.RespawnPanel.Location = new System.Drawing.Point(0, 59);
+            this.RespawnPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.RespawnPanel.Name = "RespawnPanel";
-            this.RespawnPanel.Size = new System.Drawing.Size(242, 372);
+            this.RespawnPanel.Size = new System.Drawing.Size(367, 602);
             this.RespawnPanel.TabIndex = 3;
             // 
             // toolStrip3
             // 
             this.toolStrip3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.toolStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip3.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RespawnsRemoveSelected,
             this.ResapwnsHideRegion,
             this.ResapwnsShowRegion,
             this.toolStripSeparator2,
             this.ResapwnsFocusRegion});
-            this.toolStrip3.Location = new System.Drawing.Point(0, 418);
+            this.toolStrip3.Location = new System.Drawing.Point(0, 661);
             this.toolStrip3.Name = "toolStrip3";
+            this.toolStrip3.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStrip3.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip3.Size = new System.Drawing.Size(242, 25);
+            this.toolStrip3.Size = new System.Drawing.Size(367, 31);
             this.toolStrip3.TabIndex = 7;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -239,7 +245,7 @@
             this.RespawnsRemoveSelected.Image = ((System.Drawing.Image)(resources.GetObject("RespawnsRemoveSelected.Image")));
             this.RespawnsRemoveSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.RespawnsRemoveSelected.Name = "RespawnsRemoveSelected";
-            this.RespawnsRemoveSelected.Size = new System.Drawing.Size(23, 22);
+            this.RespawnsRemoveSelected.Size = new System.Drawing.Size(28, 28);
             this.RespawnsRemoveSelected.Text = "Remove Selected";
             this.RespawnsRemoveSelected.Click += new System.EventHandler(this.RespawnsRemoveSelected_Click);
             // 
@@ -249,7 +255,7 @@
             this.ResapwnsHideRegion.Image = ((System.Drawing.Image)(resources.GetObject("ResapwnsHideRegion.Image")));
             this.ResapwnsHideRegion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ResapwnsHideRegion.Name = "ResapwnsHideRegion";
-            this.ResapwnsHideRegion.Size = new System.Drawing.Size(23, 22);
+            this.ResapwnsHideRegion.Size = new System.Drawing.Size(28, 28);
             this.ResapwnsHideRegion.Text = "Hide Region";
             this.ResapwnsHideRegion.Click += new System.EventHandler(this.ResapwnsHideRegion_Click);
             // 
@@ -259,14 +265,14 @@
             this.ResapwnsShowRegion.Image = ((System.Drawing.Image)(resources.GetObject("ResapwnsShowRegion.Image")));
             this.ResapwnsShowRegion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ResapwnsShowRegion.Name = "ResapwnsShowRegion";
-            this.ResapwnsShowRegion.Size = new System.Drawing.Size(23, 22);
+            this.ResapwnsShowRegion.Size = new System.Drawing.Size(28, 28);
             this.ResapwnsShowRegion.Text = "Show Region";
             this.ResapwnsShowRegion.Click += new System.EventHandler(this.ResapwnsShowRegion_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
             // ResapwnsFocusRegion
             // 
@@ -274,7 +280,7 @@
             this.ResapwnsFocusRegion.Image = ((System.Drawing.Image)(resources.GetObject("ResapwnsFocusRegion.Image")));
             this.ResapwnsFocusRegion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ResapwnsFocusRegion.Name = "ResapwnsFocusRegion";
-            this.ResapwnsFocusRegion.Size = new System.Drawing.Size(23, 22);
+            this.ResapwnsFocusRegion.Size = new System.Drawing.Size(28, 28);
             this.ResapwnsFocusRegion.Text = "Focus Region";
             this.ResapwnsFocusRegion.Click += new System.EventHandler(this.ResapwnsFocusRegion_Click);
             // 
@@ -283,23 +289,26 @@
             this.RespawnsFilter.Dock = System.Windows.Forms.DockStyle.Top;
             this.RespawnsFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.RespawnsFilter.FormattingEnabled = true;
-            this.RespawnsFilter.Location = new System.Drawing.Point(0, 25);
+            this.RespawnsFilter.Location = new System.Drawing.Point(0, 31);
+            this.RespawnsFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.RespawnsFilter.Name = "RespawnsFilter";
-            this.RespawnsFilter.Size = new System.Drawing.Size(242, 21);
+            this.RespawnsFilter.Size = new System.Drawing.Size(367, 28);
             this.RespawnsFilter.TabIndex = 6;
             this.RespawnsFilter.SelectedIndexChanged += new System.EventHandler(this.RespawnsFilter_SelectedIndexChanged);
             // 
             // RespawnTools
             // 
             this.RespawnTools.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.RespawnTools.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.RespawnTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RespawnsSelectAll,
             this.RespawnsSelectNone,
             this.RespawnsInvertSelection});
             this.RespawnTools.Location = new System.Drawing.Point(0, 0);
             this.RespawnTools.Name = "RespawnTools";
+            this.RespawnTools.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.RespawnTools.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.RespawnTools.Size = new System.Drawing.Size(242, 25);
+            this.RespawnTools.Size = new System.Drawing.Size(367, 31);
             this.RespawnTools.TabIndex = 2;
             this.RespawnTools.Text = "toolStrip1";
             // 
@@ -309,7 +318,7 @@
             this.RespawnsSelectAll.Image = ((System.Drawing.Image)(resources.GetObject("RespawnsSelectAll.Image")));
             this.RespawnsSelectAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.RespawnsSelectAll.Name = "RespawnsSelectAll";
-            this.RespawnsSelectAll.Size = new System.Drawing.Size(23, 22);
+            this.RespawnsSelectAll.Size = new System.Drawing.Size(28, 28);
             this.RespawnsSelectAll.Text = "Select All";
             this.RespawnsSelectAll.Click += new System.EventHandler(this.RespawnsSelectAll_Click);
             // 
@@ -319,7 +328,7 @@
             this.RespawnsSelectNone.Image = ((System.Drawing.Image)(resources.GetObject("RespawnsSelectNone.Image")));
             this.RespawnsSelectNone.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.RespawnsSelectNone.Name = "RespawnsSelectNone";
-            this.RespawnsSelectNone.Size = new System.Drawing.Size(23, 22);
+            this.RespawnsSelectNone.Size = new System.Drawing.Size(28, 28);
             this.RespawnsSelectNone.Text = "Select None";
             this.RespawnsSelectNone.Click += new System.EventHandler(this.RespawnsSelectNone_Click);
             // 
@@ -329,7 +338,7 @@
             this.RespawnsInvertSelection.Image = ((System.Drawing.Image)(resources.GetObject("RespawnsInvertSelection.Image")));
             this.RespawnsInvertSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.RespawnsInvertSelection.Name = "RespawnsInvertSelection";
-            this.RespawnsInvertSelection.Size = new System.Drawing.Size(23, 22);
+            this.RespawnsInvertSelection.Size = new System.Drawing.Size(28, 28);
             this.RespawnsInvertSelection.Text = "Invert Selection";
             this.RespawnsInvertSelection.Click += new System.EventHandler(this.RespawnsInvertSelection_Click);
             // 
@@ -339,20 +348,22 @@
             this.tabPage4.Controls.Add(this.MiningFilter);
             this.tabPage4.Controls.Add(this.toolStrip2);
             this.tabPage4.Controls.Add(this.toolStrip1);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 29);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(242, 443);
+            this.tabPage4.Size = new System.Drawing.Size(367, 692);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Mining";
+            this.tabPage4.Text = "矿区";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // MiningPanel
             // 
             this.MiningPanel.AutoScroll = true;
             this.MiningPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MiningPanel.Location = new System.Drawing.Point(0, 46);
+            this.MiningPanel.Location = new System.Drawing.Point(0, 59);
+            this.MiningPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MiningPanel.Name = "MiningPanel";
-            this.MiningPanel.Size = new System.Drawing.Size(242, 372);
+            this.MiningPanel.Size = new System.Drawing.Size(367, 602);
             this.MiningPanel.TabIndex = 3;
             // 
             // MiningFilter
@@ -360,22 +371,25 @@
             this.MiningFilter.Dock = System.Windows.Forms.DockStyle.Top;
             this.MiningFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MiningFilter.FormattingEnabled = true;
-            this.MiningFilter.Location = new System.Drawing.Point(0, 25);
+            this.MiningFilter.Location = new System.Drawing.Point(0, 31);
+            this.MiningFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MiningFilter.Name = "MiningFilter";
-            this.MiningFilter.Size = new System.Drawing.Size(242, 21);
+            this.MiningFilter.Size = new System.Drawing.Size(367, 28);
             this.MiningFilter.TabIndex = 5;
             this.MiningFilter.SelectedIndexChanged += new System.EventHandler(this.MiningFilter_SelectedIndexChanged);
             // 
             // toolStrip2
             // 
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MiningSelectAll,
             this.MiningSelectNone,
             this.MiningInvertSelection});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(242, 25);
+            this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip2.Size = new System.Drawing.Size(367, 31);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip1";
             // 
@@ -385,7 +399,7 @@
             this.MiningSelectAll.Image = ((System.Drawing.Image)(resources.GetObject("MiningSelectAll.Image")));
             this.MiningSelectAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MiningSelectAll.Name = "MiningSelectAll";
-            this.MiningSelectAll.Size = new System.Drawing.Size(23, 22);
+            this.MiningSelectAll.Size = new System.Drawing.Size(28, 28);
             this.MiningSelectAll.Text = "Select All";
             this.MiningSelectAll.Click += new System.EventHandler(this.MiningSelectAll_Click);
             // 
@@ -395,7 +409,7 @@
             this.MiningSelectNone.Image = ((System.Drawing.Image)(resources.GetObject("MiningSelectNone.Image")));
             this.MiningSelectNone.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MiningSelectNone.Name = "MiningSelectNone";
-            this.MiningSelectNone.Size = new System.Drawing.Size(23, 22);
+            this.MiningSelectNone.Size = new System.Drawing.Size(28, 28);
             this.MiningSelectNone.Text = "Select None";
             this.MiningSelectNone.Click += new System.EventHandler(this.MiningSelectNone_Click);
             // 
@@ -405,7 +419,7 @@
             this.MiningInvertSelection.Image = ((System.Drawing.Image)(resources.GetObject("MiningInvertSelection.Image")));
             this.MiningInvertSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MiningInvertSelection.Name = "MiningInvertSelection";
-            this.MiningInvertSelection.Size = new System.Drawing.Size(23, 22);
+            this.MiningInvertSelection.Size = new System.Drawing.Size(28, 28);
             this.MiningInvertSelection.Text = "Invert Selection";
             this.MiningInvertSelection.Click += new System.EventHandler(this.MiningInvertSelection_Click);
             // 
@@ -413,16 +427,18 @@
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MiningRemoveSelected,
             this.MiningHideRegion,
             this.MiningShowRegion,
             this.toolStripSeparator1,
             this.MiningFocusRegion});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 418);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 661);
             this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip1.Size = new System.Drawing.Size(242, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(367, 31);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -433,7 +449,7 @@
             this.MiningRemoveSelected.Image = ((System.Drawing.Image)(resources.GetObject("MiningRemoveSelected.Image")));
             this.MiningRemoveSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MiningRemoveSelected.Name = "MiningRemoveSelected";
-            this.MiningRemoveSelected.Size = new System.Drawing.Size(23, 22);
+            this.MiningRemoveSelected.Size = new System.Drawing.Size(28, 28);
             this.MiningRemoveSelected.Text = "Remove Selected";
             this.MiningRemoveSelected.Click += new System.EventHandler(this.MiningRemoveSelected_Click);
             // 
@@ -443,7 +459,7 @@
             this.MiningHideRegion.Image = ((System.Drawing.Image)(resources.GetObject("MiningHideRegion.Image")));
             this.MiningHideRegion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MiningHideRegion.Name = "MiningHideRegion";
-            this.MiningHideRegion.Size = new System.Drawing.Size(23, 22);
+            this.MiningHideRegion.Size = new System.Drawing.Size(28, 28);
             this.MiningHideRegion.Text = "Hide Region";
             this.MiningHideRegion.Click += new System.EventHandler(this.MiningHideRegion_Click);
             // 
@@ -453,14 +469,14 @@
             this.MiningShowRegion.Image = ((System.Drawing.Image)(resources.GetObject("MiningShowRegion.Image")));
             this.MiningShowRegion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MiningShowRegion.Name = "MiningShowRegion";
-            this.MiningShowRegion.Size = new System.Drawing.Size(23, 22);
+            this.MiningShowRegion.Size = new System.Drawing.Size(28, 28);
             this.MiningShowRegion.Text = "Show Region";
             this.MiningShowRegion.Click += new System.EventHandler(this.MiningShowRegion_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // MiningFocusRegion
             // 
@@ -468,7 +484,7 @@
             this.MiningFocusRegion.Image = ((System.Drawing.Image)(resources.GetObject("MiningFocusRegion.Image")));
             this.MiningFocusRegion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.MiningFocusRegion.Name = "MiningFocusRegion";
-            this.MiningFocusRegion.Size = new System.Drawing.Size(23, 22);
+            this.MiningFocusRegion.Size = new System.Drawing.Size(28, 28);
             this.MiningFocusRegion.Text = "Focus Region";
             this.MiningFocusRegion.Click += new System.EventHandler(this.MiningFocusRegion_Click);
             // 
@@ -477,11 +493,12 @@
             this.RegionTabs.Controls.Add(this.tabPage4);
             this.RegionTabs.Controls.Add(this.tabPage2);
             this.RegionTabs.Dock = System.Windows.Forms.DockStyle.Right;
-            this.RegionTabs.Location = new System.Drawing.Point(694, 0);
+            this.RegionTabs.Location = new System.Drawing.Point(1041, 0);
+            this.RegionTabs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.RegionTabs.Multiline = true;
             this.RegionTabs.Name = "RegionTabs";
             this.RegionTabs.SelectedIndex = 0;
-            this.RegionTabs.Size = new System.Drawing.Size(250, 469);
+            this.RegionTabs.Size = new System.Drawing.Size(375, 725);
             this.RegionTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.RegionTabs.TabIndex = 3;
             this.RegionTabs.SelectedIndexChanged += new System.EventHandler(this.RegionTabs_SelectedIndexChanged);
@@ -489,11 +506,13 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MapDetailsLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 469);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 725);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(944, 24);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1416, 33);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -502,22 +521,24 @@
             this.MapDetailsLabel.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.MapDetailsLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
             this.MapDetailsLabel.Name = "MapDetailsLabel";
-            this.MapDetailsLabel.Size = new System.Drawing.Size(216, 19);
-            this.MapDetailsLabel.Text = "Map Name: {0}   Width: {1}   Height: {2}";
+            this.MapDetailsLabel.Size = new System.Drawing.Size(284, 28);
+            this.MapDetailsLabel.Text = "地图名称: {0}   宽度: {1}   高度: {2}";
             // 
             // mapContainer1
             // 
             this.mapContainer1.AutoScroll = true;
             this.mapContainer1.Controls.Add(this.MapImage);
             this.mapContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapContainer1.Location = new System.Drawing.Point(45, 0);
+            this.mapContainer1.Location = new System.Drawing.Point(68, 0);
+            this.mapContainer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.mapContainer1.Name = "mapContainer1";
-            this.mapContainer1.Size = new System.Drawing.Size(644, 469);
+            this.mapContainer1.Size = new System.Drawing.Size(965, 725);
             this.mapContainer1.TabIndex = 2;
             // 
             // MapImage
             // 
             this.MapImage.Location = new System.Drawing.Point(0, 0);
+            this.MapImage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MapImage.Name = "MapImage";
             this.MapImage.Size = new System.Drawing.Size(0, 0);
             this.MapImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -528,15 +549,16 @@
             // 
             // VForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(944, 493);
+            this.ClientSize = new System.Drawing.Size(1416, 758);
             this.Controls.Add(this.mapContainer1);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.RegionTabs);
             this.Controls.Add(this.Tool);
             this.Controls.Add(this.statusStrip1);
             this.DoubleBuffered = true;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "VForm";
             this.Text = "Visualizer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VForm_FormClosing);

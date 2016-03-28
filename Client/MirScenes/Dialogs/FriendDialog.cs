@@ -238,7 +238,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (!SelectedFriend.Online)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Player is not online", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("Player 不在线", ChatType.System);
                     return;
                 }
 

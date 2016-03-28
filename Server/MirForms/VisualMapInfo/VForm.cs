@@ -88,7 +88,7 @@ namespace Server.MirForms.VisualMapInfo
             Canvas.Parent = MapImage;
             Canvas.BringToFront();
 
-            MapDetailsLabel.Text = string.Format("Map Name: {0}   Width: {1}   Height: {2}",
+            MapDetailsLabel.Text = string.Format("地图名称: {0}   宽度: {1}   高度: {2}",
                 VisualizerGlobal.MapInfo.Title,
                 VisualizerGlobal.ClippingMap.Width,
                 VisualizerGlobal.ClippingMap.Height);
@@ -96,13 +96,13 @@ namespace Server.MirForms.VisualMapInfo
 
         private void InitializeMineInfo()
         {
-            MiningFilter.Items.Add(new ListItem { Text = "Disabled", Value = "0" });
+            MiningFilter.Items.Add(new ListItem { Text = "已禁用", Value = "0" });
 
             for (int i = 0; i < Settings.MineSetList.Count; i++)
                 MiningFilter.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
 
-            MiningFilter.Items.Add(new ListItem { Text = "No Filter" });
-            MiningFilter.Text = "No Filter";
+            MiningFilter.Items.Add(new ListItem { Text = "无过滤" });
+            MiningFilter.Text = "无过滤";
 
             for (int i = 0; i < VisualizerGlobal.MapInfo.MineZones.Count; i++)
             {
@@ -126,8 +126,8 @@ namespace Server.MirForms.VisualMapInfo
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
                 RespawnsFilter.Items.Add(Envir.MonsterInfoList[i]);
 
-            RespawnsFilter.Items.Add(new ListItem { Text = "No Filter" });
-            RespawnsFilter.Text = "No Filter";
+            RespawnsFilter.Items.Add(new ListItem { Text = "无过滤" });
+            RespawnsFilter.Text = "无过滤";
 
             for (int i = 0; i < VisualizerGlobal.MapInfo.Respawns.Count; i++)
             {
@@ -276,7 +276,7 @@ namespace Server.MirForms.VisualMapInfo
 
         private void MapImage_Click(object sender, EventArgs e)
         {
-            if (RegionTabs.SelectedTab.Text == "Mining")
+            if (RegionTabs.SelectedTab.Text == "矿区")
                 if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Add)
                 {
                     MineEntry MineControl = new MineEntry()
@@ -295,7 +295,7 @@ namespace Server.MirForms.VisualMapInfo
                     ToolSelectedChanged(MoveButton, e);
                 }
 
-            if (RegionTabs.SelectedTab.Text == "Respawns")
+            if (RegionTabs.SelectedTab.Text == "刷怪")
                 if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Add)
                 {
                     RespawnEntry RespawnControl = new RespawnEntry()
@@ -317,7 +317,7 @@ namespace Server.MirForms.VisualMapInfo
 
         private void RegionTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (RegionTabs.SelectedTab.Text == "Mining")
+            if (RegionTabs.SelectedTab.Text == "矿区")
             {
                 for (int i = RespawnPanel.Controls.Count; i > -1; --i)
                     try
@@ -337,7 +337,7 @@ namespace Server.MirForms.VisualMapInfo
                 //    }
                 //    catch (Exception) { continue; }
             }
-            else if (RegionTabs.SelectedTab.Text == "Respawns")
+            else if (RegionTabs.SelectedTab.Text == "刷怪")
             {
                 for (int i = MiningPanel.Controls.Count; i > -1; --i)
                     try
@@ -534,7 +534,7 @@ namespace Server.MirForms.VisualMapInfo
         {
             if (MiningPanel.Controls.Count == 0) return;
 
-            DialogResult result = MessageBox.Show("Remove selected records?", "", MessageBoxButtons.YesNoCancel);
+            DialogResult result = MessageBox.Show("移除选中记录?", "", MessageBoxButtons.YesNoCancel);
             if (result != DialogResult.Yes) return;
 
             for (int i = MiningPanel.Controls.Count; i > -1; --i)
@@ -599,7 +599,7 @@ namespace Server.MirForms.VisualMapInfo
         {
             VisualizerGlobal.ZoomLevel = 1;
 
-            if (MiningFilter.Text == "No Filter")
+            if (MiningFilter.Text == "无过滤")
                 for (int i = MiningPanel.Controls.Count - 1; i > -1; i--)
                     try
                     {
@@ -664,7 +664,7 @@ namespace Server.MirForms.VisualMapInfo
         {
             if (RespawnPanel.Controls.Count == 0) return;
 
-            DialogResult result = MessageBox.Show("Remove selected records?", "", MessageBoxButtons.YesNoCancel);
+            DialogResult result = MessageBox.Show("移除选中记录?", "", MessageBoxButtons.YesNoCancel);
             if (result != DialogResult.Yes) return;
 
             for (int i = RespawnPanel.Controls.Count; i > -1; --i)
@@ -742,7 +742,7 @@ namespace Server.MirForms.VisualMapInfo
 
             VisualizerGlobal.ZoomLevel = 1;
 
-            if (RespawnsFilter.Text == "No Filter")
+            if (RespawnsFilter.Text == "无过滤")
                 for (int i = RespawnPanel.Controls.Count - 1; i > -1; i--)
                     try
                     {
@@ -788,12 +788,5 @@ namespace Server.MirForms.VisualMapInfo
             if (VisualizerGlobal.SelectedFocusType != VisualizerGlobal.FocusType.None)
                 e.Cancel = true;
         }
-
-
-
-        
-
-        
-
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
 using Server.MirDatabase;
+using Server.MirForms.Systems;
 
 namespace Server
 {
@@ -75,14 +76,14 @@ namespace Server
         {
             try
             {
-                Text = string.Format("Total: {0}, Real: {1}", Envir.LastCount, Envir.LastRealCount);
-                PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
-                MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
-                ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
+                Text = string.Format("总共: {0}, 真实: {1}", Envir.LastCount, Envir.LastRealCount);
+                PlayersLabel.Text = string.Format("玩家: {0}", Envir.Players.Count);
+                MonsterLabel.Text = string.Format("怪物: {0}", Envir.MonsterCount);
+                ConnectionsLabel.Text = string.Format("连接: {0}", Envir.Connections.Count);
 
                 if (Settings.Multithreaded && (Envir.MobThreads != null))
                 {
-                    CycleDelayLabel.Text = string.Format("CycleDelays: {0:0000}", Envir.LastRunTime);
+                    CycleDelayLabel.Text = string.Format("循环延迟: {0:0000}", Envir.LastRunTime);
                     for (int i = 0; i < Envir.MobThreads.Length; i++)
                     {
                         if (Envir.MobThreads[i] == null) break;
@@ -91,7 +92,7 @@ namespace Server
                     }
                 }
                 else
-                    CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
+                    CycleDelayLabel.Text = string.Format("循环延迟: {0}", Envir.LastRunTime);
 
                 while (!MessageLog.IsEmpty)
                 {
@@ -390,6 +391,20 @@ namespace Server
         {
             SystemInfoForm form = new SystemInfoForm(7);
             
+            form.ShowDialog();
+        }
+
+        private void monsterTunerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!SMain.Envir.Running)
+            {
+                MessageBox.Show("Server must be running to tune monsters", "Notice",
+                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
+
+            MonsterTunerForm form = new MonsterTunerForm();
+
             form.ShowDialog();
         }
 

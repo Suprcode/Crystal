@@ -39,7 +39,7 @@ namespace Server.MirForms.VisualMapInfo.Control
                 RegionHighlight.Left = (X - value) * VisualizerGlobal.ZoomLevel;
                 RegionHighlight.Top = (Y - value) * VisualizerGlobal.ZoomLevel;
 
-                Details.Text = string.Format("X: {0} | Y: {1} | Range: {2}", X.ToString(), Y.ToString(), Range.ToString());
+                Details.Text = string.Format("X: {0} | Y: {1} | 范围: {2}", X.ToString(), Y.ToString(), Range.ToString());
             }
         }
 
@@ -200,12 +200,12 @@ namespace Server.MirForms.VisualMapInfo.Control
 
         private void MineEntry_Load(object sender, EventArgs e)
         {
-            MineComboBox.Items.Add(new ListItem { Text = "Disabled", Value = "0" });
+            MineComboBox.Items.Add(new ListItem { Text = "已禁用", Value = "0" });
             for (int i = 0; i < Settings.MineSetList.Count; i++) MineComboBox.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
 
             MineComboBox.SelectedIndex = MineIndex;
 
-            Details.Text = string.Format("X: {0} | Y: {1} | Range: {2}", X.ToString(), Y.ToString(), Range.ToString());
+            Details.Text = string.Format("X: {0} | Y: {1} | 范围: {2}", X.ToString(), Y.ToString(), Range.ToString());
         }
 
         private void Details_DoubleClick(object sender, EventArgs e)

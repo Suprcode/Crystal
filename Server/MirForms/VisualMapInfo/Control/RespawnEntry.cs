@@ -18,7 +18,7 @@ namespace Server.MirForms.VisualMapInfo.Control
             get { return SMain.EditEnvir; }
         }
 
-        public OvalShape RegionHighlight = new OvalShape();
+        public RectangleShape RegionHighlight = new RectangleShape();
 
         public int MonsterIndex;
 
@@ -50,7 +50,7 @@ namespace Server.MirForms.VisualMapInfo.Control
                 RegionHighlight.Top = (Y - value) * VisualizerGlobal.ZoomLevel;
 
 
-                Details.Text = string.Format("C               D            X: {0} | Y: {1} | Range: {2}", X.ToString(), Y.ToString(), Range.ToString());
+                Details.Text = string.Format("C               D            X: {0} | Y: {1} | 范围: {2}", X.ToString(), Y.ToString(), Range.ToString());
             }
         }
 
@@ -202,7 +202,7 @@ namespace Server.MirForms.VisualMapInfo.Control
 
             MonsterComboBox.SelectedIndex = MonsterIndex-1; //-1
 
-            Details.Text = string.Format("C               D            X: {0} | Y: {1} | Range: {2}", X.ToString(), Y.ToString(), Range.ToString());
+            Details.Text = string.Format("C               D            X: {0} | Y: {1} | 范围: {2}", X.ToString(), Y.ToString(), Range.ToString());
         }
 
         private void MonsterComboBox_SelectedIndexChanged(object sender, EventArgs e)

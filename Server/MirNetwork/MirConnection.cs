@@ -63,13 +63,13 @@ namespace Server.MirNetwork
 
                     if (connCount >= Settings.MaxIP)
                     {
-                        SMain.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
+                        SMain.EnqueueDebugging(IPAddress + ", 已达到最大连接数.");
                         conn.SendDisconnect(5);
                     }
                 }
             }
 
-            SMain.Enqueue(IPAddress + ", Connected.");
+            SMain.Enqueue(IPAddress + ", 已连接.");
 
             _client = client;
             _client.NoDelay = true;
@@ -579,7 +579,7 @@ namespace Server.MirNetwork
                     Opendoor((C.Opendoor)p);
                     break;
                 default:
-                    SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
+                    SMain.Enqueue(string.Format("收到无效数据包. Index : {0}", p.Index));
                     break;
             }
         }
@@ -665,11 +665,11 @@ namespace Server.MirNetwork
 
                     BeginSend(data);
                     SoftDisconnect(10);
-                    SMain.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
+                    SMain.Enqueue(SessionID + ", 断开 - 不正确的客户端版本.");
                     return;
                 }
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", 客户端版本正确.");
             Enqueue(new S.ClientVersion { Result = 1 });
 
             Stage = GameStage.Login;
@@ -685,21 +685,21 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", New account being created.");
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", 正在创建新账号.");
             SMain.Envir.NewAccount(p, this);
         }
         private void ChangePassword(C.ChangePassword p)
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", Password being changed.");
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", 正在修改密码.");
             SMain.Envir.ChangePassword(p, this);
         }
         private void Login(C.Login p)
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", User logging in.");
+            SMain.Enqueue(SessionID + ", " + IPAddress + ", 正在登录.");
             SMain.Envir.Login(p, this);
         }
         private void NewCharacter(C.NewCharacter p)
@@ -1280,17 +1280,17 @@ namespace Server.MirNetwork
             {
                 Player.AllowMarriage = !Player.AllowMarriage;
                 if (Player.AllowMarriage)
-                    Player.ReceiveChat("You're now allowing marriage requests.", ChatType.Hint);
+                    Player.ReceiveChat("你现在允许被求婚.", ChatType.Hint);
                 else
-                    Player.ReceiveChat("You're now blocking marriage requests.", ChatType.Hint);
+                    Player.ReceiveChat("你现在不允许被求婚.", ChatType.Hint);
             }
             else
             {
                 Player.AllowLoverRecall = !Player.AllowLoverRecall;
                 if (Player.AllowLoverRecall)
-                    Player.ReceiveChat("You're now allowing recall from lover.", ChatType.Hint);
+                    Player.ReceiveChat("你现在允许被爱人召唤.", ChatType.Hint);
                 else
-                    Player.ReceiveChat("You're now blocking recall from lover.", ChatType.Hint);
+                    Player.ReceiveChat("你现在不允许被爱人召唤.", ChatType.Hint);
             }
         }
 

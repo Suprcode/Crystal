@@ -46,10 +46,10 @@ namespace Server.MirObjects.Monsters
             for (int i = 0; i < targets.Count; i++)
             {
                 Target = targets[i];
-                if (Target.IsAttackTarget(this))
-                {
-                    Target.Attacked(this, damage, defence);
-                }
+
+                if (Target == null || !Target.IsAttackTarget(this) || Target.CurrentMap != CurrentMap || Target.Node == null) continue;
+
+                Target.Attacked(this, damage, defence);
             }
 
         }

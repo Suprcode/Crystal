@@ -1737,5 +1737,10 @@ namespace Server
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Bind = (NoWeddingRingcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.NoWeddingRing : _selectedItemInfos[i].Bind ^= BindMode.NoWeddingRing);
         }
+
+        private void label50_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

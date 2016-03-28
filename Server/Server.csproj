@@ -56,7 +56,8 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Server.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -189,6 +190,12 @@
     <Compile Include="MirForms\Systems\MiningInfoForm.Designer.cs">
       <DependentUpon>MiningInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MirForms\Systems\MonsterTunerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MirForms\Systems\MonsterTunerForm.Designer.cs">
+      <DependentUpon>MonsterTunerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MirForms\Systems\SystemInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -241,6 +248,16 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
+    <Compile Include="MirObjects\Monsters\IcePillar.cs" />
+    <Compile Include="MirObjects\Monsters\TrollKing.cs" />
+    <Compile Include="MirObjects\Monsters\ManectricKing.cs" />
+    <Compile Include="MirObjects\Monsters\TrollBomber.cs" />
+    <Compile Include="MirObjects\Monsters\ManectricBlest.cs" />
+    <Compile Include="MirObjects\Monsters\WingedTigerLord.cs" />
+    <Compile Include="MirObjects\Monsters\Tornado.cs" />
+    <Compile Include="MirObjects\Monsters\Hugger.cs" />
+    <Compile Include="MirObjects\Monsters\PoisonHugger.cs" />
+    <Compile Include="MirObjects\Monsters\WitchDoctor.cs" />
     <Compile Include="MirObjects\Monsters\AxeSkeleton.cs" />
     <Compile Include="MirObjects\Monsters\Behemoth.cs" />
     <Compile Include="MirObjects\Monsters\BlockingObject.cs" />
@@ -257,13 +274,12 @@
     <Compile Include="MirObjects\Monsters\ConquestArcher.cs" />
     <Compile Include="MirObjects\Monsters\CrazyManworm.cs" />
     <Compile Include="MirObjects\Monsters\DarkDevourer.cs" />
-    <Compile Include="MirObjects\Monsters\DreamDevourer.cs" />
     <Compile Include="MirObjects\Monsters\FinialTurtle.cs" />
-    <Compile Include="MirObjects\Monsters\FlameTiger.cs" />
     <Compile Include="MirObjects\Monsters\FlamingMutant.cs" />
     <Compile Include="MirObjects\Monsters\Football.cs" />
-    <Compile Include="MirObjects\Monsters\HellBolt.cs" />
     <Compile Include="MirObjects\Monsters\HellKeeper.cs" />
+    <Compile Include="MirObjects\Monsters\HellCannibal.cs" />
+    <Compile Include="MirObjects\Monsters\HellSlasher.cs" />
     <Compile Include="MirObjects\Monsters\HellPirate.cs" />
     <Compile Include="MirObjects\Monsters\HumanAssassin.cs" />
     <Compile Include="MirObjects\Monsters\HumanWizard.cs" />
@@ -402,6 +418,9 @@
     <EmbeddedResource Include="MirForms\Systems\MiningInfoForm.resx">
       <DependentUpon>MiningInfoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MirForms\Systems\MonsterTunerForm.resx">
+      <DependentUpon>MonsterTunerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\SystemInfoForm.resx">
       <DependentUpon>SystemInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -468,9 +487,6 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Server.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
