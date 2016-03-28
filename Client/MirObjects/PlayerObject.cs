@@ -1321,6 +1321,8 @@ namespace Client.MirObjects
                             GameScene.LastRunTime = CMain.Time;
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.InputDelay = CMain.Time + 500;
+                            GameScene.CanRun = false;
+                            GameScene.CanMove = false;
                             break;
                         case MirAction.DashL:
                         case MirAction.DashR:

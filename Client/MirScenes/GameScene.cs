@@ -131,7 +131,7 @@ namespace Client.MirScenes
 
         public static bool PickedUpGold;
         public MirControl ItemLabel, MailLabel, MemoLabel, GuildBuffLabel;
-        public static long UseItemTime, PickUpTime, DropViewTime;
+        public static long UseItemTime, PickUpTime, DropViewTime, TargetDeadTime;
         public static uint Gold, Credit;
         public static long InspectTime;
         public bool ShowReviveMessage;
@@ -512,10 +512,6 @@ namespace Client.MirScenes
                     case KeybindOptions.Belt6Alt:
                         BeltDialog.Grid[5].UseItem();
                         break;
-
-                    case KeybindOptions.CreaturePickup:
-                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
-                        break;
                     case KeybindOptions.Logout:
                         LogOut();
                         break;
@@ -559,6 +555,9 @@ namespace Client.MirScenes
                         return;
                     case KeybindOptions.CreatureAutoPickup://semiauto!
                         Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
+                        break;
+                    case KeybindOptions.CreaturePickup:
+                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
                         break;
                     case KeybindOptions.ChangeAttackmode:
                         switch (AMode)
@@ -634,7 +633,11 @@ namespace Client.MirScenes
                         break;
                     case KeybindOptions.DropView:
                         if (CMain.Time > DropViewTime)
-                            DropViewTime = CMain.Time + 500;
+                            DropViewTime = CMain.Time + 5000;
+                        break;
+                    case KeybindOptions.TargetDead:
+                        if (CMain.Time > TargetDeadTime)
+                            TargetDeadTime = CMain.Time + 5000;
                         break;
                 }
             }
@@ -968,6 +971,7 @@ namespace Client.MirScenes
                 if ((Settings.SkillbarLocation[i, 0] > Settings.Resolution - 100) || (Settings.SkillbarLocation[i, 1] > 700)) continue;//in theory you'd want the y coord to be validated based on resolution, but since client only allows for wider screens and not higher :(
                 Scene.SkillBarDialogs[i].Location = new Point(Settings.SkillbarLocation[i, 0], Settings.SkillbarLocation[i, 1]);
             }
+
             if (Settings.DuraView)
                 CharacterDuraPanel.Show();
             else
@@ -3120,6 +3124,8 @@ namespace Client.MirScenes
 
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Die, Direction = p.Direction, Location = p.Location });
             ShowReviveMessage = true;
+
+            LogTime = 0;
         }
         private void ObjectDied(S.ObjectDied p)
         {
@@ -3346,6 +3352,16 @@ namespace Client.MirScenes
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 272, 6, 500, ob);
                             break;
                         }
+                    case 5: //WitchDoctor
+                        {
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 328, 20, 1000, ob);
+                            break;
+                        }
+                    case 6: //TurtleKing
+                        {
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 946, 10, 500, ob);
+                            break;
+                        }
                     default:
                         {
                             effect = new Effect(Libraries.Magic, 250, 10, 500, ob);
@@ -3381,9 +3397,19 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RedFoxman], 253, 10, 500, ob));
                             break;
                         }
-                    case 3: //MutatedManWorm
+                    case 4: //MutatedManWorm
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 278, 7, 500, ob));
+                            break;
+                        }
+                    case 5: //WitchDoctor
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 348, 20, 1000, ob));
+                            break;
+                        }
+                    case 6: //TurtleKing
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 956, 10, 500, ob));
                             break;
                         }
                     default:
@@ -3847,6 +3873,33 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Magic3, 830, 5, 500, ob, CMain.Time + p.DelayTime) { Blend = false });
                         }
                         break;
+                    case SpellEffect.TurtleKing:
+                        switch (CMain.Random.Next(2))
+                        {
+                            default:
+                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 922, 12, 1200, ob));
+                                break;
+                            case 1:
+                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 934, 12, 1200, ob));
+                                break;
+                        }
+                        break;
+                    case SpellEffect.Behemoth:
+                        {
+                            MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 788, 10, 1500, ob.CurrentLocation));
+                            MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 778, 10, 1500, ob.CurrentLocation, 0, true) { Blend = false });
+                        }
+                        break;
+                    case SpellEffect.Stunned:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StoningStatue], 632, 10, 1000, ob)
+                        {
+                            Repeat = p.Time > 0,
+                            RepeatUntil = p.Time > 0 ? CMain.Time + p.Time : 0
+                        });
+                        break;
+                    case SpellEffect.IcePillar:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 18, 8, 800, ob));
+                        break;
                 }
                 return;
             }
@@ -4033,6 +4086,11 @@ namespace Client.MirScenes
                         case 1:
                             {
                                 action = new QueuedAction { Action = MirAction.AttackRange2, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
+                                break;
+                            }
+                        case 2:
+                            {
+                                action = new QueuedAction { Action = MirAction.AttackRange3, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                                 break;
                             }
                         default:
@@ -6132,7 +6190,7 @@ namespace Client.MirScenes
             }
             return null;
         }
-        public MirControl DefenseInfoLabel(UserItem item, bool Inspect = false)
+        public MirControl DefenceInfoLabel(UserItem item, bool Inspect = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
@@ -7868,8 +7926,8 @@ namespace Client.MirScenes
             outlines[0] = NameInfoLabel(item, Inspect);
             //Attribute Info1 Label - Attack Info
             outlines[1] = AttackInfoLabel(item, Inspect);
-            //Attribute Info2 Label - Defense Info
-            outlines[2] = DefenseInfoLabel(item, Inspect);
+            //Attribute Info2 Label - Defence Info
+            outlines[2] = DefenceInfoLabel(item, Inspect);
             //Attribute Info3 Label - Weight Info
             outlines[3] = WeightInfoLabel(item, Inspect);
             //Awake Info Label
@@ -8301,7 +8359,7 @@ namespace Client.MirScenes
                         {
                             if (ob.Dead)
                             {
-                                if (!Settings.TargetDead) continue;
+                                if (!Settings.TargetDead && GameScene.TargetDeadTime <= CMain.Time) continue;
 
                                 bestmouseobject = ob;
                                 //continue;

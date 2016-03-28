@@ -46,6 +46,7 @@ namespace LibraryViewer
             if (CurrentVersion != LibVersion)
             {
                 MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", "Failed to open", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                Program.LoadFailed = true;
                 return;
             }
             Count = _reader.ReadInt32();

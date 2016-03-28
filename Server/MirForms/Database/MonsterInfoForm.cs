@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirObjects;
 
 namespace Server
 {

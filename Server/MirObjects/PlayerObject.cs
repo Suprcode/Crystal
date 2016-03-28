@@ -190,7 +190,7 @@ namespace Server.MirObjects
         }
 
         public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, CreatureTimeLeftDelay = 1000, ItemExpireDelay = 60000, MovementDelay = 2000;
-        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime, MovementTime;
+        public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, StruckTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime, MovementTime;
 
         public byte ChatTick;
 
@@ -4665,6 +4665,7 @@ namespace Server.MirObjects
                                     ReceiveChat("--Monster Info--", ChatType.System2);
                                     ReceiveChat(string.Format("ID : {0}, Name : {1}", monOb.Info.Index, monOb.Name), ChatType.System2);
                                     ReceiveChat(string.Format("Level : {0}, X : {1}, Y : {2}", monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y), ChatType.System2);
+                                    ReceiveChat(string.Format("HP : {0}, MinDC : {1}, MaxDC : {1}", monOb.Info.HP, monOb.MinDC, monOb.MaxDC), ChatType.System2);
                                     break;
                                 case ObjectType.Merchant:
                                     NPCObject npcOb = (NPCObject)ob;
@@ -6578,6 +6579,7 @@ namespace Server.MirObjects
             target.ShockTime = 0;
             target.OperateTime = 0;
             target.MaxPetLevel = (byte)(1 + magic.Level * 2);
+            //target.TameTime = Envir.Time + (Settings.Minute * 60);
 
             target.Broadcast(new S.ObjectName { ObjectID = target.ObjectID, Name = target.Name });
         }
@@ -9245,7 +9247,7 @@ namespace Server.MirObjects
                 Music = CurrentMap.Info.Music
             });
 
-            if (effects) Enqueue(new S.TeleportIn());
+            if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
             if (TradePartner != null) TradeCancel();
 
@@ -9425,7 +9427,7 @@ namespace Server.MirObjects
             if (Dead || attacker.Master == this || GMGameMaster) return false;
             if (attacker.Info.AI == 6 || attacker.Info.AI == 58) return PKPoints >= 200;
             if (attacker.Master == null) return true;
-            if (InSafeZone || attacker.Master.InSafeZone) return false;
+            if (InSafeZone || attacker.InSafeZone || attacker.Master.InSafeZone) return false;
 
             if (LastHitter != attacker.Master && attacker.Master.LastHitter != this)
             {
@@ -9802,8 +9804,12 @@ namespace Server.MirObjects
 
             CounterAttackCast(GetMagic(Spell.天务), LastHitter);
 
-            Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            if (StruckTime < Envir.Time)
+            {
+                Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
+                Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+                StruckTime = Envir.Time + 500;
+            }
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
@@ -9894,6 +9900,7 @@ namespace Server.MirObjects
 
             if (p.Owner != null && p.Owner.Race == ObjectType.Player && Envir.Time > BrownTime && PKPoints < 200)
                 p.Owner.BrownTime = Envir.Time + Settings.Minute;
+
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - PoisonRecovery);
             if (p.Duration == 0) return;
 

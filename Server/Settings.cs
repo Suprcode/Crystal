@@ -144,7 +144,7 @@ namespace Server
 
 
         //IntelligentCreature
-        public static String[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog" };
+        public static string[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog", "BabyMonkey" };
         public static string CreatureBlackStoneName = "BlackCreatureStone";
 
         //Fishing Settings

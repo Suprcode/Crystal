@@ -9,6 +9,4 @@ In development features - may need revisiting / refactoring / finishing
 
 -Object dead code draw. Currently drawn before anything else with an exception for sabuk wall - do another way?
 
--Map doors don't open/close, basic code added but not complete
-
 -Character deletion code after x days, or under x level after y days

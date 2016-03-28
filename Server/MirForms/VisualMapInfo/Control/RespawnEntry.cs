@@ -18,7 +18,7 @@ namespace Server.MirForms.VisualMapInfo.Control
             get { return SMain.EditEnvir; }
         }
 
-        public OvalShape RegionHighlight = new OvalShape();
+        public RectangleShape RegionHighlight = new RectangleShape();
 
         public int MonsterIndex;
 
