@@ -37,11 +37,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(136, 39);
+            this.button1.Location = new System.Drawing.Point(136, 36);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 21);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Start";
+            this.button1.Text = "开始";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -53,26 +53,26 @@
             "00",
             "000",
             "0000"});
-            this.cbPrefix.Location = new System.Drawing.Point(54, 12);
+            this.cbPrefix.Location = new System.Drawing.Point(54, 11);
             this.cbPrefix.Name = "cbPrefix";
-            this.cbPrefix.Size = new System.Drawing.Size(54, 21);
+            this.cbPrefix.Size = new System.Drawing.Size(54, 20);
             this.cbPrefix.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Location = new System.Drawing.Point(12, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(36, 13);
+            this.label1.Size = new System.Drawing.Size(35, 12);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Prefix:";
+            this.label1.Text = "前缀:";
             // 
             // cbFront
             // 
             this.cbFront.AutoSize = true;
-            this.cbFront.Location = new System.Drawing.Point(15, 43);
+            this.cbFront.Location = new System.Drawing.Point(15, 40);
             this.cbFront.Name = "cbFront";
-            this.cbFront.Size = new System.Drawing.Size(84, 17);
+            this.cbFront.Size = new System.Drawing.Size(90, 16);
             this.cbFront.TabIndex = 3;
             this.cbFront.Text = "FrontImages";
             this.cbFront.UseVisualStyleBackColor = true;
@@ -80,19 +80,19 @@
             // cbManualPrefix
             // 
             this.cbManualPrefix.AutoSize = true;
-            this.cbManualPrefix.Location = new System.Drawing.Point(124, 14);
+            this.cbManualPrefix.Location = new System.Drawing.Point(124, 13);
             this.cbManualPrefix.Name = "cbManualPrefix";
-            this.cbManualPrefix.Size = new System.Drawing.Size(87, 17);
+            this.cbManualPrefix.Size = new System.Drawing.Size(72, 16);
             this.cbManualPrefix.TabIndex = 4;
-            this.cbManualPrefix.Text = "ManualPrefix";
+            this.cbManualPrefix.Text = "手动输入";
             this.cbManualPrefix.UseVisualStyleBackColor = true;
             this.cbManualPrefix.CheckedChanged += new System.EventHandler(this.cbManualPrefix_CheckedChanged);
             // 
             // LoadSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(223, 71);
+            this.ClientSize = new System.Drawing.Size(223, 66);
             this.Controls.Add(this.cbManualPrefix);
             this.Controls.Add(this.cbFront);
             this.Controls.Add(this.label1);

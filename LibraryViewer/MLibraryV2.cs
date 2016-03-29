@@ -45,7 +45,7 @@ namespace LibraryViewer
             CurrentVersion = _reader.ReadInt32();
             if (CurrentVersion != LibVersion)
             {
-                MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", "Failed to open", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("版本错误, 期望版本: " + LibVersion.ToString() + " 找到版本: " + CurrentVersion.ToString() + ".", "打开失败", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 Program.LoadFailed = true;
                 return;
             }

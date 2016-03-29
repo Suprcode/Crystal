@@ -32,9 +32,9 @@ namespace LibraryViewer
         {
             ImageBox.Image = null;
 
-            WidthLabel.Text = "<No Image>";
-            HeightLabel.Text = "<No Image>";
-            LibNameLabel.Text = "<No Selection>";
+            WidthLabel.Text = "<无图片>";
+            HeightLabel.Text = "<无图片>";
+            LibNameLabel.Text = "<无选择>";
             LibCountLabel.Text = ImageList.Images.Count.ToString();
         }
 
@@ -73,7 +73,7 @@ namespace LibraryViewer
             //DebugBox.Text += "Prefix: "+Prefix + "\r\n";
             Program.LoadFailed = false;
 
-            MessageBox.Show("This can take a while.\n Press 'OK' to Start.");
+            MessageBox.Show("这将花费很长时间.\n 按 '确定' 开始.");
 
             
             Stopwatch sw = Stopwatch.StartNew();//Timing
@@ -106,9 +106,9 @@ namespace LibraryViewer
 
 
             if (ImageList.Images.Count < 1)
-                MessageBox.Show("No images seem to be found.\nMake sure you choose the right prefix!");
+                MessageBox.Show("没有找到任何图片.\n请确定你设置了正确的前缀!");
             else
-                MessageBox.Show("Folder processing finally finished.\nTime Taken: " + sw.Elapsed.TotalMilliseconds + "ms");
+                MessageBox.Show("处理文件夹完成.\n花费时间: " + sw.Elapsed.TotalMilliseconds + "ms");
         }
 
         private void PreviewListView_SelectedIndexChanged(object sender, EventArgs e)
