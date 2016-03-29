@@ -17,9 +17,6 @@ namespace Server.MirObjects.Monsters
         protected internal HellKeeper(MonsterInfo info) : base(info)
         {
             Direction = MirDirection.Up;
-
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
         }
 
         protected override bool InAttackRange()
@@ -174,17 +171,12 @@ namespace Server.MirObjects.Monsters
         {
             if (Envir.Random.Next(3) > 0)
             {
-                ShockTime = 0;
-
                 if (!Target.IsAttackTarget(this))
                 {
                     Target = null;
                     return;
                 }
-
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
-
+                
                 int damage = GetAttackPower(MinDC, MaxDC);
 
                 if (damage == 0) return;
@@ -193,22 +185,17 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Attack2();
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                int damage = GetAttackPower(MinMC, MaxMC);
+                if (damage == 0) return;
+
+                Target.Attacked(this, damage, DefenceType.MACAgility);
+                if (Envir.Random.Next(10) == 0)
+                {
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(MinMC, MaxMC), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                }
             }   
-        }
-
-        private void Attack2()
-        {
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-
-            int damage = GetAttackPower(MinMC, MaxMC);
-            if (damage == 0) return;
-
-            Target.Attacked(this, damage, DefenceType.MACAgility);
-            if (Envir.Random.Next(10) == 0)
-            {
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
-            }
         }
     }
 }

@@ -3,15 +3,16 @@ using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
+using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    public class WitchDoctor : MonsterObject
+    class FlameScythe : MonsterObject
     {
         public long FearTime;
-        public byte AttackRange = 6;
+        public byte AttackRange = 2;
 
-        protected internal WitchDoctor(MonsterInfo info)
+        protected internal FlameScythe(MonsterInfo info)
             : base(info)
         {
         }
@@ -23,37 +24,43 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
+            ShockTime = 0;
+
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
                 return;
             }
 
-            ShockTime = 0;
+            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if (Envir.Random.Next(10) == 0)
+            if(Functions.InRange(Target.CurrentLocation, CurrentLocation, 1))
             {
-                TeleportRandom(40, AttackRange);
+                base.Attack();
             }
             else
             {
-                Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
+                List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation, false);
 
                 int damage = GetAttackPower(MinMC, MaxMC);
-                if (damage == 0) return;
 
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                ActionList.Add(action);
-
-                if (Target.Dead)
-                    FindTarget();
+                if (damage > 0 && targets.Count > 0)
+                {
+                    for (int i = 0; i < targets.Count; i++)
+                    {
+                        if (Envir.Random.Next(Settings.MagicResistWeight) >= targets[i].MagicResist)
+                        {
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility);
+                            ActionList.Add(action);
+                        }
+                    }
+                }
             }
+
+            AttackTime = Envir.Time + AttackSpeed;
+            ActionTime = Envir.Time + 300;
         }
 
         protected override void ProcessTarget()
@@ -105,25 +112,8 @@ namespace Server.MirObjects.Monsters
                         }
                         break;
                 }
-                
+
             }
-        }
-
-        public override bool TeleportRandom(int attempts, int distance, Map temp = null)
-        {
-            if (Target == null) return false;
-
-            for (int i = 0; i < attempts; i++)
-            {
-                Point location;
-
-                location = new Point(Target.CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                          Target.CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
-
-                if (Teleport(CurrentMap, location, true, 5)) return true;
-            }
-
-            return false;
         }
     }
 }

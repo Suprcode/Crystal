@@ -30,20 +30,18 @@ namespace Server.MirObjects.Monsters
             }
 
             ShockTime = 0;
-
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            
+
             if (!ranged)
             {
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 int damage = GetAttackPower(MinDC, MaxDC);
-
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 if (damage == 0) return;
 
                 Target.Attacked(this, damage, DefenceType.ACAgility);
@@ -51,9 +49,6 @@ namespace Server.MirObjects.Monsters
             else
             {    
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
 
                 int damage = GetAttackPower(MinMC, MaxMC);
                 if (damage == 0) return;

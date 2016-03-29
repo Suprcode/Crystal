@@ -416,30 +416,30 @@ public enum Monster : ushort
     TrollStoner = 236,//done
     TrollKing = 237,//done
 
-    FlameSpear = 238,
-    FlameMage = 239,
-    FlameScythe = 240,
-    FlameAssassin = 241,
+    FlameSpear = 238,//done
+    FlameMage = 239,//done
+    FlameScythe = 240,//done
+    FlameAssassin = 241,//done
     FlameQueen = 242,
-    HellKnight1 = 243,
-    HellKnight2 = 244,
-    HellKnight3 = 245,
-    HellKnight4 = 246,
-    HellLord = 247,
-    WaterGuard = 248,
-    IceGuard = 249,
+    HellKnight1 = 243,//done
+    HellKnight2 = 244,//done
+    HellKnight3 = 245,//done
+    HellKnight4 = 246,//done
+    HellLord = 247,//done
 
+    WaterGuard = 248,//done
+    IceGuard = 249,
     ElementGuard = 250,
     DemonGuard = 251,
     KingGuard = 252,
-    Sanke10 = 253,
-    Sanke11 = 254,
-    Sanke12 = 255,
-    Sanke13 = 256,
-    Sanke14 = 257,
-    Sanke15 = 258,
-    Sanke16 = 259,
-    Sanke17 = 260,
+    Snake10 = 253,//done
+    Snake11 = 254,//done
+    Snake12 = 255,//done
+    Snake13 = 256,//done
+    Snake14 = 257,//done
+    Snake15 = 258,//done
+    Snake16 = 259,//done
+    Snake17 = 260,//done
     DeathCrawler = 261,
     BurningZombie = 262,
     MudZombie = 263,
@@ -590,6 +590,9 @@ public enum Monster : ushort
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
+    HellBomb1 = 903,
+    HellBomb2 = 904,
+    HellBomb3 = 905,
 
     SabukGate = 950,
     PalaceWallLeft = 951,
@@ -1106,12 +1109,13 @@ public enum Spell : byte
     Blink = 151,
     Portal = 152,
     
-
     //Map Events
     DigOutZombie = 200,
     Rubble = 201,
     MapLightning = 202,
     MapLava = 203,
+    MapQuake1 = 204,
+    MapQuake2 = 205
 }
 
 public enum SpellEffect : byte
