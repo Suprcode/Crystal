@@ -5662,11 +5662,11 @@ namespace Client.MirScenes
                         if (HoverItem.Info.Shape == 26)//WonderDrug
                         {
                             string strTime = Functions.PrintTimeSpanFromSeconds((HoverItem.CurrentDura * 3600), false);
-                            text += "\n" + string.Format(" Duration {0}", strTime);
+                            text += "\n" + string.Format(" 持久 {0}", strTime);
                         }
                         break;
                     default:
-                        text += string.Format(" Durability {0}/{1}", Math.Round(HoverItem.CurrentDura / 1000M),
+                        text += string.Format(" 持久 {0}/{1}", Math.Round(HoverItem.CurrentDura / 1000M),
                                                    Math.Round(HoverItem.MaxDura / 1000M));
                         break;
                 }
