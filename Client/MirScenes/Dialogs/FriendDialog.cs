@@ -149,7 +149,7 @@ namespace Client.MirScenes.Dialogs
             AddButton.Click += (o, e) =>
             {
                 ;
-                string message = string.Format("Please enter the name of the person you would like to {0}.", _blockedTab ? "block" : "add");
+                string message = string.Format("请输入你要 {0} 的人名.", _blockedTab ? "阻止" : "添加");
 
                 MirInputBox inputBox = new MirInputBox(message);
 
@@ -176,7 +176,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (SelectedFriend == null) return;
 
-                MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you wish to remove '{0}'?", SelectedFriend.Name), MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(string.Format("你确定要移除 '{0}'?", SelectedFriend.Name), MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (o1, e1) =>
                 {
@@ -238,7 +238,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (!SelectedFriend.Online)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Player 不在线", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("玩家不在线", ChatType.System);
                     return;
                 }
 
