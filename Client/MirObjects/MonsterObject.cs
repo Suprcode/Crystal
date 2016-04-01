@@ -103,7 +103,11 @@ namespace Client.MirObjects
                 switch (BaseImage)
                 {
                     case Monster.GreatFoxSpirit:
-                        if (update) Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 335, 20, 3000, this));
+                        if (update)
+                        {
+                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 335, 20, 3000, this));
+                            SoundManager.PlaySound(BaseSound + 8);
+                        }
                         break;
                     case Monster.HellLord:
                         {
@@ -1382,6 +1386,7 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Walking:
+                        PlayWalkSound();
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Attack1:
@@ -1514,7 +1519,7 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack3:
-                        //PlaySecondAttackSound();
+                        PlayThirdAttackSound();
                         switch (BaseImage)
                         {
                             case Monster.Yimoogi:
@@ -1600,6 +1605,18 @@ namespace Client.MirObjects
                     case MirAction.AttackRange2:
                         //PlayRangeSound();
                         TargetID = (uint)action.Params[0];
+                        switch(BaseImage)
+                        {
+                            case Monster.TurtleKing:
+                                byte random = (byte)CMain.Random.Next(4);
+                                for (int i = 0; i <= 4 + random; i++)
+                                {
+                                    Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
+
+                                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, source, CMain.Time + CMain.Random.Next(600)));
+                                }
+                                break;
+                        }
                         break;
                     case MirAction.AttackRange3:
                         //PlayRangeSound();
@@ -2187,7 +2204,10 @@ namespace Client.MirObjects
                                             case Monster.ZumaArcher:
                                             case Monster.BoneArcher:
                                                 if (MapControl.GetObject(TargetID) != null)
+                                                {
                                                     CreateProjectile(224, Libraries.Monsters[(ushort)Monster.ZumaArcher], false, 1, 30, 0);
+                                                    SoundManager.PlaySound(BaseSound + 6);
+                                                }
                                                 break;
                                             case Monster.RedThunderZuma:
                                                 ob = MapControl.GetObject(TargetID);
@@ -2206,24 +2226,26 @@ namespace Client.MirObjects
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Magic2, 10, 5, 300, ob));
-                                                    SoundManager.PlaySound(BaseSound + 6);
                                                 }
                                                 break;
                                             case Monster.LeftGuard:
                                                 if (MapControl.GetObject(TargetID) != null)
+                                                {
                                                     CreateProjectile(10, Libraries.Magic, true, 6, 30, 4);
+                                                }
                                                 break;
                                             case Monster.MinotaurKing:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MinotaurKing], 320, 20, 1000, ob));
-                                                    SoundManager.PlaySound(BaseSound + 6);
                                                 }
                                                 break;
                                             case Monster.FrostTiger:
                                                 if (MapControl.GetObject(TargetID) != null)
+                                                {
                                                     CreateProjectile(410, Libraries.Magic2, true, 4, 30, 6);
+                                                }
                                                 break;
                                             case Monster.Yimoogi:
                                                 ob = MapControl.GetObject(TargetID);
@@ -2286,6 +2308,7 @@ namespace Client.MirObjects
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                         missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WhiteFoxman], 352, 10, 600, missile.Target));
+                                                        SoundManager.PlaySound(BaseSound + 6);
                                                     };
                                                 }
                                                 break;
@@ -2461,7 +2484,7 @@ namespace Client.MirObjects
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RedFoxman], 233, 10, 400, ob));
-                                                    SoundManager.PlaySound(BaseSound + 6);
+                                                    SoundManager.PlaySound(BaseSound + 7);
                                                 }
                                                 break;
                                             case Monster.WhiteFoxman:
@@ -2472,7 +2495,8 @@ namespace Client.MirObjects
                                                     missile.Complete += (o, e) =>
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WhiteFoxman], 362, 15, 1000, missile.Target));
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WhiteFoxman], 362, 15, 1800, missile.Target));
+                                                        SoundManager.PlaySound(BaseSound + 7);
                                                     };
                                                 }
                                                 break;
@@ -2658,6 +2682,16 @@ namespace Client.MirObjects
                     return;
             }
         }
+        private void PlayWalkSound()
+        {
+            switch (BaseImage)
+            {
+                case Monster.WingedTigerLord:
+                    SoundManager.PlaySound(BaseSound + 8);
+                    return;
+            }
+        }
+
         public void PlayAppearSound()
         {
             switch (BaseImage)
@@ -2759,13 +2793,19 @@ namespace Client.MirObjects
         {
             SoundManager.PlaySound(BaseSound + 1);
         }
+
         public void PlaySecondAttackSound()
         {
             SoundManager.PlaySound(BaseSound + 6);
         }
+        public void PlayThirdAttackSound()
+        {
+            SoundManager.PlaySound(BaseSound + 7);
+        }
+
         public void PlayFourthAttackSound()
         {
-
+            SoundManager.PlaySound(BaseSound + 8);
         }
         public void PlaySwingSound()
         {
@@ -2799,15 +2839,18 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
-                case Monster.CrystalSpider:
-                case Monster.MinotaurKing:
-                    break;
                 case Monster.RedThunderZuma:
                 case Monster.KingScorpion:
                 case Monster.DarkDevil:
                 case Monster.Khazard:
                 case Monster.BoneLord:
                 case Monster.LeftGuard:
+                case Monster.RightGuard:
+                case Monster.FrostTiger:
+                case Monster.GreatFoxSpirit:
+                case Monster.BoneSpearman:
+                case Monster.MinotaurKing:
+                case Monster.WingedTigerLord:
                     SoundManager.PlaySound(BaseSound + 5);
                     break;
                 default:
@@ -2815,6 +2858,11 @@ namespace Client.MirObjects
                     break;
             }
         }
+        public void PlayerSecondRangeSound()
+        {
+            
+        }
+
         public void PlayPickupSound()
         {
             SoundManager.PlaySound(SoundList.PetPickup);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 using System.Drawing;
@@ -208,12 +204,9 @@ namespace Server.MirObjects.Monsters
                         break;
                 }
 
-                if (mob == null || !(mob is HellBomb)) return;
+                if (mob == null) return;
 
-                HellBomb bomb = (HellBomb)mob;
-                bomb.Lord = this;
-
-                bomb.Spawn(CurrentMap, location);
+                mob.Spawn(CurrentMap, location);
             }     
         }
 
@@ -240,7 +233,7 @@ namespace Server.MirObjects.Monsters
             if (mob == null || !(mob is HellKnight)) return;
 
             HellKnight knight = (HellKnight)mob;
-            knight.Lord = this;
+            knight.Owner = this;
 
             Point front = Functions.PointMove(CurrentLocation, MirDirection.DownLeft, 12);
 

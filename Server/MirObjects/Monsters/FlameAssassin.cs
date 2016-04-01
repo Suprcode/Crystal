@@ -23,13 +23,16 @@ namespace Server.MirObjects.Monsters
 
             if(target.Attacked(this, damage, defence) > 0)
             {
-                target.ApplyPoison(new Poison
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    Owner = this,
-                    Duration = GetAttackPower(MinMC, MaxMC),
-                    PType = PoisonType.Slow,
-                    TickSpeed = 1000,
-                }, this);
+                    target.ApplyPoison(new Poison
+                    {
+                        Owner = this,
+                        Duration = GetAttackPower(MinMC, MaxMC),
+                        PType = PoisonType.Slow,
+                        TickSpeed = 1000,
+                    }, this);
+                }
             }
         }
 

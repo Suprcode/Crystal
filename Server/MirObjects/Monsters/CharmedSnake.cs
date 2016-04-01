@@ -190,9 +190,12 @@ namespace Server.MirObjects.Monsters
             //if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
             Target.Attacked(this, damage, DefenceType.MAC);
 
-            if (Envir.Random.Next(10) <= PetLevel)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 4 + PetLevel, TickSpeed = 1000 }, this);
+                if (Envir.Random.Next(10) <= PetLevel)
+                {
+                    Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 4 + PetLevel, TickSpeed = 1000 }, this);
+                }
             }
         }
 

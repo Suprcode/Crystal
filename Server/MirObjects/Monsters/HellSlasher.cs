@@ -54,10 +54,13 @@ namespace Server.MirObjects.Monsters
                         if (!ob.IsAttackTarget(this)) continue;
 
                         ob.Attacked(this, MinDC, DefenceType.ACAgility);
-                        
-                        if(Envir.Random.Next(5) == 0)
+
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= ob.PoisonResist)
                         {
-                            ob.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = Envir.Random.Next(1, 4), TickSpeed = 1000 }, this);
+                            if (Envir.Random.Next(5) == 0)
+                            {
+                                ob.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = Envir.Random.Next(1, 4), TickSpeed = 1000 }, this);
+                            }
                         }
                                       
                         break;

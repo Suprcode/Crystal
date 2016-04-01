@@ -324,7 +324,7 @@ public enum Monster : ushort
     HighAssassin = 146,
     DarkDustPile = 147,
     DarkBrownWolf = 148,
-    Football = 149,
+    Football = 149, 
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -333,8 +333,7 @@ public enum Monster : ushort
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
-
-    Behemoth = 158,//done
+    Behemoth = 158,//done BOSS
     DarkDevourer = 159,//done
     PoisonHugger = 160,//done
     Hugger = 161,//done
@@ -358,12 +357,12 @@ public enum Monster : ushort
     RedYimoogi = 179,//done
     LionRiderMale = 180, //frames not added
     LionRiderFemale = 181, //frames not added
-    Tornado = 182,//done
+    Tornado = 182,//done --REDO, like fox mob
     FlameTiger = 183,//done
-    WingedTigerLord = 184,//done
+    WingedTigerLord = 184,//done BOSS
     TowerTurtle = 185,//done
     FinialTurtle = 186,//done
-    TurtleKing = 187,//FINISH
+    TurtleKing = 187,//FINISH BOSS
     DarkTurtle = 188,//done
     LightTurtle = 189,//done  
     DarkSwordOma = 190,//done
@@ -378,7 +377,7 @@ public enum Monster : ushort
     DarkYob = 199,//done
 
     FlamingMutant = 200,//FINISH
-    StoningStatue = 201,//FINISH
+    StoningStatue = 201,//FINISH BOSS
     FlyingStatue = 202,//FINISH
     ValeBat = 203,//done
     Weaver = 204,//done
@@ -395,7 +394,7 @@ public enum Monster : ushort
     HellSlasher = 215,//done
     HellPirate = 216,//done
     HellCannibal = 217,//done
-    HellKeeper = 218, //done
+    HellKeeper = 218, //done BOSS
     HellBolt = 219, //done
     WitchDoctor = 220,//done
     ManectricHammer = 221,//done
@@ -414,19 +413,17 @@ public enum Monster : ushort
     TrollHammer = 234,//done
     TrollBomber = 235,//done
     TrollStoner = 236,//done
-    TrollKing = 237,//done
-
+    TrollKing = 237,//done BOSS
     FlameSpear = 238,//done
     FlameMage = 239,//done
     FlameScythe = 240,//done
     FlameAssassin = 241,//done
-    FlameQueen = 242,
+    FlameQueen = 242, //finish BOSS
     HellKnight1 = 243,//done
     HellKnight2 = 244,//done
     HellKnight3 = 245,//done
     HellKnight4 = 246,//done
-    HellLord = 247,//done
-
+    HellLord = 247,//done BOSS
     WaterGuard = 248,//done
     IceGuard = 249,
     ElementGuard = 250,
@@ -440,6 +437,7 @@ public enum Monster : ushort
     Snake15 = 258,//done
     Snake16 = 259,//done
     Snake17 = 260,//done
+
     DeathCrawler = 261,
     BurningZombie = 262,
     MudZombie = 263,
@@ -2050,7 +2048,7 @@ public static class Globals
 
         LogDelay = 10000,
 
-        DataRange = 24;
+        DataRange = 12;//Was 24
 
     public static float Commission = 0.05F;
 

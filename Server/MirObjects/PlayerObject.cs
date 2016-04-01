@@ -9249,9 +9249,10 @@ namespace Server.MirObjects
 
             if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
+            //Cancel actions
             if (TradePartner != null) TradeCancel();
-
             if (RidingMount) RefreshMount();
+            if (ActiveBlizzard) ActiveBlizzard = false;
 
             GetObjectsPassive();
 
@@ -16039,34 +16040,38 @@ namespace Server.MirObjects
                 int getChance = FishingChance + Envir.Random.Next(10, 24) + (FishingProgress > 50 ? flexibilityStat / 2 : 0);
                 getChance = Math.Min(100, Math.Max(0, getChance));
 
-                if (Envir.Random.Next(0, 100) <= getChance)
+                if (Envir.Random.Next(0, 100) <= getChance && FishFound)
                 {
                     FishingChanceCounter = 0;
 
-                    int highRate = int.MaxValue;
                     UserItem dropItem = null;
+
                     foreach (DropInfo drop in Envir.FishingDrops.Where(x => x.Type == fishingCell.FishingAttribute))
                     {
-                        int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate);
+
+                        int rate = (int)(drop.Chance / (Settings.DropRate));
+
+                        if (EXPOwner != null && EXPOwner.ItemDropRateOffset > 0)
+                            rate -= (int)(rate * (EXPOwner.ItemDropRateOffset / 100));
 
                         if (rate < 1) rate = 1;
 
-                        if (highRate > rate)
-                        {
-                            highRate = rate;
-                            dropItem = Envir.CreateDropItem(drop.Item);
-                        }
+                        if (Envir.Random.Next(rate) != 0) continue;
+
+                        dropItem = Envir.CreateDropItem(drop.Item);
+                        break;
                     }
 
-                    if (FreeSpace(Info.Inventory) < 1)
+                    if (dropItem == null)
+                        ReceiveChat("Your fish got away!", ChatType.System);
+                    else if (FreeSpace(Info.Inventory) < 1)
+                        ReceiveChat("You do not have enough space in your bag.", ChatType.System);
+                    else if (dropItem != null)
                     {
-                        ReceiveChat("No more space.", ChatType.System);
-                        return;
-                    }
-
-                    if (dropItem != null)
                         GainItem(dropItem);
-
+                        Report.ItemChanged("FishedItem", dropItem, dropItem.Count, 2);
+                    }
+                    
                     if (Envir.Random.Next(100 - Settings.FishingMobSpawnChance) == 0)
                     {
                         MonsterObject mob = MonsterObject.GetMonster(Envir.GetMonsterInfo(Settings.FishingMonster));

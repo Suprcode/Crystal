@@ -62,16 +62,19 @@ namespace Server.MirObjects.Monsters
                 {
                     if (Target.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
                     {
-                        int poison = GetAttackPower(MinSC, MaxSC);
-
-                        Target.ApplyPoison(new Poison
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                         {
-                            Owner = this,
-                            Duration = 5,
-                            PType = PoisonType.Green,
-                            Value = poison,
-                            TickSpeed = 2000
-                        }, this);
+                            int poison = GetAttackPower(MinSC, MaxSC);
+
+                            Target.ApplyPoison(new Poison
+                            {
+                                Owner = this,
+                                Duration = 5,
+                                PType = PoisonType.Green,
+                                Value = poison,
+                                TickSpeed = 2000
+                            }, this);
+                        }
                     }
                 }
                 else
@@ -90,9 +93,11 @@ namespace Server.MirObjects.Monsters
 
                             if (ob.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
                             {
-                                int poison = GetAttackPower(MinSC, MaxSC);
+                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                                {
+                                    int poison = GetAttackPower(MinSC, MaxSC);
 
-                                ob.ApplyPoison(new Poison
+                                    ob.ApplyPoison(new Poison
                                     {
                                         Owner = this,
                                         Duration = 5,
@@ -100,6 +105,7 @@ namespace Server.MirObjects.Monsters
                                         Value = poison,
                                         TickSpeed = 2000
                                     }, this);
+                                }
                             }
                         }
                         else continue;

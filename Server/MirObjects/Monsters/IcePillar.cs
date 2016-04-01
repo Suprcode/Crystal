@@ -154,11 +154,14 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.IcePillar });
 
-                targets[i].Attacked(this, damage, DefenceType.MACAgility);
+                if (targets[i].Attacked(this, damage, DefenceType.MACAgility) <= 0) continue;
 
-                if (Envir.Random.Next(5) == 0)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                 {
-                    targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
+                    if (Envir.Random.Next(5) == 0)
+                    {
+                        targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
+                    }
                 }
             }
         }

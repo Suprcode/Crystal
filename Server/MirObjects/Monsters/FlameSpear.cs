@@ -45,6 +45,7 @@ namespace Server.MirObjects.Monsters
             {
                 base.Attack();
             }
+            else
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 

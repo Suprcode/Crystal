@@ -60,6 +60,7 @@ namespace Server.MirObjects.Monsters
                         {
                             Owner = this,
                             Duration = 5,
+                            Value = damage,
                             PType = PoisonType.Green,
                             TickSpeed = 1000,
                         }, this);

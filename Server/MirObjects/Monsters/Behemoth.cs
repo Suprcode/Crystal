@@ -52,10 +52,12 @@ namespace Server.MirObjects.Monsters
                         Attack2();
                         break;
                 }
-
-                if (Envir.Random.Next(15) == 0)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Bleeding, TickSpeed = 1000 }, this);
+                    if (Envir.Random.Next(15) == 0)
+                    {
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinDC, MinDC), TickSpeed = 1000 }, this);
+                    }
                 }
             }
             else
@@ -89,8 +91,13 @@ namespace Server.MirObjects.Monsters
 
                                     if (targets[i].Attacked(this, damage, DefenceType.ACAgility) > 0)
                                     {
-                                        if (Envir.Random.Next(15) == 0)
-                                            targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                                        {
+                                            if (Envir.Random.Next(15) == 0)
+                                            {
+                                                targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+                                            }
+                                        }
                                     }
                                 }
 
@@ -136,9 +143,12 @@ namespace Server.MirObjects.Monsters
                     {
                         t.Pushed(this, Direction, 4);
 
-                        if (Envir.Random.Next(3) == 0)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= t.PoisonResist)
                         {
-                            t.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                            if (Envir.Random.Next(3) == 0)
+                            {
+                                t.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                            }
                         }
                     }
                     break;

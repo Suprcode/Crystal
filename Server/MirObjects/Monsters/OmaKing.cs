@@ -95,7 +95,10 @@ namespace Server.MirObjects.Monsters
                             if (targets[i].Pushed(this, Functions.DirectionFromPoint(CurrentLocation, targets[i].CurrentLocation), 3 + Envir.Random.Next(3)) > 0
                             && Envir.Random.Next(8) == 0)
                             {
-                                targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this, true);
+                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                                {
+                                    targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this, true);
+                                }
                             }
                         }
                     }

@@ -2804,13 +2804,6 @@ namespace Client.MirScenes
             }
             mob = new MonsterObject(p.ObjectID);
             mob.Load(p);
-            /*
-            string[] mobs = new string[] { "OmaKing", "DarkDevil", "MinotaurKing" };
-            if (mobs.Contains(mob.Name))
-            {
-                ChatDialog.ReceiveChat(string.Format("{0} at {1}", p.Name, p.Location), ChatType.Hint);
-            }
-            */
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
@@ -2867,7 +2860,6 @@ namespace Client.MirScenes
             User.ClearMagic();
             if (User.ReincarnationStopTime > CMain.Time)
                 Network.Enqueue(new C.CancelReincarnation {});
-            //if (User.CurrentAction == MirAction.Struck) return;
 
             MirDirection dir = User.Direction;
             Point location = User.CurrentLocation;
@@ -2923,7 +2915,6 @@ namespace Client.MirScenes
                 if (ob.ObjectID != p.ObjectID) continue;
 
                 if (ob.SkipFrames) return;
-                //if (ob.CurrentAction == MirAction.Struck) return;
                 if (ob.ActionFeed.Count > 0 && ob.ActionFeed[ob.ActionFeed.Count - 1].Action == MirAction.Struck) return;
 
                 if (ob.Race == ObjectType.Player)
@@ -3785,6 +3776,7 @@ namespace Client.MirScenes
                         break;
                     case SpellEffect.GreatFoxSpirit:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, ob));
+                        SoundManager.PlaySound(((ushort)Monster.GreatFoxSpirit * 10) + 5);
                         break;
                     case SpellEffect.Entrapment:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1010, 10, 1500, ob));
@@ -3874,15 +3866,7 @@ namespace Client.MirScenes
                         }
                         break;
                     case SpellEffect.TurtleKing:
-                        switch (CMain.Random.Next(2))
-                        {
-                            default:
-                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 922, 12, 1200, ob));
-                                break;
-                            case 1:
-                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 934, 12, 1200, ob));
-                                break;
-                        }
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, ob));
                         break;
                     case SpellEffect.Behemoth:
                         {

@@ -11,7 +11,6 @@ namespace Server.MirObjects.Monsters
     public class HellBomb : MonsterObject
     {
         public long ExplosionTime;
-        public HellLord Lord;
 
         protected override bool CanMove { get { return false; } }
         protected override bool CanRegen { get { return false; } }
@@ -63,29 +62,21 @@ namespace Server.MirObjects.Monsters
 
                 if (targets[i].Attacked(this, damage, DefenceType.AC) <= 0) continue;
 
-                switch(Info.Image)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                 {
-                    case Monster.HellBomb1:
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
-                        {
-                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
-                        }
-                        break;
-                    case Monster.HellBomb2:
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
-                        {
-                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
-                        }
-                        break;
-                    case Monster.HellBomb3:
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
-                        {
-                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
-                        }
-                        break;
-                }
-
-                
+                    switch (Info.Image)
+                    {
+                        case Monster.HellBomb1:
+                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
+                            break;
+                        case Monster.HellBomb2:
+                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
+                            break;
+                        case Monster.HellBomb3:                   
+                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
+                            break;
+                    }
+                }   
             }
         }
 

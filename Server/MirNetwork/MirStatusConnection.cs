@@ -14,9 +14,8 @@ namespace Server.MirNetwork
     {
         public readonly string IPAddress;
         private TcpClient _client;
-        //private ConcurrentQueue<Packet> _receiveList;
-        //private Queue<Packet> _sendList, _retryList;
-        private long LastSendTime;
+
+        private long NextSendTime;
 
         private bool _disconnecting;
         public bool Connected;
@@ -31,12 +30,10 @@ namespace Server.MirNetwork
             }
         }
         public readonly long TimeConnected;
-        public long TimeDisconnected, TimeOutTime;
-
-        byte[] _rawData = new byte[0];
+        public long TimeOutTime;
 
 
-        public MirStatusConnection( TcpClient client)
+        public MirStatusConnection(TcpClient client)
         {
             try
             {
@@ -47,64 +44,22 @@ namespace Server.MirNetwork
 
                 TimeConnected = SMain.Envir.Time;
                 TimeOutTime = TimeConnected + Settings.TimeOut;
-                LastSendTime = SMain.Envir.Time;
                 Connected = true;
-                BeginReceive();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
             }
         }
 
-        private void BeginReceive()
-        {
-            if (!Connected) return;
-
-            byte[] rawBytes = new byte[8 * 1024];
-
-            try
-            {
-                _client.Client.BeginReceive(rawBytes, 0, rawBytes.Length, SocketFlags.None, ReceiveData, rawBytes);
-            }
-            catch
-            {
-                Disconnecting = true;
-            }
-        }
-        private void ReceiveData(IAsyncResult result)
-        {
-            if (!Connected) return;
-
-            int dataRead;
-
-            try
-            {
-                dataRead = _client.Client.EndReceive(result);
-            }
-            catch
-            {
-                Disconnecting = true;
-                return;
-            }
-
-            if (dataRead == 0)
-            {
-                Disconnecting = true;
-                return;
-            }
-            BeginReceive();
-        }
         private void BeginSend(byte[] data)
         {
             if (!Connected || data.Length == 0) return;
 
-            //Interlocked.Add(ref Network.Sent, data.Count);
-
             try
             {
-                _client.Client.BeginSend(data, 0, data.Length, SocketFlags.None, SendData, Disconnecting);
+                _client.Client.BeginSend(data, 0, data.Length, SocketFlags.None, SendData, null);
             }
             catch
             {
@@ -130,24 +85,23 @@ namespace Server.MirNetwork
                     Disconnect();
                     return;
                 }
-                TimeOutTime = SMain.Envir.Time + Settings.TimeOut;
-                if ((SMain.Envir.Time > TimeOutTime) || Disconnecting)
+
+                if (SMain.Envir.Time > TimeOutTime || Disconnecting)
                 {
                     Disconnect();
                     return;
                 }
 
-                //if (_sendList == null || _sendList.Count <= 0) return;
 
-                if (SMain.Envir.Time - LastSendTime > 10 * 1000)
+                if (SMain.Envir.Time > NextSendTime)
                 {
-                    LastSendTime = SMain.Envir.Time;
-                    string output = string.Format("c;/{0}/{1}/{2}/{3}//;", "NoName", SMain.Envir.PlayerCount, "CrystalM2", Application.ProductVersion);
-                    byte[] data = Encoding.ASCII.GetBytes(output);
-                    BeginSend(data);
+                    NextSendTime = SMain.Envir.Time + 10000;
+                    string output = string.Format("c;/NoName/{0}/CrystalM2/{1}//;", SMain.Envir.PlayerCount, Application.ProductVersion);
+
+                    BeginSend(Encoding.ASCII.GetBytes(output));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
@@ -160,16 +114,9 @@ namespace Server.MirNetwork
                 if (!Connected) return;
 
                 Connected = false;
-                TimeDisconnected = SMain.Envir.Time;
 
                 lock (SMain.Envir.StatusConnections)
                     SMain.Envir.StatusConnections.Remove(this);
-                /*
-                _sendList = null;
-                _receiveList = null;
-                _retryList = null;
-                */
-                _rawData = null;
 
                 if (_client != null) _client.Client.Dispose();
                 _client = null;

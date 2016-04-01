@@ -190,10 +190,14 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(MinMC, MaxMC);
                 if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.MACAgility);
-                if (Envir.Random.Next(10) == 0)
+                if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
+
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(MinMC, MaxMC), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                    if (Envir.Random.Next(10) == 0)
+                    {
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(MinMC, MaxMC), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                    }
                 }
             }   
         }
