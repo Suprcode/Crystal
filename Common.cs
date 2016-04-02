@@ -357,7 +357,7 @@ public enum Monster : ushort
     RedYimoogi = 179,//done
     LionRiderMale = 180, //frames not added
     LionRiderFemale = 181, //frames not added
-    Tornado = 182,//done --REDO, like fox mob
+    Tornado = 182,//done
     FlameTiger = 183,//done
     WingedTigerLord = 184,//done BOSS
     TowerTurtle = 185,//done

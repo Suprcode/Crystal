@@ -2851,6 +2851,8 @@ namespace Client.MirObjects
                 case Monster.BoneSpearman:
                 case Monster.MinotaurKing:
                 case Monster.WingedTigerLord:
+                case Monster.ManectricClaw:
+                case Monster.ManectricKing:
                     SoundManager.PlaySound(BaseSound + 5);
                     break;
                 default:
