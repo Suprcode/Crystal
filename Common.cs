@@ -362,7 +362,7 @@ public enum Monster : ushort
     WingedTigerLord = 184,//done BOSS
     TowerTurtle = 185,//done
     FinialTurtle = 186,//done
-    TurtleKing = 187,//FINISH BOSS
+    TurtleKing = 187,//done BOSS
     DarkTurtle = 188,//done
     LightTurtle = 189,//done  
     DarkSwordOma = 190,//done

@@ -3866,7 +3866,11 @@ namespace Client.MirScenes
                         }
                         break;
                     case SpellEffect.TurtleKing:
-                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, ob));
+                        {
+                            Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, ob);
+                            ef.Played += (o, e) => SoundManager.PlaySound(20000 + (ushort)Spell.HellFire * 10 + 1);
+                            ob.Effects.Add(ef);
+                        }
                         break;
                     case SpellEffect.Behemoth:
                         {

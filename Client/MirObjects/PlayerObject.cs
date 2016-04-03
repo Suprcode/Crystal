@@ -2873,7 +2873,7 @@ namespace Client.MirObjects
                                             {
                                                 if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                 missile.Target.Effects.Add(new Effect(Libraries.Magic, 170, 10, 600, missile.Target));
-                                                SoundManager.PlaySound(20000 + (ushort)Spell.FireBall * 10 + 2);
+                                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 2);
                                             };
                                         }
                                         break;

@@ -1603,7 +1603,7 @@ namespace Client.MirObjects
                         TargetID = (uint)action.Params[0];
                         break;
                     case MirAction.AttackRange2:
-                        //PlayRangeSound();
+                        PlaySecondRangeSound();
                         TargetID = (uint)action.Params[0];
                         switch(BaseImage)
                         {
@@ -1613,13 +1613,15 @@ namespace Client.MirObjects
                                 {
                                     Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
 
-                                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, source, CMain.Time + CMain.Random.Next(600)));
+                                    Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, source, CMain.Time + CMain.Random.Next(600));
+                                    ef.Played += (o, e) => SoundManager.PlaySound(20000 + (ushort)Spell.HellFire * 10 + 1);
+                                    MapControl.Effects.Add(ef);
                                 }
                                 break;
                         }
                         break;
                     case MirAction.AttackRange3:
-                        //PlayRangeSound();
+                        PlayThirdRangeSound();
                         TargetID = (uint)action.Params[0];
                         switch (BaseImage)
                         {
@@ -2366,6 +2368,7 @@ namespace Client.MirObjects
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                         missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FinialTurtle], 320, 10, 500, missile.Target) { Blend = true });
+                                                        SoundManager.PlaySound(20000 + (ushort)Spell.FrostCrunch * 10 + 2);
                                                     };
                                                 }
                                                 break;
@@ -2388,6 +2391,7 @@ namespace Client.MirObjects
                                                         {
                                                             if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                             missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 318, 10, 600, missile.Target));
+                                                            SoundManager.PlaySound(BaseSound + 6);
                                                         };
                                                     }
                                                 }
@@ -2707,6 +2711,7 @@ namespace Client.MirObjects
                     if (Stoned) return;
                     break;
             }
+
             SoundManager.PlaySound(BaseSound);
         }
         public void PlayPopupSound()
@@ -2821,7 +2826,7 @@ namespace Client.MirObjects
             {
                 case Monster.CaveBat:
                     SoundManager.PlaySound(BaseSound + 5);
-                    break;
+                    return;
             }
         }
         public void PlayReviveSound()
@@ -2832,13 +2837,15 @@ namespace Client.MirObjects
                 case Monster.NdZombie:
                 case Monster.CrawlerZombie:
                     SoundManager.PlaySound(SoundList.ZombieRevive);
-                    break;
+                    return;
             }
         }
         public void PlayRangeSound()
         {
             switch (BaseImage)
             {
+                case Monster.TurtleKing:
+                    return;
                 case Monster.RedThunderZuma:
                 case Monster.KingScorpion:
                 case Monster.DarkDevil:
@@ -2853,16 +2860,35 @@ namespace Client.MirObjects
                 case Monster.WingedTigerLord:
                 case Monster.ManectricClaw:
                 case Monster.ManectricKing:
+                case Monster.HellBolt:
+                case Monster.WitchDoctor:
                     SoundManager.PlaySound(BaseSound + 5);
-                    break;
+                    return;
                 default:
                     PlayAttackSound();
-                    break;
+                    return;
             }
         }
-        public void PlayerSecondRangeSound()
+        public void PlaySecondRangeSound()
         {
-            
+            switch(BaseImage)
+            {
+                case Monster.TurtleKing:
+                    return;
+                default:
+                    PlaySecondAttackSound();
+                    return;
+            }
+        }
+
+        public void PlayThirdRangeSound()
+        {
+            switch (BaseImage)
+            {
+                default:
+                    PlayThirdAttackSound();
+                    return;
+            }
         }
 
         public void PlayPickupSound()

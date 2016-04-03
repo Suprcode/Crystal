@@ -31,7 +31,7 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            if (Envir.Random.Next(10) == 0)
+            if (Envir.Random.Next(5) == 0)
             {
                 TeleportRandom(40, AttackRange);
             }
