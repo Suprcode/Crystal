@@ -419,7 +419,7 @@ namespace Client.MirScenes.Dialogs
             switch (Settings.SkillMode)
             {
                 case true:
-                    SModeLabel.Text = "[Skill Mode: `]";
+                    SModeLabel.Text = "[Skill Mode: ~]";
                     break;
                 case false:
                     SModeLabel.Text = "[Skill Mode: Ctrl]";

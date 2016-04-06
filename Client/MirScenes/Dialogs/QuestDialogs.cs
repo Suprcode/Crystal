@@ -916,11 +916,16 @@ namespace Client.MirScenes.Dialogs
 
         public void UpdateTrackedQuests()
         {
-            for (int i = 0; i < TrackedQuestsIds.Count; i++)
+            for (int j = 0; j < Settings.TrackedQuests.Length; j++)
             {
-                if (i < Settings.TrackedQuests.Length)
-                    Settings.TrackedQuests[i] = TrackedQuestsIds[i];
+                if (TrackedQuestsIds.Count > 0 && j < TrackedQuestsIds.Count)
+                {
+                    Settings.TrackedQuests[j] = TrackedQuestsIds[j];
+                    continue;
+                }
+                Settings.TrackedQuests[j] = -1;
             }
+
             Settings.SaveTrackedQuests(GameScene.User.Name);
             CMain.InputKeys.Save();
         }

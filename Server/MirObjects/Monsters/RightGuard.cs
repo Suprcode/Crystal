@@ -3,7 +3,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class RightGuard : MonsterObject
+    public class RightGuard : MonsterObject
     {
         protected virtual byte AttackRange
         {
@@ -82,7 +82,6 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
-
         }
     }
 }

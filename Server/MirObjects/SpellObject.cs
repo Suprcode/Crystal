@@ -100,6 +100,7 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(CurrentLocation);
             for (int i = 0; i < cell.Objects.Count; i++)
                 ProcessSpell(cell.Objects[i]);
+
             if ((Spell == Spell.MapLava) || (Spell == Spell.MapLightning)) Value = 0;
         }
         public void ProcessSpell(MapObject ob)
@@ -169,6 +170,8 @@ namespace Server.MirObjects
                     break;
                 case Spell.MapLava:
                 case Spell.MapLightning:
+                case Spell.MapQuake1:
+                case Spell.MapQuake2:
                     if (Value == 0) return;
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;

@@ -104,14 +104,17 @@ namespace Server.MirObjects.Monsters
             {
                 if (target.Attacked(this, damage, DefenceType.MACAgility) > 0 && attack == AttackType.Shock)
                 {
-                    Target.ApplyPoison(new Poison
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                     {
-                        Owner = this,
-                        Duration = Envir.Random.Next(MaxMC),
-                        PType = PoisonType.Stun,
-                        Value = damage,
-                        TickSpeed = 1000
-                    }, this);
+                        Target.ApplyPoison(new Poison
+                        {
+                            Owner = this,
+                            Duration = Envir.Random.Next(MaxMC),
+                            PType = PoisonType.Stun,
+                            Value = damage,
+                            TickSpeed = 1000
+                        }, this);
+                    }
                 }
             }
         }

@@ -52,12 +52,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ApplicationIcon>
     </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -248,7 +249,15 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
+    <Compile Include="MirObjects\Monsters\HellBomb.cs" />
+    <Compile Include="MirObjects\Monsters\FlameAssassin.cs" />
+    <Compile Include="MirObjects\Monsters\FlameMage.cs" />
+    <Compile Include="MirObjects\Monsters\FlameScythe.cs" />
+    <Compile Include="MirObjects\Monsters\HellLord.cs" />
+    <Compile Include="MirObjects\Monsters\HellKnight.cs" />
     <Compile Include="MirObjects\Monsters\IcePillar.cs" />
+    <Compile Include="MirObjects\Monsters\FlameSpear.cs" />
+    <Compile Include="MirObjects\Monsters\FlameQueen.cs" />
     <Compile Include="MirObjects\Monsters\TrollKing.cs" />
     <Compile Include="MirObjects\Monsters\ManectricKing.cs" />
     <Compile Include="MirObjects\Monsters\TrollBomber.cs" />
@@ -343,7 +352,6 @@
     <Compile Include="MirObjects\NPCObject.cs" />
     <Compile Include="MirObjects\NPCPage.cs" />
     <Compile Include="MirObjects\NPCSegment.cs" />
-    <Compile Include="MirObjects\NPC_dep\NPCObject_Backup.cs" />
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirForms\Database\QuestInfoForm.cs">

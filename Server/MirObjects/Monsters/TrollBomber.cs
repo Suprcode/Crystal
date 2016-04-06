@@ -21,6 +21,8 @@ namespace Server.MirObjects.Monsters
 
             List<MapObject> targets = FindAllTargets(2, target.CurrentLocation);
 
+            if (targets.Count == 0) return;
+
             for (int i = 0; i < targets.Count; i++)
             {
                 targets[i].Attacked(this, targets[i] == target ? damage : damage / 2, defence);

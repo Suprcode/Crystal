@@ -24,18 +24,17 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             ShockTime = 0;
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+
             if (Envir.Random.Next(4) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
 
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
 
                 Target.Attacked(this, damage, DefenceType.ACAgility);
-
             }
             else
             {
@@ -66,16 +65,17 @@ namespace Server.MirObjects.Monsters
                             {
                                 case ObjectType.Player:
                                 case ObjectType.Monster:
-                                    if (!target.IsAttackTarget(this)) continue;
-                                    target.ApplyPoison(new Poison { PType = PoisonType.Red, Duration = Envir.Random.Next(GetAttackPower(MinDC, MaxDC) / 2), TickSpeed = 1000 }, this);
+                                    {
+                                        if (!target.IsAttackTarget(this)) continue;
+                                        if (Envir.Random.Next(Settings.MagicResistWeight) < target.MagicResist) continue;
+
+                                        target.ApplyPoison(new Poison { PType = PoisonType.Red, Duration = Envir.Random.Next(GetAttackPower(MinSC, MaxSC) / 2), TickSpeed = 1000 }, this);
+                                    }
                                     break;
                             }
                         }
                     }
                 }
-
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + 300 + AttackSpeed;
 
             }
         }

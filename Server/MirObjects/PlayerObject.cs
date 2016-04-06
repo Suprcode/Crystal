@@ -4241,6 +4241,12 @@ namespace Server.MirObjects
                     case "LEAVEGUILD":
                         if (MyGuild == null) return;
                         if (MyGuildRank == null) return;
+                        if(MyGuild.IsAtWar())
+                        {
+                            ReceiveChat("Cannot leave guild whilst at war.", ChatType.System);
+                            return;
+                        }
+
                         MyGuild.DeleteMember(this, Name);
                         break;
 
@@ -9249,9 +9255,10 @@ namespace Server.MirObjects
 
             if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
+            //Cancel actions
             if (TradePartner != null) TradeCancel();
-
             if (RidingMount) RefreshMount();
+            if (ActiveBlizzard) ActiveBlizzard = false;
 
             GetObjectsPassive();
 
@@ -14947,6 +14954,13 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("{0} already has a guild invite pending.", Name), ChatType.System);
                         return;
                     }
+
+                    if (MyGuild.IsAtWar())
+                    {
+                        ReceiveChat("Cannot recuit members whilst at war.", ChatType.System);
+                        return;
+                    }
+
                     player.Enqueue(new S.GuildInvite { Name = MyGuild.Name });
                     player.PendingGuildInvite = MyGuild;
                     break;
@@ -16026,62 +16040,63 @@ namespace Server.MirObjects
 
                 Fishing = false;
 
-                if(!FishFound)
-                {
-                    return;
-                }
-
                 if (FishingProgress > 99)
                 {
                     FishingChanceCounter++;
                 }
 
-                int getChance = FishingChance + Envir.Random.Next(10, 24) + (FishingProgress > 50 ? flexibilityStat / 2 : 0);
-                getChance = Math.Min(100, Math.Max(0, getChance));
-
-                if (Envir.Random.Next(0, 100) <= getChance)
+                if (FishFound)
                 {
-                    FishingChanceCounter = 0;
+                    int getChance = FishingChance + Envir.Random.Next(10, 24) + (FishingProgress > 50 ? flexibilityStat / 2 : 0);
+                    getChance = Math.Min(100, Math.Max(0, getChance));
 
-                    int highRate = int.MaxValue;
-                    UserItem dropItem = null;
-                    foreach (DropInfo drop in Envir.FishingDrops.Where(x => x.Type == fishingCell.FishingAttribute))
+                    if (Envir.Random.Next(0, 100) <= getChance)
                     {
-                        int rate = (int)(Envir.Random.Next(0, drop.Chance) / Settings.DropRate);
+                        FishingChanceCounter = 0;
 
-                        if (rate < 1) rate = 1;
+                        UserItem dropItem = null;
 
-                        if (highRate > rate)
+                        foreach (DropInfo drop in Envir.FishingDrops.Where(x => x.Type == fishingCell.FishingAttribute))
                         {
-                            highRate = rate;
+                            int rate = (int)(drop.Chance / (Settings.DropRate));
+
+                            if (EXPOwner != null && EXPOwner.ItemDropRateOffset > 0)
+                                rate -= (int)(rate * (EXPOwner.ItemDropRateOffset / 100));
+
+                            if (rate < 1) rate = 1;
+
+                            if (Envir.Random.Next(rate) != 0) continue;
+
                             dropItem = Envir.CreateDropItem(drop.Item);
+                            break;
                         }
+
+                        if (dropItem == null)
+                            ReceiveChat("Your fish got away!", ChatType.System);
+                        else if (FreeSpace(Info.Inventory) < 1)
+                            ReceiveChat("You do not have enough space in your bag.", ChatType.System);
+                        else
+                        {
+                            GainItem(dropItem);
+                            Report.ItemChanged("FishedItem", dropItem, dropItem.Count, 2);
+                        }
+
+                        if (Envir.Random.Next(100 - Settings.FishingMobSpawnChance) == 0)
+                        {
+                            MonsterObject mob = MonsterObject.GetMonster(Envir.GetMonsterInfo(Settings.FishingMonster));
+
+                            if (mob == null) return;
+
+                            mob.Spawn(CurrentMap, Back);
+                        }
+
+                        DamagedFishingItem(FishingSlot.Reel, 1);
+
+                        cancel = true;
                     }
-
-                    if (FreeSpace(Info.Inventory) < 1)
-                    {
-                        ReceiveChat("No more space.", ChatType.System);
-                        return;
-                    }
-
-                    if (dropItem != null)
-                        GainItem(dropItem);
-
-                    if (Envir.Random.Next(100 - Settings.FishingMobSpawnChance) == 0)
-                    {
-                        MonsterObject mob = MonsterObject.GetMonster(Envir.GetMonsterInfo(Settings.FishingMonster));
-
-                        if (mob == null) return;
-
-                        mob.Spawn(CurrentMap, Back);
-                    }
-
-                    //ReceiveChat("Fishing Success." + getChance, ChatType.System);
-
-                    DamagedFishingItem(FishingSlot.Reel, 1);
+                    else
+                        ReceiveChat("Your fish got away!", ChatType.System);
                 }
-                else
-                    ReceiveChat("Fish Escaped.", ChatType.System);
 
                 FishFound = false;
                 FishFirstFound = false;
@@ -16092,12 +16107,13 @@ namespace Server.MirObjects
 
             if (FishingAutocast && !cast && !cancel)
             {
-                FishingCast(true);
                 FishingTime = Envir.Time + (FishingCastDelay * 2);
                 FishingFoundTime = Envir.Time;
                 FishingAutoReelChance = 0;
                 FishingNibbleChance = 0;
                 FishFirstFound = false;
+
+                FishingCast(true);
             }
         }
         public void FishingChangeAutocast(bool autoCast)
@@ -16122,6 +16138,7 @@ namespace Server.MirObjects
             {
                 FishFound = Envir.Random.Next(0, 100) <= FishingNibbleChance;
                 FishingFoundTime = FishFound ? Envir.Time + 3000 : Envir.Time;
+
                 if (FishFound)
                 {
                     FishFirstFound = true;

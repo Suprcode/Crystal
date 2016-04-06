@@ -52,10 +52,12 @@ namespace Server.MirObjects.Monsters
                         Attack2();
                         break;
                 }
-
-                if (Envir.Random.Next(15) == 0)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Bleeding, TickSpeed = 1000 }, this);
+                    if (Envir.Random.Next(15) == 0)
+                    {
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinDC, MinDC), TickSpeed = 1000 }, this);
+                    }
                 }
             }
             else
@@ -70,7 +72,8 @@ namespace Server.MirObjects.Monsters
                     {
                         case 0:
                             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-                            SummonSlaves(); //spawn huggers
+
+                            SpawnSlaves(); //spawn huggers
                             break;
                         case 1:
                             {
@@ -84,13 +87,17 @@ namespace Server.MirObjects.Monsters
 
                                 for (int i = 0; i < targets.Count; i++)
                                 {
-                                    Target = targets[i];
-                                    Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Behemoth });
+                                    Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Behemoth });
 
-                                    if (Target.Attacked(this, damage, DefenceType.ACAgility) > 0)
+                                    if (targets[i].Attacked(this, damage, DefenceType.ACAgility) > 0)
                                     {
-                                        if (Envir.Random.Next(15) == 0)
-                                            Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                                        {
+                                            if (Envir.Random.Next(15) == 0)
+                                            {
+                                                targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+                                            }
+                                        }
                                     }
                                 }
 
@@ -136,48 +143,63 @@ namespace Server.MirObjects.Monsters
                     {
                         t.Pushed(this, Direction, 4);
 
-                        if (Envir.Random.Next(3) == 0)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= t.PoisonResist)
                         {
-                            t.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                            if (Envir.Random.Next(3) == 0)
+                            {
+                                t.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                            }
                         }
                     }
                     break;
                 }
-
-                SummonSlaves();
             }
         }
 
-        private void SummonSlaves()
+        private void SpawnSlaves()
         {
             List<MapObject> targets = FindAllTargets(10, CurrentLocation);
-            if (targets.Count == 0) return;
 
-            for (int i = 0; i < targets.Count; i++)
+            int count = Math.Min(8, (targets.Count * 5) - SlaveList.Count);
+            
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+
+            for (int i = 0; i < count; i++)
             {
-                MonsterObject spawn = null;
-
-                switch(Envir.Random.Next(3))
+                MonsterObject mob = null;
+                switch (Envir.Random.Next(4))
                 {
                     case 0:
-                        spawn = GetMonster(Envir.GetMonsterInfo("Hugger"));
+                        mob = GetMonster(Envir.GetMonsterInfo(Settings.BehemothMonster1));
                         break;
                     case 1:
-                        spawn = GetMonster(Envir.GetMonsterInfo("PoisonHugger"));
+                        mob = GetMonster(Envir.GetMonsterInfo(Settings.BehemothMonster2));
                         break;
                     case 2:
-                        spawn = GetMonster(Envir.GetMonsterInfo("MutatedHugger"));
+                        mob = GetMonster(Envir.GetMonsterInfo(Settings.BehemothMonster3));
                         break;
                 }
 
-                if (spawn == null) return;
+                if (mob == null) continue;
 
-                spawn.Target = targets[i];
-                spawn.ActionTime = Envir.Time + 1000;
-
-                spawn.Spawn(CurrentMap, CurrentLocation);
-               
+                if (!mob.Spawn(CurrentMap, Front))
+                    mob.Spawn(CurrentMap, CurrentLocation);
+                
+                mob.Target = targets[Envir.Random.Next(targets.Count)];
+                mob.ActionTime = Envir.Time + 2000;
+                SlaveList.Add(mob);
             }
+        }
+
+        public override void Die()
+        {
+            foreach (var slave in SlaveList)
+            {
+                slave.Die();
+            }
+
+            base.Die();
         }
     }
 }

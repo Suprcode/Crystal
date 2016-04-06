@@ -324,7 +324,7 @@ public enum Monster : ushort
     HighAssassin = 146,
     DarkDustPile = 147,
     DarkBrownWolf = 148,
-    Football = 149,
+    Football = 149, 
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -333,8 +333,7 @@ public enum Monster : ushort
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
-
-    Behemoth = 158,//done
+    Behemoth = 158,//done BOSS
     DarkDevourer = 159,//done
     PoisonHugger = 160,//done
     Hugger = 161,//done
@@ -360,10 +359,10 @@ public enum Monster : ushort
     LionRiderFemale = 181, //frames not added
     Tornado = 182,//done
     FlameTiger = 183,//done
-    WingedTigerLord = 184,//done
+    WingedTigerLord = 184,//done BOSS
     TowerTurtle = 185,//done
     FinialTurtle = 186,//done
-    TurtleKing = 187,//FINISH
+    TurtleKing = 187,//done BOSS
     DarkTurtle = 188,//done
     LightTurtle = 189,//done  
     DarkSwordOma = 190,//done
@@ -378,7 +377,7 @@ public enum Monster : ushort
     DarkYob = 199,//done
 
     FlamingMutant = 200,//FINISH
-    StoningStatue = 201,//FINISH
+    StoningStatue = 201,//FINISH BOSS
     FlyingStatue = 202,//FINISH
     ValeBat = 203,//done
     Weaver = 204,//done
@@ -395,7 +394,7 @@ public enum Monster : ushort
     HellSlasher = 215,//done
     HellPirate = 216,//done
     HellCannibal = 217,//done
-    HellKeeper = 218, //done
+    HellKeeper = 218, //done BOSS
     HellBolt = 219, //done
     WitchDoctor = 220,//done
     ManectricHammer = 221,//done
@@ -414,32 +413,31 @@ public enum Monster : ushort
     TrollHammer = 234,//done
     TrollBomber = 235,//done
     TrollStoner = 236,//done
-    TrollKing = 237,//done
-
-    FlameSpear = 238,
-    FlameMage = 239,
-    FlameScythe = 240,
-    FlameAssassin = 241,
-    FlameQueen = 242,
-    HellKnight1 = 243,
-    HellKnight2 = 244,
-    HellKnight3 = 245,
-    HellKnight4 = 246,
-    HellLord = 247,
-    WaterGuard = 248,
+    TrollKing = 237,//done BOSS
+    FlameSpear = 238,//done
+    FlameMage = 239,//done
+    FlameScythe = 240,//done
+    FlameAssassin = 241,//done
+    FlameQueen = 242, //finish BOSS
+    HellKnight1 = 243,//done
+    HellKnight2 = 244,//done
+    HellKnight3 = 245,//done
+    HellKnight4 = 246,//done
+    HellLord = 247,//done BOSS
+    WaterGuard = 248,//done
     IceGuard = 249,
-
     ElementGuard = 250,
     DemonGuard = 251,
     KingGuard = 252,
-    Sanke10 = 253,
-    Sanke11 = 254,
-    Sanke12 = 255,
-    Sanke13 = 256,
-    Sanke14 = 257,
-    Sanke15 = 258,
-    Sanke16 = 259,
-    Sanke17 = 260,
+    Snake10 = 253,//done
+    Snake11 = 254,//done
+    Snake12 = 255,//done
+    Snake13 = 256,//done
+    Snake14 = 257,//done
+    Snake15 = 258,//done
+    Snake16 = 259,//done
+    Snake17 = 260,//done
+
     DeathCrawler = 261,
     BurningZombie = 262,
     MudZombie = 263,
@@ -590,6 +588,9 @@ public enum Monster : ushort
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
+    HellBomb1 = 903,
+    HellBomb2 = 904,
+    HellBomb3 = 905,
 
     SabukGate = 950,
     PalaceWallLeft = 951,
@@ -1106,12 +1107,13 @@ public enum Spell : byte
     Blink = 151,
     Portal = 152,
     
-
     //Map Events
     DigOutZombie = 200,
     Rubble = 201,
     MapLightning = 202,
     MapLava = 203,
+    MapQuake1 = 204,
+    MapQuake2 = 205
 }
 
 public enum SpellEffect : byte
@@ -2046,7 +2048,7 @@ public static class Globals
 
         LogDelay = 10000,
 
-        DataRange = 24;
+        DataRange = 12;//Was 24
 
     public static float Commission = 0.05F;
 

@@ -31,7 +31,7 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.MACAgility);
+                Target.Attacked(this, damage, DefenceType.ACAgility);
             }
 
             ShockTime = 0;

@@ -31,7 +31,7 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            if (Envir.Random.Next(10) == 0)
+            if (Envir.Random.Next(5) == 0)
             {
                 TeleportRandom(40, AttackRange);
             }
@@ -48,7 +48,7 @@ namespace Server.MirObjects.Monsters
 
                 int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
 
                 if (Target.Dead)

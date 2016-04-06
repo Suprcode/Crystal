@@ -17,9 +17,6 @@ namespace Server.MirObjects.Monsters
         protected internal HellKeeper(MonsterInfo info) : base(info)
         {
             Direction = MirDirection.Up;
-
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
         }
 
         protected override bool InAttackRange()
@@ -158,12 +155,22 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            Broadcast(new S.ObjectAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
+            byte attacktype1 = (byte)(Envir.Random.Next(3) > 0 ? 0 : 1);
+
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attacktype1 });
 
             for (int i = 0; i < targets.Count; i++)
             {
                 Target = targets[i];
-                Attack();
+
+                if (attacktype1 == 0)
+                {
+                    Attack();
+                }
+                else
+                {
+                    HypnoAttack();
+                }
             }
 
             ActionTime = Envir.Time + 300;
@@ -172,42 +179,32 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            if (Envir.Random.Next(3) > 0)
+            if (!Target.IsAttackTarget(this))
             {
-                ShockTime = 0;
-
-                if (!Target.IsAttackTarget(this))
-                {
-                    Target = null;
-                    return;
-                }
-
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
-
-                int damage = GetAttackPower(MinDC, MaxDC);
-
-                if (damage == 0) return;
-
-                Target.Attacked(this, damage);
+                Target = null;
+                return;
             }
-            else
-            {
-                Attack2();
-            }   
+
+            int damage = GetAttackPower(MinDC, MaxDC);
+
+            if (damage == 0) return;
+
+            Target.Attacked(this, damage);
         }
 
-        private void Attack2()
+        private void HypnoAttack()
         {
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-
             int damage = GetAttackPower(MinMC, MaxMC);
             if (damage == 0) return;
 
-            Target.Attacked(this, damage, DefenceType.MACAgility);
-            if (Envir.Random.Next(10) == 0)
+            if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
+
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                if (Envir.Random.Next(10) == 0)
+                {
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(MinMC, MaxMC), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                }
             }
         }
     }

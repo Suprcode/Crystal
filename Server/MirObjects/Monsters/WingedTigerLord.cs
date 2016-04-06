@@ -160,29 +160,32 @@ namespace Server.MirObjects.Monsters
 
             int poisonTime = GetAttackPower(MinSC, MaxSC);
 
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
             switch (type)
             {
                 case AttackType.SingleSlash:
-                    target.Attacked(this, damage, defence);
                     break;
                 case AttackType.Stomp:
                     {
-                        target.Attacked(this, damage, defence);
-
-                        if (Envir.Random.Next(2) == 0)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                         {
-                            target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = poisonTime, TickSpeed = 2000 }, this);
+                            if (Envir.Random.Next(2) == 0)
+                            {
+                                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = poisonTime, TickSpeed = 2000 }, this);
+                            }
                         }
                     }
                     break;
                 case AttackType.Tornado:
                     {
-                        target.Attacked(this, damage, defence);
-
-                        if (Envir.Random.Next(2) == 0)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                         {
-                            target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = poisonTime, TickSpeed = 2000 }, this);
-                            Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonTime * 1000 });
+                            if (Envir.Random.Next(2) == 0)
+                            {
+                                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = poisonTime, TickSpeed = 2000 }, this);
+                                Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonTime * 1000 });
+                            }
                         }
                     }
                     break;

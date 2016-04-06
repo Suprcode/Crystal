@@ -57,6 +57,7 @@ namespace Server.MirObjects.Monsters
                 Target = targets[i];
 
                 TeleportRandom(5, 2, CurrentMap);
+                break;
             }
         }
 
