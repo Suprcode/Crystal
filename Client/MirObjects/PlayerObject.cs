@@ -222,9 +222,6 @@ namespace Client.MirObjects
                 {
                     QueuedAction action = new QueuedAction { Action = MirAction.FishingReel, Direction = dir, Location = CurrentLocation };
                     ActionFeed.Add(action);
-
-                    if (p.FoundFish)
-                        GameScene.Scene.ChatDialog.ReceiveChat("Found fish!!", ChatType.Hint);
                 }
 
                 Fishing = p.Fishing;
@@ -2457,15 +2454,19 @@ namespace Client.MirObjects
                                             {
                                                 MapControl.Effects.Add(new Effect(Libraries.Effect, 671, 6, 720, FishingPoint) { Light = 0 });
                                                 MapControl.Effects.Add(new Effect(Libraries.Effect, 665, 6, 720, FishingPoint) { Light = 0 });
+
                                                 SoundManager.PlaySound(SoundList.Fishing);
-                                                Effects.Add(new Effect(Libraries.Prguse, 1350, 2, 720, this) { Light = 0 });
+                                                Effects.Add(new Effect(Libraries.Prguse, 1350, 2, 720, this) { Light = 0, Blend = false });
+
                                                 ((MirAnimatedButton)GameScene.Scene.FishingStatusDialog.FishButton).Visible = true;
                                             }
                                             else
                                             {
                                                 MapControl.Effects.Add(new Effect(Libraries.Effect, 650, 6, 720, FishingPoint) { Light = 0 });
                                                 MapControl.Effects.Add(new Effect(Libraries.Effect, 640, 6, 720, FishingPoint) { Light = 0 });
+                                                ((MirAnimatedButton)GameScene.Scene.FishingStatusDialog.FishButton).Visible = false;
                                             }
+
                                             ((MirAnimatedButton)GameScene.Scene.FishingStatusDialog.FishButton).AnimationCount = FoundFish ? 10 : 1;
                                             break;
                                     }

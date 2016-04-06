@@ -16091,6 +16091,8 @@ namespace Server.MirObjects
                         }
 
                         DamagedFishingItem(FishingSlot.Reel, 1);
+
+                        cancel = true;
                     }
                     else
                         ReceiveChat("Your fish got away!", ChatType.System);
@@ -16105,12 +16107,13 @@ namespace Server.MirObjects
 
             if (FishingAutocast && !cast && !cancel)
             {
-                FishingCast(true);
                 FishingTime = Envir.Time + (FishingCastDelay * 2);
                 FishingFoundTime = Envir.Time;
                 FishingAutoReelChance = 0;
                 FishingNibbleChance = 0;
                 FishFirstFound = false;
+
+                FishingCast(true);
             }
         }
         public void FishingChangeAutocast(bool autoCast)
@@ -16135,6 +16138,7 @@ namespace Server.MirObjects
             {
                 FishFound = Envir.Random.Next(0, 100) <= FishingNibbleChance;
                 FishingFoundTime = FishFound ? Envir.Time + 3000 : Envir.Time;
+
                 if (FishFound)
                 {
                     FishFirstFound = true;
