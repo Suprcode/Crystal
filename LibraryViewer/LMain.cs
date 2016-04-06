@@ -232,6 +232,35 @@ namespace LibraryViewer
             else
                 ImageBox.SizeMode = PictureBoxSizeMode.Normal;
         }
+
+        private void ExportImagesButton_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < _LImageList.Count; i++)
+            {
+                Bitmap image = _LImageList[i];
+                string filename = _NameList[i];
+
+                string _newName = filename.Replace(".lib", ".bmp");
+                string _folder = Application.StartupPath + "\\Exported\\";
+
+                Bitmap blank = new Bitmap(1, 1);
+
+                // Create the folder if it doesn't exist.
+                (new FileInfo(_folder)).Directory.Create();
+
+                if (image == null)
+                {
+                    blank.Save(_folder + _newName, ImageFormat.Bmp);
+                }
+                else
+                {
+                    image.Save(_folder + _newName, ImageFormat.Bmp);
+                }
+
+            }
+
+            MessageBox.Show("Image export complete.", "Image export", MessageBoxButtons.OK);
+        }
     }
 
     public class SemiNumericPathComparer : IComparer<string>

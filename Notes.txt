@@ -5,8 +5,5 @@ In development features - may need revisiting / refactoring / finishing
 
 -MONSTER AI 200, runaway mob
 -MONSTER AI 201, Talking mob
--MONSTER AI 69-79 - Mostly broken and incomplete
-
--Object dead code draw. Currently drawn before anything else with an exception for sabuk wall - do another way?
 
 -Character deletion code after x days, or under x level after y days

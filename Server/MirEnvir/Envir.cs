@@ -441,6 +441,16 @@ namespace Server.MirEnvir
                 if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster2;
                 if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster3;
                 if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster4;
+                if (GetMonsterInfo(Settings.BehemothMonster1, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster1;
+                if (GetMonsterInfo(Settings.BehemothMonster2, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster2;
+                if (GetMonsterInfo(Settings.BehemothMonster3, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster3;
+                if (GetMonsterInfo(Settings.HellKnight1, true) == null) return "Cannot start server without mob: " + Settings.HellKnight1;
+                if (GetMonsterInfo(Settings.HellKnight2, true) == null) return "Cannot start server without mob: " + Settings.HellKnight2;
+                if (GetMonsterInfo(Settings.HellKnight3, true) == null) return "Cannot start server without mob: " + Settings.HellKnight3;
+                if (GetMonsterInfo(Settings.HellKnight4, true) == null) return "Cannot start server without mob: " + Settings.HellKnight4;
+                if (GetMonsterInfo(Settings.HellBomb1, true) == null) return "Cannot start server without mob: " + Settings.HellBomb1;
+                if (GetMonsterInfo(Settings.HellBomb2, true) == null) return "Cannot start server without mob: " + Settings.HellBomb2;
+                if (GetMonsterInfo(Settings.HellBomb3, true) == null) return "Cannot start server without mob: " + Settings.HellBomb3;
                 if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return "Cannot start server without mob: " + Settings.WhiteSnake;
                 if (GetMonsterInfo(Settings.AngelName, true) == null) return "Cannot start server without mob: " + Settings.AngelName;
                 if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return "Cannot start server without mob: " + Settings.BombSpiderName;
@@ -463,6 +473,8 @@ namespace Server.MirEnvir
         {
             try
             {
+                MirConnection currentConnection = null;
+
                 Time = Stopwatch.ElapsedMilliseconds;
 
                 long conTime = Time;
@@ -541,9 +553,12 @@ namespace Server.MirEnvir
                             {
                                 for (int i = Connections.Count - 1; i >= 0; i--)
                                 {
-                                    Connections[i].Process();
+                                    currentConnection = Connections[i];
+                                    currentConnection.Process();
                                 }
                             }
+                            currentConnection = null;
+
                             lock (StatusConnections)
                             {
                                 for (int i = StatusConnections.Count - 1; i >= 0; i--)
@@ -667,6 +682,28 @@ namespace Server.MirEnvir
 
                     File.AppendAllText(@".\Error.txt",
                                            string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
+
+
+                    if (currentConnection == null)
+                    {
+                        lock (Connections)
+                        {
+                            for (int i = Connections.Count - 1; i >= 0; i--)
+                                Connections[i].SendDisconnect(3);
+                        }
+                    }
+                    else
+                    {
+                        string crashMessage = string.Format("IPAddress: {0} crashed the server and was disconnected, Account: {1}, Character: {2}",
+                                                        currentConnection.IPAddress,
+                                                        currentConnection.Account == null ? "<No Account>" : currentConnection.Account.AccountID,
+                                                        currentConnection.Player == null || currentConnection.Player.Info == null ? "<No Character>" : currentConnection.Player.Name);
+
+                        SMain.Enqueue(crashMessage);
+
+                        currentConnection.SendDisconnect(2);
+                        currentConnection = null;
+                    }
                 }
 
                 StopNetwork();

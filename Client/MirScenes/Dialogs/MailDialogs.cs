@@ -269,7 +269,7 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = 0; i < Rows.Length; i++)
             {
-                if (i >= GameScene.User.Mail.Count) break;
+                if (i + StartIndex >= GameScene.User.Mail.Count) break;
 
                 if (Rows[i] != null)
                     Rows[i].Dispose();

@@ -45,7 +45,6 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                 LineAttack(3);
 
-
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
                 ShockTime = 0;
@@ -68,16 +67,19 @@ namespace Server.MirObjects.Monsters
                     {
                         if (Target.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
                         {
-                            int poison = GetAttackPower(MinSC, MaxSC);
-
-                            Target.ApplyPoison(new Poison
+                            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                             {
-                                Owner = this,
-                                Duration = 5,
-                                PType = PoisonType.Green,
-                                Value = poison,
-                                TickSpeed = 2000
-                            }, this);
+                                int poison = GetAttackPower(MinSC, MaxSC);
+
+                                Target.ApplyPoison(new Poison
+                                {
+                                    Owner = this,
+                                    Duration = 5,
+                                    PType = PoisonType.Green,
+                                    Value = poison,
+                                    TickSpeed = 2000
+                                }, this);
+                            }
                         }
                     }
                 }
@@ -97,16 +99,19 @@ namespace Server.MirObjects.Monsters
                             if (Envir.Random.Next(Settings.MagicResistWeight) < ob.MagicResist) continue;
                             if (ob.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
                             {
-                                int poison = GetAttackPower(MinSC, MaxSC);
-
-                                ob.ApplyPoison(new Poison
+                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                                 {
-                                    Owner = this,
-                                    Duration = 5,
-                                    PType = PoisonType.Green,
-                                    Value = poison,
-                                    TickSpeed = 2000
-                                }, this);
+                                    int poison = GetAttackPower(MinSC, MaxSC);
+
+                                    ob.ApplyPoison(new Poison
+                                    {
+                                        Owner = this,
+                                        Duration = 5,
+                                        PType = PoisonType.Green,
+                                        Value = poison,
+                                        TickSpeed = 2000
+                                    }, this);
+                                }
                             }
                         }
                         else continue;

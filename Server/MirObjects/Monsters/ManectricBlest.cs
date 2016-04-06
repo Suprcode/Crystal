@@ -38,9 +38,12 @@ namespace Server.MirObjects.Monsters
                 {
                     targets[i].Attacked(this, damage, DefenceType.MAC);
 
-                    if(Envir.Random.Next(5) == 0)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                     {
-                        targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = 5, TickSpeed = 1000 }, this);
+                        if (Envir.Random.Next(5) == 0)
+                        {
+                            targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = 5, TickSpeed = 1000 }, this);
+                        }
                     }
                 }
 

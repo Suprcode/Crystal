@@ -196,6 +196,22 @@ namespace Server.MirObjects
                     return new TrollBomber(info);
                 case 91:
                     return new TrollKing(info);
+                case 92:
+                    return new FlameSpear(info);
+                case 93:
+                    return new FlameMage(info);
+                case 94:
+                    return new FlameScythe(info);
+                case 95:
+                    return new FlameAssassin(info);
+                case 96:
+                    return new FlameQueen(info);
+                case 97:
+                    return new HellKnight(info);
+                case 98:
+                    return new HellLord(info);
+                case 99:
+                    return new HellBomb(info);
 
                 //unfinished
                 case 253:

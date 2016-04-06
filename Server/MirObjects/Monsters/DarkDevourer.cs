@@ -32,14 +32,14 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            int damage = GetAttackPower(MinDC, MaxDC);
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 ActionTime = Envir.Time + AttackSpeed + 300;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
+                int damage = GetAttackPower(MinDC, MaxDC);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
                 ActionList.Add(action);
             }
             else
@@ -48,18 +48,23 @@ namespace Server.MirObjects.Monsters
 
                 AttackTime = Envir.Time + AttackSpeed + 500;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                int damage = GetAttackPower(MinSC, MaxSC);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
 
                 if(Info.Effect == 1)
                 {
-                    Target.ApplyPoison(new Poison
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                     {
-                        Owner = this,
-                        Duration = 5,
-                        PType = PoisonType.Green,
-                        TickSpeed = 1000,
-                    }, this);
+                        Target.ApplyPoison(new Poison
+                        {
+                            Owner = this,
+                            Duration = 5,
+                            Value = damage,
+                            PType = PoisonType.Green,
+                            TickSpeed = 1000,
+                        }, this);
+                    }
                 }
             }
 

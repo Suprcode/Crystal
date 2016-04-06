@@ -41,6 +41,7 @@ namespace Server.MirObjects.Monsters
 
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
+
                 if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.MagicResist)
                 {
                     int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
