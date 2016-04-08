@@ -47,7 +47,7 @@ namespace Server.MirObjects.Monsters
         {
             List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
 
-            if (targets.Count == 0) return;
+            if (targets.Count < 2) return;
 
             for (int i = 0; i < targets.Count; i++)
             {

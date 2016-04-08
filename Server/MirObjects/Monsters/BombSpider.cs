@@ -33,7 +33,7 @@ namespace Server.MirObjects.Monsters
             MoveTo(Target.CurrentLocation);
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteDeath(IList<object> data)
         {
             List<MapObject> targets = FindAllTargets(1, CurrentLocation, false);
             if (targets.Count == 0) return;
@@ -57,7 +57,7 @@ namespace Server.MirObjects.Monsters
 
         public override void Die()
         {
-            ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
+            ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500));
             base.Die();
         }
     }

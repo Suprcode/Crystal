@@ -125,7 +125,6 @@ namespace Server.MirObjects.Monsters
 
         private void LineAttack(int distance)
         {
-
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
 
@@ -133,7 +132,7 @@ namespace Server.MirObjects.Monsters
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (target == Target.CurrentLocation)
+                if (Target != null && target == Target.CurrentLocation)
                 {
                     Target.Attacked(this, damage, DefenceType.ACAgility);
                 }

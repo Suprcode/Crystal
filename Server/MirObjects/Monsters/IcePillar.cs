@@ -166,7 +166,7 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteDeath(IList<object> data)
         {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
@@ -194,7 +194,7 @@ namespace Server.MirObjects.Monsters
             {
                 int delay = Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) * 50 + 500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Die, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
                 ActionList.Add(action);
             }
             

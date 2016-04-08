@@ -46,7 +46,7 @@ namespace Server.MirObjects.Monsters
 
                 AttackTime = Envir.Time + AttackSpeed;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500);
                 ActionList.Add(action);
 
                 _thrustTime = Envir.Time + 5000;
@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
                 FindTarget();
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteRangeAttack(IList<object> data)
         {
             IceThrust();
         }

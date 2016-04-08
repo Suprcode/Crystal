@@ -13,7 +13,7 @@ namespace Server.MirObjects.Monsters
         {
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteRangeAttack(IList<object> data)
         {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
