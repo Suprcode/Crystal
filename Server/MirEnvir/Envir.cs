@@ -473,8 +473,6 @@ namespace Server.MirEnvir
         {
             try
             {
-                MirConnection currentConnection = null;
-
                 Time = Stopwatch.ElapsedMilliseconds;
 
                 long conTime = Time;
@@ -527,7 +525,6 @@ namespace Server.MirEnvir
 
                 try
                 {
-
                     while (Running)
                     {
                         Time = Stopwatch.ElapsedMilliseconds;
@@ -548,16 +545,13 @@ namespace Server.MirEnvir
 
                             AdjustLights();
 
-
                             lock (Connections)
                             {
                                 for (int i = Connections.Count - 1; i >= 0; i--)
                                 {
-                                    currentConnection = Connections[i];
-                                    currentConnection.Process();
+                                    Connections[i].Process();
                                 }
                             }
-                            currentConnection = null;
 
                             lock (StatusConnections)
                             {
@@ -682,28 +676,6 @@ namespace Server.MirEnvir
 
                     File.AppendAllText(@".\Error.txt",
                                            string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
-
-
-                    if (currentConnection == null)
-                    {
-                        lock (Connections)
-                        {
-                            for (int i = Connections.Count - 1; i >= 0; i--)
-                                Connections[i].SendDisconnect(3);
-                        }
-                    }
-                    else
-                    {
-                        string crashMessage = string.Format("IPAddress: {0} crashed the server and was disconnected, Account: {1}, Character: {2}",
-                                                        currentConnection.IPAddress,
-                                                        currentConnection.Account == null ? "<No Account>" : currentConnection.Account.AccountID,
-                                                        currentConnection.Player == null || currentConnection.Player.Info == null ? "<No Character>" : currentConnection.Player.Name);
-
-                        SMain.Enqueue(crashMessage);
-
-                        currentConnection.SendDisconnect(2);
-                        currentConnection = null;
-                    }
                 }
 
                 StopNetwork();
@@ -2992,7 +2964,7 @@ namespace Server.MirEnvir
         public void SetNewRank(Rank_Character_Info Rank, int Index, byte type)
         {
             CharacterInfo Player = Rank.info as CharacterInfo;
-            if (Player == null) return; ;
+            if (Player == null) return;
             Player.Rank[type] = Index;
         }
 

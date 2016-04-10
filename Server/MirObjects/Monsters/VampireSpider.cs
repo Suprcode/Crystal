@@ -46,6 +46,9 @@ namespace Server.MirObjects.Monsters
                 case DelayedType.Damage:
                     CompleteAttack(action.Params);
                     break;
+                case DelayedType.RangeDamage:
+                    CompleteRangeAttack(action.Params);
+                    break;
                 case DelayedType.Recall:
                     PetRecall((MapObject)action.Params[0]);
                     break;

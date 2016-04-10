@@ -415,7 +415,10 @@ namespace Client.MirScenes
                         }
                         break;
 
-
+                    case KeybindOptions.Ranking:
+                        if (!RankingDialog.Visible) RankingDialog.Show();
+                        else RankingDialog.Hide();
+                        break;
                     case KeybindOptions.Quests:
                         if (!QuestLogDialog.Visible) QuestLogDialog.Show();
                         else QuestLogDialog.Hide();
@@ -3326,6 +3329,9 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
                 Effect effect = null;
+
+                bool playDefaultSound = true;
+
                 switch (p.Type)
                 {
                     case 1: //Yimoogi
@@ -3341,6 +3347,9 @@ namespace Client.MirScenes
                     case 4: //MutatedManWorm
                         {
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 272, 6, 500, ob);
+
+                            SoundManager.PlaySound(((ushort)Monster.MutatedManworm) * 10 + 7);
+                            playDefaultSound = false;
                             break;
                         }
                     case 5: //WitchDoctor
@@ -3366,7 +3375,9 @@ namespace Client.MirScenes
                     ob.Effects.Add(effect);
                 }
 
-                SoundManager.PlaySound(SoundList.Teleport);
+                if(playDefaultSound)
+                    SoundManager.PlaySound(SoundList.Teleport);
+
                 return;
             }
         }
@@ -3376,6 +3387,9 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
+
+                bool playDefaultSound = true;
+
                 switch (p.Type)
                 {
                     case 1: //Yimoogi
@@ -3391,6 +3405,9 @@ namespace Client.MirScenes
                     case 4: //MutatedManWorm
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 278, 7, 500, ob));
+
+                            SoundManager.PlaySound(((ushort)Monster.MutatedManworm) * 10 + 7);
+                            playDefaultSound = false;
                             break;
                         }
                     case 5: //WitchDoctor
@@ -3410,7 +3427,9 @@ namespace Client.MirScenes
                         }
                 }
 
-                SoundManager.PlaySound(SoundList.Teleport);
+                if(playDefaultSound)
+                    SoundManager.PlaySound(SoundList.Teleport);
+
                 return;
             }
 
@@ -10056,7 +10075,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
                     break;
                 case BuffType.MagicShield:
-                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", Values[0]);
+                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", (Values[0] + 2) * 10);
                     break;
 
                 //special

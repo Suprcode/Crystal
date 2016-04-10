@@ -50,7 +50,18 @@ namespace Server.MirObjects.Monsters
             if (Envir.Time > ExplosionTime) { Die(); return; }
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        public override void Die()
+        {
+            if (HP > 0)
+            {
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500));
+            }
+            
+            base.Die();
+        }
+
+        protected override void CompleteDeath(IList<object> data)
         {
             List<MapObject> targets = FindAllTargets(4, CurrentLocation, false);
             if (targets.Count == 0) return;
@@ -72,23 +83,13 @@ namespace Server.MirObjects.Monsters
                         case Monster.HellBomb2:
                             targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
                             break;
-                        case Monster.HellBomb3:                   
+                        case Monster.HellBomb3:
                             targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
                             break;
                     }
-                }   
+                }
             }
         }
 
-        public override void Die()
-        {
-            if (HP > 0)
-            {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
-            }
-            
-            base.Die();
-        }
     }
 }

@@ -86,7 +86,8 @@ namespace Client
         Cameramode,
         Screenshot,
         DropView,
-        TargetDead
+        TargetDead,
+        Ranking
     }
 
     public class KeyBind
@@ -309,6 +310,8 @@ namespace Client
             InputKey = new KeyBind { function = KeybindOptions.DropView, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Tab };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.TargetDead, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 1, Key = Keys.ControlKey };
+            Keylist.Add(InputKey);
+            InputKey = new KeyBind { function = KeybindOptions.Ranking, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.K };
             Keylist.Add(InputKey);
         }
         public string GetKey(KeybindOptions Option)
