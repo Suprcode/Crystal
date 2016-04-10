@@ -155,7 +155,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -1010,7 +1010,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -1231,7 +1231,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                     break;
@@ -1386,7 +1386,6 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Walking:
-                        PlayWalkSound();
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Attack1:
@@ -1806,7 +1805,18 @@ namespace Client.MirObjects
                         FrameIndex = Frame.Count - 1;
                         SetAction();
                     }
-
+                    else
+                    {
+                        switch (FrameIndex)
+                        {
+                            case 0:
+                                PlayWalkSound(true);
+                                break;
+                            case 3:
+                                PlayWalkSound(false);
+                                break;
+                        }
+                    }
                     break;
                 case MirAction.Pushed:
                     if (!GameScene.CanMove) return;
@@ -2590,11 +2600,13 @@ namespace Client.MirObjects
                                         case Monster.MutatedHugger:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedHugger], 128, 7, Frame.Count * FrameInterval, this));
                                             break;
+                                        case Monster.CyanoGhast:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CyanoGhast], 681, 7, Frame.Count * FrameInterval, this));
+                                            break;
                                     }
                                     break;
                                 case 3:
                                     PlayDeadSound();
-
                                     switch (BaseImage)
                                     {
                                         case Monster.BoneSpearman:
@@ -2679,6 +2691,12 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
+                case Monster.HellKnight1:
+                case Monster.HellKnight2:
+                case Monster.HellKnight3:
+                case Monster.HellKnight4:
+                    SoundManager.PlaySound(BaseSound + 0);
+                    return;
                 case Monster.BoneFamiliar:
                 case Monster.Shinsu:
                 case Monster.HolyDeva:
@@ -2686,16 +2704,31 @@ namespace Client.MirObjects
                     return;
             }
         }
-        private void PlayWalkSound()
+        private void PlayWalkSound(bool left = true)
         {
-            switch (BaseImage)
+            if (left)
             {
-                case Monster.WingedTigerLord:
-                    SoundManager.PlaySound(BaseSound + 8);
-                    return;
+                switch (BaseImage)
+                {
+                    case Monster.WingedTigerLord:
+                    case Monster.PoisonHugger:
+                        SoundManager.PlaySound(BaseSound + 8);
+                        return;
+                }
+            }
+            else
+            {
+                switch (BaseImage)
+                {
+                    case Monster.WingedTigerLord:
+                        SoundManager.PlaySound(BaseSound + 8);
+                        return;
+                    case Monster.PoisonHugger:
+                        SoundManager.PlaySound(BaseSound + 9);
+                        return;
+                }
             }
         }
-
         public void PlayAppearSound()
         {
             switch (BaseImage)
@@ -2825,6 +2858,11 @@ namespace Client.MirObjects
             switch (BaseImage)
             {
                 case Monster.CaveBat:
+                case Monster.HellKnight1:
+                case Monster.HellKnight2:
+                case Monster.HellKnight3:
+                case Monster.HellKnight4:
+                case Monster.CyanoGhast:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
             }
@@ -2862,6 +2900,11 @@ namespace Client.MirObjects
                 case Monster.ManectricKing:
                 case Monster.HellBolt:
                 case Monster.WitchDoctor:
+                case Monster.FlameSpear:
+                case Monster.FlameMage:
+                case Monster.FlameScythe:
+                case Monster.FlameAssassin:
+                case Monster.FlameQueen:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 default:
@@ -2912,7 +2955,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     SoundManager.PlaySound(petSound);
                     break;
             }
@@ -3693,7 +3736,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     yOffset = -20;
                     break;
             }
@@ -3765,7 +3808,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     yOffset = 20;
                     break;
             }

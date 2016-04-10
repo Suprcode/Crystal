@@ -83,13 +83,13 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], GetAttackPower(MinDC, MaxDC), DefenceType.ACAgility));
+                ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500, targets[i], GetAttackPower(MinDC, MaxDC), DefenceType.ACAgility));
             }
 
             base.Die();
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteDeath(IList<object> data)
         {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];

@@ -935,10 +935,15 @@ namespace Server.MirObjects
                 case DelayedType.Damage:
                     CompleteAttack(action.Params);
                     break;
+                case DelayedType.RangeDamage:
+                    CompleteRangeAttack(action.Params);
+                    break;
+                case DelayedType.Die:
+                    CompleteDeath(action.Params);
+                    break;
                 case DelayedType.Recall:
                     PetRecall();
                     break;
-
             }
         }
 
@@ -957,6 +962,22 @@ namespace Server.MirObjects
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             target.Attacked(this, damage, defence);
+        }
+
+        protected virtual void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+        }
+
+        protected virtual void CompleteDeath(IList<object> data)
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual void ProcessRegen()

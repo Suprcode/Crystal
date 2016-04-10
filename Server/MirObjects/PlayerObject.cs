@@ -8379,7 +8379,7 @@ namespace Server.MirObjects
                     MagicShieldLv = magic.Level;
                     MagicShieldTime = Envir.Time + (int)data[1] * 1000;
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, CurrentLocation);
-                    AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
+                    AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime, Values = new int[] { MagicShieldLv } });
                     LevelMagic(magic);
                     break;
 
@@ -9619,7 +9619,7 @@ namespace Server.MirObjects
             if (MagicShield)
             {
                 MagicShieldTime -= (damage - armour) * 60;
-                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
+                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime, Values = new int[] { MagicShieldLv } });
             }
 
             ElementalBarrierTime -= (damage - armour) * 60;
@@ -9787,7 +9787,7 @@ namespace Server.MirObjects
             if (MagicShield)
             {
                 MagicShieldTime -= (damage - armour) * 60;
-                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
+                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime, Values = new int[] { MagicShieldLv } });
             }
 
             ElementalBarrierTime -= (damage - armour) * 60;
@@ -9873,7 +9873,7 @@ namespace Server.MirObjects
             if (MagicShield)
             {
                 MagicShieldTime -= (damage - armour) * 60;
-                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime });
+                AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime, Values = new int[] { MagicShieldLv } });
             }
 
             ElementalBarrierTime -= (damage - armour) * 60;

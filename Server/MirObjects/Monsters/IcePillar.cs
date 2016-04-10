@@ -166,20 +166,6 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
-            MapObject target = (MapObject)data[0];
-            int damage = (int)data[1];
-            DefenceType defence = (DefenceType)data[2];
-
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
-
-            target.Attacked(this, damage, defence);
-
-            if (Envir.Random.Next(5) == 0)
-                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
-        }
-
         public override void Die()
         {
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -194,11 +180,25 @@ namespace Server.MirObjects.Monsters
             {
                 int delay = Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) * 50 + 500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Die, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
                 ActionList.Add(action);
             }
             
             base.Die();
+        }
+
+        protected override void CompleteDeath(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+
+            if (Envir.Random.Next(5) == 0)
+                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
         }
     }
 }

@@ -43,14 +43,14 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
+            ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500));
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteRangeAttack(IList<object> data)
         {
             int damage = GetAttackPower(MinDC, MaxDC) * 3;
             if (damage == 0) return;
