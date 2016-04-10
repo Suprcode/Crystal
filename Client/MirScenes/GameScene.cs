@@ -415,7 +415,10 @@ namespace Client.MirScenes
                         }
                         break;
 
-
+                    case KeybindOptions.Ranking:
+                        if (!RankingDialog.Visible) RankingDialog.Show();
+                        else RankingDialog.Hide();
+                        break;
                     case KeybindOptions.Quests:
                         if (!QuestLogDialog.Visible) QuestLogDialog.Show();
                         else QuestLogDialog.Hide();
@@ -10072,7 +10075,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
                     break;
                 case BuffType.MagicShield:
-                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", Values[0]);
+                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", (Values[0] + 2) * 10);
                     break;
 
                 //special

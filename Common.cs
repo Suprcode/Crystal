@@ -614,7 +614,7 @@ public enum Monster : ushort
     OlympicFlame = 10008,//unknown
     BabySnowMan = 10009,//unknown
     Frog = 10010,//unknown
-    Monkey = 10011,//unknown
+    BabyMonkey = 10011,//unknown
 }
 
 public enum MirAction : byte

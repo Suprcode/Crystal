@@ -155,7 +155,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -1010,7 +1010,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -1231,7 +1231,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                     break;
@@ -2955,7 +2955,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     SoundManager.PlaySound(petSound);
                     break;
             }
@@ -3736,7 +3736,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     yOffset = -20;
                     break;
             }
@@ -3808,7 +3808,7 @@ namespace Client.MirObjects
                 case Monster.OlympicFlame:
                 case Monster.BabySnowMan:
                 case Monster.Frog:
-                case Monster.Monkey:
+                case Monster.BabyMonkey:
                     yOffset = 20;
                     break;
             }
