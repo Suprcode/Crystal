@@ -9764,8 +9764,11 @@ namespace Server.MirObjects
 
             if (Envir.Random.Next(100) < Reflect)
             {
-                attacker.Attacked(this, damage, type, false);
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
+                if (attacker.IsAttackTarget(this))
+                {
+                    attacker.Attacked(this, damage, type, false);
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
+                }
                 return 0;
             }
 
@@ -10636,7 +10639,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Dead && item.Info.Type != ItemType.Scroll && item.Info.Shape != 6)
+            if (Dead && !(item.Info.Type == ItemType.Scroll && item.Info.Shape == 6))
             {
                 Enqueue(p);
                 return;
