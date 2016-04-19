@@ -154,27 +154,16 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.IcePillar });
 
-                targets[i].Attacked(this, damage, DefenceType.MACAgility);
+                if (targets[i].Attacked(this, damage, DefenceType.MACAgility) <= 0) continue;
 
-                if (Envir.Random.Next(5) == 0)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                 {
-                    targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
+                    if (Envir.Random.Next(5) == 0)
+                    {
+                        targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
+                    }
                 }
             }
-        }
-
-        protected override void CompleteAttack(IList<object> data)
-        {
-            MapObject target = (MapObject)data[0];
-            int damage = (int)data[1];
-            DefenceType defence = (DefenceType)data[2];
-
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
-
-            target.Attacked(this, damage, defence);
-
-            if (Envir.Random.Next(5) == 0)
-                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
         }
 
         public override void Die()
@@ -191,11 +180,25 @@ namespace Server.MirObjects.Monsters
             {
                 int delay = Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) * 50 + 500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Die, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
                 ActionList.Add(action);
             }
             
             base.Die();
+        }
+
+        protected override void CompleteDeath(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+
+            if (Envir.Random.Next(5) == 0)
+                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
         }
     }
 }

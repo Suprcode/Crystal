@@ -11,7 +11,7 @@ namespace Server.MirObjects.Monsters
         {
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteRangeAttack(IList<object> data)
         {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
@@ -20,6 +20,8 @@ namespace Server.MirObjects.Monsters
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             List<MapObject> targets = FindAllTargets(2, target.CurrentLocation);
+
+            if (targets.Count == 0) return;
 
             for (int i = 0; i < targets.Count; i++)
             {

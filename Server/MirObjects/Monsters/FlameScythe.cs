@@ -1,14 +1,18 @@
-﻿using Server.MirDatabase;
+﻿using System;
+using System.Drawing;
+using Server.MirDatabase;
+using Server.MirEnvir;
 using S = ServerPackets;
+using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    public class WhiteFoxman : MonsterObject
+    class FlameScythe : MonsterObject
     {
-        public long FearTime, TeleportTime;
-        public byte AttackRange = 6;
+        public long FearTime;
+        public byte AttackRange = 2;
 
-        protected internal WhiteFoxman(MonsterInfo info)
+        protected internal FlameScythe(MonsterInfo info)
             : base(info)
         {
         }
@@ -20,60 +24,50 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
+            ShockTime = 0;
+
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
                 return;
             }
 
-            ShockTime = 0;
-
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-
-            if (Envir.Random.Next(8) != 0)
+            if(Functions.InRange(Target.CurrentLocation, CurrentLocation, 1))
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-
-                int damage = GetAttackPower(MinDC, MaxDC);
-                if (damage == 0) return;
-
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                ActionList.Add(action);
+                base.Attack();
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation, false);
+
+                int damage = GetAttackPower(MinMC, MaxMC);
+
+                if (damage > 0 && targets.Count > 0)
                 {
-                    int levelgap = 50 - Target.Level;
-                    if (Envir.Random.Next(20) < 4 + levelgap)
-                        Target.ApplyPoison(new Poison
+                    for (int i = 0; i < targets.Count; i++)
+                    {
+                        if (Envir.Random.Next(Settings.MagicResistWeight) >= targets[i].MagicResist)
                         {
-                            Owner = this,
-                            Duration = 5,
-                            PType = PoisonType.Slow,
-                            TickSpeed = 1000,
-                        }, this);
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility);
+                            ActionList.Add(action);
+                        }
+                    }
                 }
             }
 
-            if (Target.Dead)
-                FindTarget();
-
+            AttackTime = Envir.Time + AttackSpeed;
+            ActionTime = Envir.Time + 300;
         }
 
         protected override void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
 
-            if (InAttackRange() && (Envir.Time < FearTime))
+            if (InAttackRange() && Envir.Time < FearTime)
             {
                 Attack();
                 return;

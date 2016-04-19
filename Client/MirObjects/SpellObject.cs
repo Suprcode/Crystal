@@ -147,6 +147,12 @@ namespace Client.MirObjects
                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, CurrentLocation));
                     MirSounds.SoundManager.PlaySound(8302);
                     break;
+                case Spell.MapQuake1:
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 27, 12, 1200, CurrentLocation) { Blend = false });
+                    break;
+                case Spell.MapQuake2:
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 39, 13, 1300, CurrentLocation) { Blend = false });
+                    break;
 
                 case Spell.Portal:
                     BodyLibrary = Libraries.Magic2;

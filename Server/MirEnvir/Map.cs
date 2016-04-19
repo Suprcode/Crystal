@@ -353,16 +353,15 @@ namespace Server.MirEnvir
                 {//total 15
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.HighWall; //Can Fire Over.
-
-                    offSet += 2;
+                    offSet += 4;
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
-
+                    offSet += 2;
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-                    offSet += 4;
+                    offSet += 2;
                     if (fileBytes[offSet] > 0)
                         DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
-                    offSet += 6;
+                    offSet += 4;
 
                     byte light = fileBytes[offSet++];
 
@@ -769,9 +768,25 @@ namespace Server.MirEnvir
                     CompleteMagic(action.Params);
                     break;
                 case DelayedType.Spawn:
-                    MonsterObject mob = (MonsterObject) action.Params[0];
-                    mob.Spawn(this, (Point) action.Params[1]);
-                    if (action.Params.Length > 2) ((MonsterObject) action.Params[2]).SlaveList.Add(mob);
+                    MapObject obj = (MapObject)action.Params[0];
+
+                    switch(obj.Race)
+                    {
+                        case ObjectType.Monster:
+                            {
+                                MonsterObject mob = (MonsterObject)action.Params[0];
+                                mob.Spawn(this, (Point)action.Params[1]);
+                                if (action.Params.Length > 2) ((MonsterObject)action.Params[2]).SlaveList.Add(mob);
+                            }
+                            break;
+                        case ObjectType.Spell:
+                            {
+                                SpellObject spell = (SpellObject)action.Params[0];
+                                AddObject(spell);
+                                spell.Spawned();
+                            }
+                            break;
+                    }
                     break;
             }
         }

@@ -1,52 +1,34 @@
 ﻿using Server.MirDatabase;
+using System.Collections.Generic;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class AxeSkeleton : MonsterObject
+    public class FlameMage : RightGuard
     {
         public long FearTime;
-        public byte AttackRange = 6;
 
-        protected internal AxeSkeleton(MonsterInfo info)
+        protected internal FlameMage(MonsterInfo info)
             : base(info)
         {
         }
 
-        protected override bool InAttackRange()
+        protected override void CompleteRangeAttack(IList<object> data)
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
-        }
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            List<MapObject> targets = FindAllTargets(2, target.CurrentLocation);
+
+            if (targets.Count == 0) return;
+
+            for (int i = 0; i < targets.Count; i++)
             {
-                Target = null;
-                return;
+                targets[i].Attacked(this, damage, defence);
             }
-
-            ShockTime = 0;
-
-
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-
-
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-
-            int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
-
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
-            ActionList.Add(action);
-
-            if (Target.Dead)
-                FindTarget();
-
         }
 
         protected override void ProcessTarget()
@@ -98,7 +80,7 @@ namespace Server.MirObjects.Monsters
                         }
                         break;
                 }
-                
+
             }
         }
     }

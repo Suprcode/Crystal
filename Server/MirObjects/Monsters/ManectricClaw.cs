@@ -46,7 +46,7 @@ namespace Server.MirObjects.Monsters
 
                 AttackTime = Envir.Time + AttackSpeed;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500);
                 ActionList.Add(action);
 
                 _thrustTime = Envir.Time + 5000;
@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
                 FindTarget();
         }
 
-        protected override void CompleteAttack(IList<object> data)
+        protected override void CompleteRangeAttack(IList<object> data)
         {
             IceThrust();
         }
@@ -106,28 +106,31 @@ namespace Server.MirObjects.Monsters
                                 {
                                     if (target.Attacked(this, j <= 1 ? nearDamage : farDamage, DefenceType.MAC) > 0)
                                     {
-                                        if(Envir.Random.Next(5) == 0)
+                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                                         {
-                                            target.ApplyPoison(new Poison
+                                            if (Envir.Random.Next(5) == 0)
                                             {
-                                                Owner = this,
-                                                Duration = target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
-                                                PType = PoisonType.Slow,
-                                                TickSpeed = 1000,
-                                            }, this);
-                                            target.OperateTime = 0;
-                                        }
+                                                target.ApplyPoison(new Poison
+                                                {
+                                                    Owner = this,
+                                                    Duration = target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
+                                                    PType = PoisonType.Slow,
+                                                    TickSpeed = 1000,
+                                                }, this);
+                                                target.OperateTime = 0;
+                                            }
 
-                                        if(Envir.Random.Next(5) == 0)
-                                        {
-                                            target.ApplyPoison(new Poison
+                                            if (Envir.Random.Next(5) == 0)
                                             {
-                                                Owner = this,
-                                                Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(this.Freezing),
-                                                PType = PoisonType.Frozen,
-                                                TickSpeed = 1000,
-                                            }, this);
-                                            target.OperateTime = 0;
+                                                target.ApplyPoison(new Poison
+                                                {
+                                                    Owner = this,
+                                                    Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(this.Freezing),
+                                                    PType = PoisonType.Frozen,
+                                                    TickSpeed = 1000,
+                                                }, this);
+                                                target.OperateTime = 0;
+                                            }
                                         }
                                     }
                                 }

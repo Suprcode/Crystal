@@ -146,10 +146,13 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-            if (Envir.Random.Next(5) == 0)
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
-            if (Envir.Random.Next(15) == 0)
-                Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            {
+                if (Envir.Random.Next(5) == 0)
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                if (Envir.Random.Next(15) == 0)
+                    Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+            }
         }
 
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)

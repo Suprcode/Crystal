@@ -58,7 +58,7 @@ namespace Server.MirObjects.Monsters
 
                     for (int i = 0; i < targets.Count; i++)
                     {
-                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 1000, targets[i], damage, DefenceType.ACAgility, AttackType.Tornado);
+                        action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 1000, targets[i], damage, DefenceType.ACAgility);
                         ActionList.Add(action);
                     }
 
@@ -149,6 +149,28 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
         }
 
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            int poisonTime = GetAttackPower(MinSC, MaxSC);
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+            {
+                if (Envir.Random.Next(2) == 0)
+                {
+                    target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = poisonTime, TickSpeed = 2000 }, this);
+                    Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonTime * 1000 });
+                }
+            }
+        }
+
         protected override void CompleteAttack(IList<object> data)
         {
             MapObject target = (MapObject)data[0];
@@ -160,35 +182,22 @@ namespace Server.MirObjects.Monsters
 
             int poisonTime = GetAttackPower(MinSC, MaxSC);
 
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
             switch (type)
             {
-                case AttackType.SingleSlash:
-                    target.Attacked(this, damage, defence);
-                    break;
                 case AttackType.Stomp:
                     {
-                        target.Attacked(this, damage, defence);
-
-                        if (Envir.Random.Next(2) == 0)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                         {
-                            target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = poisonTime, TickSpeed = 2000 }, this);
-                        }
-                    }
-                    break;
-                case AttackType.Tornado:
-                    {
-                        target.Attacked(this, damage, defence);
-
-                        if (Envir.Random.Next(2) == 0)
-                        {
-                            target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = poisonTime, TickSpeed = 2000 }, this);
-                            Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonTime * 1000 });
+                            if (Envir.Random.Next(2) == 0)
+                            {
+                                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = poisonTime, TickSpeed = 2000 }, this);
+                            }
                         }
                     }
                     break;
             }
-
-            
         }
     }
 }

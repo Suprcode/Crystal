@@ -9,7 +9,9 @@ namespace Server.MirObjects
     {
         Magic,
         Damage,
+        RangeDamage,
         Spawn,
+        Die,
         Recall,
         MapMovement,
         Mine,

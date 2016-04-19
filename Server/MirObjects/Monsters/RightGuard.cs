@@ -3,7 +3,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class RightGuard : MonsterObject
+    public class RightGuard : MonsterObject
     {
         protected virtual byte AttackRange
         {
@@ -55,7 +55,7 @@ namespace Server.MirObjects.Monsters
                 if (damage == 0) return;
 
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
             }
 
@@ -82,7 +82,6 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
-
         }
     }
 }
