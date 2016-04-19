@@ -8,11 +8,11 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class BombSpider : MonsterObject
+    public class Hugger : MonsterObject
     {
         public long ExplosionTime;
 
-        protected internal BombSpider(MonsterInfo info)
+        protected internal Hugger(MonsterInfo info)
             : base(info)
         {
             ExplosionTime = Envir.Time + 1000 * 60 * 5;
@@ -20,9 +20,27 @@ namespace Server.MirObjects.Monsters
 
         protected override void ProcessTarget()
         {
-            if (Target == null) { Die(); return; }
-            if (InAttackRange()) { Die(); return; }
-            if (Envir.Time > ExplosionTime) { Die(); return; }
+            if (!CanAttack) return;
+
+            if (Target == null)
+            {
+                Die(); return;
+            }
+
+            if (Envir.Time > ExplosionTime)
+            {
+                Die(); return;
+            }
+
+            if (InAttackRange())
+            {
+                Attack();
+
+                if (Target.Dead)
+                    Die();
+
+                return;
+            }
 
             if (Envir.Time < ShockTime)
             {
@@ -43,12 +61,11 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
 
-                if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) continue;
+                if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
                 if (Envir.Random.Next(5) == 0)
                     targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
             }
-
         }
 
         public override void Die()

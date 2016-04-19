@@ -1,39 +1,33 @@
-﻿using System;
+﻿using Server.MirDatabase;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Server.MirDatabase;
-using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class HellKeeper : MonsterObject
+    public class IcePillar : MonsterObject
     {
         protected override bool CanMove { get { return false; } }
         protected override bool CanRegen { get { return false; } }
-        
 
-        protected internal HellKeeper(MonsterInfo info) : base(info)
+        protected internal IcePillar(MonsterInfo info)
+            : base(info)
         {
             Direction = MirDirection.Up;
-
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
         }
-
-        protected override bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
-
-            return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
-        }
+        
+        protected override void FindTarget() { }
 
         public override void Turn(MirDirection dir)
         {
         }
-        public override bool Walk(MirDirection dir) { return false; }
+        public override bool Walk(MirDirection dir) 
+        { 
+            return false; 
+        }        
 
+        protected override void ProcessRegen() { }
+        protected override void ProcessSearch() { }
+        protected override void ProcessRoam() { }
 
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
@@ -61,16 +55,8 @@ namespace Server.MirObjects.Monsters
             }
 
             if (armour >= damage) return 0;
-
+            
             ShockTime = 0;
-
-            for (int i = PoisonList.Count - 1; i >= 0; i--)
-            {
-                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
-
-                PoisonList.RemoveAt(i);
-                OperateTime = 0;
-            }
 
             if (attacker.Info.AI == 6)
                 EXPOwner = null;
@@ -81,14 +67,20 @@ namespace Server.MirObjects.Monsters
 
                 if (EXPOwner == attacker.Master)
                     EXPOwnerTime = Envir.Time + EXPOwnerDelay;
+            }
 
+            if(Envir.Random.Next(3) == 0)
+            {
+                CloseAttack(damage);
             }
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            ChangeHP(damage);
+            ChangeHP(-1);
             return 1;
+        
         }
+
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             int armour = 0;
@@ -121,14 +113,6 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            for (int i = PoisonList.Count - 1; i >= 0; i--)
-            {
-                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
-
-                PoisonList.RemoveAt(i);
-                OperateTime = 0;
-            }
-
             if (Master != null && Master != attacker)
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
                     attacker.BrownTime = Envir.Time + Settings.Minute;
@@ -139,76 +123,79 @@ namespace Server.MirObjects.Monsters
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
+            if (Envir.Random.Next(3) == 0)
+            {
+                CloseAttack(damage);
+            }
+
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
             attacker.GatherElement();
-            ChangeHP(damage);
+            ChangeHP(-1);
+
             return 1;
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
         {
-
+            return 0;
         }
-        protected override void ProcessTarget()
+
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true) { }
+
+        private void CloseAttack(int damage)
         {
-            if (!CanAttack) return;
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            List<MapObject> targets = FindAllTargets(Info.ViewRange, CurrentLocation);
+            List<MapObject> targets = FindAllTargets(1, CurrentLocation);
+
             if (targets.Count == 0) return;
+            
+            for (int i = 0; i < targets.Count; i++)
+            {
+                Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.IcePillar });
 
-            ShockTime = 0;
+                targets[i].Attacked(this, damage, DefenceType.MACAgility);
 
-            Broadcast(new S.ObjectAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
+                if (Envir.Random.Next(5) == 0)
+                {
+                    targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
+                }
+            }
+        }
+
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+
+            if (Envir.Random.Next(5) == 0)
+                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 1000 }, this);
+        }
+
+        public override void Die()
+        {
+            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            int damage = GetAttackPower(MinDC, MaxDC);
+
+            List<MapObject> targets = FindAllTargets(7, CurrentLocation, false);
+
+            if (targets.Count == 0) return;
 
             for (int i = 0; i < targets.Count; i++)
             {
-                Target = targets[i];
-                Attack();
+                int delay = Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) * 50 + 500; //50 MS per Step
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
+                ActionList.Add(action);
             }
-
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-        }
-
-        protected override void Attack()
-        {
-            if (Envir.Random.Next(3) > 0)
-            {
-                ShockTime = 0;
-
-                if (!Target.IsAttackTarget(this))
-                {
-                    Target = null;
-                    return;
-                }
-
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
-
-                int damage = GetAttackPower(MinDC, MaxDC);
-
-                if (damage == 0) return;
-
-                Target.Attacked(this, damage);
-            }
-            else
-            {
-                Attack2();
-            }   
-        }
-
-        private void Attack2()
-        {
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-
-            int damage = GetAttackPower(MinMC, MaxMC);
-            if (damage == 0) return;
-
-            Target.Attacked(this, damage, DefenceType.MACAgility);
-            if (Envir.Random.Next(10) == 0)
-            {
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
-            }
+            
+            base.Die();
         }
     }
 }
