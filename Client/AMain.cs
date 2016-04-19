@@ -46,38 +46,70 @@ namespace Launcher
             TransparencyKey = Color.FromArgb(1, 0, 0);
         }
 
+        public static void SaveError(string ex)
+        {
+            try
+            {
+                if (Settings.RemainingErrorLogs-- > 0)
+                {
+                    File.AppendAllText(@".\Error.txt",
+                                       string.Format("[{0}] {1}{2}", DateTime.Now, ex, Environment.NewLine));
+                }
+            }
+            catch
+            {
+            }
+        }
+
         public void Start()
         {
-            OldList = new List<FileInformation>();
-            DownloadList= new Queue<FileInformation>();
-
-            byte[] data = Download(Settings.P_PatchFileName);
-
-            if (data != null)
+            try
             {
-                using (MemoryStream stream = new MemoryStream(data))
-                using (BinaryReader reader = new BinaryReader(stream))
-                    ParseOld(reader);
+                OldList = new List<FileInformation>();
+                DownloadList = new Queue<FileInformation>();
+
+                byte[] data = Download(Settings.P_PatchFileName);
+
+                if (data != null)
+                {
+                    using (MemoryStream stream = new MemoryStream(data))
+                    using (BinaryReader reader = new BinaryReader(stream))
+                        ParseOld(reader);
+                }
+                else
+                {
+                    MessageBox.Show("Could not get Patch Information.");
+                    Completed = true;
+                    return;
+                }
+
+                _fileCount = OldList.Count;
+                for (int i = 0; i < OldList.Count; i++)
+                    CheckFile(OldList[i]);
+
+                Checked = true;
+                _fileCount = 0;
+                _currentCount = 0;
+
+
+                _fileCount = DownloadList.Count;
+                BeginDownload();
             }
-            else
+            catch (EndOfStreamException ex)
             {
-                MessageBox.Show("Could not get Patch Information.");
+                MessageBox.Show("End of stream found. Host is likely using a pre version 1.1.0.0 patch system");
                 Completed = true;
-                return;
+                SaveError(ex.ToString());
             }
-
-            _fileCount = OldList.Count;
-            for (int i = 0; i < OldList.Count; i++)
-                CheckFile(OldList[i]);
-
-            Checked = true;
-            _fileCount = 0;
-            _currentCount = 0;
-
-
-            _fileCount = DownloadList.Count;
-            BeginDownload();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error");
+                Completed = true;
+                SaveError(ex.ToString());
+            }
         }
+
+        
 
         private void BeginDownload()
         {

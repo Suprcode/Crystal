@@ -79,6 +79,7 @@ namespace Server
         //Database
         public static int SaveDelay = 5;
         public static short CredxGold = 30;
+        public static bool UseSQLServer = true;
 
         //Game
         public static List<long> ExperienceList = new List<long>();
@@ -121,6 +122,16 @@ namespace Server
                              BoneMonster2 = "BoneBlademan",
                              BoneMonster3 = "BoneArcher",
                              BoneMonster4 = "BoneCaptain",
+                             BehemothMonster1 = "Hugger",
+                             BehemothMonster2 = "PoisonHugger",
+                             BehemothMonster3 = "MutatedHugger",
+                             HellKnight1 = "HellKnight1",
+                             HellKnight2 = "HellKnight2",
+                             HellKnight3 = "HellKnight3",
+                             HellKnight4 = "HellKnight4",
+                             HellBomb1 = "HellBomb1",
+                             HellBomb2 = "HellBomb2",
+                             HellBomb3 = "HellBomb3",
                              WhiteSnake = "WhiteSerpent",
                              AngelName = "HolyDeva",
                              BombSpiderName = "BombSpider",
@@ -324,6 +335,16 @@ namespace Server
             BoneMonster2 = Reader.ReadString("Game", "BoneMonster2", BoneMonster2);
             BoneMonster3 = Reader.ReadString("Game", "BoneMonster3", BoneMonster3);
             BoneMonster4 = Reader.ReadString("Game", "BoneMonster4", BoneMonster4);
+            BehemothMonster1 = Reader.ReadString("Game", "BehemothMonster1", BehemothMonster1);
+            BehemothMonster2 = Reader.ReadString("Game", "BehemothMonster2", BehemothMonster2);
+            BehemothMonster3 = Reader.ReadString("Game", "BehemothMonster3", BehemothMonster3);
+            HellKnight1 = Reader.ReadString("Game", "HellKnight1", HellKnight1);
+            HellKnight2 = Reader.ReadString("Game", "HellKnight2", HellKnight2);
+            HellKnight3 = Reader.ReadString("Game", "HellKnight3", HellKnight3);
+            HellKnight4 = Reader.ReadString("Game", "HellKnight4", HellKnight4);
+            HellBomb1 = Reader.ReadString("Game", "HellBomb1", HellBomb1);
+            HellBomb2 = Reader.ReadString("Game", "HellBomb2", HellBomb2);
+            HellBomb3 = Reader.ReadString("Game", "HellBomb3", HellBomb3);
             WhiteSnake = Reader.ReadString("Game", "WhiteSnake", WhiteSnake);
             AngelName = Reader.ReadString("Game", "AngelName", AngelName);
             BombSpiderName = Reader.ReadString("Game", "BombSpiderName", BombSpiderName);
@@ -506,6 +527,18 @@ namespace Server
             Reader.Write("Game", "BoneMonster2", BoneMonster2);
             Reader.Write("Game", "BoneMonster3", BoneMonster3);
             Reader.Write("Game", "BoneMonster4", BoneMonster4);
+
+            Reader.Write("Game", "BehemothMonster1", BehemothMonster1);
+            Reader.Write("Game", "BehemothMonster2", BehemothMonster2);
+            Reader.Write("Game", "BehemothMonster3", BehemothMonster3);
+
+            Reader.Write("Game", "HellKnight1", HellKnight1);
+            Reader.Write("Game", "HellKnight2", HellKnight2);
+            Reader.Write("Game", "HellKnight3", HellKnight3);
+            Reader.Write("Game", "HellKnight4", HellKnight4);
+            Reader.Write("Game", "HellBomb1", HellBomb1);
+            Reader.Write("Game", "HellBomb2", HellBomb2);
+            Reader.Write("Game", "HellBomb3", HellBomb3);
 
             Reader.Write("Game", "WhiteSnake", WhiteSnake);
             Reader.Write("Game", "AngelName", AngelName);

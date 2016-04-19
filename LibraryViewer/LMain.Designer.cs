@@ -49,6 +49,7 @@
             this.LblWidth = new System.Windows.Forms.Label();
             this.ImageBox = new System.Windows.Forms.PictureBox();
             this.PreviewListView = new LibraryViewer.FixedListView();
+            this.ExportImagesButton = new System.Windows.Forms.Button();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -124,6 +125,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.ExportImagesButton);
             this.splitContainer2.Panel1.Controls.Add(this.DebugBox);
             this.splitContainer2.Panel1.Controls.Add(this.checkCenter);
             this.splitContainer2.Panel1.Controls.Add(this.checkBackground);
@@ -279,6 +281,16 @@
             this.PreviewListView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.PreviewListView_RetrieveVirtualItem);
             this.PreviewListView.SelectedIndexChanged += new System.EventHandler(this.PreviewListView_SelectedIndexChanged);
             // 
+            // ExportImagesButton
+            // 
+            this.ExportImagesButton.Location = new System.Drawing.Point(12, 130);
+            this.ExportImagesButton.Name = "ExportImagesButton";
+            this.ExportImagesButton.Size = new System.Drawing.Size(84, 23);
+            this.ExportImagesButton.TabIndex = 7;
+            this.ExportImagesButton.Text = "Export Images";
+            this.ExportImagesButton.UseVisualStyleBackColor = true;
+            this.ExportImagesButton.Click += new System.EventHandler(this.ExportImagesButton_Click);
+            // 
             // LMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -328,6 +340,7 @@
         private System.Windows.Forms.Label LibNameLabel;
         private System.Windows.Forms.Label LblLibName;
         private System.Windows.Forms.TextBox DebugBox;
+        private System.Windows.Forms.Button ExportImagesButton;
     }
 }
 

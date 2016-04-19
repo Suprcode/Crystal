@@ -9,12 +9,6 @@ namespace Server.MirObjects.Monsters
         public long FearTime;
         public byte AttackRange = 7;
 
-        enum AttackType
-        {
-            Shock,
-            Bomb
-        }
-
         protected internal TrollKing(MonsterInfo info)
             : base(info)
         {
@@ -52,7 +46,7 @@ namespace Server.MirObjects.Monsters
 
                     for (int i = 0; i < targets.Count; i++)
                     {
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility, AttackType.Shock);
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility);
                         ActionList.Add(action);
                     }
                 }
@@ -76,7 +70,7 @@ namespace Server.MirObjects.Monsters
 
                     int delay = Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) * 50 + 500; //50 MS per Step
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility, AttackType.Bomb);
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
                     ActionList.Add(action);
                 }
             }
@@ -94,15 +88,25 @@ namespace Server.MirObjects.Monsters
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
-            AttackType attack = (AttackType)data[3];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             target.Attacked(this, damage, defence);
 
-            if(attack == AttackType.Shock)
+            if (target.Attacked(this, damage, DefenceType.MACAgility) > 0)
             {
-                if (target.Attacked(this, damage, DefenceType.MACAgility) > 0 && attack == AttackType.Shock)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
                     Target.ApplyPoison(new Poison
                     {

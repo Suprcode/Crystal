@@ -415,7 +415,10 @@ namespace Client.MirScenes
                         }
                         break;
 
-
+                    case KeybindOptions.Ranking:
+                        if (!RankingDialog.Visible) RankingDialog.Show();
+                        else RankingDialog.Hide();
+                        break;
                     case KeybindOptions.Quests:
                         if (!QuestLogDialog.Visible) QuestLogDialog.Show();
                         else QuestLogDialog.Hide();
@@ -2804,14 +2807,7 @@ namespace Client.MirScenes
             }
             mob = new MonsterObject(p.ObjectID);
             mob.Load(p);
-            /*
-            string[] mobs = new string[] { "OmaKing", "DarkDevil", "MinotaurKing" };
-            if (mobs.Contains(mob.Name))
-            {
-                ChatDialog.ReceiveChat(string.Format("{0} at {1}", p.Name, p.Location), ChatType.Hint);
             }
-            */
-        }
         private void ObjectAttack(S.ObjectAttack p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -2867,7 +2863,6 @@ namespace Client.MirScenes
             User.ClearMagic();
             if (User.ReincarnationStopTime > CMain.Time)
                 Network.Enqueue(new C.CancelReincarnation {});
-            //if (User.CurrentAction == MirAction.Struck) return;
 
             MirDirection dir = User.Direction;
             Point location = User.CurrentLocation;
@@ -2923,7 +2918,6 @@ namespace Client.MirScenes
                 if (ob.ObjectID != p.ObjectID) continue;
 
                 if (ob.SkipFrames) return;
-                //if (ob.CurrentAction == MirAction.Struck) return;
                 if (ob.ActionFeed.Count > 0 && ob.ActionFeed[ob.ActionFeed.Count - 1].Action == MirAction.Struck) return;
 
                 if (ob.Race == ObjectType.Player)
@@ -3335,6 +3329,9 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
                 Effect effect = null;
+
+                bool playDefaultSound = true;
+
                 switch (p.Type)
                 {
                     case 1: //Yimoogi
@@ -3350,6 +3347,9 @@ namespace Client.MirScenes
                     case 4: //MutatedManWorm
                         {
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 272, 6, 500, ob);
+
+                            SoundManager.PlaySound(((ushort)Monster.MutatedManworm) * 10 + 7);
+                            playDefaultSound = false;
                             break;
                         }
                     case 5: //WitchDoctor
@@ -3375,7 +3375,9 @@ namespace Client.MirScenes
                     ob.Effects.Add(effect);
                 }
 
+                if(playDefaultSound)
                 SoundManager.PlaySound(SoundList.Teleport);
+
                 return;
             }
         }
@@ -3385,6 +3387,9 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
+
+                bool playDefaultSound = true;
+
                 switch (p.Type)
                 {
                     case 1: //Yimoogi
@@ -3400,6 +3405,9 @@ namespace Client.MirScenes
                     case 4: //MutatedManWorm
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 278, 7, 500, ob));
+
+                            SoundManager.PlaySound(((ushort)Monster.MutatedManworm) * 10 + 7);
+                            playDefaultSound = false;
                             break;
                         }
                     case 5: //WitchDoctor
@@ -3419,7 +3427,9 @@ namespace Client.MirScenes
                         }
                 }
 
+                if(playDefaultSound)
                 SoundManager.PlaySound(SoundList.Teleport);
+
                 return;
             }
 
@@ -3785,6 +3795,7 @@ namespace Client.MirScenes
                         break;
                     case SpellEffect.GreatFoxSpirit:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, ob));
+                        SoundManager.PlaySound(((ushort)Monster.GreatFoxSpirit * 10) + 5);
                         break;
                     case SpellEffect.Entrapment:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1010, 10, 1500, ob));
@@ -3874,14 +3885,10 @@ namespace Client.MirScenes
                         }
                         break;
                     case SpellEffect.TurtleKing:
-                        switch (CMain.Random.Next(2))
                         {
-                            default:
-                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 922, 12, 1200, ob));
-                                break;
-                            case 1:
-                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 934, 12, 1200, ob));
-                                break;
+                            Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, ob);
+                            ef.Played += (o, e) => SoundManager.PlaySound(20000 + (ushort)Spell.HellFire * 10 + 1);
+                            ob.Effects.Add(ef);
                         }
                         break;
                     case SpellEffect.Behemoth:
@@ -10068,7 +10075,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Booster\n增加魔法: {0}-{0}.\n增加魔法消耗 {1}%.\n", Values[0], Values[1]);
                     break;
                 case BuffType.MagicShield:
-                    text = string.Format("Magic Shield\n减少伤害 {0}%.\n", Values[0]);
+                    text = string.Format("Magic Shield\n减少伤害 {0}%.\n", (Values[0] + 2) * 10);
                     break;
 
                 //special

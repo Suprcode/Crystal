@@ -450,6 +450,44 @@ namespace Server.MirEnvir
                 if (GetMonsterInfo(Settings.ToadName, true) == null) return "不能启动缺少怪物: " + Settings.ToadName;
                 if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "不能启动缺少怪物: " + Settings.SnakeTotemName;
                 if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "不能启动缺少怪物: " + Settings.FishingMonster;
+                if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "不能启动缺少怪物: " + Settings.SkeletonName;
+                if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "不能启动缺少怪物: " + Settings.ShinsuName;
+                if (GetMonsterInfo(Settings.BugBatName, true) == null) return "不能启动缺少怪物: " + Settings.BugBatName;
+                if (GetMonsterInfo(Settings.Zuma1, true) == null) return "不能启动缺少怪物: " + Settings.Zuma1;
+                if (GetMonsterInfo(Settings.Zuma2, true) == null) return "不能启动缺少怪物: " + Settings.Zuma2;
+                if (GetMonsterInfo(Settings.Zuma3, true) == null) return "不能启动缺少怪物: " + Settings.Zuma3;
+                if (GetMonsterInfo(Settings.Zuma4, true) == null) return "不能启动缺少怪物: " + Settings.Zuma4;
+                if (GetMonsterInfo(Settings.Zuma5, true) == null) return "不能启动缺少怪物: " + Settings.Zuma5;
+                if (GetMonsterInfo(Settings.Zuma6, true) == null) return "不能启动缺少怪物: " + Settings.Zuma6;
+                if (GetMonsterInfo(Settings.Zuma7, true) == null) return "不能启动缺少怪物: " + Settings.Zuma7;
+                if (GetMonsterInfo(Settings.Turtle1, true) == null) return "不能启动缺少怪物: " + Settings.Turtle1;
+                if (GetMonsterInfo(Settings.Turtle2, true) == null) return "不能启动缺少怪物: " + Settings.Turtle2;
+                if (GetMonsterInfo(Settings.Turtle3, true) == null) return "不能启动缺少怪物: " + Settings.Turtle3;
+                if (GetMonsterInfo(Settings.Turtle4, true) == null) return "不能启动缺少怪物: " + Settings.Turtle4;
+                if (GetMonsterInfo(Settings.Turtle5, true) == null) return "不能启动缺少怪物: " + Settings.Turtle5;
+                if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster1;
+                if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster2;
+                if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster3;
+                if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return "不能启动缺少怪物: " + Settings.BoneMonster4;
+                if (GetMonsterInfo(Settings.BehemothMonster1, true) == null) return "不能启动缺少怪物: " + Settings.BehemothMonster1;
+                if (GetMonsterInfo(Settings.BehemothMonster2, true) == null) return "不能启动缺少怪物: " + Settings.BehemothMonster2;
+                if (GetMonsterInfo(Settings.BehemothMonster3, true) == null) return "不能启动缺少怪物: " + Settings.BehemothMonster3;
+                if (GetMonsterInfo(Settings.HellKnight1, true) == null) return "不能启动缺少怪物: " + Settings.HellKnight1;
+                if (GetMonsterInfo(Settings.HellKnight2, true) == null) return "不能启动缺少怪物: " + Settings.HellKnight2;
+                if (GetMonsterInfo(Settings.HellKnight3, true) == null) return "不能启动缺少怪物: " + Settings.HellKnight3;
+                if (GetMonsterInfo(Settings.HellKnight4, true) == null) return "不能启动缺少怪物: " + Settings.HellKnight4;
+                if (GetMonsterInfo(Settings.HellBomb1, true) == null) return "不能启动缺少怪物: " + Settings.HellBomb1;
+                if (GetMonsterInfo(Settings.HellBomb2, true) == null) return "不能启动缺少怪物: " + Settings.HellBomb2;
+                if (GetMonsterInfo(Settings.HellBomb3, true) == null) return "不能启动缺少怪物: " + Settings.HellBomb3;
+                if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return "不能启动缺少怪物: " + Settings.WhiteSnake;
+                if (GetMonsterInfo(Settings.AngelName, true) == null) return "不能启动缺少怪物: " + Settings.AngelName;
+                if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return "不能启动缺少怪物: " + Settings.BombSpiderName;
+                if (GetMonsterInfo(Settings.CloneName, true) == null) return "不能启动缺少怪物: " + Settings.CloneName;
+                if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return "不能启动缺少怪物: " + Settings.AssassinCloneName;
+                if (GetMonsterInfo(Settings.VampireName, true) == null) return "不能启动缺少怪物: " + Settings.VampireName;
+                if (GetMonsterInfo(Settings.ToadName, true) == null) return "不能启动缺少怪物: " + Settings.ToadName;
+                if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "不能启动缺少怪物: " + Settings.SnakeTotemName;
+                if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "不能启动缺少怪物: " + Settings.FishingMonster;
 
                 if (GetItemInfo(Settings.RefineOreName) == null) return "不能启动缺少物品: " + Settings.RefineOreName;
             }
@@ -515,7 +553,6 @@ namespace Server.MirEnvir
 
                 try
                 {
-
                     while (Running)
                     {
                         Time = Stopwatch.ElapsedMilliseconds;
@@ -536,7 +573,6 @@ namespace Server.MirEnvir
 
                             AdjustLights();
 
-
                             lock (Connections)
                             {
                                 for (int i = Connections.Count - 1; i >= 0; i--)
@@ -544,6 +580,7 @@ namespace Server.MirEnvir
                                     Connections[i].Process();
                                 }
                             }
+
                             lock (StatusConnections)
                             {
                                 for (int i = StatusConnections.Count - 1; i >= 0; i--)
@@ -2957,7 +2994,7 @@ namespace Server.MirEnvir
         public void SetNewRank(Rank_Character_Info Rank, int Index, byte type)
         {
             CharacterInfo Player = Rank.info as CharacterInfo;
-            if (Player == null) return; ;
+            if (Player == null) return;
             Player.Rank[type] = Index;
         }
 

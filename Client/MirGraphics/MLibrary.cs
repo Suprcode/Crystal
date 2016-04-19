@@ -787,28 +787,46 @@ namespace Client.MirGraphics
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
-        public bool VisiblePixel(int index, Point point, bool accurate)
-        {
-            if (!CheckImage(index)) return false;
-            bool output = false;
-            output = _images[index].VisiblePixel(point, accurate);
-            if (output) return true;
-            Point targetpoint;
-            if (!accurate) //allow for some extra space arround your mouse
-            {
-                int[] realRanges = new int[]{0,1,3,6,10,15,21};//do not edit this
-                //edit this to set how big you want the 'inaccuracy' to be (bear in mind bigger = takes more for your client to calculate)
-                //dont make it higher then 6 tho (or add more value sin realranges)
-                int range = 2;
+        //public bool VisiblePixel(int index, Point point, bool accurate)
+        //{
+        //    if (!CheckImage(index)) return false;
+        //    bool output = false;
+        //    output = _images[index].VisiblePixel(point, accurate);
+        //    if (output) return true;
+        //    Point targetpoint;
+        //    if (!accurate) //allow for some extra space arround your mouse
+        //    {
+        //        int[] realRanges = new int[]{0,1,3,6,10,15,21};//do not edit this
+        //        //edit this to set how big you want the 'inaccuracy' to be (bear in mind bigger = takes more for your client to calculate)
+        //        //dont make it higher then 6 tho (or add more value sin realranges)
+        //        int range = 2;
                 
-                for (int i = 0; i < (8 * realRanges[range]); i++)
-                {
-                    targetpoint = Functions.PointMove(point, (MirDirection)(i % 8), (int)(i/8));
-                    output |= _images[index].VisiblePixel(targetpoint, accurate);
-                    if (output) return true;
-                }
-            }
-            return output;
+        //        for (int i = 0; i < (8 * realRanges[range]); i++)
+        //        {
+        //            targetpoint = Functions.PointMove(point, (MirDirection)(i % 8), (int)(i/8));
+        //            output |= _images[index].VisiblePixel(targetpoint, accurate);
+        //            if (output) return true;
+        //        }
+        //    }
+        //    return output;
+        //}
+
+        public bool VisiblePixel(int index, Point point, bool accuate)
+        {
+            if (!CheckImage(index))
+                return false;
+
+            if (accuate)
+                return _images[index].VisiblePixel(point);
+
+            int accuracy = 2;
+
+            for (int x = -accuracy; x <= accuracy; x++)
+                for (int y = -accuracy; y <= accuracy; y++)
+                    if (_images[index].VisiblePixel(new Point(point.X + x, point.Y + y)))
+                        return true;
+
+            return false;
         }
 
     }
@@ -909,47 +927,25 @@ namespace Client.MirGraphics
 
             CleanTime = CMain.Time + Settings.CleanDelay;
         }
-        public unsafe bool VisiblePixel(Point p, bool acurrate)
+        public unsafe bool VisiblePixel(Point p)
         {
             if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
                 return false;
 
-            //if(!acurrate)
-            //{
-            //    Size trueSize = GetTrueSize();
-
-            //    int widthDiff = (Width - trueSize.Width) / 2;
-            //    int heightDiff = (Height - trueSize.Height ) /2 ;
-
-            //    if (p.X < widthDiff || p.X > Width + widthDiff || p.Y < heightDiff || p.Y > Height + heightDiff) return false;
-            //    return true;
-            //}
-
-            int w = Width;// +(4 - Width % 4) % 4;
+            int w = Width;
 
             bool result = false;
             if (Data != null)
             {
-                int x = p.X;// (p.X - p.X % 4) / 4;
-                int y = p.Y;// (p.Y - p.Y % 4) / 4;
+                int x = p.X;
+                int y = p.Y;
                 
-                int index = (y * (w << 2)) + (x << 2) ; //(y * (w * 4)) + (x * 4);
-
-                int col0 = (Data[index + 1] << 8 | Data[index]), col1 = (Data[index + 3] << 8 | Data[index + 2]);
-
-                //if (col0 == 0 && col1 == 0) return false;
+                int index = (y * (w << 2)) + (x << 2);
+                
                 byte col = Data[index];
 
                 if (col == 0) return false;
                 else return true;
-
-                //if (!acurrate || col1 < col0) return true;
-
-                //x = p.X;// % 4;
-                //y = p.Y;// % 4;
-                //x *= 2;
-
-                //result = ((Data[index + y] & 1 << x) >> x) != 1 || ((Data[index + y] & 1 << x + 1) >> x + 1) != 1;
             }
             return result;
         }
@@ -965,7 +961,7 @@ namespace Client.MirGraphics
             {
                 for (int y = 0; y < b; y++)
                 {
-                    if (!VisiblePixel(new Point(x, y), true)) continue;
+                    if (!VisiblePixel(new Point(x, y))) continue;
 
                     visible = true;
                     break;
@@ -982,7 +978,7 @@ namespace Client.MirGraphics
             {
                 for (int x = l; x < r; x++)
                 {
-                    if (!VisiblePixel(new Point(x, y), true)) continue;
+                    if (!VisiblePixel(new Point(x, y))) continue;
 
                     visible = true;
                     break;
@@ -999,7 +995,7 @@ namespace Client.MirGraphics
             {
                 for (int y = 0; y < b; y++)
                 {
-                    if (!VisiblePixel(new Point(x, y), true)) continue;
+                    if (!VisiblePixel(new Point(x, y))) continue;
 
                     visible = true;
                     break;
@@ -1016,7 +1012,7 @@ namespace Client.MirGraphics
             {
                 for (int x = l; x < r; x++)
                 {
-                    if (!VisiblePixel(new Point(x, y), true)) continue;
+                    if (!VisiblePixel(new Point(x, y))) continue;
 
                     visible = true;
                     break;

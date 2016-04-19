@@ -196,6 +196,22 @@ namespace Server.MirObjects
                     return new TrollBomber(info);
                 case 91:
                     return new TrollKing(info);
+                case 92:
+                    return new FlameSpear(info);
+                case 93:
+                    return new FlameMage(info);
+                case 94:
+                    return new FlameScythe(info);
+                case 95:
+                    return new FlameAssassin(info);
+                case 96:
+                    return new FlameQueen(info);
+                case 97:
+                    return new HellKnight(info);
+                case 98:
+                    return new HellLord(info);
+                case 99:
+                    return new HellBomb(info);
 
                 //unfinished
                 case 253:
@@ -919,10 +935,15 @@ namespace Server.MirObjects
                 case DelayedType.Damage:
                     CompleteAttack(action.Params);
                     break;
+                case DelayedType.RangeDamage:
+                    CompleteRangeAttack(action.Params);
+                    break;
+                case DelayedType.Die:
+                    CompleteDeath(action.Params);
+                    break;
                 case DelayedType.Recall:
                     PetRecall();
                     break;
-
             }
         }
 
@@ -941,6 +962,22 @@ namespace Server.MirObjects
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             target.Attacked(this, damage, defence);
+        }
+
+        protected virtual void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+        }
+
+        protected virtual void CompleteDeath(IList<object> data)
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual void ProcessRegen()

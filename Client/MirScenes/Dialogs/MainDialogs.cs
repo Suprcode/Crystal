@@ -420,7 +420,7 @@ namespace Client.MirScenes.Dialogs
             switch (Settings.SkillMode)
             {
                 case true:
-                    SModeLabel.Text = "[技能: `]";
+                    SModeLabel.Text = "[技能: ~]";
                     break;
                 case false:
                     SModeLabel.Text = "[技能: Ctrl]";
@@ -4096,7 +4096,8 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 69),
-                Visible = false
+                Visible = false,
+                Hint = "Keybinds"
             };
             KeyboardLayoutButton.Click += (o, e) =>
             {
@@ -4113,6 +4114,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 88),
+                Hint = "Ranking (" + CMain.InputKeys.GetKey(KeybindOptions.Ranking) + ")"
                 //Visible = false
             };
             RankingButton.Click += (o, e) =>

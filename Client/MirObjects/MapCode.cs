@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Client.MirGraphics;
 
 namespace Client.MirObjects
 {
@@ -59,11 +60,32 @@ namespace Client.MirObjects
         public void DrawObjects()
         {
             if (CellObjects == null) return;
+
             for (int i = 0; i < CellObjects.Count; i++)
             {
-                if (CellObjects[i].Dead && !(CellObjects[i] is MonsterObject && ((MonsterObject)CellObjects[i]).AI == 82)) continue;
+                if (!CellObjects[i].Dead)
+                {
+                    CellObjects[i].Draw();
+                    continue;
+                }
 
-                CellObjects[i].Draw();
+                if(CellObjects[i].Race == ObjectType.Monster)
+                {
+                    switch(((MonsterObject)CellObjects[i]).BaseImage)
+                    {
+                        case Monster.PalaceWallLeft:
+                        case Monster.PalaceWall1:
+                        case Monster.PalaceWall2:
+                        case Monster.SSabukWall1:
+                        case Monster.SSabukWall2:
+                        case Monster.SSabukWall3:
+                        case Monster.HellLord:
+                            CellObjects[i].Draw();
+                            break;
+                        default:
+                            continue;
+                    }
+                }
             }
         }
 
@@ -72,7 +94,23 @@ namespace Client.MirObjects
             if (CellObjects == null) return;
             for (int i = 0; i < CellObjects.Count; i++)
             {
-                if (!CellObjects[i].Dead || (CellObjects[i] is MonsterObject && ((MonsterObject)CellObjects[i]).AI == 82)) continue;
+                if (!CellObjects[i].Dead) continue;
+
+                if (CellObjects[i].Race == ObjectType.Monster)
+                {
+                    switch (((MonsterObject)CellObjects[i]).BaseImage)
+                    {
+                        case Monster.PalaceWallLeft:
+                        case Monster.PalaceWall1:
+                        case Monster.PalaceWall2:
+                        case Monster.SSabukWall1:
+                        case Monster.SSabukWall2:
+                        case Monster.SSabukWall3:
+                        case Monster.HellLord:
+                            continue;
+                    }
+                }
+
                 CellObjects[i].Draw();
             }
         }
