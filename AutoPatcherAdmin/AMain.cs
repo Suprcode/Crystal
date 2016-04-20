@@ -11,7 +11,9 @@ namespace AutoPatcherAdmin
     public partial class AMain : Form
     {
         public const string PatchFileName = @"PList.gz";
-        
+
+        public string[] ExcludeList = new string[] { "Thumbs.db" };
+
         public List<FileInformation> OldList, NewList;
         public Queue<FileInformation> UploadList;
         private Stopwatch _stopwatch = Stopwatch.StartNew();
@@ -61,6 +63,9 @@ namespace AutoPatcherAdmin
                 for (int i = 0; i < NewList.Count; i++)
                 {
                     FileInformation info = NewList[i];
+
+                    if (InExcludeList(info.FileName)) continue;
+
                     if (NeedUpdate(info))
                     {
                         UploadList.Enqueue(info);
@@ -138,7 +143,7 @@ namespace AutoPatcherAdmin
         {
             for (int i = 0; i < NewList.Count; i++)
             {
-                if (fileName.EndsWith(NewList[i].FileName))
+                if (fileName.EndsWith(NewList[i].FileName) && !InExcludeList(NewList[i].FileName))
                     return true;
             }
 
@@ -173,6 +178,17 @@ namespace AutoPatcherAdmin
             for (int i = 0; i < files.Length; i++)
                 NewList.Add(GetFileInformation(files[i]));
         }
+
+        public bool InExcludeList(string fileName)
+        {
+            foreach (var item in ExcludeList)
+            {
+                if (fileName.EndsWith(item)) return true;
+            }
+
+            return false;
+        }
+
         public bool NeedUpdate(FileInformation info)
         {
             for (int i = 0; i < OldList.Count; i++)

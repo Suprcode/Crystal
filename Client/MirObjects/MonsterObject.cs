@@ -1917,7 +1917,7 @@ namespace Client.MirObjects
                                 {
                                     case Monster.SnakeTotem://SummonSnakes Totem
                                         if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "SnakeTotem") < 0)
-                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Monsters[(ushort)Monster.SnakeTotem], 16, 10, 1500, this) { Repeat = true }, "SnakeTotem"));
+                                            Effects.Add(new TrackableEffect(new Effect(Libraries.Monsters[(ushort)Monster.SnakeTotem], 2, 10, 1500, this) { Repeat = true }, "SnakeTotem"));
                                         break;
                                     case Monster.PalaceWall1:
                                         //Effects.Add(new Effect(Libraries.Effect, 196, 1, 1000, this) { DrawBehind = true, d });

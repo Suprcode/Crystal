@@ -400,6 +400,10 @@ namespace Server.MirObjects
                     try
                     {
                         Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
+
+                        Envir.MonsterCount--;
+                        pet.CurrentMap.MonsterCount--;
+
                         pet.CurrentMap.RemoveObject(pet);
                         pet.Despawn();
                     }
@@ -4781,7 +4785,7 @@ namespace Server.MirObjects
                         }
 
                         MapInfo mapInfo = map.Info;
-                        mapInfo.CreateMap();
+                        mapInfo.CreateInstance();
                         ReceiveChat(string.Format("Map instance created for map {0}", mapInfo.FileName), ChatType.System);
                         break;
                     case "STARTCONQUEST":
@@ -13438,6 +13442,8 @@ namespace Server.MirObjects
         public override void ReceiveChat(string text, ChatType type)
         {
             Enqueue(new S.Chat { Message = text, Type = type });
+
+            Report.ChatMessage(text);
         }
 
         private void CleanUp()
@@ -15769,10 +15775,14 @@ namespace Server.MirObjects
 
                         TradePair[o].GainItem(u);
                         TradePair[p].Info.Trade[i] = null;
+
+                        Report.ItemMoved("TradeConfirm", u, MirGridType.Trade, MirGridType.Inventory, i, -99, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
                     }
 
                     if (TradePair[p].TradeGoldAmount > 0)
                     {
+                        Report.GoldChanged("TradeConfirm", TradePair[p].TradeGoldAmount, true, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
+
                         TradePair[o].GainGold(TradePair[p].TradeGoldAmount);
                         TradePair[p].TradeGoldAmount = 0;
                     }
@@ -15816,6 +15826,7 @@ namespace Server.MirObjects
                             else //Send item to mailbox if it can no longer be stored
                             {
                                 TradePair[p].GainItemMail(temp, 1);
+                                Report.ItemMailed("TradeCancel", temp, temp.Count, 1);
 
                                 TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             }
@@ -15829,6 +15840,8 @@ namespace Server.MirObjects
                     //Put back deposited gold
                     if (TradePair[p].TradeGoldAmount > 0)
                     {
+                        Report.GoldChanged("TradeCancel", TradePair[p].TradeGoldAmount, false);
+
                         TradePair[p].GainGold(TradePair[p].TradeGoldAmount);
                         TradePair[p].TradeGoldAmount = 0;
                     }

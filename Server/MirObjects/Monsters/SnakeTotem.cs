@@ -44,17 +44,10 @@ namespace Server.MirObjects.Monsters
                 bool selfDestruct = false;
                 if (Master != null)
                 {
-                    if (FindObject(Master.ObjectID, 15) == null) selfDestruct = true;
+                    if (Master.CurrentMap != CurrentMap || !Functions.InRange(Master.CurrentLocation, CurrentLocation, 15)) selfDestruct = true;
                     if (Summoned && Envir.Time > AliveTime) selfDestruct = true;
-                    if (selfDestruct && Master != null)
+                    if (selfDestruct)
                     {
-                        //Kill Minions
-                        for (int i = Pets.Count - 1; i >= 0; i--)
-                            if (!Pets[i].Dead && Pets[i].Node != null)
-                            {
-                                Pets[i].Die();
-                                Pets.RemoveAt(i);
-                            }
                         Die();
                         DieTime = Envir.Time + 3000;
                     }
@@ -92,15 +85,14 @@ namespace Server.MirObjects.Monsters
             AgroAllMobsInRange();
 
             //Refresh Minions
-            for (int i = Pets.Count - 1; i >= 0; i--)
-                if (Pets[i].Dead || Pets[i].Node == null)
+            for (int i = SlaveList.Count - 1; i >= 0; i--)
+                if (SlaveList[i].Dead || SlaveList[i].Node == null)
                 {
-                    Pets[i].Despawn();
-                    Pets.RemoveAt(i);
+                    SlaveList[i].DeadTime = 0;
                 }
 
             //Keep Minions Updated
-            if (Pets.Count < MaxMinions) SpawnMinion();
+            if (SlaveList.Count < MaxMinions) SpawnMinion();
         }
 
         public void AgroAllMobsInRange()
@@ -150,14 +142,15 @@ namespace Server.MirObjects.Monsters
             MonsterObject monster;
             monster = MonsterObject.GetMonster(info);
             monster.PetLevel = PetLevel;
-            monster.Master = (Master != null) ? Master : this;
+            monster.Master = this;
             monster.MaxPetLevel = (byte)(1 + PetLevel * 2);
             monster.Direction = Direction;
             monster.ActionTime = Envir.Time + 1000;
+
             ((Monsters.CharmedSnake)monster).AliveTime = Envir.Time + ((PetLevel * 2000) + 10000);
             ((Monsters.CharmedSnake)monster).MasterTotem = this;
 
-            Pets.Add(monster);
+            SlaveList.Add(monster);
             monster.Spawn(CurrentMap, CurrentLocation);
 
             return true;
@@ -168,17 +161,14 @@ namespace Server.MirObjects.Monsters
             base.Die();
 
             DeadTime = 0;
-			
-            if (Master == null)
-            {
-                //Kill Minions
-                for (int i = Pets.Count - 1; i >= 0; i--)
-                    if (!Pets[i].Dead && Pets[i].Node != null)
-                    {
-                        Pets[i].Die();
-                        Pets.RemoveAt(i);
-                    }
-            }
+            
+            //Kill Minions
+            for (int i = SlaveList.Count - 1; i >= 0; i--)
+                if (!SlaveList[i].Dead && SlaveList[i].Node != null)
+                {
+                    SlaveList[i].Die();
+                    SlaveList[i].DeadTime = 0;
+                }
         }
 
         public override void Spawned()

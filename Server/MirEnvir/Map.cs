@@ -17,6 +17,7 @@ namespace Server.MirEnvir
         }
         
         public MapInfo Info;
+
         public int Thread = 0;
 
         public int Width, Height;
@@ -598,6 +599,7 @@ namespace Server.MirEnvir
         {
             return Cells[location.X, location.Y];
         }
+
         public Cell GetCell(int x, int y)
         {
             return Cells[x, y];

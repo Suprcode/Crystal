@@ -2048,7 +2048,7 @@ public static class Globals
 
         LogDelay = 10000,
 
-        DataRange = 12;//Was 24
+        DataRange = 16;//Was 24
 
     public static float Commission = 0.05F;
 
@@ -2070,7 +2070,7 @@ public static class Functions
 
         for (int i = 0; i < a.Length; i++) if (a[i] != b[i]) return false;
 
-        return  true;
+        return true;
     }
 
     public static bool TryParse(string s, out Point temp)
