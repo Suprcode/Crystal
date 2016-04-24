@@ -2039,6 +2039,8 @@ public static class Globals
         MaxChatLength = 80,
 
         MaxGroup = 15,
+        
+        MaxAttackRange = 9,
 
         MaxDragonLevel = 13,
 

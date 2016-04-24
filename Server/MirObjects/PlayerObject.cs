@@ -5333,7 +5333,7 @@ namespace Server.MirObjects
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
             if ((RealItem.Shape / 100) != 2) return;
-            if (Functions.InRange(CurrentLocation, location, 9) == false) return;
+            if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
             MapObject target = null;
 
@@ -16865,6 +16865,8 @@ namespace Server.MirObjects
         public void SummonIntelligentCreature(IntelligentCreatureType pType)
         {
             if (pType == IntelligentCreatureType.None) return;
+
+            if (Dead) return;
 
             if (CreatureSummoned == true || SummonedCreatureType != IntelligentCreatureType.None) return;
 

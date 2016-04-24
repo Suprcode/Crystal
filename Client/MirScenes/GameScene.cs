@@ -9204,7 +9204,7 @@ namespace Client.MirScenes
 
                     if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
                     {
-                        if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 9))
+                        if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                         {
                             if (CMain.Time > GameScene.AttackTime)
                             {
@@ -9302,7 +9302,7 @@ namespace Client.MirScenes
                                 {
                                     if (target != null)
                                     {
-                                        if (!Functions.InRange(MapObject.MouseObject.CurrentLocation, User.CurrentLocation, 9))
+                                        if (!Functions.InRange(MapObject.MouseObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                                         {
                                             if (CMain.Time >= OutputDelay)
                                             {
@@ -9329,7 +9329,7 @@ namespace Client.MirScenes
 
                         if (MapObject.MouseObject is MonsterObject && User.Class == MirClass.Archer && MapObject.TargetObject != null && !MapObject.TargetObject.Dead && User.HasClassWeapon && !User.RidingMount) //ArcherTest - range attack
                         {
-                            if (Functions.InRange(MapObject.MouseObject.CurrentLocation, User.CurrentLocation, 9))
+                            if (Functions.InRange(MapObject.MouseObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                             {
                                 if (CMain.Time > GameScene.AttackTime)
                                 {
