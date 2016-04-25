@@ -642,6 +642,12 @@ namespace Client.MirScenes
                         if (CMain.Time > TargetDeadTime)
                             TargetDeadTime = CMain.Time + 5000;
                         break;
+                    case KeybindOptions.AddGroupMember:
+                        if (MapObject.MouseObject == null) break;
+                        if (MapObject.MouseObject.Race != ObjectType.Player) break;
+
+                        GameScene.Scene.GroupDialog.AddMember(MapObject.MouseObject.Name);
+                        break;
                 }
             }
         }
