@@ -2039,6 +2039,8 @@ public static class Globals
         MaxChatLength = 80,
 
         MaxGroup = 15,
+        
+        MaxAttackRange = 9,
 
         MaxDragonLevel = 13,
 
@@ -2048,7 +2050,7 @@ public static class Globals
 
         LogDelay = 10000,
 
-        DataRange = 12;//Was 24
+        DataRange = 16;//Was 24
 
     public static float Commission = 0.05F;
 
@@ -2070,7 +2072,7 @@ public static class Functions
 
         for (int i = 0; i < a.Length; i++) if (a[i] != b[i]) return false;
 
-        return  true;
+        return true;
     }
 
     public static bool TryParse(string s, out Point temp)
@@ -2800,8 +2802,6 @@ public class ItemInfo
 
         ItemInfo info = new ItemInfo { Name = data[0] };
 
-        
-
         if (!Enum.TryParse(data[1], out info.Type)) return null;
         if (!Enum.TryParse(data[2], out info.Grade)) return null;
         if (!Enum.TryParse(data[3], out info.RequiredType)) return null;
@@ -2906,8 +2906,6 @@ public class ItemInfo
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
             RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
     }
-
-    
 
     public override string ToString()
     {

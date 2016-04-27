@@ -670,11 +670,11 @@ namespace Client.MirObjects
 
             //51 - SnakeTotem (Archer SummonSnakes Totem)
             Monsters.Add(frame = new FrameSet());
-            frame.Frames.Add(MirAction.Standing, new Frame(0, 2, 0, 500));
-            frame.Frames.Add(MirAction.Walking, new Frame(0, 2, 0, 100));
-            frame.Frames.Add(MirAction.Struck, new Frame(0, 1, 0, 100));
-            frame.Frames.Add(MirAction.Die, new Frame(0, 1, 0, 100));
-            frame.Frames.Add(MirAction.Dead, new Frame(0, 1, 0, 100));
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 2, -2, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(0, 2, -2, 100));
+            frame.Frames.Add(MirAction.Struck, new Frame(0, 1, -1, 100));
+            frame.Frames.Add(MirAction.Die, new Frame(0, 1, -1, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(0, 1, -1, 100));
 
             //52 - CharmedSnake (Archer SummonSnakes Snake)
             Monsters.Add(frame = new FrameSet());
