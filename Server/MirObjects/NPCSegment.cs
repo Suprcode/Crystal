@@ -989,6 +989,10 @@ namespace Server.MirObjects
 
             switch (innerMatch)
             {
+                case "MONSTERCOUNT()":
+                    Map map = SMain.Envir.GetMapByNameAndInstance(oneValMatch.Groups[2].Captures[0].Value.ToUpper());
+                    newValue = map == null ? "N/A" : map.MonsterCount.ToString();
+                    break;
                 case "CONQUESTGUARD()":
                     var val1 = FindVariable(player, "%" + twoValMatch.Groups[3].Captures[0].Value.ToUpper());
                     var val2 = FindVariable(player, "%" + twoValMatch.Groups[4].Captures[0].Value.ToUpper());

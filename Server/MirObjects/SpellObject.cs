@@ -141,7 +141,7 @@ namespace Server.MirObjects
                 case Spell.Blizzard:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
-                    if (Caster.ActiveBlizzard == false) return;
+                    if (Caster != null && Caster.ActiveBlizzard == false) return;
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     if (!ob.Dead && Envir.Random.Next(8) == 0)
@@ -156,7 +156,7 @@ namespace Server.MirObjects
                 case Spell.MeteorStrike:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
-                    if (Caster.ActiveBlizzard == false) return;
+                    if (Caster != null && Caster.ActiveBlizzard == false) return;
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     break;
