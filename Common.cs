@@ -2802,8 +2802,6 @@ public class ItemInfo
 
         ItemInfo info = new ItemInfo { Name = data[0] };
 
-        
-
         if (!Enum.TryParse(data[1], out info.Type)) return null;
         if (!Enum.TryParse(data[2], out info.Grade)) return null;
         if (!Enum.TryParse(data[3], out info.RequiredType)) return null;
@@ -2908,8 +2906,6 @@ public class ItemInfo
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
             RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
     }
-
-    
 
     public override string ToString()
     {
