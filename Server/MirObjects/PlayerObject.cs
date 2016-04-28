@@ -400,6 +400,10 @@ namespace Server.MirObjects
                     try
                     {
                         Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
+
+                        Envir.MonsterCount--;
+                        pet.CurrentMap.MonsterCount--;
+
                         pet.CurrentMap.RemoveObject(pet);
                         pet.Despawn();
                     }
@@ -4781,7 +4785,7 @@ namespace Server.MirObjects
                         }
 
                         MapInfo mapInfo = map.Info;
-                        mapInfo.CreateMap();
+                        mapInfo.CreateInstance();
                         ReceiveChat(string.Format("Map instance created for map {0}", mapInfo.FileName), ChatType.System);
                         break;
                     case "STARTCONQUEST":
@@ -5329,7 +5333,7 @@ namespace Server.MirObjects
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
             if ((RealItem.Shape / 100) != 2) return;
-            if (Functions.InRange(CurrentLocation, location, 9) == false) return;
+            if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
             MapObject target = null;
 
@@ -9764,8 +9768,11 @@ namespace Server.MirObjects
 
             if (Envir.Random.Next(100) < Reflect)
             {
-                attacker.Attacked(this, damage, type, false);
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
+                if (attacker.IsAttackTarget(this))
+                {
+                    attacker.Attacked(this, damage, type, false);
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
+                }
                 return 0;
             }
 
@@ -10636,7 +10643,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Dead && item.Info.Type != ItemType.Scroll && item.Info.Shape != 6)
+            if (Dead && !(item.Info.Type == ItemType.Scroll && item.Info.Shape == 6))
             {
                 Enqueue(p);
                 return;
@@ -13435,6 +13442,8 @@ namespace Server.MirObjects
         public override void ReceiveChat(string text, ChatType type)
         {
             Enqueue(new S.Chat { Message = text, Type = type });
+
+            Report.ChatMessage(text);
         }
 
         private void CleanUp()
@@ -15766,10 +15775,14 @@ namespace Server.MirObjects
 
                         TradePair[o].GainItem(u);
                         TradePair[p].Info.Trade[i] = null;
+
+                        Report.ItemMoved("TradeConfirm", u, MirGridType.Trade, MirGridType.Inventory, i, -99, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
                     }
 
                     if (TradePair[p].TradeGoldAmount > 0)
                     {
+                        Report.GoldChanged("TradeConfirm", TradePair[p].TradeGoldAmount, true, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
+
                         TradePair[o].GainGold(TradePair[p].TradeGoldAmount);
                         TradePair[p].TradeGoldAmount = 0;
                     }
@@ -15813,6 +15826,7 @@ namespace Server.MirObjects
                             else //Send item to mailbox if it can no longer be stored
                             {
                                 TradePair[p].GainItemMail(temp, 1);
+                                Report.ItemMailed("TradeCancel", temp, temp.Count, 1);
 
                                 TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             }
@@ -15826,6 +15840,8 @@ namespace Server.MirObjects
                     //Put back deposited gold
                     if (TradePair[p].TradeGoldAmount > 0)
                     {
+                        Report.GoldChanged("TradeCancel", TradePair[p].TradeGoldAmount, false);
+
                         TradePair[p].GainGold(TradePair[p].TradeGoldAmount);
                         TradePair[p].TradeGoldAmount = 0;
                     }
@@ -16849,6 +16865,8 @@ namespace Server.MirObjects
         public void SummonIntelligentCreature(IntelligentCreatureType pType)
         {
             if (pType == IntelligentCreatureType.None) return;
+
+            if (Dead) return;
 
             if (CreatureSummoned == true || SummonedCreatureType != IntelligentCreatureType.None) return;
 

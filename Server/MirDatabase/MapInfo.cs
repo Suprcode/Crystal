@@ -28,10 +28,13 @@ namespace Server.MirDatabase
         public List<MineZone> MineZones = new List<MineZone>();
         public List<Point> ActiveCoords = new List<Point>();
 
+        public InstanceInfo Instance;
+
         public MapInfo()
         {
 
         }
+
         public MapInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
@@ -119,10 +122,6 @@ namespace Server.MirDatabase
             for (int i = 0; i < Respawns.Count; i++)
                 Respawns[i].Save(writer);
 
-            //writer.Write(NPCs.Count);
-            //for (int i = 0; i < NPCs.Count; i++)
-            //    NPCs[i].Save(writer);
-
             writer.Write(Movements.Count);
             for (int i = 0; i < Movements.Count; i++)
                 Movements[i].Save(writer);
@@ -175,9 +174,26 @@ namespace Server.MirDatabase
 
             SMain.Envir.MapList.Add(map);
 
+            if (Instance == null)
+            {
+                Instance = new InstanceInfo(this, map);
+            }
+
             for (int i = 0; i < SafeZones.Count; i++)
                 if (SafeZones[i].StartPoint)
                     SMain.Envir.StartPoints.Add(SafeZones[i]);
+        }
+
+        public void CreateInstance()
+        {
+            if (Instance.MapList.Count == 0) return;
+
+            Map map = new Map(this);
+            if (!map.Load()) return;
+
+            SMain.Envir.MapList.Add(map);
+
+            Instance.AddMap(map);
         }
 
         public void CreateSafeZone()
@@ -308,6 +324,58 @@ namespace Server.MirDatabase
 
             info.Index = ++SMain.EditEnvir.MapIndex;
             SMain.EditEnvir.MapInfoList.Add(info);
+        }
+    }
+
+    public class InstanceInfo
+    {
+        //Constants
+        public int PlayerCap = 2;
+        public int MaxInstanceCount = 10;
+
+        //
+        public MapInfo MapInfo;
+        public List<Map> MapList = new List<Map>();
+
+        /*
+         Notes
+         Create new instance from here if all current maps are full
+         Destroy maps when instance is empty - process loop in map or here?
+         Change NPC INSTANCEMOVE to move and create next available instance
+
+        */
+
+        public InstanceInfo(MapInfo mapInfo, Map map)
+        {
+            MapInfo = mapInfo;
+            AddMap(map);
+        }
+
+        public void AddMap(Map map)
+        {
+            MapList.Add(map);
+        }
+
+        public void RemoveMap(Map map)
+        {
+            MapList.Remove(map);
+        }
+
+        public Map GetFirstAvailableInstance()
+        {
+            for (int i = 0; i < MapList.Count; i++)
+            {
+                Map m = MapList[i];
+
+                if (m.Players.Count < PlayerCap) return m;
+            }
+
+            return null;
+        }
+
+        public void CreateNewInstance()
+        {
+            MapInfo.CreateInstance();
         }
     }
 }

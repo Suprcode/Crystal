@@ -17,10 +17,12 @@ namespace Server.MirEnvir
         }
         
         public MapInfo Info;
+
         public int Thread = 0;
 
         public int Width, Height;
         public Cell[,] Cells;
+        public List<Point> WalkableCells;
         public Door[,] DoorIndex;
         public List<Door> Doors = new List<Door>();
         public MineSpot[,] Mine;
@@ -124,8 +126,12 @@ namespace Server.MirEnvir
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
-                    if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
                     offSet += 2;
+                    if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+                        Cells[x, y] = Cell.HighWall; //No Floor Tile.
+
+                    if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
+
                     if (fileBytes[offSet] > 0)
                         DoorIndex[x,y] = AddDoor(fileBytes[offSet], new Point(x,y));
                     
@@ -162,7 +168,7 @@ namespace Server.MirEnvir
 
                     offSet += 6;
                     if (((BitConverter.ToInt16(fileBytes, offSet) ^ xor) & 0x8000) != 0)
-                        Cells[x, y] = Cell.LowWall; //Can't Fire Over.
+                        Cells[x, y] = Cell.LowWall; //No Floor Tile.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
                     offSet += 2;
@@ -200,9 +206,13 @@ namespace Server.MirEnvir
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
+                    offSet += 2;
+                    if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+                        Cells[x, y] = Cell.HighWall; //No Floor Tile.
+
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
-                    offSet += 4;
+                    offSet += 2;
                     if (fileBytes[offSet] > 0)
                         DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
                     offSet += 5;
@@ -237,8 +247,12 @@ namespace Server.MirEnvir
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
+                    offSet += 2;
+                    if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+                        Cells[x, y] = Cell.HighWall; //No Floor Tile.
+
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
-                    offSet += 4;
+                    offSet += 2;
                     if (fileBytes[offSet] > 0)
                         DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
                     offSet += 12;
@@ -585,6 +599,7 @@ namespace Server.MirEnvir
         {
             return Cells[location.X, location.Y];
         }
+
         public Cell GetCell(int x, int y)
         {
             return Cells[x, y];

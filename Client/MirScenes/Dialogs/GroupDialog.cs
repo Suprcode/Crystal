@@ -157,6 +157,22 @@ namespace Client.MirScenes.Dialogs
                 GroupMembers[i].Text = i >= GroupList.Count ? string.Empty : GroupList[i];
         }
 
+        public void AddMember(string name)
+        {
+            if (GroupList.Count >= Globals.MaxGroup)
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+                return;
+            }
+            if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
+                return;
+            }
+
+            Network.Enqueue(new C.AddMember { Name = name });
+        }
+
         private void AddMember()
         {
             if (GroupList.Count >= Globals.MaxGroup)

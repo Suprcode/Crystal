@@ -82,7 +82,7 @@ namespace Server.MirEnvir
             RecordAction(action);
         }
 
-        public void ItemMoved(string source, UserItem item, MirGridType from, MirGridType to, int slotFrom, int slotTo)
+        public void ItemMoved(string source, UserItem item, MirGridType from, MirGridType to, int slotFrom, int slotTo, string info = "")
         {
             string task = string.Empty;
 
@@ -91,7 +91,7 @@ namespace Server.MirEnvir
                 task = string.Format("物品移动 - {0} 从 {1}:{2} 到 {3}:{4} ({5})", item.Info.Name, from, slotFrom, to, slotTo, item.UniqueID);
             }
 
-            Action action = new Action { Source = source, Task = task };
+            Action action = new Action { Source = source, Task = task, AddedInfo = info };
 
             RecordAction(action);
         }
@@ -129,6 +129,31 @@ namespace Server.MirEnvir
             if (item != null)
             {
                 task = string.Format("交易了 {1} x{0} {2} 点数 跟 {3} 金币.", item.Info.FriendlyName, amount, CreditCost, GoldCost );
+            }
+
+            Action action = new Action { Source = source, Task = task };
+
+            RecordAction(action);
+        }
+
+        public void ItemMailed(string source, UserItem item, uint amount, int reason)
+        {
+            string task = string.Empty;
+            string message = string.Empty;
+
+            switch (reason)
+            {
+                case 1:
+                    message = "Could not return item to bag after trade.";
+                    break;
+                default:
+                    message = "No reason provided.";
+                    break;
+            }
+
+            if (item != null)
+            {
+                task = string.Format("Mailed {1} x{0}. Reason : {2}.", item.Info.FriendlyName, amount, message);
             }
 
             Action action = new Action { Source = source, Task = task };
@@ -190,6 +215,15 @@ namespace Server.MirEnvir
         #endregion
 
         #region Other Actions
+
+        public void ChatMessage(string msg)
+        {
+            string task = string.Format("Chat: {0}", msg);
+
+            Action action = new Action { Task = task };
+
+            RecordAction(action);
+        }
 
         public void Levelled(int level)
         {
@@ -261,7 +295,7 @@ namespace Server.MirEnvir
 
             if (!File.Exists(fullPath))
                 File.Create(fullPath).Close();
-
+            
             for (int i = 0; i < Actions.Count; i++)
             {
                 Action action = Actions[i];
