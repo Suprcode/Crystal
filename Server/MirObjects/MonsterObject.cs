@@ -601,6 +601,36 @@ namespace Server.MirObjects
         {
             ChangeHP(amount);
         }
+
+
+        public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
+        {
+            if (temp == null || !temp.ValidPoint(location)) return false;
+
+            CurrentMap.RemoveObject(this);
+            if (effects) Broadcast(new S.ObjectTeleportOut { ObjectID = ObjectID, Type = effectnumber });
+            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+            
+            CurrentMap.MonsterCount--;
+
+            CurrentMap = temp;
+            CurrentLocation = location;
+            
+            CurrentMap.MonsterCount++;
+
+            InTrapRock = false;
+
+            CurrentMap.AddObject(this);
+            BroadcastInfo();
+
+            if (effects) Broadcast(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
+
+            BroadcastHealthChange();
+
+            return true;
+        }
+
+
         public override void Die()
         {
             if (Dead) return;
@@ -764,8 +794,8 @@ namespace Server.MirObjects
                     if (!DropItem(item)) return;
                 }
             }
-
         }
+
         protected virtual bool DropItem(UserItem item)
         {
             if (CurrentMap.Info.NoDropMonster) return false;
@@ -1917,7 +1947,7 @@ namespace Server.MirObjects
                     armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetAttackPower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)

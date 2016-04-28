@@ -595,7 +595,7 @@ namespace Server.MirObjects
                 return false;
             }
 
-            if (Envir.GuildsAtWar.Where(e => e.GuildA == this && e.GuildB == enemyGuild).Any() || Envir.GuildsAtWar.Where(e => e.GuildA == enemyGuild || e.GuildB == this).Any())
+            if (Envir.GuildsAtWar.Where(e => e.GuildA == this && e.GuildB == enemyGuild).Any() || Envir.GuildsAtWar.Where(e => e.GuildA == enemyGuild && e.GuildB == this).Any())
             {
                 return false;
             }

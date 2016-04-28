@@ -87,7 +87,8 @@ namespace Client
         Screenshot,
         DropView,
         TargetDead,
-        Ranking
+        Ranking,
+        AddGroupMember
     }
 
     public class KeyBind
@@ -217,7 +218,7 @@ namespace Client
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Friends, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.F };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Guilds, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.G };
+            InputKey = new KeyBind { function = KeybindOptions.Guilds, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 0, Key = Keys.G };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.GameShop, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Y };
             Keylist.Add(InputKey);
@@ -312,6 +313,8 @@ namespace Client
             InputKey = new KeyBind { function = KeybindOptions.TargetDead, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 1, Key = Keys.ControlKey };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Ranking, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.K };
+            Keylist.Add(InputKey);
+            InputKey = new KeyBind { function = KeybindOptions.AddGroupMember, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 1, Key = Keys.G };
             Keylist.Add(InputKey);
         }
         public string GetKey(KeybindOptions Option)
