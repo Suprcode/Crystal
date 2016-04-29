@@ -64,6 +64,14 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
+
             if (attacker.Info.AI == 6)
                 EXPOwner = null;
             else if (attacker.Master != null)
@@ -113,6 +121,14 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
+            for (int i = PoisonList.Count - 1; i >= 0; i--)
+            {
+                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+
+                PoisonList.RemoveAt(i);
+                OperateTime = 0;
+            }
+
             if (Master != null && Master != attacker)
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
                     attacker.BrownTime = Envir.Time + Settings.Minute;
@@ -159,7 +175,7 @@ namespace Server.MirObjects.Monsters
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
 
-            Target.Attacked(this, damage, DefenceType.MAC);
+            Target.Attacked(this, damage, DefenceType.ACAgility);
 
             Broadcast(new S.ObjectEffect{ ObjectID = Target.ObjectID, Effect = SpellEffect.RedMoonEvil});
         }

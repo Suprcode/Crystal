@@ -31,12 +31,12 @@ namespace Client
                 Settings.UseTestConfig = true;
             #endif
 
-            if (UpdatePatcher()) return;
-
-            if (RuntimePolicyHelper.LegacyV2RuntimeEnabledSuccessfully == true) { }
-
             try
             {
+                if (UpdatePatcher()) return;
+
+                if (RuntimePolicyHelper.LegacyV2RuntimeEnabledSuccessfully == true) { }
+
                 Packet.IsServer = false;
                 Settings.Load();
 
@@ -47,6 +47,7 @@ namespace Client
                 else Application.Run(Form = new CMain());
 
                 Settings.Save();
+                CMain.InputKeys.Save();
 
                 if (Restart)
                 {

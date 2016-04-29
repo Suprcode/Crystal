@@ -75,6 +75,18 @@ namespace Server.MirObjects
 
         public List<NPCPage> NPCPages = new List<NPCPage>();
 
+        public ConquestObject Conq;
+
+        public float PriceRate(PlayerObject player, bool baseRate = false)
+        {
+            if (Conq == null || baseRate) return Info.Rate / 100F;
+
+            if (player.MyGuild != null && player.MyGuild.Guildindex == Conq.Owner)
+                return Info.Rate / 100F;
+            else
+                return (((Info.Rate / 100F) * Conq.npcRate) + Info.Rate) / 100F;
+        }
+
         public NPCObject(NPCInfo info)
         {
             Info = info;
@@ -105,6 +117,7 @@ namespace Server.MirObjects
                 List<string> lines = File.ReadAllLines(fileName).ToList();
 
                 lines = ParseInsert(lines);
+                lines = ParseInclude(lines);
 
                 if (Info.IsDefault)
                     ParseDefault(lines);
@@ -163,34 +176,61 @@ namespace Server.MirObjects
             for (int i = 0; i < lines.Count; i++)
             {
                 if (!lines[i].ToUpper().StartsWith("[@_")) continue;
-
-                if (lines[i].ToUpper().Contains("MAPCOORD"))
+                if (Name == "DefaultNPC")
                 {
-                    Regex regex = new Regex(@"\((.*?),([0-9]{1,3}),([0-9]{1,3})\)");
-                    Match match = regex.Match(lines[i]);
-
-                    if (!match.Success) continue;
-
-                    Map map = Envir.MapList.FirstOrDefault(m => m.Info.FileName == match.Groups[1].Value);
-
-                    if (map == null) continue;
-
-                    Point point = new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value));
-
-                    if (!map.Info.ActiveCoords.Contains(point))
+                    if (lines[i].ToUpper().Contains("MAPCOORD"))
                     {
-                        map.Info.ActiveCoords.Add(point);
+                        Regex regex = new Regex(@"\((.*?),([0-9]{1,3}),([0-9]{1,3})\)");
+                        Match match = regex.Match(lines[i]);
+
+                        if (!match.Success) continue;
+
+                        Map map = Envir.MapList.FirstOrDefault(m => m.Info.FileName == match.Groups[1].Value);
+
+                        if (map == null) continue;
+
+                        Point point = new Point(Convert.ToInt16(match.Groups[2].Value), Convert.ToInt16(match.Groups[3].Value));
+
+                        if (!map.Info.ActiveCoords.Contains(point))
+                        {
+                            map.Info.ActiveCoords.Add(point);
+                        }
+                    }
+
+                    if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
+                    {
+                        Regex regex = new Regex(@"\((.*?)\)");
+                        Match match = regex.Match(lines[i]);
+
+                        if (!match.Success) continue;
+
+                        SMain.Envir.CustomCommands.Add(match.Groups[1].Value);
                     }
                 }
 
-                if (lines[i].ToUpper().Contains("CUSTOMCOMMAND"))
+                else if (Name == "MonsterNPC")
                 {
-                    Regex regex = new Regex(@"\((.*?)\)");
-                    Match match = regex.Match(lines[i]);
+                    MonsterInfo MobInfo;
+                    if (lines[i].ToUpper().Contains("SPAWN"))
+                    {
+                        Regex regex = new Regex(@"\((.*?)\)");
+                        Match match = regex.Match(lines[i]);
 
-                    if (!match.Success) continue;
+                        if (!match.Success) continue;
+                        MobInfo = Envir.GetMonsterInfo(Convert.ToInt16(match.Groups[1].Value));
+                        if (MobInfo == null) continue;
+                        MobInfo.HasSpawnScript = true;
+                    }
+                    if (lines[i].ToUpper().Contains("DIE"))
+                    {
+                        Regex regex = new Regex(@"\((.*?)\)");
+                        Match match = regex.Match(lines[i]);
 
-                    SMain.Envir.CustomCommands.Add(match.Groups[1].Value);
+                        if (!match.Success) continue;
+                        MobInfo = Envir.GetMonsterInfo(Convert.ToInt16(match.Groups[1].Value));
+                        if (MobInfo == null) continue;
+                        MobInfo.HasDieScript = true;
+                    }
                 }
 
                 NPCPages.AddRange(ParsePages(lines, lines[i]));
@@ -230,6 +270,58 @@ namespace Server.MirObjects
             }
 
             lines.RemoveAll(str => str.ToUpper().StartsWith("#INSERT"));
+
+            return lines;
+        }
+
+        private List<string> ParseInclude(List<string> lines)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].ToUpper().StartsWith("#INCLUDE")) continue;
+
+                string[] split = lines[i].Split(' ');
+
+                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
+                string page = ("[" + split[2] + "]").ToUpper();
+
+                bool start = false, finish = false;
+
+                var parsedLines = new List<string>();
+
+                if (!File.Exists(path)) return parsedLines;
+                IList<string> extLines = File.ReadAllLines(path);
+
+                for (int j = 0; j < extLines.Count; j++)
+                {
+                    if (!extLines[j].ToUpper().StartsWith(page)) continue;
+
+                    for (int x = j + 1; x < extLines.Count; x++)
+                    {
+                        if (extLines[x].Trim() == ("{"))
+                        {
+                            start = true;
+                            continue;
+                        }
+
+                        if (extLines[x].Trim() == ("}"))
+                        {
+                            finish = true;
+                            break;
+                        }
+
+                        parsedLines.Add(extLines[x]);
+                    }
+                }
+
+                if (start && finish)
+                {
+                    lines.InsertRange(i + 1, parsedLines);
+                    parsedLines.Clear();
+                }
+            }
+
+            lines.RemoveAll(str => str.ToUpper().StartsWith("#INCLUDE"));
 
             return lines;
         }
@@ -281,6 +373,11 @@ namespace Server.MirObjects
 
                 if (!lines[i].ToUpper().StartsWith(tempSectionName.ToUpper())) continue;
 
+                if(lines[i] == "[@Market]")
+                {
+
+                }
+
                 List<string> segmentLines = new List<string>();
 
                 nextPage = false;
@@ -288,20 +385,12 @@ namespace Server.MirObjects
                 //Found a page, now process that page and split it into segments
                 for (int j = i + 1; j < lines.Count; j++)
                 {
-                    if (lines[j].StartsWith(";")) continue;
-
                     string nextLine = lines[j];
 
                     if (j < lines.Count - 1)
                         nextLine = lines[j + 1];
                     else
                         nextLine = "";
-
-                    if (lines[j].StartsWith("#INCLUDE"))
-                    {
-                        lines.InsertRange(j + 1, ParseInclude(lines[j]).Where(x => !string.IsNullOrEmpty(x)).ToList());
-                        continue;
-                    }
 
                     if (nextLine.StartsWith("[") && nextLine.EndsWith("]"))
                     {
@@ -382,6 +471,8 @@ namespace Server.MirObjects
             {
                 if (string.IsNullOrEmpty(lines[i])) continue;
 
+                if (lines[i].StartsWith(";")) continue;
+
                 if (lines[i].StartsWith("#"))
                 {
                     string[] action = lines[i].Remove(0, 1).ToUpper().Trim().Split(' ');
@@ -448,7 +539,7 @@ namespace Server.MirObjects
                                 break;
                         }
                 }
-
+                
                 currentSay.Add(lines[i].TrimEnd());
             }
 
@@ -470,48 +561,6 @@ namespace Server.MirObjects
             currentButtons.AddRange(gotoButtons);
 
             return segment;
-        }
-
-        private IEnumerable<string> ParseInclude(string line)
-        {
-            string[] split = line.Split(' ');
-
-            string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
-            string page = ("[" + split[2] + "]").ToUpper();
-
-            bool start = false, finish = false;
-
-            var parsedLines = new List<string>();
-
-            if (!File.Exists(path)) return parsedLines;
-            IList<string> lines = File.ReadAllLines(path);
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                if (!lines[i].ToUpper().StartsWith(page)) continue;
-
-                for (int x = i + 1; x < lines.Count; x++)
-                {
-                    if (lines[x].Trim() == ("{"))
-                    {
-                        start = true;
-                        continue;
-                    }
-
-                    if (lines[x].Trim() == ("}"))
-                    {
-                        finish = true;
-                        break;
-                    }
-
-                    parsedLines.Add(lines[x]);
-                }
-            }
-
-            if (start && finish)
-                return parsedLines;
-
-            return new List<string>();
         }
 
         private void ParseTypes(IList<string> lines)
@@ -594,6 +643,51 @@ namespace Server.MirObjects
             }
         }
 
+        public void Call(MonsterObject Monster, string key)//run a semi limited npc script (wont let you do stuff like checkgroup/guild etc)
+        {
+            key = key.ToUpper();
+
+            for (int i = 0; i < NPCPages.Count; i++)
+            {
+                NPCPage page = NPCPages[i];
+                if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                foreach (NPCSegment segment in page.SegmentList)
+                {
+                    if (page.BreakFromSegments)
+                    {
+                        page.BreakFromSegments = false;
+                        break;
+                    }
+
+                    ProcessSegment(Monster, page, segment);
+                }
+            }
+        }
+
+        public void Call(string key) //run a verry limited npc script (should really only be used to spawn mobs or something)
+        {
+            key = key.ToUpper();
+
+            for (int i = 0; i < NPCPages.Count; i++)
+            {
+                NPCPage page = NPCPages[i];
+                if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                foreach (NPCSegment segment in page.SegmentList)
+                {
+                    if (page.BreakFromSegments)
+                    {
+                        page.BreakFromSegments = false;
+                        break;
+                    }
+
+                    ProcessSegment(page, segment);
+                }
+            }
+        }
+
+
         public void Call(PlayerObject player, string key)
         {
             key = key.ToUpper();
@@ -606,22 +700,20 @@ namespace Server.MirObjects
 
                     bool found = false;
 
-                    if (player.NPCSuccess)
+                    foreach (NPCSegment segment in player.NPCPage.SegmentList)
                     {
-                        foreach (NPCSegment segment in player.NPCPage.SegmentList)
-                        {
-                            if (segment.Buttons.Any(c => c.ToUpper().Contains(key))) found = true;
-                        }
-                    }
-                    else
-                    {
-                        foreach (NPCSegment segment in player.NPCPage.SegmentList)
-                        {
-                            if (!segment.ElseButtons.Any(c => c.ToUpper().Contains(key))) found = true;
-                        }
+                        bool result;
+                        if (!player.NPCSuccess.TryGetValue(segment, out result)) break; //no result for segement ?
+
+                        if ((result ? segment.Buttons : segment.ElseButtons).Any(s => s.ToUpper() == key)) //key is already uppercase
+                            found = true;
                     }
 
-                    if (!found) return;
+                    if (!found)
+                    {
+                        SMain.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' ", player.Name, key));
+                        return;
+                    }
                 }
             }
             else
@@ -642,9 +734,16 @@ namespace Server.MirObjects
                 if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
 
                 player.NPCSpeech = new List<string>();
+                player.NPCSuccess.Clear();
 
                 foreach (NPCSegment segment in page.SegmentList)
                 {
+                    if (page.BreakFromSegments)
+                    {
+                        page.BreakFromSegments = false;
+                        break;
+                    }
+
                     ProcessSegment(player, page, segment);
                 }
 
@@ -665,9 +764,21 @@ namespace Server.MirObjects
         private void ProcessSegment(PlayerObject player, NPCPage page, NPCSegment segment)
         {
             player.NPCID = ObjectID;
-            player.NPCSuccess = segment.Check(player);
+            player.NPCSuccess.Add(segment, segment.Check(player));
             player.NPCPage = page;
         }
+
+        private void ProcessSegment(MonsterObject Monster, NPCPage page, NPCSegment segment)
+        {
+            segment.Check(Monster);
+        }
+
+        private void ProcessSegment(NPCPage page, NPCSegment segment)
+        {
+            segment.Check();
+        }
+
+
         private void ProcessSpecial(PlayerObject player, NPCPage page)
         {
             List<UserItem> allGoods = new List<UserItem>();
@@ -678,7 +789,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player) });
                     break;
                 case SellKey:
                     player.Enqueue(new S.NPCSell());
@@ -687,14 +798,14 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player) });
                     player.Enqueue(new S.NPCSell());
                     break;
                 case RepairKey:
-                    player.Enqueue(new S.NPCRepair { Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCRepair { Rate = PriceRate(player) });
                     break;
                 case SRepairKey:
-                    player.Enqueue(new S.NPCSRepair { Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCSRepair { Rate = PriceRate(player) });
                     break;
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
@@ -727,13 +838,13 @@ namespace Server.MirObjects
                         player.CheckItem(BuyBack[player.Name][i]);
                     }
 
-                    player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player) });
                     break;
                 case BuyUsedKey:
                     for (int i = 0; i < UsedGoods.Count; i++)
                         player.CheckItem(UsedGoods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = PriceRate(player) });
                     break;
                 case ConsignKey:
                     player.Enqueue(new S.NPCConsign());
@@ -811,7 +922,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = Info.PriceRate });
+                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player) });
                     break;
             }
         }
@@ -1039,7 +1150,14 @@ namespace Server.MirObjects
                 PlayerObject player = CurrentMap.Players[i];
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                {
                     CheckVisible(player, true);
+                    if(player.CheckStacked())
+                    {
+                        player.StackingTime = Envir.Time + 1000;
+                        player.Stacking = true;
+                    }
+                }
             }
         }
 
@@ -1058,7 +1176,7 @@ namespace Server.MirObjects
             };
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             throw new NotSupportedException();
         }
@@ -1077,11 +1195,16 @@ namespace Server.MirObjects
 
         public void CheckVisible(PlayerObject Player, bool Force = false)
         {
-            //if (Info.Sabuk != false && WARISON) NEEDS ADDING WHEN SABUK IS ADDED
-
             bool CanSee;
 
             VisibleLog.TryGetValue(Player.Info.Index, out CanSee);
+
+            if (Conq != null && Conq.WarIsOn)
+            {
+                if (CanSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                VisibleLog[Player.Info.Index] = false;
+                return;
+            }
 
             if (Info.FlagNeeded != 0 && !Player.Info.Flags[Info.FlagNeeded])
             {
@@ -1104,8 +1227,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Visible && !CanSee) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
-            else if (Force && Visible) CurrentMap.Broadcast(new S.ObjectNPC { Name = Name, Direction = Direction, Image = Info.Image, Location = CurrentLocation, NameColour = NameColour, ObjectID = ObjectID, QuestIDs = Info.CollectQuestIndexes }, CurrentLocation, Player);
+            if (Visible && !CanSee) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
+            else if (Force && Visible) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
 
             VisibleLog[Player.Info.Index] = true;
 
@@ -1168,10 +1291,13 @@ namespace Server.MirObjects
                 }
             }
 
-            if (goods == null || goods.Count == 0 || goods.Count > goods.Info.StackSize) return;
+            if (goods == null || count == 0 || count > goods.Info.StackSize) return;
+
+            goods.Count = count;
 
             uint cost = goods.Price();
-            cost = (uint)(cost * Info.PriceRate);
+            cost = (uint)(cost * PriceRate(player));
+            uint baseCost = (uint)(goods.Price() * PriceRate(player, true));
 
             if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
             {
@@ -1179,7 +1305,7 @@ namespace Server.MirObjects
             }
             else if (cost > player.Account.Gold) return;
 
-            UserItem item = (isBuyBack || isUsed ? goods : Envir.CreateFreshItem(goods.Info));
+            UserItem item = (isBuyBack || isUsed) ? goods : Envir.CreateFreshItem(goods.Info);
             item.Count = goods.Count;
 
             if (!player.CanGainItem(item)) return;
@@ -1192,12 +1318,13 @@ namespace Server.MirObjects
             {
                 player.Account.Gold -= cost;
                 player.Enqueue(new S.LoseGold { Gold = cost });
+                if (Conq != null) Conq.GoldStorage += (cost - baseCost);
             }
             player.GainItem(item);
 
             if (isUsed)
             {
-                UsedGoods.Remove(goods);
+                UsedGoods.Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
 
                 List<UserItem> newGoodsList = new List<UserItem>();
                 newGoodsList.AddRange(Goods);
@@ -1205,13 +1332,13 @@ namespace Server.MirObjects
 
                 NeedSave = true;
 
-                player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = Info.PriceRate });
+                player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = PriceRate(player) });
             }
 
             if (isBuyBack)
             {
-                BuyBack[player.Name].Remove(goods);
-                player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = Info.PriceRate });
+                BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
+                player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player) });
             }
         }
         public void Sell(PlayerObject player, UserItem item)
@@ -1226,6 +1353,8 @@ namespace Server.MirObjects
             BuyBack[player.Name].Add(item);
         }
     }
+
+
 
     public class NPCChecks
     {
@@ -1259,6 +1388,8 @@ namespace Server.MirObjects
         InstanceMove,
         GiveGold,
         TakeGold,
+        GiveGuildGold,
+        TakeGuildGold,
         GiveCredit,
         TakeCredit,
         GiveItem,
@@ -1280,6 +1411,7 @@ namespace Server.MirObjects
         LocalMessage,
         Goto,
         GiveSkill,
+        RemoveSkill,
         Set,
         Param1,
         Param2,
@@ -1314,7 +1446,18 @@ namespace Server.MirObjects
         GlobalMessage,
         LoadValue,
         SaveValue,
-        RemovePet
+        RemovePet,
+        ConquestGuard,
+        ConquestGate,
+        ConquestWall,
+        ConquestSiege,
+        TakeConquestGold,
+        SetConquestRate,
+        StartConquest,
+        ScheduleConquest,
+        OpenGate,
+        CloseGate,
+        Break,
     }
     public enum CheckType
     {
@@ -1322,6 +1465,7 @@ namespace Server.MirObjects
         Level,
         CheckItem,
         CheckGold,
+        CheckGuildGold,
         CheckCredit,
         CheckGender,
         CheckClass,
@@ -1338,6 +1482,7 @@ namespace Server.MirObjects
         Random,
         Groupleader,
         GroupCount,
+        GroupCheckNearby,
         PetLevel,
         PetCount,
         CheckCalc,
@@ -1347,6 +1492,15 @@ namespace Server.MirObjects
         CheckRelationship,
         CheckWeddingRing,
         CheckPet,
-        HasBagSpace
+        HasBagSpace,
+		IsNewHuman,
+        CheckConquest,
+        AffordGuard,
+        AffordGate,
+        AffordWall,
+        AffordSiege,
+        CheckPermission,
+        ConquestAvailable,
+        ConquestOwner,
     }
 }

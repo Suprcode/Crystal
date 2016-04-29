@@ -83,7 +83,7 @@ namespace Client.MirObjects
             DrawLocation = new Point((CurrentLocation.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
             DrawLocation.Offset((MapControl.CellWidth - Size.Width) / 2, (MapControl.CellHeight - Size.Height) / 2);
             DrawLocation.Offset(User.OffSetMove);
-
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
             FinalDrawLocation = DrawLocation;
 
             DisplayRectangle = new Rectangle(DrawLocation, Size);
@@ -105,11 +105,11 @@ namespace Client.MirObjects
             NameLabel.Draw();
         }
 
-        public override void DrawBehindEffects()
+        public override void DrawBehindEffects(bool effectsEnabled)
         {
         }
 
-        public override void DrawEffects()
+        public override void DrawEffects(bool effectsEnabled)
         {
             
 

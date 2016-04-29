@@ -11,21 +11,30 @@ namespace Client
         public static int ScreenWidth = 800, ScreenHeight = 600;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
 
+        private static bool _useTestConfig;
         public static bool UseTestConfig
         {
+            get
+            {
+                return _useTestConfig;
+            }
             set 
             {
                 if (value == true)
                 {
                     Reader = new InIReader(@".\Mir2Test.ini");
                 }
+                _useTestConfig = value;
             }
         }
 
         public const string DataPath = @".\Data\",
                             MapPath = @".\Map\",
                             SoundPath = @".\Sound\",
+                            ExtraDataPath = @".\Data\Extra\",
+                            ShadersPath = @".\Data\Shaders\",
                             MonsterPath = @".\Data\Monster\",
+                            GatePath = @".\Data\Gate\",
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",
@@ -108,15 +117,21 @@ namespace Client
         public static bool
             SkillMode = false,
             SkillBar = true,
-            SkillSet = true,
+            //SkillSet = true,
             Effect = true,
             LevelEffect = true,
             DropView = true,
             NameView = true,
             HPView = true,
             TransparentChat = false,
-            DisplayDamage = true;
+            DuraView = false,
+            DisplayDamage = true,
+            TargetDead = false;
 
+        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
+
+        //Quests
+        public static int[] TrackedQuests = new int[5];
 
         //Chat
         public static bool
@@ -188,7 +203,7 @@ namespace Client
 
             SkillMode = Reader.ReadBoolean("Game", "SkillMode", SkillMode);
             SkillBar = Reader.ReadBoolean("Game", "SkillBar", SkillBar);
-            SkillSet = Reader.ReadBoolean("Game", "SkillSet", SkillSet);
+            //SkillSet = Reader.ReadBoolean("Game", "SkillSet", SkillSet);
             Effect = Reader.ReadBoolean("Game", "Effect", Effect);
             LevelEffect = Reader.ReadBoolean("Game", "LevelEffect", Effect);
             DropView = Reader.ReadBoolean("Game", "DropView", DropView);
@@ -197,6 +212,14 @@ namespace Client
             FontName = Reader.ReadString("Game", "FontName", FontName);
             TransparentChat = Reader.ReadBoolean("Game", "TransparentChat", TransparentChat);
             DisplayDamage = Reader.ReadBoolean("Game", "DisplayDamage", DisplayDamage);
+            TargetDead = Reader.ReadBoolean("Game", "TargetDead", TargetDead);
+            DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
+
+            for (int i = 0; i < SkillbarLocation.Length / 2; i++)
+            {
+                SkillbarLocation[i, 0] = Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "X", SkillbarLocation[i, 0]);
+                SkillbarLocation[i, 1] = Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "Y", SkillbarLocation[i, 1]);
+            }
 
             //Chat
             ShowNormalChat = Reader.ReadBoolean("Chat", "ShowNormalChat", ShowNormalChat);
@@ -251,7 +274,7 @@ namespace Client
             Reader.Write("Game", "Password", Password);
             Reader.Write("Game", "SkillMode", SkillMode);
             Reader.Write("Game", "SkillBar", SkillBar);
-            Reader.Write("Game", "SkillSet", SkillSet);
+            //Reader.Write("Game", "SkillSet", SkillSet);
             Reader.Write("Game", "Effect", Effect);
             Reader.Write("Game", "LevelEffect", LevelEffect);
             Reader.Write("Game", "DropView", DropView);
@@ -260,6 +283,15 @@ namespace Client
             Reader.Write("Game", "FontName", FontName);
             Reader.Write("Game", "TransparentChat", TransparentChat);
             Reader.Write("Game", "DisplayDamage", DisplayDamage);
+            Reader.Write("Game", "TargetDead", TargetDead);
+            Reader.Write("Game", "DuraWindow", DuraView);
+
+            for (int i = 0; i < SkillbarLocation.Length / 2; i++)
+            {
+
+                Reader.Write("Game", "Skillbar" + i.ToString() + "X", SkillbarLocation[i, 0]);
+                Reader.Write("Game", "Skillbar" + i.ToString() + "Y", SkillbarLocation[i, 1]);
+            }
 
             //Chat
             Reader.Write("Chat", "ShowNormalChat", ShowNormalChat);
@@ -290,6 +322,23 @@ namespace Client
             Reader.Write("Launcher", "ServerName", P_ServerName);
             Reader.Write("Launcher", "Browser", P_BrowserAddress);
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
+        }
+
+        public static void LoadTrackedQuests(string Charname)
+        {
+            //Quests
+            for (int i = 0; i < TrackedQuests.Length; i++)
+            {
+                TrackedQuests[i] = Reader.ReadInt32("Q-" + Charname, "Quest-" + i.ToString(), -1);
+            }
+        }
+        public static void SaveTrackedQuests(string Charname)
+        {
+            //Quests
+            for (int i = 0; i < TrackedQuests.Length; i++)
+            {
+                Reader.Write("Q-" + Charname, "Quest-" + i.ToString(), TrackedQuests[i]);
+            }
         }
     }
 }

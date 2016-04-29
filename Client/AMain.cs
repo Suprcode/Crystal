@@ -46,38 +46,70 @@ namespace Launcher
             TransparencyKey = Color.FromArgb(1, 0, 0);
         }
 
+        public static void SaveError(string ex)
+        {
+            try
+            {
+                if (Settings.RemainingErrorLogs-- > 0)
+                {
+                    File.AppendAllText(@".\Error.txt",
+                                       string.Format("[{0}] {1}{2}", DateTime.Now, ex, Environment.NewLine));
+                }
+            }
+            catch
+            {
+            }
+        }
+
         public void Start()
         {
-            OldList = new List<FileInformation>();
-            DownloadList= new Queue<FileInformation>();
-
-            byte[] data = Download(Settings.P_PatchFileName);
-
-            if (data != null)
+            try
             {
-                using (MemoryStream stream = new MemoryStream(data))
-                using (BinaryReader reader = new BinaryReader(stream))
-                    ParseOld(reader);
+                OldList = new List<FileInformation>();
+                DownloadList = new Queue<FileInformation>();
+
+                byte[] data = Download(Settings.P_PatchFileName);
+
+                if (data != null)
+                {
+                    using (MemoryStream stream = new MemoryStream(data))
+                    using (BinaryReader reader = new BinaryReader(stream))
+                        ParseOld(reader);
+                }
+                else
+                {
+                    MessageBox.Show("Could not get Patch Information.");
+                    Completed = true;
+                    return;
+                }
+
+                _fileCount = OldList.Count;
+                for (int i = 0; i < OldList.Count; i++)
+                    CheckFile(OldList[i]);
+
+                Checked = true;
+                _fileCount = 0;
+                _currentCount = 0;
+
+
+                _fileCount = DownloadList.Count;
+                BeginDownload();
             }
-            else
+            catch (EndOfStreamException ex)
             {
-                MessageBox.Show("Could not get Patch Information.");
+                MessageBox.Show("End of stream found. Host is likely using a pre version 1.1.0.0 patch system");
                 Completed = true;
-                return;
+                SaveError(ex.ToString());
             }
-
-            _fileCount = OldList.Count;
-            for (int i = 0; i < OldList.Count; i++)
-                CheckFile(OldList[i]);
-
-            Checked = true;
-            _fileCount = 0;
-            _currentCount = 0;
-
-
-            _fileCount = DownloadList.Count;
-            BeginDownload();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error");
+                Completed = true;
+                SaveError(ex.ToString());
+            }
         }
+
+        
 
         private void BeginDownload()
         {
@@ -146,7 +178,7 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
-                if (old.FileName == System.AppDomain.CurrentDomain.FriendlyName)
+                if ((old.FileName.Contains(System.AppDomain.CurrentDomain.FriendlyName)))
                 {
                     File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + oldClientName);
                     Restart = true;
@@ -162,7 +194,7 @@ namespace Launcher
             string fileName = info.FileName.Replace(@"\", "/");
 
             if (fileName != "PList.gz")
-                fileName += Path.GetExtension(fileName);
+                fileName += ".gz";
 
             try
             {
@@ -190,7 +222,7 @@ namespace Launcher
                             if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
                                 Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
 
-                            File.WriteAllBytes(Settings.P_Client + info.FileName, Decompress(e.Result));
+                            File.WriteAllBytes(Settings.P_Client + info.FileName, e.Result);
                             File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
                             }
                             BeginDownload();
@@ -200,7 +232,7 @@ namespace Launcher
 
 
                     _stopwatch = Stopwatch.StartNew();
-                    client.DownloadDataAsync(new Uri(Settings.P_Host + Path.ChangeExtension("/" + fileName, ".gz")));
+                    client.DownloadDataAsync(new Uri(Settings.P_Host + fileName));
                 }
             }
             catch
@@ -225,7 +257,7 @@ namespace Launcher
                     else
                         client.Credentials = new NetworkCredential("", "");
 
-                    return Decompress(client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz")));
+                    return client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz"));
                 }
             }
             catch

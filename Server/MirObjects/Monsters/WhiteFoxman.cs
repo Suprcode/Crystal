@@ -50,15 +50,18 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
-                int levelgap = 50 - Target.Level;
-                if (Envir.Random.Next(20) < 4 + levelgap)
-                    Target.ApplyPoison(new Poison
-                    {
-                        Owner = this,
-                        Duration = 5,
-                        PType = PoisonType.Slow,
-                        TickSpeed = 1000,
-                    }, this);
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                {
+                    int levelgap = 50 - Target.Level;
+                    if (Envir.Random.Next(20) < 4 + levelgap)
+                        Target.ApplyPoison(new Poison
+                        {
+                            Owner = this,
+                            Duration = 5,
+                            PType = PoisonType.Slow,
+                            TickSpeed = 1000,
+                        }, this);
+                }
             }
 
             if (Target.Dead)

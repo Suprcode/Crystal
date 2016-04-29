@@ -27,6 +27,17 @@ namespace Server
 
             for (int i = 0; i < Envir.MapInfoList.Count; i++) MapComboBox.Items.Add(Envir.MapInfoList[i]);
 
+            if (ConquestHidden_combo.Items.Count != Envir.ConquestInfos.Count)
+            {
+                ConquestHidden_combo.Items.Clear();
+
+                for (int i = 0; i < Envir.ConquestInfos.Count; i++)
+                {
+                    ConquestHidden_combo.Items.Add(Envir.ConquestInfos[i]);
+                }
+            }
+
+
             UpdateInterface();
         }
 
@@ -75,7 +86,7 @@ namespace Server
                 MinLev_textbox.Text = string.Empty;
                 MaxLev_textbox.Text = string.Empty;
                 Class_combo.Text = string.Empty;
-                Sabuk_checkbox.Checked = false;
+                ConquestHidden_combo.SelectedIndex = -1;
                 Day_combo.Text = string.Empty;
                 TimeVisible_checkbox.Checked = false;
                 StartHour_combo.Text = string.Empty;
@@ -102,7 +113,7 @@ namespace Server
             MinLev_textbox.Text = info.MinLev.ToString();
             MaxLev_textbox.Text = info.MaxLev.ToString();
             Class_combo.Text = info.ClassRequired;
-            Sabuk_checkbox.Checked = info.Sabuk;
+            ConquestHidden_combo.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.Conquest);
             Day_combo.Text = info.DayofWeek;
             TimeVisible_checkbox.Checked = info.TimeVisible;
             StartHour_combo.Text = info.HourStart.ToString();
@@ -420,12 +431,6 @@ namespace Server
                 _selectedNPCInfos[i].ClassRequired = ActiveControl.Text;
         }
 
-        private void Sabuk_checkbox_CheckedChanged(object sender, EventArgs e)
-        {
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Sabuk = Sabuk_checkbox.Checked;
-        }
-
         private void CopyMButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show(DateTime.Now.DayOfWeek.ToString());
@@ -541,6 +546,20 @@ namespace Server
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             MessageBox.Show(DateTime.Now.TimeOfDay.ToString());
+        }
+
+        private void NPCInfoForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ConquestHidden_combo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ConquestInfo temp = (ConquestInfo)ConquestHidden_combo.SelectedItem;
+
+            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+                _selectedNPCInfos[i].Conquest = temp.Index;
         }
     }
 }

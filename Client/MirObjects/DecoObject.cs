@@ -40,7 +40,7 @@ namespace Client.MirObjects
         public override void Process()
         {
             DrawLocation = new Point((CurrentLocation.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
             DrawLocation.Offset(User.OffSetMove);
         }
 
@@ -54,11 +54,11 @@ namespace Client.MirObjects
             return false;
         }
 
-        public override void DrawBehindEffects()
+        public override void DrawBehindEffects(bool effectsEnabled)
         {
         }
 
-        public override void DrawEffects()
+        public override void DrawEffects(bool effectsEnabled)
         {
         }
     }

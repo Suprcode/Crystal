@@ -99,13 +99,16 @@ namespace Server.MirObjects.Monsters
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                    Target.ApplyPoison(new Poison
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                     {
-                        Owner = this,
-                        Duration = 6,
-                        PType = PoisonType.Red,
-                        TickSpeed = 2000
-                    }, this);                
+                        Target.ApplyPoison(new Poison
+                        {
+                            Owner = this,
+                            Duration = 6,
+                            PType = PoisonType.Red,
+                            TickSpeed = 2000
+                        }, this);
+                    }             
                 }
                 else
                 {

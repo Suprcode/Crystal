@@ -76,8 +76,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            LineAttack(2);
-
+            ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -96,7 +95,7 @@ namespace Server.MirObjects.Monsters
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (target == Target.CurrentLocation)
+                if (Target != null && target == Target.CurrentLocation)
                     Target.Attacked(this, damage, DefenceType.MACAgility);
                 else
                 {
@@ -127,6 +126,11 @@ namespace Server.MirObjects.Monsters
             base.Spawned();
 
             Summoned = true;
+        }
+
+        protected override void CompleteAttack(IList<object> data)
+        {
+            LineAttack(2);
         }
 
         public override Packet GetInfo()

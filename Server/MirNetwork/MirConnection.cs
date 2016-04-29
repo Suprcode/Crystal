@@ -7,6 +7,7 @@ using Server.MirEnvir;
 using Server.MirObjects;
 using C = ClientPackets;
 using S = ServerPackets;
+using System.Linq;
 
 namespace Server.MirNetwork
 {
@@ -215,7 +216,8 @@ namespace Server.MirNetwork
                     Disconnect(22);
                     break;
                 case (short)ClientPacketIds.KeepAlive: // Keep Alive
-                    return;
+                    ClientKeepAlive((C.KeepAlive)p);
+                    break;
                 case (short)ClientPacketIds.NewAccount:
                     NewAccount((C.NewAccount) p);
                     break;
@@ -567,8 +569,18 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.NPCConfirmInput:
                     NPCConfirmInput((C.NPCConfirmInput)p);
                     break;
+                case (short)ClientPacketIds.ReportIssue:
+                    ReportIssue((C.ReportIssue)p);
+                    break;
+                case (short)ClientPacketIds.GetRanking:
+                    GetRanking((C.GetRanking)p);
+                    break;
+                case (short)ClientPacketIds.Opendoor:
+                    Opendoor((C.Opendoor)p);
+                    break;
                 default:
-                    throw new NotImplementedException();
+                    SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
+                    break;
             }
         }
 
@@ -662,6 +674,13 @@ namespace Server.MirNetwork
 
             Stage = GameStage.Login;
         }
+        private void ClientKeepAlive(C.KeepAlive p)
+        {
+            Enqueue(new S.KeepAlive
+            {
+                Time = p.Time
+            });
+        }
         private void NewAccount(C.NewAccount p)
         {
             if (Stage != GameStage.Login) return;
@@ -687,7 +706,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Select) return;
 
-            SMain.Envir.NewCharacter(p, this);
+            SMain.Envir.NewCharacter(p, this, Account.AdminAccount);
         }
         private void DeleteCharacter(C.DeleteCharacter p)
         {
@@ -718,6 +737,7 @@ namespace Server.MirNetwork
 
             temp.Deleted = true;
             temp.DeleteDate = SMain.Envir.Now;
+            SMain.Envir.RemoveRank(temp);
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
         private void StartGame(C.StartGame p)
@@ -968,8 +988,10 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-
-            Player.Inspect(p.ObjectID);
+            if (p.Ranking)
+                Player.Inspect((int)p.ObjectID);
+            else
+                Player.Inspect(p.ObjectID);
         }
         private void ChangeAMode(C.ChangeAMode p)
         {
@@ -1027,9 +1049,18 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            //if (p.ObjectID == Player.DefaultNPC.ObjectID)
-            //    Player.CallDefaultNPC(p.Type);
-            //else
+            if (p.Key.Length > 30) //No NPC Key should be that long.
+            {
+                SendDisconnect(2);
+                return;
+            }
+
+            if (p.ObjectID == Player.DefaultNPC.ObjectID)
+            {
+                Player.CallDefaultNPC(p.ObjectID, p.Key);
+                return;
+            }
+
             Player.CallNPC(p.ObjectID, p.Key);
         }
 
@@ -1597,7 +1628,37 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.NPCInputStr = p.Value;
+
             Player.CallNPC(Player.NPCID, p.PageName);
+        }
+
+        public List<byte[]> Image = new List<byte[]>();
+        
+        private void ReportIssue(C.ReportIssue p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            return;
+
+            Image.Add(p.Image);
+
+            if (p.ImageChunk >= p.ImageSize)
+            {
+                System.Drawing.Image image = Functions.ByteArrayToImage(Functions.CombineArray(Image));
+                image.Save("Reported-" + Player.Name + "-" + DateTime.Now.ToString("yyMMddHHmmss") + ".jpg");
+                Image.Clear();
+            }
+        }
+        private void GetRanking(C.GetRanking p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.GetRanking(p.RankIndex);
+        }
+
+        private void Opendoor(C.Opendoor p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.Opendoor(p.DoorIndex);
         }
     }
 }

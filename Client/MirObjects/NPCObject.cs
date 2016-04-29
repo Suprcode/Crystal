@@ -377,6 +377,8 @@ namespace Client.MirObjects
 
             DrawLocation = new Point((Movement.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
             DrawLocation.Offset(User.OffSetMove);
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
+
             if (BodyLibrary != null)
                 FinalDrawLocation = DrawLocation.Add(BodyLibrary.GetOffSet(DrawFrame));
 
@@ -415,6 +417,7 @@ namespace Client.MirObjects
                     DrawColour = Color.Blue;
                     break;
                 case PoisonType.Paralysis:
+                case PoisonType.LRParalysis:
                     DrawColour = Color.Gray;
                     break;
             }
@@ -562,12 +565,13 @@ namespace Client.MirObjects
             return MapControl.MapLocation == CurrentLocation || BodyLibrary != null && BodyLibrary.VisiblePixel(DrawFrame, p.Subtract(FinalDrawLocation), false);
         }
 
-        public override void DrawBehindEffects()
+        public override void DrawBehindEffects(bool effectsEnabled)
         {
         }
 
-        public override void DrawEffects()
+        public override void DrawEffects(bool effectsEnabled)
         {
+            if (!effectsEnabled) return;
 
             if (BodyLibrary == null) return;
 

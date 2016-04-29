@@ -35,6 +35,12 @@ namespace Server.MirObjects
         public List<string> Notice = new List<string>();
         public List<GuildObject> WarringGuilds = new List<GuildObject>();
 
+        public ConquestObject Conquest;
+
+        public List<GuildObject> AllyGuilds = new List<GuildObject>();
+        public int AllyCount;
+
+
         public GuildObject()
         {
         }
@@ -121,6 +127,11 @@ namespace Server.MirObjects
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
+
+            if (version >= 66)
+            {
+               
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -163,6 +174,8 @@ namespace Server.MirObjects
             writer.Write(Notice.Count);
             for (int i = 0; i < Notice.Count; i++)
                 writer.Write(Notice[i]);
+
+            //Conquest.Save(writer);
         }
 
         public void SendMessage(string message, ChatType Type = ChatType.Guild)
@@ -204,9 +217,18 @@ namespace Server.MirObjects
 
         public void SendGuildStatus(PlayerObject member)
         {
-                member.Enqueue(new ServerPackets.GuildStatus()
+            string gName = Name;
+            string conquest = "";
+
+                if (Conquest != null)
                 {
-                    GuildName = Name,
+                    conquest = "[" + Conquest.Info.Name + "]";
+                    gName = gName + conquest;
+                }
+
+            member.Enqueue(new ServerPackets.GuildStatus()
+                {
+                    GuildName = gName,
                     GuildRankName = member.MyGuildRank != null? member.MyGuildRank.Name: "",
                     Experience = Experience,
                     MaxExperience = MaxExperience,
@@ -231,7 +253,6 @@ namespace Server.MirObjects
             GuildMember Member = new GuildMember() { name = newmember.Info.Name, Player = newmember, Id = newmember.Info.Index, LastLogin = Envir.Now, Online = true };
             currentrank.Members.Add(Member);
             PlayerLogged(newmember, true, true);
-            
             Membercount++;
             NeedSave = true;
         }
@@ -426,6 +447,11 @@ namespace Server.MirObjects
             }
             AllOk:
             MemberDeleted(membername, (PlayerObject)Member.Player, Member.name == Kicker.Info.Name);
+            if (Member.Player != null)
+            {
+                PlayerObject LeavingMember = (PlayerObject)Member.Player;
+                LeavingMember.RefreshStats();
+            }
             MemberRank.Members.Remove(Member);
             NeedSave = true;
             Membercount--;
@@ -451,6 +477,7 @@ namespace Server.MirObjects
                 formermember.MyGuild = null;
                 formermember.MyGuildRank = null;
                 formermember.ReceiveChat(kickself ? "You have left your guild." : "You have been removed from your guild.", ChatType.Guild);
+                formermember.RefreshStats();
                 formermember.Enqueue(new ServerPackets.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (RankOptions)0 });
                 formermember.BroadcastInfo();
             }
@@ -568,7 +595,7 @@ namespace Server.MirObjects
                 return false;
             }
 
-            if (Envir.GuildsAtWar.Where(e => e.GuildA == this && e.GuildB == enemyGuild).Any() || Envir.GuildsAtWar.Where(e => e.GuildA == enemyGuild || e.GuildB == this).Any())
+            if (Envir.GuildsAtWar.Where(e => e.GuildA == this && e.GuildB == enemyGuild).Any() || Envir.GuildsAtWar.Where(e => e.GuildA == enemyGuild && e.GuildB == this).Any())
             {
                 return false;
             }
@@ -602,6 +629,14 @@ namespace Server.MirObjects
             return true;
         }
 
+        public string GetName()
+        {
+            if (Conquest != null)
+                return Name + "[" + Conquest.Info.Name + "]";
+            else
+                return Name;
+        }
+
         public bool IsEnemy(GuildObject enemyGuild)
         {
             if (enemyGuild == null) return false;
@@ -625,6 +660,8 @@ namespace Server.MirObjects
                         player.RefreshStats();
                 }
         }
+
+
         public void Process()
         {
             //guild buffs

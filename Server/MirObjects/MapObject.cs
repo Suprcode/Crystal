@@ -76,6 +76,8 @@ namespace Server.MirObjects
         
         public bool Dead, Undead, Harvested, AutoRev;
 
+        public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
+
         public virtual int PKPoints { get; set; }
 
         public ushort PotHealthAmount, PotManaAmount, HealAmount, VampAmount;
@@ -382,7 +384,7 @@ namespace Server.MirObjects
         {
             Broadcast(GetInfo());
             return;
-        }
+        } 
 
         public abstract bool IsAttackTarget(PlayerObject attacker);
         public abstract bool IsAttackTarget(MonsterObject attacker);
@@ -415,7 +417,7 @@ namespace Server.MirObjects
 
         public virtual bool Harvest(PlayerObject player) { return false; }
 
-        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false);
+        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
         public virtual void AddBuff(Buff b)
         {
             switch (b.Type)
@@ -499,7 +501,7 @@ namespace Server.MirObjects
             CurrentMap.RemoveObject(this);
             if (effects) Broadcast(new S.ObjectTeleportOut {ObjectID = ObjectID, Type = effectnumber});
             Broadcast(new S.ObjectRemove {ObjectID = ObjectID});
-
+            
             CurrentMap = temp;
             CurrentLocation = location;
 
@@ -519,18 +521,23 @@ namespace Server.MirObjects
         {
             if (map == null) map = CurrentMap;
             if (map.Cells == null) return false;
+            if (map.WalkableCells != null && map.WalkableCells.Count == 0) return false;
 
-            var walkableCells = new List<Point>();
-            for (var x = 0; x < map.Cells.GetLength(0); x++)
-                for (var y = 0; y < map.Cells.GetLength(1); y++)
-                    if (map.Cells[x, y] != null && map.Cells[x, y].Attribute == CellAttribute.Walk)
-                        walkableCells.Add(new Point(x, y));
+            if (map.WalkableCells == null)
+            {
+                map.WalkableCells = new List<Point>();
 
-            if (!walkableCells.Any()) return false;
+                for (int x = 0; x < map.Width; x++)
+                    for (int y = 0; y < map.Height; y++)
+                        if (map.Cells[x, y].Attribute == CellAttribute.Walk)
+                            map.WalkableCells.Add(new Point(x, y));
 
-            var randomCell = Envir.Random.Next(0, walkableCells.Count - 1);
+                if (map.WalkableCells.Count == 0) return false;
+            }
 
-            return Teleport(map, new Point(walkableCells[randomCell].X, walkableCells[randomCell].Y));
+            int cellIndex = Envir.Random.Next(map.WalkableCells.Count);
+
+            return Teleport(map, map.WalkableCells[cellIndex]);
         }
 
         public Point GetRandomPoint(int attempts, int distance, Map map)

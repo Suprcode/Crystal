@@ -147,6 +147,12 @@ namespace Client.MirObjects
                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, CurrentLocation));
                     MirSounds.SoundManager.PlaySound(8302);
                     break;
+                case Spell.MapQuake1:
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 27, 12, 1200, CurrentLocation) { Blend = false });
+                    break;
+                case Spell.MapQuake2:
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 39, 13, 1300, CurrentLocation) { Blend = false });
+                    break;
 
                 case Spell.Portal:
                     BodyLibrary = Libraries.Magic2;
@@ -171,7 +177,7 @@ namespace Client.MirObjects
             }
 
             DrawLocation = new Point((CurrentLocation.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-
+            DrawLocation.Offset(GlobalDisplayLocationOffset);
             DrawLocation.Offset(User.OffSetMove);
         }
 
@@ -191,11 +197,11 @@ namespace Client.MirObjects
             return false;
         }
 
-        public override void DrawBehindEffects()
+        public override void DrawBehindEffects(bool effectsEnabled)
         {
         }
 
-        public override void DrawEffects()
+        public override void DrawEffects(bool effectsEnabled)
         { 
         }
     }

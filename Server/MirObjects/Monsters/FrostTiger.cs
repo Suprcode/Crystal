@@ -96,15 +96,31 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
 
-                if (Envir.Random.Next(8) == 0)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    Target.ApplyPoison(new Poison
+                    if (Envir.Random.Next(8) == 0)
                     {
-                        Owner = this,
-                        Duration = 5,
-                        PType = PoisonType.Slow,
-                        TickSpeed = 1000,
-                    }, this);
+                        if (Info.Effect == 0)
+                        {
+                            Target.ApplyPoison(new Poison
+                            {
+                                Owner = this,
+                                Duration = 5,
+                                PType = PoisonType.Bleeding,
+                                TickSpeed = 1000,
+                            }, this);
+                        }
+                        else if (Info.Effect == 1)
+                        {
+                            Target.ApplyPoison(new Poison
+                            {
+                                Owner = this,
+                                Duration = 5,
+                                PType = PoisonType.Slow,
+                                TickSpeed = 1000,
+                            }, this);
+                        }
+                    }
                 }
             }
 

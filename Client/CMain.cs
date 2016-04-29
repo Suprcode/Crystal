@@ -32,11 +32,14 @@ namespace Client
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
+        public static bool DebugOverride;
+
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
 
         public static bool Shift, Alt, Ctrl, Tilde;
+        public static KeyBindSettings InputKeys = new KeyBindSettings();
 
         public CMain()
         {
@@ -63,7 +66,7 @@ namespace Client
             Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             Graphics.TextContrast = 0;
         }
@@ -164,9 +167,23 @@ namespace Client
             if (e.KeyCode == Keys.Oem8)
                 CMain.Tilde = false;
 
-            if (e.KeyCode == Keys.PrintScreen)
+            foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
+            {
+                if (KeyCheck.function != KeybindOptions.Screenshot) continue;
+                if (KeyCheck.Key != e.KeyCode)
+                    continue;
+                if ((KeyCheck.RequireAlt != 2) && (KeyCheck.RequireAlt != (Alt ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireShift != 2) && (KeyCheck.RequireShift != (Shift ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireCtrl != 2) && (KeyCheck.RequireCtrl != (Ctrl ? 1 : 0)))
+                    continue;
+                if ((KeyCheck.RequireTilde != 2) && (KeyCheck.RequireTilde != (Tilde ? 1 : 0)))
+                    continue;
                 Program.Form.CreateScreenShot();
+                break;
 
+            }
             try
             {
                 if (MirScene.ActiveScene != null)
@@ -219,7 +236,6 @@ namespace Client
         }
         public static void CMain_MouseDown(object sender, MouseEventArgs e)
         {
-
             if (Program.Form.ActiveControl is TextBox)
             {
                 MirTextBox textBox = Program.Form.ActiveControl.Tag as MirTextBox;
@@ -368,25 +384,61 @@ namespace Client
 
                 DebugTextLabel.SizeChanged += (o, e) => DebugBaseLabel.Size = DebugTextLabel.Size;
             }
-            
 
+            if (DebugOverride) return;
+            
             string text;
             if (MirControl.MouseControl != null)
             {
                 text = string.Format("FPS: {0}", FPS);
 
                 if (MirControl.MouseControl is MapControl)
+                {
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
 
-                if (MirScene.ActiveScene is GameScene)
-                    text += string.Format(", Objects: {0}", MapControl.Objects.Count);
+                    //text += "\r\n";
 
+                    //var cell = GameScene.Scene.MapControl.M2CellInfo[MapControl.MapLocation.X, MapControl.MapLocation.Y];
+
+                    //if (cell != null)
+                    //{
+                    //    text += string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}. FrontImage : {4}. FrontIndex : {5}", cell.BackImage, cell.BackIndex, cell.MiddleImage, cell.MiddleIndex, cell.FrontImage, cell.FrontIndex);
+                    //}
+                }
+
+                if (MirScene.ActiveScene is GameScene)
+                {
+                    //text += "\r\n";
+                    text += string.Format(", Objects: {0}", MapControl.Objects.Count);
+                }
+                if (MirObjects.MapObject.MouseObject != null)
+                {
+                    text += string.Format(", Target: {0}", MirObjects.MapObject.MouseObject.Name);
+                }
+                else
+                {
+                    text += string.Format(", Target: none");
+                }
             }
             else
             {
                 text = string.Format("FPS: {0}", FPS);
             }
             
+
+            DebugTextLabel.Text = text;
+        }
+
+        public static void SendDebugMessage(string text)
+        {
+            if (!Settings.DebugMode) return;
+
+            if (DebugBaseLabel == null || DebugTextLabel == null)
+            {
+                CreateDebugLabel();
+            }
+
+            DebugOverride = true;
 
             DebugTextLabel.Text = text;
         }
@@ -456,7 +508,7 @@ namespace Client
             DXManager.Parameters.Windowed = !Settings.FullScreen;
             DXManager.Device.Reset(DXManager.Parameters);
             Program.Form.ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-        }
+        }//
 
         public void CreateScreenShot()
         {

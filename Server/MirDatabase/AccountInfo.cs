@@ -28,6 +28,7 @@ namespace Server.MirDatabase
         public bool Banned;
         public string BanReason = string.Empty;
         public DateTime ExpiryDate;
+        public int WrongPasswordCount;
 
         public string LastIP = string.Empty;
         public DateTime LastDate;
@@ -86,7 +87,10 @@ namespace Server.MirDatabase
             int count = reader.ReadInt32();
 
             for (int i = 0; i < count; i++)
-                Characters.Add(new CharacterInfo(reader) {AccountInfo = this});
+            {
+                Characters.Add(new CharacterInfo(reader) { AccountInfo = this });
+                
+            }
 
 
             Gold = reader.ReadUInt32();
@@ -101,6 +105,19 @@ namespace Server.MirDatabase
                     Storage[i] = item;
             }
             if (Envir.LoadVersion >= 10) AdminAccount = reader.ReadBoolean();
+            if (!AdminAccount)
+            {
+                for (int i = 0; i < Characters.Count; i++)
+                {
+                    if (Characters[i] == null) continue;
+                    if (Characters[i].Deleted) continue;
+                    if ((DateTime.Now - Characters[i].LastDate).TotalDays > 13) continue;
+                    if ((Characters[i].Level >= SMain.Envir.RankBottomLevel[0]) || (Characters[i].Level >= SMain.Envir.RankBottomLevel[(byte)Characters[i].Class + 1]))
+                    {
+                        SMain.Envir.CheckRankUpdate(Characters[i]);
+                    }
+                }
+            }
         }
 
 

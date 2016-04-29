@@ -40,11 +40,11 @@ namespace Server.MirObjects.Monsters
             return Stoned ? 0 : base.Pushed(pusher, dir, distance);
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             if (Stoned) return;
 
-            base.ApplyPoison(p, Caster);
+            base.ApplyPoison(p, Caster, NoResist, ignoreDefence);
         }
         public override void AddBuff(Buff b)
         {
@@ -182,7 +182,7 @@ namespace Server.MirObjects.Monsters
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
-                break;
+                //break;
             }
 
             return true;

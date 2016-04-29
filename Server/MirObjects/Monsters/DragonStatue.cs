@@ -67,6 +67,8 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+            if (Target.CurrentMap != CurrentMap || Target.Node == null) return;
+
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
             List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation);
             if (targets.Count == 0) return;
@@ -111,7 +113,11 @@ namespace Server.MirObjects.Monsters
         {
             return 0;
         }
-
+        public override void ChangeHP(int amount)
+        {
+            if (Sleeping) return;
+            base.ChangeHP(amount);
+        }
         public override void Die()
         {
             if (Dead || Sleeping) return;

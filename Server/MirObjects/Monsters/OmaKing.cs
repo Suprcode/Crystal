@@ -46,10 +46,10 @@ namespace Server.MirObjects.Monsters
             for (int i = 0; i < targets.Count; i++)
             {
                 Target = targets[i];
-                if (Target.IsAttackTarget(this))
-                {
-                    Target.Attacked(this, damage, defence);
-                }
+
+                if (Target == null || !Target.IsAttackTarget(this) || Target.CurrentMap != CurrentMap || Target.Node == null) continue;
+
+                Target.Attacked(this, damage, defence);
             }
 
         }
@@ -95,7 +95,10 @@ namespace Server.MirObjects.Monsters
                             if (targets[i].Pushed(this, Functions.DirectionFromPoint(CurrentLocation, targets[i].CurrentLocation), 3 + Envir.Random.Next(3)) > 0
                             && Envir.Random.Next(8) == 0)
                             {
-                                targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this, true);
+                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                                {
+                                    targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this, true);
+                                }
                             }
                         }
                     }
@@ -122,7 +125,6 @@ namespace Server.MirObjects.Monsters
 
         private void LineAttack(int distance)
         {
-
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
 
@@ -130,7 +132,7 @@ namespace Server.MirObjects.Monsters
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (target == Target.CurrentLocation)
+                if (Target != null && target == Target.CurrentLocation)
                 {
                     Target.Attacked(this, damage, DefenceType.ACAgility);
                 }

@@ -33,7 +33,7 @@ namespace Server.MirObjects
         public int Value, TickSpeed;
         public Spell Spell;
         public Point CastLocation;
-        public bool Show;
+        public bool Show, Decoration;
 
         //ExplosiveTrap
         public int ExplosiveTrapID;
@@ -56,12 +56,13 @@ namespace Server.MirObjects
 
         public override void Process()
         {
+            if (Decoration) return;
+
             if (Caster != null && Caster.Node == null) Caster = null;
 
             if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.ExplosiveTrap) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
             {
-                if (Spell == Spell.TrapHexagon && Target != null ||
-                    Spell == Spell.Trap && Target != null)
+                if (Spell == Spell.TrapHexagon && Target != null || Spell == Spell.Trap && Target != null)
                 {
                     MonsterObject ob = (MonsterObject)Target;
 
@@ -99,6 +100,7 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(CurrentLocation);
             for (int i = 0; i < cell.Objects.Count; i++)
                 ProcessSpell(cell.Objects[i]);
+
             if ((Spell == Spell.MapLava) || (Spell == Spell.MapLightning)) Value = 0;
         }
         public void ProcessSpell(MapObject ob)
@@ -125,7 +127,7 @@ namespace Server.MirObjects
                     if (ob.Dead) return;
 
                     if (!ob.IsAttackTarget(Caster)) return;
-                    ob.Attacked(Caster, Value, DefenceType.None, false);
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     if (!ob.Dead)
                     ob.ApplyPoison(new Poison
                         {
@@ -134,14 +136,14 @@ namespace Server.MirObjects
                             PType = PoisonType.Green,
                             TickSpeed = 2000,
                             Value = Value/20
-                        }, Caster);
+                        }, Caster, false, false);
                     break;
                 case Spell.Blizzard:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
-                    if (Caster.ActiveBlizzard == false) return;
+                    if (Caster != null && Caster.ActiveBlizzard == false) return;
                     if (!ob.IsAttackTarget(Caster)) return;
-                    ob.Attacked(Caster, Value, DefenceType.MACAgility, false);
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     if (!ob.Dead && Envir.Random.Next(8) == 0)
                         ob.ApplyPoison(new Poison
                         {
@@ -154,9 +156,9 @@ namespace Server.MirObjects
                 case Spell.MeteorStrike:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
-                    if (Caster.ActiveBlizzard == false) return;
+                    if (Caster != null && Caster.ActiveBlizzard == false) return;
                     if (!ob.IsAttackTarget(Caster)) return;
-                    ob.Attacked(Caster, Value, DefenceType.MACAgility, false);
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     break;
                 case Spell.ExplosiveTrap:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
@@ -168,6 +170,8 @@ namespace Server.MirObjects
                     break;
                 case Spell.MapLava:
                 case Spell.MapLightning:
+                case Spell.MapQuake1:
+                case Spell.MapQuake2:
                     if (Value == 0) return;
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
@@ -326,7 +330,7 @@ namespace Server.MirObjects
 
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             throw new NotSupportedException();
         }
