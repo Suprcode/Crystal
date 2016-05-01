@@ -3790,7 +3790,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 468,
                 Library = Libraries.Prguse2,
-                Location = new Point(159, 222),
+                Location = new Point(159, 225),
                 Parent = this,
                 DrawImage = false,
             };
@@ -3802,7 +3802,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 20,
                 Library = Libraries.Prguse,
-                Location = new Point(155, 221),
+                Location = new Point(155, 218),
                 Parent = this,
                 NotControl = true,
             };
@@ -3811,9 +3811,9 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 468,
                 Library = Libraries.Prguse2,
-                Location = new Point(159, 248),
+                Location = new Point(159, 251),
                 Parent = this,
-                DrawImage = false,
+                DrawImage = false
             };
             MusicSoundBar.MouseDown += MusicSoundBar_MouseMove;
             MusicSoundBar.MouseMove += MusicSoundBar_MouseMove;
@@ -3824,7 +3824,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 20,
                 Library = Libraries.Prguse,
-                Location = new Point(155, 247),
+                Location = new Point(155, 244),
                 Parent = this,
                 NotControl = true,
             };
@@ -3859,7 +3859,7 @@ namespace Client.MirScenes.Dialogs
             double percent = Settings.Volume / 100D;
             if (percent > 1) percent = 1;
 
-            VolumeBar.Location = percent > 0 ? new Point(159 + (int)((SoundBar.Size.Width - 2) * percent), 222) : new Point(159, 222);
+            VolumeBar.Location = percent > 0 ? new Point(159 + (int)((SoundBar.Size.Width - 2) * percent), 218) : new Point(159, 218);
         }
 
         private void SoundBar_BeforeDraw(object sender, EventArgs e)
@@ -3876,10 +3876,10 @@ namespace Client.MirScenes.Dialogs
                 };
 
                 SoundBar.Library.Draw(SoundBar.Index, section, SoundBar.DisplayLocation, Color.White, false);
-                VolumeBar.Location = new Point(159 + section.Size.Width, 222);
+                VolumeBar.Location = new Point(159 + section.Size.Width, 218);
             }
             else
-                VolumeBar.Location = new Point(159, 222);
+                VolumeBar.Location = new Point(159, 218);
         }
 
         private void MusicSoundBar_BeforeDraw(object sender, EventArgs e)
@@ -3896,10 +3896,10 @@ namespace Client.MirScenes.Dialogs
                 };
 
                 MusicSoundBar.Library.Draw(MusicSoundBar.Index, section, MusicSoundBar.DisplayLocation, Color.White, false);
-                MusicVolumeBar.Location = new Point(159 + section.Size.Width, 247);
+                MusicVolumeBar.Location = new Point(159 + section.Size.Width, 244);
             }
             else
-                MusicVolumeBar.Location = new Point(159, 247);
+                MusicVolumeBar.Location = new Point(159, 244);
         }
 
         public void MusicSoundBar_MouseUp(object sender, MouseEventArgs e)
@@ -3933,7 +3933,7 @@ namespace Client.MirScenes.Dialogs
             double percent = Settings.MusicVolume / 100D;
             if (percent > 1) percent = 1;
 
-            MusicVolumeBar.Location = percent > 0 ? new Point(159 + (int)((MusicSoundBar.Size.Width - 2) * percent), 247) : new Point(159, 247);
+            MusicVolumeBar.Location = percent > 0 ? new Point(159 + (int)((MusicSoundBar.Size.Width - 2) * percent), 244) : new Point(159, 244);
         }
 
         private void OptionPanel_BeforeDraw(object sender, EventArgs e)
