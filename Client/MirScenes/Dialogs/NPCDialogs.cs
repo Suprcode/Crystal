@@ -69,7 +69,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Size = new Size(16, 14),
-                Location = new Point(416, 35),
+                Location = new Point(417, 34),
                 Sound = SoundList.ButtonA,
                 Visible = false
             };
@@ -91,7 +91,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 209,
                 Parent = this,
                 Size = new Size(16, 14),
-                Location = new Point(416, 175),
+                Location = new Point(417, 175),
                 Sound = SoundList.ButtonA,
                 Visible = false
             };
@@ -111,7 +111,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 206,
                 PressedIndex = 206,
                 Library = Libraries.Prguse2,
-                Location = new Point(416, 48),
+                Location = new Point(417, 47),
                 Parent = this,
                 Movable = true,
                 Sound = SoundList.None,
@@ -184,13 +184,13 @@ namespace Client.MirScenes.Dialogs
 
         void PositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            int x = 416;
+            int x = 417;
             int y = PositionBar.Location.Y;
 
-            if (y >= 156) y = 156;
-            if (y <= 48) y = 48;
+            if (y >= 155) y = 155;
+            if (y <= 47) y = 47;
 
-            int location = y - 48;
+            int location = y - 47;
             int interval = 108 / (CurrentLines.Count - MaximumLines);
 
             double yPoint = location / interval;
@@ -208,11 +208,11 @@ namespace Client.MirScenes.Dialogs
 
             int interval = 108 / (CurrentLines.Count - MaximumLines);
 
-            int x = 416;
+            int x = 417;
             int y = 48 + (_index * interval);
 
-            if (y >= 156) y = 156;
-            if (y <= 48) y = 48;
+            if (y >= 155) y = 155;
+            if (y <= 47) y = 47;
 
             PositionBar.Location = new Point(x, y);
         }
