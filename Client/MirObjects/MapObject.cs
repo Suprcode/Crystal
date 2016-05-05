@@ -148,7 +148,7 @@ namespace Client.MirObjects
                     BuffEffect effect;
 
                     Effects.Add(effect = new BuffEffect(Libraries.Magic2, 1880, 9, 900, this, true, type) { Repeat = false });
-                    SoundManager.PlaySound(20000 + (ushort)Spell.EnergyShield * 10 + 0);
+                    SoundManager.PlaySound(20000 + (ushort)Spell.先天气功 * 10 + 0);
 
                     effect.Complete += (o, e) =>
                     {

@@ -1721,7 +1721,7 @@ namespace Client.MirScenes.Dialogs
                         Blending = true,
                     };
                     animEffect.AfterAnimation += (o, e) => animEffect.Dispose();
-                    SoundManager.PlaySound(20000 + (ushort)Spell.MagicShield * 10);
+                    SoundManager.PlaySound(20000 + (ushort)Spell.魔法盾 * 10);
                     break;
             }
 
@@ -3335,13 +3335,13 @@ namespace Client.MirScenes.Dialogs
 
                 if (GroupDialog.GroupList.Count >= Globals.MaxGroup)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("组已经满了.", ChatType.System);
                     return;
                 }
                 if (GroupDialog.GroupList.Count > 0 && GroupDialog.GroupList[0] != MapObject.User.Name)
                 {
 
-                    GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你不是组长.", ChatType.System);
                 }
 
                 Network.Enqueue(new C.AddMember { Name = Name });
@@ -3769,7 +3769,7 @@ namespace Client.MirScenes.Dialogs
             HPViewOn.Click += (o, e) =>
             {
                 Settings.HPView = true;
-                GameScene.Scene.ChatDialog.ReceiveChat("<HP/MP Mode 1>", ChatType.Hint);
+                GameScene.Scene.ChatDialog.ReceiveChat("<HP/MP 模式 1>", ChatType.Hint);
             };
 
             HPViewOff = new MirButton
@@ -3784,7 +3784,7 @@ namespace Client.MirScenes.Dialogs
             HPViewOff.Click += (o, e) =>
             {
                 Settings.HPView = false;
-                GameScene.Scene.ChatDialog.ReceiveChat("<HP/MP Mode 2>", ChatType.Hint);
+                GameScene.Scene.ChatDialog.ReceiveChat("<HP/MP 模式 2>", ChatType.Hint);
             };
 
             SoundBar = new MirImageControl
@@ -4054,7 +4054,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 12),
                 PressedIndex = 635,
-                Hint = "Exit (" + CMain.InputKeys.GetKey(KeybindOptions.Exit) + ")"
+                Hint = "退出 (" + CMain.InputKeys.GetKey(KeybindOptions.Exit) + ")"
             };
             ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
@@ -4066,7 +4066,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 31),
                 PressedIndex = 638,
-                Hint = "Log Out (" + CMain.InputKeys.GetKey(KeybindOptions.Logout) + ")"
+                Hint = "小退 (" + CMain.InputKeys.GetKey(KeybindOptions.Logout) + ")"
             };
             LogOutButton.Click += (o, e) => GameScene.Scene.LogOut();
 
@@ -4079,7 +4079,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 50),
-                Hint = "Help (" + CMain.InputKeys.GetKey(KeybindOptions.Help) + ")"
+                Hint = "帮助 (" + CMain.InputKeys.GetKey(KeybindOptions.Help) + ")"
             };
             HelpButton.Click += (o, e) =>
             {
@@ -4097,7 +4097,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 69),
                 Visible = false,
-                Hint = "Keybinds"
+                Hint = "按键"
             };
             KeyboardLayoutButton.Click += (o, e) =>
             {
@@ -4114,7 +4114,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 88),
-                Hint = "Ranking (" + CMain.InputKeys.GetKey(KeybindOptions.Ranking) + ")"
+                Hint = "排行 (" + CMain.InputKeys.GetKey(KeybindOptions.Ranking) + ")"
                 //Visible = false
             };
             RankingButton.Click += (o, e) =>
@@ -4147,7 +4147,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse2,
                 Location = new Point(3, 126),
-                Hint = "Creatures (" + CMain.InputKeys.GetKey(KeybindOptions.Creature) + ")"
+                Hint = "灵物 (" + CMain.InputKeys.GetKey(KeybindOptions.Creature) + ")"
             };
             IntelligentCreatureButton.Click += (o, e) =>
             {
@@ -4163,7 +4163,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 145),
-                Hint = "Mount (" + CMain.InputKeys.GetKey(KeybindOptions.MountWindow) + ")"
+                Hint = "坐骑 (" + CMain.InputKeys.GetKey(KeybindOptions.MountWindow) + ")"
             };
             RideButton.Click += (o, e) =>
             {
@@ -4180,7 +4180,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 164),
-                Hint = "Fishing (" + CMain.InputKeys.GetKey(KeybindOptions.Fishing) + ")"
+                Hint = "钓鱼 (" + CMain.InputKeys.GetKey(KeybindOptions.Fishing) + ")"
             };
             FishingButton.Click += (o, e) =>
             {
@@ -4198,7 +4198,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
                 Visible = true,
-                Hint = "Friends (" + CMain.InputKeys.GetKey(KeybindOptions.Friends) + ")"
+                Hint = "好友 (" + CMain.InputKeys.GetKey(KeybindOptions.Friends) + ")"
             };
             FriendButton.Click += (o, e) =>
             {
@@ -4216,7 +4216,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 202),
                 Visible = true,
-                Hint = "Mentor (" + CMain.InputKeys.GetKey(KeybindOptions.Mentor) + ")"
+                Hint = "师徒 (" + CMain.InputKeys.GetKey(KeybindOptions.Mentor) + ")"
             };
             MentorButton.Click += (o, e) =>
             {
@@ -4235,7 +4235,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
                 Visible = true,
-                Hint = "Relationship (" + CMain.InputKeys.GetKey(KeybindOptions.Relationship) + ")"
+                Hint = "关系 (" + CMain.InputKeys.GetKey(KeybindOptions.Relationship) + ")"
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -4252,7 +4252,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 240),
-                Hint = "Groups (" + CMain.InputKeys.GetKey(KeybindOptions.Group) + ")"
+                Hint = "组队 (" + CMain.InputKeys.GetKey(KeybindOptions.Group) + ")"
             };
             GroupButton.Click += (o, e) =>
             {
@@ -4269,7 +4269,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 259),
-                Hint = "Guild (" + CMain.InputKeys.GetKey(KeybindOptions.Guilds) + ")"
+                Hint = "公会 (" + CMain.InputKeys.GetKey(KeybindOptions.Guilds) + ")"
             };
             GuildButton.Click += (o, e) =>
             {
@@ -4489,7 +4489,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(230, 32),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.WordBreak,
-                Text = string.Format("Select the Key for: {0}", magic.Spell)
+                Text = string.Format("为此技能选择按键: {0}", magic.Spell)
             };
 
             NoneButton = new MirButton
@@ -4863,7 +4863,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 2111,
                 PressedIndex = 2112,
                 Sound = SoundList.ButtonA,
-                Hint = "Dura Panel"
+                Hint = "持久面板"
             };
             Character.Click += (o, e) =>
             {
@@ -4973,7 +4973,7 @@ namespace Client.MirScenes.Dialogs
 
             switch (item.Info.Type)
             {
-                case ItemType.Amulet: //Based on stacks of 5000
+                case ItemType.护身符: //Based on stacks of 5000
                     if (item.Count > AmuletWarning)
                         Amulet.Index = 2134;
                     if (item.Count <= AmuletWarning)
@@ -4983,7 +4983,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.Count == 0)
                         Amulet.Index = -1;
                     break;
-                case ItemType.Armour:
+                case ItemType.护甲:
                     if (item.CurrentDura > Warning)
                         Armour.Index = 2149;
                     if (item.CurrentDura <= Warning)
@@ -4993,7 +4993,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.CurrentDura == 0)
                         Armour.Index = -1;
                     break;
-                case ItemType.Belt:
+                case ItemType.腰带:
                     if (item.CurrentDura > Warning)
                         Belt.Index = 2158;
                     if (item.CurrentDura <= Warning)
@@ -5003,7 +5003,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.CurrentDura == 0)
                         Belt.Index = -1;
                     break;
-                case ItemType.Boots:
+                case ItemType.鞋:
                     if (item.CurrentDura > Warning)
                         Boots.Index = 2152;
                     if (item.CurrentDura <= Warning)
@@ -5013,7 +5013,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.CurrentDura == 0)
                         Boots.Index = -1;
                     break;
-                case ItemType.Bracelet:
+                case ItemType.手镯:
                     if (GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.BraceletR].Item != null && item.UniqueID == GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.BraceletR].Item.UniqueID)
                     {
                         if (item.CurrentDura > Warning)
@@ -5037,7 +5037,7 @@ namespace Client.MirScenes.Dialogs
                             LeftBracelet.Index = -1;
                     }
                     break;
-                case ItemType.Helmet:
+                case ItemType.头盔:
                     if (item.CurrentDura > Warning)
                         Helmet.Index = 2155;
                     if (item.CurrentDura <= Warning)
@@ -5047,7 +5047,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.CurrentDura == 0)
                         Helmet.Index = -1;
                     break;
-                case ItemType.Necklace:
+                case ItemType.项链:
                     if (item.CurrentDura > Warning)
                         Necklace.Index = 2122;
                     if (item.CurrentDura <= Warning)
@@ -5057,7 +5057,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.CurrentDura == 0)
                         Necklace.Index = -1;
                     break;
-                case ItemType.Ring:
+                case ItemType.戒指:
                     if (GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.RingR].Item != null && item.UniqueID == GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.RingR].Item.UniqueID)
                     {
                         if (item.CurrentDura > Warning)
@@ -5081,11 +5081,11 @@ namespace Client.MirScenes.Dialogs
                             LeftRing.Index = -1;
                     }
                     break;
-                case ItemType.Stone:
+                case ItemType.守护石:
                     if (item.CurrentDura == 0)
                         Stone.Index = 2137;
                     break;
-                case ItemType.Mount:
+                case ItemType.坐骑:
                     if (item.CurrentDura > Warning)
                         Mount.Index = 2140;
                     if (item.CurrentDura <= Warning)
@@ -5095,7 +5095,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.CurrentDura == 0)
                         Mount.Index = -1;
                     break;
-                case ItemType.Torch:
+                case ItemType.火把:
                     if (item.CurrentDura > Warning)
                         Torch.Index = 2146;
                     if (item.CurrentDura <= Warning)
@@ -5105,7 +5105,7 @@ namespace Client.MirScenes.Dialogs
                     if (item.CurrentDura == 0)
                         Torch.Index = -1;
                     break;
-                case ItemType.Weapon:
+                case ItemType.武器:
                     if (item.CurrentDura > Warning)
                         Weapon.Index = 2125;
                     if (item.CurrentDura <= Warning)

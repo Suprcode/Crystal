@@ -276,7 +276,7 @@ namespace Client.MirObjects
 
                 ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
 
-                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
+                if (RealItem.Type == ItemType.武器 || RealItem.Type == ItemType.火把)
                     CurrentHandWeight = (ushort)Math.Min(ushort.MaxValue, CurrentHandWeight + temp.Weight);
                 else
                     CurrentWearWeight = (ushort)Math.Min(ushort.MaxValue, CurrentWearWeight + temp.Weight);
@@ -345,15 +345,15 @@ namespace Client.MirObjects
                     FastRun = true;
                 }
 
-                if (RealItem.Type == ItemType.Armour)
+                if (RealItem.Type == ItemType.护甲)
                 {
                     Armour = RealItem.Shape;
                     WingEffect = RealItem.Effect;
                 }
-                if (RealItem.Type == ItemType.Weapon)
+                if (RealItem.Type == ItemType.武器)
                     Weapon = RealItem.Shape;
 
-                if (RealItem.Type == ItemType.Mount)
+                if (RealItem.Type == ItemType.坐骑)
                     MountType = RealItem.Shape;
 
                 if (RealItem.Set == ItemSet.None) continue;
@@ -396,11 +396,11 @@ namespace Client.MirObjects
         {
             foreach (var s in ItemSets)
             {
-                if ((s.Set == ItemSet.Smash) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
+                if ((s.Set == ItemSet.Smash) && (s.Type.Contains(ItemType.戒指)) && (s.Type.Contains(ItemType.手镯)))
                     ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
-                if ((s.Set == ItemSet.Purity) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
+                if ((s.Set == ItemSet.Purity) && (s.Type.Contains(ItemType.戒指)) && (s.Type.Contains(ItemType.手镯)))
                     Holy = Math.Min(byte.MaxValue, (byte)(Holy + 3));
-                if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
+                if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.戒指)) && (s.Type.Contains(ItemType.手镯)))
                 {
                     MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
                     MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
@@ -610,10 +610,10 @@ namespace Client.MirObjects
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level * 3);
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + (magic.Level + 1) * 3);
                         break;
-                    case Spell.FatalSword:
+                    case Spell.绝命剑法:
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level);
                         break;
-                    case Spell.SpiritSword:
+                    case Spell.精神力战法:
                         Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + MaxSC * (magic.Level + 1) * 0.1F);
                         break;
@@ -864,7 +864,7 @@ namespace Client.MirObjects
 
             }
 
-            if (item.Info.Type == ItemType.Amulet)
+            if (item.Info.Type == ItemType.护身符)
             {
                 for (int i = 0; i < Inventory.Length; i++)
                 {

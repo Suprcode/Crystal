@@ -78,7 +78,7 @@ namespace Server
             if (ushort.TryParse(SaveDelayTextBox.Text, out tempshort))
                 Settings.SaveDelay = tempshort;
 
-            Settings.UseSQLServer = UseSQLServerCheckbox.Checked;
+            //Settings.UseSQLServer = UseSQLServerCheckbox.Checked;
 
             Settings.AllowNewAccount = AccountCheckBox.Checked;
             Settings.AllowChangePassword = PasswordCheckBox.Checked;

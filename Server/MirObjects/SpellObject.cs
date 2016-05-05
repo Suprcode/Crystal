@@ -60,16 +60,16 @@ namespace Server.MirObjects
 
             if (Caster != null && Caster.Node == null) Caster = null;
 
-            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.ExplosiveTrap) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
+            if (Envir.Time > ExpireTime || ((Spell == Spell.火墙 || Spell == Spell.爆阱) && Caster == null) || (Spell == Spell.困魔咒 && Target != null) || (Spell == Spell.捕缚术 && Target != null))
             {
-                if (Spell == Spell.TrapHexagon && Target != null || Spell == Spell.Trap && Target != null)
+                if (Spell == Spell.困魔咒 && Target != null || Spell == Spell.捕缚术 && Target != null)
                 {
                     MonsterObject ob = (MonsterObject)Target;
 
                     if (Envir.Time < ExpireTime && ob.ShockTime != 0) return;
                 }
 
-                if (Spell == Spell.Reincarnation)
+                if (Spell == Spell.苏生术)
                 {
                     Caster.ReincarnationReady = true;
                     Caster.ReincarnationExpireTime = Envir.Time + 6000;
@@ -80,14 +80,14 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Spell == Spell.Reincarnation && !Caster.ActiveReincarnation)
+            if (Spell == Spell.苏生术 && !Caster.ActiveReincarnation)
             {
                 CurrentMap.RemoveObject(this);
                 Despawn();
                 return;
             }
 
-            if (Spell == Spell.ExplosiveTrap && FindObject(Caster.ObjectID, 20) == null && Caster != null)
+            if (Spell == Spell.爆阱 && FindObject(Caster.ObjectID, 20) == null && Caster != null)
             {
                 CurrentMap.RemoveObject(this);
                 Despawn();
@@ -108,21 +108,21 @@ namespace Server.MirObjects
             if (Envir.Time < StartTime) return;
             switch (Spell)
             {
-                case Spell.FireWall:
+                case Spell.火墙:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
 
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     break;
-                case Spell.Healing: //SafeZone
+                case Spell.治愈术: //SafeZone
                     if (ob.Race != ObjectType.Player && (ob.Race != ObjectType.Monster || ob.Master == null || ob.Master.Race != ObjectType.Player)) return;
                     if (ob.Dead || ob.HealAmount != 0 || ob.PercentHealth == 100) return;
 
                     ob.HealAmount += 25;
                     Broadcast(new S.ObjectEffect {ObjectID = ob.ObjectID, Effect = SpellEffect.Healing});
                     break;
-                case Spell.PoisonCloud:
+                case Spell.毒雾:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
 
@@ -138,7 +138,7 @@ namespace Server.MirObjects
                             Value = Value/20
                         }, Caster, false, false);
                     break;
-                case Spell.Blizzard:
+                case Spell.天霜冰环:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
                     if (Caster != null && Caster.ActiveBlizzard == false) return;
@@ -153,14 +153,14 @@ namespace Server.MirObjects
                             TickSpeed = 2000,
                         }, Caster);
                     break;
-                case Spell.MeteorStrike:
+                case Spell.天上秘术:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
                     if (Caster != null && Caster.ActiveBlizzard == false) return;
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     break;
-                case Spell.ExplosiveTrap:
+                case Spell.爆阱:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
                     if (!ob.IsAttackTarget(Caster)) return;
@@ -293,11 +293,11 @@ namespace Server.MirObjects
         {
             switch (Spell)
             {
-                case Spell.Healing:
+                case Spell.治愈术:
                     return null;
-                case Spell.PoisonCloud:
-                case Spell.Blizzard:
-                case Spell.MeteorStrike:
+                case Spell.毒雾:
+                case Spell.天霜冰环:
+                case Spell.天上秘术:
                     if (!Show)
                         return null;
 
@@ -308,7 +308,7 @@ namespace Server.MirObjects
                         Spell = Spell,
                         Direction = Direction
                     };
-                case Spell.ExplosiveTrap:
+                case Spell.爆阱:
                     return new S.ObjectSpell
                     {
                         ObjectID = ObjectID,
@@ -350,13 +350,13 @@ namespace Server.MirObjects
         {
             base.Despawn();
 
-            if (Spell == Spell.Reincarnation && Caster != null && Caster.Node != null)
+            if (Spell == Spell.苏生术 && Caster != null && Caster.Node != null)
             {
                 Caster.ActiveReincarnation = false;
                 Caster.Enqueue(new S.CancelReincarnation { });
             }
 
-            if (Spell == Spell.ExplosiveTrap && Caster != null)
+            if (Spell == Spell.爆阱 && Caster != null)
                 Caster.ExplosiveTrapDetonated(ExplosiveTrapID, ExplosiveTrapCount);
 
             if (Spell == Spell.Portal && Caster != null)
@@ -380,7 +380,7 @@ namespace Server.MirObjects
 
         public override void BroadcastInfo()
         {
-            if ((Spell != Spell.ExplosiveTrap) || (Caster == null))
+            if ((Spell != Spell.爆阱) || (Caster == null))
                 base.BroadcastInfo();
             Packet p;
             if (CurrentMap == null) return;

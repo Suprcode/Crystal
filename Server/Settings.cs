@@ -699,13 +699,13 @@ namespace Server
             if (!File.Exists(ConfigPath + @".\RandomItemStats.ini"))
             {
                 RandomItemStatsList.Add(new RandomItemStat());
-                RandomItemStatsList.Add(new RandomItemStat(ItemType.Weapon));
-                RandomItemStatsList.Add(new RandomItemStat(ItemType.Armour));
-                RandomItemStatsList.Add(new RandomItemStat(ItemType.Helmet));
-                RandomItemStatsList.Add(new RandomItemStat(ItemType.Necklace));
-                RandomItemStatsList.Add(new RandomItemStat(ItemType.Bracelet));
-                RandomItemStatsList.Add(new RandomItemStat(ItemType.Ring));
-                RandomItemStatsList.Add(new RandomItemStat(ItemType.Belt));
+                RandomItemStatsList.Add(new RandomItemStat(ItemType.武器));
+                RandomItemStatsList.Add(new RandomItemStat(ItemType.护甲));
+                RandomItemStatsList.Add(new RandomItemStat(ItemType.头盔));
+                RandomItemStatsList.Add(new RandomItemStat(ItemType.项链));
+                RandomItemStatsList.Add(new RandomItemStat(ItemType.手镯));
+                RandomItemStatsList.Add(new RandomItemStat(ItemType.戒指));
+                RandomItemStatsList.Add(new RandomItemStat(ItemType.腰带));
                 SaveRandomItemStats();
                 return;
             }

@@ -38,8 +38,8 @@ namespace Server
              if (_selectedMagicInfo == null)
              {
                  tabControl1.Enabled = false;
-                 lblBookValid.Text = "Searching";
-                 lblSelected.Text = "Selected Skill: none";
+                 lblBookValid.Text = "搜索中..";
+                 lblSelected.Text = "选中技能: 无";
                  lblDamageExample.Text = "";
                  lblDamageExplained.Text = "";
                  txtSkillIcon.Text = "0";
@@ -61,9 +61,9 @@ namespace Server
              else
              {
                  tabControl1.Enabled = true;
-                 lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
-                 lblDamageExample.Text = string.Format("Damage @ Skill level 0: {0:000}-{1:000}   |||   level 1: {2:000}-{3:000}   |||   level 2: {4:000}-{5:000}   |||   level 3: {6:000}-{7:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3));
-                 lblDamageExplained.Text = string.Format("Damage: {{Random(minstat-maxstat) + [<(random({0}-{1})/4) X (skill level +1)> + random<{2}-{3}>]}}  X  {{{4} + (skill level * {5})}}", _selectedMagicInfo.MPowerBase, _selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus, _selectedMagicInfo.PowerBase, _selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase, _selectedMagicInfo.MultiplierBase, _selectedMagicInfo.MultiplierBonus);
+                 lblSelected.Text = "选中技能: " + _selectedMagicInfo.ToString();
+                 lblDamageExample.Text = string.Format("伤害 @ 技能等级 0: {0:000}-{1:000}   |||   等级 1: {2:000}-{3:000}   |||   等级 2: {4:000}-{5:000}   |||   等级 3: {6:000}-{7:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3));
+                 lblDamageExplained.Text = string.Format("伤害: {{Random(minstat-maxstat) + [<(random({0}-{1})/4) X (skill level +1)> + random<{2}-{3}>]}}  X  {{{4} + (skill level * {5})}}", _selectedMagicInfo.MPowerBase, _selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus, _selectedMagicInfo.PowerBase, _selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase, _selectedMagicInfo.MultiplierBase, _selectedMagicInfo.MultiplierBonus);
                  txtSkillIcon.Text = _selectedMagicInfo.Icon.ToString();
                  txtSkillLvl1Points.Text = _selectedMagicInfo.Need1.ToString();
                  txtSkillLvl1Req.Text = _selectedMagicInfo.Level1.ToString();
@@ -91,7 +91,7 @@ namespace Server
                  }
                  else
                  {
-                     lblBookValid.Text = "No book found";
+                     lblBookValid.Text = "没有找到对应的书";
                      lblBookValid.BackColor = Color.Red;
                  }
                  

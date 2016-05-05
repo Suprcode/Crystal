@@ -39,7 +39,7 @@ namespace Server.MirDatabase
         public List<string> CompletionDescription = new List<string>(); 
 
         public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
-        public RequiredClass RequiredClass = RequiredClass.None;
+        public RequiredClass RequiredClass = RequiredClass.无;
 
         public QuestType Type;
 
@@ -329,23 +329,23 @@ namespace Server.MirDatabase
             switch (player.Class)
             {
                 case MirClass.Warrior:
-                    if (!RequiredClass.HasFlag(RequiredClass.Warrior))
+                    if (!RequiredClass.HasFlag(RequiredClass.战士))
                         return false;
                     break;
                 case MirClass.Wizard:
-                    if (!RequiredClass.HasFlag(RequiredClass.Wizard))
+                    if (!RequiredClass.HasFlag(RequiredClass.法师))
                         return false;
                     break;
                 case MirClass.Taoist:
-                    if (!RequiredClass.HasFlag(RequiredClass.Taoist))
+                    if (!RequiredClass.HasFlag(RequiredClass.道士))
                         return false;
                     break;
                 case MirClass.Assassin:
-                    if (!RequiredClass.HasFlag(RequiredClass.Assassin))
+                    if (!RequiredClass.HasFlag(RequiredClass.刺客))
                         return false;
                     break;
                 case MirClass.Archer:
-                    if (!RequiredClass.HasFlag(RequiredClass.Archer))
+                    if (!RequiredClass.HasFlag(RequiredClass.弓手))
                         return false;
                     break;
             }

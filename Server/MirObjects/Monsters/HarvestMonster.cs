@@ -72,7 +72,7 @@ namespace Server.MirObjects.Monsters
                     if (!player.CheckGroupQuestItem(item, false)) continue;
                 }
 
-                if (item.Info.Type == ItemType.Meat)
+                if (item.Info.Type == ItemType.肉)
                     item.CurrentDura = (ushort)Math.Max(0, item.CurrentDura + Quality);
 
                 _drops.Add(item);

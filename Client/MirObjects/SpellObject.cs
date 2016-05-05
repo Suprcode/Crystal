@@ -41,14 +41,14 @@ namespace Client.MirObjects
 
             switch (Spell)
             {
-                case Spell.TrapHexagon:
+                case Spell.困魔咒:
                     BodyLibrary = Libraries.Magic;
                     DrawFrame = 1390;
                     FrameInterval = 100;
                     FrameCount = 10;
                     Blend = true;
                     break;
-                case Spell.FireWall:
+                case Spell.火墙:
                     BodyLibrary = Libraries.Magic;
                     DrawFrame = 1630;
                     FrameInterval = 120;
@@ -56,7 +56,7 @@ namespace Client.MirObjects
                     Light = 3;
                     Blend = true;
                     break;
-                case Spell.PoisonCloud:
+                case Spell.毒雾:
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1650;
                     FrameInterval = 120;
@@ -70,7 +70,7 @@ namespace Client.MirObjects
                     FrameCount = 0;
                     Blend = false;
                     break;
-                case Spell.Blizzard:
+                case Spell.天霜冰环:
                     CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1550;
@@ -80,7 +80,7 @@ namespace Client.MirObjects
                     Blend = true;
                     Repeat = false;
                     break;
-                case Spell.MeteorStrike:
+                case Spell.天上秘术:
                     MapControl.Effects.Add(new Effect(Libraries.Magic2, 1600, 10, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
                     CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
                     BodyLibrary = Libraries.Magic2;
@@ -102,7 +102,7 @@ namespace Client.MirObjects
                         FrameInterval = 10000;
                     }
                     break;
-                case Spell.Reincarnation:
+                case Spell.苏生术:
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1680;
                     FrameInterval = 100;
@@ -111,7 +111,7 @@ namespace Client.MirObjects
                     Blend = true;
                     Repeat = true;
                     break;
-                case Spell.ExplosiveTrap:
+                case Spell.爆阱:
                     BodyLibrary = Libraries.Magic3;
                     if (info.Param)
                     {
@@ -131,7 +131,7 @@ namespace Client.MirObjects
                     //Light = 1;
                     Blend = true;
                     break;
-                case Spell.Trap:
+                case Spell.捕缚术:
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 2360;
                     FrameInterval = 100;

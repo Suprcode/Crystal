@@ -1166,7 +1166,7 @@ namespace Server.MirObjects
                     {
                         case ObjectType.Player:
                             PlayerObject caster = (PlayerObject)poison.Owner;
-                            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time, poison.Owner, caster.GetMagic(Spell.DelayedExplosion), poison.Value, this.CurrentLocation);
+                            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time, poison.Owner, caster.GetMagic(Spell.爆闪), poison.Value, this.CurrentLocation);
                             CurrentMap.ActionList.Add(action);
                             //Attacked((PlayerObject)poison.Owner, poison.Value, DefenceType.MAC, false);
                             break;

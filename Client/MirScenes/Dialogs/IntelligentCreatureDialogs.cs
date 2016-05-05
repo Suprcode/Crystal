@@ -1144,7 +1144,7 @@ namespace Client.MirScenes.Dialogs
             if (sender == OptionsCancelButton)
             {
                 Filter = new IntelligentCreatureItemFilter();
-                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType = ItemGrade.None;
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType = ItemGrade.无;
                 GameScene.Scene.IntelligentCreatureOptionsGradeDialog.RefreshGradeFilter();
                 GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
                 RefreshFilter();
@@ -1299,13 +1299,13 @@ namespace Client.MirScenes.Dialogs
         {
             switch (grade)
             {
-                case ItemGrade.Common:
+                case ItemGrade.普通:
                     return Color.Yellow;
-                case ItemGrade.Rare:
+                case ItemGrade.稀有:
                     return Color.DeepSkyBlue;
-                case ItemGrade.Legendary:
+                case ItemGrade.传奇:
                     return Color.DarkOrange;
-                case ItemGrade.Mythical:
+                case ItemGrade.史诗:
                     return Color.Plum;
                 default:
                     return Color.White;

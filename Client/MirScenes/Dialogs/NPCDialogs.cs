@@ -891,7 +891,7 @@ namespace Client.MirScenes.Dialogs
 
                 case PanelType.ReplaceWedRing:
 
-                    if (TargetItem.Info.Type != ItemType.Ring)
+                    if (TargetItem.Info.Type != ItemType.戒指)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat(String.Format("{0} 不是戒指.", TargetItem.FriendlyName), ChatType.System);
                         return;
@@ -918,8 +918,8 @@ namespace Client.MirScenes.Dialogs
 
             if (GameScene.SelectedCell != null && PType == PanelType.Disassemble)
             {
-                if (GameScene.SelectedCell.Item.Info.Grade != ItemGrade.None &&
-                    GameScene.SelectedCell.Item.Info.Type != ItemType.Awakening)
+                if (GameScene.SelectedCell.Item.Info.Grade != ItemGrade.无 &&
+                    GameScene.SelectedCell.Item.Info.Type != ItemType.觉醒)
                 {
                     TargetItem = GameScene.SelectedCell.Item;
                     OldCell = GameScene.SelectedCell;
@@ -1317,13 +1317,13 @@ namespace Client.MirScenes.Dialogs
                 if (Items[0].Awake.getAwakeLevel() == 0)
                 {
                     SelectAwakeType.Items.Add("选择升级类型.");
-                    if (Items[0].Info.Type == ItemType.Weapon)
+                    if (Items[0].Info.Type == ItemType.武器)
                     {
                         SelectAwakeType.Items.Add("Bravery Glyph");
                         SelectAwakeType.Items.Add("Magic Glyph");
                         SelectAwakeType.Items.Add("Soul Glyph");
                     }
-                    else if (Items[0].Info.Type == ItemType.Helmet)
+                    else if (Items[0].Info.Type == ItemType.头盔)
                     {
                         SelectAwakeType.Items.Add("Protection Glyph");
                         SelectAwakeType.Items.Add("EvilSlayer Glyph");

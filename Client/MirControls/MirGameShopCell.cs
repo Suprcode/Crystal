@@ -256,7 +256,7 @@ namespace Client.MirControls
 
         public void UpdateText()
         {
-            nameLabel.Text = (Item.Info.Type == ItemType.Pets && Item.Info.Shape == 26 && Item.Info.Effect != 7) ? "WonderDrug" : Item.Info.FriendlyName;
+            nameLabel.Text = (Item.Info.Type == ItemType.宠物 && Item.Info.Shape == 26 && Item.Info.Effect != 7) ? "WonderDrug" : Item.Info.FriendlyName;
             nameLabel.Text = nameLabel.Text.Length > 17 ? nameLabel.Text.Substring(0, 17) : nameLabel.Text;
             nameLabel.ForeColour = GameScene.Scene.GradeNameColor(Item.Info.Grade);
             quantity.Text = Quantity.ToString();
@@ -267,7 +267,7 @@ namespace Client.MirControls
             else stockLabel.Text = Item.Stock.ToString();
             countLabel.Text = Item.Count.ToString();
 
-            if (Item.Info.Type == ItemType.Mount || Item.Info.Type == ItemType.Weapon || Item.Info.Type == ItemType.Armour || Item.Info.Type == ItemType.Transform)
+            if (Item.Info.Type == ItemType.坐骑 || Item.Info.Type == ItemType.武器 || Item.Info.Type == ItemType.护甲 || Item.Info.Type == ItemType.变换)
             {
                 PreviewItem.Visible = true;
                 BuyItem.Location = new Point(75, 122);
@@ -434,10 +434,10 @@ namespace Client.MirControls
         public void UpdateViewer()
         {
             this.Visible = true;
-            if (ViewerItem.Info.Type == ItemType.Weapon) DrawWeapon();
-            if (ViewerItem.Info.Type == ItemType.Armour) DrawArmour();
-            if (ViewerItem.Info.Type == ItemType.Mount) DrawMount();
-            if (ViewerItem.Info.Type == ItemType.Transform) DrawTransform();
+            if (ViewerItem.Info.Type == ItemType.武器) DrawWeapon();
+            if (ViewerItem.Info.Type == ItemType.护甲) DrawArmour();
+            if (ViewerItem.Info.Type == ItemType.坐骑) DrawMount();
+            if (ViewerItem.Info.Type == ItemType.变换) DrawTransform();
         }
 
         private void GameShopViewer_BeforeDraw(object sender, EventArgs e)

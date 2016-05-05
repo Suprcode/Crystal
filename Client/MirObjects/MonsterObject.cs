@@ -1610,7 +1610,7 @@ namespace Client.MirObjects
                                     Point source = new Point(User.CurrentLocation.X + CMain.Random.Next(-7, 7), User.CurrentLocation.Y + CMain.Random.Next(-7, 7));
 
                                     Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, source, CMain.Time + CMain.Random.Next(600));
-                                    ef.Played += (o, e) => SoundManager.PlaySound(20000 + (ushort)Spell.HellFire * 10 + 1);
+                                    ef.Played += (o, e) => SoundManager.PlaySound(20000 + (ushort)Spell.地狱火 * 10 + 1);
                                     MapControl.Effects.Add(ef);
                                 }
                                 break;
@@ -2375,7 +2375,7 @@ namespace Client.MirObjects
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                         missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FinialTurtle], 320, 10, 500, missile.Target) { Blend = true });
-                                                        SoundManager.PlaySound(20000 + (ushort)Spell.FrostCrunch * 10 + 2);
+                                                        SoundManager.PlaySound(20000 + (ushort)Spell.寒冰掌 * 10 + 2);
                                                     };
                                                 }
                                                 break;

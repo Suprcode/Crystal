@@ -135,7 +135,7 @@ namespace Server.MirObjects.Monsters
                 {
                     MapObject ob = cell.Objects[i];
                     if (AvoidFireWall && ob.Race == ObjectType.Spell)
-                        if (((SpellObject)ob).Spell == Spell.FireWall) return false;
+                        if (((SpellObject)ob).Spell == Spell.火墙) return false;
 
                     if (!ob.Blocking) continue;
 
