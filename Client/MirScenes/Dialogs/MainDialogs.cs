@@ -35,6 +35,11 @@ namespace Client.MirScenes.Dialogs
         public MirControl HealthOrb;
         public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
 
+        public bool HPOnly
+        {
+            get { return User != null && User.Class == MirClass.Warrior && User.Level < 10; }
+        }
+
         public MainDialog()
         {
             Index = Settings.Resolution == 800 ? 0 : Settings.Resolution == 1024 ? 1 : 2;
@@ -429,14 +434,22 @@ namespace Client.MirScenes.Dialogs
             if (Settings.HPView)
             {
                 HealthLabel.Text = string.Format("HP {0}/{1}", User.HP, User.MaxHP);
-                ManaLabel.Text = string.Format("MP {0}/{1} ", User.MP, User.MaxMP);
+                ManaLabel.Text = HPOnly ? "" : string.Format("MP {0}/{1} ", User.MP, User.MaxMP);
                 TopLabel.Text = string.Empty;
                 BottomLabel.Text = string.Empty;
             }
             else
             {
-                TopLabel.Text = string.Format(" {0}    {1} \n" + "---------------", User.HP, User.MP);
-                BottomLabel.Text = string.Format(" {0}    {1} ", User.MaxHP, User.MaxMP);
+                if (HPOnly)
+                {
+                    TopLabel.Text = string.Format("{0}\n" + "--", User.HP);
+                    BottomLabel.Text = string.Format("{0}", User.MaxHP);
+                }
+                else
+                {
+                    TopLabel.Text = string.Format(" {0}    {1} \n" + "---------------", User.HP, User.MP);
+                    BottomLabel.Text = string.Format(" {0}    {1} ", User.MaxHP, User.MaxMP);
+                }
                 HealthLabel.Text = string.Empty;
                 ManaLabel.Text = string.Empty;
             }
@@ -472,8 +485,20 @@ namespace Client.MirScenes.Dialogs
             if (height < 0) height = 0;
             if (height > 80) height = 80;
 
-            Rectangle r = new Rectangle(0, 80 - height, 50, height);
-            Libraries.Prguse.Draw(4, r, new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
+            int orbImage = 4;
+
+            bool hpOnly = false;
+
+            if (HPOnly)
+            {
+                hpOnly = true;
+                orbImage = 6;
+            }
+
+            Rectangle r = new Rectangle(0, 80 - height, hpOnly ? 100 : 50, height);
+            Libraries.Prguse.Draw(orbImage, r, new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
+
+            if (hpOnly) return;
 
             if (User.MP != User.MaxMP)
                 height = (int)(80 * User.MP / (float)User.MaxMP);

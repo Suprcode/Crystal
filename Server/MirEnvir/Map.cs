@@ -367,10 +367,10 @@ namespace Server.MirEnvir
                 {//total 15
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.HighWall; //Can Fire Over.
-                    offSet += 4;
+                    offSet += 6;
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
-                    offSet += 2;
+                    //offSet += 2;
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
                     offSet += 2;
                     if (fileBytes[offSet] > 0)

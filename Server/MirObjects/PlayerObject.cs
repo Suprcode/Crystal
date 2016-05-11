@@ -7094,8 +7094,8 @@ namespace Server.MirObjects
         private void EnergyShield(MapObject target, UserMagic magic, out bool cast)
         {
             cast = false;
-
-            if (!target.IsFriendlyTarget(this)) target = this; //offical is only party target
+            
+            if (target == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
             int duration = 30 + 50 * magic.Level;
             int power = magic.GetPower(GetAttackPower(MinSC, MaxSC));
@@ -10366,7 +10366,7 @@ namespace Server.MirObjects
                 array[from] = i;
 
                 Report.ItemMoved("MoveItem", array[from], grid, grid, to, from);
-
+                
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -11224,6 +11224,8 @@ namespace Server.MirObjects
                 tempTo.Count = tempTo.Info.StackSize;
             }
 
+            TradeUnlock();
+
             p.Success = true;
             Enqueue(p);
             RefreshStats();
@@ -11612,6 +11614,8 @@ namespace Server.MirObjects
             Report.ItemCombined("CombineItem", tempFrom, tempTo, indexFrom, indexTo, MirGridType.Inventory);
 
             //item merged ok
+            TradeUnlock();
+
             p.Success = true;
             Enqueue(p);
         }
@@ -15503,7 +15507,7 @@ namespace Server.MirObjects
                 TradeItem();
 
                 Report.ItemMoved("DepositTradeItem", temp, MirGridType.Inventory, MirGridType.Trade, from, to);
-
+                
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -15552,10 +15556,8 @@ namespace Server.MirObjects
                 TradeItem();
 
                 Report.ItemMoved("RetrieveTradeItem", temp, MirGridType.Trade, MirGridType.Inventory, from, to);
-
-                Enqueue(p);
-                return;
             }
+
             Enqueue(p);
         }
 
@@ -15673,6 +15675,8 @@ namespace Server.MirObjects
         }
         public void TradeGold(uint amount)
         {
+            TradeUnlock();
+
             if (TradePartner == null) return;
 
             if (Account.Gold < amount)
@@ -15688,6 +15692,8 @@ namespace Server.MirObjects
         }
         public void TradeItem()
         {
+            TradeUnlock();
+
             if (TradePartner == null) return;
 
             for (int i = 0; i < Info.Trade.Length; i++)
@@ -15701,8 +15707,25 @@ namespace Server.MirObjects
 
             TradePartner.Enqueue(new S.TradeItem { TradeItems = Info.Trade });
         }
-        public void TradeConfirm(bool locked)
+
+        public void TradeUnlock()
         {
+            TradeLocked = false;
+
+            if (TradePartner != null)
+            {
+                TradePartner.TradeLocked = false;
+            }
+        }
+
+        public void TradeConfirm(bool confirm)
+        {
+            if(!confirm)
+            {
+                TradeLocked = false;
+                return;
+            }
+
             if (TradePartner == null)
             {
                 TradeCancel();
@@ -15716,7 +15739,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            TradeLocked = locked;
+            TradeLocked = true;
 
             if (TradeLocked && !TradePartner.TradeLocked)
             {
@@ -15797,6 +15820,8 @@ namespace Server.MirObjects
         }
         public void TradeCancel()
         {
+            TradeUnlock();
+
             if (TradePartner == null)
             {
                 return;
