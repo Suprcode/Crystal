@@ -7094,8 +7094,8 @@ namespace Server.MirObjects
         private void EnergyShield(MapObject target, UserMagic magic, out bool cast)
         {
             cast = false;
-
-            if (!target.IsFriendlyTarget(this)) target = this; //offical is only party target
+            
+            if (target == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
             int duration = 30 + 50 * magic.Level;
             int power = magic.GetPower(GetAttackPower(MinSC, MaxSC));
