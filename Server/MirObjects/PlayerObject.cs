@@ -2915,6 +2915,7 @@ namespace Server.MirObjects
                 ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
                 Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
             }
+            
         }
 
         #endregion
@@ -9906,7 +9907,7 @@ namespace Server.MirObjects
             {
                 int armour = GetAttackPower(MinMAC, MaxMAC);
 
-                if (p.Value > armour)
+                if (p.Value < armour)
                     p.PType = PoisonType.None;
                 else
                     p.Value -= armour;
@@ -9917,7 +9918,7 @@ namespace Server.MirObjects
 
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - PoisonRecovery);
             if (p.Duration == 0) return;
-
+            if (p.PType == PoisonType.None) return;
 
             for (int i = 0; i < PoisonList.Count; i++)
             {
