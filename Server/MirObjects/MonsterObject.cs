@@ -2216,11 +2216,13 @@ namespace Server.MirObjects
             {
                 int armour = GetAttackPower(MinMAC, MaxMAC);
 
-                if (p.Value > armour)
+                if (p.Value < armour)
                     p.PType = PoisonType.None;
                 else
                     p.Value -= armour;
             }
+
+            if (p.PType == PoisonType.None) return;
 
             for (int i = 0; i < PoisonList.Count; i++)
             {
