@@ -124,7 +124,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.PoisonCloud:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
-                    if (ob.Dead) return;
+                    if (ob.Dead) return;              
 
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
@@ -191,7 +191,7 @@ namespace Server.MirObjects
                     if (!ExitMap.ValidPoint(newExit)) return;
 
                     ob.Teleport(ExitMap, newExit, false);
-
+                    
                     break;
             }
         }

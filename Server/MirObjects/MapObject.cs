@@ -43,7 +43,7 @@ namespace Server.MirObjects
         public abstract int CurrentMapIndex { get; set; }
         public abstract Point CurrentLocation { get; set; }
         public abstract MirDirection Direction { get; set; }
-        
+
         public abstract ushort Level { get; set; }
 
         public abstract uint Health { get; }
