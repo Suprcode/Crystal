@@ -633,7 +633,7 @@ namespace Client.MirObjects
                         MapCells[x, y] = new CellInfo();
                         MapCells[x, y].BackIndex = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].BackImage = (short)BitConverter.ToInt32(Bytes, offset);
+                        MapCells[x, y].BackImage = (int)BitConverter.ToInt32(Bytes, offset);
                         offset += 4;
                         MapCells[x, y].MiddleIndex = (short)BitConverter.ToInt16(Bytes, offset);
                         offset += 2;

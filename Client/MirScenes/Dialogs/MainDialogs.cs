@@ -37,7 +37,7 @@ namespace Client.MirScenes.Dialogs
 
         public bool HPOnly
         {
-            get { return User != null && User.Class == MirClass.Warrior && User.Level < 10; }
+            get { return User != null && User.Class == MirClass.Warrior && User.Level < 26; }
         }
 
         public MainDialog()
