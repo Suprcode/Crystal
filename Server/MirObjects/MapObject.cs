@@ -248,7 +248,15 @@ namespace Server.MirObjects
 
             return Envir.Random.Next(min, max + 1);
         }
-        
+
+        public int GetDefencePower(int min, int max)
+        {
+            if (min < 0) min = 0;
+            if (min > max) max = min;
+
+            return Envir.Random.Next(min, max + 1);
+        }
+
         public virtual void Remove(PlayerObject player)
         {
             player.Enqueue(new S.ObjectRemove {ObjectID = ObjectID});

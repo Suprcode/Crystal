@@ -5223,7 +5223,7 @@ namespace Client.MirScenes
             NewMailCounter = 0;
             User.Mail.Clear();
 
-            User.Mail = p.Mail.OrderBy(e => !e.Locked).ThenBy(e => e.DateSent).ToList();
+            User.Mail = p.Mail.OrderByDescending(e => !e.Locked).ThenByDescending(e => e.DateSent).ToList();
 
             foreach(ClientMail mail in User.Mail)
             {
