@@ -27,7 +27,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Junk\AutoPatcher\AutoPatcherAdmin\</OutputPath>
+    <OutputPath>..\..\AutoPatcherAdmin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
