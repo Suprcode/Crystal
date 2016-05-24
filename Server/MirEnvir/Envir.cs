@@ -734,7 +734,15 @@ namespace Server.MirEnvir
                         {
                             if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
                             {
-                                Info.current.Value.Process();
+                                var playerProcess = Info.current.Value as PlayerObject;
+
+                                if (playerProcess != null && (playerProcess.Connection == null || playerProcess.Info == null))
+                                {
+                                    SMain.EnqueueDebugging(string.Format("Tried to process player that isn't set."));
+                                    Info.current.Value.Despawn();
+                                }
+                                else
+                                    Info.current.Value.Process();
 
                                 Info.current.Value.SetOperateTime();
                             }
@@ -799,8 +807,7 @@ namespace Server.MirEnvir
         }
 
         public void Process()
-        {
-            
+        {        
             //if we get to a new day : reset daily's
             if (Now.Day != DailyTime)
             {
@@ -836,7 +843,7 @@ namespace Server.MirEnvir
                     }
                 }
 
-                mailTime = Time + (Settings.Second * 10);
+                mailTime = Time + (Settings.Minute * 1);
             }
 
             if (Time >= guildTime)
@@ -1129,7 +1136,7 @@ namespace Server.MirEnvir
             }
         }
 
-        private void BeginSaveAccounts()
+        public void BeginSaveAccounts()
         {
             if (Saving) return;
 
@@ -2009,6 +2016,17 @@ namespace Server.MirEnvir
                     if (info.DeleteDate < DateTime.Now.AddDays(-7))
                     {
                         //delete char from db
+                    }
+                }
+
+                if(info.Mail.Count > Settings.MailCapacity)
+                {
+                    for (int j = (info.Mail.Count - 1 - (int)Settings.MailCapacity); j >= 0; j--)
+                    {
+                        if (info.Mail[j].DateOpened > DateTime.Now && info.Mail[j].Collected && info.Mail[j].Items.Count == 0 && info.Mail[j].Gold == 0)
+                        {
+                            info.Mail.Remove(info.Mail[j]);
+                        }
                     }
                 }
             }

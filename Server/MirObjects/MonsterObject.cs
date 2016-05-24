@@ -1933,10 +1933,10 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
@@ -1944,10 +1944,10 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
@@ -2094,10 +2094,10 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
@@ -2105,10 +2105,10 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.Agility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
@@ -2176,16 +2176,16 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.Agility:
                     break;
@@ -2214,7 +2214,7 @@ namespace Server.MirObjects
 
             if (!ignoreDefence && (p.PType == PoisonType.Green))
             {
-                int armour = GetAttackPower(MinMAC, MaxMAC);
+                int armour = GetDefencePower(MinMAC, MaxMAC);
 
                 if (p.Value < armour)
                     p.PType = PoisonType.None;
