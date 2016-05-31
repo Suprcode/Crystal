@@ -42,6 +42,8 @@ namespace Client.MirObjects
 
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40];
         public int BeltIdx = 6;
+        public bool AddedStorage = false;
+
         public List<ClientMagic> Magics = new List<ClientMagic>();
         public List<ItemSets> ItemSets = new List<ItemSets>();
         public List<EquipmentSlot> MirSet = new List<EquipmentSlot>();
@@ -95,6 +97,8 @@ namespace Client.MirObjects
             Inventory = info.Inventory;
             Equipment = info.Equipment;
             QuestInventory = info.QuestInventory;
+
+            AddedStorage = info.AddedStorage;
 
             Magics = info.Magics;
             for (int i = 0; i < Magics.Count; i++ )

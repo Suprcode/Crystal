@@ -1427,6 +1427,7 @@ public enum ServerPacketIds : short
     ParcelCollected,
     MailCost,
 	ResizeInventory,
+    ResizeStorage,
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
@@ -5018,7 +5019,9 @@ public abstract class Packet
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
 			case (short)ServerPacketIds.ResizeInventory:
-                return new S.ResizeInventory();            
+                return new S.ResizeInventory();
+            case (short)ServerPacketIds.ResizeStorage:
+                return new S.ResizeStorage();
             case (short)ServerPacketIds.NewIntelligentCreature:
                 return new S.NewIntelligentCreature();
             case (short)ServerPacketIds.UpdateIntelligentCreatureList:

@@ -1563,6 +1563,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ResizeInventory:
                     ResizeInventory((S.ResizeInventory)p);
                     break;
+                case (short)ServerPacketIds.ResizeStorage:
+                    ResizeStorage((S.ResizeStorage)p);
+                    break;
                 case (short)ServerPacketIds.NewIntelligentCreature:
                     NewIntelligentCreature((S.NewIntelligentCreature)p);
                     break;
@@ -3958,6 +3961,11 @@ namespace Client.MirScenes
         }
         private void UserStorage(S.UserStorage p)
         {
+            if(Storage.Length != p.Storage.Length)
+            {
+                Array.Resize(ref Storage, p.Storage.Length);
+            }
+
             Storage = p.Storage;
 
             for (int i = 0; i < Storage.Length; i++)
@@ -5309,6 +5317,15 @@ namespace Client.MirScenes
         {
             Array.Resize(ref User.Inventory, p.Size);
             InventoryDialog.RefreshInventory2();
+        }
+
+        private void ResizeStorage(S.ResizeStorage p)
+        {
+            User.AddedStorage = p.Size > 80;
+
+            Array.Resize(ref Storage, p.Size);
+
+            StorageDialog.RefreshStorage2();
         }
 
         private void MailCost(S.MailCost p)

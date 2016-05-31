@@ -2233,6 +2233,7 @@ namespace Server.MirObjects
                 QuestInventory = new UserItem[Info.QuestInventory.Length],
                 Gold = Account.Gold,
                 Credit = Account.Credit,
+                AddedStorage = Account.Storage.Length > 80
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -4707,20 +4708,41 @@ namespace Server.MirObjects
                         break;
 
                     case "ADDINVENTORY":
-                        int openLevel = (int)((Info.Inventory.Length - 46) / 4);
-                        uint openGold = (uint)(1000000 + openLevel * 1000000);
-                        if (Account.Gold >= openGold)
                         {
-                            Account.Gold -= openGold;
-                            Enqueue(new S.LoseGold { Gold = openGold });
-                            Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
-                            ReceiveChat("Inventory size increased.", ChatType.System);
+                            int openLevel = (int)((Info.Inventory.Length - 46) / 4);
+                            uint openGold = (uint)(1000000 + openLevel * 1000000);
+                            if (Account.Gold >= openGold)
+                            {
+                                Account.Gold -= openGold;
+                                Enqueue(new S.LoseGold { Gold = openGold });
+                                Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
+                                ReceiveChat("Inventory size increased.", ChatType.System);
+                            }
+                            else
+                            {
+                                ReceiveChat("Not enough gold.", ChatType.System);
+                            }
+                            ChatTime = 0;
                         }
-                        else
+                        break;
+
+                    case "ADDSTORAGE":
                         {
-                            ReceiveChat("Not enough gold.", ChatType.System);
+                            int openLevel = Account.Storage.Length / 4;
+                            uint openGold = (uint)(openLevel * 1000000);
+                            if (Account.Gold >= openGold)
+                            {
+                                Account.Gold -= openGold;
+                                Enqueue(new S.LoseGold { Gold = openGold });
+                                Enqueue(new S.ResizeStorage { Size = Account.ResizeStorage() });
+                                ReceiveChat("Storage size increased.", ChatType.System);
+                            }
+                            else
+                            {
+                                ReceiveChat("Not enough gold.", ChatType.System);
+                            }
+                            ChatTime = 0;
                         }
-                        ChatTime = 0;
                         break;
 
                     case "INFO":

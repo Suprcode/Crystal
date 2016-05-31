@@ -471,6 +471,8 @@ namespace ServerPackets
         public UserItem[] Inventory, Equipment, QuestInventory;
         public uint Gold, Credit;
 
+        public bool AddedStorage;
+
         public List<ClientMagic> Magics = new List<ClientMagic>();
 
         public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
@@ -533,6 +535,8 @@ namespace ServerPackets
 
             Gold = reader.ReadUInt32();
             Credit = reader.ReadUInt32();
+
+            AddedStorage = reader.ReadBoolean();
 
             int count = reader.ReadInt32();
 
@@ -612,6 +616,8 @@ namespace ServerPackets
 
             writer.Write(Gold);
             writer.Write(Credit);
+
+            writer.Write(AddedStorage);
 
             writer.Write(Magics.Count);
             for (int i = 0; i < Magics.Count; i++)
@@ -4999,6 +5005,23 @@ namespace ServerPackets
             writer.Write(Size);
         }
     }
+
+    public sealed class ResizeStorage : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ResizeStorage; } }
+
+        public int Size;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Size = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Size);
+        }
+    }
+
     public sealed class NewIntelligentCreature : Packet//IntelligentCreature
     {
         public override short Index
