@@ -544,6 +544,8 @@ namespace Server.MirObjects
 
         public override void Process()
         {
+            if (Connection == null || Node == null || Info == null) return;
+
             if (GroupInvitation != null && GroupInvitation.Node == null)
                 GroupInvitation = null;
 
@@ -5409,9 +5411,10 @@ namespace Server.MirObjects
         public void RangeAttack(MirDirection dir, Point location, uint targetID)
         {
             LogTime = Envir.Time + Globals.LogDelay;
-            //bug: when you wear a mirbow the shape is actualy from the old item :p
+
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
+
             if ((RealItem.Shape / 100) != 2) return;
             if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
@@ -5423,6 +5426,8 @@ namespace Server.MirObjects
                 target = FindObject(targetID, 10);
 
             if (target != null && target.Dead) return;
+
+            if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player) return;
 
             Direction = dir;
 
@@ -14796,6 +14801,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (GroupMembers != null)
+            {
+                ReceiveChat(string.Format("You can no longer join {0}'s group", GroupInvitation.Name), ChatType.System);
+                GroupInvitation = null;
+                return;
+            }
 
             if (GroupInvitation.GroupMembers != null && GroupInvitation.GroupMembers[0] != GroupInvitation)
             {
@@ -18278,7 +18289,7 @@ namespace Server.MirObjects
 
             if (MarriageProposal.Info.Married != 0)
             {
-                ReceiveChat(string.Format("{0} is already married.", TradeInvitation.Info.Name), ChatType.System);
+                ReceiveChat(string.Format("{0} is already married.", MarriageProposal.Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
@@ -18622,7 +18633,11 @@ namespace Server.MirObjects
 
         public void MentorReply(bool accept)
         {
-            if (MentorRequest == null) return;
+            if (MentorRequest == null || MentorRequest.Info == null)
+            {
+                MentorRequest = null;
+                return;
+            }
 
             if (!accept)
             {

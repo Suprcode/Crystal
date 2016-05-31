@@ -734,16 +734,7 @@ namespace Server.MirEnvir
                         {
                             if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
                             {
-                                var playerProcess = Info.current.Value as PlayerObject;
-
-                                if (playerProcess != null && (playerProcess.Connection == null || playerProcess.Info == null))
-                                {
-                                    SMain.EnqueueDebugging(string.Format("Tried to process player that isn't set."));
-                                    Info.current.Value.Despawn();
-                                }
-                                else
-                                    Info.current.Value.Process();
-
+                                Info.current.Value.Process();
                                 Info.current.Value.SetOperateTime();
                             }
                         }

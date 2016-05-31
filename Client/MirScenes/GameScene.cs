@@ -1718,6 +1718,7 @@ namespace Client.MirScenes
                 image.Hint = buff.ToString();
                 image.Index = buffImage;
                 image.Library = buffLibrary;
+                image.Visible = MainDialog.Visible;
 
                 if (!buff.Infinite && Math.Round((buff.Expire - CMain.Time) / 1000D) <= 5)
                 {
@@ -9744,7 +9745,7 @@ namespace Client.MirScenes
         {
             if (M2CellInfo[p.X, p.Y].DoorIndex == 0) return true;
             Door DoorInfo = GetDoor(M2CellInfo[p.X, p.Y].DoorIndex);
-            if (DoorInfo == null) return false;//if the door doesnt excist then it isnt even being shown on screen (and cant be open lol)
+            if (DoorInfo == null) return false;//if the door doesnt exist then it isnt even being shown on screen (and cant be open lol)
             if ((DoorInfo.DoorState == 0) || (DoorInfo.DoorState == 3))
             {
                 Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });

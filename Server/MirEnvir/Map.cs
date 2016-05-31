@@ -127,15 +127,18 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     offSet += 2;
+
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.HighWall; //No Floor Tile.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
+                    offSet += 4;
+
                     if (fileBytes[offSet] > 0)
-                        DoorIndex[x,y] = AddDoor(fileBytes[offSet], new Point(x,y));
-                    
-                    offSet += 7;
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+
+                    offSet += 3;
 
                     byte light = fileBytes[offSet++];
 
@@ -143,7 +146,7 @@ namespace Server.MirEnvir
                         Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
-
+        
         private void LoadMapCellsv1(byte[] fileBytes)
         {
             int offSet = 21;

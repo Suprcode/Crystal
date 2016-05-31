@@ -143,6 +143,7 @@ namespace Client.MirObjects
         public MapReader(string FileName)
         {
             this.FileName = FileName;
+
             initiate();
         }
 

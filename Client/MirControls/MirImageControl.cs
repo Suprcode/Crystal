@@ -157,7 +157,9 @@ namespace Client.MirControls
             {
                 if (GrayScale) DXManager.SetGrayscale(1F, Color.White);
                 else if (Blending) Library.DrawBlend(Index, DisplayLocation, ForeColour, false, BlendingRate);
-                else Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
+
+                Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
+
                 if (GrayScale) DXManager.SetNormal(1F, Color.White);
             }
         }
