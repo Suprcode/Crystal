@@ -1248,7 +1248,7 @@ namespace Server
         {
             if (!File.Exists(ConfigPath + @".\MentorSystem.ini"))
             {
-                SaveMarriage();
+                SaveMentor();
                 return;
             }
             InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");

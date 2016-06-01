@@ -5321,7 +5321,7 @@ namespace Client.MirScenes
 
         private void ResizeStorage(S.ResizeStorage p)
         {
-            User.AddedStorage = p.Size > 80;
+            User.AddedStorage = true;
 
             Array.Resize(ref Storage, p.Size);
 
