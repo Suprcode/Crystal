@@ -147,7 +147,7 @@ namespace Server.MirObjects
         {
             for (int i = 0; i < GateList.Count; i++)
             {
-                GateList[i].Spawn();
+                GateList[i].Spawn(false);
             }
         }
 
@@ -893,7 +893,7 @@ namespace Server.MirObjects
         }
 
 
-        public void Spawn()
+        public void Spawn(bool repair)
         {
             if (Gate != null) Gate.Despawn();
 
@@ -910,6 +910,8 @@ namespace Server.MirObjects
             Gate.GateIndex = Index;
 
             Gate.Spawn(Conquest.ConquestMap, Info.Location);
+
+            if (repair) Health = Gate.MaxHP;
 
             if (Health == 0)
                 Gate.Die();
@@ -937,12 +939,12 @@ namespace Server.MirObjects
         {
             if (Gate == null)
             {
-                Spawn();
+                Spawn(true);
                 return;
             }
 
             if (Gate.Dead)
-                Spawn();
+                Spawn(true);
             else
                 Gate.HP = Gate.MaxHP;
 

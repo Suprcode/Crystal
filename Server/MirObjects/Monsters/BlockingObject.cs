@@ -59,12 +59,18 @@ namespace Server.MirObjects.Monsters
         public void Hide()
         {
             Visible = false;
+
+            if (CurrentMap == null) return;
+
             CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
         }
 
         public void Show()
         {
             Visible = true;
+
+            if (CurrentMap == null) return;
+
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];

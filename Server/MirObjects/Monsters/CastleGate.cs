@@ -9,6 +9,9 @@ namespace Server.MirObjects.Monsters
 {
     public abstract class CastleGate : MonsterObject
     {
+        public ConquestObject Conquest;
+        public int GateIndex;
+
         public bool Closed;
 
         protected List<BlockingObject> BlockingObjects = new List<BlockingObject>();
@@ -61,7 +64,7 @@ namespace Server.MirObjects.Monsters
 
                 if (!b.Spawn(this.CurrentMap, new Point(this.CurrentLocation.X + block.X, this.CurrentLocation.Y + block.Y)))
                 {
-                    SMain.EnqueueDebugging(string.Format("CastleGate blocking mob not spawned at {0} {1}:{2}", CurrentMap.Info.FileName, block.X, block.Y));
+                    SMain.EnqueueDebugging(string.Format("{3} blocking mob not spawned at {0} {1}:{2}", CurrentMap.Info.FileName, block.X, block.Y, Info.Name));
                 }
             }
         }
@@ -77,10 +80,19 @@ namespace Server.MirObjects.Monsters
 
         public override bool IsAttackTarget(MonsterObject attacker)
         {
+            if (attacker.Master != null && attacker.Master.Race == ObjectType.Player)
+            {
+                PlayerObject owner = (PlayerObject)attacker.Master;
+
+                if (owner.MyGuild != null && owner.MyGuild.Conquest != null && owner.MyGuild.Conquest == Conquest) return false;
+            }
+
             return Closed && base.IsAttackTarget(attacker);
         }
         public override bool IsAttackTarget(PlayerObject attacker)
         {
+            if (attacker.MyGuild != null && attacker.MyGuild.Conquest != null && attacker.MyGuild.Conquest == Conquest) return false;
+
             return Closed && base.IsAttackTarget(attacker);
         }
 

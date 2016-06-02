@@ -9,9 +9,6 @@ namespace Server.MirObjects.Monsters
 {
     public class Gate : CastleGate
     {
-        public ConquestObject Conquest;
-        public int GateIndex;
-
         protected internal Gate(MonsterInfo info) : base(info)
         {
             switch (info.Effect)
