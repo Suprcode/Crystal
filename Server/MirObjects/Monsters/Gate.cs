@@ -55,7 +55,6 @@ namespace Server.MirObjects.Monsters
                         new Point(-1, 1),
                         new Point(-2, 0),
                         };
-
                     }
                     break;
                 case 4: // East Pointing Castle Gi

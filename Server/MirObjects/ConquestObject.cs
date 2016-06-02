@@ -570,6 +570,8 @@ namespace Server.MirObjects
                         if (ConquestMap.Players[i].WarZone && ConquestMap.GetInnerConquest(ConquestMap.Players[i].CurrentLocation) != null)
                             if (ConquestMap.Players[i].MyGuild != null)
                             {
+                                if (ConquestMap.Players[i].Dead) continue;
+
                                 if (StartType == ConquestType.Request && ConquestMap.Players[i].MyGuild.Guildindex != AttackerID) continue;
 
                                 if (ConquestMap.Players[i].MyGuild.Conquest != null && ConquestMap.Players[i].MyGuild.Conquest != this) continue;
@@ -622,6 +624,8 @@ namespace Server.MirObjects
                     GuildObject TakingGuild = null;
                     for (int i = 0; i < PalaceMap.Players.Count; i++)
                     {
+                        if (PalaceMap.Players[i].Dead) continue;
+
                         if (PalaceMap.Players[i].MyGuild != null)
                         {
                             if (TakingGuild == null || TakingGuild != PalaceMap.Players[i].MyGuild)
