@@ -4956,6 +4956,8 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("{0} has been reset.", ResetConq.Info.Name), ChatType.System);
                         break;
                     case "GATES":
+                        if (parts.Length < 2) return;
+
                         string openclose = parts[1];
                         bool OpenClose;
 
@@ -4964,9 +4966,7 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("You don't have access to control any gates at the moment."), ChatType.System);
                             return;
                         }
-
-                        if (openclose == null) return;
-
+                        
                         if (openclose.ToUpper() == "CLOSE") OpenClose = true;
                         else if (openclose.ToUpper() == "OPEN") OpenClose = false;
                         else
