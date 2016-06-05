@@ -321,7 +321,7 @@ namespace Server.MirDatabase
                 temp.Location = new Point(x, y);
 
                 if (!ushort.TryParse(data[start + 4 + (i * 6)], out temp.Rate)) return;
-                if (!byte.TryParse(data[start + 5 + (i * 6)], out temp.Image)) return;
+                if (!ushort.TryParse(data[start + 5 + (i * 6)], out temp.Image)) return;
 
                 info.NPCs.Add(temp);
             }

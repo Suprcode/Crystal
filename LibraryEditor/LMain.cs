@@ -353,7 +353,7 @@ namespace LibraryEditor
             for (int i = 0; i < copyList.Count; i++)
             {
                 MLibraryV2.MImage image = _library.GetMImage(copyList[i]);
-                tempLibrary.AddImage(image.Image, image.X, image.Y);
+                tempLibrary.AddImage(image.Image, image.MaskImage, image.X, image.Y);
             }
 
             tempLibrary.Save();

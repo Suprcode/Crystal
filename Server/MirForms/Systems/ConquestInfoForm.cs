@@ -23,6 +23,7 @@ namespace Server
         private ConquestGateInfo selectedGate;
         private ConquestWallInfo selectedWall;
         private ConquestSiegeInfo selectedSiege;
+        private ConquestFlagInfo selectedFlag;
 
         public ConquestInfoForm()
         {
@@ -67,6 +68,9 @@ namespace Server
 
         private void UpdateArchers()
         {
+            ArcherIndex_combo.SelectedItem = null;
+            ArcherIndex_combo.SelectedIndex = -1;
+
             if (selectedArcher != null)
             {
                 Archer_gb.Enabled = true;
@@ -75,16 +79,34 @@ namespace Server
                 ArchYLoc_textbox.Text = selectedArcher.Location.Y.ToString();
                 ArcherName_textbox.Text = selectedArcher.Name;
                 ArcherCost_textbox.Text = selectedArcher.RepairCost.ToString();
-
             }
             else
             {
                 Archer_gb.Enabled = false;
-                ArcherIndex_combo.SelectedIndex = -1;
                 ArchXLoc_textbox.Text = string.Empty;
                 ArchYLoc_textbox.Text = string.Empty;
                 ArcherName_textbox.Text = string.Empty;
                 ArcherCost_textbox.Text = string.Empty;
+            }
+        }
+
+        private void UpdateFlags()
+        {
+            if (selectedFlag != null)
+            {
+                Flag_gb.Enabled = true;
+                FlagXLoc_textbox.Text = selectedFlag.Location.X.ToString();
+                FlagYLoc_textbox.Text = selectedFlag.Location.Y.ToString();
+                FlagName_textbox.Text = selectedFlag.Name;
+                FlagFilename_textbox.Text = selectedFlag.FileName;
+            }
+            else
+            {
+                Flag_gb.Enabled = false;
+                FlagXLoc_textbox.Text = string.Empty;
+                FlagYLoc_textbox.Text = string.Empty;
+                FlagName_textbox.Text = string.Empty;
+                FlagFilename_textbox.Text = string.Empty;
             }
         }
 
@@ -180,6 +202,7 @@ namespace Server
             Gates_listbox.Items.Clear();
             Walls_listbox.Items.Clear();
             Siege_listbox.Items.Clear();
+            Flags_listbox.Items.Clear();
             Index_textbox.Text = string.Empty;
             Name_textbox.Text = string.Empty;
             LocX_textbox.Text = string.Empty;
@@ -260,6 +283,12 @@ namespace Server
                 {
                     Siege_listbox.Items.Add(selectedConquest.ConquestSieges[i]);
                 }
+
+                for (int i = 0; i < selectedConquest.ConquestFlags.Count; i++)
+                {
+                    Flags_listbox.Items.Add(selectedConquest.ConquestFlags[i]);
+                }
+
             }
 
         }
@@ -865,6 +894,77 @@ namespace Server
 
             MonsterInfo temp = (MonsterInfo)SiegeIndex_combo.SelectedItem;
             selectedSiege.MobIndex = temp.Index;
+        }
+
+        private void RemoveFlag_button_Click(object sender, EventArgs e)
+        {
+            if (Flags_listbox.SelectedItem != null)
+                selectedConquest.ConquestFlags.Remove((ConquestFlagInfo)Flags_listbox.SelectedItem);
+
+            UpdateInterface();
+        }
+
+        private void AddFlag_button_Click(object sender, EventArgs e)
+        {
+            if (selectedConquest != null)
+            {
+                selectedConquest.ConquestFlags.Add(new ConquestFlagInfo { Location = new Point(0, 0), Name = "Flag", Index = ++selectedConquest.FlagIndex });
+                UpdateInterface();
+            }
+        }
+
+        private void FlagXLoc_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            selectedFlag.Location.X = temp;
+        }
+
+        private void FlagYLoc_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            selectedFlag.Location.Y = temp;
+        }
+
+        private void FlagName_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            selectedFlag.Name = ActiveControl.Text;
+        }
+
+        private void Flags_listbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (Flags_listbox.SelectedIndex != -1)
+            {
+                selectedFlag = (ConquestFlagInfo)Flags_listbox.SelectedItem;
+                UpdateFlags();
+            }
+            else
+                selectedFlag = null;
+        }
+
+        private void FlagFilename_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            selectedFlag.FileName = ActiveControl.Text;
         }
     }
 }

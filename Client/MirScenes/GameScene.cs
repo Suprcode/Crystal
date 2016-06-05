@@ -1409,6 +1409,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCUpdate:
                     NPCUpdate((S.NPCUpdate)p);
                     break;
+                case (short)ServerPacketIds.NPCImageUpdate:
+                    NPCImageUpdate((S.NPCImageUpdate)p);
+                    break;
                 case (short)ServerPacketIds.MarriageRequest:
                     MarriageRequest((S.MarriageRequest)p);
                     break;
@@ -2430,7 +2433,16 @@ namespace Client.MirScenes
                 User.RefreshStats();
                 return;
             }
+
+            for (int i = 0; i < GameScene.User.BeltIdx; i++)
+            {
+                if (array[i] != null) continue;
+                array[i] = p.Item;
+                User.RefreshStats();
+                return;
+            }
         }
+
         private void SplitItem1(S.SplitItem1 p)
         {
             MirItemCell cell;
@@ -3259,6 +3271,20 @@ namespace Client.MirScenes
         private void NPCUpdate(S.NPCUpdate p)
         {
             GameScene.NPCID = p.NPCID; //Updates the client with the correct NPC ID if it's manually called from the client
+        }
+
+        private void NPCImageUpdate(S.NPCImageUpdate p)
+        {
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != p.ObjectID || ob.Race != ObjectType.Merchant) continue;
+
+                NPCObject npc = (NPCObject)ob;
+                npc.Image = p.Image;
+                npc.Colour = p.Colour;
+                return;
+            }
         }
         private void DefaultNPC(S.DefaultNPC p)
         {

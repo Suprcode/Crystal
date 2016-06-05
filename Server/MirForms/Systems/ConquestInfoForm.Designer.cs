@@ -125,9 +125,7 @@
             this.label22 = new System.Windows.Forms.Label();
             this.WallXLoc_textbox = new System.Windows.Forms.TextBox();
             this.Walls_listbox = new System.Windows.Forms.ListBox();
-            this.AddConq_button = new System.Windows.Forms.Button();
-            this.RemoveConq_button = new System.Windows.Forms.Button();
-            this.Siege_ta = new System.Windows.Forms.TabPage();
+            this.Siege_tab = new System.Windows.Forms.TabPage();
             this.RemoveSiege_button = new System.Windows.Forms.Button();
             this.AddSiege_button = new System.Windows.Forms.Button();
             this.Siege_gb = new System.Windows.Forms.GroupBox();
@@ -143,6 +141,22 @@
             this.label41 = new System.Windows.Forms.Label();
             this.SiegeXLoc_textbox = new System.Windows.Forms.TextBox();
             this.Siege_listbox = new System.Windows.Forms.ListBox();
+            this.flags_tab = new System.Windows.Forms.TabPage();
+            this.RemoveFlag_button = new System.Windows.Forms.Button();
+            this.AddFlag_button = new System.Windows.Forms.Button();
+            this.Flag_gb = new System.Windows.Forms.GroupBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.FlagName_textbox = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.FlagYLoc_textbox = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.FlagXLoc_textbox = new System.Windows.Forms.TextBox();
+            this.Flags_listbox = new System.Windows.Forms.ListBox();
+            this.AddConq_button = new System.Windows.Forms.Button();
+            this.RemoveConq_button = new System.Windows.Forms.Button();
+            this.label42 = new System.Windows.Forms.Label();
+            this.FlagFilename_textbox = new System.Windows.Forms.TextBox();
             this.Main_tabs.SuspendLayout();
             this.Info_tab.SuspendLayout();
             this.Maps_tab.SuspendLayout();
@@ -157,8 +171,10 @@
             this.Gates_gb.SuspendLayout();
             this.Walls_tab.SuspendLayout();
             this.Walls_gb.SuspendLayout();
-            this.Siege_ta.SuspendLayout();
+            this.Siege_tab.SuspendLayout();
             this.Siege_gb.SuspendLayout();
+            this.flags_tab.SuspendLayout();
+            this.Flag_gb.SuspendLayout();
             this.SuspendLayout();
             // 
             // ConquestInfoListBox
@@ -183,7 +199,8 @@
             this.Main_tabs.Controls.Add(this.Guards_tab);
             this.Main_tabs.Controls.Add(this.Gates_tab);
             this.Main_tabs.Controls.Add(this.Walls_tab);
-            this.Main_tabs.Controls.Add(this.Siege_ta);
+            this.Main_tabs.Controls.Add(this.Siege_tab);
+            this.Main_tabs.Controls.Add(this.flags_tab);
             this.Main_tabs.Enabled = false;
             this.Main_tabs.Location = new System.Drawing.Point(207, 12);
             this.Main_tabs.Name = "Main_tabs";
@@ -326,7 +343,7 @@
             this.Objective_gb.Size = new System.Drawing.Size(184, 74);
             this.Objective_gb.TabIndex = 51;
             this.Objective_gb.TabStop = false;
-            this.Objective_gb.Text = "Objective";
+            this.Objective_gb.Text = "CTF Objective";
             // 
             // label28
             // 
@@ -1217,38 +1234,18 @@
             this.Walls_listbox.TabIndex = 21;
             this.Walls_listbox.SelectedIndexChanged += new System.EventHandler(this.Walls_listbox_SelectedIndexChanged);
             // 
-            // AddConq_button
+            // Siege_tab
             // 
-            this.AddConq_button.Location = new System.Drawing.Point(175, 231);
-            this.AddConq_button.Name = "AddConq_button";
-            this.AddConq_button.Size = new System.Drawing.Size(27, 23);
-            this.AddConq_button.TabIndex = 10;
-            this.AddConq_button.Text = "+";
-            this.AddConq_button.UseVisualStyleBackColor = true;
-            this.AddConq_button.Click += new System.EventHandler(this.AddConq_button_Click);
-            // 
-            // RemoveConq_button
-            // 
-            this.RemoveConq_button.Location = new System.Drawing.Point(11, 231);
-            this.RemoveConq_button.Name = "RemoveConq_button";
-            this.RemoveConq_button.Size = new System.Drawing.Size(27, 23);
-            this.RemoveConq_button.TabIndex = 11;
-            this.RemoveConq_button.Text = "-";
-            this.RemoveConq_button.UseVisualStyleBackColor = true;
-            this.RemoveConq_button.Click += new System.EventHandler(this.RemoveConq_button_Click);
-            // 
-            // Siege_ta
-            // 
-            this.Siege_ta.Controls.Add(this.RemoveSiege_button);
-            this.Siege_ta.Controls.Add(this.AddSiege_button);
-            this.Siege_ta.Controls.Add(this.Siege_gb);
-            this.Siege_ta.Controls.Add(this.Siege_listbox);
-            this.Siege_ta.Location = new System.Drawing.Point(4, 22);
-            this.Siege_ta.Name = "Siege_ta";
-            this.Siege_ta.Size = new System.Drawing.Size(376, 216);
-            this.Siege_ta.TabIndex = 6;
-            this.Siege_ta.Text = "Siege";
-            this.Siege_ta.UseVisualStyleBackColor = true;
+            this.Siege_tab.Controls.Add(this.RemoveSiege_button);
+            this.Siege_tab.Controls.Add(this.AddSiege_button);
+            this.Siege_tab.Controls.Add(this.Siege_gb);
+            this.Siege_tab.Controls.Add(this.Siege_listbox);
+            this.Siege_tab.Location = new System.Drawing.Point(4, 22);
+            this.Siege_tab.Name = "Siege_tab";
+            this.Siege_tab.Size = new System.Drawing.Size(376, 216);
+            this.Siege_tab.TabIndex = 6;
+            this.Siege_tab.Text = "Siege";
+            this.Siege_tab.UseVisualStyleBackColor = true;
             // 
             // RemoveSiege_button
             // 
@@ -1406,6 +1403,174 @@
             this.Siege_listbox.TabIndex = 19;
             this.Siege_listbox.SelectedIndexChanged += new System.EventHandler(this.Siege_listbox_SelectedIndexChanged);
             // 
+            // flags_tab
+            // 
+            this.flags_tab.Controls.Add(this.RemoveFlag_button);
+            this.flags_tab.Controls.Add(this.AddFlag_button);
+            this.flags_tab.Controls.Add(this.Flag_gb);
+            this.flags_tab.Controls.Add(this.Flags_listbox);
+            this.flags_tab.Location = new System.Drawing.Point(4, 22);
+            this.flags_tab.Name = "flags_tab";
+            this.flags_tab.Padding = new System.Windows.Forms.Padding(3);
+            this.flags_tab.Size = new System.Drawing.Size(376, 216);
+            this.flags_tab.TabIndex = 7;
+            this.flags_tab.Text = "Flags";
+            this.flags_tab.UseVisualStyleBackColor = true;
+            // 
+            // RemoveFlag_button
+            // 
+            this.RemoveFlag_button.Location = new System.Drawing.Point(6, 185);
+            this.RemoveFlag_button.Name = "RemoveFlag_button";
+            this.RemoveFlag_button.Size = new System.Drawing.Size(23, 22);
+            this.RemoveFlag_button.TabIndex = 22;
+            this.RemoveFlag_button.Text = "-";
+            this.RemoveFlag_button.UseVisualStyleBackColor = true;
+            this.RemoveFlag_button.Click += new System.EventHandler(this.RemoveFlag_button_Click);
+            // 
+            // AddFlag_button
+            // 
+            this.AddFlag_button.Location = new System.Drawing.Point(156, 185);
+            this.AddFlag_button.Name = "AddFlag_button";
+            this.AddFlag_button.Size = new System.Drawing.Size(24, 22);
+            this.AddFlag_button.TabIndex = 20;
+            this.AddFlag_button.Text = "+";
+            this.AddFlag_button.UseVisualStyleBackColor = true;
+            this.AddFlag_button.Click += new System.EventHandler(this.AddFlag_button_Click);
+            // 
+            // Flag_gb
+            // 
+            this.Flag_gb.Controls.Add(this.label42);
+            this.Flag_gb.Controls.Add(this.FlagFilename_textbox);
+            this.Flag_gb.Controls.Add(this.label43);
+            this.Flag_gb.Controls.Add(this.FlagName_textbox);
+            this.Flag_gb.Controls.Add(this.label45);
+            this.Flag_gb.Controls.Add(this.label46);
+            this.Flag_gb.Controls.Add(this.FlagYLoc_textbox);
+            this.Flag_gb.Controls.Add(this.label47);
+            this.Flag_gb.Controls.Add(this.FlagXLoc_textbox);
+            this.Flag_gb.Location = new System.Drawing.Point(185, 4);
+            this.Flag_gb.Name = "Flag_gb";
+            this.Flag_gb.Size = new System.Drawing.Size(185, 203);
+            this.Flag_gb.TabIndex = 21;
+            this.Flag_gb.TabStop = false;
+            this.Flag_gb.Text = "Edit";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.Location = new System.Drawing.Point(13, 56);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(41, 16);
+            this.label43.TabIndex = 45;
+            this.label43.Text = "Name";
+            // 
+            // FlagName_textbox
+            // 
+            this.FlagName_textbox.Location = new System.Drawing.Point(16, 72);
+            this.FlagName_textbox.Name = "FlagName_textbox";
+            this.FlagName_textbox.Size = new System.Drawing.Size(163, 21);
+            this.FlagName_textbox.TabIndex = 46;
+            this.FlagName_textbox.TextChanged += new System.EventHandler(this.FlagName_textbox_TextChanged);
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label45.Location = new System.Drawing.Point(12, 12);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(55, 16);
+            this.label45.TabIndex = 44;
+            this.label45.Text = "Location";
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.Location = new System.Drawing.Point(94, 30);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(15, 16);
+            this.label46.TabIndex = 16;
+            this.label46.Text = "Y";
+            // 
+            // FlagYLoc_textbox
+            // 
+            this.FlagYLoc_textbox.Location = new System.Drawing.Point(109, 28);
+            this.FlagYLoc_textbox.Name = "FlagYLoc_textbox";
+            this.FlagYLoc_textbox.Size = new System.Drawing.Size(54, 21);
+            this.FlagYLoc_textbox.TabIndex = 12;
+            this.FlagYLoc_textbox.TextChanged += new System.EventHandler(this.FlagYLoc_textbox_TextChanged);
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label47.Location = new System.Drawing.Point(13, 30);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(16, 16);
+            this.label47.TabIndex = 15;
+            this.label47.Text = "X";
+            // 
+            // FlagXLoc_textbox
+            // 
+            this.FlagXLoc_textbox.Location = new System.Drawing.Point(29, 28);
+            this.FlagXLoc_textbox.Name = "FlagXLoc_textbox";
+            this.FlagXLoc_textbox.Size = new System.Drawing.Size(54, 21);
+            this.FlagXLoc_textbox.TabIndex = 14;
+            this.FlagXLoc_textbox.TextChanged += new System.EventHandler(this.FlagXLoc_textbox_TextChanged);
+            // 
+            // Flags_listbox
+            // 
+            this.Flags_listbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Flags_listbox.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Flags_listbox.FormattingEnabled = true;
+            this.Flags_listbox.ItemHeight = 14;
+            this.Flags_listbox.Location = new System.Drawing.Point(7, 11);
+            this.Flags_listbox.Name = "Flags_listbox";
+            this.Flags_listbox.Size = new System.Drawing.Size(172, 172);
+            this.Flags_listbox.TabIndex = 19;
+            this.Flags_listbox.SelectedIndexChanged += new System.EventHandler(this.Flags_listbox_SelectedIndexChanged);
+            // 
+            // AddConq_button
+            // 
+            this.AddConq_button.Location = new System.Drawing.Point(175, 231);
+            this.AddConq_button.Name = "AddConq_button";
+            this.AddConq_button.Size = new System.Drawing.Size(27, 23);
+            this.AddConq_button.TabIndex = 10;
+            this.AddConq_button.Text = "+";
+            this.AddConq_button.UseVisualStyleBackColor = true;
+            this.AddConq_button.Click += new System.EventHandler(this.AddConq_button_Click);
+            // 
+            // RemoveConq_button
+            // 
+            this.RemoveConq_button.Location = new System.Drawing.Point(11, 231);
+            this.RemoveConq_button.Name = "RemoveConq_button";
+            this.RemoveConq_button.Size = new System.Drawing.Size(27, 23);
+            this.RemoveConq_button.TabIndex = 11;
+            this.RemoveConq_button.Text = "-";
+            this.RemoveConq_button.UseVisualStyleBackColor = true;
+            this.RemoveConq_button.Click += new System.EventHandler(this.RemoveConq_button_Click);
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.Location = new System.Drawing.Point(12, 105);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(60, 16);
+            this.label42.TabIndex = 47;
+            this.label42.Text = "Filename";
+            // 
+            // FlagFilename_textbox
+            // 
+            this.FlagFilename_textbox.Location = new System.Drawing.Point(16, 121);
+            this.FlagFilename_textbox.Name = "FlagFilename_textbox";
+            this.FlagFilename_textbox.Size = new System.Drawing.Size(163, 21);
+            this.FlagFilename_textbox.TabIndex = 48;
+            this.FlagFilename_textbox.TextChanged += new System.EventHandler(this.FlagFilename_textbox_TextChanged);
+            // 
             // ConquestInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1442,9 +1607,12 @@
             this.Walls_tab.ResumeLayout(false);
             this.Walls_gb.ResumeLayout(false);
             this.Walls_gb.PerformLayout();
-            this.Siege_ta.ResumeLayout(false);
+            this.Siege_tab.ResumeLayout(false);
             this.Siege_gb.ResumeLayout(false);
             this.Siege_gb.PerformLayout();
+            this.flags_tab.ResumeLayout(false);
+            this.Flag_gb.ResumeLayout(false);
+            this.Flag_gb.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1550,7 +1718,7 @@
         private System.Windows.Forms.TextBox ObLocX_textbox;
         private System.Windows.Forms.TextBox ObLocY_textbox;
         private System.Windows.Forms.Button RemoveWall_button;
-        private System.Windows.Forms.TabPage Siege_ta;
+        private System.Windows.Forms.TabPage Siege_tab;
         private System.Windows.Forms.Button RemoveSiege_button;
         private System.Windows.Forms.Button AddSiege_button;
         private System.Windows.Forms.GroupBox Siege_gb;
@@ -1566,5 +1734,19 @@
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.TextBox SiegeXLoc_textbox;
         private System.Windows.Forms.ListBox Siege_listbox;
+        private System.Windows.Forms.TabPage flags_tab;
+        private System.Windows.Forms.Button RemoveFlag_button;
+        private System.Windows.Forms.Button AddFlag_button;
+        private System.Windows.Forms.GroupBox Flag_gb;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.TextBox FlagName_textbox;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.TextBox FlagYLoc_textbox;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.TextBox FlagXLoc_textbox;
+        private System.Windows.Forms.ListBox Flags_listbox;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.TextBox FlagFilename_textbox;
     }
 }

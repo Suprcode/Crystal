@@ -4956,36 +4956,108 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("{0} has been reset.", ResetConq.Info.Name), ChatType.System);
                         break;
                     case "GATES":
-                        if (parts.Length < 2) return;
-
-                        string openclose = parts[1];
-                        bool OpenClose;
 
                         if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
                             ReceiveChat(string.Format("You don't have access to control any gates at the moment."), ChatType.System);
                             return;
                         }
-                        
-                        if (openclose.ToUpper() == "CLOSE") OpenClose = true;
-                        else if (openclose.ToUpper() == "OPEN") OpenClose = false;
+
+                        bool OpenClose = false;
+
+                        if (parts.Length > 1)
+                        {
+                            string openclose = parts[1];
+
+                            if (openclose.ToUpper() == "CLOSE") OpenClose = true;
+                            else if (openclose.ToUpper() == "OPEN") OpenClose = false;
+                            else
+                            {
+                                ReceiveChat(string.Format("You must type /Gates Open or /Gates Close."), ChatType.System);
+                                return;
+                            }
+
+                            for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                                if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                    if (OpenClose)
+                                        MyGuild.Conquest.GateList[i].Gate.CloseDoor();
+                                    else
+                                        MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+                        }
                         else
                         {
-                            ReceiveChat(string.Format("You must type /Gates Open or /Gates Close."), ChatType.System);
-                            return;
+                            for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                                if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                    if (!MyGuild.Conquest.GateList[i].Gate.Closed)
+                                    {
+                                        MyGuild.Conquest.GateList[i].Gate.CloseDoor();
+                                        OpenClose = true;
+                                    }
+                                    else
+                                    {
+                                        MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+                                        OpenClose = false;
+                                    }
                         }
-
-                        for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
-                            if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
-                                if (OpenClose)
-                                    MyGuild.Conquest.GateList[i].Gate.CloseDoor();
-                                else
-                                    MyGuild.Conquest.GateList[i].Gate.OpenDoor();
 
                         if (OpenClose)
                             ReceiveChat(string.Format("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
                         else
                             ReceiveChat(string.Format("The gates at {0} have been opened.", MyGuild.Conquest.Info.Name), ChatType.System);
+                        break;
+
+                    case "CHANGEFLAG":
+                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                        {
+                            ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
+                            return;
+                        }
+
+                        ushort flag = (ushort)Envir.Random.Next(12);
+
+                        if(parts.Length > 1)
+                        {
+                            ushort temp;
+
+                            ushort.TryParse(parts[1], out temp);
+
+                            if (temp < 11) flag = temp;
+                        }
+
+                        MyGuild.FlagImage = (ushort)(1000 + flag);
+
+                        for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
+                        {
+                            MyGuild.Conquest.FlagList[i].UpdateImage();
+                        }
+
+                        break;
+                    case "CHANGEFLAGCOLOUR":
+                        {
+                            if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                            {
+                                ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
+                                return;
+                            }
+
+                            byte r1 = (byte)Envir.Random.Next(255);
+                            byte g1 = (byte)Envir.Random.Next(255);
+                            byte b1 = (byte)Envir.Random.Next(255);
+
+                            if (parts.Length > 3)
+                            {
+                                byte.TryParse(parts[1], out r1);
+                                byte.TryParse(parts[2], out g1);
+                                byte.TryParse(parts[3], out b1);
+                            }
+
+                            MyGuild.FlagColour = Color.FromArgb(255, r1, g1, b1);
+
+                            for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
+                            {
+                                MyGuild.Conquest.FlagList[i].UpdateColour();
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -11187,7 +11259,16 @@ namespace Server.MirObjects
                 RefreshBagWeight();
                 return;
             }
+
+            for (int i = 0; i < 6; i++)
+            {
+                if (array[i] != null) continue;
+                array[i] = temp;
+                RefreshBagWeight();
+                return;
+            }
         }
+
         public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
         {
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
@@ -15517,6 +15598,7 @@ namespace Server.MirObjects
                 enemyGuild.SendMessage(string.Format("{0} has started a war", MyGuild.Name), ChatType.System);
 
                 MyGuild.Gold -= Settings.Guild_WarCost;
+                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Name = Info.Name, Amount = Settings.Guild_WarCost });
             }
         }
 

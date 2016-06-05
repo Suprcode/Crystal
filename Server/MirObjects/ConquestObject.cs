@@ -32,6 +32,8 @@ namespace Server.MirObjects
         public List<ConquestGateObject> GateList = new List<ConquestGateObject>();
         public List<ConquestWallObject> WallList = new List<ConquestWallObject>();
         public List<ConquestSiegeObject> SiegeList = new List<ConquestSiegeObject>();
+        public List<ConquestFlagObject> FlagList = new List<ConquestFlagObject>();
+
         public int ArcherCount;
         public int GateCount;
         public int WallCount;
@@ -166,6 +168,15 @@ namespace Server.MirObjects
                 SiegeList[i].Spawn();
             }
         }
+
+        public void LoadFlags()
+        {
+            for (int i = 0; i < FlagList.Count; i++)
+            {
+                FlagList[i].Spawn();
+            }
+        }
+
         public void LoadNPCs()
         {
             for (int i = 0; i < ConquestMap.NPCs.Count; i++)
@@ -756,6 +767,66 @@ namespace Server.MirObjects
             Gate.CheckDirection();
 
 
+        }
+    }
+
+    public class ConquestFlagObject
+    {
+        public int Index;
+
+        public ConquestFlagInfo Info;
+
+        public ConquestObject Conquest;
+
+        public NPCObject Flag;
+
+        public ConquestFlagObject()
+        {
+
+        }
+
+        public void Spawn()
+        {
+            NPCInfo npcInfo = new NPCInfo
+            {
+                Name = Info.Name,
+                FileName = Info.FileName,
+                Location = Info.Location,
+                Image = 1000
+            };
+
+            if(Conquest.Guild != null)
+            {
+                npcInfo.Image = Conquest.Guild.FlagImage;
+                npcInfo.Colour = Conquest.Guild.FlagColour;
+            }
+
+            Flag = new NPCObject(npcInfo);
+            Flag.CurrentMap = Conquest.ConquestMap;
+
+            Flag.CurrentMap.AddObject(Flag);
+
+            Flag.Spawned();
+        }
+
+        public void UpdateImage()
+        {
+            if(Conquest.Guild != null)
+            {
+                Flag.Info.Image = Conquest.Guild.FlagImage;
+
+                Flag.Broadcast(Flag.GetUpdateInfo());
+            }
+        }
+
+        public void UpdateColour()
+        {
+            if (Conquest.Guild != null)
+            {
+                Flag.Info.Colour = Conquest.Guild.FlagColour;
+
+                Flag.Broadcast(Flag.GetUpdateInfo());
+            }
         }
     }
 

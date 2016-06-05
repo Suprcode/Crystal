@@ -1374,6 +1374,7 @@ public enum ServerPacketIds : short
     GuildRequestWar,
     DefaultNPC,
     NPCUpdate,
+    NPCImageUpdate,
     MarriageRequest,
     DivorceRequest,
     MentorRequest,
@@ -4916,6 +4917,8 @@ public abstract class Packet
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:
                 return new S.NPCUpdate();
+            case (short)ServerPacketIds.NPCImageUpdate:
+                return new S.NPCImageUpdate();
             case (short)ServerPacketIds.MarriageRequest:
                 return new S.MarriageRequest();
             case (short)ServerPacketIds.DivorceRequest:

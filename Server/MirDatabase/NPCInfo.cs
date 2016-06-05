@@ -17,7 +17,8 @@ namespace Server.MirDatabase
         public int MapIndex;
         public Point Location;
         public ushort Rate = 100;
-        public byte Image;
+        public ushort Image;
+        public Color Colour;
 
         public bool TimeVisible = false;
         public byte HourStart = 0;
@@ -59,7 +60,15 @@ namespace Server.MirDatabase
             Name = reader.ReadString();
 
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
-            Image = reader.ReadByte();
+
+            if (Envir.LoadVersion >= 72)
+            {
+                Image = reader.ReadUInt16();
+            }
+            else
+            {
+                Image = reader.ReadByte();
+            }
             
             Rate = reader.ReadUInt16();
 
@@ -135,7 +144,7 @@ namespace Server.MirDatabase
 
             info.Name = data[4];
 
-            if (!byte.TryParse(data[5], out info.Image)) return;
+            if (!ushort.TryParse(data[5], out info.Image)) return;
             if (!ushort.TryParse(data[6], out info.Rate)) return;
 
             info.Index = ++SMain.EditEnvir.NPCIndex;

@@ -1169,10 +1169,21 @@ namespace Server.MirObjects
                 Name = Name,
                 NameColour = NameColour,
                 Image = Info.Image,
+                Colour = Info.Colour,
                 Location = CurrentLocation,
                 Direction = Direction,
                 QuestIDs = (from q in Quests
                             select q.Index).ToList()
+            };
+        }
+
+        public Packet GetUpdateInfo()
+        {
+            return new S.NPCImageUpdate
+            {
+                ObjectID = ObjectID,
+                Image = Info.Image,
+                Colour = Info.Colour
             };
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.MirEnvir;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -18,10 +19,13 @@ namespace Server.MirDatabase
         public List<ConquestGateInfo> ConquestGates = new List<ConquestGateInfo>();
         public List<ConquestWallInfo> ConquestWalls = new List<ConquestWallInfo>();
         public List<ConquestSiegeInfo> ConquestSieges = new List<ConquestSiegeInfo>();
+        public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
+
         public int GuardIndex;
         public int GateIndex;
         public int WallIndex;
         public int SiegeIndex;
+        public int FlagIndex;
 
         public byte StartHour = 0;
         public int WarLength = 60;
@@ -59,6 +63,12 @@ namespace Server.MirDatabase
             GateIndex = reader.ReadInt32();
             WallIndex = reader.ReadInt32();
             SiegeIndex = reader.ReadInt32();
+
+            if (Envir.LoadVersion > 72)
+            {
+                FlagIndex = reader.ReadInt32();
+            }
+
             counter = reader.ReadInt32();
             for (int i = 0; i < counter; i++)
             {
@@ -84,6 +94,16 @@ namespace Server.MirDatabase
             {
                 ConquestSieges.Add(new ConquestSiegeInfo(reader));
             }
+
+            if (Envir.LoadVersion > 72)
+            {
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ConquestFlags.Add(new ConquestFlagInfo(reader));
+                }
+            }
+
             StartHour = reader.ReadByte();
             WarLength = reader.ReadInt32();
             Type = (ConquestType)reader.ReadByte();
@@ -115,6 +135,8 @@ namespace Server.MirDatabase
             writer.Write(GateIndex);
             writer.Write(WallIndex);
             writer.Write(SiegeIndex);
+            writer.Write(FlagIndex);
+
             writer.Write(ConquestGuards.Count);
             for (int i = 0; i < ConquestGuards.Count; i++)
             {
@@ -139,6 +161,12 @@ namespace Server.MirDatabase
             for (int i = 0; i < ConquestSieges.Count; i++)
             {
                 ConquestSieges[i].Save(writer);
+            }
+
+            writer.Write(ConquestFlags.Count);
+            for (int i = 0; i < ConquestFlags.Count; i++)
+            {
+                ConquestFlags[i].Save(writer);
             }
             writer.Write(StartHour);
             writer.Write(WarLength);
@@ -325,5 +353,40 @@ namespace Server.MirDatabase
         }
 
 
+    }
+
+    public class ConquestFlagInfo
+    {
+        public int Index;
+        public Point Location;
+        public string Name;
+        public string FileName = string.Empty;
+
+        public ConquestFlagInfo()
+        {
+
+        }
+
+        public ConquestFlagInfo(BinaryReader reader)
+        {
+            Index = reader.ReadInt32();
+            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+            Name = reader.ReadString();
+            FileName = reader.ReadString();
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(Index);
+            writer.Write(Location.X);
+            writer.Write(Location.Y);
+            writer.Write(Name);
+            writer.Write(FileName);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1} ({2})", Index, Name, Location);
+        }
     }
 }
