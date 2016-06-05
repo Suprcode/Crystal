@@ -526,32 +526,32 @@ namespace Server.MirObjects
         {
             if (Create)
             { 
-            WarEffects.Clear();
-            for (int y = Info.ObjectLoc.Y - Info.ObjectSize; y <= Info.ObjectLoc.Y + Info.ObjectSize; y++)
-            {
-                if (y < 0) continue;
-                if (y >= ConquestMap.Height) break;
-                for (int x = Info.ObjectLoc.X - Info.ObjectSize; x <= Info.ObjectLoc.X + Info.ObjectSize; x += Math.Abs(y - Info.ObjectLoc.Y) == Info.ObjectSize ? 1 : Info.ObjectSize * 2)
+                WarEffects.Clear();
+                for (int y = Info.ObjectLoc.Y - Info.ObjectSize; y <= Info.ObjectLoc.Y + Info.ObjectSize; y++)
                 {
-                    if (x < 0) continue;
-                    if (x >= ConquestMap.Width) break;
-                    if (!ConquestMap.Cells[x, y].Valid) continue;
-
-                    SpellObject spell = new SpellObject
+                    if (y < 0) continue;
+                    if (y >= ConquestMap.Height) break;
+                    for (int x = Info.ObjectLoc.X - Info.ObjectSize; x <= Info.ObjectLoc.X + Info.ObjectSize; x += Math.Abs(y - Info.ObjectLoc.Y) == Info.ObjectSize ? 1 : Info.ObjectSize * 2)
                     {
-                        ExpireTime = long.MaxValue,
-                        Spell = Spell.TrapHexagon,
-                        TickSpeed = int.MaxValue,
-                        CurrentLocation = new Point(x, y),
-                        CurrentMap = ConquestMap,
-                        Decoration = true
-                    };
+                        if (x < 0) continue;
+                        if (x >= ConquestMap.Width) break;
+                        if (!ConquestMap.Cells[x, y].Valid) continue;
 
-                    ConquestMap.Cells[x, y].Add(spell);
-                    WarEffects.Add(spell);
-                    spell.Spawned();
+                        SpellObject spell = new SpellObject
+                        {
+                            ExpireTime = long.MaxValue,
+                            Spell = Spell.TrapHexagon,
+                            TickSpeed = int.MaxValue,
+                            CurrentLocation = new Point(x, y),
+                            CurrentMap = ConquestMap,
+                            Decoration = true
+                        };
+
+                        ConquestMap.Cells[x, y].Add(spell);
+                        WarEffects.Add(spell);
+                        spell.Spawned();
+                    }
                 }
-            }
             }
             else
             {
@@ -590,17 +590,26 @@ namespace Server.MirObjects
                                 Points.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
 
                                 if (points == 0)
-                                    Points[ConquestMap.Players[i].MyGuild] = 1;
-                                else if (points < 15)
-                                    Points[ConquestMap.Players[i].MyGuild] += 1;
-
-                                List<GuildObject> tempList = Points.Keys.ToList();
-                                foreach (var item in tempList)
                                 {
-                                    if (ConquestMap.Players[i].MyGuild == item) continue;
+                                    Points[ConquestMap.Players[i].MyGuild] = 1;
+                                    ConquestMap.Players[i].MyGuild.SendOutputMessage(string.Format("King of Hill point gained. Current Points : {0}", Points[ConquestMap.Players[i].MyGuild]));
+                                }
+                                else if (points < 15)
+                                {
+                                    Points[ConquestMap.Players[i].MyGuild] += 1;
+                                    ConquestMap.Players[i].MyGuild.SendOutputMessage(string.Format("King of Hill point gained. Current Points : {0}", Points[ConquestMap.Players[i].MyGuild]));
+                                }
+
+                                List<GuildObject> guilds = Points.Keys.ToList();
+                                foreach (var guild in guilds)
+                                {
+                                    if (ConquestMap.Players[i].MyGuild == guild) continue;
                                     Points.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
-                                    if (points > 0)
-                                        Points[item] -= 1;
+                                    if (points > 0 && Points[guild] > 0)
+                                    {
+                                        Points[guild] -= 1;
+                                        guild.SendOutputMessage(string.Format("King of Hill point lost. Current Points : {0}", Points[guild]));
+                                    }
                                 }
 
                                 PointsChanged = true;
@@ -627,7 +636,15 @@ namespace Server.MirObjects
                         }
 
                         if (tempWinning != Guild)
+                        {
                             TakeConquest(null, tempWinning);
+
+                            for (int j = 0; j < ConquestMap.Players.Count; j++)
+                            {
+                                ConquestMap.Players[j].ReceiveOutputMessage(string.Format("{0} has captured the hill", tempWinning.Name), OutputMessageType.Guild);
+                            }
+
+                        }
                     }
                     break;
                 case ConquestGame.Classic:

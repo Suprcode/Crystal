@@ -198,6 +198,17 @@ namespace Server.MirObjects
                 }
         }
 
+        public void SendOutputMessage(string message, OutputMessageType Type = OutputMessageType.Guild)
+        {
+            for (int i = 0; i < Ranks.Count; i++)
+                for (int j = 0; j < Ranks[i].Members.Count; j++)
+                {
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
+                    if (player != null)
+                        player.ReceiveOutputMessage(message, Type);
+                }
+        }
+
         public void PlayerLogged(PlayerObject member, bool online, bool New = false)
         {
             for (int i = 0; i < Ranks.Count; i++)

@@ -62,6 +62,7 @@ public enum OutputMessageType : byte
 {
     Normal, 
     Quest,
+    Guild
 }
 
 public enum ItemGrade : byte

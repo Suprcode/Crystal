@@ -145,6 +145,8 @@
             this.RemoveFlag_button = new System.Windows.Forms.Button();
             this.AddFlag_button = new System.Windows.Forms.Button();
             this.Flag_gb = new System.Windows.Forms.GroupBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.FlagFilename_textbox = new System.Windows.Forms.TextBox();
             this.label43 = new System.Windows.Forms.Label();
             this.FlagName_textbox = new System.Windows.Forms.TextBox();
             this.label45 = new System.Windows.Forms.Label();
@@ -155,8 +157,6 @@
             this.Flags_listbox = new System.Windows.Forms.ListBox();
             this.AddConq_button = new System.Windows.Forms.Button();
             this.RemoveConq_button = new System.Windows.Forms.Button();
-            this.label42 = new System.Windows.Forms.Label();
-            this.FlagFilename_textbox = new System.Windows.Forms.TextBox();
             this.Main_tabs.SuspendLayout();
             this.Info_tab.SuspendLayout();
             this.Maps_tab.SuspendLayout();
@@ -343,7 +343,7 @@
             this.Objective_gb.Size = new System.Drawing.Size(184, 74);
             this.Objective_gb.TabIndex = 51;
             this.Objective_gb.TabStop = false;
-            this.Objective_gb.Text = "CTF Objective";
+            this.Objective_gb.Text = "King Of The Hill Objective";
             // 
             // label28
             // 
@@ -1455,6 +1455,24 @@
             this.Flag_gb.TabStop = false;
             this.Flag_gb.Text = "Edit";
             // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.Location = new System.Drawing.Point(12, 105);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(60, 16);
+            this.label42.TabIndex = 47;
+            this.label42.Text = "Filename";
+            // 
+            // FlagFilename_textbox
+            // 
+            this.FlagFilename_textbox.Location = new System.Drawing.Point(16, 121);
+            this.FlagFilename_textbox.Name = "FlagFilename_textbox";
+            this.FlagFilename_textbox.Size = new System.Drawing.Size(163, 21);
+            this.FlagFilename_textbox.TabIndex = 48;
+            this.FlagFilename_textbox.TextChanged += new System.EventHandler(this.FlagFilename_textbox_TextChanged);
+            // 
             // label43
             // 
             this.label43.AutoSize = true;
@@ -1552,24 +1570,6 @@
             this.RemoveConq_button.Text = "-";
             this.RemoveConq_button.UseVisualStyleBackColor = true;
             this.RemoveConq_button.Click += new System.EventHandler(this.RemoveConq_button_Click);
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.Location = new System.Drawing.Point(12, 105);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(60, 16);
-            this.label42.TabIndex = 47;
-            this.label42.Text = "Filename";
-            // 
-            // FlagFilename_textbox
-            // 
-            this.FlagFilename_textbox.Location = new System.Drawing.Point(16, 121);
-            this.FlagFilename_textbox.Name = "FlagFilename_textbox";
-            this.FlagFilename_textbox.Size = new System.Drawing.Size(163, 21);
-            this.FlagFilename_textbox.TabIndex = 48;
-            this.FlagFilename_textbox.TextChanged += new System.EventHandler(this.FlagFilename_textbox_TextChanged);
             // 
             // ConquestInfoForm
             // 

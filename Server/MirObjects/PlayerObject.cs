@@ -13642,6 +13642,11 @@ namespace Server.MirObjects
             Report.ChatMessage(text);
         }
 
+        public void ReceiveOutputMessage(string text, OutputMessageType type)
+        {
+            Enqueue(new S.SendOutputMessage { Message = text, Type = type });
+        }
+
         private void CleanUp()
         {
             Connection.Player = null;

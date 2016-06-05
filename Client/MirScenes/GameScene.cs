@@ -289,6 +289,9 @@ namespace Client.MirScenes
                         case OutputMessageType.Quest:
                             color = Color.Gold;
                             break;
+                        case OutputMessageType.Guild:
+                            color = Color.Violet;
+                            break;
                         default:
                             color = Color.LimeGreen;
                             break;
