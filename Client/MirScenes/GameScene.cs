@@ -3283,6 +3283,8 @@ namespace Client.MirScenes
                 NPCObject npc = (NPCObject)ob;
                 npc.Image = p.Image;
                 npc.Colour = p.Colour;
+
+                npc.LoadLibrary();
                 return;
             }
         }

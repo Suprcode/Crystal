@@ -67,10 +67,7 @@ namespace Client.MirObjects
             Image = info.Image;
             Colour = info.Colour;
 
-            if (info.Image < Libraries.NPCs.Length)
-                BodyLibrary = Libraries.NPCs[info.Image];
-            else if (info.Image >= 1000 && info.Image < 1100)
-                BodyLibrary = Libraries.Flags[info.Image - 1000];
+            LoadLibrary();
 
             switch (info.Image)
             {
@@ -367,6 +364,14 @@ namespace Client.MirObjects
             BaseIndex = 0;
 
             SetAction();
+        }
+
+        public void LoadLibrary()
+        {
+            if (Image < Libraries.NPCs.Length)
+                BodyLibrary = Libraries.NPCs[Image];
+            else if (Image >= 1000 && Image < 1100)
+                BodyLibrary = Libraries.Flags[Image - 1000];
         }
 
         public override void Process()
