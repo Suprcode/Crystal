@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using Server.MirObjects;
@@ -10,29 +12,61 @@ namespace Server.MirDatabase
 {
     public class QuestProgressInfo
     {
-        public int Index;
-
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Index { get; set; }
+        [NotMapped]
         public QuestInfo Info;
 
-        public DateTime StartDateTime = DateTime.MinValue;
-        public DateTime EndDateTime = DateTime.MaxValue;
+        public DateTime StartDateTime { get; set; } = DateTime.MinValue;
+        public DateTime EndDateTime { get; set; } = DateTime.MaxValue;
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        
+        public CharacterInfo CharacterInfo { get; set; }
 
         public List<int> KillTaskCount = new List<int>();
-        public List<long> ItemTaskCount = new List<long>();
-        public List<bool> FlagTaskSet = new List<bool>();
+        public string DbKillTaskCount
+        {
+            get { return string.Join(",", KillTaskCount); }
+            set { KillTaskCount = value.Split(',').Select(int.Parse).ToList(); }
+        }
 
-        public List<string> TaskList = new List<string>();
+        public List<long> ItemTaskCount { get; set; } = new List<long>();
+        public string DbItemTaskCount
+        {
+            get { return string.Join(",", ItemTaskCount); }
+            set { ItemTaskCount = value.Split(',').Select(long.Parse).ToList(); }
+        }
 
+        public List<bool> FlagTaskSet { get; set; } = new List<bool>();
+        public string DbFlagTaskSet
+        {
+            get { return string.Join(",", FlagTaskSet); }
+            set
+            {
+                FlagTaskSet = value.Split(',').Select(bool.Parse).ToList();
+            }
+        }
+
+        public List<string> TaskList { get; set; } = new List<string>();
+        public string DbTaskList
+        {
+            get { return string.Join("|", TaskList); }
+            set { TaskList = value.Split('|').ToList(); }
+        }
+
+        [NotMapped]
         public bool Taken
         {
             get { return StartDateTime > DateTime.MinValue; }
         }
-
+        [NotMapped]
         public bool Completed
         {
             get { return EndDateTime < DateTime.MaxValue; }
         }
-
+        [NotMapped]
         public bool New
         {
             get { return StartDateTime > DateTime.Now.AddDays(-1); }

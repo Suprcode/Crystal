@@ -5160,7 +5160,7 @@ namespace Client.MirScenes
             if (InventoryDialog.Visible)
                 InventoryDialog.Hide();
 
-            MirItemCell cell = InventoryDialog.GetCell((ulong)p.removeID);
+            MirItemCell cell = InventoryDialog.GetCell(p.removeID);
             if (cell != null)
             {
                 cell.Locked = false;

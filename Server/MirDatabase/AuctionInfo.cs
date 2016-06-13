@@ -8,7 +8,7 @@ namespace Server.MirDatabase
 {
     public class AuctionInfo
     {
-        public ulong AuctionID; 
+        public long AuctionID; 
 
         public UserItem Item;
         public DateTime ConsignmentDate;
@@ -25,7 +25,7 @@ namespace Server.MirDatabase
         }
         public AuctionInfo(BinaryReader reader, int version, int customversion)
         {
-            AuctionID = reader.ReadUInt64();
+            AuctionID = (long) reader.ReadUInt64();
 
             Item = new UserItem(reader, version, customversion);
             ConsignmentDate = DateTime.FromBinary(reader.ReadInt64());

@@ -972,14 +972,14 @@ namespace ServerPackets
         }
 
         public MirGridType Grid;
-        public ulong UniqueID;
+        public long UniqueID;
         public int To;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Grid = (MirGridType)reader.ReadByte();
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             To = reader.ReadInt32();
             Success = reader.ReadBoolean();
         }
@@ -1000,15 +1000,15 @@ namespace ServerPackets
         }
 
         public MirGridType GridFrom, GridTo;
-        public ulong IDFrom, IDTo;
+        public long IDFrom, IDTo;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             GridFrom = (MirGridType)reader.ReadByte();
             GridTo = (MirGridType)reader.ReadByte();
-            IDFrom = reader.ReadUInt64();
-            IDTo = reader.ReadUInt64();
+            IDFrom = (long) reader.ReadUInt64();
+            IDTo = (long) reader.ReadUInt64();
             Success = reader.ReadBoolean();
         }
 
@@ -1029,14 +1029,14 @@ namespace ServerPackets
         }
 
         public MirGridType Grid;
-        public ulong UniqueID;
+        public long UniqueID;
         public int To;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Grid = (MirGridType)reader.ReadByte();
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             To = reader.ReadInt32();
             Success = reader.ReadBoolean();
         }
@@ -1058,7 +1058,7 @@ namespace ServerPackets
 
         public MirGridType Grid;
         public MirGridType GridTo;
-        public ulong UniqueID;
+        public long UniqueID;
         public int To;
         public bool Success;
 
@@ -1066,7 +1066,7 @@ namespace ServerPackets
         {
             Grid = (MirGridType)reader.ReadByte();
             GridTo = (MirGridType)reader.ReadByte();
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             To = reader.ReadInt32();
             Success = reader.ReadBoolean();
         }
@@ -1205,11 +1205,11 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.RefineItem; }
         }
 
-        public ulong UniqueID;
+        public long UniqueID;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1299,14 +1299,14 @@ namespace ServerPackets
         }
 
         public MirGridType Grid;
-        public ulong UniqueID;
+        public long UniqueID;
         public uint Count;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Grid = (MirGridType)reader.ReadByte();
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Count = reader.ReadUInt32();
             Success = reader.ReadBoolean();
         }
@@ -1326,12 +1326,12 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.UseItem; }
         }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Success = reader.ReadBoolean();
         }
 
@@ -1348,13 +1348,13 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.DropItem; }
         }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public uint Count;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Count = reader.ReadUInt32();
             Success = reader.ReadBoolean();
         }
@@ -2053,12 +2053,12 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.DuraChanged; }
         }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public ushort CurrentDura;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             CurrentDura = reader.ReadUInt16();
         }
 
@@ -2096,12 +2096,12 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.DeleteItem; }
         }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public uint Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Count = reader.ReadUInt32();
         }
 
@@ -2708,13 +2708,13 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.SellItem; } }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public uint Count;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Count = reader.ReadUInt32();
             Success = reader.ReadBoolean();
         }
@@ -2729,11 +2729,11 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.RepairItem; } }
 
-        public ulong UniqueID;
+        public long UniqueID;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2744,12 +2744,12 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.ItemRepaired; } }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public ushort MaxDura, CurrentDura;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             MaxDura = reader.ReadUInt16();
             CurrentDura = reader.ReadUInt16();
         }
@@ -3584,12 +3584,12 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.ConsignItem; } }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Success = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
@@ -3717,11 +3717,11 @@ namespace ServerPackets
     public sealed class ChatItemStats : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.ChatItemStats; } }
-        public ulong ChatItemId;
+        public long ChatItemId;
         public UserItem Stats;
         protected override void ReadPacket(BinaryReader reader)
         {
-            ChatItemId = reader.ReadUInt64();
+            ChatItemId = (long) reader.ReadUInt64();
             Stats = new UserItem(reader);
         }
 
@@ -4059,7 +4059,7 @@ namespace ServerPackets
         }
 
         public MirGridType Grid;
-        public ulong UniqueID;
+        public long UniqueID;
         public int To;
         public bool Success;
         public MirGridType GridTo;
@@ -4067,7 +4067,7 @@ namespace ServerPackets
         protected override void ReadPacket(BinaryReader reader)
         {
             Grid = (MirGridType)reader.ReadByte();
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             To = reader.ReadInt32();
             GridTo = (MirGridType)reader.ReadByte();
             Success = reader.ReadBoolean();
@@ -4266,12 +4266,12 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.DeleteQuestItem; }
         }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public uint Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Count = reader.ReadUInt32();
         }
 
@@ -4499,14 +4499,14 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.CombineItem; }
         }
 
-        public ulong IDFrom, IDTo;
+        public long IDFrom, IDTo;
         public bool Success;
         public bool Destroy;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            IDFrom = reader.ReadUInt64();
-            IDTo = reader.ReadUInt64();
+            IDFrom = (long) reader.ReadUInt64();
+            IDTo = (long) reader.ReadUInt64();
             Success = reader.ReadBoolean();
             Destroy = reader.ReadBoolean();
         }
@@ -4830,12 +4830,12 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.AwakeningLockedItem; } }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public bool Locked;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Locked = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
@@ -4893,12 +4893,12 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.MailLockedItem; } }
 
-        public ulong UniqueID;
+        public long UniqueID;
         public bool Locked;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            UniqueID = reader.ReadUInt64();
+            UniqueID = (long) reader.ReadUInt64();
             Locked = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)

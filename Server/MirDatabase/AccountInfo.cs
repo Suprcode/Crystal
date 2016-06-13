@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Windows.Forms;
 using Server.MirNetwork;
@@ -11,29 +13,31 @@ namespace Server.MirDatabase
 {
     public class AccountInfo
     {
-        public int Index;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Index { get; set; }
 
-        public string AccountID = string.Empty;
-        public string Password = string.Empty;
+        public string AccountID { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
 
-        public string UserName = string.Empty;
-        public DateTime BirthDate;
-        public string SecretQuestion = string.Empty;
-        public string SecretAnswer = string.Empty;
-        public string EMailAddress = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public DateTime? BirthDate { get; set; }
+        public string SecretQuestion { get; set; } = string.Empty;
+        public string SecretAnswer { get; set; } = string.Empty;
+        public string EMailAddress { get; set; } = string.Empty;
 
-        public string CreationIP = string.Empty;
-        public DateTime CreationDate;
+        public string CreationIP { get; set; } = string.Empty;
+        public DateTime? CreationDate { get; set; }
 
-        public bool Banned;
-        public string BanReason = string.Empty;
-        public DateTime ExpiryDate;
-        public int WrongPasswordCount;
+        public bool Banned { get; set; }
+        public string BanReason { get; set; } = string.Empty;
+        public DateTime? ExpiryDate { get; set; }
+        public int WrongPasswordCount { get; set; }
 
-        public string LastIP = string.Empty;
-        public DateTime LastDate;
+        public string LastIP { get; set; } = string.Empty;
+        public DateTime? LastDate { get; set; }
 
-        public List<CharacterInfo> Characters = new List<CharacterInfo>();
+        public List<CharacterInfo> Characters { get; set; } = new List<CharacterInfo>();
 
         public UserItem[] Storage = new UserItem[80];
         public uint Gold;
@@ -111,7 +115,7 @@ namespace Server.MirDatabase
                 {
                     if (Characters[i] == null) continue;
                     if (Characters[i].Deleted) continue;
-                    if ((DateTime.Now - Characters[i].LastDate).TotalDays > 13) continue;
+                    if ((DateTime.Now - Characters[i].LastDate).GetValueOrDefault().TotalDays > 13) continue;
                     if ((Characters[i].Level >= SMain.Envir.RankBottomLevel[0]) || (Characters[i].Level >= SMain.Envir.RankBottomLevel[(byte)Characters[i].Class + 1]))
                     {
                         SMain.Envir.CheckRankUpdate(Characters[i]);
@@ -128,20 +132,20 @@ namespace Server.MirDatabase
             writer.Write(Password);
 
             writer.Write(UserName);
-            writer.Write(BirthDate.ToBinary());
+            writer.Write(BirthDate.GetValueOrDefault().ToBinary());
             writer.Write(SecretQuestion);
             writer.Write(SecretAnswer);
             writer.Write(EMailAddress);
 
             writer.Write(CreationIP);
-            writer.Write(CreationDate.ToBinary());
+            writer.Write(CreationDate.GetValueOrDefault().ToBinary());
 
             writer.Write(Banned);
             writer.Write(BanReason);
-            writer.Write(ExpiryDate.ToBinary());
+            writer.Write(ExpiryDate.GetValueOrDefault().ToBinary());
 
             writer.Write(LastIP);
-            writer.Write(LastDate.ToBinary());
+            writer.Write(LastDate.GetValueOrDefault().ToBinary());
 
             writer.Write(Characters.Count);
             for (int i = 0; i < Characters.Count; i++)

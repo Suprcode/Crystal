@@ -52,7 +52,7 @@ namespace Server
 
             PKPointsLabel.Text = Character.PKPoints.ToString();
             CurrentIPLabel.Text = Character.AccountInfo.LastIP;
-            OnlineTimeLabel.Text = (DateTime.Now - Character.LastDate).TotalMinutes.ToString("##") + " minutes";
+            OnlineTimeLabel.Text = (DateTime.Now - Character.LastDate).GetValueOrDefault().TotalMinutes.ToString("##") + " minutes";
 
             ChatBanExpiryTextBox.Text = Character.ChatBanExpiryDate.ToString();
         }

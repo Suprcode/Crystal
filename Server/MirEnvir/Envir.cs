@@ -119,7 +119,7 @@ namespace Server.MirEnvir
 
         //User DB
         public int NextAccountID, NextCharacterID;
-        public ulong NextUserItemID, NextAuctionID, NextMailID;
+        public long NextUserItemID, NextAuctionID, NextMailID;
         public List<AccountInfo> AccountList = new List<AccountInfo>();
         public List<CharacterInfo> CharacterList = new List<CharacterInfo>(); 
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
@@ -870,6 +870,26 @@ namespace Server.MirEnvir
 
         public void SaveDB()
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    foreach (var itemInfo in ItemInfoList)
+                    {
+                        var dbItemInfo = ctx.ItemInfos.FirstOrDefault(i => i.Index == itemInfo.Index);
+                        if (dbItemInfo == null)
+                        {
+                            ctx.ItemInfos.Add(itemInfo);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbItemInfo).CurrentValues.SetValues(itemInfo);
+                        }
+                    }
+                }
+                
+                //return;
+            }
             using (FileStream stream = File.Create(DatabasePath))
             using (BinaryWriter writer = new BinaryWriter(stream))
             {
@@ -1322,7 +1342,7 @@ namespace Server.MirEnvir
                     if (LoadVersion > 57) LoadCustomVersion = reader.ReadInt32();
                     NextAccountID = reader.ReadInt32();
                     NextCharacterID = reader.ReadInt32();
-                    NextUserItemID = reader.ReadUInt64();
+                    NextUserItemID = (long) reader.ReadUInt64();
 
                     if (LoadVersion > 27)
                     {
@@ -1346,7 +1366,7 @@ namespace Server.MirEnvir
                     Auctions.Clear();
 
                     if (LoadVersion >= 8)
-                        NextAuctionID = reader.ReadUInt64();
+                        NextAuctionID = (long) reader.ReadUInt64();
 
                     count = reader.ReadInt32();
                     for (int i = 0; i < count; i++)
@@ -1371,7 +1391,7 @@ namespace Server.MirEnvir
 
                     if(LoadVersion > 43)
                     {
-                        NextMailID = reader.ReadUInt64();
+                        NextMailID = (long) reader.ReadUInt64();
 
                         Mail.Clear();
 
@@ -2158,7 +2178,7 @@ namespace Server.MirEnvir
             {
                 if (account.ExpiryDate > Now)
                 {
-                    c.Enqueue(new ServerPackets.ChangePasswordBanned {Reason = account.BanReason, ExpiryDate = account.ExpiryDate});
+                    c.Enqueue(new ServerPackets.ChangePasswordBanned {Reason = account.BanReason, ExpiryDate = account.ExpiryDate.GetValueOrDefault() });
                     return;
                 }
                 account.Banned = false;
@@ -2209,7 +2229,7 @@ namespace Server.MirEnvir
                     c.Enqueue(new ServerPackets.LoginBanned
                     {
                         Reason = account.BanReason,
-                        ExpiryDate = account.ExpiryDate
+                        ExpiryDate = account.ExpiryDate.GetValueOrDefault()
                     });
                     return;
                 }
@@ -2230,7 +2250,7 @@ namespace Server.MirEnvir
                     c.Enqueue(new ServerPackets.LoginBanned
                     {
                         Reason = account.BanReason,
-                        ExpiryDate = account.ExpiryDate
+                        ExpiryDate = account.ExpiryDate.GetValueOrDefault()
                     });
                     return;
                 }
@@ -2583,8 +2603,8 @@ namespace Server.MirEnvir
             if ((stat.CriticalDamageChance > 0) && (Random.Next(stat.CriticalDamageChance) == 0)) item.CriticalDamage = (byte)(RandomomRange(stat.CriticalDamageMaxStat-1, stat.CriticalDamageStatChance)+1);
             if ((stat.FreezeChance > 0) && (Random.Next(stat.FreezeChance) == 0)) item.Freezing = (byte)(RandomomRange(stat.FreezeMaxStat-1, stat.FreezeStatChance)+1);
             if ((stat.PoisonAttackChance > 0) && (Random.Next(stat.PoisonAttackChance) == 0)) item.PoisonAttack = (byte)(RandomomRange(stat.PoisonAttackMaxStat-1, stat.PoisonAttackStatChance)+1);
-            if ((stat.AttackSpeedChance > 0) && (Random.Next(stat.AttackSpeedChance) == 0)) item.AttackSpeed = (sbyte)(RandomomRange(stat.AttackSpeedMaxStat-1, stat.AttackSpeedStatChance)+1);
-            if ((stat.LuckChance > 0) && (Random.Next(stat.LuckChance) == 0)) item.Luck = (sbyte)(RandomomRange(stat.LuckMaxStat-1, stat.LuckStatChance)+1);
+            if ((stat.AttackSpeedChance > 0) && (Random.Next(stat.AttackSpeedChance) == 0)) item.AttackSpeed = (byte) (RandomomRange(stat.AttackSpeedMaxStat-1, stat.AttackSpeedStatChance)+1);
+            if ((stat.LuckChance > 0) && (Random.Next(stat.LuckChance) == 0)) item.Luck = (byte) (RandomomRange(stat.LuckMaxStat-1, stat.LuckStatChance)+1);
             if ((stat.CurseChance > 0) && (Random.Next(100) <= stat.CurseChance)) item.Cursed = true;
         }
 

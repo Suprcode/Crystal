@@ -1922,7 +1922,7 @@ namespace Server.MirObjects
             GetFriends();
             GetRelationship();
             
-            if ((Info.Mentor != 0) && (Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now))
+            if ((Info.Mentor != 0) && (Info.MentorDate.GetValueOrDefault().AddDays(Settings.MentorLength) < DateTime.Now))
                 MentorBreak();
             else
                 GetMentor();
@@ -2015,7 +2015,7 @@ namespace Server.MirObjects
 
             if (InSafeZone && Info.LastDate > DateTime.MinValue)
             {
-                double totalMinutes = (Envir.Now - Info.LastDate).TotalMinutes;
+                double totalMinutes = (Envir.Now - Info.LastDate).GetValueOrDefault().TotalMinutes;
 
                 _restedCounter = (int)(totalMinutes * 60);
             }
@@ -9978,7 +9978,7 @@ namespace Server.MirObjects
             Enqueue(new S.AddBuff { Type = b.Type, Caster = Name, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible });
         }
 
-        public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        public void EquipSlotItem(MirGridType grid, long id, int to, MirGridType gridTo)
         {
             S.EquipSlotItem p = new S.EquipSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
 
@@ -10107,7 +10107,7 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-        public void RemoveItem(MirGridType grid, ulong id, int to)
+        public void RemoveItem(MirGridType grid, long id, int to)
         {
             S.RemoveItem p = new S.RemoveItem { Grid = grid, UniqueID = id, To = to, Success = false };
             UserItem[] array;
@@ -10192,7 +10192,7 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-        public void RemoveSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        public void RemoveSlotItem(MirGridType grid, long id, int to, MirGridType gridTo)
         {
             S.RemoveSlotItem p = new S.RemoveSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
             UserItem[] array;
@@ -10504,7 +10504,7 @@ namespace Server.MirObjects
             }
             Enqueue(p);
         }
-        public void EquipItem(MirGridType grid, ulong id, int to)
+        public void EquipItem(MirGridType grid, long id, int to)
         {
             S.EquipItem p = new S.EquipItem { Grid = grid, UniqueID = id, To = to, Success = false };
 
@@ -10622,7 +10622,7 @@ namespace Server.MirObjects
             }
             Enqueue(p);
         }
-        public void UseItem(ulong id)
+        public void UseItem(long id)
         {
             S.UseItem p = new S.UseItem { UniqueID = id, Success = false };
 
@@ -10985,7 +10985,7 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
         }
-        public void SplitItem(MirGridType grid, ulong id, uint count)
+        public void SplitItem(MirGridType grid, long id, uint count)
         {
             S.SplitItem1 p = new S.SplitItem1 { Grid = grid, UniqueID = id, Count = count, Success = false };
             UserItem[] array;
@@ -11077,7 +11077,7 @@ namespace Server.MirObjects
                 return;
             }
         }
-        public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
+        public void MergeItem(MirGridType gridFrom, MirGridType gridTo, long fromID, long toID)
         {
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
 
@@ -11228,7 +11228,7 @@ namespace Server.MirObjects
             Enqueue(p);
             RefreshStats();
         }
-        public void CombineItem(ulong fromID, ulong toID)
+        public void CombineItem(long fromID, long toID)
         {
             S.CombineItem p = new S.CombineItem { IDFrom = fromID, IDTo = toID, Success = false };
 
@@ -11506,7 +11506,7 @@ namespace Server.MirObjects
 
                     else if ((tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed) > 0)
                     {
-                        if (succeeded) tempTo.AttackSpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, tempTo.AttackSpeed + tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed)));
+                        if (succeeded) tempTo.AttackSpeed = (byte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, tempTo.AttackSpeed + tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed)));
                     }
 
                     else if ((tempFrom.Info.Agility + tempFrom.Agility) > 0)
@@ -11540,7 +11540,7 @@ namespace Server.MirObjects
                     }
                     else if ((tempFrom.Info.Luck + tempFrom.Luck) > 0)
                     {
-                        if (succeeded) tempTo.Luck = (sbyte)Math.Min(sbyte.MaxValue, tempFrom.Info.Luck + tempTo.Luck + tempFrom.Luck);
+                        if (succeeded) tempTo.Luck = (byte)Math.Min(sbyte.MaxValue, tempFrom.Info.Luck + tempTo.Luck + tempFrom.Luck);
                     }
                     else
                     {
@@ -11825,7 +11825,7 @@ namespace Server.MirObjects
             */
             return 0;
         }
-        public void DropItem(ulong id, uint count)
+        public void DropItem(long id, uint count)
         {
             S.DropItem p = new S.DropItem { UniqueID = id, Count = count, Success = false };
             if (Dead)
@@ -12764,7 +12764,7 @@ namespace Server.MirObjects
             if (Character != null)
                 Enqueue(new S.UserName { Id = (uint)Character.Index, Name = Character.Name });
         }
-        public void RequestChatItem(ulong id)
+        public void RequestChatItem(long id)
         {
             //Enqueue(new S.ChatItemStats { ChatItemId = id, Stats = whatever });
         }
@@ -13671,7 +13671,7 @@ namespace Server.MirObjects
             CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
         }
 
-        public void BuyItem(ulong index, uint count)
+        public void BuyItem(long index, uint count)
         {
             if (Dead) return;
 
@@ -13689,7 +13689,7 @@ namespace Server.MirObjects
                 ob.Buy(this, index, count);
             }
         }
-        public void SellItem(ulong uniqueID, uint count)
+        public void SellItem(long uniqueID, uint count)
         {
             S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };
             if (Dead || count == 0)
@@ -13768,7 +13768,7 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-        public void RepairItem(ulong uniqueID, bool special = false)
+        public void RepairItem(long uniqueID, bool special = false)
         {
             Enqueue(new S.RepairItem { UniqueID = uniqueID });
 
@@ -13845,7 +13845,7 @@ namespace Server.MirObjects
 
         #region Consignment
 
-        public void ConsignItem(ulong uniqueID, uint price)
+        public void ConsignItem(long uniqueID, uint price)
         {
             S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
             if (price < Globals.MinConsignment || price > Globals.MaxConsignment || Dead)
@@ -14025,7 +14025,7 @@ namespace Server.MirObjects
                 GetMarket(string.Empty, MatchType);
             }
         }
-        public void MarketBuy(ulong auctionID)
+        public void MarketBuy(long auctionID)
         {
             if (Dead)
             {
@@ -14095,7 +14095,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.MarketFail { Reason = 7 });
         }
-        public void MarketGetBack(ulong auctionID)
+        public void MarketGetBack(long auctionID)
         {
             if (Dead)
             {
@@ -14168,7 +14168,7 @@ namespace Server.MirObjects
 
         #region Awakening
 
-        public void Awakening(ulong UniqueID, AwakeType type)
+        public void Awakening(long UniqueID, AwakeType type)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.AwakeningKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14229,7 +14229,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void DowngradeAwakening(ulong UniqueID)
+        public void DowngradeAwakening(long UniqueID)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.DowngradeKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14271,7 +14271,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void DisassembleItem(ulong UniqueID)
+        public void DisassembleItem(long UniqueID)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.DisassembleKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14319,7 +14319,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void ResetAddedItem(ulong UniqueID)
+        public void ResetAddedItem(long UniqueID)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ResetKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14358,7 +14358,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void AwakeningNeedMaterials(ulong UniqueID, AwakeType type)
+        public void AwakeningNeedMaterials(long UniqueID, AwakeType type)
         {
             if (type == AwakeType.None) return;
 
@@ -16629,7 +16629,7 @@ namespace Server.MirObjects
             mail.Send();
         }
 
-        public void SendMail(string name, string message, uint gold, ulong[] items, bool stamped)
+        public void SendMail(string name, string message, uint gold, long[] items, bool stamped)
         {
             CharacterInfo player = Envir.GetCharacterInfo(name);
 
@@ -16716,7 +16716,7 @@ namespace Server.MirObjects
             Enqueue(new S.MailSent { Result = 1 });
         }
 
-        public void ReadMail(ulong mailID)
+        public void ReadMail(long mailID)
         {
             MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
 
@@ -16727,7 +16727,7 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void CollectMail(ulong mailID)
+        public void CollectMail(long mailID)
         {
             MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
 
@@ -16773,7 +16773,7 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void DeleteMail(ulong mailID)
+        public void DeleteMail(long mailID)
         {
             MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
 
@@ -16784,7 +16784,7 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void LockMail(ulong mailID, bool lockMail)
+        public void LockMail(long mailID, bool lockMail)
         {
             MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
 
@@ -16795,7 +16795,7 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public uint GetMailCost(ulong[] items, uint gold, bool stamped)
+        public uint GetMailCost(long[] items, uint gold, bool stamped)
         {
             uint cost = 0;
 
@@ -17225,14 +17225,14 @@ namespace Server.MirObjects
             switch ((int)dropitem.Info.Effect)
             {
                 case 0://exp low/med/high
-                    dropitem.Luck = (sbyte)5;
-                    if (boxtype > 0) dropitem.Luck = (sbyte)10;
-                    if (boxtype > 1) dropitem.Luck = (sbyte)20;
+                    dropitem.Luck = 5;
+                    if (boxtype > 0) dropitem.Luck = 10;
+                    if (boxtype > 1) dropitem.Luck = 20;
                     break;
                 case 1://drop low/med/high
-                    dropitem.Luck = (sbyte)10;
-                    if (boxtype > 0) dropitem.Luck = (sbyte)20;
-                    if (boxtype > 1) dropitem.Luck = (sbyte)50;
+                    dropitem.Luck = 10;
+                    if (boxtype > 0) dropitem.Luck = 20;
+                    if (boxtype > 1) dropitem.Luck = 50;
                     break;
                 case 2://hp low/med/high
                     dropitem.HP = (byte)50;
@@ -17255,9 +17255,9 @@ namespace Server.MirObjects
                     if (boxtype > 1) dropitem.MAC = (byte)5;
                     break;
                 case 6://speed low/med/high
-                    dropitem.AttackSpeed = (sbyte)2;
-                    if (boxtype > 0) dropitem.AttackSpeed = (sbyte)3;
-                    if (boxtype > 1) dropitem.AttackSpeed = (sbyte)4;
+                    dropitem.AttackSpeed = 2;
+                    if (boxtype > 0) dropitem.AttackSpeed = 3;
+                    if (boxtype > 1) dropitem.AttackSpeed = 4;
                     break;
             }
             //string dbg = String.Format(" Img: {0} Effect: {1} Dura: {2} Exp: {3} Drop: {3} HP: {4} MP: {5} AC: {6} MAC: {7} ASpeed: {8} BagWeight: {9}", dropitem.Image, dropitem.Info.Effect, dropitem.CurrentDura, dropitem.Luck, dropitem.HP, dropitem.MP, dropitem.AC, dropitem.MAC, dropitem.AttackSpeed, dropitem.Luck);
@@ -17535,7 +17535,7 @@ namespace Server.MirObjects
                 }
             }
         }
-        public void RefineItem(ulong uniqueID)
+        public void RefineItem(long uniqueID)
         {
             Enqueue(new S.RepairItem { UniqueID = uniqueID }); //CHECK THIS.
 
@@ -17801,7 +17801,7 @@ namespace Server.MirObjects
             Enqueue(p);
             return;
         }
-        public void CheckRefine(ulong uniqueID)
+        public void CheckRefine(long uniqueID)
         {
             //Enqueue(new S.RepairItem { UniqueID = uniqueID });
 
@@ -17949,7 +17949,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void ReplaceWeddingRing(ulong uniqueID)
+        public void ReplaceWeddingRing(long uniqueID)
         {
             if (Dead) return;
 
@@ -18037,7 +18037,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+            if (Info.MarriedDate.GetValueOrDefault().AddDays(Settings.MarriageCooldown) > DateTime.Now)
             {
                 ReceiveChat(string.Format("You can't get married again yet, there is a {0} day cooldown after a divorce.", Settings.MarriageCooldown), ChatType.System);
                 return;
@@ -18081,7 +18081,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (player.Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+                if (player.Info.MarriedDate.GetValueOrDefault().AddDays(Settings.MarriageCooldown) > DateTime.Now)
                 {
                     ReceiveChat(string.Format("{0} can't get married again yet, there is a {1} day cooldown after divorce", player.Name, Settings.MarriageCooldown), ChatType.System);
                     return;
@@ -18308,7 +18308,7 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0)
             {
-                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate, MapName = "", MarriedDays = 0 });
+                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate.GetValueOrDefault(), MapName = "", MarriedDays = 0 });
             }
             else
             {
@@ -18317,10 +18317,10 @@ namespace Server.MirObjects
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
 
                 if (player == null)
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate.GetValueOrDefault(), MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).GetValueOrDefault().TotalDays });
                 else
                 {
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate.GetValueOrDefault(), MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(DateTime.Now - Info.MarriedDate).GetValueOrDefault().TotalDays });
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
@@ -18343,7 +18343,7 @@ namespace Server.MirObjects
             PlayerObject player = Envir.GetPlayer(Lover.Name);
             if (player != null)
             {
-                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate.GetValueOrDefault(), MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).GetValueOrDefault().TotalDays });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }

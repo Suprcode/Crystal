@@ -34,6 +34,7 @@ namespace Server
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
+            UseSQLServerCheckbox.Checked = Settings.UseSQLServer;
 
             ServerVersionLabel.Text = Application.ProductVersion;
             DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");

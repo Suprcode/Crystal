@@ -605,7 +605,7 @@ namespace Server.MirObjects
                     if (data.Length == 2)
                         uint.TryParse(data[1], out count);
                     goods.Count = count;
-                    goods.UniqueID = (ulong)i;
+                    goods.UniqueID = i;
 
                     Goods.Add(goods);
                 }
@@ -1255,7 +1255,7 @@ namespace Server.MirObjects
         }
         #endregion
 
-        public void Buy(PlayerObject player, ulong index, uint count)
+        public void Buy(PlayerObject player, long index, uint count)
         {
             UserItem goods = null;
 

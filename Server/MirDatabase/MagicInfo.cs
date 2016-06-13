@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,16 +11,28 @@ namespace Server.MirDatabase
 {
     public class MagicInfo
     {
-        public string Name;
-        public Spell Spell;
-        public byte BaseCost, LevelCost, Icon;
-        public byte Level1, Level2, Level3;
-        public ushort Need1, Need2, Need3;
-        public uint DelayBase = 1800, DelayReduction;
-        public ushort PowerBase, PowerBonus;
-        public ushort MPowerBase, MPowerBonus;
-        public float MultiplierBase = 1.0f, MultiplierBonus;
-        public byte Range = 9;
+        public long id { get; set; }
+
+        public string Name { get; set; }
+        public Spell Spell { get; set; }
+        public byte BaseCost { get; set; }
+        public byte LevelCost { get; set; }
+        public byte Icon { get; set; }
+        public byte Level1 { get; set; }
+        public byte Level2 { get; set; }
+        public byte Level3 { get; set; }
+        public ushort Need1 { get; set; }
+        public ushort Need2 { get; set; }
+        public ushort Need3 { get; set; }
+        public uint DelayBase { get; set; } = 1800;
+        public uint DelayReduction { get; set; }
+        public ushort PowerBase { get; set; }
+        public ushort PowerBonus { get; set; }
+        public ushort MPowerBase { get; set; }
+        public ushort MPowerBonus { get; set; }
+        public float MultiplierBase { get; set; } = 1.0f;
+        public float MultiplierBonus { get; set; }
+        public byte Range { get; set; } = 9;
 
         public override string ToString()
         {
@@ -87,13 +100,21 @@ namespace Server.MirDatabase
 
     public class UserMagic
     {
-        public Spell Spell;
-        public MagicInfo Info;
+        public long id { get; set; }
 
-        public byte Level, Key;
-        public ushort Experience;
-        public bool IsTempSpell;
-        public long CastTime;
+        public Spell Spell { get; set; }
+        [NotMapped]
+        public MagicInfo Info;
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        
+        public virtual CharacterInfo CharacterInfo { get; set; }
+
+        public byte Level { get; set; }
+        public byte Key { get; set; }
+        public ushort Experience { get; set; }
+        public bool IsTempSpell { get; set; }
+        public long CastTime { get; set; }
 
         private MagicInfo GetMagicInfo(Spell spell)
         {
