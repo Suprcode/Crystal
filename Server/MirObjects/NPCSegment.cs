@@ -1088,6 +1088,18 @@ namespace Server.MirObjects
                             newValue += " - [ " + Siege.GetRepairCost().ToString("#,##0") + " gold ]";
                     }
                     break;
+                case "CONQUESTOWNER()":
+                    val1 = FindVariable(player, "%" + oneValMatch.Groups[2].Captures[0].Value.ToUpper());
+
+                    if (int.TryParse(val1.Replace("%", ""), out intVal1))
+                    {
+                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        if (Conquest == null) return string.Empty;
+                        if (Conquest.Guild == null) return "No Owner";
+
+                        newValue = Conquest.Guild.Name;
+                    }
+                    break;
                 case "CONQUESTGOLD()":
                     val1 = FindVariable(player, "%" + oneValMatch.Groups[2].Captures[0].Value.ToUpper());
 
@@ -3321,7 +3333,7 @@ namespace Server.MirObjects
                         {
                             Conquest.StartType = ConquestType.Forced;
                             Conquest.GameType = tempGame;
-                            Conquest.WarIsOn = true;
+                            Conquest.StartWar(tempGame);
                         }
                         break;
                     case ActionType.ScheduleConquest:

@@ -13,6 +13,9 @@ namespace Server.MirObjects.Monsters
         public int GateIndex;
 
         public bool Closed;
+        private long CloseTime;
+
+        private bool AutoOpen = true;
 
         protected List<BlockingObject> BlockingObjects = new List<BlockingObject>();
 
@@ -71,6 +74,36 @@ namespace Server.MirObjects.Monsters
         protected override void ProcessAI()
         {
             base.ProcessAI();
+
+            if(!Closed && CloseTime > 0 && CloseTime < Envir.Time)
+            {
+                CloseDoor();
+                CloseTime = 0;
+            }
+        }
+
+        protected override void ProcessSearch()
+        {
+            if (Envir.Time < SearchTime) return;
+
+            SearchTime = Envir.Time + SearchDelay;
+
+            if(Closed && AutoOpen)
+            {
+                var nearby = FindAllNearby(4, CurrentLocation);
+
+                for (int i = 0; i < nearby.Count; i++)
+                {
+                    if (nearby[i].Race != ObjectType.Player) continue;
+                    PlayerObject player = (PlayerObject)nearby[i];
+
+                    if (player.MyGuild == null || player.MyGuild.Conquest == null || player.MyGuild.Conquest != Conquest || player.WarZone) continue;
+
+                    OpenDoor();
+                    CloseTime = Envir.Time + (Settings.Second * 10);
+                    break;
+                }
+            }
         }
 
 
@@ -97,9 +130,7 @@ namespace Server.MirObjects.Monsters
         }
 
         protected override void ProcessRoam() { }
-
-        protected override void ProcessSearch() { }
-
+        
         public override Packet GetInfo()
         {
             return base.GetInfo();

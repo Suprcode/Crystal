@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 73;
+        public const int Version = 75;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -1765,7 +1765,16 @@ namespace Server.MirEnvir
                         if (newConquest.SiegeList[j].Info == null)
                             newConquest.SiegeList.Remove(newConquest.SiegeList[j]);
                     }
-                    
+
+                    //Bind Info to Saved Flag objects or create new objects
+                    for (int j = 0; j < ConquestInfos[i].ControlPoints.Count; j++)
+                    {
+                        ConquestFlagObject cp = null;
+                        newConquest.ControlPoints.Add(cp = new ConquestFlagObject { Info = ConquestInfos[i].ControlPoints[j], Index = ConquestInfos[i].ControlPoints[j].Index, Conquest = newConquest }, new Dictionary<GuildObject, int>());
+
+                        cp.Spawn();
+                    }
+
 
                     newConquest.LoadArchers();
                     newConquest.LoadGates();

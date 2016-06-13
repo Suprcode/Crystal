@@ -2037,11 +2037,12 @@ namespace Server.MirEnvir
                 case Spell.Portal:                  
                     value = (int)data[2];
                     location = (Point)data[3];
+                    value2 = (int)data[4];
 
                     spellOb = new SpellObject
                     {
                         Spell = Spell.Portal,
-                        Value = 0,
+                        Value = value2,
                         ExpireTime = Envir.Time + value * 1000,
                         TickSpeed = 2000,
                         Caster = player,
@@ -2159,22 +2160,25 @@ namespace Server.MirEnvir
             for (int i = 0; i < Conquest.Count; i++)
             {
                 ConquestObject swi = Conquest[i];
-                if (Functions.InRange(swi.Info.Location, location, swi.Info.Size) && swi.WarIsOn)
+
+                if ((swi.Info.FullMap || Functions.InRange(swi.Info.Location, location, swi.Info.Size)) && swi.WarIsOn)
                     return swi;
             }
             return null;
         }
 
-        public ConquestObject GetInnerConquest(Point location)
-        {
-            for (int i = 0; i < Conquest.Count; i++)
-            {
-                ConquestObject swi = Conquest[i];
-                if (Functions.InRange(swi.Info.ObjectLoc, location, swi.Info.ObjectSize) && swi.WarIsOn)
-                    return swi;
-            }
-            return null;
-        }
+        //public ConquestObject GetInnerConquest(Map map, Point location)
+        //{
+        //    for (int i = 0; i < Conquest.Count; i++)
+        //    {
+        //        ConquestObject swi = Conquest[i];
+        //        if (map.Info.Index != swi.Info.MapIndex) continue;
+
+        //        if (Functions.InRange(swi.Info.KingLocation, location, swi.Info.KingSize) && swi.WarIsOn)
+        //            return swi;
+        //    }
+        //    return null;
+        //}
 
         public void Broadcast(Packet p, Point location)
         {

@@ -191,6 +191,14 @@ namespace Server.MirObjects
                     if (!ExitMap.ValidPoint(newExit)) return;
 
                     ob.Teleport(ExitMap, newExit, false);
+
+                    Value = Value - 1;
+
+                    if(Value < 1)
+                    {
+                        ExpireTime = Envir.Time;
+                        return;
+                    }
                     
                     break;
             }

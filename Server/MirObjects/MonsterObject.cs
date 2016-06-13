@@ -1708,13 +1708,11 @@ namespace Server.MirObjects
                 {
                     if (y < 0) continue;
                     if (y >= CurrentMap.Height) break;
-                    if ((y < location.Y - d + 1) || (y > location.Y + d - 1)) continue;
 
                     for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
-                        if ((x < location.Y - d + 1) || (x > location.X + d - 1)) continue;
 
                         Cell cell = CurrentMap.GetCell(x, y);
                         if (!cell.Valid || cell.Objects == null) continue;
@@ -1725,6 +1723,7 @@ namespace Server.MirObjects
                             switch (ob.Race)
                             {
                                 case ObjectType.Monster:
+                                case ObjectType.Player:
                                     targets.Add(ob);
                                     continue;
                                 default:

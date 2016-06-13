@@ -1593,6 +1593,7 @@ public enum ConquestGame : byte
     KingOfHill = 1,
     Random = 2,
     Classic = 3,
+    ControlPoints = 4
 }
 
 public class InIReader

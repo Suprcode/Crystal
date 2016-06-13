@@ -290,7 +290,7 @@ namespace Client.MirScenes
                             color = Color.Gold;
                             break;
                         case OutputMessageType.Guild:
-                            color = Color.Violet;
+                            color = Color.DeepPink;
                             break;
                         default:
                             color = Color.LimeGreen;

@@ -36,7 +36,7 @@ namespace Server.MirObjects
         public List<string> Notice = new List<string>();
         public List<GuildObject> WarringGuilds = new List<GuildObject>();
 
-        public ushort FlagImage = 0;
+        public ushort FlagImage = 1000;
         public Color FlagColour = Color.White;
 
         public ConquestObject Conquest;

@@ -9,6 +9,7 @@ namespace Server.MirDatabase
     public class ConquestInfo
     {
         public int Index;
+        public bool FullMap;
         public Point Location;
         public ushort Size;
         public string Name;
@@ -43,8 +44,13 @@ namespace Server.MirDatabase
         public bool Saturday;
         public bool Sunday;
 
-        public Point ObjectLoc;
-        public ushort ObjectSize;
+        //King of the hill
+        public Point KingLocation;
+        public ushort KingSize;
+
+        //Control points
+        public List<ConquestFlagInfo> ControlPoints = new List<ConquestFlagInfo>();
+        public int ControlPointIndex;
 
         public ConquestInfo()
         {
@@ -54,6 +60,12 @@ namespace Server.MirDatabase
         public ConquestInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
+
+            if(Envir.LoadVersion > 73)
+            {
+                FullMap = reader.ReadBoolean();
+            }
+
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Size = reader.ReadUInt16();
             Name = reader.ReadString();
@@ -117,14 +129,24 @@ namespace Server.MirDatabase
             Saturday = reader.ReadBoolean();
             Sunday = reader.ReadBoolean();
 
-            ObjectLoc = new Point(reader.ReadInt32(), reader.ReadInt32());
-            ObjectSize = reader.ReadUInt16();
+            KingLocation = new Point(reader.ReadInt32(), reader.ReadInt32());
+            KingSize = reader.ReadUInt16();
 
+            if (Envir.LoadVersion > 74)
+            {
+                ControlPointIndex = reader.ReadInt32();
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ControlPoints.Add(new ConquestFlagInfo(reader));
+                }
+            }
         }
 
         public void Save(BinaryWriter writer)
         {
             writer.Write(Index);
+            writer.Write(FullMap);
             writer.Write(Location.X);
             writer.Write(Location.Y);
             writer.Write(Size);
@@ -181,11 +203,16 @@ namespace Server.MirDatabase
             writer.Write(Saturday);
             writer.Write(Sunday);
 
-            writer.Write(ObjectLoc.X);
-            writer.Write(ObjectLoc.Y);
-            writer.Write(ObjectSize);
+            writer.Write(KingLocation.X);
+            writer.Write(KingLocation.Y);
+            writer.Write(KingSize);
 
-
+            writer.Write(ControlPointIndex);
+            writer.Write(ControlPoints.Count);
+            for (int i = 0; i < ControlPoints.Count; i++)
+            {
+                ControlPoints[i].Save(writer);
+            }
 
         }
 

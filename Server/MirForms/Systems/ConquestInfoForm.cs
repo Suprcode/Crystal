@@ -24,6 +24,7 @@ namespace Server
         private ConquestWallInfo selectedWall;
         private ConquestSiegeInfo selectedSiege;
         private ConquestFlagInfo selectedFlag;
+        private ConquestFlagInfo selectedControlPoint;
 
         public ConquestInfoForm()
         {
@@ -181,6 +182,26 @@ namespace Server
             }
         }
 
+        private void UpdateControlPoints()
+        {
+            if (selectedControlPoint != null)
+            {
+                Control_gb.Enabled = true;
+                ControlXLoc_textbox.Text = selectedControlPoint.Location.X.ToString();
+                ControlYLoc_textbox.Text = selectedControlPoint.Location.Y.ToString();
+                ControlName_textbox.Text = selectedControlPoint.Name;
+                ControlFilename_textbox.Text = selectedControlPoint.FileName;
+            }
+            else
+            {
+                Control_gb.Enabled = false;
+                ControlXLoc_textbox.Text = string.Empty;
+                ControlYLoc_textbox.Text = string.Empty;
+                ControlName_textbox.Text = string.Empty;
+                ControlFilename_textbox.Text = string.Empty;
+            }
+        }
+
         private void UpdateInterface()
         {
 
@@ -205,12 +226,14 @@ namespace Server
             Flags_listbox.Items.Clear();
             Index_textbox.Text = string.Empty;
             Name_textbox.Text = string.Empty;
+            FullMap_checkbox.Checked = false;
             LocX_textbox.Text = string.Empty;
             LocY_textbox.Text = string.Empty;
             Size_textbox.Text = string.Empty;
             ObLocX_textbox.Text = string.Empty;
             ObLocY_textbox.Text = string.Empty;
             ObSize_textbox.Text = string.Empty;
+            Controls_listbox.Items.Clear();
             ConquestMap_combo.SelectedIndex = -1;
             PalaceMap_combo.SelectedIndex = -1;
             ExtraMaps_combo.SelectedIndex = -1;
@@ -242,12 +265,13 @@ namespace Server
                 
                 Index_textbox.Text = selectedConquest.Index.ToString();
                 Name_textbox.Text = selectedConquest.Name.ToString();
+                FullMap_checkbox.Checked = selectedConquest.FullMap;
                 LocX_textbox.Text = selectedConquest.Location.X.ToString();
                 LocY_textbox.Text = selectedConquest.Location.Y.ToString();
                 Size_textbox.Text = selectedConquest.Size.ToString();
-                ObLocX_textbox.Text = selectedConquest.ObjectLoc.X.ToString();
-                ObLocY_textbox.Text = selectedConquest.ObjectLoc.Y.ToString();
-                ObSize_textbox.Text = selectedConquest.ObjectSize.ToString();
+                ObLocX_textbox.Text = selectedConquest.KingLocation.X.ToString();
+                ObLocY_textbox.Text = selectedConquest.KingLocation.Y.ToString();
+                ObSize_textbox.Text = selectedConquest.KingSize.ToString();
                 ConquestMap_combo.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == selectedConquest.MapIndex);
                 PalaceMap_combo.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == selectedConquest.PalaceIndex);
                 WarMode_combo.SelectedItem = selectedConquest.Game;
@@ -287,6 +311,11 @@ namespace Server
                 for (int i = 0; i < selectedConquest.ConquestFlags.Count; i++)
                 {
                     Flags_listbox.Items.Add(selectedConquest.ConquestFlags[i]);
+                }
+
+                for (int i = 0; i < selectedConquest.ControlPoints.Count; i++)
+                {
+                    Controls_listbox.Items.Add(selectedConquest.ControlPoints[i]);
                 }
 
             }
@@ -773,7 +802,7 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
-            selectedConquest.ObjectLoc.X = temp;
+            selectedConquest.KingLocation.X = temp;
         }
 
         private void ObLocY_textbox_TextChanged(object sender, EventArgs e)
@@ -789,7 +818,7 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
-            selectedConquest.ObjectLoc.Y = temp;
+            selectedConquest.KingLocation.Y = temp;
         }
 
         private void ObSize_textbox_TextChanged(object sender, EventArgs e)
@@ -805,7 +834,7 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
-            selectedConquest.ObjectSize = temp;
+            selectedConquest.KingSize = temp;
         }
 
         private void Siege_listbox_SelectedIndexChanged(object sender, EventArgs e)
@@ -965,6 +994,85 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             selectedFlag.FileName = ActiveControl.Text;
+        }
+
+        private void FullMap_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            selectedConquest.FullMap = FullMap_checkbox.Checked;
+        }
+
+
+
+        private void Control_Listbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (Controls_listbox.SelectedIndex != -1)
+            {
+                selectedControlPoint = (ConquestFlagInfo)Controls_listbox.SelectedItem;
+                UpdateControlPoints();
+            }
+            else
+                selectedControlPoint = null;
+        }
+
+        private void AddControl_button_Click(object sender, EventArgs e)
+        {
+            if (selectedConquest != null)
+            {
+                selectedConquest.ControlPoints.Add(new ConquestFlagInfo { Location = new Point(0, 0), Name = "Control Point", Index = ++selectedConquest.ControlPointIndex });
+                UpdateInterface();
+            }
+        }
+
+        private void RemoveControl_button_Click(object sender, EventArgs e)
+        {
+            if (Controls_listbox.SelectedItem != null)
+                selectedConquest.ControlPoints.Remove((ConquestFlagInfo)Controls_listbox.SelectedItem);
+
+            UpdateInterface();
+        }
+
+        private void ControlXLoc_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            selectedControlPoint.Location.X = temp;
+        }
+
+        private void ControlYLoc_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            selectedControlPoint.Location.Y = temp;
+        }
+
+        private void ControlName_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            selectedControlPoint.Name = ActiveControl.Text;
+        }
+
+        private void ControlFilename_textbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            selectedControlPoint.FileName = ActiveControl.Text;
         }
     }
 }

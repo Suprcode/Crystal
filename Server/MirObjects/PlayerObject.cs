@@ -1214,13 +1214,14 @@ namespace Server.MirObjects
 
             if (LastHitter != null && LastHitter.Race == ObjectType.Player)
             {
-                if (AtWar((PlayerObject)LastHitter) || WarZone)
+                PlayerObject hitter = (PlayerObject)LastHitter;
+
+                if (AtWar(hitter) || WarZone)
                 {
-                    ReceiveChat(string.Format("You've been protected by the law"), ChatType.System);
+                    hitter.ReceiveChat(string.Format("You've been protected by the law"), ChatType.System);
                 }
                 else if (Envir.Time > BrownTime && PKPoints < 200)
                 {
-                    PlayerObject hitter = (PlayerObject)LastHitter;
                     UserItem weapon = hitter.Info.Equipment[(byte)EquipmentSlot.Weapon];
 
                     hitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
@@ -5021,7 +5022,7 @@ namespace Server.MirObjects
 
                             ushort.TryParse(parts[1], out temp);
 
-                            if (temp < 11) flag = temp;
+                            if (temp <= 11) flag = temp;
                         }
 
                         MyGuild.FlagImage = (ushort)(1000 + flag);
@@ -8260,8 +8261,9 @@ namespace Server.MirObjects
 
             int duration = 30 + (magic.Level * 30);
             int value = duration;
+            int passthroughCount = (magic.Level * 2) - 1;
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location, passthroughCount);
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
@@ -14287,8 +14289,8 @@ namespace Server.MirObjects
 
                     Report.ItemChanged("BuyMarketItem", auction.Item, auction.Item.Count, 2);
 
-                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price), ChatType.Hint);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price) });
+                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price), ChatType.Hint);
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price) });
                     MarketSearch(MatchName);
                     return;
                 }
@@ -14355,7 +14357,7 @@ namespace Server.MirObjects
                     Account.Auctions.Remove(auction);
                     Envir.Auctions.Remove(auction);
                     GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.Name, auction.Price, gold, auction.Price - gold) });
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, auction.Price, gold, auction.Price - gold) });
                     MarketSearch(MatchName);
                     return;
                 }
@@ -19109,7 +19111,9 @@ namespace Server.MirObjects
             }
             else if (CurrentMap.tempConquest != null)
             {
-                if (checkPalace && CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace) CurrentMap.tempConquest.TakeConquest(this);
+                if (checkPalace && CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace)
+                    CurrentMap.tempConquest.TakeConquest(this);
+
                 EnterSabuk();
             }
         }
