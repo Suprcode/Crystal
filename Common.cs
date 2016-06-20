@@ -124,8 +124,8 @@ public enum QuestIcon : byte
     QuestionYellow = 3,
     ExclamationBlue = 5,
     QuestionBlue = 6,
-    ExclamationGreen = 7,
-    QuestionGreen = 8
+    ExclamationGreen = 52,
+    QuestionGreen = 53
 }
 
 public enum QuestState : byte
@@ -2574,7 +2574,7 @@ public class ItemInfo
 
     public bool IsConsumable
     {
-        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform; }
+        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform || Type == ItemType.Script; }
     }
 
     public string FriendlyName

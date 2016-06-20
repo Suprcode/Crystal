@@ -1712,7 +1712,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll)
+            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Script)
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -11230,9 +11230,9 @@ namespace Server.MirObjects
             Enqueue(p);
             Enqueue(new S.SplitItem { Item = temp, Grid = grid });
 
-            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || temp.Info.Type == ItemType.Amulet))
+            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || temp.Info.Type == ItemType.Amulet || temp.Info.Type == ItemType.Script ))
             {
-                if (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll)
+                if (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || temp.Info.Type == ItemType.Script)
                 {
                     for (int i = 0; i < 4; i++)
                     {

@@ -152,6 +152,7 @@ namespace Server.MirEnvir
         public Dragon DragonSystem;
         public NPCObject DefaultNPC;
         public NPCObject MonsterNPC;
+        public NPCObject RobotNPC;
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
@@ -1889,6 +1890,7 @@ namespace Server.MirEnvir
 
             DefaultNPC = new NPCObject(new NPCInfo() { Name = "DefaultNPC", FileName = Settings.DefaultNPCFilename, IsDefault = true });
             MonsterNPC = new NPCObject(new NPCInfo() { Name = "MonsterNPC", FileName = Settings.MonsterNPCFilename, IsDefault = true });
+            RobotNPC = new NPCObject(new NPCInfo() { Name = "RobotNPC", FileName = Settings.RobotNPCFilename, IsDefault = true, IsRobot = true });
 
             SMain.Enqueue("Envir Started.");
         }
@@ -2534,7 +2536,7 @@ namespace Server.MirEnvir
         {
             //can't have expiry on usable items
             if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
-                item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Transform) return;
+                item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script) return;
 
             ExpireInfo expiryInfo = new ExpireInfo();
 

@@ -2823,10 +2823,10 @@ namespace Server.MirObjects
 
                         for (var j = player.Info.Magics.Count - 1; j >= 0; j--)
                         {
-                            if (player.Info.Magics[i].Spell != skill) continue;
+                            if (player.Info.Magics[j].Spell != skill) continue;
 
-                            player.Info.Magics.RemoveAt(i);
-                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                            player.Info.Magics.RemoveAt(j);
+                            player.Enqueue(new S.RemoveMagic { PlaceId = j });
                         }
 
                         break;

@@ -33,7 +33,7 @@ namespace Server.MirDatabase
         public int FlagNeeded = 0;
         public int Conquest;
 
-        public bool IsDefault;
+        public bool IsDefault, IsRobot;
 
         public List<int> CollectQuestIndexes = new List<int>();
         public List<int> FinishQuestIndexes = new List<int>();
