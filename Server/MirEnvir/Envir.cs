@@ -2536,7 +2536,7 @@ namespace Server.MirEnvir
         {
             //can't have expiry on usable items
             if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
-                item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script) return;
+                item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script) return;
 
             ExpireInfo expiryInfo = new ExpireInfo();
 
