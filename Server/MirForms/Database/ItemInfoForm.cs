@@ -920,7 +920,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].AttackSpeed = temp;
+                _selectedItemInfos[i].AttackSpeed = (byte) temp;
         }
         private void LuckTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -938,7 +938,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Luck = temp;
+                _selectedItemInfos[i].Luck = (byte) temp;
         }
         private void BWeightText_TextChanged(object sender, EventArgs e)
         {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,26 +12,74 @@ namespace Server.MirDatabase
 {
     public class MonsterInfo
     {
-        public int Index;
-        public string Name = string.Empty;
+        [Key]
+        public int Index { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public Monster Image;
-        public byte AI, Effect, ViewRange = 7, CoolEye;
-        public ushort Level;
+        public Monster Image { get; set; }
+        public byte AI { get; set; }
+        public byte Effect { get; set; }
+        public byte ViewRange { get; set; } = 7;
+        public byte CoolEye { get; set; }
+        [NotMapped]
+        public ushort Level { get; set; }
+        public int DBLevel { get { return Level; } set { Level = (ushort) value; } }
 
-        public uint HP;
-        public byte Accuracy, Agility, Light;
-        public ushort MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
+        public uint HP { get; set; }
+        public byte Accuracy { get; set; }
+        public byte Agility { get; set; }
+        public byte Light { get; set; }
+        [NotMapped]
+        public ushort MinAC { get; set; }
+        public int DBMinAC { get { return MinAC; } set { MinAC = (ushort) value; } }
+        [NotMapped]
+        public ushort MaxAC { get; set; }
+        public int DBMaxAC { get { return MaxAC; } set { MaxAC = (ushort) value; } }
+        [NotMapped]
+        public ushort MinMAC { get; set; }
+        public int DBMinMAC { get { return MinMAC; } set { MinMAC = (ushort) value; } }
+        [NotMapped]
+        public ushort MaxMAC { get; set; }
+        public int DBMaxMAC { get { return MaxMAC; } set { MaxMAC = (ushort) value; } }
+        [NotMapped]
+        public ushort MinDC { get; set; }
+        public int DBMinDC { get { return MinDC; } set { MinDC = (ushort) value; } }
+        [NotMapped]
+        public ushort MaxDC { get; set; }
+        public int DBMaxDC { get { return MaxDC; } set { MaxDC = (ushort) value; } }
+        [NotMapped]
+        public ushort MinMC { get; set; }
+        public int DBMinMC { get { return MinMC; } set { MinMC = (ushort) value; } }
+        [NotMapped]
+        public ushort MaxMC { get; set; }
+        public int DBMaxMC { get { return MaxMC; } set { MaxMC = (ushort) value; } }
+        [NotMapped]
+        public ushort MinSC { get; set; }
+        public int DBMinSC { get { return MinSC; } set { MinSC = (ushort) value; } }
+        [NotMapped]
+        public ushort MaxSC { get; set; }
+        public int DBMaxSC { get { return MaxSC; } set { MaxSC = (ushort) value; } }
 
-        public ushort AttackSpeed = 2500, MoveSpeed = 1800;
-        public uint Experience;
-        
+        [NotMapped]
+        public ushort AttackSpeed { get; set; } = 2500;
+        public int DBAttackSpeed { get { return AttackSpeed; } set { AttackSpeed = (ushort) value; } }
+        [NotMapped]
+        public ushort MoveSpeed { get; set; } = 1800;
+        public int DBMoveSpeed { get { return MoveSpeed;} set { MoveSpeed = (ushort) value; } }
+        [NotMapped]
+        public uint Experience { get; set; }
+        public long DBExperience { get { return Experience;} set { Experience = (uint) value; } }
+
+        [NotMapped]
         public List<DropInfo> Drops = new List<DropInfo>();
 
-        public bool CanTame = true, CanPush = true, AutoRev = true, Undead = false;
+        public bool CanTame { get; set; } = true;
+        public bool CanPush { get; set; } = true;
+        public bool AutoRev { get; set; } = true;
+        public bool Undead { get; set; } = false;
 
-        public bool HasSpawnScript;
-        public bool HasDieScript;
+        public bool HasSpawnScript { get; set; }
+        public bool HasDieScript { get; set; }
 
         public MonsterInfo()
         {
@@ -214,35 +264,63 @@ namespace Server.MirDatabase
             ushort image;
             if (!ushort.TryParse(data[1], out image)) return;
             info.Image = (Monster) image;
+            byte tempbyte;
+            ushort tempUshort;
+            uint tempUint;
+            bool tempbool;
 
-            if (!byte.TryParse(data[2], out info.AI)) return;
-            if (!byte.TryParse(data[3], out info.Effect)) return;
-            if (!ushort.TryParse(data[4], out info.Level)) return;
-            if (!byte.TryParse(data[5], out info.ViewRange)) return;
+            if (!byte.TryParse(data[2], out tempbyte)) return;
+            info.AI = tempbyte;
+            if (!byte.TryParse(data[3], out tempbyte)) return;
+            info.Effect = tempbyte;
+            if (!ushort.TryParse(data[4], out tempUshort)) return;
+            info.Level = tempUshort;
+            if (!byte.TryParse(data[5], out tempbyte)) return;
+            info.ViewRange = tempbyte;
 
-            if (!uint.TryParse(data[6], out info.HP)) return;
+            if (!uint.TryParse(data[6], out tempUint)) return;
+            info.HP = tempUint;
 
-            if (!ushort.TryParse(data[7], out info.MinAC)) return;
-            if (!ushort.TryParse(data[8], out info.MaxAC)) return;
-            if (!ushort.TryParse(data[9], out info.MinMAC)) return;
-            if (!ushort.TryParse(data[10], out info.MaxMAC)) return;
-            if (!ushort.TryParse(data[11], out info.MinDC)) return;
-            if (!ushort.TryParse(data[12], out info.MaxDC)) return;
-            if (!ushort.TryParse(data[13], out info.MinMC)) return;
-            if (!ushort.TryParse(data[14], out info.MaxMC)) return;
-            if (!ushort.TryParse(data[15], out info.MinSC)) return;
-            if (!ushort.TryParse(data[16], out info.MaxSC)) return;
-            if (!byte.TryParse(data[17], out info.Accuracy)) return;
-            if (!byte.TryParse(data[18], out info.Agility)) return;
-            if (!byte.TryParse(data[19], out info.Light)) return;
+            if (!ushort.TryParse(data[7], out tempUshort)) return;
+            info.MinAC = tempUshort;
+            if (!ushort.TryParse(data[8], out tempUshort)) return;
+            info.MaxAC = tempUshort;
+            if (!ushort.TryParse(data[9], out tempUshort)) return;
+            info.MinMAC = tempUshort;
+            if (!ushort.TryParse(data[10], out tempUshort)) return;
+            info.MaxMAC = tempUshort;
+            if (!ushort.TryParse(data[11], out tempUshort)) return;
+            info.MinDC = tempUshort;
+            if (!ushort.TryParse(data[12], out tempUshort)) return;
+            info.MaxDC = tempUshort;
+            if (!ushort.TryParse(data[13], out tempUshort)) return;
+            info.MinMC = tempUshort;
+            if (!ushort.TryParse(data[14], out tempUshort)) return;
+            info.MaxMC = tempUshort;
+            if (!ushort.TryParse(data[15], out tempUshort)) return;
+            info.MinSC = tempUshort;
+            if (!ushort.TryParse(data[16], out tempUshort)) return;
+            info.MaxSC = tempUshort;
+            if (!byte.TryParse(data[17], out tempbyte)) return;
+            info.Accuracy = tempbyte;
+            if (!byte.TryParse(data[18], out tempbyte)) return;
+            info.Agility = tempbyte;
+            if (!byte.TryParse(data[19], out tempbyte)) return;
+            info.Light = tempbyte;
 
-            if (!ushort.TryParse(data[20], out info.AttackSpeed)) return;
-            if (!ushort.TryParse(data[21], out info.MoveSpeed)) return;
+            if (!ushort.TryParse(data[20], out tempUshort)) return;
+            info.AttackSpeed = tempUshort;
+            if (!ushort.TryParse(data[21], out tempUshort)) return;
+            info.MoveSpeed = tempUshort;
 
-            if (!uint.TryParse(data[22], out info.Experience)) return;
-            
-            if (!bool.TryParse(data[23], out info.CanTame)) return;
-            if (!bool.TryParse(data[24], out info.CanPush)) return;
+            if (!uint.TryParse(data[22], out tempUint)) return;
+            info.Experience = tempUint;
+
+
+            if (!bool.TryParse(data[23], out tempbool)) return;
+            info.CanTame = tempbool;
+            if (!bool.TryParse(data[24], out tempbool)) return;
+            info.CanPush = tempbool;
 
             //int count;
 

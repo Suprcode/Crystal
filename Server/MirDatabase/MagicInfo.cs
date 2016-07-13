@@ -21,15 +21,33 @@ namespace Server.MirDatabase
         public byte Level1 { get; set; }
         public byte Level2 { get; set; }
         public byte Level3 { get; set; }
+        [NotMapped]
         public ushort Need1 { get; set; }
+        public int DBNeed1 { get { return Need1;} set { Need1 = (ushort) value; } }
+        [NotMapped]
         public ushort Need2 { get; set; }
+        public int DBNeed2 { get { return Need2; } set { Need2 = (ushort) value; } }
+        [NotMapped]
         public ushort Need3 { get; set; }
+        public int DBNeed3 { get { return Need3; } set { Need3 = (ushort) value; } }
+        [NotMapped]
         public uint DelayBase { get; set; } = 1800;
+        public long DBDelayBase { get { return DelayBase; } set { DelayBase = (uint) value; } }
+        [NotMapped]
         public uint DelayReduction { get; set; }
+        public long DBDelayReductioin { get { return DelayReduction; } set { DelayReduction = (uint) value; } }
+        [NotMapped]
         public ushort PowerBase { get; set; }
+        public int DBPowerBase { get { return PowerBase; } set { PowerBase = (ushort) value; } }
+        [NotMapped]
         public ushort PowerBonus { get; set; }
+        public int DBPowerBonus { get { return PowerBonus; } set { PowerBonus = (ushort) value; } }
+        [NotMapped]
         public ushort MPowerBase { get; set; }
+        public int DBMPowerBase { get { return MPowerBase;} set { MPowerBase = (ushort) value; } }
+        [NotMapped]
         public ushort MPowerBonus { get; set; }
+        public int DBMPowerBonus { get { return MPowerBonus;} set { MPowerBonus = (ushort) value; } }
         public float MultiplierBase { get; set; } = 1.0f;
         public float MultiplierBonus { get; set; }
         public byte Range { get; set; } = 9;
@@ -112,7 +130,14 @@ namespace Server.MirDatabase
 
         public byte Level { get; set; }
         public byte Key { get; set; }
+        [NotMapped]
         public ushort Experience { get; set; }
+
+        public int DBExperience
+        {
+            get { return Experience;}
+            set { Experience = (ushort) value; }
+        }
         public bool IsTempSpell { get; set; }
         public long CastTime { get; set; }
 

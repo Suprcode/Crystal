@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,25 +14,31 @@ namespace Server.MirDatabase
     public class MailInfo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long MailID { get; set; }
 
         public string Sender { get; set; }
-        [ForeignKey("RecipientInfo")]
+        //[ForeignKey("RecipientInfo")]
         public int RecipientIndex { get; set; }
         
         public CharacterInfo RecipientInfo { get; set; }
-        [ForeignKey("CharacterInfo")]
+        //[ForeignKey("CharacterInfo")]
         public int CharacterIndex { get; set; }
         
         public CharacterInfo CharacterInfo { get; set; }
 
         public string Message { get; set; } = string.Empty;
+        [NotMapped]
         public uint Gold { get; set; } = 0;
+
+        public long DBGold
+        {
+            get { return Gold; }
+            set { Gold = (uint) value; }
+        }
         public List<UserItem> Items = new List<UserItem>();
 
-        public DateTime DateSent { get; set; }
-        public DateTime DateOpened { get; set; }
+        public DateTime? DateSent { get; set; } = SqlDateTime.MinValue.Value;
+        public DateTime? DateOpened { get; set; } = SqlDateTime.MinValue.Value;
         [NotMapped]
         public bool Sent
         {
@@ -99,8 +106,8 @@ namespace Server.MirDatabase
             for (int i = 0; i < Items.Count; i++)
                 Items[i].Save(writer);
 
-            writer.Write(DateSent.ToBinary());
-            writer.Write(DateOpened.ToBinary());
+            writer.Write(DateSent.GetValueOrDefault().ToBinary());
+            writer.Write(DateOpened.GetValueOrDefault().ToBinary());
 
             writer.Write(Locked);
             writer.Write(Collected);
@@ -181,7 +188,7 @@ namespace Server.MirDatabase
                 Items = Items,
                 Opened = Opened,
                 Collected = Collected,
-                DateSent = DateSent
+                DateSent = DateSent.GetValueOrDefault()
             };
         }
     }
@@ -189,14 +196,13 @@ namespace Server.MirDatabase
     public class MailItem
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Index { get; set; }
         [ForeignKey("MailInfo")]
         public long MailID { get; set; }
         
         public MailInfo MailInfo { get; set; }
         [ForeignKey("UserItem")]
-        public ulong ItemUniqueID { get; set; }
+        public long ItemUniqueID { get; set; }
         
         public UserItem UserItem { get; set; }
     }

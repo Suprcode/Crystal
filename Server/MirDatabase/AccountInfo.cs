@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Windows.Forms;
 using Server.MirNetwork;
@@ -14,28 +15,27 @@ namespace Server.MirDatabase
     public class AccountInfo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Index { get; set; }
 
         public string AccountID { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
 
         public string UserName { get; set; } = string.Empty;
-        public DateTime? BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; } = SqlDateTime.MinValue.Value;
         public string SecretQuestion { get; set; } = string.Empty;
         public string SecretAnswer { get; set; } = string.Empty;
         public string EMailAddress { get; set; } = string.Empty;
 
         public string CreationIP { get; set; } = string.Empty;
-        public DateTime? CreationDate { get; set; }
+        public DateTime? CreationDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public bool Banned { get; set; }
         public string BanReason { get; set; } = string.Empty;
-        public DateTime? ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
         public int WrongPasswordCount { get; set; }
 
         public string LastIP { get; set; } = string.Empty;
-        public DateTime? LastDate { get; set; }
+        public DateTime? LastDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public List<CharacterInfo> Characters { get; set; } = new List<CharacterInfo>();
 

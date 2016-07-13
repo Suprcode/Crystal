@@ -10,36 +10,44 @@ using Server.MirNetwork;
 using Server.MirObjects;
 using System.Windows.Forms;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlTypes;
 
 namespace Server.MirDatabase
 {
     public class CharacterInfo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Index { get; set; }
         public string Name { get; set; }
+        [NotMapped]
         public ushort Level { get; set; }
+
+        public int DBLevel
+        {
+            get { return Level; }
+            set { Level = (ushort)value; }
+        }
+
         public MirClass Class { get; set; }
         public MirGender Gender { get; set; }
         public byte Hair { get; set; }
         public int GuildIndex { get; set; } = -1;
 
         public string CreationIP { get; set; }
-        public DateTime? CreationDate { get; set; }
+        public DateTime? CreationDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public bool Banned { get; set; }
         public string BanReason { get; set; } = string.Empty;
-        public DateTime? ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public bool ChatBanned { get; set; }
-        public DateTime? ChatBanExpiryDate { get; set; }
+        public DateTime? ChatBanExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public string LastIP { get; set; } = string.Empty;
-        public DateTime? LastDate { get; set; }
+        public DateTime? LastDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public bool Deleted { get; set; }
-        public DateTime? DeleteDate { get; set; }
+        public DateTime? DeleteDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public ListViewItem ListItem;
 
@@ -49,7 +57,7 @@ namespace Server.MirDatabase
 
         //Mentor
         public int Mentor { get; set; } = 0;
-        public DateTime? MentorDate { get; set; }
+        public DateTime? MentorDate { get; set; } = SqlDateTime.MinValue.Value;
         public bool isMentor { get; set; }
         public long MentorExp { get; set; } = 0;
 
@@ -59,9 +67,22 @@ namespace Server.MirDatabase
         public MirDirection Direction { get; set; }
         public int BindMapIndex { get; set; }
         public Point BindLocation { get; set; }
-
+        [NotMapped]
         public ushort HP { get; set; }
+
+        public int DBHP
+        {
+            get { return HP; }
+            set { HP = (ushort) value; }
+        }
+        [NotMapped]
         public ushort MP { get; set; }
+
+        public int DBMP
+        {
+            get { return MP; }
+            set { MP = (ushort) value; }
+        }
         public long Experience { get; set; }
 
         public AttackMode AMode { get; set; }
@@ -104,7 +125,7 @@ namespace Server.MirDatabase
         public string DbCompletedQuests
         {
             get { return string.Join(",", CompletedQuests); }
-            set { CompletedQuests = value.Split(',').Select(int.Parse).ToList(); }
+            set { CompletedQuests = string.IsNullOrEmpty(value) ? new List<int>() : value.Split(',').Select(int.Parse).ToList(); }
         }
 
         public bool[] Flags { get; set; } = new bool[Globals.FlagIndexCount];
@@ -392,7 +413,8 @@ namespace Server.MirDatabase
                     var dbCharacter = ctx.CharacterInfos.FirstOrDefault(c => c.Index == Index);
                     if (dbCharacter == null)
                     {
-                        ctx.CharacterInfos.Add(this);
+                        dbCharacter = this;
+                        ctx.CharacterInfos.Add(dbCharacter);
                     }
                     else
                     {
@@ -451,7 +473,7 @@ namespace Server.MirDatabase
                     }
 
                     ctx.SaveChanges();
-                    ctx.CharacterInfos.Attach(this);
+                    //ctx.CharacterInfos.Attach(this);
 
 
                     var dbCurrentRefine = ctx.CurrentRefines.FirstOrDefault(r => r.CharacterIndex == Index);
@@ -490,12 +512,22 @@ namespace Server.MirDatabase
                         }
                     }
 
+                    dbCharacter.CollectTime = CollectTime;
                     ctx.SaveChanges();
 
                     ctx.Inventories.RemoveRange(ctx.Inventories.Where(i => i.CharacterIndex == Index));
                     foreach (var item in Inventory)
                     {
                         ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+
+                        ctx.Inventories.Add(new InventoryItem()
+                        {
+                            CharacterIndex = Index,
+                            ItemUniqueID = item?.UniqueID ?? 0,
+                        });
+                        ctx.SaveChanges();
+                        if(item == null) continue;
+
                         var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
                         if (dbItem == null)
                         {
@@ -505,19 +537,21 @@ namespace Server.MirDatabase
                         {
                             ctx.Entry(dbItem).CurrentValues.SetValues(item);
                         }
-                        ctx.SaveChanges();
-
-                        ctx.Inventories.Add(new InventoryItem()
-                        {
-                            CharacterIndex = Index,
-                            ItemUniqueID = item.UniqueID,
-                        });
                         ctx.SaveChanges();
                     }
 
                     ctx.Equipments.RemoveRange(ctx.Equipments.Where(i => i.CharacterIndex == Index));
                     foreach (var item in Equipment)
                     {
+                        var uid = item?.UniqueID;
+                        ctx.Equipments.Add(new EquipmentItem()
+                        {
+                            CharacterIndex = Index,
+                            ItemUniqueID = item?.UniqueID ?? 0,
+                        });
+                        ctx.SaveChanges();
+                        if(item == null) continue;
+
                         ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
                         var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
                         if (dbItem == null)
@@ -530,17 +564,20 @@ namespace Server.MirDatabase
                         }
                         ctx.SaveChanges();
 
-                        ctx.Equipments.Add(new EquipmentItem()
-                        {
-                            CharacterIndex = Index,
-                            ItemUniqueID = item.UniqueID,
-                        });
-                        ctx.SaveChanges();
+                        
                     }
 
                     ctx.QuestInventories.RemoveRange(ctx.QuestInventories.Where(i => i.CharacterIndex == Index));
                     foreach (var item in QuestInventory)
                     {
+                        ctx.QuestInventories.Add(new QuestInventoryItem()
+                        {
+                            CharacterIndex = Index,
+                            ItemUniqueID = item?.UniqueID ?? 0,
+                        });
+                        ctx.SaveChanges();
+                        if (item == null) continue;
+
                         ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
                         var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
                         if (dbItem == null)
@@ -553,12 +590,6 @@ namespace Server.MirDatabase
                         }
                         ctx.SaveChanges();
 
-                        ctx.QuestInventories.Add(new QuestInventoryItem()
-                        {
-                            CharacterIndex = Index,
-                            ItemUniqueID = item.UniqueID,
-                        });
-                        ctx.SaveChanges();
                     }
 
                     foreach (var magic in Magics)
@@ -1065,7 +1096,6 @@ namespace Server.MirDatabase
     public class UserIntelligentCreature
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Index { get; set; }
 
         public IntelligentCreatureType PetType { get; set; }
@@ -1242,14 +1272,20 @@ namespace Server.MirDatabase
     public class UserBuff
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Index { get; set; }
 
         public BuffType Type { get; set; }
         [NotMapped]
         public MapObject Caster { get; set; }
         public bool Visible { get; set; }
+        [NotMapped]
         public uint ObjectID { get; set; }
+
+        public long DBObjectID
+        {
+            get { return ObjectID; }
+            set { ObjectID = (uint) value; }
+        }
         public long ExpireTime { get; set; }
         public int[] Values;
 
@@ -1261,7 +1297,7 @@ namespace Server.MirDatabase
         public bool Infinite { get; set; }
 
         public bool RealTime { get; set; }
-        public DateTime RealTimeExpire { get; set; }
+        public DateTime? RealTimeExpire { get; set; } = SqlDateTime.MinValue.Value;
 
         public bool Paused { get; set; }
         [ForeignKey("CharacterInfo")]

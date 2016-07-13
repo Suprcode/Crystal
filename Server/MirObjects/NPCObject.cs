@@ -1058,7 +1058,7 @@ namespace Server.MirObjects
                 {
                     UserItem item = items[i];
 
-                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
+                    if (DateTime.Compare(item.BuybackExpiryDate.GetValueOrDefault().AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
                     {
                         deleteList.Add(BuyBack[playerGoods.Key][i]);
 

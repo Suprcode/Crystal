@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using Server.MirObjects;
@@ -13,13 +14,12 @@ namespace Server.MirDatabase
     public class QuestProgressInfo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Index { get; set; }
         [NotMapped]
         public QuestInfo Info;
 
-        public DateTime StartDateTime { get; set; } = DateTime.MinValue;
-        public DateTime EndDateTime { get; set; } = DateTime.MaxValue;
+        public DateTime? StartDateTime { get; set; } = SqlDateTime.MinValue.Value;
+        public DateTime? EndDateTime { get; set; } = SqlDateTime.MinValue.Value;
         [ForeignKey("CharacterInfo")]
         public int CharacterIndex { get; set; }
         
@@ -118,8 +118,8 @@ namespace Server.MirDatabase
         {
             writer.Write(Index);
 
-            writer.Write(StartDateTime.ToBinary());
-            writer.Write(EndDateTime.ToBinary());
+            writer.Write(StartDateTime.GetValueOrDefault().ToBinary());
+            writer.Write(EndDateTime.GetValueOrDefault().ToBinary());
 
             writer.Write(KillTaskCount.Count);
             for (int i = 0; i < KillTaskCount.Count; i++)

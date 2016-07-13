@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -2526,7 +2527,6 @@ public class SelectInfo
 public class ItemInfo
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Index { get; set; }
     public string Name { get; set; } = string.Empty;
     public ItemType Type { get; set; }
@@ -2542,9 +2542,22 @@ public class ItemInfo
     public byte Weight { get; set; }
     public byte Light { get; set; }
     public byte RequiredAmount { get; set; }
-
+    [NotMapped]
     public ushort Image { get; set; }
+
+    public int DBImage
+    {
+        get { return Image; }
+        set { Image = (ushort) value; }
+    }
+    [NotMapped]
     public ushort Durability { get; set; }
+
+    public int DBDurability
+    {
+        get { return Durability; }
+        set { Durability = (ushort) value; }
+    }
 
     public uint Price { get; set; } = 1;
     public uint StackSize { get; set; } = 1;
@@ -2561,10 +2574,14 @@ public class ItemInfo
     public byte MaxSC { get; set; }
     public byte Accuracy { get; set; }
     public byte Agility { get; set; }
+    [NotMapped]
     public ushort HP { get; set; }
+    public int DBHP { get { return HP; } set { HP = (ushort) value; } }
+    [NotMapped]
     public ushort MP { get; set; }
-    public sbyte AttackSpeed { get; set; }
-    public sbyte Luck { get; set; }
+    public int DBMP { get { return MP; } set { MP = (ushort) value; } }
+    public byte AttackSpeed { get; set; }
+    public byte Luck { get; set; }
     public byte BagWeight { get; set; }
     public byte HandWeight { get; set; }
     public byte WearWeight { get; set; }
@@ -2669,8 +2686,8 @@ public class ItemInfo
         Accuracy = reader.ReadByte();
         Agility = reader.ReadByte();
 
-        Luck = reader.ReadSByte();
-        AttackSpeed = reader.ReadSByte();
+        Luck = (byte) reader.ReadSByte();
+        AttackSpeed = (byte) reader.ReadSByte();
 
         StartItem = reader.ReadBoolean();
 
@@ -2898,10 +2915,10 @@ public class ItemInfo
         if (!ushort.TryParse(data[24], out tempUshort)) return null;
         info.MP = tempUshort;
 
-        sbyte tempSbyte;
-        if (!sbyte.TryParse(data[25], out tempSbyte)) return null;
+        byte tempSbyte;
+        if (!byte.TryParse(data[25], out tempSbyte)) return null;
         info.AttackSpeed = tempSbyte;
-        if (!sbyte.TryParse(data[26], out tempSbyte)) return null;
+        if (!byte.TryParse(data[26], out tempSbyte)) return null;
         info.Luck = tempSbyte;
 
         if (!byte.TryParse(data[27], out tempByte)) return null;
@@ -3029,15 +3046,28 @@ public class ItemInfo
 public class UserItem
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long UniqueID { get; set; }
 
     [ForeignKey("Info")]
     public int ItemIndex { get; set; }
     public ItemInfo Info { get; set; }
 
+    [NotMapped]
     public ushort CurrentDura { get; set; }
+
+    public int DBCurrentDura
+    {
+        get { return CurrentDura;}
+        set { CurrentDura = (ushort) value; }
+    }
+    [NotMapped]
     public ushort MaxDura { get; set; }
+
+    public int DBMaxDura
+    {
+        get { return MaxDura;}
+        set { MaxDura = (ushort) value; }
+    }
     public uint Count { get; set; } = 1;
     public uint GemCount { get; set; } = 0;
 
@@ -3064,19 +3094,19 @@ public class UserItem
     public byte AttackSpeed { get; set; }
     public byte Luck { get; set; }
 
-    public RefinedValue RefinedValue = RefinedValue.None;
-    public byte RefineAdded = 0;
+    public RefinedValue RefinedValue { get; set; } = RefinedValue.None;
+    public byte RefineAdded { get; set; } = 0;
 
-    public bool DuraChanged;
-    public int SoulBoundId = -1;
-    public bool Identified = false;
-    public bool Cursed = false;
+    public bool DuraChanged { get; set; } = false;
+    public int SoulBoundId { get; set; } = -1;
+    public bool Identified { get; set; } = false;
+    public bool Cursed { get; set; } = false;
 
-    public int WeddingRing = -1;
+    public int WeddingRing { get; set; } = -1;
 
     public UserItem[] Slots = new UserItem[5];
 
-    public DateTime BuybackExpiryDate;
+    public DateTime? BuybackExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
 
     public ExpireInfo ExpireInfo;
 
@@ -3105,6 +3135,8 @@ public class UserItem
     {
         get { return Count > 1 ? string.Format("{0} ({1})", Info.FriendlyName, Count) : Info.FriendlyName; }
     }
+
+    public UserItem() { }
 
     public UserItem(ItemInfo info)
     {
@@ -3463,7 +3495,7 @@ public class UserItem
 
 public class ExpireInfo
 {
-    public DateTime ExpiryDate;
+    public DateTime? ExpiryDate;
 
     public ExpireInfo()
     {
@@ -3477,7 +3509,7 @@ public class ExpireInfo
 
     public void Save(BinaryWriter writer)
     {
-        writer.Write(ExpiryDate.ToBinary());
+        writer.Write(ExpiryDate.GetValueOrDefault().ToBinary());
     }
 }
 

@@ -885,6 +885,33 @@ namespace Server.MirEnvir
                         {
                             ctx.Entry(dbItemInfo).CurrentValues.SetValues(itemInfo);
                         }
+                        ctx.SaveChanges();
+                    }
+                    foreach (var info in MonsterInfoList)
+                    {
+                        var dbInfo = ctx.MonsterInfos.FirstOrDefault(i => i.Index == info.Index);
+                        if (dbInfo == null)
+                        {
+                            ctx.MonsterInfos.Add(info);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbInfo).CurrentValues.SetValues(info);
+                        }
+                        ctx.SaveChanges();
+                    }
+                    foreach (var info in MagicInfoList)
+                    {
+                        var dbInfo = ctx.MagicInfos.FirstOrDefault(i => i.id == info.id);
+                        if (dbInfo == null)
+                        {
+                            ctx.MagicInfos.Add(info);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbInfo).CurrentValues.SetValues(info);
+                        }
+                        ctx.SaveChanges();
                     }
                 }
                 
