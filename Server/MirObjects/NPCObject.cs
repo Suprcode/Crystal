@@ -233,6 +233,19 @@ namespace Server.MirObjects
                     }
                 }
 
+                else if (Name == "RobotNPC")
+                {
+                    //min,hour,day,month
+
+                    if (lines[i].ToUpper().Contains("TIME"))
+                    {
+                        Regex regex = new Regex(@"\(([0-9]{1,2}),([0-9]{1,2}),([0-9]{1,1}),([0-9]{1,2})\)");
+                        Match match = regex.Match(lines[i]);
+
+                        if (!match.Success) continue;
+                    }
+                }
+
                 NPCPages.AddRange(ParsePages(lines, lines[i]));
 
             }
@@ -1169,10 +1182,21 @@ namespace Server.MirObjects
                 Name = Name,
                 NameColour = NameColour,
                 Image = Info.Image,
+                Colour = Info.Colour,
                 Location = CurrentLocation,
                 Direction = Direction,
                 QuestIDs = (from q in Quests
                             select q.Index).ToList()
+            };
+        }
+
+        public Packet GetUpdateInfo()
+        {
+            return new S.NPCImageUpdate
+            {
+                ObjectID = ObjectID,
+                Image = Info.Image,
+                Colour = Info.Colour
             };
         }
 

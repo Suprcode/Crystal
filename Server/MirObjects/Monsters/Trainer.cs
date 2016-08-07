@@ -135,7 +135,22 @@ namespace Server.MirObjects.Monsters
 
             if (_currentAttacker == null)
                 _StartTime = Envir.Time;
-            _currentAttacker = (PlayerObject)attacker.Master;
+
+
+            MapObject tmpAttacker = attacker.Master;
+
+            while(true)
+            {
+                if(tmpAttacker.Master != null)
+                {
+                    tmpAttacker = tmpAttacker.Master;
+                    continue;
+                }
+                break;
+            }
+
+            _currentAttacker = (PlayerObject)tmpAttacker;
+
             _hitCount++;
             _totalDamage += damage;
             _lastAttackTime = Envir.Time;

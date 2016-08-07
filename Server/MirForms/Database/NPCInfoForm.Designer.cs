@@ -277,9 +277,9 @@
             // NImageTextBox
             // 
             this.NImageTextBox.Location = new System.Drawing.Point(87, 137);
-            this.NImageTextBox.MaxLength = 3;
+            this.NImageTextBox.MaxLength = 5;
             this.NImageTextBox.Name = "NImageTextBox";
-            this.NImageTextBox.Size = new System.Drawing.Size(28, 20);
+            this.NImageTextBox.Size = new System.Drawing.Size(37, 20);
             this.NImageTextBox.TabIndex = 11;
             this.NImageTextBox.TextChanged += new System.EventHandler(this.NImageTextBox_TextChanged);
             // 

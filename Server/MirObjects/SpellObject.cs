@@ -60,7 +60,7 @@ namespace Server.MirObjects
 
             if (Caster != null && Caster.Node == null) Caster = null;
 
-            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.ExplosiveTrap || Spell == Spell.Reincarnation) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
+            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.Portal || Spell == Spell.ExplosiveTrap || Spell == Spell.Reincarnation) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
             {
                 if (Spell == Spell.TrapHexagon && Target != null || Spell == Spell.Trap && Target != null)
                 {
@@ -191,6 +191,14 @@ namespace Server.MirObjects
                     if (!ExitMap.ValidPoint(newExit)) return;
 
                     ob.Teleport(ExitMap, newExit, false);
+
+                    Value = Value - 1;
+
+                    if(Value < 1)
+                    {
+                        ExpireTime = Envir.Time;
+                        return;
+                    }
                     
                     break;
             }

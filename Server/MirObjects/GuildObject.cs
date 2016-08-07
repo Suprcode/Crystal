@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Server.MirEnvir;
+using System.Drawing;
 
 namespace Server.MirObjects
 {
@@ -35,6 +36,9 @@ namespace Server.MirObjects
         public List<string> Notice = new List<string>();
         public List<GuildObject> WarringGuilds = new List<GuildObject>();
 
+        public ushort FlagImage = 1000;
+        public Color FlagColour = Color.White;
+
         public ConquestObject Conquest;
 
         public List<GuildObject> AllyGuilds = new List<GuildObject>();
@@ -57,7 +61,10 @@ namespace Server.MirObjects
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
+
+            FlagColour = Color.FromArgb(255, Envir.Random.Next(255), Envir.Random.Next(255), Envir.Random.Next(255));
         }
+
         public GuildObject(BinaryReader reader) 
         {
             int customversion = Envir.LoadCustomVersion;
@@ -128,9 +135,10 @@ namespace Server.MirObjects
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
 
-            if (version >= 66)
+            if (version > 72)
             {
-               
+                FlagImage = reader.ReadUInt16();
+                FlagColour = Color.FromArgb(reader.ReadInt32());
             }
         }
         public void Save(BinaryWriter writer)
@@ -175,7 +183,8 @@ namespace Server.MirObjects
             for (int i = 0; i < Notice.Count; i++)
                 writer.Write(Notice[i]);
 
-            //Conquest.Save(writer);
+            writer.Write(FlagImage);
+            writer.Write(FlagColour.ToArgb());   
         }
 
         public void SendMessage(string message, ChatType Type = ChatType.Guild)
@@ -186,6 +195,17 @@ namespace Server.MirObjects
                     PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                     if (player != null)
                         player.ReceiveChat(message, Type);
+                }
+        }
+
+        public void SendOutputMessage(string message, OutputMessageType Type = OutputMessageType.Guild)
+        {
+            for (int i = 0; i < Ranks.Count; i++)
+                for (int j = 0; j < Ranks[i].Members.Count; j++)
+                {
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
+                    if (player != null)
+                        player.ReceiveOutputMessage(message, Type);
                 }
         }
 

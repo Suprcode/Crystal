@@ -9,9 +9,6 @@ namespace Server.MirObjects.Monsters
 {
     public class Gate : CastleGate
     {
-        public ConquestObject Conquest;
-        public int GateIndex;
-
         protected internal Gate(MonsterInfo info) : base(info)
         {
             switch (info.Effect)
@@ -55,7 +52,6 @@ namespace Server.MirObjects.Monsters
                         new Point(-1, 1),
                         new Point(-2, 0),
                         };
-
                     }
                     break;
                 case 4: // East Pointing Castle Gi
