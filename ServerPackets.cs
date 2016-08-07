@@ -471,6 +471,8 @@ namespace ServerPackets
         public UserItem[] Inventory, Equipment, QuestInventory;
         public uint Gold, Credit;
 
+        public bool AddedStorage;
+
         public List<ClientMagic> Magics = new List<ClientMagic>();
 
         public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
@@ -533,6 +535,8 @@ namespace ServerPackets
 
             Gold = reader.ReadUInt32();
             Credit = reader.ReadUInt32();
+
+            AddedStorage = reader.ReadBoolean();
 
             int count = reader.ReadInt32();
 
@@ -612,6 +616,8 @@ namespace ServerPackets
 
             writer.Write(Gold);
             writer.Write(Credit);
+
+            writer.Write(AddedStorage);
 
             writer.Write(Magics.Count);
             for (int i = 0; i < Magics.Count; i++)
@@ -2352,7 +2358,8 @@ namespace ServerPackets
         public string Name = string.Empty;
 
         public Color NameColour;
-        public byte Image;
+        public ushort Image;
+        public Color Colour;
         public Point Location;
         public MirDirection Direction;
         public List<int> QuestIDs = new List<int>();
@@ -2362,7 +2369,8 @@ namespace ServerPackets
             ObjectID = reader.ReadUInt32();
             Name = reader.ReadString();
             NameColour = Color.FromArgb(reader.ReadInt32());
-            Image = reader.ReadByte();
+            Image = reader.ReadUInt16();
+            Colour = Color.FromArgb(reader.ReadInt32());
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Direction = (MirDirection)reader.ReadByte();
 
@@ -2377,6 +2385,7 @@ namespace ServerPackets
             writer.Write(Name);
             writer.Write(NameColour.ToArgb());
             writer.Write(Image);
+            writer.Write(Colour.ToArgb());
             writer.Write(Location.X);
             writer.Write(Location.Y);
             writer.Write((byte)Direction);
@@ -4010,6 +4019,28 @@ namespace ServerPackets
         }
     }
 
+
+    public sealed class NPCImageUpdate : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.NPCImageUpdate; } }
+
+        public long ObjectID;
+        public ushort Image;
+        public Color Colour;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadInt64();
+            Image = reader.ReadUInt16();
+            Colour = Color.FromArgb(reader.ReadInt32());
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(Image);
+            writer.Write(Colour.ToArgb());
+        }
+    }
     public sealed class MountUpdate : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.MountUpdate; } }
@@ -4999,6 +5030,23 @@ namespace ServerPackets
             writer.Write(Size);
         }
     }
+
+    public sealed class ResizeStorage : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ResizeStorage; } }
+
+        public int Size;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Size = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Size);
+        }
+    }
+
     public sealed class NewIntelligentCreature : Packet//IntelligentCreature
     {
         public override short Index

@@ -67,6 +67,7 @@ namespace Client.MirGraphics
                                           ARHumEffect = new MLibrary[3],
                                           Monsters = new MLibrary[406],
                                           Gates = new MLibrary[2],
+                                          Flags = new MLibrary[12],
                                           Mounts = new MLibrary[12],
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
@@ -129,6 +130,9 @@ namespace Client.MirGraphics
 
             for (int i = 0; i < Gates.Length; i++)
                 Gates[i] = new MLibrary(Settings.GatePath + i.ToString("00"));
+
+            for (int i = 0; i < Flags.Length; i++)
+                Flags[i] = new MLibrary(Settings.FlagPath + i.ToString("00"));
 
             for (int i = 0; i < NPCs.Length; i++)
                 NPCs[i] = new MLibrary(Settings.NPCPath + i.ToString("00"));
@@ -729,19 +733,23 @@ namespace Client.MirGraphics
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
-        public void DrawTinted(int index, Point point, Color colour, Color Tint)
+        public void DrawTinted(int index, Point point, Color colour, Color Tint, bool offSet = false)
         {
             if (!CheckImage(index))
                 return;
 
             MImage mi = _images[index];
 
+            if (offSet) point.Offset(mi.X, mi.Y);
+
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
             DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
 
-            if (mi.HasMask != true) return;
-            DXManager.Sprite.Draw2D(mi.MaskImage, Point.Empty, 0, point, Tint);
+            if (mi.HasMask)
+            {
+                DXManager.Sprite.Draw2D(mi.MaskImage, Point.Empty, 0, point, Tint);
+            }
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }

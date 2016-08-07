@@ -62,6 +62,7 @@ public enum OutputMessageType : byte
 {
     Normal, 
     Quest,
+    Guild
 }
 
 public enum ItemGrade : byte
@@ -123,8 +124,8 @@ public enum QuestIcon : byte
     QuestionYellow = 3,
     ExclamationBlue = 5,
     QuestionBlue = 6,
-    ExclamationGreen = 7,
-    QuestionGreen = 8
+    ExclamationGreen = 52,
+    QuestionGreen = 53
 }
 
 public enum QuestState : byte
@@ -1374,6 +1375,7 @@ public enum ServerPacketIds : short
     GuildRequestWar,
     DefaultNPC,
     NPCUpdate,
+    NPCImageUpdate,
     MarriageRequest,
     DivorceRequest,
     MentorRequest,
@@ -1427,6 +1429,7 @@ public enum ServerPacketIds : short
     ParcelCollected,
     MailCost,
 	ResizeInventory,
+    ResizeStorage,
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
@@ -1590,6 +1593,7 @@ public enum ConquestGame : byte
     KingOfHill = 1,
     Random = 2,
     Classic = 3,
+    ControlPoints = 4
 }
 
 public class InIReader
@@ -2570,7 +2574,7 @@ public class ItemInfo
 
     public bool IsConsumable
     {
-        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform; }
+        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform || Type == ItemType.Script; }
     }
 
     public string FriendlyName
@@ -4915,6 +4919,8 @@ public abstract class Packet
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:
                 return new S.NPCUpdate();
+            case (short)ServerPacketIds.NPCImageUpdate:
+                return new S.NPCImageUpdate();
             case (short)ServerPacketIds.MarriageRequest:
                 return new S.MarriageRequest();
             case (short)ServerPacketIds.DivorceRequest:
@@ -5018,7 +5024,9 @@ public abstract class Packet
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
 			case (short)ServerPacketIds.ResizeInventory:
-                return new S.ResizeInventory();            
+                return new S.ResizeInventory();
+            case (short)ServerPacketIds.ResizeStorage:
+                return new S.ResizeStorage();
             case (short)ServerPacketIds.NewIntelligentCreature:
                 return new S.NewIntelligentCreature();
             case (short)ServerPacketIds.UpdateIntelligentCreatureList:

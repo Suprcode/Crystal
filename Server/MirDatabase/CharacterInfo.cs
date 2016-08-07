@@ -544,7 +544,7 @@ namespace Server.MirDatabase
                 Array.Resize(ref Inventory, Inventory.Length + 4);
 
             return Inventory.Length;
-        }    
+        }
     }
 
     public class PetInfo

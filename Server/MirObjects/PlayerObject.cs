@@ -544,6 +544,8 @@ namespace Server.MirObjects
 
         public override void Process()
         {
+            if (Connection == null || Node == null || Info == null) return;
+
             if (GroupInvitation != null && GroupInvitation.Node == null)
                 GroupInvitation = null;
 
@@ -1212,13 +1214,14 @@ namespace Server.MirObjects
 
             if (LastHitter != null && LastHitter.Race == ObjectType.Player)
             {
-                if (AtWar((PlayerObject)LastHitter) || WarZone)
+                PlayerObject hitter = (PlayerObject)LastHitter;
+
+                if (AtWar(hitter) || WarZone)
                 {
-                    ReceiveChat(string.Format("You've been protected by the law"), ChatType.System);
+                    hitter.ReceiveChat(string.Format("You've been protected by the law"), ChatType.System);
                 }
                 else if (Envir.Time > BrownTime && PKPoints < 200)
                 {
-                    PlayerObject hitter = (PlayerObject)LastHitter;
                     UserItem weapon = hitter.Info.Equipment[(byte)EquipmentSlot.Weapon];
 
                     hitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
@@ -1709,7 +1712,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll)
+            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll || (item.Info.Type == ItemType.Script && item.Info.Effect == 1))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -2231,6 +2234,7 @@ namespace Server.MirObjects
                 QuestInventory = new UserItem[Info.QuestInventory.Length],
                 Gold = Account.Gold,
                 Credit = Account.Credit,
+                AddedStorage = Account.Storage.Length > 80
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -4705,20 +4709,41 @@ namespace Server.MirObjects
                         break;
 
                     case "ADDINVENTORY":
-                        int openLevel = (int)((Info.Inventory.Length - 46) / 4);
-                        uint openGold = (uint)(1000000 + openLevel * 1000000);
-                        if (Account.Gold >= openGold)
                         {
-                            Account.Gold -= openGold;
-                            Enqueue(new S.LoseGold { Gold = openGold });
-                            Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
-                            ReceiveChat("Inventory size increased.", ChatType.System);
+                            int openLevel = (int)((Info.Inventory.Length - 46) / 4);
+                            uint openGold = (uint)(1000000 + openLevel * 1000000);
+                            if (Account.Gold >= openGold)
+                            {
+                                Account.Gold -= openGold;
+                                Enqueue(new S.LoseGold { Gold = openGold });
+                                Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
+                                ReceiveChat("Inventory size increased.", ChatType.System);
+                            }
+                            else
+                            {
+                                ReceiveChat("Not enough gold.", ChatType.System);
+                            }
+                            ChatTime = 0;
                         }
-                        else
+                        break;
+
+                    case "ADDSTORAGE":
                         {
-                            ReceiveChat("Not enough gold.", ChatType.System);
+                            int openLevel = Account.Storage.Length / 4;
+                            uint openGold = (uint)(openLevel * 1000000);
+                            if (Account.Gold >= openGold)
+                            {
+                                Account.Gold -= openGold;
+                                Enqueue(new S.LoseGold { Gold = openGold });
+                                Enqueue(new S.ResizeStorage { Size = Account.ResizeStorage() });
+                                ReceiveChat("Storage size increased.", ChatType.System);
+                            }
+                            else
+                            {
+                                ReceiveChat("Not enough gold.", ChatType.System);
+                            }
+                            ChatTime = 0;
                         }
-                        ChatTime = 0;
                         break;
 
                     case "INFO":
@@ -4932,8 +4957,6 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("{0} has been reset.", ResetConq.Info.Name), ChatType.System);
                         break;
                     case "GATES":
-                        string openclose = parts[1];
-                        bool OpenClose;
 
                         if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
@@ -4941,27 +4964,101 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        if (openclose == null) return;
+                        bool OpenClose = false;
 
-                        if (openclose.ToUpper() == "CLOSE") OpenClose = true;
-                        else if (openclose.ToUpper() == "OPEN") OpenClose = false;
+                        if (parts.Length > 1)
+                        {
+                            string openclose = parts[1];
+
+                            if (openclose.ToUpper() == "CLOSE") OpenClose = true;
+                            else if (openclose.ToUpper() == "OPEN") OpenClose = false;
+                            else
+                            {
+                                ReceiveChat(string.Format("You must type /Gates Open or /Gates Close."), ChatType.System);
+                                return;
+                            }
+
+                            for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                                if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                    if (OpenClose)
+                                        MyGuild.Conquest.GateList[i].Gate.CloseDoor();
+                                    else
+                                        MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+                        }
                         else
                         {
-                            ReceiveChat(string.Format("You must type /Gates Open or /Gates Close."), ChatType.System);
-                            return;
+                            for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                                if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                    if (!MyGuild.Conquest.GateList[i].Gate.Closed)
+                                    {
+                                        MyGuild.Conquest.GateList[i].Gate.CloseDoor();
+                                        OpenClose = true;
+                                    }
+                                    else
+                                    {
+                                        MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+                                        OpenClose = false;
+                                    }
                         }
-
-                        for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
-                            if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
-                                if (OpenClose)
-                                    MyGuild.Conquest.GateList[i].Gate.CloseDoor();
-                                else
-                                    MyGuild.Conquest.GateList[i].Gate.OpenDoor();
 
                         if (OpenClose)
                             ReceiveChat(string.Format("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
                         else
                             ReceiveChat(string.Format("The gates at {0} have been opened.", MyGuild.Conquest.Info.Name), ChatType.System);
+                        break;
+
+                    case "CHANGEFLAG":
+                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                        {
+                            ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
+                            return;
+                        }
+
+                        ushort flag = (ushort)Envir.Random.Next(12);
+
+                        if(parts.Length > 1)
+                        {
+                            ushort temp;
+
+                            ushort.TryParse(parts[1], out temp);
+
+                            if (temp <= 11) flag = temp;
+                        }
+
+                        MyGuild.FlagImage = (ushort)(1000 + flag);
+
+                        for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
+                        {
+                            MyGuild.Conquest.FlagList[i].UpdateImage();
+                        }
+
+                        break;
+                    case "CHANGEFLAGCOLOUR":
+                        {
+                            if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                            {
+                                ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
+                                return;
+                            }
+
+                            byte r1 = (byte)Envir.Random.Next(255);
+                            byte g1 = (byte)Envir.Random.Next(255);
+                            byte b1 = (byte)Envir.Random.Next(255);
+
+                            if (parts.Length > 3)
+                            {
+                                byte.TryParse(parts[1], out r1);
+                                byte.TryParse(parts[2], out g1);
+                                byte.TryParse(parts[3], out b1);
+                            }
+
+                            MyGuild.FlagColour = Color.FromArgb(255, r1, g1, b1);
+
+                            for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
+                            {
+                                MyGuild.Conquest.FlagList[i].UpdateColour();
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -5409,9 +5506,10 @@ namespace Server.MirObjects
         public void RangeAttack(MirDirection dir, Point location, uint targetID)
         {
             LogTime = Envir.Time + Globals.LogDelay;
-            //bug: when you wear a mirbow the shape is actualy from the old item :p
+
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
+
             if ((RealItem.Shape / 100) != 2) return;
             if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
@@ -5423,6 +5521,8 @@ namespace Server.MirObjects
                 target = FindObject(targetID, 10);
 
             if (target != null && target.Dead) return;
+
+            if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player) return;
 
             Direction = dir;
 
@@ -8161,8 +8261,9 @@ namespace Server.MirObjects
 
             int duration = 30 + (magic.Level * 30);
             int value = duration;
+            int passthroughCount = (magic.Level * 2) - 1;
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location, passthroughCount);
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
@@ -11129,9 +11230,9 @@ namespace Server.MirObjects
             Enqueue(p);
             Enqueue(new S.SplitItem { Item = temp, Grid = grid });
 
-            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || temp.Info.Type == ItemType.Amulet))
+            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || temp.Info.Type == ItemType.Amulet || (temp.Info.Type == ItemType.Script && temp.Info.Effect == 1)))
             {
-                if (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll)
+                if (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || (temp.Info.Type == ItemType.Script && temp.Info.Effect == 1))
                 {
                     for (int i = 0; i < 4; i++)
                     {
@@ -11160,7 +11261,16 @@ namespace Server.MirObjects
                 RefreshBagWeight();
                 return;
             }
+
+            for (int i = 0; i < 6; i++)
+            {
+                if (array[i] != null) continue;
+                array[i] = temp;
+                RefreshBagWeight();
+                return;
+            }
         }
+
         public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
         {
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
@@ -13534,6 +13644,11 @@ namespace Server.MirObjects
             Report.ChatMessage(text);
         }
 
+        public void ReceiveOutputMessage(string text, OutputMessageType type)
+        {
+            Enqueue(new S.SendOutputMessage { Message = text, Type = type });
+        }
+
         private void CleanUp()
         {
             Connection.Player = null;
@@ -14174,8 +14289,8 @@ namespace Server.MirObjects
 
                     Report.ItemChanged("BuyMarketItem", auction.Item, auction.Item.Count, 2);
 
-                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price), ChatType.Hint);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price) });
+                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price), ChatType.Hint);
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price) });
                     MarketSearch(MatchName);
                     return;
                 }
@@ -14242,7 +14357,7 @@ namespace Server.MirObjects
                     Account.Auctions.Remove(auction);
                     Envir.Auctions.Remove(auction);
                     GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.Name, auction.Price, gold, auction.Price - gold) });
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, auction.Price, gold, auction.Price - gold) });
                     MarketSearch(MatchName);
                     return;
                 }
@@ -14796,6 +14911,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (GroupMembers != null)
+            {
+                ReceiveChat(string.Format("You can no longer join {0}'s group", GroupInvitation.Name), ChatType.System);
+                GroupInvitation = null;
+                return;
+            }
 
             if (GroupInvitation.GroupMembers != null && GroupInvitation.GroupMembers[0] != GroupInvitation)
             {
@@ -15484,6 +15605,7 @@ namespace Server.MirObjects
                 enemyGuild.SendMessage(string.Format("{0} has started a war", MyGuild.Name), ChatType.System);
 
                 MyGuild.Gold -= Settings.Guild_WarCost;
+                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Name = Info.Name, Amount = Settings.Guild_WarCost });
             }
         }
 
@@ -18278,7 +18400,7 @@ namespace Server.MirObjects
 
             if (MarriageProposal.Info.Married != 0)
             {
-                ReceiveChat(string.Format("{0} is already married.", TradeInvitation.Info.Name), ChatType.System);
+                ReceiveChat(string.Format("{0} is already married.", MarriageProposal.Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
@@ -18622,7 +18744,11 @@ namespace Server.MirObjects
 
         public void MentorReply(bool accept)
         {
-            if (MentorRequest == null) return;
+            if (MentorRequest == null || MentorRequest.Info == null)
+            {
+                MentorRequest = null;
+                return;
+            }
 
             if (!accept)
             {
@@ -18985,7 +19111,9 @@ namespace Server.MirObjects
             }
             else if (CurrentMap.tempConquest != null)
             {
-                if (checkPalace && CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace) CurrentMap.tempConquest.TakeConquest(this);
+                if (checkPalace && CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace)
+                    CurrentMap.tempConquest.TakeConquest(this);
+
                 EnterSabuk();
             }
         }
