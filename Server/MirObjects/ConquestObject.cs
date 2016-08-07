@@ -1077,16 +1077,11 @@ namespace Server.MirObjects
 
         public uint GetRepairCost()
         {
-            uint cost = 0;
+            if (Wall == null) return Info.RepairCost;
 
-            if (Wall.MaxHP == Wall.HP) return cost;
+            if (Wall.MaxHP == Wall.HP) return 0;
 
-            if (Wall != null)
-            {
-                cost = Info.RepairCost / (Wall.MaxHP / (Wall.MaxHP - Wall.HP));
-            }
-
-            return cost;
+            return Info.RepairCost / (Wall.MaxHP / (Wall.MaxHP - Wall.HP));
         }
 
         public void Repair()

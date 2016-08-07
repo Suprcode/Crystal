@@ -3269,13 +3269,15 @@ namespace Server.MirObjects
                         ConquestWallObject ConquestWall = Conquest.WallList.FirstOrDefault(z => z.Index == tempInt);
                         if (ConquestWall == null) return;
 
-                        if (ConquestWall.Wall != null)
-                            if (!ConquestWall.Wall.Dead) return;
+                        //if (ConquestWall.Wall != null)
+                        //    if (!ConquestWall.Wall.Dead) return;
 
-                        if (player.MyGuild == null || player.MyGuild.Gold < ConquestWall.GetRepairCost()) return;
+                        uint repairCost = ConquestWall.GetRepairCost();
 
-                        player.MyGuild.Gold -= ConquestWall.GetRepairCost();
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestWall.GetRepairCost() });
+                        if (player.MyGuild == null || player.MyGuild.Gold < repairCost) return;
+
+                        player.MyGuild.Gold -= repairCost;
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = repairCost });
 
                         ConquestWall.Repair();
                         break;
