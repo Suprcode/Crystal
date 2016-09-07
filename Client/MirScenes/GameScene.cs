@@ -1799,6 +1799,8 @@ namespace Client.MirScenes
                     return 173;
                 case BuffType.General:
                     return 182;
+                case BuffType.HumUp://stupple need changing
+                    return 508;//508
                 case BuffType.Exp:
                     return 260;
                 case BuffType.Drop:
@@ -1861,7 +1863,7 @@ namespace Client.MirScenes
         }
         private void UserInformation(S.UserInformation p)
         {
-            User = new UserObject(p.ObjectID);
+            User = new UserObject(p.ObjectID, p.Class);//stupple
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
@@ -1906,9 +1908,9 @@ namespace Client.MirScenes
         {
             ChatDialog.ReceiveChat(p.Message, p.Type);
         }
-        private void ObjectPlayer(S.ObjectPlayer p)
+        private void ObjectPlayer(S.ObjectPlayer p)//stupple
         {
-            PlayerObject player = new PlayerObject(p.ObjectID);
+            PlayerObject player = new PlayerObject(p.ObjectID, p.Class);
             player.Load(p);
         }
         private void ObjectRemove(S.ObjectRemove p)
@@ -3925,6 +3927,11 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Magic3, 830, 5, 500, ob, CMain.Time + p.DelayTime) { Blend = false });
                         }
                         break;
+                    case SpellEffect.HumUpEffect://stupple
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Effect, 760, 94, 9400, ob));
+                        }
+                        break;
                     case SpellEffect.TurtleKing:
                         {
                             Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, ob);
@@ -5343,7 +5350,12 @@ namespace Client.MirScenes
                     break;
             }
         }
-
+        private void HumUpPlayer(S.HumUpPlayer p)//stupple
+        {
+            PlayerObject player = (PlayerObject)GameScene.Scene.MapControl.FindObject(p.ObjectID, p.Location.X, p.Location.Y);
+            player.Class = p.Class;
+        }
+        
         private void ResizeInventory(S.ResizeInventory p)
         {
             Array.Resize(ref User.Inventory, p.Size);

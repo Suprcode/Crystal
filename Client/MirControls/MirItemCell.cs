@@ -1616,6 +1616,41 @@ namespace Client.MirControls
                         return false;
                     }
                     break;
+                case MirClass.HighWarrior:
+                    if (!Item.Info.RequiredClass.HasFlag(RequiredClass.HighWarrior))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighWarriors cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighWizard:
+                    if (!Item.Info.RequiredClass.HasFlag(RequiredClass.HighWizard))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighWizards cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighTaoist:
+                    if (!Item.Info.RequiredClass.HasFlag(RequiredClass.HighTaoist))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighTaoists cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighAssassin:
+                    if (!Item.Info.RequiredClass.HasFlag(RequiredClass.HighAssassin))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighAssassins cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighArcher:
+                    if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Archer))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("Archers cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
             }
 
             switch (Item.Info.RequiredType)
@@ -1751,6 +1786,41 @@ namespace Client.MirControls
                     if (!i.Info.RequiredClass.HasFlag(RequiredClass.Archer))
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("Archers cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighWarrior:
+                    if (!i.Info.RequiredClass.HasFlag(RequiredClass.HighWarrior))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighWarriors cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighWizard:
+                    if (!i.Info.RequiredClass.HasFlag(RequiredClass.HighWizard))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighWizards cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighTaoist:
+                    if (!i.Info.RequiredClass.HasFlag(RequiredClass.HighTaoist))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighTaoists cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighAssassin:
+                    if (!i.Info.RequiredClass.HasFlag(RequiredClass.HighAssassin))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighAssassins cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.HighArcher:
+                    if (!i.Info.RequiredClass.HasFlag(RequiredClass.HighArcher))
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighArchers cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;

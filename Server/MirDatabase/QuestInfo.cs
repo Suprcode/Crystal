@@ -348,6 +348,26 @@ namespace Server.MirDatabase
                     if (!RequiredClass.HasFlag(RequiredClass.Archer))
                         return false;
                     break;
+                case MirClass.HighWarrior:
+                    if (!RequiredClass.HasFlag(RequiredClass.HighWarrior))
+                        return false;
+                    break;
+                case MirClass.HighWizard:
+                    if (!RequiredClass.HasFlag(RequiredClass.HighWizard))
+                        return false;
+                    break;
+                case MirClass.HighTaoist:
+                    if (!RequiredClass.HasFlag(RequiredClass.HighTaoist))
+                        return false;
+                    break;
+                case MirClass.HighAssassin:
+                    if (!RequiredClass.HasFlag(RequiredClass.HighAssassin))
+                        return false;
+                    break;
+                case MirClass.HighArcher:
+                    if (!RequiredClass.HasFlag(RequiredClass.HighArcher))
+                        return false;
+                    break;
             }
 
             return true;

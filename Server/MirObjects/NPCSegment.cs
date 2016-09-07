@@ -830,6 +830,9 @@ namespace Server.MirObjects
                     if (parts.Length < 3) return;
                     acts.Add(new NPCActions(ActionType.AddMailItem, parts[1], parts[2]));
                     break;
+                case "HUMUP"://stupple
+                    acts.Add(new NPCActions(ActionType.Humup));
+                    break;
 
                 case "SENDMAIL":
                     acts.Add(new NPCActions(ActionType.SendMail));
@@ -3178,6 +3181,10 @@ namespace Server.MirObjects
 
                         break;
 
+                    case ActionType.Humup://stupple
+                        player.Humup();
+
+                        break;
                     case ActionType.GroupGoto:
                         if (player.GroupMembers == null) return;
 

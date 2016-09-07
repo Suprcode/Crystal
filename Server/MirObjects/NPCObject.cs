@@ -1482,6 +1482,7 @@ namespace Server.MirObjects
         OpenGate,
         CloseGate,
         Break,
+        Humup,//stupple
     }
     public enum CheckType
     {

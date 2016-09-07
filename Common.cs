@@ -699,7 +699,12 @@ public enum MirClass : byte
     Wizard = 1,
     Taoist = 2,
     Assassin = 3,
-    Archer = 4
+    Archer = 4,
+    HighWarrior = 5,
+    HighWizard = 6,
+    HighTaoist = 7,
+    HighAssassin = 8,
+    HighArcher = 9,
 }
 
 public enum MirDirection : byte
@@ -922,13 +927,47 @@ public enum SpecialItemMode : short
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum RequiredClass : byte
 {
+    //Warrior = 0,
+    //Wizard = 1,
+    //Taoist = 2,
+    //Assassin = 3,
+    //Archer = 4,
+    //HighWarrior = 5,
+    //HighWizard = 6,
+    //HighTaoist = 7,
+    //HighAssassin = 8,
+    //HighArcher = 9,
+
+    //WarWizTao = 10,
+
+    //WarHighWar = 11,
+    //WizHighWiz = 12,
+    //TaoHighTao = 13,
+    //AssHighAss = 14,
+    //ArcHighArc = 15,
+
+    //WarWizTaoAssArc = 16,
+    //All = 17,
+    //None = 18,
+    //High = 19,
+
     Warrior = 1,
     Wizard = 2,
     Taoist = 4,
     Assassin = 8,
     Archer = 16,
+    HighWarrior = 11,
+    HighWizard = 12,
+    HighTaoist = 13,
+    HighAssassin = 14,
+    HighArcher = 15,
+    AllHigh = HighWarrior | HighWizard | HighTaoist | HighAssassin | HighArcher,
     WarWizTao = Warrior | Wizard | Taoist,
-    None = WarWizTao | Assassin | Archer
+    None = AllLow | AllHigh,
+    AllLow = Warrior | Wizard | Taoist | Assassin | Archer,
+    
+
+
 }
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -1146,6 +1185,7 @@ public enum SpellEffect : byte
     TurtleKing,
     Behemoth,
     Stunned,
+    HumUpEffect,//stupple
     IcePillar
 }
 
@@ -1178,6 +1218,7 @@ public enum BuffType : byte
     PetEnhancer,
     ImmortalSkin,
     MagicShield,
+    HumUp, //stupple
 
     //special
     GameMaster = 100,
@@ -1428,7 +1469,8 @@ public enum ServerPacketIds : short
     MailSent,
     ParcelCollected,
     MailCost,
-	ResizeInventory,
+    HumUpPlayer,//stupple
+    ResizeInventory,
     ResizeStorage,
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
@@ -2493,7 +2535,56 @@ public static class Functions
         return rv;
     }
 }
+//public static bool EqualClass(RequiredClass requiredClass, MirClass job) ///stupple
+//{
+//    bool isEqual = false;
+//    byte byteJob = (byte)job;
+//    switch (requiredClass)
+//    {
+//        case RequiredClass.Warrior:
+//        case RequiredClass.Wizard:
+//        case RequiredClass.Taoist:
+//        case RequiredClass.Assassin:
+//        case RequiredClass.Archer:
+//        case RequiredClass.HighWarrior:
+//        case RequiredClass.HighWizard:
+//        case RequiredClass.HighTaoist:
+//        case RequiredClass.HighAssassin:
+//        case RequiredClass.HighArcher:
+//            isEqual = ((byte)requiredClass == byteJob);
+//            break;
+//        case RequiredClass.WarWizTao:
+//            isEqual = (byteJob < 3);
+//            break;
+//        case RequiredClass.WarHighWar:
+//            isEqual = (byteJob == 0 || byteJob == 5);
+//            break;
+//        case RequiredClass.WizHighWiz:
+//            isEqual = (byteJob == 1 || byteJob == 6);
+//            break;
+//        case RequiredClass.TaoHighTao:
+//            isEqual = (byteJob == 2 || byteJob == 7);
+//            break;
+//        case RequiredClass.AssHighAss:
+//            isEqual = (byteJob == 3 || byteJob == 8);
+//            break;
+//        case RequiredClass.ArcHighArc:
+//            isEqual = (byteJob == 4 || byteJob == 9);
+//            break;
+//        case RequiredClass.WarWizTaoAssArc:
+//            isEqual = (byteJob <= 4);
+//            break;
+//        case RequiredClass.High:
+//            isEqual = (byteJob > 4 && byteJob < 10);
+//            break;
+//        case RequiredClass.All:
+//        case RequiredClass.None:
+//            isEqual = true;
+//            break;
+//    }
 
+//    return isEqual;
+//}
 public class SelectInfo
 {
     public int Index;
@@ -3275,6 +3366,8 @@ public class UserItem
 			}
 		}
 
+    public int Shape { get; internal set; }
+
     public UserItem Clone()
     {
         UserItem item = new UserItem(Info)
@@ -3644,20 +3737,21 @@ public class ClientMagic
 {
     public Spell Spell;
     public byte BaseCost, LevelCost, Icon;
-    public byte Level1, Level2, Level3;
-    public ushort Need1, Need2, Need3;
+    public byte Level1, Level2, Level3, Level4;//stupple
+    public ushort Need1, Need2, Need3, Need4;//stupple
 
     public byte Level, Key, Range;
     public ushort Experience;
 
     public bool IsTempSpell;
+    public bool IsHumUpTrain;//stupple
     public long CastTime, Delay;
 
     public ClientMagic()
     {
     }
 
-    public ClientMagic(BinaryReader reader)
+    public ClientMagic(BinaryReader reader)//stupple data
     {
         Spell = (Spell)reader.ReadByte();
 
@@ -3667,13 +3761,16 @@ public class ClientMagic
         Level1 = reader.ReadByte();
         Level2 = reader.ReadByte();
         Level3 = reader.ReadByte();
+        Level4 = reader.ReadByte();//stupple
         Need1 = reader.ReadUInt16();
         Need2 = reader.ReadUInt16();
         Need3 = reader.ReadUInt16();
+        Need4 = reader.ReadUInt16();//stupple
 
         Level = reader.ReadByte();
         Key = reader.ReadByte();
         Experience = reader.ReadUInt16();
+        IsHumUpTrain = reader.ReadBoolean();//stupple
 
         Delay = reader.ReadInt64();
 
@@ -3691,13 +3788,16 @@ public class ClientMagic
         writer.Write(Level1);
         writer.Write(Level2);
         writer.Write(Level3);
+        writer.Write(Level4);//stupple
         writer.Write(Need1);
         writer.Write(Need2);
         writer.Write(Need3);
+        writer.Write(Need4);//stupple
 
         writer.Write(Level);
         writer.Write(Key);
         writer.Write(Experience);
+        writer.Write(IsHumUpTrain);//Stupple
 
         writer.Write(Delay);
 
@@ -4578,6 +4678,7 @@ public abstract class Packet
                 return new C.MailLockedItem();
             case (short)ClientPacketIds.MailCost:
                 return new C.MailCost();
+          
             case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
                 return new C.UpdateIntelligentCreature();
             case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
@@ -5023,7 +5124,9 @@ public abstract class Packet
                 return new S.ParcelCollected();
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
-			case (short)ServerPacketIds.ResizeInventory:
+            case (short)ServerPacketIds.HumUpPlayer://stupple
+                return new S.HumUpPlayer();
+            case (short)ServerPacketIds.ResizeInventory:
                 return new S.ResizeInventory();
             case (short)ServerPacketIds.ResizeStorage:
                 return new S.ResizeStorage();
@@ -5071,6 +5174,7 @@ public class BaseStats
         switch (Job)
         {
             case MirClass.Warrior:
+            case MirClass.HighWarrior:
                 HpGain = 4F;
                 HpGainRate = 4.5F;
                 MpGainRate = 0;
@@ -5095,6 +5199,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Wizard:
+            case MirClass.HighWizard:
                 HpGain = 15F;
                 HpGainRate = 1.8F;
                 MpGainRate = 0;
@@ -5119,6 +5224,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Taoist:
+            case MirClass.HighTaoist:
                 HpGain = 6F;
                 HpGainRate = 2.5F;
                 MpGainRate = 0;
@@ -5143,6 +5249,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Assassin:
+            case MirClass.HighAssassin:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;
@@ -5167,6 +5274,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Archer:
+            case MirClass.HighArcher:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;
