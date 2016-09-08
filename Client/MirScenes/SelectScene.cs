@@ -476,6 +476,21 @@ namespace Client.MirScenes
                     case MirClass.Archer:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 100 : 140; //160 : 180;
                         break;
+                    case MirClass.HighWarrior:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 220 : 500; //220 : 500;
+                        break;
+                    case MirClass.HighWizard:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 240 : 520; //240 : 520;
+                        break;
+                    case MirClass.HighTaoist:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 260 : 540; //260 : 540;
+                        break;
+                    case MirClass.HighAssassin:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 280 : 560; //280 : 560;
+                        break;
+                    case MirClass.HighArcher:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 160 : 180; //160 : 180;
+                        break;
                 }
 
                 LastAccessLabel.Text = Characters[_selected].LastAccess == DateTime.MinValue ? "Never" : Characters[_selected].LastAccess.ToString();
@@ -852,6 +867,31 @@ namespace Client.MirScenes
                         Description.Text = ArcherDescription;
                         CharacterDisplay.Index = (byte)_gender == 0 ? 100 : 140; //160 : 180;
                         break;
+                    case MirClass.HighWarrior:
+                        WarriorButton.Index = 2427;
+                        Description.Text = WarriorDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 220 : 500; //220 : 500;
+                        break;
+                    case MirClass.HighWizard:
+                        WizardButton.Index = 2430;
+                        Description.Text = WizardDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 240 : 520; //240 : 520;
+                        break;
+                    case MirClass.HighTaoist:
+                        TaoistButton.Index = 2433;
+                        Description.Text = TaoistDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 260 : 540; //260 : 540;
+                        break;
+                    case MirClass.HighAssassin:
+                        AssassinButton.Index = 2436;
+                        Description.Text = AssassinDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 280 : 560; //280 : 560;
+                        break;
+                    case MirClass.HighArcher:
+                        ArcherButton.Index = 2439;
+                        Description.Text = ArcherDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 160 : 180; //160 : 180;
+                        break;
                 }
 
                 //CharacterDisplay.Index = ((byte)_class + 1) * 20 + (byte)_gender * 280;
@@ -861,7 +901,7 @@ namespace Client.MirScenes
         {
             public MirLabel NameLabel, LevelLabel, ClassLabel;
             public bool Selected;
-            
+
             public CharacterButton()
             {
                 Index = 44; //45 locked
@@ -912,7 +952,7 @@ namespace Client.MirScenes
 
                 Library = Libraries.Title;
 
-                Index = 660 + (byte) info.Class;
+                Index = 660 + (byte)info.Class - (info.Class > MirClass.Archer ? 5 : 0);
 
                 if (Selected) Index += 5;
 
@@ -920,7 +960,7 @@ namespace Client.MirScenes
                 NameLabel.Text = info.Name;
                 LevelLabel.Text = info.Level.ToString();
                 ClassLabel.Text = info.Class.ToString();
-                
+
                 NameLabel.Visible = true;
                 LevelLabel.Visible = true;
                 ClassLabel.Visible = true;

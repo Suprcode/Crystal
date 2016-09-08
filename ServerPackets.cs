@@ -4994,7 +4994,33 @@ namespace ServerPackets
             writer.Write(Result);
         }
     }
+    public sealed class HumUpPlayer : Packet//stupple
+    {
 
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.HumUpPlayer; }
+        }
+
+        public uint ObjectID;
+        public MirClass Class;
+        public Point Location;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+            Class = (MirClass)reader.ReadByte();
+            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write((byte)Class);
+            writer.Write(Location.X);
+            writer.Write(Location.Y);
+        }
+    }
     public sealed class MailCost : Packet
     {
         public uint Cost;

@@ -732,6 +732,26 @@ namespace Client.MirObjects
                         if (!quest.ClassNeeded.HasFlag(RequiredClass.Archer))
                             return false;
                         break;
+                    case MirClass.HighWarrior:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighWarrior))
+                            return false;
+                        break;
+                    case MirClass.HighWizard:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighWizard))
+                            return false;
+                        break;
+                    case MirClass.HighTaoist:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighTaoist))
+                            return false;
+                        break;
+                    case MirClass.HighAssassin:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighAssassin))
+                            return false;
+                        break;
+                    case MirClass.HighArcher:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighArcher))
+                            return false;
+                        break;
                 }
             }
 

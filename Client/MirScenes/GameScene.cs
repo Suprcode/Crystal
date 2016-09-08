@@ -1658,11 +1658,11 @@ namespace Client.MirScenes
             switch (buff.Type)
             {
                 case BuffType.UltimateEnhancer:
-                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
+                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer || GameScene.User.Class == MirClass.HighWizard || GameScene.User.Class == MirClass.HighArcher)
                     {
                         text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
-                    else if (GameScene.User.Class == MirClass.Taoist)
+                    else if (GameScene.User.Class == MirClass.Taoist || GameScene.User.Class == MirClass.HighTaoist)
                     {
                         text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
@@ -1799,6 +1799,8 @@ namespace Client.MirScenes
                     return 173;
                 case BuffType.General:
                     return 182;
+                case BuffType.HumUp://stupple need changing
+                    return 186;//508
                 case BuffType.Exp:
                     return 260;
                 case BuffType.Drop:
@@ -1861,7 +1863,7 @@ namespace Client.MirScenes
         }
         private void UserInformation(S.UserInformation p)
         {
-            User = new UserObject(p.ObjectID);
+            User = new UserObject(p.ObjectID, p.Class);//stupple
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
@@ -1906,9 +1908,9 @@ namespace Client.MirScenes
         {
             ChatDialog.ReceiveChat(p.Message, p.Type);
         }
-        private void ObjectPlayer(S.ObjectPlayer p)
+        private void ObjectPlayer(S.ObjectPlayer p)//stupple
         {
-            PlayerObject player = new PlayerObject(p.ObjectID);
+            PlayerObject player = new PlayerObject(p.ObjectID, p.Class);
             player.Load(p);
         }
         private void ObjectRemove(S.ObjectRemove p)
@@ -3925,6 +3927,11 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Magic3, 830, 5, 500, ob, CMain.Time + p.DelayTime) { Blend = false });
                         }
                         break;
+                    case SpellEffect.HumUpEffect://stupple
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Effect, 760, 94, 9400, ob));
+                        }
+                        break;
                     case SpellEffect.TurtleKing:
                         {
                             Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, ob);
@@ -5343,7 +5350,12 @@ namespace Client.MirScenes
                     break;
             }
         }
-
+        private void HumUpPlayer(S.HumUpPlayer p)//stupple
+        {
+            PlayerObject player = (PlayerObject)GameScene.Scene.MapControl.FindObject(p.ObjectID, p.Location.X, p.Location.Y);
+            player.Class = p.Class;
+        }
+        
         private void ResizeInventory(S.ResizeInventory p)
         {
             Array.Resize(ref User.Inventory, p.Size);
@@ -9257,7 +9269,7 @@ namespace Client.MirScenes
 
                     GameScene.LogTime = CMain.Time + Globals.LogDelay;
 
-                    if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
+                    if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
                     {
                         if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                         {
@@ -9353,7 +9365,7 @@ namespace Client.MirScenes
                                 MapObject target = null;
                                 if (MapObject.MouseObject is MonsterObject || MapObject.MouseObject is PlayerObject) target = MapObject.MouseObject;
 
-                                if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount)
+                                if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && !User.RidingMount)
                                 {
                                     if (target != null)
                                     {
@@ -9382,7 +9394,7 @@ namespace Client.MirScenes
                             return;
                         }
 
-                        if (MapObject.MouseObject is MonsterObject && User.Class == MirClass.Archer && MapObject.TargetObject != null && !MapObject.TargetObject.Dead && User.HasClassWeapon && !User.RidingMount) //ArcherTest - range attack
+                        if (MapObject.MouseObject is MonsterObject &&( User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && MapObject.TargetObject != null && !MapObject.TargetObject.Dead && User.HasClassWeapon && !User.RidingMount) //ArcherTest - range attack
                         {
                             if (Functions.InRange(MapObject.MouseObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                             {
@@ -9495,7 +9507,7 @@ namespace Client.MirScenes
             if (((!MapObject.TargetObject.Name.EndsWith(")") && !(MapObject.TargetObject is PlayerObject)) || !CMain.Shift) &&
                 (MapObject.TargetObject.Name.EndsWith(")") || !(MapObject.TargetObject is MonsterObject))) return;
             if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 1)) return;
-            if (User.Class == MirClass.Archer && User.HasClassWeapon && (MapObject.TargetObject is MonsterObject || MapObject.TargetObject is PlayerObject)) return; //ArcherTest - stop walking
+            if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && (MapObject.TargetObject is MonsterObject || MapObject.TargetObject is PlayerObject)) return; //ArcherTest - stop walking
             direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation);
 
             if (!CanWalk(direction)) return;
@@ -10078,11 +10090,11 @@ namespace Client.MirScenes
                     text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
                     break;
                 case BuffType.UltimateEnhancer:
-                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
+                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer || GameScene.User.Class == MirClass.HighWizard || GameScene.User.Class == MirClass.HighArcher)
                     {
                         text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Values[0]);
                     }
-                    else if (GameScene.User.Class == MirClass.Taoist)
+                    else if (GameScene.User.Class == MirClass.Taoist || GameScene.User.Class == MirClass.HighTaoist)
                     {
                         text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Values[0]);
                     }
