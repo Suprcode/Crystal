@@ -16862,8 +16862,6 @@ namespace Server.MirObjects
 
         public void SendMail(string name, string message, uint gold, ulong[] items, bool stamped)
         {
-            if (gold > Account.Gold) return;
-            
             CharacterInfo player = Envir.GetCharacterInfo(name);
 
             if (player == null)
@@ -16878,7 +16876,7 @@ namespace Server.MirObjects
 
             totalGold = gold + parcelCost;
 
-            if (Account.Gold < totalGold)
+            if (Account.Gold < totalGold || Account.Gold < gold || gold > totalGold)
             {
                 Enqueue(new S.MailSent { Result = -1 });
                 return;
