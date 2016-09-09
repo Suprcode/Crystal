@@ -314,6 +314,12 @@ namespace Server
 
         private void ConquestInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveConquests(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

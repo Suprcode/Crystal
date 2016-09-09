@@ -45,6 +45,12 @@ namespace Server
         }
         private void MapInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveMaps(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

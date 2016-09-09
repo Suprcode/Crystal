@@ -152,6 +152,8 @@ namespace Server.MirDatabase
             return null;
         }
 
+        public UserMagic() { }
+
         public UserMagic(Spell spell)
         {
             Spell = spell;

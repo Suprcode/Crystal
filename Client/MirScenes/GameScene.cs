@@ -7674,7 +7674,7 @@ namespace Client.MirScenes
 
             if (HoverItem.ExpireInfo != null)
             {
-                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - DateTime.Now).TotalSeconds;
+                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - DateTime.Now).Value.TotalSeconds;
 
                 count++;
                 MirLabel EXPIRELabel = new MirLabel

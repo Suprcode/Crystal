@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Migrations;
 using System.Data.SqlTypes;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Server.MirNetwork;
 using Server.MirEnvir;
@@ -127,6 +129,21 @@ namespace Server.MirDatabase
 
         public void Save(BinaryWriter writer)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.AccountInfos.AddOrUpdate(i => new {i.Index}, this);
+                    ctx.SaveChanges();
+                    foreach (var characterInfo in Characters)
+                    {
+                        characterInfo.AccountInfoIndex = Index;
+                        characterInfo.Save(writer);
+                    }
+                    ctx.SaveChanges();
+                }
+                return;
+            }
             writer.Write(Index);
             writer.Write(AccountID);
             writer.Write(Password);

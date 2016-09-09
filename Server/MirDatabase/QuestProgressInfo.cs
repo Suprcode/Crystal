@@ -72,6 +72,8 @@ namespace Server.MirDatabase
             get { return StartDateTime > DateTime.Now.AddDays(-1); }
         }
 
+        public QuestProgressInfo() { }
+
         public QuestProgressInfo(int index)
         {
             Index = index;

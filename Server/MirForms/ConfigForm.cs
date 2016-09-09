@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
+using Server.MirEnvir;
 
 namespace Server
 {
@@ -144,6 +147,24 @@ namespace Server
         private void SafeZoneHealingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void SaveDBButton_Click(object sender, EventArgs e)
+        {
+#if DEBUG
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+#endif
+            SMain.Envir.SaveDB();
+#if DEBUG
+            SMain.Enqueue("DB Saved In:" + stopWatch.Elapsed);
+            stopWatch.Stop();
+#endif
+        }
+
+        private void SaveAccount_Click(object sender, EventArgs e)
+        {
+            SMain.Envir.SaveAccounts();
         }
     }
 }

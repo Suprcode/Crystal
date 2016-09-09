@@ -261,6 +261,14 @@ namespace Server
 
         private void NPCInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    Envir.SaveNPCs(ctx);
+                }
+                return;
+            }
             Envir.SaveDB();
         }
 

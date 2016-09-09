@@ -168,6 +168,12 @@ namespace Server
 
         private void QuestInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveQuests(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

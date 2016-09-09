@@ -16,7 +16,8 @@ namespace Server.MirDatabase
         public int Index { get; set; }
         public string Name { get; set; } = string.Empty;
 
-        public Monster Image { get; set; }
+        public Monster Image;
+        public int DBImage { get { return (int) Image; } set { Enum.TryParse(value.ToString(), out Image); } }
         public byte AI { get; set; }
         public byte Effect { get; set; }
         public byte ViewRange { get; set; } = 7;
@@ -26,6 +27,7 @@ namespace Server.MirDatabase
         public int DBLevel { get { return Level; } set { Level = (ushort) value; } }
 
         public uint HP { get; set; }
+        public long DBHP { get { return HP; } set { HP = (uint) value; } }
         public byte Accuracy { get; set; }
         public byte Agility { get; set; }
         public byte Light { get; set; }

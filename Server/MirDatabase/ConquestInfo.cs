@@ -1,46 +1,105 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace Server.MirDatabase
 {
     public class ConquestInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
+        [NotMapped]
         public Point Location;
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
         public ushort Size;
-        public string Name;
-        public int MapIndex;
-        public int PalaceIndex;
+        public int DBSize { get { return Size; } set { Size = (ushort) value; } }
+        public string Name { get; set; }
+        public int MapIndex { get; set; }
+        public int PalaceIndex { get; set; }
         public List<int> ExtraMaps = new List<int>();
+
+        public string DBExtraMaps
+        {
+            get { return string.Join(",", ExtraMaps); }
+            set
+            {
+                ExtraMaps = string.IsNullOrEmpty(value) ? new List<int>() : value.Split(',').Select(int.Parse).ToList();
+            }
+        }
+
         public List<ConquestArcherInfo> ConquestGuards = new List<ConquestArcherInfo>();
         public List<ConquestGateInfo> ConquestGates = new List<ConquestGateInfo>();
         public List<ConquestWallInfo> ConquestWalls = new List<ConquestWallInfo>();
         public List<ConquestSiegeInfo> ConquestSieges = new List<ConquestSiegeInfo>();
-        public int GuardIndex;
-        public int GateIndex;
-        public int WallIndex;
-        public int SiegeIndex;
+        public int GuardIndex { get; set; }
+        public int GateIndex { get; set; }
+        public int WallIndex { get; set; }
+        public int SiegeIndex { get; set; }
 
-        public byte StartHour = 0;
-        public int WarLength = 60;
+        public byte StartHour { get; set; } = 0;
+        public int WarLength { get; set; } = 60;
 
         private int counter;
 
-        public ConquestType Type = ConquestType.Request;
-        public ConquestGame Game = ConquestGame.CapturePalace;
+        public ConquestType Type { get; set; } = ConquestType.Request;
+        public ConquestGame Game { get; set; } = ConquestGame.CapturePalace;
 
-        public bool Monday;
-        public bool Tuesday;
-        public bool Wednesday;
-        public bool Thursday;
-        public bool Friday;
-        public bool Saturday;
-        public bool Sunday;
+        public bool Monday { get; set; }
+        public bool Tuesday { get; set; }
+        public bool Wednesday { get; set; }
+        public bool Thursday { get; set; }
+        public bool Friday { get; set; }
+        public bool Saturday { get; set; }
+        public bool Sunday { get; set; }
 
         public Point ObjectLoc;
+        public string DBObjectLoc
+        {
+            get { return ObjectLoc.X + "," + ObjectLoc.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    ObjectLoc.X = 0;
+                    ObjectLoc.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    ObjectLoc.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    ObjectLoc.Y = result;
+                }
+            }
+        }
         public ushort ObjectSize;
+        public int DBObjectSize { get { return ObjectSize;} set { ObjectSize = (ushort) value; } }
 
         public ConquestInfo()
         {
@@ -169,11 +228,35 @@ namespace Server.MirDatabase
 
     public class ConquestSiegeInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
         public Point Location;
-        public int MobIndex;
-        public string Name;
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
+        public int ConquestInfoIndex { get; set; }
+        public int MobIndex { get; set; }
+        public string Name { get; set; }
         public uint RepairCost;
+        public long DBRepairCost { get { return RepairCost;} set { RepairCost = (uint) value; } }
 
         public ConquestSiegeInfo()
         {
@@ -209,11 +292,35 @@ namespace Server.MirDatabase
 
     public class ConquestWallInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
         public Point Location;
-        public int MobIndex;
-        public string Name;
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
+        public int ConquestInfoIndex { get; set; }
+        public int MobIndex { get; set; }
+        public string Name { get; set; }
         public uint RepairCost;
+        public long DBRepairCost { get { return RepairCost; } set { RepairCost = (uint)value; } }
 
         public ConquestWallInfo()
         {
@@ -249,11 +356,35 @@ namespace Server.MirDatabase
 
     public class ConquestGateInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
         public Point Location;
-        public int MobIndex;
-        public string Name;
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
+        public int ConquestInfoIndex { get; set; }
+        public int MobIndex { get; set; }
+        public string Name { get; set; }
         public uint RepairCost;
+        public long DBRepairCost { get { return RepairCost; } set { RepairCost = (uint)value; } }
 
         public ConquestGateInfo()
         {
@@ -289,11 +420,35 @@ namespace Server.MirDatabase
 
     public class ConquestArcherInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
         public Point Location;
-        public int MobIndex;
-        public string Name;
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
+        public int ConquestInfoIndex { get; set; }
+        public int MobIndex { get; set; }
+        public string Name { get; set; }
         public uint RepairCost;
+        public long DBRepairCost { get { return RepairCost; } set { RepairCost = (uint)value; } }
 
         public ConquestArcherInfo()
         {

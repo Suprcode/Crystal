@@ -2,6 +2,8 @@
 using Server.MirObjects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,12 @@ namespace Server.MirDatabase
 {
     public class QuestInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
 
         public uint NpcIndex;
+        public long DBNpcIndex { get { return NpcIndex; } set { NpcIndex = (uint) value; } }
+        [NotMapped]
         public NPCInfo NpcInfo;
 
         private uint _finishNpcIndex;
@@ -24,24 +29,50 @@ namespace Server.MirDatabase
             get { return _finishNpcIndex == 0 ? NpcIndex : _finishNpcIndex; }
             set { _finishNpcIndex = value; }
         }
+        public long DBFinishNpcIndex { get { return FinishNpcIndex;} set { FinishNpcIndex = (uint) value; } }
 
-        public string 
-            Name = string.Empty, 
-            Group = string.Empty, 
-            FileName = string.Empty, 
-            GotoMessage = string.Empty, 
-            KillMessage = string.Empty, 
-            ItemMessage = string.Empty,
-            FlagMessage = string.Empty;
+        public string Name { get; set; } = string.Empty;
+
+        public string Group { get; set; } = string.Empty;
+
+        public string FileName { get; set; } = string.Empty;
+
+        public string GotoMessage { get; set; } = string.Empty;
+
+        public string KillMessage { get; set; } = string.Empty;
+
+        public string ItemMessage { get; set; } = string.Empty;
+
+        public string FlagMessage { get; set; } = string.Empty;
 
         public List<string> Description = new List<string>();
-        public List<string> TaskDescription = new List<string>(); 
-        public List<string> CompletionDescription = new List<string>(); 
 
-        public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
-        public RequiredClass RequiredClass = RequiredClass.None;
+        public string DBDescription
+        {
+            get { return string.Join("|", Description); }
+            set { Description = value.Split('|').ToList(); }
+        }
+        public List<string> TaskDescription = new List<string>();
 
-        public QuestType Type;
+        public string DBTaskDescription
+        {
+            get { return string.Join("|", TaskDescription); }
+            set { TaskDescription = value.Split('|').ToList(); }
+        }
+        public List<string> CompletionDescription = new List<string>();
+
+        public string DBCompletionDescription
+        {
+            get { return string.Join("|", CompletionDescription); }
+            set { CompletionDescription = value.Split('|').ToList(); }
+        }
+
+        public int RequiredMinLevel { get; set; }
+        public int RequiredMaxLevel { get; set; }
+        public int RequiredQuest { get; set; }
+        public RequiredClass RequiredClass { get; set; } = RequiredClass.None;
+
+        public QuestType Type { get; set; }
 
         public List<QuestItemTask> CarryItems = new List<QuestItemTask>(); 
 
@@ -50,10 +81,75 @@ namespace Server.MirDatabase
         public List<QuestFlagTask> FlagTasks = new List<QuestFlagTask>();
 
         public uint GoldReward;
+        public long DBGoldReward { get { return GoldReward; } set { GoldReward = (uint) value; } }
         public uint ExpReward;
+        public long DBExpReward { get { return ExpReward;} set { ExpReward = (uint) value; } }
         public uint CreditReward;
+        public long DBCreditReward { get { return CreditReward;} set { CreditReward = (uint) value; } }
         public List<QuestItemReward> FixedRewards = new List<QuestItemReward>();
+
+        public string DBFixedRewards
+        {
+            get
+            {
+                var stringList = from r in FixedRewards select r.Item.Index + "," + r.Count;
+                return string.Join("|", stringList);
+            }
+            set
+            {
+                if(string.IsNullOrEmpty(value)) return;
+                var stringList = value.Split('|');
+                FixedRewards = new List<QuestItemReward>();
+                foreach (var s in stringList)
+                {
+                    var tempArray = s.Split(',');
+                    var itemIndex = int.Parse(tempArray[0]);
+                    var itemCount = uint.Parse(tempArray[1] ?? "0");
+                    using (var ctx = new DataContext())
+                    {
+                        var item = ctx.ItemInfos.FirstOrDefault(i => i.Index == itemIndex);
+                        if(item == null) continue;
+                        FixedRewards.Add(new QuestItemReward()
+                        {
+                            Count = itemCount,
+                            Item = item
+                        });
+                    }
+                }
+            }
+        }
         public List<QuestItemReward> SelectRewards = new List<QuestItemReward>();
+
+        public string DBSelectRewards
+        {
+            get
+            {
+                var stringList = from r in SelectRewards select r.Item.Index + "," + r.Count;
+                return string.Join("|", stringList);
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value)) return;
+                var stringList = value.Split('|');
+                SelectRewards = new List<QuestItemReward>();
+                foreach (var s in stringList)
+                {
+                    var tempArray = s.Split(',');
+                    var itemIndex = int.Parse(tempArray[0]);
+                    var itemCount = uint.Parse(tempArray[1] ?? "0");
+                    using (var ctx = new DataContext())
+                    {
+                        var item = ctx.ItemInfos.FirstOrDefault(i => i.Index == itemIndex);
+                        if (item == null) continue;
+                        SelectRewards.Add(new QuestItemReward()
+                        {
+                            Count = itemCount,
+                            Item = item
+                        });
+                    }
+                }
+            }
+        }
 
         private Regex _regexMessage = new Regex("\"([^\"]*)\"");
 
@@ -401,9 +497,13 @@ namespace Server.MirDatabase
             info.ItemMessage = data[6];
             info.FlagMessage = data[7];
 
-            int.TryParse(data[8], out info.RequiredMinLevel);
-            int.TryParse(data[9], out info.RequiredMaxLevel);
-            int.TryParse(data[10], out info.RequiredQuest);
+            int result;
+            int.TryParse(data[8], out result);
+            info.RequiredMinLevel = result;
+            int.TryParse(data[9], out result);
+            info.RequiredMaxLevel = result;
+            int.TryParse(data[10], out result);
+            info.RequiredQuest = result;
 
             byte.TryParse(data[11], out temp);
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using Server.MirDatabase;
 using Server.MirEnvir;
 
 
@@ -176,7 +177,13 @@ namespace Server
             if (GemChanged)
                 Settings.SaveGem();
             if (SpawnChanged)
-                Envir.SaveDB();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                        Envir.SaveMaps(ctx);
+                }
+                else
+                    Envir.SaveDB();
         }
 
         #region Fishing

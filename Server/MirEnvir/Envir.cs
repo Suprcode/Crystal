@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -874,48 +875,18 @@ namespace Server.MirEnvir
             {
                 using (var ctx = new DataContext())
                 {
-                    foreach (var itemInfo in ItemInfoList)
-                    {
-                        var dbItemInfo = ctx.ItemInfos.FirstOrDefault(i => i.Index == itemInfo.Index);
-                        if (dbItemInfo == null)
-                        {
-                            ctx.ItemInfos.Add(itemInfo);
-                        }
-                        else
-                        {
-                            ctx.Entry(dbItemInfo).CurrentValues.SetValues(itemInfo);
-                        }
-                        ctx.SaveChanges();
-                    }
-                    foreach (var info in MonsterInfoList)
-                    {
-                        var dbInfo = ctx.MonsterInfos.FirstOrDefault(i => i.Index == info.Index);
-                        if (dbInfo == null)
-                        {
-                            ctx.MonsterInfos.Add(info);
-                        }
-                        else
-                        {
-                            ctx.Entry(dbInfo).CurrentValues.SetValues(info);
-                        }
-                        ctx.SaveChanges();
-                    }
-                    foreach (var info in MagicInfoList)
-                    {
-                        var dbInfo = ctx.MagicInfos.FirstOrDefault(i => i.id == info.id);
-                        if (dbInfo == null)
-                        {
-                            ctx.MagicInfos.Add(info);
-                        }
-                        else
-                        {
-                            ctx.Entry(dbInfo).CurrentValues.SetValues(info);
-                        }
-                        ctx.SaveChanges();
-                    }
+                    SaveItems(ctx);
+                    SaveMonsters(ctx);
+                    SaveMagics(ctx);
+                    SaveMaps(ctx);
+                    SaveNPCs(ctx);
+                    SaveQuests(ctx);
+                    SaveDragon(ctx);
+                    SaveGameShop(ctx);
+                    SaveConquests(ctx);
                 }
-                
-                //return;
+
+                return;
             }
             using (FileStream stream = File.Create(DatabasePath))
             using (BinaryWriter writer = new BinaryWriter(stream))
@@ -930,32 +901,32 @@ namespace Server.MirEnvir
                 writer.Write(GameshopIndex);
                 writer.Write(ConquestIndex);
                 writer.Write(RespawnIndex);
-
+                
                 writer.Write(MapInfoList.Count);
                 for (int i = 0; i < MapInfoList.Count; i++)
                     MapInfoList[i].Save(writer);
-
+                
                 writer.Write(ItemInfoList.Count);
                 for (int i = 0; i < ItemInfoList.Count; i++)
                     ItemInfoList[i].Save(writer);
-
+                
                 writer.Write(MonsterInfoList.Count);
                 for (int i = 0; i < MonsterInfoList.Count; i++)
                     MonsterInfoList[i].Save(writer);
-
+                
                 writer.Write(NPCInfoList.Count);
                 for (int i = 0; i < NPCInfoList.Count; i++)
                     NPCInfoList[i].Save(writer);
-
+                
                 writer.Write(QuestInfoList.Count);
                 for (int i = 0; i < QuestInfoList.Count; i++)
                     QuestInfoList[i].Save(writer);
-
+                
                 DragonInfo.Save(writer);
                 writer.Write(MagicInfoList.Count);
                 for (int i = 0; i < MagicInfoList.Count; i++)
                     MagicInfoList[i].Save(writer);
-
+                
                 writer.Write(GameShopList.Count);
                 for (int i = 0; i < GameShopList.Count; i++)
                     GameShopList[i].Save(writer);
@@ -967,6 +938,278 @@ namespace Server.MirEnvir
                 RespawnTick.Save(writer);
             }
         }
+
+        public void SaveConquests(DataContext ctx)
+        {
+            foreach (var info in ConquestInfos)
+            {
+                var dbInfo = ctx.ConquestInfos.FirstOrDefault(i => i.Index == info.Index);
+                if (dbInfo == null)
+                {
+                    ctx.ConquestInfos.Add(info);
+                }
+                else
+                {
+                    ctx.Entry(dbInfo).CurrentValues.SetValues(info);
+                }
+                //ctx.SaveChanges();
+                foreach (var gateInfo in info.ConquestGates)
+                {
+                    gateInfo.ConquestInfoIndex = dbInfo?.Index ?? info.Index;
+                    var dbGateInfo = ctx.ConquestGateInfos.FirstOrDefault(i => i.Index == gateInfo.Index);
+                    if (dbGateInfo == null)
+                    {
+                        ctx.ConquestGateInfos.Add(gateInfo);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbGateInfo).CurrentValues.SetValues(gateInfo);
+                    }
+                    //ctx.SaveChanges();
+                }
+                foreach (var guardInfo in info.ConquestGuards)
+                {
+                    guardInfo.ConquestInfoIndex = dbInfo?.Index ?? info.Index;
+                    var dbGuardInfo = ctx.ConquestArcherInfos.FirstOrDefault(i => i.Index == guardInfo.Index);
+                    if (dbGuardInfo == null)
+                    {
+                        ctx.ConquestArcherInfos.Add(guardInfo);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbGuardInfo).CurrentValues.SetValues(guardInfo);
+                    }
+                    //ctx.SaveChanges();
+                }
+                foreach (var siegeInfo in info.ConquestSieges)
+                {
+                    siegeInfo.ConquestInfoIndex = dbInfo?.Index ?? info.Index;
+                    var dbSiegeInfo = ctx.ConquestSiegeInfos.FirstOrDefault(i => i.Index == siegeInfo.Index);
+                    if (dbSiegeInfo == null)
+                    {
+                        ctx.ConquestSiegeInfos.Add(siegeInfo);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbSiegeInfo).CurrentValues.SetValues(siegeInfo);
+                    }
+                    //ctx.SaveChanges();
+                }
+                foreach (var wallInfo in info.ConquestWalls)
+                {
+                    wallInfo.ConquestInfoIndex = dbInfo?.Index ?? info.Index;
+                    var dbWallInfo = ctx.ConquestWallInfos.FirstOrDefault(i => i.Index == wallInfo.Index);
+                    if (dbWallInfo == null)
+                    {
+                        ctx.ConquestWallInfos.Add(wallInfo);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbWallInfo).CurrentValues.SetValues(wallInfo);
+                    }
+                    
+                }
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveGameShop(DataContext ctx)
+        {
+            foreach (var item in GameShopList)
+            {
+                var dbItem = ctx.GameShopItems.FirstOrDefault(i => i.ItemIndex == item.ItemIndex);
+                if (dbItem == null)
+                {
+                    ctx.GameShopItems.Add(item);
+                }
+                else
+                {
+                    ctx.Entry(dbItem).CurrentValues.SetValues(item);
+                }
+                
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveDragon(DataContext ctx)
+        {
+            var dbDragonInfo = ctx.DragonInfos.FirstOrDefault(i => i.id == DragonInfo.id);
+            if (dbDragonInfo == null)
+            {
+                ctx.DragonInfos.Add(DragonInfo);
+            }
+            else
+            {
+                ctx.Entry(dbDragonInfo).CurrentValues.SetValues(DragonInfo);
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveQuests(DataContext ctx)
+        {
+            foreach (var questInfo in QuestInfoList)
+            {
+                var dbQuestInfo = ctx.QuestInfos.FirstOrDefault(i => i.Index == questInfo.Index);
+                if (dbQuestInfo == null)
+                {
+                    ctx.QuestInfos.Add(questInfo);
+                }
+                else
+                {
+                    ctx.Entry(dbQuestInfo).CurrentValues.SetValues(questInfo);
+                }
+                
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveNPCs(DataContext ctx)
+        {
+            foreach (var npcInfo in NPCInfoList)
+            {
+                var dbNPCInfo = ctx.NpcInfos.FirstOrDefault(i => i.Index == npcInfo.Index);
+                if (dbNPCInfo == null)
+                {
+                    ctx.NpcInfos.Add(npcInfo);
+                }
+                else
+                {
+                    ctx.Entry(dbNPCInfo).CurrentValues.SetValues(npcInfo);
+                }
+                
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveMaps(DataContext ctx)
+        {
+            foreach (var mapInfo in MapInfoList)
+            {
+                var dbMapInfo = ctx.MapInfos.FirstOrDefault(i => i.Index == mapInfo.Index);
+                if (dbMapInfo == null)
+                {
+                    ctx.MapInfos.Add(mapInfo);
+                }
+                else
+                {
+                    ctx.Entry(dbMapInfo).CurrentValues.SetValues(mapInfo);
+                }
+                //ctx.SaveChanges();
+                foreach (var safeZoneInfo in mapInfo.SafeZones)
+                {
+                    safeZoneInfo.MapInfoIndex = dbMapInfo?.Index ?? mapInfo.Index;
+                    var dbSafeZoneInfo = ctx.SafeZoneInfos.FirstOrDefault(i => i.id == safeZoneInfo.id);
+                    if (dbSafeZoneInfo == null)
+                    {
+                        ctx.SafeZoneInfos.Add(safeZoneInfo);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbSafeZoneInfo).CurrentValues.SetValues(safeZoneInfo);
+                    }
+                }
+                //ctx.SaveChanges();
+                foreach (var movement in mapInfo.Movements)
+                {
+                    var dbMovementInfo = ctx.MovementInfos.FirstOrDefault(i => i.id == movement.id);
+                    if (dbMovementInfo == null)
+                    {
+                        ctx.MovementInfos.Add(movement);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbMovementInfo).CurrentValues.SetValues(movement);
+                    }
+                    
+                }
+                //ctx.SaveChanges();
+                foreach (var respawnInfo in mapInfo.Respawns)
+                {
+                    respawnInfo.MapInfoIndex = dbMapInfo?.Index ?? mapInfo.Index;
+                    var dbRespawnInfo = ctx.RespawnInfos.FirstOrDefault(i => i.id == respawnInfo.id);
+                    if (dbRespawnInfo == null)
+                    {
+                        ctx.RespawnInfos.Add(respawnInfo);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbRespawnInfo).CurrentValues.SetValues(respawnInfo);
+                    }
+                    
+                }
+                //ctx.SaveChanges();
+                foreach (var mineZoneInfo in mapInfo.MineZones)
+                {
+                    mineZoneInfo.MapInfoIndex = dbMapInfo?.Index ?? mapInfo.Index;
+                    var dbMineZoneInfo = ctx.MineZones.FirstOrDefault(i => i.id == mineZoneInfo.id);
+                    if (dbMineZoneInfo == null)
+                    {
+                        ctx.MineZones.Add(mineZoneInfo);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbMineZoneInfo).CurrentValues.SetValues(mineZoneInfo);
+                    }
+                    
+                }
+                
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveMagics(DataContext ctx)
+        {
+            foreach (var info in MagicInfoList)
+            {
+                var dbInfo = ctx.MagicInfos.FirstOrDefault(i => i.id == info.id);
+                if (dbInfo == null)
+                {
+                    ctx.MagicInfos.Add(info);
+                }
+                else
+                {
+                    ctx.Entry(dbInfo).CurrentValues.SetValues(info);
+                }
+                
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveMonsters(DataContext ctx)
+        {
+            foreach (var info in MonsterInfoList)
+            {
+                var dbInfo = ctx.MonsterInfos.FirstOrDefault(i => i.Index == info.Index);
+                if (dbInfo == null)
+                {
+                    ctx.MonsterInfos.Add(info);
+                }
+                else
+                {
+                    ctx.Entry(dbInfo).CurrentValues.SetValues(info);
+                }
+                
+            }
+            ctx.SaveChanges();
+        }
+
+        public void SaveItems(DataContext ctx)
+        {
+            foreach (var itemInfo in ItemInfoList)
+            {
+                var dbItemInfo = ctx.ItemInfos.FirstOrDefault(i => i.Index == itemInfo.Index);
+                if (dbItemInfo == null)
+                {
+                    ctx.ItemInfos.Add(itemInfo);
+                }
+                else
+                {
+                    ctx.Entry(dbItemInfo).CurrentValues.SetValues(itemInfo);
+                }
+            }
+            ctx.SaveChanges();
+        }
+
         public void SaveAccounts()
         {
             while (Saving)
@@ -1012,25 +1255,78 @@ namespace Server.MirEnvir
                 writer.Write(Mail.Count);
                 foreach (MailInfo mail in Mail)
                         mail.Save(writer);
-
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopPurchases.RemoveRange(ctx.GameShopPurchases.Where(p => p.id > 0));
+                        foreach (var item in GameshopLog)
+                        {
+                            ctx.GameShopPurchases.Add(new GameShopPurchase()
+                            {
+                                GameShopItemIndex = item.Key,
+                                GameShopItemQty = item.Value
+                            });
+                        }
+                    }
+                }
                 writer.Write(GameshopLog.Count);
                 foreach (var item in GameshopLog)
                 {
+                    
                     writer.Write(item.Key);
                     writer.Write(item.Value);
                 }
-
-                writer.Write(SavedSpawns.Count);
-                foreach (MapRespawn Spawn in SavedSpawns)
+                if (Settings.UseSQLServer)
                 {
-                    RespawnSave Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = (Spawn.Count >= (Spawn.Info.Count * spawnmultiplyer)) };
-                    Save.save(writer);
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnSaves.RemoveRange(ctx.RespawnSaves.Where(s => true));
+                        ctx.SaveChanges();
+                        foreach (MapRespawn Spawn in SavedSpawns)
+                        {
+                            RespawnSave Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = (Spawn.Count >= (Spawn.Info.Count * spawnmultiplyer)) };
+                            ctx.RespawnSaves.Add(Save);
+                        }
+                        ctx.SaveChanges();
+                    }
                 }
+                else
+                {
+                    writer.Write(SavedSpawns.Count);
+                    foreach (MapRespawn Spawn in SavedSpawns)
+                    {
+                        RespawnSave Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = (Spawn.Count >= (Spawn.Info.Count * spawnmultiplyer)) };
+                        Save.save(writer);
+                    }
+                }
+                
             }
         }
 
         private void SaveGuilds(bool forced = false)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    foreach (var guildObject in GuildList)
+                    {
+                        var dbGuild = ctx.Guilds.FirstOrDefault(g => g.Guildindex == guildObject.Guildindex);
+                        if (dbGuild == null)
+                        {
+                            ctx.Guilds.Add(guildObject);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbGuild).CurrentValues.SetValues(guildObject);
+                        }
+                        
+                    }
+                    ctx.SaveChanges();
+                }
+                return;
+            }
             if (!Directory.Exists(Settings.GuildPath)) Directory.CreateDirectory(Settings.GuildPath);
             for (int i = 0; i < GuildList.Count; i++)
             {
@@ -1230,6 +1526,63 @@ namespace Server.MirEnvir
         {
             lock (LoadLock)
             {
+                if (Settings.UseSQLServer)
+                {
+                    LoadVersion = 999;
+                    LoadCustomVersion = 999;
+                    using (var ctx = new DataContext())
+                    {
+                        MapIndex = ctx.MapInfos.Max(m => (int?)m.Index) ?? 0;
+                        ItemIndex = ctx.ItemInfos.Max(i => (int?)i.Index) ?? 0;
+                        MonsterIndex = ctx.MonsterInfos.Max(i => (int?)i.Index) ?? 0;
+                        NPCIndex = ctx.NpcInfos.Max(i => (int?)i.Index) ?? 0;
+                        QuestIndex = ctx.QuestInfos.Max(i => (int?)i.Index) ?? 0;
+                        GameshopIndex = ctx.GameShopItems.Max(i => (int?)i.ItemIndex) ?? 0;
+                        ConquestIndex = ctx.ConquestInfos.Max(i => (int?)i.Index) ?? 0;
+                        RespawnIndex = ctx.RespawnInfos.Max(i => (int?)i.RespawnIndex) ?? 0;
+                        MapInfoList = ctx.MapInfos.AsNoTracking().ToList();
+
+                        MapInfoList.ForEach(x =>
+                        {
+                            x.Respawns =
+                                ctx.RespawnInfos.AsNoTracking().Where(i => i.MapInfoIndex == x.Index).ToList();
+                            x.SafeZones =
+                                ctx.SafeZoneInfos.AsNoTracking().Where(i => i.MapInfoIndex == x.Index).ToList();
+                            x.SafeZones.ForEach(z => z.Info = x);
+                            x.Movements = ctx.MovementInfos.AsNoTracking().Where(i => i.MapIndex == x.Index).ToList();
+                            x.NPCs = ctx.NpcInfos.AsNoTracking().Where(i => i.MapIndex == i.Index).ToList();
+                        });
+                        ItemInfoList = ctx.ItemInfos.AsNoTracking().ToList();
+                        ItemInfoList.ForEach(x =>
+                        {
+                            if (x.RandomStatsId < Settings.RandomItemStatsList.Count)
+                            {
+                                x.RandomStats = Settings.RandomItemStatsList[x.RandomStatsId];
+                            }
+
+                        });
+                        MonsterInfoList = ctx.MonsterInfos.AsNoTracking().ToList();
+                        NPCInfoList = ctx.NpcInfos.AsNoTracking().ToList();
+                        QuestInfoList = ctx.QuestInfos.AsNoTracking().ToList();
+                        DragonInfo = ctx.DragonInfos.AsNoTracking().FirstOrDefault() ?? new DragonInfo();
+                        MagicInfoList = ctx.MagicInfos.AsNoTracking().ToList();
+                        FillMagicInfoList();
+                        UpdateMagicInfo();
+                        GameShopList.Clear();
+                        var gameShopList = ctx.GameShopItems.AsNoTracking().ToList();
+                        foreach (var shopItem in gameShopList)
+                        {
+                            if (SMain.Envir.BindGameShop(shopItem))
+                            {
+                                GameShopList.Add(shopItem);
+                            }
+                        }
+                        ConquestInfos = ctx.ConquestInfos.AsNoTracking().ToList();
+                        RespawnTick = new RespawnTimer();
+                    }
+                    Settings.LinkGuildCreationItems(ItemInfoList);
+                    return;
+                }
                 if (!File.Exists(DatabasePath))
                     SaveDB();
 
@@ -1359,6 +1712,100 @@ namespace Server.MirEnvir
 
             lock (LoadLock)
             {
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        NextAccountID = (ctx.AccountInfos.Max(i => (int?)i.Index) ?? 0) + 1;
+                        NextCharacterID = (ctx.CharacterInfos.Max(i => (int?)i.Index) ?? 0) + 1;
+                        NextUserItemID = (ctx.UserItems.Max(i => (long?) i.UniqueID) ?? 0) + 1;
+                        GuildCount = ctx.Guilds.Count();
+                        NextGuildID = (ctx.Guilds.Max(g => (int?) g.Guildindex) ?? 0) + 1;
+                        AccountList = ctx.AccountInfos.AsNoTracking().ToList();
+                        CharacterList = ctx.CharacterInfos.Include(c => c.AccountInfo).AsNoTracking().ToList();
+                        CharacterList.ForEach(x =>
+                        {
+                            var Inventoryitems =
+                                ctx.Inventories.Include(i => i.UserItem)
+                                    .AsNoTracking()
+                                    .Where(i => i.CharacterIndex == x.Index)
+                                    .ToList();
+                            for (int i = 0; i < Inventoryitems.Count; i++)
+                            {
+
+                                if (Inventoryitems[i].UserItem != null && SMain.Envir.BindItem(Inventoryitems[i].UserItem) && i < x.Inventory.Length)
+                                {
+                                    x.Inventory[i] = Inventoryitems[i].UserItem;
+                                }
+                            }
+                            var EquipmentItems =
+                                ctx.Equipments.Include(e => e.UserItem)
+                                    .AsNoTracking()
+                                    .Where(e => e.CharacterIndex == x.Index)
+                                    .ToList();
+                            for (int i = 0; i < EquipmentItems.Count; i++)
+                            {
+                                if (EquipmentItems[i].UserItem != null && SMain.Envir.BindItem(EquipmentItems[i].UserItem) && i < x.Equipment.Length)
+                                {
+                                    x.Equipment[i] = EquipmentItems[i].UserItem;
+                                }
+                            }
+                            var QuestInventorys =
+                                ctx.QuestInventories.Include(i => i.UserItem)
+                                    .AsNoTracking()
+                                    .Where(i => i.CharacterIndex == x.Index)
+                                    .ToList();
+                            for (int i = 0; i < QuestInventorys.Count; i++)
+                            {
+                                if (QuestInventorys[i].UserItem != null && SMain.Envir.BindItem(QuestInventorys[i].UserItem) && i < x.QuestInventory.Length)
+                                {
+                                    x.QuestInventory[i] = QuestInventorys[i].UserItem;
+                                }
+                            }
+                            x.Magics = ctx.UserMagics.AsNoTracking().Where(m => m.CharacterIndex == x.Index).ToList();
+                            x.Magics.ForEach(m =>
+                            {
+                                m.CastTime = 0;
+                            });
+
+                        });
+                        AccountList.ForEach(x =>
+                        {
+                            x.Characters = CharacterList.Where(c => c.AccountInfoIndex == x.Index).ToList();
+                        });
+                        foreach (AuctionInfo auction in Auctions)
+                            auction.CharacterInfo.AccountInfo.Auctions.Remove(auction);
+                        Auctions = new LinkedList<AuctionInfo>(ctx.AuctionInfos.Include(a => a.CharacterInfo).Include(a => a.CharacterInfo.AccountInfo).AsNoTracking().ToList());
+                        NextAuctionID = (Auctions.Max(a => (long?) a.AuctionID) ?? 0) + 1;
+                        foreach (var auction in Auctions)
+                        {
+                            if (!BindItem(auction.Item) || !BindCharacter(auction)) continue;
+                            auction.CharacterInfo.AccountInfo.Auctions.AddLast(auction);
+                        }
+                        NextMailID = (ctx.Mails.Max(m => (long?) m.MailID) ?? 0) + 1;
+                        Mail = ctx.Mails.AsNoTracking().ToList();
+                        var respawnSaves = ctx.RespawnSaves.AsNoTracking().ToList();
+                        foreach (var Saved in respawnSaves)
+                        {
+                            foreach (MapRespawn Respawn in SavedSpawns)
+                            {
+                                if (Respawn.Info.RespawnIndex == Saved.RespawnIndex)
+                                {
+                                    Respawn.NextSpawnTick = Saved.NextSpawnTick;
+                                    if ((Saved.Spawned) && ((Respawn.Info.Count * spawnmultiplyer) > Respawn.Count))
+                                    {
+                                        int mobcount = (Respawn.Info.Count * spawnmultiplyer) - Respawn.Count;
+                                        for (int j = 0; j < mobcount; j++)
+                                        {
+                                            Respawn.Spawn();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return;
+                }
                 if (!File.Exists(AccountPath))
                     SaveAccounts();
 

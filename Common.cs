@@ -2560,7 +2560,9 @@ public class ItemInfo
     }
 
     public uint Price { get; set; } = 1;
+    public long DBPrice { get { return Price; } set { Price = (uint) value; } }
     public uint StackSize { get; set; } = 1;
+    public long DBStackSize { get { return StackSize; } set { StackSize = (uint) value; } }
 
     public byte MinAC { get; set; }
     public byte MaxAC { get; set; }
@@ -3515,20 +3517,25 @@ public class ExpireInfo
 
 public class GameShopItem
 {
-    public int ItemIndex;
-    public int GIndex;
+    [Key]
+    public int ItemIndex { get; set; }
+    public int GIndex { get; set; }
+    [NotMapped]
     public ItemInfo Info;
-    public uint GoldPrice = 0;
-    public uint CreditPrice = 0;
-    public uint Count = 1;
-    public string Class = "";
-    public string Category = "";
-    public int Stock = 0;
-    public bool iStock = false;
-    public bool Deal = false;
-    public bool TopItem = false;
-    public DateTime Date;
-    
+
+    public int ItemInfoIndex { get; set; }
+
+    public uint GoldPrice { get; set; } = 0;
+    public uint CreditPrice { get; set; } = 0;
+    public uint Count { get; set; } = 1;
+    public string Class { get; set; } = "";
+    public string Category { get; set; } = "";
+    public int Stock { get; set; } = 0;
+    public bool iStock { get; set; } = false;
+    public bool Deal { get; set; } = false;
+    public bool TopItem { get; set; } = false;
+    public DateTime Date { get; set; }
+
     public GameShopItem()
     {
     }
@@ -5795,9 +5802,33 @@ public class MineDrop
 
 public class MineZone
 {
-    public byte Mine;
+    public int id { get; set; }
+    public byte Mine { get; set; }
     public Point Location;
+    public string DBLocation
+    {
+        get { return Location.X + "," + Location.Y; }
+        set
+        {
+            var tempArray = value.Split(',');
+            if (tempArray.Length != 2)
+            {
+                Location.X = 0;
+                Location.Y = 0;
+            }
+            else
+            {
+                int result = 0;
+                int.TryParse(tempArray[0], out result);
+                Location.X = result;
+                int.TryParse(tempArray[1], out result);
+                Location.Y = result;
+            }
+        }
+    }
     public ushort Size;
+    public int DBSize { get { return Size; } set { Size = (ushort) value; } }
+    public int MapInfoIndex { get; set; }
 
     public MineZone()
     {

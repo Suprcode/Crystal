@@ -518,12 +518,13 @@ namespace Server.MirDatabase
                     ctx.Inventories.RemoveRange(ctx.Inventories.Where(i => i.CharacterIndex == Index));
                     foreach (var item in Inventory)
                     {
-                        ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
-
+                        if(item != null)
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        
                         ctx.Inventories.Add(new InventoryItem()
                         {
                             CharacterIndex = Index,
-                            ItemUniqueID = item?.UniqueID ?? 0,
+                            ItemUniqueID = item?.UniqueID,
                         });
                         ctx.SaveChanges();
                         if(item == null) continue;
@@ -543,16 +544,24 @@ namespace Server.MirDatabase
                     ctx.Equipments.RemoveRange(ctx.Equipments.Where(i => i.CharacterIndex == Index));
                     foreach (var item in Equipment)
                     {
+                        if (item != null)
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
                         var uid = item?.UniqueID;
                         ctx.Equipments.Add(new EquipmentItem()
                         {
                             CharacterIndex = Index,
-                            ItemUniqueID = item?.UniqueID ?? 0,
+                            ItemUniqueID = item?.UniqueID,
                         });
                         ctx.SaveChanges();
                         if(item == null) continue;
 
-                        ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        var dbUserItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbUserItem == null)
+                        {
+                            dbUserItem = item;
+                            ctx.UserItems.Add(dbUserItem);
+                            ctx.SaveChanges();
+                        }
                         var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
                         if (dbItem == null)
                         {
@@ -570,15 +579,23 @@ namespace Server.MirDatabase
                     ctx.QuestInventories.RemoveRange(ctx.QuestInventories.Where(i => i.CharacterIndex == Index));
                     foreach (var item in QuestInventory)
                     {
+                        if (item != null)
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
                         ctx.QuestInventories.Add(new QuestInventoryItem()
                         {
                             CharacterIndex = Index,
-                            ItemUniqueID = item?.UniqueID ?? 0,
+                            ItemUniqueID = item?.UniqueID,
                         });
                         ctx.SaveChanges();
                         if (item == null) continue;
 
-                        ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        var dbUserItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbUserItem == null)
+                        {
+                            dbUserItem = item;
+                            ctx.UserItems.Add(dbUserItem);
+                            ctx.SaveChanges();
+                        }
                         var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
                         if (dbItem == null)
                         {
@@ -992,6 +1009,8 @@ namespace Server.MirDatabase
         public int CharacterIndex { get; set; }
         public CharacterInfo CharacterInfo { get; set; }
 
+        public FriendInfo() { }
+
         public FriendInfo(CharacterInfo info, bool blocked) 
         {
             Index = info.Index;
@@ -1117,6 +1136,8 @@ namespace Server.MirDatabase
         public long BlackstoneTime { get; set; } = 0;
         public long MaintainFoodTime { get; set; } = 0;
 
+        public UserIntelligentCreature() { }
+
         public UserIntelligentCreature(IntelligentCreatureType creatureType, int slot, byte effect = 0)
         {
             PetType = creatureType;
@@ -1227,7 +1248,7 @@ namespace Server.MirDatabase
         public CharacterInfo CharacterInfo { get; set; }
 
         [ForeignKey("UserItem")]
-        public long ItemUniqueID { get; set; }
+        public long? ItemUniqueID { get; set; }
         public UserItem UserItem { get; set; }
     }
 
@@ -1239,7 +1260,7 @@ namespace Server.MirDatabase
         public CharacterInfo CharacterInfo { get; set; }
 
         [ForeignKey("UserItem")]
-        public long ItemUniqueID { get; set; }
+        public long? ItemUniqueID { get; set; }
         public UserItem UserItem { get; set; }
     }
 
@@ -1252,7 +1273,7 @@ namespace Server.MirDatabase
         public CharacterInfo CharacterInfo { get; set; }
 
         [ForeignKey("UserItem")]
-        public long ItemUniqueID { get; set; }
+        public long? ItemUniqueID { get; set; }
         public UserItem UserItem { get; set; }
     }
 
@@ -1265,7 +1286,7 @@ namespace Server.MirDatabase
         public CharacterInfo CharacterInfo { get; set; }
 
         [ForeignKey("UserItem")]
-        public long ItemUniqueID { get; set; }
+        public long? ItemUniqueID { get; set; }
         public UserItem UserItem { get; set; }
     }
 
@@ -1313,7 +1334,7 @@ namespace Server.MirDatabase
         public int GameShopItemQty { get; set; }
 
         [ForeignKey("CharacterInfo")]
-        public int CharacterIndex { get; set; }
+        public int? CharacterIndex { get; set; }
         public CharacterInfo CharacterInfo { get; set; }
     }
 }

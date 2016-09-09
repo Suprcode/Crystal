@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,32 +12,71 @@ namespace Server.MirDatabase
 {
     public class NPCInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
 
-        public string FileName = string.Empty, Name = string.Empty;
+        public string FileName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-        public int MapIndex;
+        public int MapIndex { get; set; }
+        [NotMapped]
         public Point Location;
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
         public ushort Rate = 100;
-        public byte Image;
+        public int DBRate { get { return Rate; }set { Rate = (ushort) value; } }
 
-        public bool TimeVisible = false;
-        public byte HourStart = 0;
-        public byte MinuteStart = 0;
-        public byte HourEnd = 0;
-        public byte MinuteEnd = 1;
-        public short MinLev = 0;
-        public short MaxLev = 0;
-        public string DayofWeek = "";
-        public string ClassRequired = "";
-        public bool Sabuk = false;
-        public int FlagNeeded = 0;
-        public int Conquest;
+        public byte Image { get; set; }
 
-        public bool IsDefault;
+        public bool TimeVisible { get; set; } = false;
+        public byte HourStart { get; set; } = 0;
+        public byte MinuteStart { get; set; } = 0;
+        public byte HourEnd { get; set; } = 0;
+        public byte MinuteEnd { get; set; } = 1;
+        public short MinLev { get; set; } = 0;
+        public short MaxLev { get; set; } = 0;
+        public string DayofWeek { get; set; } = "";
+        public string ClassRequired { get; set; } = "";
+        public bool Sabuk { get; set; } = false;
+        public int FlagNeeded { get; set; } = 0;
+        public int Conquest { get; set; }
 
+        public bool IsDefault { get; set; }
+        [NotMapped]
         public List<int> CollectQuestIndexes = new List<int>();
+
+        public string DBCollectQuestIndexes
+        {
+            get { return string.Join(",", CollectQuestIndexes); }
+            set { CollectQuestIndexes = string.IsNullOrEmpty(value) ? new List<int>() : value.Split(',').Select(int.Parse).ToList(); }
+        }
+        [NotMapped]
         public List<int> FinishQuestIndexes = new List<int>();
+
+        public string DBFinishQuestIndexes
+        {
+            get { return string.Join(",", FinishQuestIndexes); }
+            set { FinishQuestIndexes = string.IsNullOrEmpty(value) ? new List<int>() : value.Split(',').Select(int.Parse).ToList(); }
+        }
         
         public NPCInfo()
         { }
@@ -135,7 +176,9 @@ namespace Server.MirDatabase
 
             info.Name = data[4];
 
-            if (!byte.TryParse(data[5], out info.Image)) return;
+            byte result;
+            if (!byte.TryParse(data[5], out result)) return;
+            info.Image = result;
             if (!ushort.TryParse(data[6], out info.Rate)) return;
 
             info.Index = ++SMain.EditEnvir.NPCIndex;

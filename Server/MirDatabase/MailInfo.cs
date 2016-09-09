@@ -61,6 +61,8 @@ namespace Server.MirDatabase
 
         public bool CanReply { get; set; }
 
+        public MailInfo() { }
+
         public MailInfo(int recipientIndex, bool canReply = false)
         {
             MailID = ++SMain.Envir.NextMailID;
@@ -96,6 +98,36 @@ namespace Server.MirDatabase
 
         public void Save(BinaryWriter writer)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var dbMail = ctx.Mails.FirstOrDefault(m => m.MailID == MailID);
+                    if (dbMail == null)
+                    {
+                        ctx.Mails.Add(this);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbMail).CurrentValues.SetValues(this);
+                    }
+                    ctx.SaveChanges();
+                    foreach (var item in Items)
+                    {
+                        var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbItem == null)
+                        {
+                            ctx.UserItems.Add(item);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbItem).CurrentValues.SetValues(item);
+                        }
+                        ctx.SaveChanges();
+                    }
+                }
+                return;
+            }
             writer.Write(MailID);
             writer.Write(Sender);
             writer.Write(RecipientIndex);
