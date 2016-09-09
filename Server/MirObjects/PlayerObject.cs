@@ -16862,6 +16862,8 @@ namespace Server.MirObjects
 
         public void SendMail(string name, string message, uint gold, ulong[] items, bool stamped)
         {
+            if (gold > Account.Gold) return;
+            
             CharacterInfo player = Envir.GetCharacterInfo(name);
 
             if (player == null)
