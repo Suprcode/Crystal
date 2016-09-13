@@ -11,6 +11,7 @@ namespace Server.MirDatabase
     public class MovementInfo
     {
         public int id { get; set; }
+        public int SourceMapIndex { get; set; }
         public int MapIndex { get; set; }
         public Point Source, Destination;
 

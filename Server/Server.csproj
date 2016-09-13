@@ -98,6 +98,22 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
+    <Compile Include="Migrations\201609120849364_AddMissingAttrs.cs" />
+    <Compile Include="Migrations\201609120849364_AddMissingAttrs.Designer.cs">
+      <DependentUpon>201609120849364_AddMissingAttrs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609130344440_RemoveQuestAttrsFromDB.cs" />
+    <Compile Include="Migrations\201609130344440_RemoveQuestAttrsFromDB.Designer.cs">
+      <DependentUpon>201609130344440_RemoveQuestAttrsFromDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609130357281_AddMissingAttrs1.cs" />
+    <Compile Include="Migrations\201609130357281_AddMissingAttrs1.Designer.cs">
+      <DependentUpon>201609130357281_AddMissingAttrs1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609130751593_AddMissingAttrs2.cs" />
+    <Compile Include="Migrations\201609130751593_AddMissingAttrs2.Designer.cs">
+      <DependentUpon>201609130751593_AddMissingAttrs2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MirDatabase\DataContext.cs" />
     <Compile Include="MirDatabase\MailInfo.cs" />
@@ -397,6 +413,18 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Migrations\201609120849364_AddMissingAttrs.resx">
+      <DependentUpon>201609120849364_AddMissingAttrs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609130344440_RemoveQuestAttrsFromDB.resx">
+      <DependentUpon>201609130344440_RemoveQuestAttrsFromDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609130357281_AddMissingAttrs1.resx">
+      <DependentUpon>201609130357281_AddMissingAttrs1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609130751593_AddMissingAttrs2.resx">
+      <DependentUpon>201609130751593_AddMissingAttrs2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>
     </EmbeddedResource>

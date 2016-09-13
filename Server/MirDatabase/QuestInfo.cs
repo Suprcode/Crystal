@@ -18,7 +18,6 @@ namespace Server.MirDatabase
         public int Index { get; set; }
 
         public uint NpcIndex;
-        public long DBNpcIndex { get { return NpcIndex; } set { NpcIndex = (uint) value; } }
         [NotMapped]
         public NPCInfo NpcInfo;
 
@@ -29,7 +28,6 @@ namespace Server.MirDatabase
             get { return _finishNpcIndex == 0 ? NpcIndex : _finishNpcIndex; }
             set { _finishNpcIndex = value; }
         }
-        public long DBFinishNpcIndex { get { return FinishNpcIndex;} set { FinishNpcIndex = (uint) value; } }
 
         public string Name { get; set; } = string.Empty;
 
@@ -46,26 +44,8 @@ namespace Server.MirDatabase
         public string FlagMessage { get; set; } = string.Empty;
 
         public List<string> Description = new List<string>();
-
-        public string DBDescription
-        {
-            get { return string.Join("|", Description); }
-            set { Description = value.Split('|').ToList(); }
-        }
         public List<string> TaskDescription = new List<string>();
-
-        public string DBTaskDescription
-        {
-            get { return string.Join("|", TaskDescription); }
-            set { TaskDescription = value.Split('|').ToList(); }
-        }
         public List<string> CompletionDescription = new List<string>();
-
-        public string DBCompletionDescription
-        {
-            get { return string.Join("|", CompletionDescription); }
-            set { CompletionDescription = value.Split('|').ToList(); }
-        }
 
         public int RequiredMinLevel { get; set; }
         public int RequiredMaxLevel { get; set; }
@@ -81,75 +61,14 @@ namespace Server.MirDatabase
         public List<QuestFlagTask> FlagTasks = new List<QuestFlagTask>();
 
         public uint GoldReward;
-        public long DBGoldReward { get { return GoldReward; } set { GoldReward = (uint) value; } }
+        //public long DBGoldReward { get { return GoldReward; } set { GoldReward = (uint) value; } }
         public uint ExpReward;
-        public long DBExpReward { get { return ExpReward;} set { ExpReward = (uint) value; } }
+        //public long DBExpReward { get { return ExpReward;} set { ExpReward = (uint) value; } }
         public uint CreditReward;
-        public long DBCreditReward { get { return CreditReward;} set { CreditReward = (uint) value; } }
+        //public long DBCreditReward { get { return CreditReward;} set { CreditReward = (uint) value; } }
         public List<QuestItemReward> FixedRewards = new List<QuestItemReward>();
-
-        public string DBFixedRewards
-        {
-            get
-            {
-                var stringList = from r in FixedRewards select r.Item.Index + "," + r.Count;
-                return string.Join("|", stringList);
-            }
-            set
-            {
-                if(string.IsNullOrEmpty(value)) return;
-                var stringList = value.Split('|');
-                FixedRewards = new List<QuestItemReward>();
-                foreach (var s in stringList)
-                {
-                    var tempArray = s.Split(',');
-                    var itemIndex = int.Parse(tempArray[0]);
-                    var itemCount = uint.Parse(tempArray[1] ?? "0");
-                    using (var ctx = new DataContext())
-                    {
-                        var item = ctx.ItemInfos.FirstOrDefault(i => i.Index == itemIndex);
-                        if(item == null) continue;
-                        FixedRewards.Add(new QuestItemReward()
-                        {
-                            Count = itemCount,
-                            Item = item
-                        });
-                    }
-                }
-            }
-        }
+        
         public List<QuestItemReward> SelectRewards = new List<QuestItemReward>();
-
-        public string DBSelectRewards
-        {
-            get
-            {
-                var stringList = from r in SelectRewards select r.Item.Index + "," + r.Count;
-                return string.Join("|", stringList);
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value)) return;
-                var stringList = value.Split('|');
-                SelectRewards = new List<QuestItemReward>();
-                foreach (var s in stringList)
-                {
-                    var tempArray = s.Split(',');
-                    var itemIndex = int.Parse(tempArray[0]);
-                    var itemCount = uint.Parse(tempArray[1] ?? "0");
-                    using (var ctx = new DataContext())
-                    {
-                        var item = ctx.ItemInfos.FirstOrDefault(i => i.Index == itemIndex);
-                        if (item == null) continue;
-                        SelectRewards.Add(new QuestItemReward()
-                        {
-                            Count = itemCount,
-                            Item = item
-                        });
-                    }
-                }
-            }
-        }
 
         private Regex _regexMessage = new Regex("\"([^\"]*)\"");
 

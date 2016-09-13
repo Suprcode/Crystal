@@ -43,7 +43,9 @@ namespace Server.MirDatabase
 
         public UserItem[] Storage = new UserItem[80];
         public uint Gold;
+        public long DBGold { get { return Gold;} set { Gold = (uint) value; } }
         public uint Credit;
+        public long DBCredit { get { return Credit;} set { Credit = (uint) value; } }
 
         public ListViewItem ListItem;
         public MirConnection Connection;

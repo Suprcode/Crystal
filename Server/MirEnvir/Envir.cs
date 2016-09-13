@@ -1112,6 +1112,7 @@ namespace Server.MirEnvir
                 foreach (var movement in mapInfo.Movements)
                 {
                     var dbMovementInfo = ctx.MovementInfos.FirstOrDefault(i => i.id == movement.id);
+                    movement.SourceMapIndex = mapInfo.Index;
                     if (dbMovementInfo == null)
                     {
                         ctx.MovementInfos.Add(movement);
@@ -1549,7 +1550,7 @@ namespace Server.MirEnvir
                             x.SafeZones =
                                 ctx.SafeZoneInfos.AsNoTracking().Where(i => i.MapInfoIndex == x.Index).ToList();
                             x.SafeZones.ForEach(z => z.Info = x);
-                            x.Movements = ctx.MovementInfos.AsNoTracking().Where(i => i.MapIndex == x.Index).ToList();
+                            x.Movements = ctx.MovementInfos.AsNoTracking().Where(i => i.SourceMapIndex == x.Index).ToList();
                             x.NPCs = ctx.NpcInfos.AsNoTracking().Where(i => i.MapIndex == i.Index).ToList();
                         });
                         ItemInfoList = ctx.ItemInfos.AsNoTracking().ToList();
@@ -1564,6 +1565,10 @@ namespace Server.MirEnvir
                         MonsterInfoList = ctx.MonsterInfos.AsNoTracking().ToList();
                         NPCInfoList = ctx.NpcInfos.AsNoTracking().ToList();
                         QuestInfoList = ctx.QuestInfos.AsNoTracking().ToList();
+                        QuestInfoList.ForEach(q =>
+                        {
+                            q.LoadInfo();
+                        });
                         DragonInfo = ctx.DragonInfos.AsNoTracking().FirstOrDefault() ?? new DragonInfo();
                         MagicInfoList = ctx.MagicInfos.AsNoTracking().ToList();
                         FillMagicInfoList();

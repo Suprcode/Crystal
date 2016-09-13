@@ -63,10 +63,56 @@ namespace Server.MirDatabase
 
         //Location
         public int CurrentMapIndex { get; set; }
-        public Point CurrentLocation { get; set; }
+        public Point CurrentLocation;
+
+        public string DBCurrentLocation
+        {
+            get { return CurrentLocation.X + "," + CurrentLocation.Y; }
+            set
+            {
+                if(string.IsNullOrEmpty(value)) return;
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    CurrentLocation.X = 0;
+                    CurrentLocation.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    CurrentLocation.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    CurrentLocation.Y = result;
+                }
+            }
+        }
         public MirDirection Direction { get; set; }
         public int BindMapIndex { get; set; }
-        public Point BindLocation { get; set; }
+        public Point BindLocation;
+
+        public string DBBindLocatoin
+        {
+            get { return BindLocation.X + "," + BindLocation.Y; }
+            set
+            {
+                if (string.IsNullOrEmpty(value)) return;
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    BindLocation.X = 0;
+                    BindLocation.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    BindLocation.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    BindLocation.Y = result;
+                }
+            }
+        }
         [NotMapped]
         public ushort HP { get; set; }
 
@@ -414,62 +460,12 @@ namespace Server.MirDatabase
                     if (dbCharacter == null)
                     {
                         dbCharacter = this;
+                        dbCharacter.AccountInfo = null;
                         ctx.CharacterInfos.Add(dbCharacter);
                     }
                     else
                     {
-                        dbCharacter.Name = Name;
-                        dbCharacter.Level = Level;
-                        dbCharacter.Class = Class;
-                        dbCharacter.Gender = Gender;
-                        dbCharacter.Hair = Hair;
-
-                        dbCharacter.CreationIP = CreationIP;
-                        dbCharacter.CreationDate = CreationDate;
-
-                        dbCharacter.Banned = Banned;
-                        dbCharacter.BanReason = BanReason;
-                        dbCharacter.ExpiryDate = ExpiryDate;
-
-                        dbCharacter.LastIP = LastIP;
-                        dbCharacter.LastDate = LastDate;
-
-                        dbCharacter.Deleted = Deleted;
-                        dbCharacter.DeleteDate = DeleteDate;
-
-                        dbCharacter.CurrentMapIndex = CurrentMapIndex;
-                        dbCharacter.CurrentLocation = CurrentLocation;
-
-                        dbCharacter.Direction = Direction;
-                        dbCharacter.BindMapIndex = BindMapIndex;
-                        dbCharacter.BindLocation = BindLocation;
-
-                        dbCharacter.HP = HP;
-                        dbCharacter.MP = MP;
-                        dbCharacter.Experience = Experience;
-
-                        dbCharacter.AMode = AMode;
-                        dbCharacter.PMode = PMode;
-
-                        dbCharacter.PKPoints = PKPoints;
-
-                        dbCharacter.Thrusting = Thrusting;
-                        dbCharacter.HalfMoon = HalfMoon;
-                        dbCharacter.CrossHalfMoon = CrossHalfMoon;
-                        dbCharacter.DoubleSlash = DoubleSlash;
-                        dbCharacter.MentalState = MentalState;
-
-                        dbCharacter.AllowGroup = AllowGroup;
-
-                        dbCharacter.AllowTrade = AllowTrade;
-                        dbCharacter.PearlCount = PearlCount;
-
-                        dbCharacter.Married = Married;
-                        dbCharacter.MarriedDate = MarriedDate;
-                        dbCharacter.Mentor = Mentor;
-                        dbCharacter.MentorDate = MentorDate;
-                        dbCharacter.isMentor = isMentor;
-                        dbCharacter.MentorExp = MentorExp;
+                        ctx.Entry(dbCharacter).CurrentValues.SetValues(this);
                     }
 
                     ctx.SaveChanges();
@@ -481,7 +477,9 @@ namespace Server.MirDatabase
                     {
                         if (CurrentRefine != null)
                         {
-                            ctx.UserItems.AddOrUpdate(i => new {i.UniqueID}, CurrentRefine);
+                            var currentRefine = CurrentRefine;
+                            currentRefine.Info = null;
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, currentRefine);
                             ctx.CurrentRefines.Add(new CurrentRefineItem()
                             {
                                 CharacterIndex = Index,
@@ -502,7 +500,9 @@ namespace Server.MirDatabase
                         }
                         else
                         {
-                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, CurrentRefine);
+                            var currentRefine = CurrentRefine;
+                            currentRefine.Info = null;
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, currentRefine);
                             dbCurrentRefine.CharacterIndex = Index;
                             dbCurrentRefine.ItemUniqueID = CurrentRefine.UniqueID;
                             if ((CollectTime - SMain.Envir.Time) < 0)
@@ -518,9 +518,12 @@ namespace Server.MirDatabase
                     ctx.Inventories.RemoveRange(ctx.Inventories.Where(i => i.CharacterIndex == Index));
                     foreach (var item in Inventory)
                     {
-                        if(item != null)
+                        if (item != null)
+                        {
+                            item.Info = null;
                             ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
-                        
+                        }
+
                         ctx.Inventories.Add(new InventoryItem()
                         {
                             CharacterIndex = Index,
@@ -538,14 +541,18 @@ namespace Server.MirDatabase
                         {
                             ctx.Entry(dbItem).CurrentValues.SetValues(item);
                         }
-                        ctx.SaveChanges();
+                        
                     }
-
+                    ctx.SaveChanges();
                     ctx.Equipments.RemoveRange(ctx.Equipments.Where(i => i.CharacterIndex == Index));
                     foreach (var item in Equipment)
                     {
                         if (item != null)
+                        {
+                            item.Info = null;
                             ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        }
+                            
                         var uid = item?.UniqueID;
                         ctx.Equipments.Add(new EquipmentItem()
                         {
@@ -571,16 +578,16 @@ namespace Server.MirDatabase
                         {
                             ctx.Entry(dbItem).CurrentValues.SetValues(item);
                         }
-                        ctx.SaveChanges();
-
-                        
                     }
-
+                    ctx.SaveChanges();
                     ctx.QuestInventories.RemoveRange(ctx.QuestInventories.Where(i => i.CharacterIndex == Index));
                     foreach (var item in QuestInventory)
                     {
                         if (item != null)
+                        {
+                            item.Info = null;
                             ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        }
                         ctx.QuestInventories.Add(new QuestInventoryItem()
                         {
                             CharacterIndex = Index,
@@ -605,10 +612,8 @@ namespace Server.MirDatabase
                         {
                             ctx.Entry(dbItem).CurrentValues.SetValues(item);
                         }
-                        ctx.SaveChanges();
-
                     }
-
+                    ctx.SaveChanges();
                     foreach (var magic in Magics)
                     {
                         var dbMagic = ctx.UserMagics.FirstOrDefault(m => m.Spell == magic.Spell && m.CharacterIndex == Index);
@@ -621,8 +626,8 @@ namespace Server.MirDatabase
                         {
                             ctx.Entry(dbMagic).CurrentValues.SetValues(magic);
                         }
-                        ctx.SaveChanges();
                     }
+                    ctx.SaveChanges();
                     /*
                     foreach (var pet in Pets)
                     {
@@ -634,9 +639,9 @@ namespace Server.MirDatabase
                     {
                         questProgressInfo.CharacterIndex = Index;
                         ctx.QuestProgressInfos.Add(questProgressInfo);
-                        ctx.SaveChanges();
+                        
                     }
-
+                    ctx.SaveChanges();
                     ctx.UserBuffs.RemoveRange(ctx.UserBuffs.Where(b => b.CharacterIndex == Index));
                     foreach (var buff in Buffs)
                     {
@@ -654,9 +659,8 @@ namespace Server.MirDatabase
                             Values = buff.Values,
                         };
                         ctx.UserBuffs.Add(userBuff);
-                        ctx.SaveChanges();
                     }
-
+                    ctx.SaveChanges();
                     ctx.Mails.RemoveRange(ctx.Mails.Where(m => m.CharacterIndex == Index));
                     foreach (var mailInfo in Mail)
                     {
@@ -669,10 +673,8 @@ namespace Server.MirDatabase
                         {
                             ctx.Entry(dbMail).CurrentValues.SetValues(mailInfo);
                         }
-                        ctx.SaveChanges();
-
                     }
-
+                    ctx.SaveChanges();
                     ctx.UserIntelligentCreatures.RemoveRange(
                         ctx.UserIntelligentCreatures.Where(i => i.CharacterIndex == Index));
                     foreach (var userIntelligentCreature in IntelligentCreatures)
@@ -687,9 +689,9 @@ namespace Server.MirDatabase
                         {
                             ctx.Entry(dbUserIntelligentCreature).CurrentValues.SetValues(userIntelligentCreature);
                         }
-                        ctx.SaveChanges();
+                        
                     }
-
+                    ctx.SaveChanges();
                     ctx.Friends.RemoveRange(ctx.Friends.Where(f => f.CharacterIndex == Index));
                     foreach (var friendInfo in Friends)
                     {
@@ -706,8 +708,9 @@ namespace Server.MirDatabase
                             GameShopItemQty = item.Value
                         });
                     }
-                    
+                    ctx.SaveChanges();
                 }
+                return;
             }
             writer.Write(Index);
             writer.Write(Name);

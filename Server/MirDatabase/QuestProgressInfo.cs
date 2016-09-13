@@ -18,8 +18,8 @@ namespace Server.MirDatabase
         [NotMapped]
         public QuestInfo Info;
 
-        public DateTime? StartDateTime { get; set; } = SqlDateTime.MinValue.Value;
-        public DateTime? EndDateTime { get; set; } = SqlDateTime.MinValue.Value;
+        public DateTime? StartDateTime { get; set; } = DateTime.MinValue;
+        public DateTime? EndDateTime { get; set; } = DateTime.MaxValue;
         [ForeignKey("CharacterInfo")]
         public int CharacterIndex { get; set; }
         
@@ -50,11 +50,7 @@ namespace Server.MirDatabase
         }
 
         public List<string> TaskList { get; set; } = new List<string>();
-        public string DbTaskList
-        {
-            get { return string.Join("|", TaskList); }
-            set { TaskList = value.Split('|').ToList(); }
-        }
+
 
         [NotMapped]
         public bool Taken
