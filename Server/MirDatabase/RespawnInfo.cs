@@ -86,7 +86,7 @@ namespace Server.MirDatabase
         {
             string[] data = text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
 
-            if (data.Length != 7) return null;
+            if (data.Length < 7) return null;
 
             RespawnInfo info = new RespawnInfo();
 

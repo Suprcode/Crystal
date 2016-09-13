@@ -127,15 +127,18 @@ namespace Server.MirEnvir
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
 
                     offSet += 2;
+
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.HighWall; //No Floor Tile.
 
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
 
+                    offSet += 4;
+
                     if (fileBytes[offSet] > 0)
-                        DoorIndex[x,y] = AddDoor(fileBytes[offSet], new Point(x,y));
-                    
-                    offSet += 7;
+                        DoorIndex[x, y] = AddDoor(fileBytes[offSet], new Point(x, y));
+
+                    offSet += 3;
 
                     byte light = fileBytes[offSet++];
 
@@ -143,7 +146,7 @@ namespace Server.MirEnvir
                         Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
-
+        
         private void LoadMapCellsv1(byte[] fileBytes)
         {
             int offSet = 21;
@@ -367,10 +370,10 @@ namespace Server.MirEnvir
                 {//total 15
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.HighWall; //Can Fire Over.
-                    offSet += 4;
+                    offSet += 6;
                     if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
                         Cells[x, y] = Cell.LowWall; //Can't Fire Over.
-                    offSet += 2;
+                    //offSet += 2;
                     if (Cells[x, y] == null) Cells[x, y] = new Cell { Attribute = CellAttribute.Walk };
                     offSet += 2;
                     if (fileBytes[offSet] > 0)
@@ -2034,11 +2037,12 @@ namespace Server.MirEnvir
                 case Spell.Portal:                  
                     value = (int)data[2];
                     location = (Point)data[3];
+                    value2 = (int)data[4];
 
                     spellOb = new SpellObject
                     {
                         Spell = Spell.Portal,
-                        Value = 0,
+                        Value = value2,
                         ExpireTime = Envir.Time + value * 1000,
                         TickSpeed = 2000,
                         Caster = player,
@@ -2156,22 +2160,25 @@ namespace Server.MirEnvir
             for (int i = 0; i < Conquest.Count; i++)
             {
                 ConquestObject swi = Conquest[i];
-                if (Functions.InRange(swi.Info.Location, location, swi.Info.Size) && swi.WarIsOn)
+
+                if ((swi.Info.FullMap || Functions.InRange(swi.Info.Location, location, swi.Info.Size)) && swi.WarIsOn)
                     return swi;
             }
             return null;
         }
 
-        public ConquestObject GetInnerConquest(Point location)
-        {
-            for (int i = 0; i < Conquest.Count; i++)
-            {
-                ConquestObject swi = Conquest[i];
-                if (Functions.InRange(swi.Info.ObjectLoc, location, swi.Info.ObjectSize) && swi.WarIsOn)
-                    return swi;
-            }
-            return null;
-        }
+        //public ConquestObject GetInnerConquest(Map map, Point location)
+        //{
+        //    for (int i = 0; i < Conquest.Count; i++)
+        //    {
+        //        ConquestObject swi = Conquest[i];
+        //        if (map.Info.Index != swi.Info.MapIndex) continue;
+
+        //        if (Functions.InRange(swi.Info.KingLocation, location, swi.Info.KingSize) && swi.WarIsOn)
+        //            return swi;
+        //    }
+        //    return null;
+        //}
 
         public void Broadcast(Packet p, Point location)
         {

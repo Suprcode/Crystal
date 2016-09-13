@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.MirEnvir;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,6 +14,7 @@ namespace Server.MirDatabase
         [Key]
         public int Index { get; set; }
         [NotMapped]
+        public bool FullMap;
         public Point Location;
         public string DBLocation
         {
@@ -55,10 +57,12 @@ namespace Server.MirDatabase
         public List<ConquestGateInfo> ConquestGates = new List<ConquestGateInfo>();
         public List<ConquestWallInfo> ConquestWalls = new List<ConquestWallInfo>();
         public List<ConquestSiegeInfo> ConquestSieges = new List<ConquestSiegeInfo>();
+public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
         public int GuardIndex { get; set; }
         public int GateIndex { get; set; }
         public int WallIndex { get; set; }
         public int SiegeIndex { get; set; }
+        public int FlagIndex;
 
         public byte StartHour { get; set; } = 0;
         public int WarLength { get; set; } = 60;
@@ -76,6 +80,10 @@ namespace Server.MirDatabase
         public bool Saturday { get; set; }
         public bool Sunday { get; set; }
 
+
+//King of the hill
+        public Point KingLocation;
+        public ushort KingSize;
         public Point ObjectLoc;
         public string DBObjectLoc
         {
@@ -101,6 +109,10 @@ namespace Server.MirDatabase
         public ushort ObjectSize;
         public int DBObjectSize { get { return ObjectSize;} set { ObjectSize = (ushort) value; } }
 
+        //Control points
+        public List<ConquestFlagInfo> ControlPoints = new List<ConquestFlagInfo>();
+        public int ControlPointIndex;
+
         public ConquestInfo()
         {
 
@@ -109,6 +121,12 @@ namespace Server.MirDatabase
         public ConquestInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
+
+            if(Envir.LoadVersion > 73)
+            {
+                FullMap = reader.ReadBoolean();
+            }
+
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Size = reader.ReadUInt16();
             Name = reader.ReadString();
@@ -118,6 +136,12 @@ namespace Server.MirDatabase
             GateIndex = reader.ReadInt32();
             WallIndex = reader.ReadInt32();
             SiegeIndex = reader.ReadInt32();
+
+            if (Envir.LoadVersion > 72)
+            {
+                FlagIndex = reader.ReadInt32();
+            }
+
             counter = reader.ReadInt32();
             for (int i = 0; i < counter; i++)
             {
@@ -143,6 +167,16 @@ namespace Server.MirDatabase
             {
                 ConquestSieges.Add(new ConquestSiegeInfo(reader));
             }
+
+            if (Envir.LoadVersion > 72)
+            {
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ConquestFlags.Add(new ConquestFlagInfo(reader));
+                }
+            }
+
             StartHour = reader.ReadByte();
             WarLength = reader.ReadInt32();
             Type = (ConquestType)reader.ReadByte();
@@ -156,14 +190,24 @@ namespace Server.MirDatabase
             Saturday = reader.ReadBoolean();
             Sunday = reader.ReadBoolean();
 
-            ObjectLoc = new Point(reader.ReadInt32(), reader.ReadInt32());
-            ObjectSize = reader.ReadUInt16();
+            KingLocation = new Point(reader.ReadInt32(), reader.ReadInt32());
+            KingSize = reader.ReadUInt16();
 
+            if (Envir.LoadVersion > 74)
+            {
+                ControlPointIndex = reader.ReadInt32();
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ControlPoints.Add(new ConquestFlagInfo(reader));
+        }
+            }
         }
 
         public void Save(BinaryWriter writer)
         {
             writer.Write(Index);
+            writer.Write(FullMap);
             writer.Write(Location.X);
             writer.Write(Location.Y);
             writer.Write(Size);
@@ -174,6 +218,8 @@ namespace Server.MirDatabase
             writer.Write(GateIndex);
             writer.Write(WallIndex);
             writer.Write(SiegeIndex);
+            writer.Write(FlagIndex);
+
             writer.Write(ConquestGuards.Count);
             for (int i = 0; i < ConquestGuards.Count; i++)
             {
@@ -199,6 +245,12 @@ namespace Server.MirDatabase
             {
                 ConquestSieges[i].Save(writer);
             }
+
+            writer.Write(ConquestFlags.Count);
+            for (int i = 0; i < ConquestFlags.Count; i++)
+            {
+                ConquestFlags[i].Save(writer);
+            }
             writer.Write(StartHour);
             writer.Write(WarLength);
             writer.Write((byte)Type);
@@ -212,11 +264,16 @@ namespace Server.MirDatabase
             writer.Write(Saturday);
             writer.Write(Sunday);
 
-            writer.Write(ObjectLoc.X);
-            writer.Write(ObjectLoc.Y);
-            writer.Write(ObjectSize);
+            writer.Write(KingLocation.X);
+            writer.Write(KingLocation.Y);
+            writer.Write(KingSize);
 
-
+            writer.Write(ControlPointIndex);
+            writer.Write(ControlPoints.Count);
+            for (int i = 0; i < ControlPoints.Count; i++)
+            {
+                ControlPoints[i].Save(writer);
+            }
 
         }
 
@@ -480,5 +537,40 @@ namespace Server.MirDatabase
         }
 
 
+    }
+
+    public class ConquestFlagInfo
+    {
+        public int Index;
+        public Point Location;
+        public string Name;
+        public string FileName = string.Empty;
+
+        public ConquestFlagInfo()
+        {
+
+        }
+
+        public ConquestFlagInfo(BinaryReader reader)
+        {
+            Index = reader.ReadInt32();
+            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+            Name = reader.ReadString();
+            FileName = reader.ReadString();
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(Index);
+            writer.Write(Location.X);
+            writer.Write(Location.Y);
+            writer.Write(Name);
+            writer.Write(FileName);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1} ({2})", Index, Name, Location);
+        }
     }
 }

@@ -105,6 +105,9 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion >= 63) Credit = reader.ReadUInt32();
 
             count = reader.ReadInt32();
+
+            Array.Resize(ref Storage, count);
+
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
@@ -112,6 +115,7 @@ namespace Server.MirDatabase
                 if (SMain.Envir.BindItem(item) && i < Storage.Length)
                     Storage[i] = item;
             }
+
             if (Envir.LoadVersion >= 10) AdminAccount = reader.ReadBoolean();
             if (!AdminAccount)
             {
@@ -228,6 +232,14 @@ namespace Server.MirDatabase
             }
 
             return list;
+        }
+
+        public int ResizeStorage()
+        {
+            if (Storage.Length == 80)
+                Array.Resize(ref Storage, Storage.Length + 80);
+
+            return Storage.Length;
         }
     }
 }

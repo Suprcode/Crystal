@@ -1588,6 +1588,7 @@ namespace Client.MirScenes.Dialogs
     {
         public MirItemCell[] Grid;
         public MirButton Storage1Button, Storage2Button, RentButton, ProtectButton, CloseButton;
+        public MirImageControl LockedPage;
 
         public StorageDialog()
         {
@@ -1603,6 +1604,16 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(18, 8),
                 Parent = this
             };
+
+            LockedPage = new MirImageControl
+            {
+                Index = 2443,
+                Library = Libraries.Prguse,
+                Location = new Point(8, 59),
+                Parent = this,
+                Visible = false
+            };
+
             Storage1Button = new MirButton
             {
                 HoverIndex = 743,
@@ -1615,12 +1626,9 @@ namespace Client.MirScenes.Dialogs
             };
             Storage1Button.Click += (o, e) =>
             {
-                Storage1Button.Index = 743;
-                Storage1Button.HoverIndex = 743;
-                Storage2Button.Index = 746;
-                Storage2Button.HoverIndex = 746;
-                RentButton.Visible = false;
+                RefreshStorage1();
             };
+
             Storage2Button = new MirButton
             {
                 HoverIndex = 746,
@@ -1630,27 +1638,38 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 746,
                 Sound = SoundList.ButtonA,
-                Visible = false
+                Visible = true
             };
             Storage2Button.Click += (o, e) =>
             {
-                Storage1Button.Index = 744;
-                Storage1Button.HoverIndex = 744;
-                Storage2Button.Index = 745;
-                Storage2Button.HoverIndex = 745;
-                RentButton.Visible = true;
+                
+                RefreshStorage2();
             };
             RentButton = new MirButton
             {
-                HoverIndex = 741,
-                Index = 740,
-                Location = new Point(283, 33),
+                Index = 483,
+                HoverIndex = 484,
+                PressedIndex = 485,
                 Library = Libraries.Title,
+                Location = new Point(283, 33),
                 Parent = this,
-                PressedIndex = 742,
                 Sound = SoundList.ButtonA,
                 Visible = false,
             };
+            RentButton.Click += (o, e) =>
+            {
+                if (GameScene.Storage.Length == 80)
+                {
+                    MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 80 extra slots for 20,000,000 gold?", MirMessageBoxButtons.OKCancel);
+
+                    messageBox.OKButton.Click += (o1, a) =>
+                    {
+                        Network.Enqueue(new C.Chat { Message = "@ADDSTORAGE" });
+                    };
+                    messageBox.Show();
+                }
+            };
+
             ProtectButton = new MirButton
             {
                 HoverIndex = 114,
@@ -1674,22 +1693,25 @@ namespace Client.MirScenes.Dialogs
             };
             CloseButton.Click += (o, e) => Hide();
 
-
-
-            Grid = new MirItemCell[10 * 8];
+            Grid = new MirItemCell[10 * 16];
 
             for (int x = 0; x < 10; x++)
             {
-                for (int y = 0; y < 8; y++)
+                for (int y = 0; y < 16; y++)
                 {
-                    Grid[10 * y + x] = new MirItemCell
+                    int idx = 10 * y + x;
+
+                    Grid[idx] = new MirItemCell
                     {
-                        ItemSlot = 10 * y + x,
+                        ItemSlot = idx,
                         GridType = MirGridType.Storage,
                         Library = Libraries.Items,
                         Parent = this,
-                        Location = new Point(x * 36 + 9 + x, y * 32 + 60 + y),
+                        Location = new Point(x * 36 + 9 + x, y % 8 * 32 + 60 + y % 8),
                     };
+
+                    if (idx >= 80)
+                        Grid[idx].Visible = false;
                 }
             }
         }
@@ -1702,9 +1724,60 @@ namespace Client.MirScenes.Dialogs
         public void Show()
         {
             GameScene.Scene.InventoryDialog.Show();
+            RefreshStorage1();
+
             Visible = true;
         }
 
+        public void RefreshStorage1()
+        {
+            if (GameScene.User == null) return;
+
+            Storage1Button.Index = 743;
+            Storage1Button.HoverIndex = 743;
+            Storage2Button.Index = 746;
+            Storage2Button.HoverIndex = 746;
+
+            foreach (var grid in Grid)
+            {
+                if (grid.ItemSlot < 80)
+                    grid.Visible = true;
+                else
+                    grid.Visible = false;
+            }
+
+            RentButton.Visible = false;
+            LockedPage.Visible = false;
+        }
+
+        public void RefreshStorage2()
+        {
+            if (GameScene.User == null) return;
+
+            Storage1Button.Index = 744;
+            Storage1Button.HoverIndex = 744;
+            Storage2Button.Index = 745;
+            Storage2Button.HoverIndex = 745;
+
+            if (GameScene.User.AddedStorage)
+            {
+                RentButton.Visible = false;
+                LockedPage.Visible = false;
+            }
+            else
+            {
+                RentButton.Visible = true;
+                LockedPage.Visible = true;
+            }
+
+            foreach (var grid in Grid)
+            {
+                if (grid.ItemSlot < 80 || !GameScene.User.AddedStorage)
+                    grid.Visible = false;
+                else
+                    grid.Visible = true;
+            }
+        }
 
         public MirItemCell GetCell(long id)
         {

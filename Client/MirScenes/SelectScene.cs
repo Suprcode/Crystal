@@ -68,7 +68,8 @@ namespace Client.MirScenes
                 Library = Libraries.Title,
                 Location = new Point(110, 568),
                 Parent = Background,
-                PressedIndex = 342
+                PressedIndex = 342,
+                GrayScale = true
             };
             StartGameButton.Click += (o, e) => StartGame();
 

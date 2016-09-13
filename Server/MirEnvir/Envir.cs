@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 71;
+        public const int Version = 75;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -153,6 +153,7 @@ namespace Server.MirEnvir
         public Dragon DragonSystem;
         public NPCObject DefaultNPC;
         public NPCObject MonsterNPC;
+        public NPCObject RobotNPC;
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
@@ -736,7 +737,6 @@ namespace Server.MirEnvir
                             if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
                             {
                                 Info.current.Value.Process();
-
                                 Info.current.Value.SetOperateTime();
                             }
                         }
@@ -800,8 +800,7 @@ namespace Server.MirEnvir
         }
 
         public void Process()
-        {
-            
+        {        
             //if we get to a new day : reset daily's
             if (Now.Day != DailyTime)
             {
@@ -837,7 +836,7 @@ namespace Server.MirEnvir
                     }
                 }
 
-                mailTime = Time + (Settings.Second * 10);
+                mailTime = Time + (Settings.Minute * 1);
             }
 
             if (Time >= guildTime)
@@ -1473,7 +1472,7 @@ namespace Server.MirEnvir
             }
         }
 
-        private void BeginSaveAccounts()
+        public void BeginSaveAccounts()
         {
             if (Saving) return;
 
@@ -2132,6 +2131,7 @@ namespace Server.MirEnvir
                 ConquestGateObject tempGate;
                 ConquestWallObject tempWall;
                 ConquestSiegeObject tempSiege;
+                ConquestFlagObject tempFlag;
 
                 for (int i = 0; i < ConquestInfos.Count; i++)
                 {
@@ -2206,6 +2206,12 @@ namespace Server.MirEnvir
                         }
                     }
 
+                    //Bind Info to Saved Flag objects or create new objects
+                    for (int j = 0; j < ConquestInfos[i].ConquestFlags.Count; j++)
+                    {
+                        newConquest.FlagList.Add(new ConquestFlagObject { Info = ConquestInfos[i].ConquestFlags[j], Index = ConquestInfos[i].ConquestFlags[j].Index, Conquest = newConquest });
+                    }
+
                     //Remove Gates that have been removed from DB
                     for (int j = 0; j < newConquest.GateList.Count; j++)
                     {
@@ -2259,12 +2265,22 @@ namespace Server.MirEnvir
                         if (newConquest.SiegeList[j].Info == null)
                             newConquest.SiegeList.Remove(newConquest.SiegeList[j]);
                     }
-                    
+
+                    //Bind Info to Saved Flag objects or create new objects
+                    for (int j = 0; j < ConquestInfos[i].ControlPoints.Count; j++)
+                    {
+                        ConquestFlagObject cp = null;
+                        newConquest.ControlPoints.Add(cp = new ConquestFlagObject { Info = ConquestInfos[i].ControlPoints[j], Index = ConquestInfos[i].ControlPoints[j].Index, Conquest = newConquest }, new Dictionary<GuildObject, int>());
+
+                        cp.Spawn();
+                    }
+
 
                     newConquest.LoadArchers();
                     newConquest.LoadGates();
                     newConquest.LoadWalls();
                     newConquest.LoadSieges();
+                    newConquest.LoadFlags();
                     newConquest.LoadNPCs();
                 }
             }
@@ -2373,6 +2389,7 @@ namespace Server.MirEnvir
 
             DefaultNPC = new NPCObject(new NPCInfo() { Name = "DefaultNPC", FileName = Settings.DefaultNPCFilename, IsDefault = true });
             MonsterNPC = new NPCObject(new NPCInfo() { Name = "MonsterNPC", FileName = Settings.MonsterNPCFilename, IsDefault = true });
+            RobotNPC = new NPCObject(new NPCInfo() { Name = "RobotNPC", FileName = Settings.RobotNPCFilename, IsDefault = true, IsRobot = true });
 
             SMain.Enqueue("Envir Started.");
         }
@@ -2508,6 +2525,17 @@ namespace Server.MirEnvir
                     if (info.DeleteDate < DateTime.Now.AddDays(-7))
                     {
                         //delete char from db
+                    }
+                }
+
+                if(info.Mail.Count > Settings.MailCapacity)
+                {
+                    for (int j = (info.Mail.Count - 1 - (int)Settings.MailCapacity); j >= 0; j--)
+                    {
+                        if (info.Mail[j].DateOpened > DateTime.Now && info.Mail[j].Collected && info.Mail[j].Items.Count == 0 && info.Mail[j].Gold == 0)
+                        {
+                            info.Mail.Remove(info.Mail[j]);
+                        }
                     }
                 }
             }
@@ -3007,7 +3035,7 @@ namespace Server.MirEnvir
         {
             //can't have expiry on usable items
             if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
-                item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Transform) return;
+                item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script) return;
 
             ExpireInfo expiryInfo = new ExpireInfo();
 

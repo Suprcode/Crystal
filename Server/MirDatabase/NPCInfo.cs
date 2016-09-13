@@ -44,8 +44,9 @@ namespace Server.MirDatabase
         }
         public ushort Rate = 100;
         public int DBRate { get { return Rate; }set { Rate = (ushort) value; } }
+        public Color Colour;
 
-        public byte Image { get; set; }
+        public int Image { get; set; }
 
         public bool TimeVisible { get; set; } = false;
         public byte HourStart { get; set; } = 0;
@@ -59,6 +60,7 @@ namespace Server.MirDatabase
         public bool Sabuk { get; set; } = false;
         public int FlagNeeded { get; set; } = 0;
         public int Conquest { get; set; }
+        public bool IsRobot { get; set; }
 
         public bool IsDefault { get; set; }
         [NotMapped]
@@ -100,7 +102,15 @@ namespace Server.MirDatabase
             Name = reader.ReadString();
 
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+
+            if (Envir.LoadVersion >= 72)
+            {
+                Image = reader.ReadUInt16();
+            }
+            else
+            {
             Image = reader.ReadByte();
+            }
             
             Rate = reader.ReadUInt16();
 

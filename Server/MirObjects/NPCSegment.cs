@@ -1088,6 +1088,18 @@ namespace Server.MirObjects
                             newValue += " - [ " + Siege.GetRepairCost().ToString("#,##0") + " gold ]";
                     }
                     break;
+                case "CONQUESTOWNER()":
+                    val1 = FindVariable(player, "%" + oneValMatch.Groups[2].Captures[0].Value.ToUpper());
+
+                    if (int.TryParse(val1.Replace("%", ""), out intVal1))
+                    {
+                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        if (Conquest == null) return string.Empty;
+                        if (Conquest.Guild == null) return "No Owner";
+
+                        newValue = Conquest.Guild.Name;
+                    }
+                    break;
                 case "CONQUESTGOLD()":
                     val1 = FindVariable(player, "%" + oneValMatch.Groups[2].Captures[0].Value.ToUpper());
 
@@ -2811,10 +2823,10 @@ namespace Server.MirObjects
 
                         for (var j = player.Info.Magics.Count - 1; j >= 0; j--)
                         {
-                            if (player.Info.Magics[i].Spell != skill) continue;
+                            if (player.Info.Magics[j].Spell != skill) continue;
 
-                            player.Info.Magics.RemoveAt(i);
-                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                            player.Info.Magics.RemoveAt(j);
+                            player.Enqueue(new S.RemoveMagic { PlaceId = j });
                         }
 
                         break;
@@ -3257,13 +3269,15 @@ namespace Server.MirObjects
                         ConquestWallObject ConquestWall = Conquest.WallList.FirstOrDefault(z => z.Index == tempInt);
                         if (ConquestWall == null) return;
 
-                        if (ConquestWall.Wall != null)
-                            if (!ConquestWall.Wall.Dead) return;
+                        //if (ConquestWall.Wall != null)
+                        //    if (!ConquestWall.Wall.Dead) return;
 
-                        if (player.MyGuild == null || player.MyGuild.Gold < ConquestWall.GetRepairCost()) return;
+                        uint repairCost = ConquestWall.GetRepairCost();
 
-                        player.MyGuild.Gold -= ConquestWall.GetRepairCost();
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestWall.GetRepairCost() });
+                        if (player.MyGuild == null || player.MyGuild.Gold < repairCost) return;
+
+                        player.MyGuild.Gold -= repairCost;
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = repairCost });
 
                         ConquestWall.Repair();
                         break;
@@ -3321,7 +3335,7 @@ namespace Server.MirObjects
                         {
                             Conquest.StartType = ConquestType.Forced;
                             Conquest.GameType = tempGame;
-                            Conquest.WarIsOn = true;
+                            Conquest.StartWar(tempGame);
                         }
                         break;
                     case ActionType.ScheduleConquest:

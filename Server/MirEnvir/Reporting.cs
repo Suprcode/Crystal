@@ -275,7 +275,7 @@ namespace Server.MirEnvir
 
         private void RecordAction(Action action)
         {
-            if (!DoLog) return;
+            if (!DoLog || Player.Info == null) return;
 
             action.Time = SMain.Envir.Now;
             action.Player = Player.Name;

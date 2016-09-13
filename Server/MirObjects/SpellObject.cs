@@ -60,7 +60,7 @@ namespace Server.MirObjects
 
             if (Caster != null && Caster.Node == null) Caster = null;
 
-            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.ExplosiveTrap) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
+            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.Portal || Spell == Spell.ExplosiveTrap || Spell == Spell.Reincarnation) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
             {
                 if (Spell == Spell.TrapHexagon && Target != null || Spell == Spell.Trap && Target != null)
                 {
@@ -69,7 +69,7 @@ namespace Server.MirObjects
                     if (Envir.Time < ExpireTime && ob.ShockTime != 0) return;
                 }
 
-                if (Spell == Spell.Reincarnation)
+                if (Spell == Spell.Reincarnation && Caster != null)
                 {
                     Caster.ReincarnationReady = true;
                     Caster.ReincarnationExpireTime = Envir.Time + 6000;
@@ -124,7 +124,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.PoisonCloud:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
-                    if (ob.Dead) return;
+                    if (ob.Dead) return;              
 
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
@@ -192,6 +192,14 @@ namespace Server.MirObjects
 
                     ob.Teleport(ExitMap, newExit, false);
 
+                    Value = Value - 1;
+
+                    if(Value < 1)
+                    {
+                        ExpireTime = Envir.Time;
+                        return;
+                    }
+                    
                     break;
             }
         }
