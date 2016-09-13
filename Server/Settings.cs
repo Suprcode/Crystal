@@ -47,6 +47,7 @@ namespace Server
         public static string StrongboxDropFilename = "00Strongbox";
         public static string BlackstoneDropFilename = "00Blackstone";
         public static string MonsterNPCFilename = "00Monster";
+        public static string RobotNPCFilename = "00Robot";
 
         //Network
         public static string IPAddress = "127.0.0.1";
@@ -172,6 +173,7 @@ namespace Server
         public static bool MailFreeWithStamp = true;
         public static uint MailCostPer1KGold = 100;
         public static uint MailItemInsurancePercentage = 5;
+        public static uint MailCapacity = 100;
 
         //Refine Settings
         public static bool OnlyRefineWeapon = true;
@@ -436,6 +438,14 @@ namespace Server
             }
 
             fileName = Path.Combine(Settings.NPCPath, MonsterNPCFilename + ".txt");
+
+            if (!File.Exists(fileName))
+            {
+                FileStream NewFile = File.Create(fileName);
+                NewFile.Close();
+            }
+
+            fileName = Path.Combine(Settings.NPCPath, RobotNPCFilename + ".txt");
 
             if (!File.Exists(fileName))
             {
@@ -1166,6 +1176,7 @@ namespace Server
             MailFreeWithStamp = reader.ReadBoolean("Rates", "FreeWithStamp", MailFreeWithStamp);
             MailCostPer1KGold = reader.ReadUInt32("Rates", "CostPer1k", MailCostPer1KGold);
             MailItemInsurancePercentage = reader.ReadUInt32("Rates", "InsurancePerItem", MailItemInsurancePercentage);
+            MailCapacity = reader.ReadUInt32("General", "MailCapacity", MailCapacity);
         }
         public static void SaveMail()
         {
@@ -1176,6 +1187,7 @@ namespace Server
             reader.Write("Rates", "FreeWithStamp", MailFreeWithStamp);
             reader.Write("Rates", "CostPer1k", MailCostPer1KGold);
             reader.Write("Rates", "InsurancePerItem", MailItemInsurancePercentage);
+            reader.Write("General", "MailCapacity", MailCapacity);
         }
 
         public static void LoadRefine()
@@ -1246,7 +1258,7 @@ namespace Server
         {
             if (!File.Exists(ConfigPath + @".\MentorSystem.ini"))
             {
-                SaveMarriage();
+                SaveMentor();
                 return;
             }
             InIReader reader = new InIReader(ConfigPath + @".\MentorSystem.ini");

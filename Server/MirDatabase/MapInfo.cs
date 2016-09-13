@@ -170,6 +170,12 @@ namespace Server.MirDatabase
             }
 
             Map map = new Map(this);
+
+            if(map.Info.FileName == "orc25")
+            {
+
+            }
+
             if (!map.Load()) return;
 
             SMain.Envir.MapList.Add(map);
@@ -315,7 +321,7 @@ namespace Server.MirDatabase
                 temp.Location = new Point(x, y);
 
                 if (!ushort.TryParse(data[start + 4 + (i * 6)], out temp.Rate)) return;
-                if (!byte.TryParse(data[start + 5 + (i * 6)], out temp.Image)) return;
+                if (!ushort.TryParse(data[start + 5 + (i * 6)], out temp.Image)) return;
 
                 info.NPCs.Add(temp);
             }

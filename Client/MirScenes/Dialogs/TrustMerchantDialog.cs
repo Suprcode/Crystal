@@ -141,7 +141,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (Selected.Listing.Seller == "For Sale")
                     {
-                        MirMessageBox box = new MirMessageBox(string.Format("{0} has not sold, Are you sure you want to get it back?", Selected.Listing.Item.Name), MirMessageBoxButtons.YesNo);
+                        MirMessageBox box = new MirMessageBox(string.Format("{0} has not sold, Are you sure you want to get it back?", Selected.Listing.Item.FriendlyName), MirMessageBoxButtons.YesNo);
                         box.YesButton.Click += (o1, e2) =>
                         {
                             MarketTime = CMain.Time + 3000;
@@ -158,7 +158,7 @@ namespace Client.MirScenes.Dialogs
                 }
                 else
                 {
-                    MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.Name, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
+                    MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.FriendlyName, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
                     box.YesButton.Click += (o1, e2) =>
                     {
                         MarketTime = CMain.Time + 3000;
@@ -368,7 +368,7 @@ namespace Client.MirScenes.Dialogs
 
             if (Selected == null) return;
 
-            NameLabel.Text = Selected.Listing.Item.Name;
+            NameLabel.Text = Selected.Listing.Item.FriendlyName;
 
             TotalPriceLabel.Text = string.Format("Price: {0:#,##0}", Selected.Listing.Price);
             SplitPriceLabel.Text = string.Format("Each: {0:#,##0.#}", Selected.Listing.Price / (float)Selected.Listing.Item.Count);
@@ -521,7 +521,7 @@ namespace Client.MirScenes.Dialogs
             public void Update(ClientAuction listing)
             {
                 Listing = listing;
-                NameLabel.Text = Listing.Item.Name;
+                NameLabel.Text = Listing.Item.FriendlyName;
                 PriceLabel.Text = Listing.Price.ToString("###,###,##0");
 
                 NameLabel.ForeColour = Listing.Item.IsAdded ? Color.Cyan : Color.White;

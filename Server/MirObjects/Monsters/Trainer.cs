@@ -75,11 +75,11 @@ namespace Server.MirObjects.Monsters
             {
                 case DefenceType.AC:
                 case DefenceType.ACAgility:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MAC:
                 case DefenceType.MACAgility:
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
             }
             if (armour >= damage)
@@ -119,11 +119,11 @@ namespace Server.MirObjects.Monsters
             {
                 case DefenceType.AC:
                 case DefenceType.ACAgility:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MAC:
                 case DefenceType.MACAgility:
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
             }
             if (armour >= damage)
@@ -135,7 +135,22 @@ namespace Server.MirObjects.Monsters
 
             if (_currentAttacker == null)
                 _StartTime = Envir.Time;
-            _currentAttacker = (PlayerObject)attacker.Master;
+
+
+            MapObject tmpAttacker = attacker.Master;
+
+            while(true)
+            {
+                if(tmpAttacker.Master != null)
+                {
+                    tmpAttacker = tmpAttacker.Master;
+                    continue;
+                }
+                break;
+            }
+
+            _currentAttacker = (PlayerObject)tmpAttacker;
+
             _hitCount++;
             _totalDamage += damage;
             _lastAttackTime = Envir.Time;
