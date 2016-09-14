@@ -215,9 +215,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -261,6 +261,14 @@ namespace Server
 
         private void NPCInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    Envir.SaveNPCs(ctx);
+                }
+                return;
+            }
             Envir.SaveDB();
         }
 

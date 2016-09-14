@@ -40,7 +40,11 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 522,
                 Sound = SoundList.ButtonA,
             };
-            ConfirmButton.Click += (o, e) => { ChangeLockState(!GameScene.User.TradeLocked); };
+            ConfirmButton.Click += (o, e) => 
+            {
+                ChangeLockState(!GameScene.User.TradeLocked);
+                Network.Enqueue(new C.TradeConfirm { Locked = GameScene.User.TradeLocked });
+            };
 
             CloseButton = new MirButton
             {
@@ -135,11 +139,11 @@ namespace Client.MirScenes.Dialogs
                 ConfirmButton.Index = 520;
             }
 
-            if (!cancelled)
-            {
-                //Send lock info to server
-                Network.Enqueue(new C.TradeConfirm { Locked = lockState });
-            }
+            //if (!cancelled)
+            //{
+            //    //Send lock info to server
+            //    Network.Enqueue(new C.TradeConfirm { Locked = lockState });
+            //}
         }
 
         public void RefreshInterface()
@@ -194,7 +198,7 @@ namespace Client.MirScenes.Dialogs
             Visible = true;
         }
 
-        public MirItemCell GetCell(ulong id)
+        public MirItemCell GetCell(long id)
         {
             for (int i = 0; i < Grid.Length; i++)
             {

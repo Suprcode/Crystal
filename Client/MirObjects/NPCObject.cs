@@ -28,7 +28,9 @@ namespace Client.MirObjects
         public int BaseIndex, FrameIndex, FrameInterval, 
             EffectFrameIndex, EffectFrameInterval, QuestIndex;
 
-        public byte Image;
+        public int Image;
+        public Color Colour = Color.White;
+
         public QuestIcon QuestIcon = QuestIcon.None;
 
         private bool _canChangeDir = true;
@@ -63,8 +65,9 @@ namespace Client.MirObjects
             Quests = GameScene.QuestInfoList.Where(c => c.NPCIndex == ObjectID).ToList();
 
             Image = info.Image;
-            if (info.Image < Libraries.NPCs.Length)
-                BodyLibrary = Libraries.NPCs[info.Image];
+            Colour = info.Colour;
+
+            LoadLibrary();
 
             switch (info.Image)
             {
@@ -232,6 +235,18 @@ namespace Client.MirObjects
                 case 123:
                 case 175:
                 case 176:
+                case 1000:
+                case 1001:
+                case 1002:
+                case 1003:
+                case 1004:
+                case 1005:
+                case 1006:
+                case 1007:
+                case 1008:
+                case 1009:
+                case 1010:
+                case 1011:
                     Frames = FrameSet.NPCs[7];
                     CanChangeDir = false;
                     break;
@@ -349,6 +364,14 @@ namespace Client.MirObjects
             BaseIndex = 0;
 
             SetAction();
+        }
+
+        public void LoadLibrary()
+        {
+            if (Image < Libraries.NPCs.Length)
+                BodyLibrary = Libraries.NPCs[Image];
+            else if (Image >= 1000 && Image < 1100)
+                BodyLibrary = Libraries.Flags[Image - 1000];
         }
 
         public override void Process()
@@ -547,7 +570,9 @@ namespace Client.MirObjects
         {
             if (BodyLibrary == null) return;
 
-            BodyLibrary.Draw(DrawFrame, DrawLocation, DrawColour, true);
+            //BodyLibrary.Draw(DrawFrame, DrawLocation, DrawColour, true);
+
+            BodyLibrary.DrawTinted(DrawFrame, DrawLocation, DrawColour, Colour, true);
 
             if (QuestIcon == QuestIcon.None) return;
 
@@ -555,8 +580,7 @@ namespace Client.MirObjects
             var size = BodyLibrary.GetSize(BaseIndex);
 
             int imageIndex = 981 + ((int)QuestIcon * 2) + QuestIndex;
-
-            //Libraries.Prguse.Draw(981 + ((int)QuestIcon * 2) + QuestIndex, DrawLocation.Add(offSet).Add(0, -40), Color.White, false);
+            
             Libraries.Prguse.Draw(imageIndex, DrawLocation.Add(offSet).Add(size.Width / 2 - 28, -40), Color.White, false);
         }
 

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Server.MirDatabase;
 using Server.MirEnvir;
 
 namespace Server
@@ -920,7 +921,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].AttackSpeed = temp;
+                _selectedItemInfos[i].AttackSpeed = (byte) temp;
         }
         private void LuckTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -938,7 +939,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Luck = temp;
+                _selectedItemInfos[i].Luck = (byte) temp;
         }
         private void BWeightText_TextChanged(object sender, EventArgs e)
         {
@@ -1015,6 +1016,12 @@ namespace Server
 
         private void ItemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveItems(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 
@@ -1728,6 +1735,12 @@ namespace Server
         {
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 Envir.AddToGameShop(_selectedItemInfos[i]);
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveGameShop(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

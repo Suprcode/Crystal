@@ -3602,17 +3602,119 @@ namespace Client.MirObjects
         private void PlayShandaStepSound(int x, int y, out int moveSound)
         {
             int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex - 100) * 100000 + index;
+            //index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex - 100) * 100000 + index;
 
             var tt = GameScene.Scene.MapControl.M2CellInfo[x, y];
 
             //CMain.SendDebugMessage(string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}", tt.BackImage, tt.BackIndex, tt.MiddleImage, tt.MiddleIndex));
 
+            #region Back Tiles (Tiles)
             switch (GameScene.Scene.MapControl.M2CellInfo[x, y].BackIndex)
             {
                 case 100:
                     {
-                        moveSound = SoundList.WalkWaterL;
+                        //Tiles1
+                        if ((index >= 0 && index <= 39) || (index >= 50 && index <= 74) || (index >= 80 && index <= 84) || (index >= 100 && index <= 204) ||
+                            (index >= 210 && index <= 249) || (index >= 255 && index <= 259) || (index >= 265 && index <= 329) || (index >= 350 && index <= 404) ||
+                            (index >= 410 && index <= 449) || (index >= 455 && index <= 459) || (index >= 465 && index <= 504) ||  (index >= 510 && index <= 549) ||
+                            (index >= 555 && index <= 559) || (index >= 565 && index <= 574) || (index >= 581 && index <= 581) || (index >= 586 && index <= 587) ||
+                            (index >= 600 && index <= 604) || (index >= 610 && index <= 614) || (index >= 615 && index <= 649) || (index >= 655 && index <= 659) || 
+                            (index >= 665 && index <= 704) || (index >= 710 && index <= 749) || (index >= 755 && index <= 759) || (index >= 765 && index <= 824) || 
+                            (index >= 850 && index <= 874) || (index >= 900 && index <= 924) || (index >= 950 && index <= 974) || (index >= 1100 && index <= 1124) || 
+                            (index >= 1150 && index <= 1174) || (index >= 1200 && index <= 1204) || (index >= 1210 && index <= 1214) || (index >= 1255 && index <= 1259) || 
+                            (index >= 1300 && index <= 1324) || (index >= 1340 && index <= 1374) || (index >= 1560 && index <= 1604) || (index >= 1610 && index <= 1614) || 
+                            (index >= 1655 && index <= 1659) || (index >= 1665 && index <= 1674) || (index >= 1700 && index <= 1724) || (index >= 1750 && index <= 1774) ||
+                            (index >= 1850 && index <= 1874) || (index >= 2050 && index <= 2074) || (index >= 2100 && index <= 2124) || (index >= 2150 && index <= 2174) ||
+                            (index >= 2200 && index <= 2224) ||(index >= 2250 && index <= 2274) ||(index >= 2300 && index <= 2324) ||(index >= 2350 && index <= 2374) ||
+                            (index >= 2500 && index <= 2524) ||(index >= 2750 && index <= 2774) ||(index >= 3250 && index <= 3274) ||(index >= 3300 && index <= 3349) ||
+                            (index >= 3375 && index <= 3404) ||(index >= 3425 && index <= 3449) ||(index >= 3475 && index <= 3499) ||(index >= 3525 && index <= 3549) ||
+                            (index >= 3575 && index <= 3599) ||(index >= 3625 && index <= 3649) ||(index >= 3675 && index <= 3749) ||(index >= 3775 && index <= 3780) ||
+                            (index >= 4475 && index <= 4624) ||(index >= 4680 && index <= 4824) ||(index >= 6225 && index <= 7924) ||(index >= 11079 && index <= 11079) ||
+                            (index >= 11083 && index <= 11084) ||(index >= 11120 && index <= 11127) ||(index >= 11129 && index <= 11130) ||(index >= 11132 && index <= 11133) ||
+                            (index >= 11135 && index <= 11136) ||(index >= 13770 && index <= 14019) ||(index >= 14170 && index <= 14219) ||(index >= 14820 && index <= 14869) ||
+                            (index >= 20470 && index <= 21619) ||(index >= 25000 && index <= 31724))
+                            moveSound = SoundList.WalkGroundL;
+                        else if ((index >= 205 && index <= 209) ||(index >= 260 && index <= 264) ||(index >= 330 && index <= 349) ||(index >= 405 && index <= 409) ||
+                            (index >= 460 && index <= 464) ||(index >= 505 && index <= 509) ||(index >= 560 && index <= 564) ||(index >= 575 && index <= 580) ||
+                            (index >= 582 && index <= 585) ||(index >= 588 && index <= 599) ||(index >= 705 && index <= 709) ||(index >= 750 && index <= 754) ||
+                            (index >= 760 && index <= 764) ||(index >= 1205 && index <= 1209) ||(index >= 1215 && index <= 1224) ||(index >= 1250 && index <= 1254) ||
+                            (index >= 1260 && index <= 1274) ||(index >= 1400 && index <= 1424) ||(index >= 1455 && index <= 1459) ||(index >= 1500 && index <= 1524) ||
+                            (index >= 1550 && index <= 1574) ||(index >= 2555 && index <= 2559) ||(index >= 2605 && index <= 2609) ||(index >= 2655 && index <= 2659) ||
+                            (index >= 2705 && index <= 2709) ||(index >= 10320 && index <= 10324) ||(index >= 10329 && index <= 10329) ||(index >= 10334 && index <= 10334) ||
+                            (index >= 10372 && index <= 10372) ||(index >= 10381 && index <= 10381) ||(index >= 10420 && index <= 10422) ||(index >= 10425 && index <= 10424) ||
+                            (index >= 10429 && index <= 10429) ||(index >= 10470 && index <= 10470) ||(index >= 10472 && index <= 10472) ||(index >= 10475 && index <= 10475) ||
+                            (index >= 10479 && index <= 10519) ||(index >= 10530 && index <= 10530) ||(index >= 10535 && index <= 10535) ||(index >= 10539 && index <= 10539) ||
+                            (index >= 10623 && index <= 10624) ||(index >= 10628 && index <= 10629) ||(index >= 10634 && index <= 10634) ||(index >= 10639 && index <= 10639) ||
+                            (index >= 10644 && index <= 10669) ||(index >= 10673 && index <= 10677) ||(index >= 10680 && index <= 10681) ||(index >= 10684 && index <= 10685) ||
+                            (index >= 10688 && index <= 10690) ||(index >= 10721 && index <= 10723) ||(index >= 10725 && index <= 10727) ||(index >= 10729 && index <= 10731) ||
+                            (index >= 10733 && index <= 10770) ||(index >= 10772 && index <= 10772) ||(index >= 10775 && index <= 10775) ||(index >= 10779 && index <= 10779) ||
+                            (index >= 10784 && index <= 10784) ||(index >= 10835 && index <= 10836) ||(index >= 10840 && index <= 10869) ||(index >= 10874 && index <= 10874) ||
+                            (index >= 10890 && index <= 10890) ||(index >= 10920 && index <= 10929) ||(index >= 10931 && index <= 10934) ||(index >= 10936 && index <= 10939) ||
+                            (index >= 10941 && index <= 10970) ||(index >= 10974 && index <= 10974) ||(index >= 10977 && index <= 11019) ||(index >= 11021 && index <= 11021) ||
+                            (index >= 11023 && index <= 11027) ||(index >= 11029 && index <= 11033) ||(index >= 11037 && index <= 11038) ||(index >= 11070 && index <= 11071) ||
+                            (index >= 11075 && index <= 11078) ||(index >= 11080 && index <= 11082) ||(index >= 11086 && index <= 11089) ||(index >= 11091 && index <= 11119) ||
+                            (index >= 11128 && index <= 11128) ||(index >= 11131 && index <= 11131) ||(index >= 11134 && index <= 11134) ||(index >= 11137 && index <= 11171) ||
+                            (index >= 11175 && index <= 11177) ||(index >= 11180 && index <= 11182) ||(index >= 11185 && index <= 11219) ||(index >= 11223 && index <= 11224) ||
+                            (index >= 11227 && index <= 11229) ||(index >= 11232 && index <= 11291) ||(index >= 11296 && index <= 11299) ||(index >= 11305 && index <= 11308) ||
+                            (index >= 11314 && index <= 11317) ||(index >= 11322 && index <= 11327) ||(index >= 11332 && index <= 11369))
+                            moveSound = SoundList.WalkLawnL;
+                        else if ((index >= 250 && index <= 254) ||(index >= 450 && index <= 454) ||(index >= 550 && index <= 554) ||(index >= 1000 && index <= 1024) ||
+                            (index >= 1050 && index <= 1074) ||(index >= 1450 && index <= 1454) ||(index >= 1460 && index <= 1464) ||(index >= 1465 && index <= 1474) ||
+                            (index >= 1605 && index <= 1609) ||(index >= 1615 && index <= 1624) ||(index >= 1650 && index <= 1654) ||(index >= 1660 && index <= 1664))
+                            moveSound = SoundList.WalkRoughL;
+                        else if ((index >= 2800 && index <= 2824) ||(index >= 3130 && index <= 3130) ||(index >= 3137 && index <= 3138) ||(index >= 3177 && index <= 3178) ||
+                            (index >= 3189 && index <= 3190) ||(index >= 3230 && index <= 3231) ||(index >= 3240 && index <= 3242) ||(index >= 3246 && index <= 3246) ||
+                            (index >= 3276 && index <= 3278) ||(index >= 3280 && index <= 3299) ||(index >= 5178 && index <= 5179) ||(index >= 5182 && index <= 5185) ||
+                            (index >= 5188 && index <= 5191) ||(index >= 5194 && index <= 5195) ||(index >= 5780 && index <= 6060) ||(index >= 6080 && index <= 6084) ||
+                            (index >= 6145 && index <= 6224) ||(index >= 14020 && index <= 14169) ||(index >= 14220 && index <= 14819))
+                            moveSound = SoundList.WalkWoodL;
+                        else if ((index >= 825 && index <= 849) ||(index >= 875 && index <= 899) ||(index >= 925 && index <= 949) ||(index >= 975 && index <= 999) ||
+                            (index >= 1025 && index <= 1049) ||(index >= 1075 && index <= 1099) ||(index >= 1125 && index <= 1149) ||(index >= 1175 && index <= 1199) ||
+                            (index >= 1225 && index <= 1249) ||(index >= 1275 && index <= 1299) ||(index >= 1325 && index <= 1339) ||(index >= 2025 && index <= 2049) ||
+                            (index >= 2075 && index <= 2099) ||(index >= 2125 && index <= 2149) ||(index >= 2900 && index <= 2924) ||(index >= 3781 && index <= 4474) ||
+                            (index >= 6085 && index <= 6144))
+                            moveSound = SoundList.WalkWoodL;
+                        else if ((index >= 40 && index <= 49) ||(index >= 75 && index <= 79) ||(index >= 85 && index <= 99) ||(index >= 1375 && index <= 1399) ||
+                            (index >= 1425 && index <= 1449) ||(index >= 1475 && index <= 1499) ||(index >= 1525 && index <= 1549) ||(index >= 1575 && index <= 1559) ||
+                            (index >= 1625 && index <= 1649) ||(index >= 1675 && index <= 1699) ||(index >= 1725 && index <= 1749) ||(index >= 1775 && index <= 1799) ||
+                            (index >= 1825 && index <= 1849) ||(index >= 1875 && index <= 2024) ||(index >= 2175 && index <= 2199) ||(index >= 2225 && index <= 2249) ||
+                            (index >= 2275 && index <= 2299) ||(index >= 2325 && index <= 2349) ||(index >= 2375 && index <= 2499) ||(index >= 2525 && index <= 2549) ||
+                            (index >= 2575 && index <= 2599) ||(index >= 2625 && index <= 2649) ||(index >= 2675 && index <= 2699) ||(index >= 2725 && index <= 2749) ||
+                            (index >= 2775 && index <= 2799) ||(index >= 2825 && index <= 2849) ||(index >= 2875 && index <= 2899) ||(index >= 2925 && index <= 2994) ||
+                            (index >= 2995 && index <= 2999) ||(index >= 3025 && index <= 3129) ||(index >= 3131 && index <= 3136) ||(index >= 3139 && index <= 3176) ||
+                            (index >= 3179 && index <= 3188) ||(index >= 3191 && index <= 3229) ||(index >= 3232 && index <= 3239) ||(index >= 3243 && index <= 3245) ||
+                            (index >= 3247 && index <= 3249) ||(index >= 3275 && index <= 3275) ||(index >= 3279 && index <= 3279) ||(index >= 3350 && index <= 3374) ||
+                            (index >= 3450 && index <= 3474) ||(index >= 3500 && index <= 3524) ||(index >= 3550 && index <= 3574) ||(index >= 3600 && index <= 3624) ||
+                            (index >= 3650 && index <= 3674) ||(index >= 3750 && index <= 3774) ||(index >= 4825 && index <= 5177) ||(index >= 5180 && index <= 5181) ||
+                            (index >= 5186 && index <= 5187) ||(index >= 5192 && index <= 5193) ||(index >= 5196 && index <= 5779) ||(index >= 7925 && index <= 10305) ||
+                            (index >= 11370 && index <= 13769) ||(index >= 14870 && index <= 20469) ||(index >= 21620 && index <= 24999))
+                            moveSound = SoundList.WalkCaveL;
+                        else if ((index >= 605 && index <= 609) ||(index >= 650 && index <= 654) ||(index >= 660 && index <= 664) ||(index >= 2550 && index <= 2554) ||
+                            (index >= 2560 && index <= 2564) ||(index >= 2565 && index <= 2574) ||(index >= 2600 && index <= 2604) ||(index >= 2610 && index <= 2624) ||
+                            (index >= 2650 && index <= 2654) ||(index >= 2660 && index <= 2674) ||(index >= 2700 && index <= 2704) ||(index >= 2710 && index <= 2724) ||
+                            (index >= 2850 && index <= 2874) ||(index >= 3405 && index <= 3424) ||(index >= 4625 && index <= 4679) ||(index >= 6075 && index <= 6079) ||
+                            (index >= 10325 && index <= 10328) ||(index >= 10330 && index <= 10333) ||(index >= 10335 && index <= 10371) ||(index >= 10373 && index <= 10380) ||
+                            (index >= 10382 && index <= 10419) ||(index >= 10423 && index <= 10424) ||(index >= 10426 && index <= 10428) ||(index >= 10430 && index <= 10469) ||
+                            (index >= 10471 && index <= 10471) ||(index >= 10473 && index <= 10474) ||(index >= 10476 && index <= 10478) ||(index >= 10520 && index <= 10529) ||
+                            (index >= 10531 && index <= 10534) ||(index >= 10536 && index <= 10538) ||(index >= 10540 && index <= 10622) ||(index >= 10625 && index <= 10627) ||
+                            (index >= 10630 && index <= 10633) ||(index >= 10635 && index <= 10638) ||(index >= 10640 && index <= 10643) ||(index >= 10670 && index <= 10672) ||
+                            (index >= 10771 && index <= 10771) ||(index >= 10773 && index <= 10774) ||(index >= 10776 && index <= 10778) ||(index >= 10780 && index <= 10783) ||
+                            (index >= 10785 && index <= 10834) ||(index >= 10837 && index <= 10839) ||(index >= 10870 && index <= 10873) ||(index >= 10875 && index <= 10889) ||
+                            (index >= 10891 && index <= 10919) ||(index >= 10930 && index <= 10930) ||(index >= 10935 && index <= 10935) ||(index >= 10940 && index <= 10940) ||
+                            (index >= 10971 && index <= 10973) ||(index >= 10975 && index <= 10976) ||(index >= 11020 && index <= 11020) ||(index >= 11022 && index <= 11022) ||
+                            (index >= 11028 && index <= 11028) ||(index >= 11072 && index <= 11074))
+                            moveSound = SoundList.WalkStoneL;
+                        else if ((index >= 1800 && index <= 1824) || (index >= 3000 && index <= 3024) ||(index >= 10678 && index <= 10679) ||
+                            (index >= 10682 && index <= 10683) ||(index >= 10686 && index <= 10687) ||(index >= 10691 && index <= 10720) ||
+                            (index >= 10724 && index <= 10724) ||(index >= 10728 && index <= 10728) ||(index >= 10732 && index <= 10732) ||
+                            (index >= 11034 && index <= 11036) ||(index >= 11039 && index <= 11069) ||(index >= 11085 && index <= 11085) ||
+                            (index >= 11090 && index <= 11090) ||(index >= 11172 && index <= 11174) ||(index >= 11178 && index <= 11179) ||
+                            (index >= 11183 && index <= 11184) ||(index >= 11220 && index <= 11222) ||(index >= 11225 && index <= 11226) ||
+                            (index >= 11230 && index <= 11231) ||(index >= 11292 && index <= 11295) ||(index >= 11300 && index <= 11304) ||
+                            (index >= 11309 && index <= 11313) ||(index >= 11318 && index <= 11321) ||(index >= 11328 && index <= 11331))
+                            moveSound = SoundList.WalkWaterL;
+                        else
+                            moveSound = SoundList.WalkWaterL;
                     }
                     break;
                 case 101:
@@ -3719,7 +3821,88 @@ namespace Client.MirObjects
                     break;
                 case 104:
                     {
-                        moveSound = SoundList.WalkWaterL;
+                        //Tiles5
+                        if ((index >= 10 && index <= 0014) || (index >= 100 && index <= 0104) || (index >= 110 && index <= 0114) || (index >= 156 && index <= 0159) ||
+                            (index >= 165 && index <= 0204) || (index >= 210 && index <= 0214) || (index >= 255 && index <= 0259) || (index >= 300 && index <= 0304) ||
+                            (index >= 310 && index <= 0314) || (index >= 400 && index <= 0404) || (index >= 410 && index <= 0414) || (index >= 500 && index <= 0504) ||
+                            (index >= 510 && index <= 0514) || (index >= 555 && index <= 0559) || (index >= 800 && index <= 0849) || (index >= 855 && index <= 0859) ||
+                            (index >= 900 && index <= 0904) || (index >= 910 && index <= 0914) || (index >= 955 && index <= 0959) || (index >= 1000 && index <= 1004) ||
+                            (index >= 1010 && index <= 1014) || (index >= 1055 && index <= 1059) || (index >= 1400 && index <= 1404) || (index >= 1410 && index <= 1449) ||
+                            (index >= 1455 && index <= 1459) || (index >= 1465 && index <= 1499) || (index >= 1700 && index <= 1749) || (index >= 1755 && index <= 1759) ||
+                            (index >= 1765 && index <= 1804) || (index >= 1810 && index <= 1849) || (index >= 1855 && index <= 1859) || (index >= 1900 && index <= 1904) ||
+                            (index >= 1910 && index <= 1949) || (index >= 1955 && index <= 1959) || (index >= 2000 && index <= 2099) || (index >= 2150 && index <= 2154) ||
+                            (index >= 2160 && index <= 2164) || (index >= 2250 && index <= 2254) || (index >= 2260 && index <= 2263) || (index >= 2300 && index <= 2399) ||
+                            (index >= 2500 && index <= 2549) || (index >= 2555 && index <= 2559) || (index >= 2565 && index <= 2699) || (index >= 2750 && index <= 2754) ||
+                            (index >= 2760 && index <= 2764) || (index >= 2800 && index <= 2804) || (index >= 2810 && index <= 2814) || (index >= 2855 && index <= 2859) ||
+                            (index >= 2865 && index <= 2904) || (index >= 2910 && index <= 2914) || (index >= 2955 && index <= 2959) || (index >= 2965 && index <= 3004) ||
+                            (index >= 3010 && index <= 3014) || (index >= 3100 && index <= 3104) || (index >= 3111 && index <= 3114) || (index >= 3200 && index <= 3204) ||
+                            (index >= 3300 && index <= 3304) || (index >= 3800 && index <= 3804) || (index >= 3900 && index <= 3904) || (index >= 3910 && index <= 3914) ||
+                            (index >= 4000 && index <= 4004) || (index >= 4010 && index <= 4014) || (index >= 4100 && index <= 4104) || (index >= 4110 && index <= 4114) ||
+                            (index >= 4200 && index <= 4204) || (index >= 4210 && index <= 4214) || (index >= 4300 && index <= 4304) || (index >= 4310 && index <= 4311) ||
+                            (index >= 4500 && index <= 4504) || (index >= 4510 && index <= 4514) || (index >= 4600 && index <= 4604) || (index >= 4610 && index <= 4614) ||
+                            (index >= 4620 && index <= 4621) || (index >= 4655 && index <= 4659) || (index >= 4700 && index <= 4904) || (index >= 4910 && index <= 4949) ||
+                            (index >= 4955 && index <= 4959) || (index >= 5000 && index <= 5004) || (index >= 5010 && index <= 5014) || (index >= 5100 && index <= 5104) ||
+                            (index >= 5110 && index <= 5114) || (index >= 5155 && index <= 5159) || (index >= 5165 && index <= 5204) || (index >= 5210 && index <= 5254) ||
+                            (index >= 5260 && index <= 5264) || (index >= 5305 && index <= 5309) || (index >= 5355 && index <= 5359) || (index >= 5400 && index <= 5599) ||
+                            (index >= 5650 && index <= 5654) || (index >= 5700 && index <= 5799) || (index >= 5900 && index <= 6049) || (index >= 6100 && index <= 6399) ||
+                            (index >= 6850 && index <= 6949) || (index >= 7050 && index <= 7349) || (index >= 7750 && index <= 7754) || (index >= 7760 && index <= 7764) ||
+                            (index >= 7805 && index <= 7809) || (index >= 7815 && index <= 7849) || (index >= 7950 && index <= 7999) || (index >= 8150 && index <= 8399))
+                            moveSound = SoundList.WalkGroundL;
+                        else if ((index >= 710 && index <= 0714) || (index >= 860 && index <= 0899) || (index >= 905 && index <= 0909) || (index >= 915 && index <= 0949) ||
+                            (index >= 960 && index <= 0999) || (index >= 1005 && index <= 1009) || (index >= 1015 && index <= 1049) || (index >= 1060 && index <= 1099) ||
+                            (index >= 1105 && index <= 1109) || (index >= 1160 && index <= 1199) || (index >= 1260 && index <= 1264) || (index >= 1305 && index <= 1309) ||
+                            (index >= 1360 && index <= 1364) || (index >= 1405 && index <= 1409) || (index >= 1460 && index <= 1464) || (index >= 1500 && index <= 1549) ||
+                            (index >= 1555 && index <= 1599) || (index >= 1608 && index <= 1609) || (index >= 1660 && index <= 1664) || (index >= 1760 && index <= 1764) ||
+                            (index >= 1805 && index <= 1809) || (index >= 1860 && index <= 1899) || (index >= 1905 && index <= 1909) || (index >= 1960 && index <= 1999) ||
+                            (index >= 2400 && index <= 2499) || (index >= 2550 && index <= 2554) || (index >= 2560 && index <= 2564) || (index >= 3400 && index <= 3404) ||
+                            (index >= 3410 && index <= 3414) || (index >= 3455 && index <= 3459) || (index >= 3465 && index <= 3504) || (index >= 3510 && index <= 3514) ||
+                            (index >= 3555 && index <= 3559) || (index >= 3565 && index <= 3604) || (index >= 3610 && index <= 3614) || (index >= 3700 && index <= 3704) ||
+                            (index >= 3710 && index <= 3714) || (index >= 4400 && index <= 4404) || (index >= 4410 && index <= 4414) || (index >= 4904 && index <= 4909) ||
+                            (index >= 4950 && index <= 4954) || (index >= 4960 && index <= 4999) || (index >= 5005 && index <= 5009) || (index >= 5015 && index <= 5099) ||
+                            (index >= 5105 && index <= 5109) || (index >= 5115 && index <= 5154) || (index >= 5160 && index <= 5164) || (index >= 5205 && index <= 5209) ||
+                            (index >= 5225 && index <= 5259) || (index >= 5265 && index <= 5304) || (index >= 5310 && index <= 5354) || (index >= 5360 && index <= 5399) ||
+                            (index >= 5600 && index <= 5649) || (index >= 5655 && index <= 5699) || (index >= 6050 && index <= 6099) || (index >= 6950 && index <= 7049) ||
+                            (index >= 7350 && index <= 7449) || (index >= 7855 && index <= 7859) || (index >= 7865 && index <= 7899))
+                            moveSound = SoundList.WalkLawnL;
+                        else if ((index >= 600 && index <= 0604) || (index >= 610 && index <= 0614) || (index >= 655 && index <= 0659) || (index >= 700 && index <= 0704) ||
+                            (index >= 850 && index <= 0854) || (index >= 950 && index <= 0954) || (index >= 1050 && index <= 1054) || (index >= 1150 && index <= 1154) ||
+                            (index >= 1250 && index <= 1254) || (index >= 1350 && index <= 1354) || (index >= 1450 && index <= 1454) || (index >= 1550 && index <= 1554) ||
+                            (index >= 1650 && index <= 1654) || (index >= 1750 && index <= 1754) || (index >= 1850 && index <= 1854) || (index >= 1950 && index <= 1954) ||
+                            (index >= 5800 && index <= 5899) || (index >= 7450 && index <= 7454) || (index >= 7460 && index <= 7464) || (index >= 7505 && index <= 7509) ||
+                            (index >= 7515 && index <= 7554) || (index >= 7560 && index <= 7564) || (index >= 7605 && index <= 7609) || (index >= 7615 && index <= 7649) ||
+                            (index >= 7655 && index <= 7659) || (index >= 7665 && index <= 7704) || (index >= 7755 && index <= 7759) || (index >= 7765 && index <= 7804) ||
+                            (index >= 7810 && index <= 7814) || (index >= 7850 && index <= 7854) || (index >= 7860 && index <= 7864))
+                            moveSound = SoundList.WalkRoughL;
+                        else if ((index >= 5 && index <= 0009) || (index >= 15 && index <= 0099) || (index >= 105 && index <= 0109) || (index >= 115 && index <= 0155) ||
+                            (index >= 160 && index <= 0164) || (index >= 205 && index <= 0209) || (index >= 215 && index <= 0254) || (index >= 260 && index <= 0299) ||
+                            (index >= 305 && index <= 0309) || (index >= 315 && index <= 0399) || (index >= 405 && index <= 0409) || (index >= 415 && index <= 0499) ||
+                            (index >= 505 && index <= 0509) || (index >= 515 && index <= 0554) || (index >= 560 && index <= 0599) || (index >= 605 && index <= 0609) ||
+                            (index >= 615 && index <= 0654) || (index >= 660 && index <= 0699) || (index >= 705 && index <= 0709) || (index >= 715 && index <= 0799) ||
+                            (index >= 1100 && index <= 1104) || (index >= 1110 && index <= 1149) || (index >= 1155 && index <= 1159) || (index >= 1200 && index <= 1249) ||
+                            (index >= 1255 && index <= 1259) || (index >= 1265 && index <= 1304) || (index >= 1310 && index <= 1349) || (index >= 1355 && index <= 1359) ||
+                            (index >= 1365 && index <= 1399) || (index >= 1600 && index <= 1604) || (index >= 1606 && index <= 1607) || (index >= 1610 && index <= 1649) ||
+                            (index >= 1655 && index <= 1659) || (index >= 1665 && index <= 1699) || (index >= 2100 && index <= 2149) || (index >= 2155 && index <= 2159) ||
+                            (index >= 2165 && index <= 2249) || (index >= 2255 && index <= 2259) || (index >= 2264 && index <= 2299) || (index >= 2700 && index <= 2749) ||
+                            (index >= 2755 && index <= 2759) || (index >= 2765 && index <= 2799) || (index >= 2805 && index <= 2809) || (index >= 2815 && index <= 2854) ||
+                            (index >= 2860 && index <= 2864) || (index >= 2905 && index <= 2909) || (index >= 2915 && index <= 2954) || (index >= 2960 && index <= 2964) ||
+                            (index >= 3005 && index <= 3009) || (index >= 3015 && index <= 3099) || (index >= 3105 && index <= 3110) || (index >= 3115 && index <= 3199) ||
+                            (index >= 3205 && index <= 3299) || (index >= 3305 && index <= 3399) || (index >= 3405 && index <= 3409) || (index >= 3415 && index <= 3454) ||
+                            (index >= 3460 && index <= 3464) || (index >= 3505 && index <= 3509) || (index >= 3515 && index <= 3554) || (index >= 3560 && index <= 3564) ||
+                            (index >= 3605 && index <= 3609) || (index >= 3615 && index <= 3699) || (index >= 3705 && index <= 3709) || (index >= 3715 && index <= 3799) ||
+                            (index >= 3805 && index <= 3899) || (index >= 3905 && index <= 3909) || (index >= 3915 && index <= 3999) || (index >= 4005 && index <= 4009) ||
+                            (index >= 4015 && index <= 4099) || (index >= 4105 && index <= 4109) || (index >= 4115 && index <= 4199) || (index >= 4205 && index <= 4209) ||
+                            (index >= 4305 && index <= 4309) || (index >= 4312 && index <= 4399) || (index >= 4405 && index <= 4409) || (index >= 4415 && index <= 4499) ||
+                            (index >= 4505 && index <= 4509) || (index >= 4515 && index <= 4599) || (index >= 4605 && index <= 4609) || (index >= 4615 && index <= 4619) ||
+                            (index >= 4622 && index <= 4654) || (index >= 4660 && index <= 4699) || (index >= 6400 && index <= 6849) || (index >= 7455 && index <= 7459) ||
+                            (index >= 7465 && index <= 7504) || (index >= 7510 && index <= 7514) || (index >= 7555 && index <= 7559) || (index >= 7565 && index <= 7604) ||
+                            (index >= 7610 && index <= 7614) || (index >= 7650 && index <= 7654) || (index >= 7660 && index <= 7664) ||
+                            (index >= 7705 && index <= 7709) || (index >= 7715 && index <= 7749))
+                            moveSound = SoundList.WalkStoneL;
+                        else if ((index >= 8000 && index <= 8149) || (index >= 8400 && index <= 8481))
+                            moveSound = SoundList.WalkCaveL;
+                        else if ((index >= 7900 && index <= 7949))
+                            moveSound = SoundList.WalkWaterL;
+                        else moveSound = SoundList.WalkWaterL;
                     }
                     break;
                 case 105:
@@ -3767,22 +3950,82 @@ namespace Client.MirObjects
                     moveSound = SoundList.WalkWaterL;
                     break;
             }
+            #endregion
+            
+            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x1FFFF) - 1;
 
-            #region BackTiles
-            //if (index >= 0 && index <= 99999)
-            //else if (index >= 100000 && index <= 199999)
-            //else if (index >= 200000 && index <= 299999)
-            //else if (index >= 300000 && index <= 399999)
-            //else if (index >= 400000 && index <= 499999)
-            //else if (index >= 500000 && index <= 599999)           
-            //else if (index >= 600000 && index <= 699999)          
-            //else if (index >= 700000 && index <= 799999)            
-            //else moveSound = SoundList.WalkWaterL;
+            #region Middle Tiles
+            switch (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex)
+            {
+                case 114:
+                    {
+                        //SMTiles5  iJam Ver
+                        if ((index >= 3165 && index <= 21311) || (index >= 23775 && index <= 24650))
+                            moveSound = SoundList.WalkGroundL;
+                        else if ((index >= 2773 && index <= 3164) || (index >= 21416 && index <= 21462) || (index >= 21510 && index <= 21511) || (index >= 21528 && index <= 21531) ||
+                                (index >= 21548 && index <= 21533) || (index >= 21569 && index <= 21575) || (index >= 21591 && index <= 21594) || (index >= 21609 && index <= 21613) ||
+                                (index >= 21627 && index <= 21632) || (index >= 21646 && index <= 21650) || (index >= 21634 && index <= 21667) || (index >= 22977 && index <= 23316) ||
+                                (index >= 30473 && index <= 31255))
+                            moveSound = SoundList.WalkLawnL;
+                        else if ((index >= 24651 && index <= 30472))
+                            moveSound = SoundList.WalkRoomL;
+                        else if ((index >= 0 && index <= 2772) || (index >= 21312 && index <= 21415) || (index >= 21463 && index <= 21509) || (index >= 21512 && index <= 21527) ||
+                            (index >= 21532 && index <= 21547) || (index >= 21534 && index <= 21568) || (index >= 21576 && index <= 21590) || (index >= 21595 && index <= 21608) ||
+                            (index >= 21614 && index <= 21626) || (index >= 21633 && index <= 21645) || (index >= 21651 && index <= 21633) || (index >= 21668 && index <= 22976) ||
+                            (index >= 23317 && index <= 23774) || (index >= 31256 && index <= 31302))
+                            moveSound = SoundList.WalkStoneL;
+                    }
+                    break;
+                case 116:
+                    {
+                        //SMTiles7  iJam Ver
+                        if ((index >= 10 && index <= 13) || (index >= 23 && index <= 25) || (index >= 35 && index <= 37) || (index >= 47 && index <= 49) ||
+                            (index >= 59 && index <= 61) || (index >= 71 && index <= 73) || (index >= 83 && index <= 85) || (index >= 95 && index <= 97) ||
+                            (index >= 107 && index <= 109) || (index >= 119 && index <= 121) || (index >= 131 && index <= 133) || (index >= 143 && index <= 145) ||
+                            (index >= 155 && index <= 157) || (index >= 167 && index <= 169) || (index >= 179 && index <= 181) || (index >= 191 && index <= 193) ||
+                            (index >= 203 && index <= 205) || (index >= 215 && index <= 217) || (index >= 227 && index <= 229) || (index >= 239 && index <= 241) ||
+                            (index >= 251 && index <= 253) || (index >= 263 && index <= 264) || (index >= 269 && index <= 271) || (index >= 281 && index <= 283) ||
+                            (index >= 297 && index <= 299) || (index >= 311 && index <= 313) || (index >= 323 && index <= 325) || (index >= 333 && index <= 335) ||
+                            (index >= 341 && index <= 343) || (index >= 347 && index <= 349) || (index >= 351 && index <= 353) || (index >= 488 && index <= 489) ||
+                            (index >= 494 && index <= 495) || (index >= 502 && index <= 503) || (index >= 512 && index <= 514) || (index >= 524 && index <= 526) ||
+                            (index >= 538 && index <= 540) || (index >= 554 && index <= 556) || (index >= 572 && index <= 573) || (index >= 648 && index <= 649) ||
+                            (index >= 665 && index <= 667) || (index >= 677 && index <= 679) || (index >= 689 && index <= 690) || (index >= 701 && index <= 702) ||
+                            (index >= 713 && index <= 714) || (index >= 1260 && index <= 1567) || (index >= 2772 && index <= 5869) || (index >= 8887 && index <= 10230))
+                            moveSound = SoundList.WalkGroundL;
+                        else if ((index >= 2013 && index <= 2438) || (index >= 2639 && index <= 2771))
+                            moveSound = SoundList.WalkRoughL;
+                        else if ((index >= 7810 && index <= 7814) || (index >= 7827 && index <= 7832) || (index >= 7847 && index <= 7853) || (index >= 7866 && index <= 7867) ||
+                            (index >= 7872 && index <= 7874) || (index >= 7884 && index <= 7887) || (index >= 7892 && index <= 7910) || (index >= 7916 && index <= 7923) ||
+                            (index >= 7929 && index <= 7990))
+                            moveSound = SoundList.WalkWoodL;
+                        else if ((index >= 5870 && index <= 7753) || (index >= 7868 && index <= 7871) || (index >= 7888 && index <= 7891) || (index >= 7991 && index <= 8886) ||
+                            (index >= 10231 && index <= 10430))
+                            moveSound = SoundList.WalkRoomL;
+                        else if ((index >= 0 && index <= 9) || (index >= 14 && index <= 22) || (index >= 26 && index <= 34) || (index >= 38 && index <= 46) ||
+                            (index >= 50 && index <= 58) || (index >= 62 && index <= 70) || (index >= 74 && index <= 82) || (index >= 86 && index <= 94) ||
+                            (index >= 98 && index <= 106) || (index >= 110 && index <= 118) || (index >= 122 && index <= 130) || (index >= 134 && index <= 142) ||
+                            (index >= 146 && index <= 154) || (index >= 158 && index <= 166) || (index >= 170 && index <= 178) || (index >= 182 && index <= 190) ||
+                            (index >= 194 && index <= 202) || (index >= 206 && index <= 214) || (index >= 218 && index <= 226) || (index >= 230 && index <= 238) ||
+                            (index >= 242 && index <= 250) || (index >= 254 && index <= 262) || (index >= 265 && index <= 268) || (index >= 272 && index <= 280) ||
+                            (index >= 284 && index <= 296) || (index >= 300 && index <= 310) || (index >= 314 && index <= 322) || (index >= 326 && index <= 332) ||
+                            (index >= 336 && index <= 340) || (index >= 344 && index <= 346) || (index >= 350 && index <= 350) || (index >= 354 && index <= 487) ||
+                            (index >= 490 && index <= 493) || (index >= 496 && index <= 501) || (index >= 504 && index <= 511) || (index >= 515 && index <= 523) ||
+                            (index >= 527 && index <= 537) || (index >= 541 && index <= 553) || (index >= 557 && index <= 571) || (index >= 574 && index <= 647) ||
+                            (index >= 650 && index <= 664) || (index >= 668 && index <= 676) || (index >= 680 && index <= 688) || (index >= 691 && index <= 700) ||
+                            (index >= 703 && index <= 712) || (index >= 715 && index <= 1259) || (index >= 1568 && index <= 2012) || (index >= 7754 && index <= 7809) ||
+                            (index >= 7815 && index <= 7826) || (index >= 7833 && index <= 7846) || (index >= 7854 && index <= 7865) || (index >= 7875 && index <= 7883) ||
+                            (index >= 7911 && index <= 7915) || (index >= 7924 && index <= 7928))
+                            moveSound = SoundList.WalkStoneL;
+                        else if ((index >= 2439 && index <= 2638))
+                            moveSound = SoundList.WalkCaveL;
+                    }
+                    break;
+            }
             #endregion
 
-            #region MiddleTiles
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleImage & 0x1FFFF) - 1;
             index = (GameScene.Scene.MapControl.M2CellInfo[x, y].MiddleIndex - 110) * 100000 + index;
+
+            #region Middle Tiles old code method
 
             if (index >= 0 && index <= 99999)
             {
@@ -3878,21 +4121,6 @@ namespace Client.MirObjects
                     moveSound = SoundList.WalkWaterL;
             }
 
-            else if (index >= 400000 && index <= 499999)
-            {
-                //SMTiles5 (114 image)
-                if ((index >= 403165 && index <= 422976) || (index >= 423789 && index <= 424650))
-                    moveSound = SoundList.WalkGroundL;
-                else if ((index >= 402773 && index <= 403164) || (index >= 422977 && index <= 423788))
-                    moveSound = SoundList.WalkLawnL;
-                else if ((index >= 400000 && index <= 402772) || (index >= 431256 && index <= 431302))
-                    moveSound = SoundList.WalkStoneL;
-                else if ((index >= 424651 && index <= 430455))
-                    moveSound = SoundList.WalkRoomL;
-                else if ((index >= 430456 && index <= 431255))
-                    moveSound = SoundList.WalkRoughL;
-            }
-
             else if (index >= 500000 && index <= 599999)
             {
                 //SMTiles6 (115 image)
@@ -3906,11 +4134,6 @@ namespace Client.MirObjects
                     moveSound = SoundList.WalkRoomL;
                 else if ((index >= 512910 && index <= 513556) || (index >= 513746 && index <= 514853) || (index >= 515037 && index <= 516307))
                     moveSound = SoundList.WalkStoneL;
-            }
-
-            else if (index >= 600000 && index <= 699999)
-            {
-                //SMTiles7
             }
 
             else if (index >= 700000 && index <= 799999)

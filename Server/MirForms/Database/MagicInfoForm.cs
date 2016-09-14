@@ -699,6 +699,12 @@ namespace Server
         private void MagicInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             //do something to save it all
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveMagics(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

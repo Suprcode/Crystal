@@ -544,6 +544,8 @@ namespace Server.MirObjects
 
         public override void Process()
         {
+            if (Connection == null || Node == null || Info == null) return;
+
             if (GroupInvitation != null && GroupInvitation.Node == null)
                 GroupInvitation = null;
 
@@ -640,6 +642,8 @@ namespace Server.MirObjects
 
             if (NewMail)
             {
+                ReceiveChat("New mail has arrived.", ChatType.System);
+
                 GetMail();
             }
 
@@ -1208,11 +1212,16 @@ namespace Server.MirObjects
                 }
             }
 
-            if (LastHitter != null && LastHitter.Race == ObjectType.Player && !AtWar((PlayerObject)LastHitter) && !WarZone)
+            if (LastHitter != null && LastHitter.Race == ObjectType.Player)
             {
-                if (Envir.Time > BrownTime && PKPoints < 200)
+                PlayerObject hitter = (PlayerObject)LastHitter;
+
+                if (AtWar(hitter) || WarZone)
                 {
-                    PlayerObject hitter = (PlayerObject)LastHitter;
+                    hitter.ReceiveChat(string.Format("You've been protected by the law"), ChatType.System);
+                }
+                else if (Envir.Time > BrownTime && PKPoints < 200)
+                {
                     UserItem weapon = hitter.Info.Equipment[(byte)EquipmentSlot.Weapon];
 
                     hitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
@@ -1703,7 +1712,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (item.Info.Type == ItemType.药剂 || item.Info.Type == ItemType.卷轴)
+            if (item.Info.Type == ItemType.药剂 || item.Info.Type == ItemType.卷轴 || (item.Info.Type == ItemType.手稿 && item.Info.Effect == 1))
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -1765,10 +1774,10 @@ namespace Server.MirObjects
             switch (Gender)
             {
                 case MirGender.Male:
-                    if (!info.RequiredGender.HasFlag(RequiredGender.Male)) return false;
+                    if (!info.RequiredGender.HasFlag(RequiredGender.男)) return false;
                     break;
                 case MirGender.Female:
-                    if (!info.RequiredGender.HasFlag(RequiredGender.Female)) return false;
+                    if (!info.RequiredGender.HasFlag(RequiredGender.女)) return false;
                     break;
                 default:
                     return false;
@@ -1922,7 +1931,7 @@ namespace Server.MirObjects
             GetFriends();
             GetRelationship();
             
-            if ((Info.Mentor != 0) && (Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now))
+            if ((Info.Mentor != 0) && (Info.MentorDate.GetValueOrDefault().AddDays(Settings.MentorLength) < DateTime.Now))
                 MentorBreak();
             else
                 GetMentor();
@@ -2015,9 +2024,14 @@ namespace Server.MirObjects
 
             if (InSafeZone && Info.LastDate > DateTime.MinValue)
             {
-                double totalMinutes = (Envir.Now - Info.LastDate).TotalMinutes;
+                double totalMinutes = (Envir.Now - Info.LastDate).GetValueOrDefault().TotalMinutes;
 
                 _restedCounter = (int)(totalMinutes * 60);
+            }
+
+            if (Info.Mail.Count > Settings.MailCapacity)
+            {
+                ReceiveChat("Your mailbox is overflowing.", ChatType.System);
             }
 
             Report.Connected(Connection.IPAddress);
@@ -2220,6 +2234,7 @@ namespace Server.MirObjects
                 QuestInventory = new UserItem[Info.QuestInventory.Length],
                 Gold = Account.Gold,
                 Credit = Account.Credit,
+                AddedStorage = Account.Storage.Length > 80
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -2915,6 +2930,7 @@ namespace Server.MirObjects
                 ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
                 Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
             }
+            
         }
 
         #endregion
@@ -3920,6 +3936,74 @@ namespace Server.MirObjects
                         ReceiveChat((string.Format("You are currently in {0}. Map ID: {1}", mapTitle, mapName)), ChatType.System);
                         break;
 
+                    case "SAVEPLAYER":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 2) return;
+
+                        CharacterInfo tempInfo = null;
+
+                        System.IO.Directory.CreateDirectory("Character Backups");
+
+                        for (int i = 0; i < Envir.AccountList.Count; i++)
+                        {
+                            for (int j = 0; j < Envir.AccountList[i].Characters.Count; j++)
+                            {
+                                if (String.Compare(Envir.AccountList[i].Characters[j].Name, parts[1], StringComparison.OrdinalIgnoreCase) != 0) continue;
+
+                                tempInfo = Envir.AccountList[i].Characters[j];
+                                break;
+                            }
+                        }
+                        
+                        using (System.IO.FileStream stream = System.IO.File.Create(string.Format("Character Backups/{0}", tempInfo.Name)))
+                        {
+                            using (System.IO.BinaryWriter writer = new System.IO.BinaryWriter(stream))
+                            {
+                                tempInfo.Save(writer);
+                            }
+                        }
+
+                        break;
+
+                    case "LOADPLAYER":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 2) return;
+
+                        tempInfo = null;
+
+                        System.IO.Directory.CreateDirectory("Character Backups");
+
+                        for (int i = 0; i < Envir.AccountList.Count; i++)
+                        {
+                            for (int j = 0; j < Envir.AccountList[i].Characters.Count; j++)
+                            {
+                                if (String.Compare(Envir.AccountList[i].Characters[j].Name, parts[1], StringComparison.OrdinalIgnoreCase) != 0) continue;
+
+                                tempInfo = Envir.AccountList[i].Characters[j];
+
+                                using (System.IO.FileStream stream = System.IO.File.OpenRead(string.Format("Character Backups/{0}", tempInfo.Name)))
+                                {
+                                    using (System.IO.BinaryReader reader = new System.IO.BinaryReader(stream))
+                                    {
+                                        CharacterInfo tt = new CharacterInfo(reader);
+
+                                        if(Envir.AccountList[i].Characters[j].Index != tt.Index)
+                                        {
+                                            ReceiveChat("Player name was matched however IDs did not. Likely due to player being recreated. Player not restored", ChatType.System);
+                                            return;
+                                        }
+
+                                        Envir.AccountList[i].Characters[j] = tt;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        Envir.BeginSaveAccounts();
+                    break;
+
                     case "MOVE":
                         if (!IsGM && !HasTeleportRing && !Settings.TestServer) return;
                         if (!IsGM && CurrentMap.Info.NoPosition)
@@ -4625,6 +4709,7 @@ namespace Server.MirObjects
                         break;
 
                     case "ADDINVENTORY":
+                        {
                         int openLevel = (int)((Info.Inventory.Length - 46) / 4);
                         uint openGold = (uint)(1000000 + openLevel * 1000000);
                         if (Account.Gold >= openGold)
@@ -4639,6 +4724,26 @@ namespace Server.MirObjects
                             ReceiveChat("Not enough gold.", ChatType.System);
                         }
                         ChatTime = 0;
+                        }
+                        break;
+
+                    case "ADDSTORAGE":
+                        {
+                            int openLevel = Account.Storage.Length / 4;
+                            uint openGold = (uint)(openLevel * 1000000);
+                            if (Account.Gold >= openGold)
+                            {
+                                Account.Gold -= openGold;
+                                Enqueue(new S.LoseGold { Gold = openGold });
+                                Enqueue(new S.ResizeStorage { Size = Account.ResizeStorage() });
+                                ReceiveChat("Storage size increased.", ChatType.System);
+                            }
+                            else
+                            {
+                                ReceiveChat("Not enough gold.", ChatType.System);
+                            }
+                            ChatTime = 0;
+                        }
                         break;
 
                     case "INFO":
@@ -4852,8 +4957,6 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("{0} has been reset.", ResetConq.Info.Name), ChatType.System);
                         break;
                     case "GATES":
-                        string openclose = parts[1];
-                        bool OpenClose;
 
                         if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
@@ -4861,7 +4964,11 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        if (openclose == null) return;
+                        bool OpenClose = false;
+
+                        if (parts.Length > 1)
+                        {
+                            string openclose = parts[1];
 
                         if (openclose.ToUpper() == "CLOSE") OpenClose = true;
                         else if (openclose.ToUpper() == "OPEN") OpenClose = false;
@@ -4877,11 +4984,81 @@ namespace Server.MirObjects
                                     MyGuild.Conquest.GateList[i].Gate.CloseDoor();
                                 else
                                     MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+                        }
+                        else
+                        {
+                            for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                                if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                    if (!MyGuild.Conquest.GateList[i].Gate.Closed)
+                                    {
+                                        MyGuild.Conquest.GateList[i].Gate.CloseDoor();
+                                        OpenClose = true;
+                                    }
+                                    else
+                                    {
+                                        MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+                                        OpenClose = false;
+                                    }
+                        }
 
                         if (OpenClose)
                             ReceiveChat(string.Format("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
                         else
                             ReceiveChat(string.Format("The gates at {0} have been opened.", MyGuild.Conquest.Info.Name), ChatType.System);
+                        break;
+
+                    case "CHANGEFLAG":
+                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                        {
+                            ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
+                            return;
+                        }
+
+                        ushort flag = (ushort)Envir.Random.Next(12);
+
+                        if(parts.Length > 1)
+                        {
+                            ushort temp;
+
+                            ushort.TryParse(parts[1], out temp);
+
+                            if (temp <= 11) flag = temp;
+                        }
+
+                        MyGuild.FlagImage = (ushort)(1000 + flag);
+
+                        for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
+                        {
+                            MyGuild.Conquest.FlagList[i].UpdateImage();
+                        }
+
+                        break;
+                    case "CHANGEFLAGCOLOUR":
+                        {
+                            if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                            {
+                                ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
+                                return;
+                            }
+
+                            byte r1 = (byte)Envir.Random.Next(255);
+                            byte g1 = (byte)Envir.Random.Next(255);
+                            byte b1 = (byte)Envir.Random.Next(255);
+
+                            if (parts.Length > 3)
+                            {
+                                byte.TryParse(parts[1], out r1);
+                                byte.TryParse(parts[2], out g1);
+                                byte.TryParse(parts[3], out b1);
+                            }
+
+                            MyGuild.FlagColour = Color.FromArgb(255, r1, g1, b1);
+
+                            for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
+                            {
+                                MyGuild.Conquest.FlagList[i].UpdateColour();
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -5329,9 +5506,10 @@ namespace Server.MirObjects
         public void RangeAttack(MirDirection dir, Point location, uint targetID)
         {
             LogTime = Envir.Time + Globals.LogDelay;
-            //bug: when you wear a mirbow the shape is actualy from the old item :p
+
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
+
             if ((RealItem.Shape / 100) != 2) return;
             if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
@@ -5343,6 +5521,8 @@ namespace Server.MirObjects
                 target = FindObject(targetID, 10);
 
             if (target != null && target.Dead) return;
+
+            if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player) return;
 
             Direction = dir;
 
@@ -6656,6 +6836,7 @@ namespace Server.MirObjects
         private void TurnUndead(MapObject target, UserMagic magic)
         {
             if (target == null || target.Race != ObjectType.Monster || !target.Undead || !target.IsAttackTarget(this)) return;
+
             if (Envir.Random.Next(2) + Level - 1 <= target.Level)
             {
                 target.Target = this;
@@ -6675,7 +6856,7 @@ namespace Server.MirObjects
         }
         private void FlameDisruptor(MapObject target, UserMagic magic)
         {
-            if (target == null || !target.IsAttackTarget(this)) return;
+            if (target == null || (target.Race != ObjectType.Player && target.Race != ObjectType.Monster) || !target.IsAttackTarget(this)) return;
 
             int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
 
@@ -7094,8 +7275,8 @@ namespace Server.MirObjects
         private void EnergyShield(MapObject target, UserMagic magic, out bool cast)
         {
             cast = false;
-
-            if (!target.IsFriendlyTarget(this)) target = this; //offical is only party target
+            
+            if (target == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
             int duration = 30 + 50 * magic.Level;
             int power = magic.GetPower(GetAttackPower(MinSC, MaxSC));
@@ -8080,8 +8261,9 @@ namespace Server.MirObjects
 
             int duration = 30 + (magic.Level * 30);
             int value = duration;
+            int passthroughCount = (magic.Level * 2) - 1;
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location, passthroughCount);
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
@@ -9546,10 +9728,10 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
                     if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist))
@@ -9562,7 +9744,7 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist))
@@ -9570,7 +9752,7 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
@@ -9732,10 +9914,10 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
                     if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
@@ -9747,7 +9929,7 @@ namespace Server.MirObjects
                     {
                         return 0;
                     }
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
@@ -9755,7 +9937,7 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         return 0;
                     }
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.Agility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
@@ -9851,16 +10033,16 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    armour = GetAttackPower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetAttackPower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.Agility:
                     break;
@@ -9904,9 +10086,9 @@ namespace Server.MirObjects
 
             if (!ignoreDefence && (p.PType == PoisonType.Green))
             {
-                int armour = GetAttackPower(MinMAC, MaxMAC);
+                int armour = GetDefencePower(MinMAC, MaxMAC);
 
-                if (p.Value > armour)
+                if (p.Value < armour)
                     p.PType = PoisonType.None;
                 else
                     p.Value -= armour;
@@ -9917,7 +10099,7 @@ namespace Server.MirObjects
 
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - PoisonRecovery);
             if (p.Duration == 0) return;
-
+            if (p.PType == PoisonType.None) return;
 
             for (int i = 0; i < PoisonList.Count; i++)
             {
@@ -9978,7 +10160,7 @@ namespace Server.MirObjects
             Enqueue(new S.AddBuff { Type = b.Type, Caster = Name, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible });
         }
 
-        public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        public void EquipSlotItem(MirGridType grid, long id, int to, MirGridType gridTo)
         {
             S.EquipSlotItem p = new S.EquipSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
 
@@ -10107,7 +10289,7 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-        public void RemoveItem(MirGridType grid, ulong id, int to)
+        public void RemoveItem(MirGridType grid, long id, int to)
         {
             S.RemoveItem p = new S.RemoveItem { Grid = grid, UniqueID = id, To = to, Success = false };
             UserItem[] array;
@@ -10174,11 +10356,14 @@ namespace Server.MirObjects
             }
 
             if (!CanRemoveItem(grid, temp)) return;
-            Info.Equipment[index] = null;
+
             if (temp.Cursed)
                 UnlockCurse = false;
+
             if (array[to] == null)
             {
+                Info.Equipment[index] = null;
+
                 array[to] = temp;
                 p.Success = true;
                 Enqueue(p);
@@ -10192,7 +10377,7 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-        public void RemoveSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        public void RemoveSlotItem(MirGridType grid, long id, int to, MirGridType gridTo)
         {
             S.RemoveSlotItem p = new S.RemoveSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
             UserItem[] array;
@@ -10366,7 +10551,7 @@ namespace Server.MirObjects
                 array[from] = i;
 
                 Report.ItemMoved("MoveItem", array[from], grid, grid, to, from);
-
+                
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -10504,7 +10689,7 @@ namespace Server.MirObjects
             }
             Enqueue(p);
         }
-        public void EquipItem(MirGridType grid, ulong id, int to)
+        public void EquipItem(MirGridType grid, long id, int to)
         {
             S.EquipItem p = new S.EquipItem { Grid = grid, UniqueID = id, To = to, Success = false };
 
@@ -10622,7 +10807,7 @@ namespace Server.MirObjects
             }
             Enqueue(p);
         }
-        public void UseItem(ulong id)
+        public void UseItem(long id)
         {
             S.UseItem p = new S.UseItem { UniqueID = id, Success = false };
 
@@ -10985,7 +11170,7 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
         }
-        public void SplitItem(MirGridType grid, ulong id, uint count)
+        public void SplitItem(MirGridType grid, long id, uint count)
         {
             S.SplitItem1 p = new S.SplitItem1 { Grid = grid, UniqueID = id, Count = count, Success = false };
             UserItem[] array;
@@ -11045,9 +11230,9 @@ namespace Server.MirObjects
             Enqueue(p);
             Enqueue(new S.SplitItem { Item = temp, Grid = grid });
 
-            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.药剂 || temp.Info.Type == ItemType.卷轴 || temp.Info.Type == ItemType.护身符))
+            if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.药剂 || temp.Info.Type == ItemType.卷轴 || temp.Info.Type == ItemType.护身符 || (temp.Info.Type == ItemType.手稿 && temp.Info.Effect == 1)))
             {
-                if (temp.Info.Type == ItemType.药剂 || temp.Info.Type == ItemType.卷轴)
+                if (temp.Info.Type == ItemType.药剂 || temp.Info.Type == ItemType.卷轴|| (temp.Info.Type == ItemType.手稿 && temp.Info.Effect == 1))
                 {
                     for (int i = 0; i < 4; i++)
                     {
@@ -11076,8 +11261,17 @@ namespace Server.MirObjects
                 RefreshBagWeight();
                 return;
             }
+
+            for (int i = 0; i < 6; i++)
+            {
+                if (array[i] != null) continue;
+                array[i] = temp;
+                RefreshBagWeight();
+                return;
         }
-        public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
+        }
+        
+        public void MergeItem(MirGridType gridFrom, MirGridType gridTo, long fromID, long toID)
         {
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
 
@@ -11224,11 +11418,13 @@ namespace Server.MirObjects
                 tempTo.Count = tempTo.Info.StackSize;
             }
 
+            TradeUnlock();
+
             p.Success = true;
             Enqueue(p);
             RefreshStats();
         }
-        public void CombineItem(ulong fromID, ulong toID)
+        public void CombineItem(long fromID, long toID)
         {
             S.CombineItem p = new S.CombineItem { IDFrom = fromID, IDTo = toID, Success = false };
 
@@ -11506,7 +11702,7 @@ namespace Server.MirObjects
 
                     else if ((tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed) > 0)
                     {
-                        if (succeeded) tempTo.AttackSpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, tempTo.AttackSpeed + tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed)));
+                        if (succeeded) tempTo.AttackSpeed = (byte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, tempTo.AttackSpeed + tempFrom.Info.AttackSpeed + tempFrom.AttackSpeed)));
                     }
 
                     else if ((tempFrom.Info.Agility + tempFrom.Agility) > 0)
@@ -11540,7 +11736,7 @@ namespace Server.MirObjects
                     }
                     else if ((tempFrom.Info.Luck + tempFrom.Luck) > 0)
                     {
-                        if (succeeded) tempTo.Luck = (sbyte)Math.Min(sbyte.MaxValue, tempFrom.Info.Luck + tempTo.Luck + tempFrom.Luck);
+                        if (succeeded) tempTo.Luck = (byte)Math.Min(sbyte.MaxValue, tempFrom.Info.Luck + tempTo.Luck + tempFrom.Luck);
                     }
                     else
                     {
@@ -11612,6 +11808,8 @@ namespace Server.MirObjects
             Report.ItemCombined("CombineItem", tempFrom, tempTo, indexFrom, indexTo, MirGridType.Inventory);
 
             //item merged ok
+            TradeUnlock();
+
             p.Success = true;
             Enqueue(p);
         }
@@ -11825,7 +12023,7 @@ namespace Server.MirObjects
             */
             return 0;
         }
-        public void DropItem(ulong id, uint count)
+        public void DropItem(long id, uint count)
         {
             S.DropItem p = new S.DropItem { UniqueID = id, Count = count, Success = false };
             if (Dead)
@@ -12162,14 +12360,14 @@ namespace Server.MirObjects
             switch (Gender)
             {
                 case MirGender.Male:
-                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Male))
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.男))
                     {
                         ReceiveChat("You are not Female.", ChatType.System);
                         return false;
                     }
                     break;
                 case MirGender.Female:
-                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Female))
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.女))
                     {
                         ReceiveChat("You are not Male.", ChatType.System);
                         return false;
@@ -12492,11 +12690,11 @@ namespace Server.MirObjects
             switch (Gender)
             {
                 case MirGender.Male:
-                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Male))
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.男))
                         return false;
                     break;
                 case MirGender.Female:
-                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Female))
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.女))
                         return false;
                     break;
             }
@@ -12764,7 +12962,7 @@ namespace Server.MirObjects
             if (Character != null)
                 Enqueue(new S.UserName { Id = (uint)Character.Index, Name = Character.Name });
         }
-        public void RequestChatItem(ulong id)
+        public void RequestChatItem(long id)
         {
             //Enqueue(new S.ChatItemStats { ChatItemId = id, Stats = whatever });
         }
@@ -13446,6 +13644,11 @@ namespace Server.MirObjects
             Report.ChatMessage(text);
         }
 
+        public void ReceiveOutputMessage(string text, OutputMessageType type)
+        {
+            Enqueue(new S.SendOutputMessage { Message = text, Type = type });
+        }
+
         private void CleanUp()
         {
             Connection.Player = null;
@@ -13671,7 +13874,7 @@ namespace Server.MirObjects
             CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
         }
 
-        public void BuyItem(ulong index, uint count)
+        public void BuyItem(long index, uint count)
         {
             if (Dead) return;
 
@@ -13689,7 +13892,7 @@ namespace Server.MirObjects
                 ob.Buy(this, index, count);
             }
         }
-        public void SellItem(ulong uniqueID, uint count)
+        public void SellItem(long uniqueID, uint count)
         {
             S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };
             if (Dead || count == 0)
@@ -13768,7 +13971,7 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-        public void RepairItem(ulong uniqueID, bool special = false)
+        public void RepairItem(long uniqueID, bool special = false)
         {
             Enqueue(new S.RepairItem { UniqueID = uniqueID });
 
@@ -13845,7 +14048,7 @@ namespace Server.MirObjects
 
         #region Consignment
 
-        public void ConsignItem(ulong uniqueID, uint price)
+        public void ConsignItem(long uniqueID, uint price)
         {
             S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
             if (price < Globals.MinConsignment || price > Globals.MaxConsignment || Dead)
@@ -14025,7 +14228,7 @@ namespace Server.MirObjects
                 GetMarket(string.Empty, MatchType);
             }
         }
-        public void MarketBuy(ulong auctionID)
+        public void MarketBuy(long auctionID)
         {
             if (Dead)
             {
@@ -14086,8 +14289,8 @@ namespace Server.MirObjects
 
                     Report.ItemChanged("BuyMarketItem", auction.Item, auction.Item.Count, 2);
 
-                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price), ChatType.Hint);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.Name, auction.Price) });
+                    Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price), ChatType.Hint);
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price) });
                     MarketSearch(MatchName);
                     return;
                 }
@@ -14095,7 +14298,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.MarketFail { Reason = 7 });
         }
-        public void MarketGetBack(ulong auctionID)
+        public void MarketGetBack(long auctionID)
         {
             if (Dead)
             {
@@ -14154,7 +14357,7 @@ namespace Server.MirObjects
                     Account.Auctions.Remove(auction);
                     Envir.Auctions.Remove(auction);
                     GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.Name, auction.Price, gold, auction.Price - gold) });
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, auction.Price, gold, auction.Price - gold) });
                     MarketSearch(MatchName);
                     return;
                 }
@@ -14168,7 +14371,7 @@ namespace Server.MirObjects
 
         #region Awakening
 
-        public void Awakening(ulong UniqueID, AwakeType type)
+        public void Awakening(long UniqueID, AwakeType type)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.AwakeningKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14229,7 +14432,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void DowngradeAwakening(ulong UniqueID)
+        public void DowngradeAwakening(long UniqueID)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.DowngradeKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14271,7 +14474,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void DisassembleItem(ulong UniqueID)
+        public void DisassembleItem(long UniqueID)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.DisassembleKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14319,7 +14522,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void ResetAddedItem(ulong UniqueID)
+        public void ResetAddedItem(long UniqueID)
         {
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ResetKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
@@ -14358,7 +14561,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void AwakeningNeedMaterials(ulong UniqueID, AwakeType type)
+        public void AwakeningNeedMaterials(long UniqueID, AwakeType type)
         {
             if (type == AwakeType.None) return;
 
@@ -14708,6 +14911,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (GroupMembers != null)
+            {
+                ReceiveChat(string.Format("You can no longer join {0}'s group", GroupInvitation.Name), ChatType.System);
+                GroupInvitation = null;
+                return;
+            }
 
             if (GroupInvitation.GroupMembers != null && GroupInvitation.GroupMembers[0] != GroupInvitation)
             {
@@ -15396,6 +15605,7 @@ namespace Server.MirObjects
                 enemyGuild.SendMessage(string.Format("{0} has started a war", MyGuild.Name), ChatType.System);
 
                 MyGuild.Gold -= Settings.Guild_WarCost;
+                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Name = Info.Name, Amount = Settings.Guild_WarCost });
             }
         }
 
@@ -15503,7 +15713,7 @@ namespace Server.MirObjects
                 TradeItem();
 
                 Report.ItemMoved("DepositTradeItem", temp, MirGridType.Inventory, MirGridType.Trade, from, to);
-
+                
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -15552,12 +15762,10 @@ namespace Server.MirObjects
                 TradeItem();
 
                 Report.ItemMoved("RetrieveTradeItem", temp, MirGridType.Trade, MirGridType.Inventory, from, to);
+            }
 
                 Enqueue(p);
-                return;
             }
-            Enqueue(p);
-        }
 
         public void TradeRequest()
         {
@@ -15673,6 +15881,8 @@ namespace Server.MirObjects
         }
         public void TradeGold(uint amount)
         {
+            TradeUnlock();
+
             if (TradePartner == null) return;
 
             if (Account.Gold < amount)
@@ -15688,6 +15898,8 @@ namespace Server.MirObjects
         }
         public void TradeItem()
         {
+            TradeUnlock();
+
             if (TradePartner == null) return;
 
             for (int i = 0; i < Info.Trade.Length; i++)
@@ -15701,8 +15913,25 @@ namespace Server.MirObjects
 
             TradePartner.Enqueue(new S.TradeItem { TradeItems = Info.Trade });
         }
-        public void TradeConfirm(bool locked)
+
+        public void TradeUnlock()
         {
+            TradeLocked = false;
+
+            if (TradePartner != null)
+            {
+                TradePartner.TradeLocked = false;
+            }
+        }
+
+        public void TradeConfirm(bool confirm)
+        {
+            if(!confirm)
+            {
+                TradeLocked = false;
+                return;
+            }
+
             if (TradePartner == null)
             {
                 TradeCancel();
@@ -15716,7 +15945,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            TradeLocked = locked;
+            TradeLocked = true;
 
             if (TradeLocked && !TradePartner.TradeLocked)
             {
@@ -15797,6 +16026,8 @@ namespace Server.MirObjects
         }
         public void TradeCancel()
         {
+            TradeUnlock();
+
             if (TradePartner == null)
             {
                 return;
@@ -16629,7 +16860,7 @@ namespace Server.MirObjects
             mail.Send();
         }
 
-        public void SendMail(string name, string message, uint gold, ulong[] items, bool stamped)
+        public void SendMail(string name, string message, uint gold, long[] items, bool stamped)
         {
             CharacterInfo player = Envir.GetCharacterInfo(name);
 
@@ -16645,7 +16876,7 @@ namespace Server.MirObjects
 
             totalGold = gold + parcelCost;
 
-            if (Account.Gold < totalGold)
+            if (Account.Gold < totalGold || Account.Gold < gold || gold > totalGold)
             {
                 Enqueue(new S.MailSent { Result = -1 });
                 return;
@@ -16716,9 +16947,9 @@ namespace Server.MirObjects
             Enqueue(new S.MailSent { Result = 1 });
         }
 
-        public void ReadMail(ulong mailID)
+        public void ReadMail(long mailID)
         {
-            MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
+            MailInfo mail = Info.Mail.SingleOrDefault(e => e.MailID == mailID);
 
             if (mail == null) return;
 
@@ -16727,9 +16958,9 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void CollectMail(ulong mailID)
+        public void CollectMail(long mailID)
         {
-            MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
+            MailInfo mail = Info.Mail.SingleOrDefault(e => e.MailID == mailID);
 
             if (mail == null) return;
 
@@ -16773,9 +17004,9 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void DeleteMail(ulong mailID)
+        public void DeleteMail(long mailID)
         {
-            MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
+            MailInfo mail = Info.Mail.SingleOrDefault(e => e.MailID == mailID);
 
             if (mail == null) return;
 
@@ -16784,9 +17015,9 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void LockMail(ulong mailID, bool lockMail)
+        public void LockMail(long mailID, bool lockMail)
         {
-            MailInfo mail = Info.Mail.FirstOrDefault(e => e.MailID == mailID);
+            MailInfo mail = Info.Mail.SingleOrDefault(e => e.MailID == mailID);
 
             if (mail == null) return;
 
@@ -16795,7 +17026,7 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public uint GetMailCost(ulong[] items, uint gold, bool stamped)
+        public uint GetMailCost(long[] items, uint gold, bool stamped)
         {
             uint cost = 0;
 
@@ -16832,15 +17063,27 @@ namespace Server.MirObjects
         {
             List<ClientMail> mail = new List<ClientMail>();
 
-            foreach (MailInfo m in Info.Mail)
+            int start = (Info.Mail.Count - Settings.MailCapacity) > 0 ? (Info.Mail.Count - (int)Settings.MailCapacity) : 0;
+
+            for (int i = start; i < Info.Mail.Count; i++)
             {
-                foreach (UserItem itm in m.Items)
+                foreach (UserItem itm in Info.Mail[i].Items)
                 {
                     CheckItem(itm);
                 }
 
-                mail.Add(m.CreateClientMail());
+                mail.Add(Info.Mail[i].CreateClientMail());
             }
+
+            //foreach (MailInfo m in Info.Mail)
+            //{
+            //    foreach (UserItem itm in m.Items)
+            //    {
+            //        CheckItem(itm);
+            //    }
+
+            //    mail.Add(m.CreateClientMail());
+            //}
 
             NewMail = false;
 
@@ -17225,14 +17468,14 @@ namespace Server.MirObjects
             switch ((int)dropitem.Info.Effect)
             {
                 case 0://exp low/med/high
-                    dropitem.Luck = (sbyte)5;
-                    if (boxtype > 0) dropitem.Luck = (sbyte)10;
-                    if (boxtype > 1) dropitem.Luck = (sbyte)20;
+                    dropitem.Luck = 5;
+                    if (boxtype > 0) dropitem.Luck = 10;
+                    if (boxtype > 1) dropitem.Luck = 20;
                     break;
                 case 1://drop low/med/high
-                    dropitem.Luck = (sbyte)10;
-                    if (boxtype > 0) dropitem.Luck = (sbyte)20;
-                    if (boxtype > 1) dropitem.Luck = (sbyte)50;
+                    dropitem.Luck = 10;
+                    if (boxtype > 0) dropitem.Luck = 20;
+                    if (boxtype > 1) dropitem.Luck = 50;
                     break;
                 case 2://hp low/med/high
                     dropitem.HP = (byte)50;
@@ -17255,9 +17498,9 @@ namespace Server.MirObjects
                     if (boxtype > 1) dropitem.MAC = (byte)5;
                     break;
                 case 6://speed low/med/high
-                    dropitem.AttackSpeed = (sbyte)2;
-                    if (boxtype > 0) dropitem.AttackSpeed = (sbyte)3;
-                    if (boxtype > 1) dropitem.AttackSpeed = (sbyte)4;
+                    dropitem.AttackSpeed = 2;
+                    if (boxtype > 0) dropitem.AttackSpeed = 3;
+                    if (boxtype > 1) dropitem.AttackSpeed = 4;
                     break;
             }
             //string dbg = String.Format(" Img: {0} Effect: {1} Dura: {2} Exp: {3} Drop: {3} HP: {4} MP: {5} AC: {6} MAC: {7} ASpeed: {8} BagWeight: {9}", dropitem.Image, dropitem.Info.Effect, dropitem.CurrentDura, dropitem.Luck, dropitem.HP, dropitem.MP, dropitem.AC, dropitem.MAC, dropitem.AttackSpeed, dropitem.Luck);
@@ -17535,7 +17778,7 @@ namespace Server.MirObjects
                 }
             }
         }
-        public void RefineItem(ulong uniqueID)
+        public void RefineItem(long uniqueID)
         {
             Enqueue(new S.RepairItem { UniqueID = uniqueID }); //CHECK THIS.
 
@@ -17792,16 +18035,16 @@ namespace Server.MirObjects
                 return;
             }
 
+            ReceiveChat(String.Format("Your item has been returned to you."), ChatType.System);
             p.Success = true;
-            Enqueue(new S.GainedItem { Item = Info.CurrentRefine });
-            AddItem(Info.CurrentRefine);
-            RefreshBagWeight();
+
+            GainItem(Info.CurrentRefine);
+
             Info.CurrentRefine = null;
             Info.CollectTime = 0;
             Enqueue(p);
-            return;
         }
-        public void CheckRefine(ulong uniqueID)
+        public void CheckRefine(long uniqueID)
         {
             //Enqueue(new S.RepairItem { UniqueID = uniqueID });
 
@@ -17949,7 +18192,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void ReplaceWeddingRing(ulong uniqueID)
+        public void ReplaceWeddingRing(long uniqueID)
         {
             if (Dead) return;
 
@@ -18037,7 +18280,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+            if (Info.MarriedDate.GetValueOrDefault().AddDays(Settings.MarriageCooldown) > DateTime.Now)
             {
                 ReceiveChat(string.Format("You can't get married again yet, there is a {0} day cooldown after a divorce.", Settings.MarriageCooldown), ChatType.System);
                 return;
@@ -18081,7 +18324,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (player.Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+                if (player.Info.MarriedDate.GetValueOrDefault().AddDays(Settings.MarriageCooldown) > DateTime.Now)
                 {
                     ReceiveChat(string.Format("{0} can't get married again yet, there is a {1} day cooldown after divorce", player.Name, Settings.MarriageCooldown), ChatType.System);
                     return;
@@ -18157,7 +18400,7 @@ namespace Server.MirObjects
 
             if (MarriageProposal.Info.Married != 0)
             {
-                ReceiveChat(string.Format("{0} is already married.", TradeInvitation.Info.Name), ChatType.System);
+                ReceiveChat(string.Format("{0} is already married.", MarriageProposal.Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
@@ -18308,7 +18551,7 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0)
             {
-                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate, MapName = "", MarriedDays = 0 });
+                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate.GetValueOrDefault(), MapName = "", MarriedDays = 0 });
             }
             else
             {
@@ -18317,10 +18560,10 @@ namespace Server.MirObjects
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
 
                 if (player == null)
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate.GetValueOrDefault(), MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).GetValueOrDefault().TotalDays });
                 else
                 {
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate.GetValueOrDefault(), MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(DateTime.Now - Info.MarriedDate).GetValueOrDefault().TotalDays });
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
@@ -18343,7 +18586,7 @@ namespace Server.MirObjects
             PlayerObject player = Envir.GetPlayer(Lover.Name);
             if (player != null)
             {
-                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate.GetValueOrDefault(), MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).GetValueOrDefault().TotalDays });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }
@@ -18501,7 +18744,11 @@ namespace Server.MirObjects
 
         public void MentorReply(bool accept)
         {
-            if (MentorRequest == null) return;
+            if (MentorRequest == null || MentorRequest.Info == null)
+            {
+                MentorRequest = null;
+                return;
+            }
 
             if (!accept)
             {
@@ -18864,7 +19111,9 @@ namespace Server.MirObjects
             }
             else if (CurrentMap.tempConquest != null)
             {
-                if (checkPalace && CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace) CurrentMap.tempConquest.TakeConquest(this);
+                if (checkPalace && CurrentMap.Info.Index == CurrentMap.tempConquest.PalaceMap.Info.Index && CurrentMap.tempConquest.GameType == ConquestGame.CapturePalace)
+                    CurrentMap.tempConquest.TakeConquest(this);
+
                 EnterSabuk();
             }
         }

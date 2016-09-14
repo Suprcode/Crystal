@@ -368,7 +368,7 @@ namespace Client.MirScenes.Dialogs
 
             if (Selected == null) return;
 
-            NameLabel.Text = Selected.Listing.Item.Name;
+            NameLabel.Text = Selected.Listing.Item.FriendlyName;
 
             TotalPriceLabel.Text = string.Format("价格: {0:#,##0}", Selected.Listing.Price);
             SplitPriceLabel.Text = string.Format("每个: {0:#,##0.#}", Selected.Listing.Price / (float)Selected.Listing.Item.Count);
@@ -521,7 +521,7 @@ namespace Client.MirScenes.Dialogs
             public void Update(ClientAuction listing)
             {
                 Listing = listing;
-                NameLabel.Text = Listing.Item.Name;
+                NameLabel.Text = Listing.Item.FriendlyName;
                 PriceLabel.Text = Listing.Price.ToString("###,###,##0");
 
                 NameLabel.ForeColour = Listing.Item.IsAdded ? Color.Cyan : Color.White;

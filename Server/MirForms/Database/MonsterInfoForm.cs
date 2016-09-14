@@ -608,6 +608,12 @@ namespace Server
         }
         private void MonsterInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveMonsters(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

@@ -38,8 +38,6 @@ namespace Client.MirScenes.Dialogs
             Sort = true;
             Location = Center;
 
-            AfterDraw += FriendDialog_BeforeDraw;
-
             TitleLabel = new MirImageControl
             {
                 Index = 6,
@@ -59,6 +57,7 @@ namespace Client.MirScenes.Dialogs
             FriendLabel.Click += (o, e) =>
             {
                 _tempBlockedTab = false;
+                UpdateDisplay();
             };
 
             BlacklistLabel = new MirImageControl
@@ -72,6 +71,7 @@ namespace Client.MirScenes.Dialogs
             BlacklistLabel.Click += (o, e) =>
             {
                 _tempBlockedTab = true;
+                UpdateDisplay();
             };
 
             PageNumberLabel = new MirLabel
@@ -251,7 +251,7 @@ namespace Client.MirScenes.Dialogs
             #endregion
         }
 
-        void FriendDialog_BeforeDraw(object sender, EventArgs e)
+        private void UpdateDisplay()
         {
             if (!Visible) return;
 
@@ -390,7 +390,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (Visible) return;
             Visible = true;
-
+            UpdateDisplay();
             Network.Enqueue(new C.RefreshFriends());
         }
     }

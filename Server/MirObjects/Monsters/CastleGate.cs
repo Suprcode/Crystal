@@ -9,7 +9,13 @@ namespace Server.MirObjects.Monsters
 {
     public abstract class CastleGate : MonsterObject
     {
+        public ConquestObject Conquest;
+        public int GateIndex;
+
         public bool Closed;
+        private long CloseTime;
+
+        private bool AutoOpen = true;
 
         protected List<BlockingObject> BlockingObjects = new List<BlockingObject>();
 
@@ -61,13 +67,43 @@ namespace Server.MirObjects.Monsters
 
                 if (!b.Spawn(this.CurrentMap, new Point(this.CurrentLocation.X + block.X, this.CurrentLocation.Y + block.Y)))
                 {
-                    SMain.EnqueueDebugging(string.Format("CastleGate blocking mob not spawned at {0} {1}:{2}", CurrentMap.Info.FileName, block.X, block.Y));
+                    SMain.EnqueueDebugging(string.Format("{3} blocking mob not spawned at {0} {1}:{2}", CurrentMap.Info.FileName, block.X, block.Y, Info.Name));
                 }
             }
         }
         protected override void ProcessAI()
         {
             base.ProcessAI();
+
+            if(!Closed && CloseTime > 0 && CloseTime < Envir.Time)
+            {
+                CloseDoor();
+                CloseTime = 0;
+            }
+        }
+
+        protected override void ProcessSearch()
+        {
+            if (Envir.Time < SearchTime) return;
+
+            SearchTime = Envir.Time + SearchDelay;
+
+            if(Closed && AutoOpen)
+            {
+                var nearby = FindAllNearby(4, CurrentLocation);
+
+                for (int i = 0; i < nearby.Count; i++)
+                {
+                    if (nearby[i].Race != ObjectType.Player) continue;
+                    PlayerObject player = (PlayerObject)nearby[i];
+
+                    if (player.MyGuild == null || player.MyGuild.Conquest == null || player.MyGuild.Conquest != Conquest || player.WarZone) continue;
+
+                    OpenDoor();
+                    CloseTime = Envir.Time + (Settings.Second * 10);
+                    break;
+                }
+            }
         }
 
 
@@ -77,17 +113,24 @@ namespace Server.MirObjects.Monsters
 
         public override bool IsAttackTarget(MonsterObject attacker)
         {
+            if (attacker.Master != null && attacker.Master.Race == ObjectType.Player)
+            {
+                PlayerObject owner = (PlayerObject)attacker.Master;
+
+                if (owner.MyGuild != null && owner.MyGuild.Conquest != null && owner.MyGuild.Conquest == Conquest) return false;
+            }
+
             return Closed && base.IsAttackTarget(attacker);
         }
         public override bool IsAttackTarget(PlayerObject attacker)
         {
+            if (attacker.MyGuild != null && attacker.MyGuild.Conquest != null && attacker.MyGuild.Conquest == Conquest) return false;
+
             return Closed && base.IsAttackTarget(attacker);
         }
 
         protected override void ProcessRoam() { }
-
-        protected override void ProcessSearch() { }
-
+        
         public override Packet GetInfo()
         {
             return base.GetInfo();

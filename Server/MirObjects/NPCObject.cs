@@ -233,6 +233,19 @@ namespace Server.MirObjects
                     }
                 }
 
+                else if (Name == "RobotNPC")
+                {
+                    //min,hour,day,month
+
+                    if (lines[i].ToUpper().Contains("TIME"))
+                    {
+                        Regex regex = new Regex(@"\(([0-9]{1,2}),([0-9]{1,2}),([0-9]{1,1}),([0-9]{1,2})\)");
+                        Match match = regex.Match(lines[i]);
+
+                        if (!match.Success) continue;
+                    }
+                }
+
                 NPCPages.AddRange(ParsePages(lines, lines[i]));
 
             }
@@ -605,7 +618,7 @@ namespace Server.MirObjects
                     if (data.Length == 2)
                         uint.TryParse(data[1], out count);
                     goods.Count = count;
-                    goods.UniqueID = (ulong)i;
+                    goods.UniqueID = i;
 
                     Goods.Add(goods);
                 }
@@ -1058,7 +1071,7 @@ namespace Server.MirObjects
                 {
                     UserItem item = items[i];
 
-                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
+                    if (DateTime.Compare(item.BuybackExpiryDate.GetValueOrDefault().AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
                     {
                         deleteList.Add(BuyBack[playerGoods.Key][i]);
 
@@ -1169,10 +1182,21 @@ namespace Server.MirObjects
                 Name = Name,
                 NameColour = NameColour,
                 Image = Info.Image,
+                Colour = Info.Colour,
                 Location = CurrentLocation,
                 Direction = Direction,
                 QuestIDs = (from q in Quests
                             select q.Index).ToList()
+            };
+        }
+
+        public Packet GetUpdateInfo()
+        {
+            return new S.NPCImageUpdate
+            {
+                ObjectID = ObjectID,
+                Image = Info.Image,
+                Colour = Info.Colour
             };
         }
 
@@ -1255,7 +1279,7 @@ namespace Server.MirObjects
         }
         #endregion
 
-        public void Buy(PlayerObject player, ulong index, uint count)
+        public void Buy(PlayerObject player, long index, uint count)
         {
             UserItem goods = null;
 

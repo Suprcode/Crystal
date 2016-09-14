@@ -19,7 +19,7 @@ namespace Client.MirObjects
         }
         public override bool Blocking
         {
-            get { return AI == 64 || (AI == 72 && Direction == (MirDirection)6) ? false : !Dead; }
+            get { return AI == 64 || (AI == 81 && Direction == (MirDirection)6) ? false : !Dead; }
         }
         public Point ManualLocationOffset
         {

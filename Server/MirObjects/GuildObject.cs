@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Server.MirDatabase;
 using Server.MirEnvir;
+using System.Drawing;
 
 namespace Server.MirObjects
 {
@@ -14,30 +18,80 @@ namespace Server.MirObjects
         {
             get { return SMain.Envir; }
         }
-
-        public int Guildindex = 0;
-        public string Name = "";
-        public byte Level = 0;
-        public byte SparePoints = 0;
-        public long Experience = 0;
+        [Key]
+        public int Guildindex { get; set; } = 0;
+        public string Name { get; set; } = "";
+        public byte Level { get; set; } = 0;
+        public byte SparePoints { get; set; } = 0;
+        public long Experience { get; set; } = 0;
         public uint Gold = 0;
+        public long DBGold { get { return Gold; } set { Gold = (uint) value; } }
+        [NotMapped]
         public List<Rank> Ranks = new List<Rank>();
+        [NotMapped]
         public GuildStorageItem[] StoredItems = new GuildStorageItem[112];
+        [NotMapped]
         public List<GuildBuff> BuffList = new List<GuildBuff>();
-        public Int32 Votes = 0;
-        public DateTime LastVoteAttempt;
-        public bool Voting = false;
-        public bool NeedSave = false;
-        public int Membercount = 0;
-        public long MaxExperience = 0;
-        public long NextExpUpdate = 0;
-        public int MemberCap = 0;
+        public Int32 Votes { get; set; } = 0;
+        public DateTime LastVoteAttempt { get; set; }
+        public bool Voting { get; set; } = false;
+        public bool NeedSave { get; set; } = false;
+        public int Membercount { get; set; } = 0;
+        public long MaxExperience { get; set; } = 0;
+        public long NextExpUpdate { get; set; } = 0;
+        public int MemberCap { get; set; } = 0;
         public List<string> Notice = new List<string>();
+        public string DBNotice { get { return string.Join("|_|-*-|_|", Notice); } set
+        {
+            Notice = value.Split(new[] {"|_|-*-|_|"}, StringSplitOptions.RemoveEmptyEntries).ToList();
+        } }
+
         public List<GuildObject> WarringGuilds = new List<GuildObject>();
 
+        public string DBWarringGuilds
+        {
+            get { return string.Join(",", WarringGuilds.Select(w => w.Guildindex).ToList()); }
+            set
+            {
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        var idList = value.Split(',').Select(int.Parse).ToList();
+                        foreach (var i in idList)
+                        {
+                            WarringGuilds.Add(ctx.Guilds.AsNoTracking().FirstOrDefault(g => g.Guildindex == i));
+                        }
+                    }
+                }
+            }
+        }
+
+        public ushort FlagImage = 1000;
+        public Color FlagColour = Color.White;
+        [NotMapped]
         public ConquestObject Conquest;
 
         public List<GuildObject> AllyGuilds = new List<GuildObject>();
+
+        public string DBAllyGuilds
+        {
+            get { return string.Join(",", AllyGuilds.Select(w => w.Guildindex).ToList()); }
+            set
+            {
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        var idList = value.Split(',').Select(int.Parse).ToList();
+                        foreach (var i in idList)
+                        {
+                            AllyGuilds.Add(ctx.Guilds.AsNoTracking().FirstOrDefault(g => g.Guildindex == i));
+                        }
+                    }
+                }
+            }
+        }
         public int AllyCount;
 
 
@@ -57,7 +111,10 @@ namespace Server.MirObjects
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
+
+            FlagColour = Color.FromArgb(255, Envir.Random.Next(255), Envir.Random.Next(255), Envir.Random.Next(255));
         }
+
         public GuildObject(BinaryReader reader) 
         {
             int customversion = Envir.LoadCustomVersion;
@@ -128,9 +185,10 @@ namespace Server.MirObjects
             if (Level < Settings.Guild_MembercapList.Count)
                 MemberCap = Settings.Guild_MembercapList[Level];
 
-            if (version >= 66)
+            if (version > 72)
             {
-               
+                FlagImage = reader.ReadUInt16();
+                FlagColour = Color.FromArgb(reader.ReadInt32());
             }
         }
         public void Save(BinaryWriter writer)
@@ -175,7 +233,8 @@ namespace Server.MirObjects
             for (int i = 0; i < Notice.Count; i++)
                 writer.Write(Notice[i]);
 
-            //Conquest.Save(writer);
+            writer.Write(FlagImage);
+            writer.Write(FlagColour.ToArgb());   
         }
 
         public void SendMessage(string message, ChatType Type = ChatType.Guild)
@@ -186,6 +245,17 @@ namespace Server.MirObjects
                     PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                     if (player != null)
                         player.ReceiveChat(message, Type);
+                }
+        }
+
+        public void SendOutputMessage(string message, OutputMessageType Type = OutputMessageType.Guild)
+        {
+            for (int i = 0; i < Ranks.Count; i++)
+                for (int j = 0; j < Ranks[i].Members.Count; j++)
+                {
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
+                    if (player != null)
+                        player.ReceiveOutputMessage(message, Type);
                 }
         }
 

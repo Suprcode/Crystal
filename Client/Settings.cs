@@ -35,6 +35,7 @@ namespace Client
                             ShadersPath = @".\Data\Shaders\",
                             MonsterPath = @".\Data\Monster\",
                             GatePath = @".\Data\Gate\",
+                            FlagPath = @".\Data\Flag\",
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",
@@ -62,12 +63,12 @@ namespace Client
         public static int RemainingErrorLogs = 100;
 
         //Graphics
-        public static bool FullScreen = true, TopMost = true;
+        public static bool FullScreen = false, TopMost = true;
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
         public static int Resolution = 1024;
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
 
         //Network
 #if DEBUG
@@ -164,13 +165,13 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @"ftp://160.16.69.9"; //ftp://212.67.209.184
+        public static string P_Host = @"http://mirfiles.co.uk/mir2/cmir/patch/"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = true;
         public static string P_Login = "mir";
         public static string P_Password = "mir";
         public static string P_ServerName = "C#中文版";
-        public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
+        public static string P_BrowserAddress = "http://cm2cn.esy.es/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 

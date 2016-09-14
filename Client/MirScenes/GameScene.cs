@@ -289,6 +289,9 @@ namespace Client.MirScenes
                         case OutputMessageType.Quest:
                             color = Color.Gold;
                             break;
+                        case OutputMessageType.Guild:
+                            color = Color.DeepPink;
+                            break;
                         default:
                             color = Color.LimeGreen;
                             break;
@@ -1409,6 +1412,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCUpdate:
                     NPCUpdate((S.NPCUpdate)p);
                     break;
+                case (short)ServerPacketIds.NPCImageUpdate:
+                    NPCImageUpdate((S.NPCImageUpdate)p);
+                    break;
                 case (short)ServerPacketIds.MarriageRequest:
                     MarriageRequest((S.MarriageRequest)p);
                     break;
@@ -1562,6 +1568,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.ResizeInventory:
                     ResizeInventory((S.ResizeInventory)p);
+                    break;
+                case (short)ServerPacketIds.ResizeStorage:
+                    ResizeStorage((S.ResizeStorage)p);
                     break;
                 case (short)ServerPacketIds.NewIntelligentCreature:
                     NewIntelligentCreature((S.NewIntelligentCreature)p);
@@ -1718,6 +1727,7 @@ namespace Client.MirScenes
                 image.Hint = buff.ToString();
                 image.Index = buffImage;
                 image.Library = buffLibrary;
+                image.Visible = MainDialog.Visible;
 
                 if (!buff.Infinite && Math.Round((buff.Expire - CMain.Time) / 1000D) <= 5)
                 {
@@ -2426,7 +2436,16 @@ namespace Client.MirScenes
                 User.RefreshStats();
                 return;
             }
+
+            for (int i = 0; i < GameScene.User.BeltIdx; i++)
+            {
+                if (array[i] != null) continue;
+                array[i] = p.Item;
+                User.RefreshStats();
+                return;
         }
+        }
+
         private void SplitItem1(S.SplitItem1 p)
         {
             MirItemCell cell;
@@ -3256,6 +3275,22 @@ namespace Client.MirScenes
         {
             GameScene.NPCID = p.NPCID; //Updates the client with the correct NPC ID if it's manually called from the client
         }
+
+        private void NPCImageUpdate(S.NPCImageUpdate p)
+        {
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != p.ObjectID || ob.Race != ObjectType.Merchant) continue;
+
+                NPCObject npc = (NPCObject)ob;
+                npc.Image = p.Image;
+                npc.Colour = p.Colour;
+
+                npc.LoadLibrary();
+                return;
+            }
+        }
         private void DefaultNPC(S.DefaultNPC p)
         {
             GameScene.DefaultNPCID = p.ObjectID; //Updates the client with the correct Default NPC ID
@@ -3957,6 +3992,11 @@ namespace Client.MirScenes
         }
         private void UserStorage(S.UserStorage p)
         {
+            if(Storage.Length != p.Storage.Length)
+            {
+                Array.Resize(ref Storage, p.Storage.Length);
+            }
+
             Storage = p.Storage;
 
             for (int i = 0; i < Storage.Length; i++)
@@ -5160,7 +5200,7 @@ namespace Client.MirScenes
             if (InventoryDialog.Visible)
                 InventoryDialog.Hide();
 
-            MirItemCell cell = InventoryDialog.GetCell((ulong)p.removeID);
+            MirItemCell cell = InventoryDialog.GetCell(p.removeID);
             if (cell != null)
             {
                 cell.Locked = false;
@@ -5223,7 +5263,7 @@ namespace Client.MirScenes
             NewMailCounter = 0;
             User.Mail.Clear();
 
-            User.Mail = p.Mail.OrderBy(e => !e.Locked).ThenBy(e => e.DateSent).ToList();
+            User.Mail = p.Mail.OrderByDescending(e => !e.Locked).ThenByDescending(e => e.DateSent).ToList();
 
             foreach(ClientMail mail in User.Mail)
             {
@@ -5308,6 +5348,15 @@ namespace Client.MirScenes
         {
             Array.Resize(ref User.Inventory, p.Size);
             InventoryDialog.RefreshInventory2();
+        }
+
+        private void ResizeStorage(S.ResizeStorage p)
+        {
+            User.AddedStorage = true;
+
+            Array.Resize(ref Storage, p.Size);
+
+            StorageDialog.RefreshStorage2();
         }
 
         private void MailCost(S.MailCost p)
@@ -7674,7 +7723,7 @@ namespace Client.MirScenes
 
             if (HoverItem.ExpireInfo != null)
             {
-                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - DateTime.Now).TotalSeconds;
+                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - DateTime.Now).Value.TotalSeconds;
 
                 count++;
                 MirLabel EXPIRELabel = new MirLabel
@@ -9744,7 +9793,7 @@ namespace Client.MirScenes
         {
             if (M2CellInfo[p.X, p.Y].DoorIndex == 0) return true;
             Door DoorInfo = GetDoor(M2CellInfo[p.X, p.Y].DoorIndex);
-            if (DoorInfo == null) return false;//if the door doesnt excist then it isnt even being shown on screen (and cant be open lol)
+            if (DoorInfo == null) return false;//if the door doesnt exist then it isnt even being shown on screen (and cant be open lol)
             if ((DoorInfo.DoorState == 0) || (DoorInfo.DoorState == 3))
             {
                 Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });

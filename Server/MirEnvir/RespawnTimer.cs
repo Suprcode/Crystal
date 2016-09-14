@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Server.MirDatabase;
 
 namespace Server.MirEnvir
 {
     public class RespawnSave
     {
-        public bool Spawned = false;
+        public bool Spawned { get; set; } = false;
         public ulong NextSpawnTick = 0;
-        public int RespawnIndex = 0;
+        public long DBNextSpawnTick { get { return (long) NextSpawnTick; } set { NextSpawnTick = (ulong) value; } }
+        [Key]
+        public int RespawnIndex { get; set; } = 0;
 
         public RespawnSave()
         { }
@@ -25,6 +30,22 @@ namespace Server.MirEnvir
 
         public void save(BinaryWriter writer)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var dbSave = ctx.RespawnSaves.FirstOrDefault(s => s.RespawnIndex == RespawnIndex);
+                    if (dbSave == null)
+                    {
+                        ctx.RespawnSaves.Add(this);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbSave).CurrentValues.SetValues(this);
+                    }
+                    ctx.SaveChanges();
+                }
+            }
             writer.Write(Spawned);
             writer.Write(NextSpawnTick);
             writer.Write(RespawnIndex);

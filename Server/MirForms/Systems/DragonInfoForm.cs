@@ -115,6 +115,12 @@ namespace Server
 
         private void DragonInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                    Envir.SaveDragon(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

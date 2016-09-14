@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,39 @@ namespace Server.MirDatabase
 {
     public class SafeZoneInfo
     {
+        public int id { get; set; }
+        [NotMapped]
         public Point Location;
-        public ushort Size;
-        public bool StartPoint;
 
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
+
+        public ushort Size;
+        public int DBSize { get { return Size; } set { Size = (ushort) value; } }
+
+        public bool StartPoint { get; set; }
+
+        public int MapInfoIndex { get; set; }
+        [NotMapped]
         public MapInfo Info;
 
         public SafeZoneInfo()

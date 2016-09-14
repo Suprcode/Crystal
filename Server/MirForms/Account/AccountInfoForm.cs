@@ -118,7 +118,7 @@ namespace Server
             PasswordTextBox.Text = info.Password;
 
             UserNameTextBox.Text = info.UserName;
-            BirthDateTextBox.Text = info.BirthDate.ToShortDateString();
+            BirthDateTextBox.Text = info.BirthDate.GetValueOrDefault().ToShortDateString();
             QuestionTextBox.Text = info.SecretQuestion;
             AnswerTextBox.Text = info.SecretAnswer;
             EMailTextBox.Text = info.EMailAddress;
@@ -141,7 +141,7 @@ namespace Server
                 if (AccountIDTextBox.Text != info.AccountID) AccountIDTextBox.Text = string.Empty;
                 if (PasswordTextBox.Text != info.Password) PasswordTextBox.Text = string.Empty;
                 if (UserNameTextBox.Text != info.UserName) UserNameTextBox.Text = string.Empty;
-                if (BirthDateTextBox.Text != info.BirthDate.ToShortDateString()) BirthDateTextBox.Text = string.Empty;
+                if (BirthDateTextBox.Text != info.BirthDate.GetValueOrDefault().ToShortDateString()) BirthDateTextBox.Text = string.Empty;
                 if (QuestionTextBox.Text != info.SecretQuestion) QuestionTextBox.Text = string.Empty;
                 if (AnswerTextBox.Text != info.SecretAnswer) AnswerTextBox.Text = string.Empty;
                 if (EMailTextBox.Text != info.EMailAddress) EMailTextBox.Text = string.Empty;

@@ -776,7 +776,7 @@ namespace Server.MirNetwork
             {
                 if (info.ExpiryDate > DateTime.Now)
                 {
-                    Enqueue(new S.StartGameBanned { Reason = info.BanReason, ExpiryDate = info.ExpiryDate });
+                    Enqueue(new S.StartGameBanned { Reason = info.BanReason, ExpiryDate = info.ExpiryDate.GetValueOrDefault() });
                     return;
                 }
                 info.Banned = false;
@@ -784,7 +784,7 @@ namespace Server.MirNetwork
             info.BanReason = string.Empty;
             info.ExpiryDate = DateTime.MinValue;
 
-            long delay = (long) (SMain.Envir.Now - info.LastDate).TotalMilliseconds;
+            long delay = (long) (SMain.Envir.Now - info.LastDate).GetValueOrDefault().TotalMilliseconds;
 
 
             //if (delay < Settings.RelogDelay)

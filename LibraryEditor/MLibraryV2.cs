@@ -195,6 +195,14 @@ namespace LibraryEditor
             Images.Add(mImage);
         }
 
+        public void AddImage(Bitmap image, Bitmap maskImage, short x, short y)
+        {
+            MImage mImage = new MImage(image, maskImage) { X = x, Y = y };
+
+            Count++;
+            Images.Add(mImage);
+        }
+
         public void ReplaceImage(int Index, Bitmap image, short x, short y)
         {
             MImage mImage = new MImage(image) { X = x, Y = y };

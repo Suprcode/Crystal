@@ -2,17 +2,93 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
     public class DragonInfo
     {
-        public bool Enabled;
-        public string MapFileName, MonsterName, BodyName;
+        public int id { get; set; }
+        public bool Enabled { get; set; }
+        public string MapFileName { get; set; }
+        public string MonsterName { get; set; }
+        public string BodyName { get; set; }
         public Point Location, DropAreaTop, DropAreaBottom;
+
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
+
+        public string DBDropAreaTop
+        {
+            get { return DropAreaTop.X + "," + DropAreaTop.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    DropAreaTop.X = 0;
+                    DropAreaTop.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    DropAreaTop.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    DropAreaTop.Y = result;
+                }
+            }
+        }
+
+        public string DBDropAreaBottom
+        {
+            get { return DropAreaBottom.X + "," + DropAreaBottom.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    DropAreaBottom.X = 0;
+                    DropAreaBottom.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    DropAreaBottom.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    DropAreaBottom.Y = result;
+                }
+            }
+        }
         public List<DropInfo>[] Drops = new List<DropInfo>[Globals.MaxDragonLevel];
         public long[] Exps = new long[Globals.MaxDragonLevel - 1];
+
+        public string DBExps
+        {
+            get { return string.Join(",", Exps); }
+            set { Exps = string.IsNullOrEmpty(value) ? new long[Globals.MaxDragonLevel - 1] : value.Split(',').Select(long.Parse).ToArray(); }
+        }
 
         public byte Level;
         public long Experience;

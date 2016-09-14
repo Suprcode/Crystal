@@ -2,6 +2,8 @@
 using Server.MirObjects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,11 @@ namespace Server.MirDatabase
 {
     public class QuestInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
 
         public uint NpcIndex;
+        [NotMapped]
         public NPCInfo NpcInfo;
 
         private uint _finishNpcIndex;
@@ -25,23 +29,30 @@ namespace Server.MirDatabase
             set { _finishNpcIndex = value; }
         }
 
-        public string 
-            Name = string.Empty, 
-            Group = string.Empty, 
-            FileName = string.Empty, 
-            GotoMessage = string.Empty, 
-            KillMessage = string.Empty, 
-            ItemMessage = string.Empty,
-            FlagMessage = string.Empty;
+        public string Name { get; set; } = string.Empty;
+
+        public string Group { get; set; } = string.Empty;
+
+        public string FileName { get; set; } = string.Empty;
+
+        public string GotoMessage { get; set; } = string.Empty;
+
+        public string KillMessage { get; set; } = string.Empty;
+
+        public string ItemMessage { get; set; } = string.Empty;
+
+        public string FlagMessage { get; set; } = string.Empty;
 
         public List<string> Description = new List<string>();
-        public List<string> TaskDescription = new List<string>(); 
-        public List<string> CompletionDescription = new List<string>(); 
+        public List<string> TaskDescription = new List<string>();
+        public List<string> CompletionDescription = new List<string>();
 
-        public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
-        public RequiredClass RequiredClass = RequiredClass.无;
+        public int RequiredMinLevel { get; set; }
+        public int RequiredMaxLevel { get; set; }
+        public int RequiredQuest { get; set; }
+        public RequiredClass RequiredClass { get; set; } = RequiredClass.无;
 
-        public QuestType Type;
+        public QuestType Type { get; set; }
 
         public List<QuestItemTask> CarryItems = new List<QuestItemTask>(); 
 
@@ -50,9 +61,13 @@ namespace Server.MirDatabase
         public List<QuestFlagTask> FlagTasks = new List<QuestFlagTask>();
 
         public uint GoldReward;
+        //public long DBGoldReward { get { return GoldReward; } set { GoldReward = (uint) value; } }
         public uint ExpReward;
+        //public long DBExpReward { get { return ExpReward;} set { ExpReward = (uint) value; } }
         public uint CreditReward;
+        //public long DBCreditReward { get { return CreditReward;} set { CreditReward = (uint) value; } }
         public List<QuestItemReward> FixedRewards = new List<QuestItemReward>();
+        
         public List<QuestItemReward> SelectRewards = new List<QuestItemReward>();
 
         private Regex _regexMessage = new Regex("\"([^\"]*)\"");
@@ -401,9 +416,13 @@ namespace Server.MirDatabase
             info.ItemMessage = data[6];
             info.FlagMessage = data[7];
 
-            int.TryParse(data[8], out info.RequiredMinLevel);
-            int.TryParse(data[9], out info.RequiredMaxLevel);
-            int.TryParse(data[10], out info.RequiredQuest);
+            int result;
+            int.TryParse(data[8], out result);
+            info.RequiredMinLevel = result;
+            int.TryParse(data[9], out result);
+            info.RequiredMaxLevel = result;
+            int.TryParse(data[10], out result);
+            info.RequiredQuest = result;
 
             byte.TryParse(data[11], out temp);
 

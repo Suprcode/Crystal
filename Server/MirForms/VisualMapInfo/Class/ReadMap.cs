@@ -36,6 +36,8 @@ namespace Server.MirForms.VisualMapInfo.Class
                 return 7;
             if ((input[0] == 0xC8) && (input[2] == 0xC8) && (input[4] == 0x0D)) // Shortys Map Save
                 return 8;
+            if ((input[2] == 0x43) && (input[3] == 0x23)) //C#
+                return 100;
 
             return 0;
         }
@@ -320,6 +322,41 @@ namespace Server.MirForms.VisualMapInfo.Class
                 }
         }
 
+        private void LoadMapCellsv100(byte[] fileBytes)
+        {
+            int offSet = 4;
+
+            if ((fileBytes[0] != 1) || (fileBytes[1] != 0)) return;//only support version 1 atm;
+
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            Cells = new Cell[Width, Height];
+
+            offSet = 8;
+
+            clippingZone = new Bitmap(Width, Height);
+
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    offSet += 2;
+
+                    if (Cells[x, y] == null)
+                        clippingZone.SetPixel(x, y, Color.WhiteSmoke);
+
+                    if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+                        clippingZone.SetPixel(x, y, Color.Black);
+
+                    offSet += 10;
+
+                    if ((BitConverter.ToInt16(fileBytes, offSet) & 0x8000) != 0)
+                        clippingZone.SetPixel(x, y, Color.Black);
+
+                    offSet += 14;
+                }
+        }
+
         public void Load()
         {
             try
@@ -373,6 +410,11 @@ namespace Server.MirForms.VisualMapInfo.Class
                         case 8:
                             LoadMapCellsv8(fileBytes);
                             mapFormat = "Shortys";
+                            break;
+
+                        case 100:
+                            LoadMapCellsv100(fileBytes);
+                            mapFormat = "C#";
                             break;
                     }
                 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Server.MirDatabase;
 using Server.MirEnvir;
 
 namespace Server
@@ -34,6 +35,12 @@ namespace Server
 
         private void GameShop_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (Settings.UseSQLServer)
+            {
+                using(var ctx = new DataContext())
+                    Envir.SaveGameShop(ctx);
+                return;
+            }
             Envir.SaveDB();
         }
 

@@ -64,12 +64,15 @@
             this.PasswordCheckBox = new System.Windows.Forms.CheckBox();
             this.AccountCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.UseSQLServerCheckbox = new System.Windows.Forms.CheckBox();
             this.SaveDelayTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
+            this.SaveDBButton = new System.Windows.Forms.Button();
+            this.SaveAccount = new System.Windows.Forms.Button();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -444,6 +447,9 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.SaveAccount);
+            this.tabPage4.Controls.Add(this.SaveDBButton);
+            this.tabPage4.Controls.Add(this.UseSQLServerCheckbox);
             this.tabPage4.Controls.Add(this.SaveDelayTextBox);
             this.tabPage4.Controls.Add(this.label6);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -453,6 +459,17 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "数据库";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // UseSQLServerCheckbox
+            // 
+            this.UseSQLServerCheckbox.AutoSize = true;
+            this.UseSQLServerCheckbox.Location = new System.Drawing.Point(20, 41);
+            this.UseSQLServerCheckbox.Margin = new System.Windows.Forms.Padding(2);
+            this.UseSQLServerCheckbox.Name = "UseSQLServerCheckbox";
+            this.UseSQLServerCheckbox.Size = new System.Drawing.Size(96, 16);
+            this.UseSQLServerCheckbox.TabIndex = 26;
+            this.UseSQLServerCheckbox.Text = "UseSQLServer";
+            this.UseSQLServerCheckbox.UseVisualStyleBackColor = true;
             // 
             // SaveDelayTextBox
             // 
@@ -510,6 +527,26 @@
             // 
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
+            // 
+            // SaveDBButton
+            // 
+            this.SaveDBButton.Location = new System.Drawing.Point(20, 62);
+            this.SaveDBButton.Name = "SaveDBButton";
+            this.SaveDBButton.Size = new System.Drawing.Size(75, 23);
+            this.SaveDBButton.TabIndex = 27;
+            this.SaveDBButton.Text = "SaveDB";
+            this.SaveDBButton.UseVisualStyleBackColor = true;
+            this.SaveDBButton.Click += new System.EventHandler(this.SaveDBButton_Click);
+            // 
+            // SaveAccount
+            // 
+            this.SaveAccount.Location = new System.Drawing.Point(101, 62);
+            this.SaveAccount.Name = "SaveAccount";
+            this.SaveAccount.Size = new System.Drawing.Size(81, 23);
+            this.SaveAccount.TabIndex = 28;
+            this.SaveAccount.Text = "SaveAccount";
+            this.SaveAccount.UseVisualStyleBackColor = true;
+            this.SaveAccount.Click += new System.EventHandler(this.SaveAccount_Click);
             // 
             // ConfigForm
             // 
@@ -582,5 +619,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button SaveDBButton;
+        private System.Windows.Forms.Button SaveAccount;
     }
 }

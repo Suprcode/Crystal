@@ -160,7 +160,7 @@ namespace Client.MirScenes.Dialogs
             Visible = true;
         }
 
-        public MirItemCell GetCell(ulong id)
+        public MirItemCell GetCell(long id)
         {
             for (int i = 0; i < Grid.Length; i++)
             {

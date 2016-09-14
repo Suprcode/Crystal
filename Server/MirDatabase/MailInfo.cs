@@ -2,6 +2,9 @@
 using Server.MirObjects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,39 +13,55 @@ namespace Server.MirDatabase
 {
     public class MailInfo
     {
-        public ulong MailID;
+        [Key]
+        public long MailID { get; set; }
 
-        public string Sender;
+        public string Sender { get; set; }
+        //[ForeignKey("RecipientInfo")]
+        public int RecipientIndex { get; set; }
+        
+        public CharacterInfo RecipientInfo { get; set; }
+        //[ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        
+        public CharacterInfo CharacterInfo { get; set; }
 
-        public int RecipientIndex;
-        public CharacterInfo RecipientInfo;
+        public string Message { get; set; } = string.Empty;
+        [NotMapped]
+        public uint Gold { get; set; } = 0;
 
-        public string Message = string.Empty;
-        public uint Gold = 0;
+        public long DBGold
+        {
+            get { return Gold; }
+            set { Gold = (uint) value; }
+        }
         public List<UserItem> Items = new List<UserItem>();
 
-        public DateTime DateSent, DateOpened;
-
+        public DateTime? DateSent { get; set; } = SqlDateTime.MinValue.Value;
+        public DateTime? DateOpened { get; set; } = SqlDateTime.MinValue.Value;
+        [NotMapped]
         public bool Sent
         {
             get { return DateSent > DateTime.MinValue; }
         }
-
+        [NotMapped]
         public bool Opened
         {
             get { return DateOpened > DateTime.MinValue; }
         }
 
-        public bool Locked;
+        public bool Locked { get; set; }
 
-        public bool Collected;
-
+        public bool Collected { get; set; }
+        [NotMapped]
         public bool Parcel //parcel if item contains gold or items.
         {
             get { return Gold > 0 || Items.Count > 0; }
         }
 
-        public bool CanReply;
+        public bool CanReply { get; set; }
+
+        public MailInfo() { }
 
         public MailInfo(int recipientIndex, bool canReply = false)
         {
@@ -54,7 +73,7 @@ namespace Server.MirDatabase
 
         public MailInfo(BinaryReader reader, int version, int customversion)
         {
-            MailID = reader.ReadUInt64();
+            MailID = (long) reader.ReadUInt64();
             Sender = reader.ReadString();
             RecipientIndex = reader.ReadInt32();
             Message = reader.ReadString();
@@ -79,6 +98,36 @@ namespace Server.MirDatabase
 
         public void Save(BinaryWriter writer)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var dbMail = ctx.Mails.FirstOrDefault(m => m.MailID == MailID);
+                    if (dbMail == null)
+                    {
+                        ctx.Mails.Add(this);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbMail).CurrentValues.SetValues(this);
+                    }
+                    ctx.SaveChanges();
+                    foreach (var item in Items)
+                    {
+                        var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbItem == null)
+                        {
+                            ctx.UserItems.Add(item);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbItem).CurrentValues.SetValues(item);
+                        }
+                        ctx.SaveChanges();
+                    }
+                }
+                return;
+            }
             writer.Write(MailID);
             writer.Write(Sender);
             writer.Write(RecipientIndex);
@@ -89,8 +138,8 @@ namespace Server.MirDatabase
             for (int i = 0; i < Items.Count; i++)
                 Items[i].Save(writer);
 
-            writer.Write(DateSent.ToBinary());
-            writer.Write(DateOpened.ToBinary());
+            writer.Write(DateSent.GetValueOrDefault().ToBinary());
+            writer.Write(DateOpened.GetValueOrDefault().ToBinary());
 
             writer.Write(Locked);
             writer.Write(Collected);
@@ -171,9 +220,23 @@ namespace Server.MirDatabase
                 Items = Items,
                 Opened = Opened,
                 Collected = Collected,
-                DateSent = DateSent
+                DateSent = DateSent.GetValueOrDefault()
             };
         }
+    }
+
+    public class MailItem
+    {
+        [Key]
+        public long Index { get; set; }
+        [ForeignKey("MailInfo")]
+        public long MailID { get; set; }
+        
+        public MailInfo MailInfo { get; set; }
+        [ForeignKey("UserItem")]
+        public long ItemUniqueID { get; set; }
+        
+        public UserItem UserItem { get; set; }
     }
 
     // player bool NewMail (process in envir loop) - send all mail on login

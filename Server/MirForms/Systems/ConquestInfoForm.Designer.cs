@@ -40,13 +40,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Name_textbox = new System.Windows.Forms.TextBox();
             this.Maps_tab = new System.Windows.Forms.TabPage();
-            this.Objective_gb = new System.Windows.Forms.GroupBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.ObSize_textbox = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.ObLocX_textbox = new System.Windows.Forms.TextBox();
-            this.ObLocY_textbox = new System.Windows.Forms.TextBox();
+            this.FullMap_checkbox = new System.Windows.Forms.CheckBox();
             this.RemoveMap_button = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.Size_textbox = new System.Windows.Forms.TextBox();
@@ -57,10 +51,8 @@
             this.LocY_textbox = new System.Windows.Forms.TextBox();
             this.AddExtraMap_button = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.ExtraMaps_combo = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.PalaceMap_combo = new System.Windows.Forms.ComboBox();
             this.ConquestMap_combo = new System.Windows.Forms.ComboBox();
             this.Maps_listbox = new System.Windows.Forms.ListBox();
             this.Times_tab = new System.Windows.Forms.TabPage();
@@ -77,6 +69,33 @@
             this.WarLength_num = new System.Windows.Forms.NumericUpDown();
             this.label31 = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
+            this.games_tab = new System.Windows.Forms.TabPage();
+            this.GameTabs = new System.Windows.Forms.TabControl();
+            this.palace_tab = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.PalaceMap_combo = new System.Windows.Forms.ComboBox();
+            this.king_tab = new System.Windows.Forms.TabPage();
+            this.Objective_gb = new System.Windows.Forms.GroupBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.ObSize_textbox = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.ObLocX_textbox = new System.Windows.Forms.TextBox();
+            this.ObLocY_textbox = new System.Windows.Forms.TextBox();
+            this.control_tab = new System.Windows.Forms.TabPage();
+            this.RemoveControl_button = new System.Windows.Forms.Button();
+            this.AddControl_button = new System.Windows.Forms.Button();
+            this.Control_gb = new System.Windows.Forms.GroupBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.ControlFilename_textbox = new System.Windows.Forms.TextBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.ControlName_textbox = new System.Windows.Forms.TextBox();
+            this.label49 = new System.Windows.Forms.Label();
+            this.label50 = new System.Windows.Forms.Label();
+            this.ControlYLoc_textbox = new System.Windows.Forms.TextBox();
+            this.label51 = new System.Windows.Forms.Label();
+            this.ControlXLoc_textbox = new System.Windows.Forms.TextBox();
+            this.Controls_listbox = new System.Windows.Forms.ListBox();
             this.Guards_tab = new System.Windows.Forms.TabPage();
             this.RemoveGuard_button = new System.Windows.Forms.Button();
             this.AddGuard_button = new System.Windows.Forms.Button();
@@ -125,7 +144,7 @@
             this.label22 = new System.Windows.Forms.Label();
             this.WallXLoc_textbox = new System.Windows.Forms.TextBox();
             this.Walls_listbox = new System.Windows.Forms.ListBox();
-            this.Siege_ta = new System.Windows.Forms.TabPage();
+            this.Siege_tab = new System.Windows.Forms.TabPage();
             this.RemoveSiege_button = new System.Windows.Forms.Button();
             this.AddSiege_button = new System.Windows.Forms.Button();
             this.Siege_gb = new System.Windows.Forms.GroupBox();
@@ -141,24 +160,46 @@
             this.label41 = new System.Windows.Forms.Label();
             this.SiegeXLoc_textbox = new System.Windows.Forms.TextBox();
             this.Siege_listbox = new System.Windows.Forms.ListBox();
+            this.flags_tab = new System.Windows.Forms.TabPage();
+            this.RemoveFlag_button = new System.Windows.Forms.Button();
+            this.AddFlag_button = new System.Windows.Forms.Button();
+            this.Flag_gb = new System.Windows.Forms.GroupBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.FlagFilename_textbox = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.FlagName_textbox = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.FlagYLoc_textbox = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.FlagXLoc_textbox = new System.Windows.Forms.TextBox();
+            this.Flags_listbox = new System.Windows.Forms.ListBox();
             this.AddConq_button = new System.Windows.Forms.Button();
             this.RemoveConq_button = new System.Windows.Forms.Button();
             this.Main_tabs.SuspendLayout();
             this.Info_tab.SuspendLayout();
             this.Maps_tab.SuspendLayout();
-            this.Objective_gb.SuspendLayout();
             this.Times_tab.SuspendLayout();
             this.WarTimes_gb.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StartHour_num)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WarLength_num)).BeginInit();
+            this.games_tab.SuspendLayout();
+            this.GameTabs.SuspendLayout();
+            this.palace_tab.SuspendLayout();
+            this.king_tab.SuspendLayout();
+            this.Objective_gb.SuspendLayout();
+            this.control_tab.SuspendLayout();
+            this.Control_gb.SuspendLayout();
             this.Guards_tab.SuspendLayout();
             this.Archer_gb.SuspendLayout();
             this.Gates_tab.SuspendLayout();
             this.Gates_gb.SuspendLayout();
             this.Walls_tab.SuspendLayout();
             this.Walls_gb.SuspendLayout();
-            this.Siege_ta.SuspendLayout();
+            this.Siege_tab.SuspendLayout();
             this.Siege_gb.SuspendLayout();
+            this.flags_tab.SuspendLayout();
+            this.Flag_gb.SuspendLayout();
             this.SuspendLayout();
             // 
             // ConquestInfoListBox
@@ -171,7 +212,7 @@
             this.ConquestInfoListBox.ItemHeight = 14;
             this.ConquestInfoListBox.Location = new System.Drawing.Point(12, 13);
             this.ConquestInfoListBox.Name = "ConquestInfoListBox";
-            this.ConquestInfoListBox.Size = new System.Drawing.Size(189, 214);
+            this.ConquestInfoListBox.Size = new System.Drawing.Size(200, 214);
             this.ConquestInfoListBox.TabIndex = 8;
             this.ConquestInfoListBox.SelectedIndexChanged += new System.EventHandler(this.ConquestInfoListBox_SelectedIndexChanged);
             // 
@@ -180,15 +221,17 @@
             this.Main_tabs.Controls.Add(this.Info_tab);
             this.Main_tabs.Controls.Add(this.Maps_tab);
             this.Main_tabs.Controls.Add(this.Times_tab);
+            this.Main_tabs.Controls.Add(this.games_tab);
             this.Main_tabs.Controls.Add(this.Guards_tab);
             this.Main_tabs.Controls.Add(this.Gates_tab);
             this.Main_tabs.Controls.Add(this.Walls_tab);
-            this.Main_tabs.Controls.Add(this.Siege_ta);
+            this.Main_tabs.Controls.Add(this.Siege_tab);
+            this.Main_tabs.Controls.Add(this.flags_tab);
             this.Main_tabs.Enabled = false;
             this.Main_tabs.Location = new System.Drawing.Point(207, 12);
             this.Main_tabs.Name = "Main_tabs";
             this.Main_tabs.SelectedIndex = 0;
-            this.Main_tabs.Size = new System.Drawing.Size(384, 242);
+            this.Main_tabs.Size = new System.Drawing.Size(404, 242);
             this.Main_tabs.TabIndex = 9;
             // 
             // Info_tab
@@ -205,7 +248,7 @@
             this.Info_tab.Location = new System.Drawing.Point(4, 22);
             this.Info_tab.Name = "Info_tab";
             this.Info_tab.Padding = new System.Windows.Forms.Padding(3);
-            this.Info_tab.Size = new System.Drawing.Size(376, 216);
+            this.Info_tab.Size = new System.Drawing.Size(396, 216);
             this.Info_tab.TabIndex = 0;
             this.Info_tab.Text = "信息";
             this.Info_tab.UseVisualStyleBackColor = true;
@@ -289,7 +332,7 @@
             // 
             // Maps_tab
             // 
-            this.Maps_tab.Controls.Add(this.Objective_gb);
+            this.Maps_tab.Controls.Add(this.FullMap_checkbox);
             this.Maps_tab.Controls.Add(this.RemoveMap_button);
             this.Maps_tab.Controls.Add(this.label6);
             this.Maps_tab.Controls.Add(this.Size_textbox);
@@ -300,20 +343,18 @@
             this.Maps_tab.Controls.Add(this.LocY_textbox);
             this.Maps_tab.Controls.Add(this.AddExtraMap_button);
             this.Maps_tab.Controls.Add(this.label12);
-            this.Maps_tab.Controls.Add(this.label8);
             this.Maps_tab.Controls.Add(this.ExtraMaps_combo);
             this.Maps_tab.Controls.Add(this.label7);
-            this.Maps_tab.Controls.Add(this.PalaceMap_combo);
             this.Maps_tab.Controls.Add(this.ConquestMap_combo);
             this.Maps_tab.Controls.Add(this.Maps_listbox);
             this.Maps_tab.Location = new System.Drawing.Point(4, 22);
             this.Maps_tab.Name = "Maps_tab";
-            this.Maps_tab.Size = new System.Drawing.Size(376, 216);
+            this.Maps_tab.Size = new System.Drawing.Size(396, 216);
             this.Maps_tab.TabIndex = 2;
             this.Maps_tab.Text = "地图";
             this.Maps_tab.UseVisualStyleBackColor = true;
             // 
-            // Objective_gb
+            // FullMap_checkbox
             // 
             this.Objective_gb.Controls.Add(this.label28);
             this.Objective_gb.Controls.Add(this.ObSize_textbox);
@@ -327,6 +368,14 @@
             this.Objective_gb.TabIndex = 51;
             this.Objective_gb.TabStop = false;
             this.Objective_gb.Text = "目标";
+            this.FullMap_checkbox.AutoSize = true;
+            this.FullMap_checkbox.Location = new System.Drawing.Point(34, 129);
+            this.FullMap_checkbox.Name = "FullMap_checkbox";
+            this.FullMap_checkbox.Size = new System.Drawing.Size(65, 17);
+            this.FullMap_checkbox.TabIndex = 51;
+            this.FullMap_checkbox.Text = "Full Map";
+            this.FullMap_checkbox.UseVisualStyleBackColor = true;
+            this.FullMap_checkbox.CheckedChanged += new System.EventHandler(this.FullMap_checkbox_CheckedChanged);
             // 
             // label28
             // 
@@ -384,7 +433,7 @@
             // 
             // RemoveMap_button
             // 
-            this.RemoveMap_button.Location = new System.Drawing.Point(340, 182);
+            this.RemoveMap_button.Location = new System.Drawing.Point(359, 111);
             this.RemoveMap_button.Name = "RemoveMap_button";
             this.RemoveMap_button.Size = new System.Drawing.Size(25, 23);
             this.RemoveMap_button.TabIndex = 50;
@@ -458,7 +507,7 @@
             // 
             // AddExtraMap_button
             // 
-            this.AddExtraMap_button.Location = new System.Drawing.Point(306, 182);
+            this.AddExtraMap_button.Location = new System.Drawing.Point(328, 111);
             this.AddExtraMap_button.Name = "AddExtraMap_button";
             this.AddExtraMap_button.Size = new System.Drawing.Size(25, 23);
             this.AddExtraMap_button.TabIndex = 42;
@@ -470,7 +519,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.label12.Location = new System.Drawing.Point(177, 86);
+            this.label12.Location = new System.Drawing.Point(177, 14);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(125, 14);
             this.label12.TabIndex = 40;
@@ -490,7 +539,7 @@
             // 
             this.ExtraMaps_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ExtraMaps_combo.FormattingEnabled = true;
-            this.ExtraMaps_combo.Location = new System.Drawing.Point(180, 183);
+            this.ExtraMaps_combo.Location = new System.Drawing.Point(180, 111);
             this.ExtraMaps_combo.Name = "ExtraMaps_combo";
             this.ExtraMaps_combo.Size = new System.Drawing.Size(125, 21);
             this.ExtraMaps_combo.TabIndex = 41;
@@ -504,16 +553,6 @@
             this.label7.Size = new System.Drawing.Size(55, 14);
             this.label7.TabIndex = 38;
             this.label7.Text = "战争地图";
-            // 
-            // PalaceMap_combo
-            // 
-            this.PalaceMap_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PalaceMap_combo.FormattingEnabled = true;
-            this.PalaceMap_combo.Location = new System.Drawing.Point(17, 183);
-            this.PalaceMap_combo.Name = "PalaceMap_combo";
-            this.PalaceMap_combo.Size = new System.Drawing.Size(145, 21);
-            this.PalaceMap_combo.TabIndex = 37;
-            this.PalaceMap_combo.SelectedIndexChanged += new System.EventHandler(this.PalaceMap_combo_SelectedIndexChanged);
             // 
             // ConquestMap_combo
             // 
@@ -533,9 +572,9 @@
             this.Maps_listbox.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Maps_listbox.FormattingEnabled = true;
             this.Maps_listbox.ItemHeight = 14;
-            this.Maps_listbox.Location = new System.Drawing.Point(180, 102);
+            this.Maps_listbox.Location = new System.Drawing.Point(180, 30);
             this.Maps_listbox.Name = "Maps_listbox";
-            this.Maps_listbox.Size = new System.Drawing.Size(184, 74);
+            this.Maps_listbox.Size = new System.Drawing.Size(204, 74);
             this.Maps_listbox.TabIndex = 10;
             this.Maps_listbox.SelectedIndexChanged += new System.EventHandler(this.Maps_listbox_SelectedIndexChanged);
             // 
@@ -549,7 +588,7 @@
             this.Times_tab.Controls.Add(this.label35);
             this.Times_tab.Location = new System.Drawing.Point(4, 22);
             this.Times_tab.Name = "Times_tab";
-            this.Times_tab.Size = new System.Drawing.Size(376, 216);
+            this.Times_tab.Size = new System.Drawing.Size(396, 216);
             this.Times_tab.TabIndex = 5;
             this.Times_tab.Text = "时间";
             this.Times_tab.UseVisualStyleBackColor = true;
@@ -709,6 +748,285 @@
             this.label35.TabIndex = 74;
             this.label35.Text = "(分钟)";
             // 
+            // games_tab
+            // 
+            this.games_tab.Controls.Add(this.GameTabs);
+            this.games_tab.Location = new System.Drawing.Point(4, 22);
+            this.games_tab.Name = "games_tab";
+            this.games_tab.Size = new System.Drawing.Size(396, 216);
+            this.games_tab.TabIndex = 8;
+            this.games_tab.Text = "Games";
+            this.games_tab.UseVisualStyleBackColor = true;
+            // 
+            // GameTabs
+            // 
+            this.GameTabs.Controls.Add(this.palace_tab);
+            this.GameTabs.Controls.Add(this.king_tab);
+            this.GameTabs.Controls.Add(this.control_tab);
+            this.GameTabs.Location = new System.Drawing.Point(3, 3);
+            this.GameTabs.Name = "GameTabs";
+            this.GameTabs.SelectedIndex = 0;
+            this.GameTabs.Size = new System.Drawing.Size(390, 210);
+            this.GameTabs.TabIndex = 0;
+            // 
+            // palace_tab
+            // 
+            this.palace_tab.Controls.Add(this.label8);
+            this.palace_tab.Controls.Add(this.PalaceMap_combo);
+            this.palace_tab.Location = new System.Drawing.Point(4, 22);
+            this.palace_tab.Name = "palace_tab";
+            this.palace_tab.Padding = new System.Windows.Forms.Padding(3);
+            this.palace_tab.Size = new System.Drawing.Size(382, 184);
+            this.palace_tab.TabIndex = 1;
+            this.palace_tab.Text = "Palace";
+            this.palace_tab.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(6, 3);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(73, 16);
+            this.label8.TabIndex = 41;
+            this.label8.Text = "Palace Map";
+            // 
+            // PalaceMap_combo
+            // 
+            this.PalaceMap_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PalaceMap_combo.FormattingEnabled = true;
+            this.PalaceMap_combo.Location = new System.Drawing.Point(9, 19);
+            this.PalaceMap_combo.Name = "PalaceMap_combo";
+            this.PalaceMap_combo.Size = new System.Drawing.Size(145, 21);
+            this.PalaceMap_combo.TabIndex = 40;
+            this.PalaceMap_combo.SelectedIndexChanged += new System.EventHandler(this.PalaceMap_combo_SelectedIndexChanged);
+            // 
+            // king_tab
+            // 
+            this.king_tab.Controls.Add(this.Objective_gb);
+            this.king_tab.Location = new System.Drawing.Point(4, 22);
+            this.king_tab.Name = "king_tab";
+            this.king_tab.Size = new System.Drawing.Size(382, 184);
+            this.king_tab.TabIndex = 2;
+            this.king_tab.Text = "King";
+            this.king_tab.UseVisualStyleBackColor = true;
+            // 
+            // Objective_gb
+            // 
+            this.Objective_gb.Controls.Add(this.label28);
+            this.Objective_gb.Controls.Add(this.ObSize_textbox);
+            this.Objective_gb.Controls.Add(this.label29);
+            this.Objective_gb.Controls.Add(this.label30);
+            this.Objective_gb.Controls.Add(this.ObLocX_textbox);
+            this.Objective_gb.Controls.Add(this.ObLocY_textbox);
+            this.Objective_gb.Location = new System.Drawing.Point(3, 3);
+            this.Objective_gb.Name = "Objective_gb";
+            this.Objective_gb.Size = new System.Drawing.Size(184, 74);
+            this.Objective_gb.TabIndex = 52;
+            this.Objective_gb.TabStop = false;
+            this.Objective_gb.Text = "Objective";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Location = new System.Drawing.Point(77, 47);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(32, 16);
+            this.label28.TabIndex = 56;
+            this.label28.Text = "Size";
+            // 
+            // ObSize_textbox
+            // 
+            this.ObSize_textbox.Location = new System.Drawing.Point(110, 45);
+            this.ObSize_textbox.Name = "ObSize_textbox";
+            this.ObSize_textbox.Size = new System.Drawing.Size(48, 21);
+            this.ObSize_textbox.TabIndex = 55;
+            this.ObSize_textbox.TextChanged += new System.EventHandler(this.ObSize_textbox_TextChanged);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(94, 19);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(15, 16);
+            this.label29.TabIndex = 54;
+            this.label29.Text = "Y";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.Location = new System.Drawing.Point(18, 19);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(16, 16);
+            this.label30.TabIndex = 53;
+            this.label30.Text = "X";
+            // 
+            // ObLocX_textbox
+            // 
+            this.ObLocX_textbox.Location = new System.Drawing.Point(35, 17);
+            this.ObLocX_textbox.Name = "ObLocX_textbox";
+            this.ObLocX_textbox.Size = new System.Drawing.Size(41, 21);
+            this.ObLocX_textbox.TabIndex = 52;
+            this.ObLocX_textbox.TextChanged += new System.EventHandler(this.ObLocX_textbox_TextChanged);
+            // 
+            // ObLocY_textbox
+            // 
+            this.ObLocY_textbox.Location = new System.Drawing.Point(110, 17);
+            this.ObLocY_textbox.Name = "ObLocY_textbox";
+            this.ObLocY_textbox.Size = new System.Drawing.Size(48, 21);
+            this.ObLocY_textbox.TabIndex = 50;
+            this.ObLocY_textbox.TextChanged += new System.EventHandler(this.ObLocY_textbox_TextChanged);
+            // 
+            // control_tab
+            // 
+            this.control_tab.Controls.Add(this.RemoveControl_button);
+            this.control_tab.Controls.Add(this.AddControl_button);
+            this.control_tab.Controls.Add(this.Control_gb);
+            this.control_tab.Controls.Add(this.Controls_listbox);
+            this.control_tab.Location = new System.Drawing.Point(4, 22);
+            this.control_tab.Name = "control_tab";
+            this.control_tab.Size = new System.Drawing.Size(382, 184);
+            this.control_tab.TabIndex = 3;
+            this.control_tab.Text = "Control";
+            this.control_tab.UseVisualStyleBackColor = true;
+            // 
+            // RemoveControl_button
+            // 
+            this.RemoveControl_button.Location = new System.Drawing.Point(3, 153);
+            this.RemoveControl_button.Name = "RemoveControl_button";
+            this.RemoveControl_button.Size = new System.Drawing.Size(23, 22);
+            this.RemoveControl_button.TabIndex = 26;
+            this.RemoveControl_button.Text = "-";
+            this.RemoveControl_button.UseVisualStyleBackColor = true;
+            this.RemoveControl_button.Click += new System.EventHandler(this.RemoveControl_button_Click);
+            // 
+            // AddControl_button
+            // 
+            this.AddControl_button.Location = new System.Drawing.Point(171, 153);
+            this.AddControl_button.Name = "AddControl_button";
+            this.AddControl_button.Size = new System.Drawing.Size(24, 22);
+            this.AddControl_button.TabIndex = 24;
+            this.AddControl_button.Text = "+";
+            this.AddControl_button.UseVisualStyleBackColor = true;
+            this.AddControl_button.Click += new System.EventHandler(this.AddControl_button_Click);
+            // 
+            // Control_gb
+            // 
+            this.Control_gb.Controls.Add(this.label44);
+            this.Control_gb.Controls.Add(this.ControlFilename_textbox);
+            this.Control_gb.Controls.Add(this.label48);
+            this.Control_gb.Controls.Add(this.ControlName_textbox);
+            this.Control_gb.Controls.Add(this.label49);
+            this.Control_gb.Controls.Add(this.label50);
+            this.Control_gb.Controls.Add(this.ControlYLoc_textbox);
+            this.Control_gb.Controls.Add(this.label51);
+            this.Control_gb.Controls.Add(this.ControlXLoc_textbox);
+            this.Control_gb.Location = new System.Drawing.Point(201, 3);
+            this.Control_gb.Name = "Control_gb";
+            this.Control_gb.Size = new System.Drawing.Size(178, 172);
+            this.Control_gb.TabIndex = 25;
+            this.Control_gb.TabStop = false;
+            this.Control_gb.Text = "Edit";
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label44.Location = new System.Drawing.Point(6, 104);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(60, 16);
+            this.label44.TabIndex = 47;
+            this.label44.Text = "Filename";
+            // 
+            // ControlFilename_textbox
+            // 
+            this.ControlFilename_textbox.Location = new System.Drawing.Point(6, 123);
+            this.ControlFilename_textbox.Name = "ControlFilename_textbox";
+            this.ControlFilename_textbox.Size = new System.Drawing.Size(163, 21);
+            this.ControlFilename_textbox.TabIndex = 48;
+            this.ControlFilename_textbox.TextChanged += new System.EventHandler(this.ControlFilename_textbox_TextChanged);
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label48.Location = new System.Drawing.Point(6, 56);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(41, 16);
+            this.label48.TabIndex = 45;
+            this.label48.Text = "Name";
+            // 
+            // ControlName_textbox
+            // 
+            this.ControlName_textbox.Location = new System.Drawing.Point(6, 75);
+            this.ControlName_textbox.Name = "ControlName_textbox";
+            this.ControlName_textbox.Size = new System.Drawing.Size(163, 21);
+            this.ControlName_textbox.TabIndex = 46;
+            this.ControlName_textbox.TextChanged += new System.EventHandler(this.ControlName_textbox_TextChanged);
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label49.Location = new System.Drawing.Point(6, 14);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(55, 16);
+            this.label49.TabIndex = 44;
+            this.label49.Text = "Location";
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label50.Location = new System.Drawing.Point(94, 34);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(15, 16);
+            this.label50.TabIndex = 16;
+            this.label50.Text = "Y";
+            // 
+            // ControlYLoc_textbox
+            // 
+            this.ControlYLoc_textbox.Location = new System.Drawing.Point(115, 33);
+            this.ControlYLoc_textbox.Name = "ControlYLoc_textbox";
+            this.ControlYLoc_textbox.Size = new System.Drawing.Size(54, 21);
+            this.ControlYLoc_textbox.TabIndex = 12;
+            this.ControlYLoc_textbox.TextChanged += new System.EventHandler(this.ControlYLoc_textbox_TextChanged);
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label51.Location = new System.Drawing.Point(6, 34);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(16, 16);
+            this.label51.TabIndex = 15;
+            this.label51.Text = "X";
+            // 
+            // ControlXLoc_textbox
+            // 
+            this.ControlXLoc_textbox.Location = new System.Drawing.Point(28, 33);
+            this.ControlXLoc_textbox.Name = "ControlXLoc_textbox";
+            this.ControlXLoc_textbox.Size = new System.Drawing.Size(54, 21);
+            this.ControlXLoc_textbox.TabIndex = 14;
+            this.ControlXLoc_textbox.TextChanged += new System.EventHandler(this.ControlXLoc_textbox_TextChanged);
+            // 
+            // Controls_listbox
+            // 
+            this.Controls_listbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Controls_listbox.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Controls_listbox.FormattingEnabled = true;
+            this.Controls_listbox.ItemHeight = 14;
+            this.Controls_listbox.Location = new System.Drawing.Point(3, 3);
+            this.Controls_listbox.Name = "Controls_listbox";
+            this.Controls_listbox.Size = new System.Drawing.Size(192, 144);
+            this.Controls_listbox.TabIndex = 23;
+            this.Controls_listbox.SelectedIndexChanged += new System.EventHandler(this.Control_Listbox_SelectedIndexChanged);
+            // 
             // Guards_tab
             // 
             this.Guards_tab.Controls.Add(this.RemoveGuard_button);
@@ -717,7 +1035,7 @@
             this.Guards_tab.Controls.Add(this.Guards_listbox);
             this.Guards_tab.Location = new System.Drawing.Point(4, 22);
             this.Guards_tab.Name = "Guards_tab";
-            this.Guards_tab.Size = new System.Drawing.Size(376, 216);
+            this.Guards_tab.Size = new System.Drawing.Size(396, 216);
             this.Guards_tab.TabIndex = 1;
             this.Guards_tab.Text = "守卫";
             this.Guards_tab.UseVisualStyleBackColor = true;
@@ -766,7 +1084,7 @@
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(12, 105);
+            this.label23.Location = new System.Drawing.Point(13, 102);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(77, 16);
             this.label23.TabIndex = 47;
@@ -774,9 +1092,9 @@
             // 
             // ArcherCost_textbox
             // 
-            this.ArcherCost_textbox.Location = new System.Drawing.Point(16, 121);
+            this.ArcherCost_textbox.Location = new System.Drawing.Point(15, 121);
             this.ArcherCost_textbox.Name = "ArcherCost_textbox";
-            this.ArcherCost_textbox.Size = new System.Drawing.Size(163, 21);
+            this.ArcherCost_textbox.Size = new System.Drawing.Size(164, 21);
             this.ArcherCost_textbox.TabIndex = 48;
             this.ArcherCost_textbox.TextChanged += new System.EventHandler(this.ArcherCost_textbox_TextChanged);
             // 
@@ -784,7 +1102,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(13, 56);
+            this.label14.Location = new System.Drawing.Point(13, 53);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(31, 14);
             this.label14.TabIndex = 45;
@@ -812,7 +1130,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.label13.Location = new System.Drawing.Point(12, 12);
+            this.label13.Location = new System.Drawing.Point(12, 11);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(31, 14);
             this.label13.TabIndex = 44;
@@ -832,7 +1150,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(94, 30);
+            this.label9.Location = new System.Drawing.Point(104, 30);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(15, 16);
             this.label9.TabIndex = 16;
@@ -840,7 +1158,7 @@
             // 
             // ArchYLoc_textbox
             // 
-            this.ArchYLoc_textbox.Location = new System.Drawing.Point(109, 28);
+            this.ArchYLoc_textbox.Location = new System.Drawing.Point(125, 28);
             this.ArchYLoc_textbox.Name = "ArchYLoc_textbox";
             this.ArchYLoc_textbox.Size = new System.Drawing.Size(54, 21);
             this.ArchYLoc_textbox.TabIndex = 12;
@@ -886,7 +1204,7 @@
             this.Gates_tab.Controls.Add(this.Gates_listbox);
             this.Gates_tab.Location = new System.Drawing.Point(4, 22);
             this.Gates_tab.Name = "Gates_tab";
-            this.Gates_tab.Size = new System.Drawing.Size(376, 216);
+            this.Gates_tab.Size = new System.Drawing.Size(396, 216);
             this.Gates_tab.TabIndex = 3;
             this.Gates_tab.Text = "大门";
             this.Gates_tab.UseVisualStyleBackColor = true;
@@ -935,7 +1253,7 @@
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(13, 107);
+            this.label24.Location = new System.Drawing.Point(13, 104);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(77, 16);
             this.label24.TabIndex = 51;
@@ -953,7 +1271,7 @@
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.label25.Location = new System.Drawing.Point(13, 62);
+            this.label25.Location = new System.Drawing.Point(13, 54);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(31, 14);
             this.label25.TabIndex = 49;
@@ -961,7 +1279,7 @@
             // 
             // GateName_textbox
             // 
-            this.GateName_textbox.Location = new System.Drawing.Point(16, 78);
+            this.GateName_textbox.Location = new System.Drawing.Point(16, 73);
             this.GateName_textbox.Name = "GateName_textbox";
             this.GateName_textbox.Size = new System.Drawing.Size(163, 21);
             this.GateName_textbox.TabIndex = 50;
@@ -981,7 +1299,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Tahoma", 9F);
-            this.label17.Location = new System.Drawing.Point(13, 14);
+            this.label17.Location = new System.Drawing.Point(12, 12);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(31, 14);
             this.label17.TabIndex = 44;
@@ -1001,7 +1319,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(94, 32);
+            this.label18.Location = new System.Drawing.Point(104, 32);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(15, 16);
             this.label18.TabIndex = 16;
@@ -1009,9 +1327,9 @@
             // 
             // GateYLoc_textbox
             // 
-            this.GateYLoc_textbox.Location = new System.Drawing.Point(109, 30);
+            this.GateYLoc_textbox.Location = new System.Drawing.Point(125, 31);
             this.GateYLoc_textbox.Name = "GateYLoc_textbox";
-            this.GateYLoc_textbox.Size = new System.Drawing.Size(51, 21);
+            this.GateYLoc_textbox.Size = new System.Drawing.Size(54, 21);
             this.GateYLoc_textbox.TabIndex = 12;
             this.GateYLoc_textbox.TextChanged += new System.EventHandler(this.GateYLoc_textbox_TextChanged);
             // 
@@ -1055,7 +1373,7 @@
             this.Walls_tab.Controls.Add(this.Walls_listbox);
             this.Walls_tab.Location = new System.Drawing.Point(4, 22);
             this.Walls_tab.Name = "Walls_tab";
-            this.Walls_tab.Size = new System.Drawing.Size(376, 216);
+            this.Walls_tab.Size = new System.Drawing.Size(396, 216);
             this.Walls_tab.TabIndex = 4;
             this.Walls_tab.Text = "墙";
             this.Walls_tab.UseVisualStyleBackColor = true;
@@ -1171,7 +1489,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(99, 30);
+            this.label21.Location = new System.Drawing.Point(106, 30);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(15, 16);
             this.label21.TabIndex = 16;
@@ -1179,7 +1497,7 @@
             // 
             // WallYLoc_textbox
             // 
-            this.WallYLoc_textbox.Location = new System.Drawing.Point(114, 28);
+            this.WallYLoc_textbox.Location = new System.Drawing.Point(127, 28);
             this.WallYLoc_textbox.Name = "WallYLoc_textbox";
             this.WallYLoc_textbox.Size = new System.Drawing.Size(52, 21);
             this.WallYLoc_textbox.TabIndex = 12;
@@ -1217,18 +1535,18 @@
             this.Walls_listbox.TabIndex = 21;
             this.Walls_listbox.SelectedIndexChanged += new System.EventHandler(this.Walls_listbox_SelectedIndexChanged);
             // 
-            // Siege_ta
+            // Siege_tab
             // 
-            this.Siege_ta.Controls.Add(this.RemoveSiege_button);
-            this.Siege_ta.Controls.Add(this.AddSiege_button);
-            this.Siege_ta.Controls.Add(this.Siege_gb);
-            this.Siege_ta.Controls.Add(this.Siege_listbox);
-            this.Siege_ta.Location = new System.Drawing.Point(4, 22);
-            this.Siege_ta.Name = "Siege_ta";
-            this.Siege_ta.Size = new System.Drawing.Size(376, 216);
-            this.Siege_ta.TabIndex = 6;
-            this.Siege_ta.Text = "围城";
-            this.Siege_ta.UseVisualStyleBackColor = true;
+            this.Siege_tab.Controls.Add(this.RemoveSiege_button);
+            this.Siege_tab.Controls.Add(this.AddSiege_button);
+            this.Siege_tab.Controls.Add(this.Siege_gb);
+            this.Siege_tab.Controls.Add(this.Siege_listbox);
+            this.Siege_tab.Location = new System.Drawing.Point(4, 22);
+            this.Siege_tab.Name = "Siege_tab";
+            this.Siege_tab.Size = new System.Drawing.Size(396, 216);
+            this.Siege_tab.TabIndex = 6;
+            this.Siege_tab.Text = "围城";
+            this.Siege_tab.UseVisualStyleBackColor = true;
             // 
             // RemoveSiege_button
             // 
@@ -1340,7 +1658,7 @@
             // 
             this.label40.AutoSize = true;
             this.label40.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.Location = new System.Drawing.Point(94, 30);
+            this.label40.Location = new System.Drawing.Point(104, 30);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(15, 16);
             this.label40.TabIndex = 16;
@@ -1348,7 +1666,7 @@
             // 
             // SiegeYLoc_textbox
             // 
-            this.SiegeYLoc_textbox.Location = new System.Drawing.Point(109, 28);
+            this.SiegeYLoc_textbox.Location = new System.Drawing.Point(125, 28);
             this.SiegeYLoc_textbox.Name = "SiegeYLoc_textbox";
             this.SiegeYLoc_textbox.Size = new System.Drawing.Size(54, 21);
             this.SiegeYLoc_textbox.TabIndex = 12;
@@ -1382,9 +1700,177 @@
             this.Siege_listbox.ItemHeight = 14;
             this.Siege_listbox.Location = new System.Drawing.Point(7, 14);
             this.Siege_listbox.Name = "Siege_listbox";
-            this.Siege_listbox.Size = new System.Drawing.Size(172, 172);
+            this.Siege_listbox.Size = new System.Drawing.Size(192, 172);
             this.Siege_listbox.TabIndex = 19;
             this.Siege_listbox.SelectedIndexChanged += new System.EventHandler(this.Siege_listbox_SelectedIndexChanged);
+            // 
+            // AddConq_button
+            // 
+            this.AddConq_button.Location = new System.Drawing.Point(175, 231);
+            this.AddConq_button.Name = "AddConq_button";
+            this.AddConq_button.Size = new System.Drawing.Size(27, 23);
+            this.AddConq_button.TabIndex = 10;
+            this.AddConq_button.Text = "+";
+            this.AddConq_button.UseVisualStyleBackColor = true;
+            this.AddConq_button.Click += new System.EventHandler(this.AddConq_button_Click);
+            // 
+            // RemoveConq_button
+            // 
+            this.RemoveConq_button.Location = new System.Drawing.Point(11, 231);
+            this.RemoveConq_button.Name = "RemoveConq_button";
+            this.RemoveConq_button.Size = new System.Drawing.Size(27, 23);
+            this.RemoveConq_button.TabIndex = 11;
+            this.RemoveConq_button.Text = "-";
+            this.RemoveConq_button.UseVisualStyleBackColor = true;
+            this.RemoveConq_button.Click += new System.EventHandler(this.RemoveConq_button_Click);
+            // 
+            // flags_tab
+            // 
+            this.flags_tab.Controls.Add(this.RemoveFlag_button);
+            this.flags_tab.Controls.Add(this.AddFlag_button);
+            this.flags_tab.Controls.Add(this.Flag_gb);
+            this.flags_tab.Controls.Add(this.Flags_listbox);
+            this.flags_tab.Location = new System.Drawing.Point(4, 22);
+            this.flags_tab.Name = "flags_tab";
+            this.flags_tab.Padding = new System.Windows.Forms.Padding(3);
+            this.flags_tab.Size = new System.Drawing.Size(396, 216);
+            this.flags_tab.TabIndex = 7;
+            this.flags_tab.Text = "Flags";
+            this.flags_tab.UseVisualStyleBackColor = true;
+            // 
+            // RemoveFlag_button
+            // 
+            this.RemoveFlag_button.Location = new System.Drawing.Point(7, 185);
+            this.RemoveFlag_button.Name = "RemoveFlag_button";
+            this.RemoveFlag_button.Size = new System.Drawing.Size(23, 22);
+            this.RemoveFlag_button.TabIndex = 22;
+            this.RemoveFlag_button.Text = "-";
+            this.RemoveFlag_button.UseVisualStyleBackColor = true;
+            this.RemoveFlag_button.Click += new System.EventHandler(this.RemoveFlag_button_Click);
+            // 
+            // AddFlag_button
+            // 
+            this.AddFlag_button.Location = new System.Drawing.Point(175, 185);
+            this.AddFlag_button.Name = "AddFlag_button";
+            this.AddFlag_button.Size = new System.Drawing.Size(24, 22);
+            this.AddFlag_button.TabIndex = 20;
+            this.AddFlag_button.Text = "+";
+            this.AddFlag_button.UseVisualStyleBackColor = true;
+            this.AddFlag_button.Click += new System.EventHandler(this.AddFlag_button_Click);
+            // 
+            // Flag_gb
+            // 
+            this.Flag_gb.Controls.Add(this.label42);
+            this.Flag_gb.Controls.Add(this.FlagFilename_textbox);
+            this.Flag_gb.Controls.Add(this.label43);
+            this.Flag_gb.Controls.Add(this.FlagName_textbox);
+            this.Flag_gb.Controls.Add(this.label45);
+            this.Flag_gb.Controls.Add(this.label46);
+            this.Flag_gb.Controls.Add(this.FlagYLoc_textbox);
+            this.Flag_gb.Controls.Add(this.label47);
+            this.Flag_gb.Controls.Add(this.FlagXLoc_textbox);
+            this.Flag_gb.Location = new System.Drawing.Point(205, 4);
+            this.Flag_gb.Name = "Flag_gb";
+            this.Flag_gb.Size = new System.Drawing.Size(185, 203);
+            this.Flag_gb.TabIndex = 21;
+            this.Flag_gb.TabStop = false;
+            this.Flag_gb.Text = "Edit";
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.Location = new System.Drawing.Point(12, 105);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(60, 16);
+            this.label42.TabIndex = 47;
+            this.label42.Text = "Filename";
+            // 
+            // FlagFilename_textbox
+            // 
+            this.FlagFilename_textbox.Location = new System.Drawing.Point(16, 121);
+            this.FlagFilename_textbox.Name = "FlagFilename_textbox";
+            this.FlagFilename_textbox.Size = new System.Drawing.Size(163, 21);
+            this.FlagFilename_textbox.TabIndex = 48;
+            this.FlagFilename_textbox.TextChanged += new System.EventHandler(this.FlagFilename_textbox_TextChanged);
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.Location = new System.Drawing.Point(13, 56);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(41, 16);
+            this.label43.TabIndex = 45;
+            this.label43.Text = "Name";
+            // 
+            // FlagName_textbox
+            // 
+            this.FlagName_textbox.Location = new System.Drawing.Point(16, 72);
+            this.FlagName_textbox.Name = "FlagName_textbox";
+            this.FlagName_textbox.Size = new System.Drawing.Size(163, 21);
+            this.FlagName_textbox.TabIndex = 46;
+            this.FlagName_textbox.TextChanged += new System.EventHandler(this.FlagName_textbox_TextChanged);
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label45.Location = new System.Drawing.Point(12, 12);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(55, 16);
+            this.label45.TabIndex = 44;
+            this.label45.Text = "Location";
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.Location = new System.Drawing.Point(104, 30);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(15, 16);
+            this.label46.TabIndex = 16;
+            this.label46.Text = "Y";
+            // 
+            // FlagYLoc_textbox
+            // 
+            this.FlagYLoc_textbox.Location = new System.Drawing.Point(125, 28);
+            this.FlagYLoc_textbox.Name = "FlagYLoc_textbox";
+            this.FlagYLoc_textbox.Size = new System.Drawing.Size(54, 21);
+            this.FlagYLoc_textbox.TabIndex = 12;
+            this.FlagYLoc_textbox.TextChanged += new System.EventHandler(this.FlagYLoc_textbox_TextChanged);
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label47.Location = new System.Drawing.Point(13, 30);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(16, 16);
+            this.label47.TabIndex = 15;
+            this.label47.Text = "X";
+            // 
+            // FlagXLoc_textbox
+            // 
+            this.FlagXLoc_textbox.Location = new System.Drawing.Point(29, 28);
+            this.FlagXLoc_textbox.Name = "FlagXLoc_textbox";
+            this.FlagXLoc_textbox.Size = new System.Drawing.Size(54, 21);
+            this.FlagXLoc_textbox.TabIndex = 14;
+            this.FlagXLoc_textbox.TextChanged += new System.EventHandler(this.FlagXLoc_textbox_TextChanged);
+            // 
+            // Flags_listbox
+            // 
+            this.Flags_listbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Flags_listbox.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Flags_listbox.FormattingEnabled = true;
+            this.Flags_listbox.ItemHeight = 14;
+            this.Flags_listbox.Location = new System.Drawing.Point(7, 11);
+            this.Flags_listbox.Name = "Flags_listbox";
+            this.Flags_listbox.Size = new System.Drawing.Size(192, 172);
+            this.Flags_listbox.TabIndex = 19;
+            this.Flags_listbox.SelectedIndexChanged += new System.EventHandler(this.Flags_listbox_SelectedIndexChanged);
             // 
             // AddConq_button
             // 
@@ -1410,7 +1896,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 262);
+            this.ClientSize = new System.Drawing.Size(614, 262);
             this.Controls.Add(this.RemoveConq_button);
             this.Controls.Add(this.AddConq_button);
             this.Controls.Add(this.Main_tabs);
@@ -1425,14 +1911,22 @@
             this.Info_tab.PerformLayout();
             this.Maps_tab.ResumeLayout(false);
             this.Maps_tab.PerformLayout();
-            this.Objective_gb.ResumeLayout(false);
-            this.Objective_gb.PerformLayout();
             this.Times_tab.ResumeLayout(false);
             this.Times_tab.PerformLayout();
             this.WarTimes_gb.ResumeLayout(false);
             this.WarTimes_gb.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StartHour_num)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WarLength_num)).EndInit();
+            this.games_tab.ResumeLayout(false);
+            this.GameTabs.ResumeLayout(false);
+            this.palace_tab.ResumeLayout(false);
+            this.palace_tab.PerformLayout();
+            this.king_tab.ResumeLayout(false);
+            this.Objective_gb.ResumeLayout(false);
+            this.Objective_gb.PerformLayout();
+            this.control_tab.ResumeLayout(false);
+            this.Control_gb.ResumeLayout(false);
+            this.Control_gb.PerformLayout();
             this.Guards_tab.ResumeLayout(false);
             this.Archer_gb.ResumeLayout(false);
             this.Archer_gb.PerformLayout();
@@ -1442,9 +1936,12 @@
             this.Walls_tab.ResumeLayout(false);
             this.Walls_gb.ResumeLayout(false);
             this.Walls_gb.PerformLayout();
-            this.Siege_ta.ResumeLayout(false);
+            this.Siege_tab.ResumeLayout(false);
             this.Siege_gb.ResumeLayout(false);
             this.Siege_gb.PerformLayout();
+            this.flags_tab.ResumeLayout(false);
+            this.Flag_gb.ResumeLayout(false);
+            this.Flag_gb.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1469,10 +1966,8 @@
         private System.Windows.Forms.TabPage Maps_tab;
         private System.Windows.Forms.Button AddExtraMap_button;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox ExtraMaps_combo;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox PalaceMap_combo;
         private System.Windows.Forms.ComboBox ConquestMap_combo;
         private System.Windows.Forms.ListBox Maps_listbox;
         private System.Windows.Forms.Button RemoveConq_button;
@@ -1542,15 +2037,8 @@
         private System.Windows.Forms.TextBox LocY_textbox;
         private System.Windows.Forms.Button RemoveGuard_button;
         private System.Windows.Forms.Button RemoveGate_button;
-        private System.Windows.Forms.GroupBox Objective_gb;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.TextBox ObSize_textbox;
-        private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.TextBox ObLocX_textbox;
-        private System.Windows.Forms.TextBox ObLocY_textbox;
         private System.Windows.Forms.Button RemoveWall_button;
-        private System.Windows.Forms.TabPage Siege_ta;
+        private System.Windows.Forms.TabPage Siege_tab;
         private System.Windows.Forms.Button RemoveSiege_button;
         private System.Windows.Forms.Button AddSiege_button;
         private System.Windows.Forms.GroupBox Siege_gb;
@@ -1566,5 +2054,47 @@
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.TextBox SiegeXLoc_textbox;
         private System.Windows.Forms.ListBox Siege_listbox;
+        private System.Windows.Forms.TabPage flags_tab;
+        private System.Windows.Forms.Button RemoveFlag_button;
+        private System.Windows.Forms.Button AddFlag_button;
+        private System.Windows.Forms.GroupBox Flag_gb;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.TextBox FlagName_textbox;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.TextBox FlagYLoc_textbox;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.TextBox FlagXLoc_textbox;
+        private System.Windows.Forms.ListBox Flags_listbox;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.TextBox FlagFilename_textbox;
+        private System.Windows.Forms.TabPage games_tab;
+        private System.Windows.Forms.TabControl GameTabs;
+        private System.Windows.Forms.TabPage palace_tab;
+        private System.Windows.Forms.TabPage king_tab;
+        private System.Windows.Forms.GroupBox Objective_gb;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox ObSize_textbox;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox ObLocX_textbox;
+        private System.Windows.Forms.TextBox ObLocY_textbox;
+        private System.Windows.Forms.TabPage control_tab;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox PalaceMap_combo;
+        private System.Windows.Forms.CheckBox FullMap_checkbox;
+        private System.Windows.Forms.Button RemoveControl_button;
+        private System.Windows.Forms.Button AddControl_button;
+        private System.Windows.Forms.GroupBox Control_gb;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox ControlFilename_textbox;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.TextBox ControlName_textbox;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.TextBox ControlYLoc_textbox;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.TextBox ControlXLoc_textbox;
+        private System.Windows.Forms.ListBox Controls_listbox;
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -63,6 +66,7 @@ public enum OutputMessageType : byte
 {
     Normal, 
     Quest,
+    Guild
 }
 
 public enum ItemGrade : byte
@@ -124,8 +128,8 @@ public enum QuestIcon : byte
     QuestionYellow = 3,
     ExclamationBlue = 5,
     QuestionBlue = 6,
-    ExclamationGreen = 7,
-    QuestionGreen = 8
+    ExclamationGreen = 52,
+    QuestionGreen = 53
 }
 
 public enum QuestState : byte
@@ -934,9 +938,9 @@ public enum RequiredClass : byte
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum RequiredGender : byte
 {
-    Male = 1,
-    Female = 2,
-    None = Male | Female
+    男 = 1,
+    女 = 2,
+    无 = 男 | 女
 }
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum RequiredType : byte
@@ -1375,6 +1379,7 @@ public enum ServerPacketIds : short
     GuildRequestWar,
     DefaultNPC,
     NPCUpdate,
+    NPCImageUpdate,
     MarriageRequest,
     DivorceRequest,
     MentorRequest,
@@ -1428,6 +1433,7 @@ public enum ServerPacketIds : short
     ParcelCollected,
     MailCost,
 	ResizeInventory,
+    ResizeStorage,
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
     IntelligentCreatureEnableRename,
@@ -1591,6 +1597,7 @@ public enum ConquestGame : byte
     KingOfHill = 1,
     Random = 2,
     Classic = 3,
+    ControlPoints = 4
 }
 
 public class InIReader
@@ -2524,56 +2531,108 @@ public class SelectInfo
 
 public class ItemInfo
 {
-    public int Index;
-    public string Name = string.Empty;
-    public ItemType Type;
-    public ItemGrade Grade;
-    public RequiredType RequiredType = RequiredType.Level;
-    public RequiredClass RequiredClass = RequiredClass.无;
-    public RequiredGender RequiredGender = RequiredGender.None;
-    public ItemSet Set;
+    [Key]
+    public int Index { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public ItemType Type { get; set; }
+    public ItemGrade Grade { get; set; }
+    public RequiredType RequiredType { get; set; } = RequiredType.Level;
+    public RequiredClass RequiredClass { get; set; } = RequiredClass.无;
+    public RequiredGender RequiredGender { get; set; } = RequiredGender.无;
+    public ItemSet Set { get; set; }
 
 
 
-    public short Shape;
-    public byte Weight, Light, RequiredAmount;
+    public short Shape { get; set; }
+    public byte Weight { get; set; }
+    public byte Light { get; set; }
+    public byte RequiredAmount { get; set; }
+    [NotMapped]
+    public ushort Image { get; set; }
 
-    public ushort Image, Durability;
+    public int DBImage
+    {
+        get { return Image; }
+        set { Image = (ushort) value; }
+    }
+    [NotMapped]
+    public ushort Durability { get; set; }
 
-    public uint Price, StackSize = 1;
+    public int DBDurability
+    {
+        get { return Durability; }
+        set { Durability = (ushort) value; }
+    }
 
-    public byte MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility;
-    public ushort HP, MP;
-    public sbyte AttackSpeed, Luck;
-    public byte BagWeight, HandWeight, WearWeight;
+    public uint Price { get; set; } = 1;
+    public long DBPrice { get { return Price; } set { Price = (uint) value; } }
+    public uint StackSize { get; set; } = 1;
+    public long DBStackSize { get { return StackSize; } set { StackSize = (uint) value; } }
 
-    public bool StartItem;
-    public byte Effect;
+    public byte MinAC { get; set; }
+    public byte MaxAC { get; set; }
+    public byte MinMAC { get; set; }
+    public byte MaxMAC { get; set; }
+    public byte MinDC { get; set; }
+    public byte MaxDC { get; set; }
+    public byte MinMC { get; set; }
+    public byte MaxMC { get; set; }
+    public byte MinSC { get; set; }
+    public byte MaxSC { get; set; }
+    public byte Accuracy { get; set; }
+    public byte Agility { get; set; }
+    [NotMapped]
+    public ushort HP { get; set; }
+    public int DBHP { get { return HP; } set { HP = (ushort) value; } }
+    [NotMapped]
+    public ushort MP { get; set; }
+    public int DBMP { get { return MP; } set { MP = (ushort) value; } }
+    public byte AttackSpeed { get; set; }
+    public byte Luck { get; set; }
+    public byte BagWeight { get; set; }
+    public byte HandWeight { get; set; }
+    public byte WearWeight { get; set; }
 
-    public byte Strong;
-    public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
-    public byte CriticalRate, CriticalDamage;
-    public bool NeedIdentify, ShowGroupPickup;
-    public bool ClassBased;
-    public bool LevelBased;
-    public bool CanMine;
-    public bool CanFastRun;
-    public bool CanAwakening;
-    public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
+    public bool StartItem { get; set; }
+    public byte Effect { get; set; }
+
+    public byte Strong { get; set; }
+    public byte MagicResist { get; set; }
+    public byte PoisonResist { get; set; }
+    public byte HealthRecovery { get; set; }
+    public byte SpellRecovery { get; set; }
+    public byte PoisonRecovery { get; set; }
+    public byte HPrate { get; set; }
+    public byte MPrate { get; set; }
+    public byte CriticalRate { get; set; }
+    public byte CriticalDamage { get; set; }
+    public bool NeedIdentify { get; set; }
+    public bool ShowGroupPickup { get; set; }
+    public bool ClassBased { get; set; }
+    public bool LevelBased { get; set; }
+    public bool CanMine { get; set; }
+    public bool CanFastRun { get; set; }
+    public bool CanAwakening { get; set; }
+    public byte MaxAcRate { get; set; }
+    public byte MaxMacRate { get; set; }
+    public byte Holy { get; set; }
+    public byte Freezing { get; set; }
+    public byte PoisonAttack { get; set; }
+    public byte HpDrainRate { get; set; }
     
-    public BindMode Bind = BindMode.none;
-    public byte Reflect;
-    public SpecialItemMode Unique = SpecialItemMode.None;
-    public byte RandomStatsId;
+    public BindMode Bind { get; set; } = BindMode.none;
+    public byte Reflect { get; set; }
+    public SpecialItemMode Unique { get; set; } = SpecialItemMode.None;
+    public byte RandomStatsId { get; set; }
     public RandomItemStat RandomStats;
-    public string ToolTip = string.Empty;
+    public string ToolTip { get; set; } = string.Empty;
 
-
+    [NotMapped]
     public bool IsConsumable
     {
         get { return Type == ItemType.药剂 || Type == ItemType.卷轴 || Type == ItemType.食物 || Type == ItemType.变换; }
     }
-
+    [NotMapped]
     public string FriendlyName
     {
         get 
@@ -2634,8 +2693,8 @@ public class ItemInfo
         Accuracy = reader.ReadByte();
         Agility = reader.ReadByte();
 
-        Luck = reader.ReadSByte();
-        AttackSpeed = reader.ReadSByte();
+        Luck = (byte) reader.ReadSByte();
+        AttackSpeed = (byte) reader.ReadSByte();
 
         StartItem = reader.ReadBoolean();
 
@@ -2803,76 +2862,152 @@ public class ItemInfo
 
         ItemInfo info = new ItemInfo { Name = data[0] };
 
-        if (!Enum.TryParse(data[1], out info.Type)) return null;
-        if (!Enum.TryParse(data[2], out info.Grade)) return null;
-        if (!Enum.TryParse(data[3], out info.RequiredType)) return null;
-        if (!Enum.TryParse(data[4], out info.RequiredClass)) return null;
-        if (!Enum.TryParse(data[5], out info.RequiredGender)) return null;
-        if (!Enum.TryParse(data[6], out info.Set)) return null;
-        if (!short.TryParse(data[7], out info.Shape)) return null;
+        ItemType tempType;
+        if (!Enum.TryParse(data[1], out tempType)) return null;
+        info.Type = tempType;
+        ItemGrade tempGrade;
+        if (!Enum.TryParse(data[2], out tempGrade)) return null;
+        info.Grade = tempGrade;
+        RequiredType tempRequiredType;
+        if (!Enum.TryParse(data[3], out tempRequiredType)) return null;
+        info.RequiredType = tempRequiredType;
+        RequiredClass tempRequiredClass;
+        if (!Enum.TryParse(data[4], out tempRequiredClass)) return null;
+        info.RequiredClass = tempRequiredClass;
+        global::RequiredGender tempRequiredGender;
+        if (!Enum.TryParse(data[5], out tempRequiredGender)) return null;
+        info.RequiredGender = tempRequiredGender;
+        ItemSet tempItemSet;
+        if (!Enum.TryParse(data[6], out tempItemSet)) return null;
+        info.Set = tempItemSet;
+        short tempShort;
+        if (!short.TryParse(data[7], out tempShort)) return null;
+        info.Shape = tempShort;
 
-        if (!byte.TryParse(data[8], out info.Weight)) return null;
-        if (!byte.TryParse(data[9], out info.Light)) return null;
-        if (!byte.TryParse(data[10], out info.RequiredAmount)) return null;
+        byte tempByte;
+        if (!byte.TryParse(data[8], out tempByte)) return null;
+        info.Weight = tempByte;
+        if (!byte.TryParse(data[9], out tempByte)) return null;
+        info.Light = tempByte;
+        if (!byte.TryParse(data[10], out tempByte)) return null;
+        info.RequiredAmount = tempByte;
 
-        if (!byte.TryParse(data[11], out info.MinAC)) return null;
-        if (!byte.TryParse(data[12], out info.MaxAC)) return null;
-        if (!byte.TryParse(data[13], out info.MinMAC)) return null;
-        if (!byte.TryParse(data[14], out info.MaxMAC)) return null;
-        if (!byte.TryParse(data[15], out info.MinDC)) return null;
-        if (!byte.TryParse(data[16], out info.MaxDC)) return null;
-        if (!byte.TryParse(data[17], out info.MinMC)) return null;
-        if (!byte.TryParse(data[18], out info.MaxMC)) return null;
-        if (!byte.TryParse(data[19], out info.MinSC)) return null;
-        if (!byte.TryParse(data[20], out info.MaxSC)) return null;
-        if (!byte.TryParse(data[21], out info.Accuracy)) return null;
-        if (!byte.TryParse(data[22], out info.Agility)) return null;
-        if (!ushort.TryParse(data[23], out info.HP)) return null;
-        if (!ushort.TryParse(data[24], out info.MP)) return null;
+        if (!byte.TryParse(data[11], out tempByte)) return null;
+        info.MinAC = tempByte;
+        if (!byte.TryParse(data[12], out tempByte)) return null;
+        info.MaxAC = tempByte;
+        if (!byte.TryParse(data[13], out tempByte)) return null;
+        info.MinMAC = tempByte;
+        if (!byte.TryParse(data[14], out tempByte)) return null;
+        info.MaxMAC = tempByte;
+        if (!byte.TryParse(data[15], out tempByte)) return null;
+        info.MinDC = tempByte;
+        if (!byte.TryParse(data[16], out tempByte)) return null;
+        info.MaxDC = tempByte;
+        if (!byte.TryParse(data[17], out tempByte)) return null;
+        info.MinMC = tempByte;
+        if (!byte.TryParse(data[18], out tempByte)) return null;
+        info.MaxMC = tempByte;
+        if (!byte.TryParse(data[19], out tempByte)) return null;
+        info.MinSC = tempByte;
+        if (!byte.TryParse(data[20], out tempByte)) return null;
+        info.MaxSC = tempByte;
+        if (!byte.TryParse(data[21], out tempByte)) return null;
+        info.Accuracy = tempByte;
+        if (!byte.TryParse(data[22], out tempByte)) return null;
+        info.Agility = tempByte;
+        ushort tempUshort;
+        if (!ushort.TryParse(data[23], out tempUshort)) return null;
+        info.HP = tempUshort;
+        if (!ushort.TryParse(data[24], out tempUshort)) return null;
+        info.MP = tempUshort;
 
-        if (!sbyte.TryParse(data[25], out info.AttackSpeed)) return null;
-        if (!sbyte.TryParse(data[26], out info.Luck)) return null;
+        byte tempSbyte;
+        if (!byte.TryParse(data[25], out tempSbyte)) return null;
+        info.AttackSpeed = tempSbyte;
+        if (!byte.TryParse(data[26], out tempSbyte)) return null;
+        info.Luck = tempSbyte;
 
-        if (!byte.TryParse(data[27], out info.BagWeight)) return null;
+        if (!byte.TryParse(data[27], out tempByte)) return null;
+        info.BagWeight = tempByte;
 
-        if (!byte.TryParse(data[28], out info.HandWeight)) return null;
-        if (!byte.TryParse(data[29], out info.WearWeight)) return null;
+        if (!byte.TryParse(data[28], out tempByte)) return null;
+        info.HandWeight = tempByte;
+        if (!byte.TryParse(data[29], out tempByte)) return null;
+        info.WearWeight = tempByte;
 
-        if (!bool.TryParse(data[30], out info.StartItem)) return null;
+        bool tempBool;
+        if (!bool.TryParse(data[30], out tempBool)) return null;
+        info.StartItem = tempBool;
 
-        if (!ushort.TryParse(data[31], out info.Image)) return null;
-        if (!ushort.TryParse(data[32], out info.Durability)) return null;
-        if (!uint.TryParse(data[33], out info.Price)) return null;
-        if (!uint.TryParse(data[34], out info.StackSize)) return null;
-        if (!byte.TryParse(data[35], out info.Effect)) return null;
+        if (!ushort.TryParse(data[31], out tempUshort)) return null;
+        info.Image = tempUshort;
+        if (!ushort.TryParse(data[32], out tempUshort)) return null;
+        info.Durability = tempUshort;
+        uint tempUint;
+        if (!uint.TryParse(data[33], out tempUint)) return null;
+        info.Price = tempUint;
+        if (!uint.TryParse(data[34], out tempUint)) return null;
+        info.StackSize = tempUint;
+        if (!byte.TryParse(data[35], out tempByte)) return null;
+        info.Effect = tempByte;
 
-        if (!byte.TryParse(data[36], out info.Strong)) return null;
-        if (!byte.TryParse(data[37], out info.MagicResist)) return null;
-        if (!byte.TryParse(data[38], out info.PoisonResist)) return null;
-        if (!byte.TryParse(data[39], out info.HealthRecovery)) return null;
-        if (!byte.TryParse(data[40], out info.SpellRecovery)) return null;
-        if (!byte.TryParse(data[41], out info.PoisonRecovery)) return null;
-        if (!byte.TryParse(data[42], out info.HPrate)) return null;
-        if (!byte.TryParse(data[43], out info.MPrate)) return null;
-        if (!byte.TryParse(data[44], out info.CriticalRate)) return null;
-        if (!byte.TryParse(data[45], out info.CriticalDamage)) return null;
-        if (!bool.TryParse(data[46], out info.NeedIdentify)) return null;
-        if (!bool.TryParse(data[47], out info.ShowGroupPickup)) return null;
-        if (!byte.TryParse(data[48], out info.MaxAcRate)) return null;
-        if (!byte.TryParse(data[49], out info.MaxMacRate)) return null;
-        if (!byte.TryParse(data[50], out info.Holy)) return null;
-        if (!byte.TryParse(data[51], out info.Freezing)) return null;
-        if (!byte.TryParse(data[52], out info.PoisonAttack)) return null;
-        if (!bool.TryParse(data[53], out info.ClassBased)) return null;
-        if (!bool.TryParse(data[54], out info.LevelBased)) return null;
-        if (!Enum.TryParse(data[55], out info.Bind)) return null;
-        if (!byte.TryParse(data[56], out info.Reflect)) return null;
-        if (!byte.TryParse(data[57], out info.HpDrainRate)) return null;
-        if (!Enum.TryParse(data[58], out info.Unique)) return null;
-        if (!byte.TryParse(data[59], out info.RandomStatsId)) return null;
-        if (!bool.TryParse(data[60], out info.CanMine)) return null;
-        if (!bool.TryParse(data[61], out info.CanFastRun)) return null;
-		if (!bool.TryParse(data[62], out info.CanAwakening)) return null;
+        if (!byte.TryParse(data[36], out tempByte)) return null;
+        info.Strong = tempByte;
+        if (!byte.TryParse(data[37], out tempByte)) return null;
+        info.MagicResist = tempByte;
+        if (!byte.TryParse(data[38], out tempByte)) return null;
+        info.PoisonResist = tempByte;
+        if (!byte.TryParse(data[39], out tempByte)) return null;
+        info.HealthRecovery = tempByte;
+        if (!byte.TryParse(data[40], out tempByte)) return null;
+        info.SpellRecovery = tempByte;
+        if (!byte.TryParse(data[41], out tempByte)) return null;
+        info.PoisonRecovery = tempByte;
+        if (!byte.TryParse(data[42], out tempByte)) return null;
+        info.HPrate = tempByte;
+        if (!byte.TryParse(data[43], out tempByte)) return null;
+        info.MPrate = tempByte;
+        if (!byte.TryParse(data[44], out tempByte)) return null;
+        info.CriticalRate = tempByte;
+        if (!byte.TryParse(data[45], out tempByte)) return null;
+        info.CriticalDamage = tempByte;
+        if (!bool.TryParse(data[46], out tempBool)) return null;
+        info.NeedIdentify = tempBool;
+        if (!bool.TryParse(data[47], out tempBool)) return null;
+        info.ShowGroupPickup = tempBool;
+        if (!byte.TryParse(data[48], out tempByte)) return null;
+        info.MaxAcRate = tempByte;
+        if (!byte.TryParse(data[49], out tempByte)) return null;
+        info.MaxMacRate = tempByte;
+        if (!byte.TryParse(data[50], out tempByte)) return null;
+        info.Holy = tempByte;
+        if (!byte.TryParse(data[51], out tempByte)) return null;
+        info.Freezing = tempByte;
+        if (!byte.TryParse(data[52], out tempByte)) return null;
+        info.PoisonAttack = tempByte;
+        if (!bool.TryParse(data[53], out tempBool)) return null;
+        info.ClassBased = tempBool;
+        if (!bool.TryParse(data[54], out tempBool)) return null;
+        info.LevelBased = tempBool;
+        BindMode tempBindMode;
+        if (!Enum.TryParse(data[55], out tempBindMode)) return null;
+        info.Bind = tempBindMode;
+        if (!byte.TryParse(data[56], out tempByte)) return null;
+        info.Reflect = tempByte;
+        if (!byte.TryParse(data[57], out tempByte)) return null;
+        info.HpDrainRate = tempByte;
+        SpecialItemMode tempItemMode;
+        if (!Enum.TryParse(data[58], out tempItemMode)) return null;
+        info.Unique = tempItemMode;
+        if (!byte.TryParse(data[59], out tempByte)) return null;
+        info.RandomStatsId = tempByte;
+        if (!bool.TryParse(data[60], out tempBool)) return null;
+        info.CanMine = tempBool;
+        if (!bool.TryParse(data[61], out tempBool)) return null;
+        info.CanFastRun = tempBool;
+		if (!bool.TryParse(data[62], out tempBool)) return null;
+        info.CanAwakening = tempBool;
         if (data[63] == "-")
             info.ToolTip = "";
         else
@@ -2917,33 +3052,73 @@ public class ItemInfo
 }
 public class UserItem
 {
-    public ulong UniqueID;
-    public int ItemIndex;
+    [Key]
+    public long UniqueID { get; set; }
 
-    public ItemInfo Info;
-    public ushort CurrentDura, MaxDura;
-    public uint Count = 1, GemCount = 0;
+    [ForeignKey("Info")]
+    public int ItemIndex { get; set; }
+    public ItemInfo Info { get; set; }
 
-    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
-    public sbyte AttackSpeed, Luck;
+    [NotMapped]
+    public ushort CurrentDura { get; set; }
 
-    public RefinedValue RefinedValue = RefinedValue.None;
-    public byte RefineAdded = 0;
+    public int DBCurrentDura
+    {
+        get { return CurrentDura;}
+        set { CurrentDura = (ushort) value; }
+    }
+    [NotMapped]
+    public ushort MaxDura { get; set; }
 
-    public bool DuraChanged;
-    public int SoulBoundId = -1;
-    public bool Identified = false;
-    public bool Cursed = false;
+    public int DBMaxDura
+    {
+        get { return MaxDura;}
+        set { MaxDura = (ushort) value; }
+    }
+    public uint Count { get; set; } = 1;
+    public uint GemCount { get; set; } = 0;
 
-    public int WeddingRing = -1;
+    public byte AC { get; set; }
+    public byte MAC { get; set; }
+    public byte DC { get; set; }
+    public byte MC { get; set; }
+    public byte SC { get; set; }
+    public byte Accuracy { get; set; }
+    public byte Agility { get; set; }
+    public byte HP { get; set; }
+    public byte MP { get; set; }
+    public byte Strong { get; set; }
+    public byte MagicResist { get; set; }
+    public byte PoisonResist { get; set; }
+    public byte HealthRecovery { get; set; }
+    public byte ManaRecovery { get; set; }
+    public byte PoisonRecovery { get; set; }
+    public byte CriticalRate { get; set; }
+    public byte CriticalDamage { get; set; }
+    public byte Freezing { get; set; }
+    public byte PoisonAttack { get; set; }
+
+    public byte AttackSpeed { get; set; }
+    public byte Luck { get; set; }
+
+    public RefinedValue RefinedValue { get; set; } = RefinedValue.None;
+    public byte RefineAdded { get; set; } = 0;
+
+    public bool DuraChanged { get; set; } = false;
+    public int SoulBoundId { get; set; } = -1;
+    public bool Identified { get; set; } = false;
+    public bool Cursed { get; set; } = false;
+
+    public int WeddingRing { get; set; } = -1;
 
     public UserItem[] Slots = new UserItem[5];
 
-    public DateTime BuybackExpiryDate;
+    public DateTime? BuybackExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
 
     public ExpireInfo ExpireInfo;
 
 	public Awake Awake = new Awake();
+    [NotMapped]
     public bool IsAdded
     {
         get
@@ -2952,21 +3127,23 @@ public class UserItem
                 HealthRecovery != 0 || ManaRecovery != 0 || PoisonRecovery != 0 || CriticalRate != 0 || CriticalDamage != 0 || Freezing != 0 || PoisonAttack != 0;
         }
     }
-
+    [NotMapped]
     public uint Weight
     {
         get { return Info.Type == ItemType.护身符 ? Info.Weight : Info.Weight*Count; }
     }
-
+    [NotMapped]
     public string Name
     {
         get { return Count > 1 ? string.Format("{0} ({1})", Info.Name, Count) : Info.Name; }   
     }
-    
+    [NotMapped]
     public string FriendlyName
     {
         get { return Count > 1 ? string.Format("{0} ({1})", Info.FriendlyName, Count) : Info.FriendlyName; }
     }
+
+    public UserItem() { }
 
     public UserItem(ItemInfo info)
     {
@@ -2978,7 +3155,7 @@ public class UserItem
     }
     public UserItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
     {
-        UniqueID = reader.ReadUInt64();
+        UniqueID = (long) reader.ReadUInt64();
         ItemIndex = reader.ReadInt32();
 
         CurrentDura = reader.ReadUInt16();
@@ -2997,8 +3174,8 @@ public class UserItem
         HP = reader.ReadByte();
         MP = reader.ReadByte();
 
-        AttackSpeed = reader.ReadSByte();
-        Luck = reader.ReadSByte();
+        AttackSpeed = (byte) reader.ReadSByte();
+        Luck = (byte) reader.ReadSByte();
 
         if (version <= 19) return;
         SoulBoundId = reader.ReadInt32();
@@ -3325,7 +3502,7 @@ public class UserItem
 
 public class ExpireInfo
 {
-    public DateTime ExpiryDate;
+    public DateTime? ExpiryDate;
 
     public ExpireInfo()
     {
@@ -3339,26 +3516,31 @@ public class ExpireInfo
 
     public void Save(BinaryWriter writer)
     {
-        writer.Write(ExpiryDate.ToBinary());
+        writer.Write(ExpiryDate.GetValueOrDefault().ToBinary());
     }
 }
 
 public class GameShopItem
 {
-    public int ItemIndex;
-    public int GIndex;
+    [Key]
+    public int ItemIndex { get; set; }
+    public int GIndex { get; set; }
+    [NotMapped]
     public ItemInfo Info;
-    public uint GoldPrice = 0;
-    public uint CreditPrice = 0;
-    public uint Count = 1;
-    public string Class = "";
-    public string Category = "";
-    public int Stock = 0;
-    public bool iStock = false;
-    public bool Deal = false;
-    public bool TopItem = false;
-    public DateTime Date;
-    
+
+    public int ItemInfoIndex { get; set; }
+
+    public uint GoldPrice { get; set; } = 0;
+    public uint CreditPrice { get; set; } = 0;
+    public uint Count { get; set; } = 1;
+    public string Class { get; set; } = "";
+    public string Category { get; set; } = "";
+    public int Stock { get; set; } = 0;
+    public bool iStock { get; set; } = false;
+    public bool Deal { get; set; } = false;
+    public bool TopItem { get; set; } = false;
+    public DateTime Date { get; set; }
+
     public GameShopItem()
     {
     }
@@ -3729,7 +3911,7 @@ public class ClientMagic
 
 public class ClientAuction
 {
-    public ulong AuctionID;
+    public long AuctionID;
     public UserItem Item;
     public string Seller = string.Empty;
     public uint Price;
@@ -3741,7 +3923,7 @@ public class ClientAuction
     }
     public ClientAuction(BinaryReader reader)
     {
-        AuctionID = reader.ReadUInt64();
+        AuctionID = (long) reader.ReadUInt64();
         Item = new UserItem(reader);
         Seller = reader.ReadString();
         Price = reader.ReadUInt32();
@@ -3980,7 +4162,7 @@ public class QuestItemReward
 
 public class ClientMail
 {
-    public ulong MailID;
+    public long MailID;
     public string SenderName;
     public string Message;
     public bool Opened, Locked, CanReply, Collected;
@@ -3994,7 +4176,7 @@ public class ClientMail
 
     public ClientMail(BinaryReader reader)
     {
-        MailID = reader.ReadUInt64();
+        MailID = (long) reader.ReadUInt64();
         SenderName = reader.ReadString();
         Message = reader.ReadString();
         Opened = reader.ReadBoolean();
@@ -4939,6 +5121,8 @@ public abstract class Packet
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:
                 return new S.NPCUpdate();
+            case (short)ServerPacketIds.NPCImageUpdate:
+                return new S.NPCImageUpdate();
             case (short)ServerPacketIds.MarriageRequest:
                 return new S.MarriageRequest();
             case (short)ServerPacketIds.DivorceRequest:
@@ -5042,7 +5226,9 @@ public abstract class Packet
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
 			case (short)ServerPacketIds.ResizeInventory:
-                return new S.ResizeInventory();            
+                return new S.ResizeInventory();
+            case (short)ServerPacketIds.ResizeStorage:
+                return new S.ResizeStorage();
             case (short)ServerPacketIds.NewIntelligentCreature:
                 return new S.NewIntelligentCreature();
             case (short)ServerPacketIds.UpdateIntelligentCreatureList:
@@ -5505,7 +5691,7 @@ public class RandomItemStat
 public class ChatItem
 {
     public long RecievedTick = 0;
-    public ulong ID = 0;
+    public long ID = 0;
     public UserItem ItemStats;
 }
 
@@ -5648,9 +5834,33 @@ public class MineDrop
 
 public class MineZone
 {
-    public byte Mine;
+    public int id { get; set; }
+    public byte Mine { get; set; }
     public Point Location;
+    public string DBLocation
+    {
+        get { return Location.X + "," + Location.Y; }
+        set
+        {
+            var tempArray = value.Split(',');
+            if (tempArray.Length != 2)
+            {
+                Location.X = 0;
+                Location.Y = 0;
+            }
+            else
+            {
+                int result = 0;
+                int.TryParse(tempArray[0], out result);
+                Location.X = result;
+                int.TryParse(tempArray[1], out result);
+                Location.Y = result;
+            }
+        }
+    }
     public ushort Size;
+    public int DBSize { get { return Size; } set { Size = (ushort) value; } }
+    public int MapInfoIndex { get; set; }
 
     public MineZone()
     {

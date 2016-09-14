@@ -1,79 +1,159 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Migrations;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Server.MirEnvir;
 using Server.MirNetwork;
 using Server.MirObjects;
 using System.Windows.Forms;
+using System.ComponentModel.DataAnnotations;
+using System.Data.SqlTypes;
 
 namespace Server.MirDatabase
 {
     public class CharacterInfo
     {
-        public int Index;
-        public string Name;
-        public ushort Level;
-        public MirClass Class;
-        public MirGender Gender;
-        public byte Hair;
-        public int GuildIndex = -1;
+        [Key]
+        public int Index { get; set; }
+        public string Name { get; set; }
+        [NotMapped]
+        public ushort Level { get; set; }
 
-        public string CreationIP;
-        public DateTime CreationDate;
+        public int DBLevel
+        {
+            get { return Level; }
+            set { Level = (ushort)value; }
+        }
 
-        public bool Banned;
-        public string BanReason = string.Empty;
-        public DateTime ExpiryDate;
+        public MirClass Class { get; set; }
+        public MirGender Gender { get; set; }
+        public byte Hair { get; set; }
+        public int GuildIndex { get; set; } = -1;
 
-        public bool ChatBanned;
-        public DateTime ChatBanExpiryDate;
+        public string CreationIP { get; set; }
+        public DateTime? CreationDate { get; set; } = SqlDateTime.MinValue.Value;
 
-        public string LastIP = string.Empty;
-        public DateTime LastDate;
+        public bool Banned { get; set; }
+        public string BanReason { get; set; } = string.Empty;
+        public DateTime? ExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
 
-        public bool Deleted;
-        public DateTime DeleteDate;
+        public bool ChatBanned { get; set; }
+        public DateTime? ChatBanExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
+
+        public string LastIP { get; set; } = string.Empty;
+        public DateTime? LastDate { get; set; } = SqlDateTime.MinValue.Value;
+
+        public bool Deleted { get; set; }
+        public DateTime? DeleteDate { get; set; } = SqlDateTime.MinValue.Value;
 
         public ListViewItem ListItem;
 
         //Marriage
-        public int Married = 0;
-        public DateTime MarriedDate;
+        public int Married { get; set; } = 0;
+        public DateTime? MarriedDate { get; set; }
 
         //Mentor
-        public int Mentor = 0;
-        public DateTime MentorDate;
-        public bool isMentor;
-        public long MentorExp = 0;
+        public int Mentor { get; set; } = 0;
+        public DateTime? MentorDate { get; set; } = SqlDateTime.MinValue.Value;
+        public bool isMentor { get; set; }
+        public long MentorExp { get; set; } = 0;
 
         //Location
-        public int CurrentMapIndex;
+        public int CurrentMapIndex { get; set; }
         public Point CurrentLocation;
-        public MirDirection Direction;
-        public int BindMapIndex;
+
+        public string DBCurrentLocation
+        {
+            get { return CurrentLocation.X + "," + CurrentLocation.Y; }
+            set
+            {
+                if(string.IsNullOrEmpty(value)) return;
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    CurrentLocation.X = 0;
+                    CurrentLocation.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    CurrentLocation.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    CurrentLocation.Y = result;
+                }
+            }
+        }
+        public MirDirection Direction { get; set; }
+        public int BindMapIndex { get; set; }
         public Point BindLocation;
 
-        public ushort HP, MP;
-        public long Experience;
+        public string DBBindLocatoin
+        {
+            get { return BindLocation.X + "," + BindLocation.Y; }
+            set
+            {
+                if (string.IsNullOrEmpty(value)) return;
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    BindLocation.X = 0;
+                    BindLocation.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    BindLocation.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    BindLocation.Y = result;
+                }
+            }
+        }
+        [NotMapped]
+        public ushort HP { get; set; }
 
-        public AttackMode AMode;
-        public PetMode PMode;
-        public bool AllowGroup;
-        public bool AllowTrade;
+        public int DBHP
+        {
+            get { return HP; }
+            set { HP = (ushort) value; }
+        }
+        [NotMapped]
+        public ushort MP { get; set; }
 
-        public int PKPoints;
+        public int DBMP
+        {
+            get { return MP; }
+            set { MP = (ushort) value; }
+        }
+        public long Experience { get; set; }
+
+        public AttackMode AMode { get; set; }
+        public PetMode PMode { get; set; }
+        public bool AllowGroup { get; set; }
+        public bool AllowTrade { get; set; }
+
+        public int PKPoints { get; set; }
 
         public bool NewDay;
 
-        public bool Thrusting, HalfMoon, CrossHalfMoon;
-        public bool DoubleSlash;
-        public byte MentalState;
-        public byte MentalStateLvl;
+        public bool Thrusting { get; set; }
+        public bool HalfMoon { get; set; }
+        public bool CrossHalfMoon { get; set; }
+        public bool DoubleSlash { get; set; }
+        public byte MentalState { get; set; }
+        public byte MentalStateLvl { get; set; }
 
-        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];
+        public UserItem[] Inventory = new UserItem[46];
+        public UserItem[] Equipment = new UserItem[14];
+        public UserItem[] Trade = new UserItem[10];
+        public UserItem[] QuestInventory = new UserItem[40];
+        public UserItem[] Refine = new UserItem[16];
         public UserItem CurrentRefine = null;
-        public long CollectTime = 0;
+        public long CollectTime { get; set; } = 0;
         public List<UserMagic> Magics = new List<UserMagic>();
         public List<PetInfo> Pets = new List<PetInfo>();
         public List<Buff> Buffs = new List<Buff>();
@@ -83,18 +163,32 @@ namespace Server.MirDatabase
 
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
-        public int PearlCount;
+        public int PearlCount { get; set; }
 
         public List<QuestProgressInfo> CurrentQuests = new List<QuestProgressInfo>();
         public List<int> CompletedQuests = new List<int>();
 
-        public bool[] Flags = new bool[Globals.FlagIndexCount];
+        public string DbCompletedQuests
+        {
+            get { return string.Join(",", CompletedQuests); }
+            set { CompletedQuests = string.IsNullOrEmpty(value) ? new List<int>() : value.Split(',').Select(int.Parse).ToList(); }
+        }
 
-        public AccountInfo AccountInfo;
+        public bool[] Flags { get; set; } = new bool[Globals.FlagIndexCount];
+        public string DbFlags
+        {
+            get { return string.Join(",", Flags); }
+            set { Flags = value.Split(',').Select(bool.Parse).ToArray(); }
+        }
+        [ForeignKey("AccountInfo")]
+        public int AccountInfoIndex { get; set; }
+        public AccountInfo AccountInfo { get; set; }
+
         public PlayerObject Player;
         public MountInfo Mount;
 
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
+        [NotMapped]
         public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
 
         public CharacterInfo()
@@ -358,6 +452,266 @@ namespace Server.MirDatabase
 
         public void Save(BinaryWriter writer)
         {
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var dbCharacter = ctx.CharacterInfos.FirstOrDefault(c => c.Index == Index);
+                    if (dbCharacter == null)
+                    {
+                        dbCharacter = this;
+                        dbCharacter.AccountInfo = null;
+                        ctx.CharacterInfos.Add(dbCharacter);
+                    }
+                    else
+                    {
+                        ctx.Entry(dbCharacter).CurrentValues.SetValues(this);
+                    }
+
+                    ctx.SaveChanges();
+                    //ctx.CharacterInfos.Attach(this);
+
+
+                    var dbCurrentRefine = ctx.CurrentRefines.FirstOrDefault(r => r.CharacterIndex == Index);
+                    if (dbCurrentRefine == null)
+                    {
+                        if (CurrentRefine != null)
+                        {
+                            var currentRefine = CurrentRefine;
+                            currentRefine.Info = null;
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, currentRefine);
+                            ctx.CurrentRefines.Add(new CurrentRefineItem()
+                            {
+                                CharacterIndex = Index,
+                                ItemUniqueID = CurrentRefine.UniqueID
+                            });
+                            if ((CollectTime - SMain.Envir.Time) < 0)
+                                CollectTime = 0;
+                            else
+                                CollectTime = CollectTime - SMain.Envir.Time;
+                        }
+                    }
+                    else
+                    {
+                        if (CurrentRefine == null)
+                        {
+                            ctx.CurrentRefines.Remove(dbCurrentRefine);
+                            CollectTime = 0;
+                        }
+                        else
+                        {
+                            var currentRefine = CurrentRefine;
+                            currentRefine.Info = null;
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, currentRefine);
+                            dbCurrentRefine.CharacterIndex = Index;
+                            dbCurrentRefine.ItemUniqueID = CurrentRefine.UniqueID;
+                            if ((CollectTime - SMain.Envir.Time) < 0)
+                                CollectTime = 0;
+                            else
+                                CollectTime = CollectTime - SMain.Envir.Time;
+                        }
+                    }
+
+                    dbCharacter.CollectTime = CollectTime;
+                    ctx.SaveChanges();
+
+                    ctx.Inventories.RemoveRange(ctx.Inventories.Where(i => i.CharacterIndex == Index));
+                    foreach (var item in Inventory)
+                    {
+                        if (item != null)
+                        {
+                            item.Info = null;
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        }
+
+                        ctx.Inventories.Add(new InventoryItem()
+                        {
+                            CharacterIndex = Index,
+                            ItemUniqueID = item?.UniqueID,
+                        });
+                        ctx.SaveChanges();
+                        if(item == null) continue;
+
+                        var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbItem == null)
+                        {
+                            ctx.UserItems.Add(item);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbItem).CurrentValues.SetValues(item);
+                        }
+                        
+                    }
+                    ctx.SaveChanges();
+                    ctx.Equipments.RemoveRange(ctx.Equipments.Where(i => i.CharacterIndex == Index));
+                    foreach (var item in Equipment)
+                    {
+                        if (item != null)
+                        {
+                            item.Info = null;
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        }
+                            
+                        var uid = item?.UniqueID;
+                        ctx.Equipments.Add(new EquipmentItem()
+                        {
+                            CharacterIndex = Index,
+                            ItemUniqueID = item?.UniqueID,
+                        });
+                        ctx.SaveChanges();
+                        if(item == null) continue;
+
+                        var dbUserItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbUserItem == null)
+                        {
+                            dbUserItem = item;
+                            ctx.UserItems.Add(dbUserItem);
+                            ctx.SaveChanges();
+                        }
+                        var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbItem == null)
+                        {
+                            ctx.UserItems.Add(item);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbItem).CurrentValues.SetValues(item);
+                        }
+                    }
+                    ctx.SaveChanges();
+                    ctx.QuestInventories.RemoveRange(ctx.QuestInventories.Where(i => i.CharacterIndex == Index));
+                    foreach (var item in QuestInventory)
+                    {
+                        if (item != null)
+                        {
+                            item.Info = null;
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                        }
+                        ctx.QuestInventories.Add(new QuestInventoryItem()
+                        {
+                            CharacterIndex = Index,
+                            ItemUniqueID = item?.UniqueID,
+                        });
+                        ctx.SaveChanges();
+                        if (item == null) continue;
+
+                        var dbUserItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbUserItem == null)
+                        {
+                            dbUserItem = item;
+                            ctx.UserItems.Add(dbUserItem);
+                            ctx.SaveChanges();
+                        }
+                        var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
+                        if (dbItem == null)
+                        {
+                            ctx.UserItems.Add(item);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbItem).CurrentValues.SetValues(item);
+                        }
+                    }
+                    ctx.SaveChanges();
+                    foreach (var magic in Magics)
+                    {
+                        var dbMagic = ctx.UserMagics.FirstOrDefault(m => m.Spell == magic.Spell && m.CharacterIndex == Index);
+                        if (dbMagic == null)
+                        {
+                            magic.CharacterIndex = Index;
+                            ctx.UserMagics.Add(magic);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbMagic).CurrentValues.SetValues(magic);
+                        }
+                    }
+                    ctx.SaveChanges();
+                    /*
+                    foreach (var pet in Pets)
+                    {
+                            
+                    }
+                    */
+                    ctx.QuestProgressInfos.RemoveRange(ctx.QuestProgressInfos.Where(q => q.CharacterIndex == Index));
+                    foreach (var questProgressInfo in CurrentQuests)
+                    {
+                        questProgressInfo.CharacterIndex = Index;
+                        ctx.QuestProgressInfos.Add(questProgressInfo);
+                        
+                    }
+                    ctx.SaveChanges();
+                    ctx.UserBuffs.RemoveRange(ctx.UserBuffs.Where(b => b.CharacterIndex == Index));
+                    foreach (var buff in Buffs)
+                    {
+                        var userBuff = new UserBuff()
+                        {
+                            Caster = buff.Caster,
+                            CharacterIndex = Index,
+                            ExpireTime = buff.ExpireTime,
+                            Infinite = buff.Infinite,
+                            ObjectID = buff.ObjectID,
+                            Paused = buff.Paused,
+                            RealTime = buff.RealTime,
+                            Type = buff.Type,
+                            Visible = buff.Visible,
+                            Values = buff.Values,
+                        };
+                        ctx.UserBuffs.Add(userBuff);
+                    }
+                    ctx.SaveChanges();
+                    ctx.Mails.RemoveRange(ctx.Mails.Where(m => m.CharacterIndex == Index));
+                    foreach (var mailInfo in Mail)
+                    {
+                        var dbMail = ctx.Mails.FirstOrDefault(m => m.MailID == mailInfo.MailID);
+                        if (dbMail == null)
+                        {
+                            ctx.Mails.Add(mailInfo);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbMail).CurrentValues.SetValues(mailInfo);
+                        }
+                    }
+                    ctx.SaveChanges();
+                    ctx.UserIntelligentCreatures.RemoveRange(
+                        ctx.UserIntelligentCreatures.Where(i => i.CharacterIndex == Index));
+                    foreach (var userIntelligentCreature in IntelligentCreatures)
+                    {
+                        var dbUserIntelligentCreature =
+                            ctx.UserIntelligentCreatures.FirstOrDefault(i => i.Index == userIntelligentCreature.Index);
+                        if (dbUserIntelligentCreature == null)
+                        {
+                            ctx.UserIntelligentCreatures.Add(userIntelligentCreature);
+                        }
+                        else
+                        {
+                            ctx.Entry(dbUserIntelligentCreature).CurrentValues.SetValues(userIntelligentCreature);
+                        }
+                        
+                    }
+                    ctx.SaveChanges();
+                    ctx.Friends.RemoveRange(ctx.Friends.Where(f => f.CharacterIndex == Index));
+                    foreach (var friendInfo in Friends)
+                    {
+                        ctx.Friends.Add(friendInfo);
+                    }
+
+                    ctx.GameShopPurchases.RemoveRange(ctx.GameShopPurchases.Where(p => p.CharacterIndex == Index));
+                    foreach (var item in GSpurchases)
+                    {
+                        ctx.GameShopPurchases.Add(new GameShopPurchase()
+                        {
+                            CharacterIndex = Index,
+                            GameShopItemIndex = item.Key,
+                            GameShopItemQty = item.Value
+                        });
+                    }
+                    ctx.SaveChanges();
+                }
+                return;
+            }
             writer.Write(Index);
             writer.Write(Name);
             writer.Write(Level);
@@ -366,17 +720,17 @@ namespace Server.MirDatabase
             writer.Write(Hair);
 
             writer.Write(CreationIP);
-            writer.Write(CreationDate.ToBinary());
+            writer.Write(CreationDate.GetValueOrDefault().ToBinary());
 
             writer.Write(Banned);
             writer.Write(BanReason);
-            writer.Write(ExpiryDate.ToBinary());
+            writer.Write(ExpiryDate.GetValueOrDefault().ToBinary());
 
             writer.Write(LastIP);
-            writer.Write(LastDate.ToBinary());
+            writer.Write(LastDate.GetValueOrDefault().ToBinary());
 
             writer.Write(Deleted);
-            writer.Write(DeleteDate.ToBinary());
+            writer.Write(DeleteDate.GetValueOrDefault().ToBinary());
 
             writer.Write(CurrentMapIndex);
             writer.Write(CurrentLocation.X);
@@ -485,9 +839,9 @@ namespace Server.MirDatabase
                 Friends[i].Save(writer);
 
             writer.Write(Married);
-            writer.Write(MarriedDate.ToBinary());
+            writer.Write(MarriedDate.GetValueOrDefault().ToBinary());
             writer.Write(Mentor);
-            writer.Write(MentorDate.ToBinary());
+            writer.Write(MentorDate.GetValueOrDefault().ToBinary());
             writer.Write(isMentor);
             writer.Write(MentorExp);
 
@@ -524,8 +878,8 @@ namespace Server.MirDatabase
                     Level = Level,
                     Class = Class,
                     Gender = Gender,
-                    LastAccess = LastDate
-                };
+                    LastAccess = LastDate.GetValueOrDefault()
+            };
         }
 
         public bool CheckHasIntelligentCreature(IntelligentCreatureType petType)
@@ -544,7 +898,7 @@ namespace Server.MirDatabase
                 Array.Resize(ref Inventory, Inventory.Length + 4);
 
             return Inventory.Length;
-        }    
+        }
     }
 
     public class PetInfo
@@ -635,9 +989,12 @@ namespace Server.MirDatabase
 
     public class FriendInfo
     {
-        public int Index;
+        public long id { get; set; }
+
+        public int Index { get; set; }
 
         private CharacterInfo _Info;
+        [NotMapped]
         public CharacterInfo Info
         {
             get 
@@ -649,8 +1006,13 @@ namespace Server.MirDatabase
             }
         }
 
-        public bool Blocked;
-        public string Memo;
+        public bool Blocked { get; set; }
+        public string Memo { get; set; }
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        public CharacterInfo CharacterInfo { get; set; }
+
+        public FriendInfo() { }
 
         public FriendInfo(CharacterInfo info, bool blocked) 
         {
@@ -755,18 +1117,29 @@ namespace Server.MirDatabase
     }
     public class UserIntelligentCreature
     {
-        public IntelligentCreatureType PetType;
+        [Key]
+        public int Index { get; set; }
+
+        public IntelligentCreatureType PetType { get; set; }
+        [NotMapped]
         public IntelligentCreatureInfo Info;
+        [NotMapped]
         public IntelligentCreatureItemFilter Filter;
 
-        public IntelligentCreaturePickupMode petMode = IntelligentCreaturePickupMode.SemiAutomatic;
+        public IntelligentCreaturePickupMode petMode { get; set; } = IntelligentCreaturePickupMode.SemiAutomatic;
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        
+        public CharacterInfo CharacterInfo { get; set; }
 
-        public string CustomName;
-        public int Fullness;
-        public int SlotIndex;
-        public long ExpireTime = -9999;//
-        public long BlackstoneTime = 0;
-        public long MaintainFoodTime = 0;
+        public string CustomName { get; set; }
+        public int Fullness { get; set; }
+        public int SlotIndex { get; set; }
+        public long ExpireTime { get; set; } = -9999;//
+        public long BlackstoneTime { get; set; } = 0;
+        public long MaintainFoodTime { get; set; } = 0;
+
+        public UserIntelligentCreature() { }
 
         public UserIntelligentCreature(IntelligentCreatureType creatureType, int slot, byte effect = 0)
         {
@@ -867,5 +1240,104 @@ namespace Server.MirDatabase
                 Filter = Filter
             };
         }
+    }
+
+    public class InventoryItem
+    {
+        public long id { get; set; }
+
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        public CharacterInfo CharacterInfo { get; set; }
+
+        [ForeignKey("UserItem")]
+        public long? ItemUniqueID { get; set; }
+        public UserItem UserItem { get; set; }
+    }
+
+    public class EquipmentItem
+    {
+        public long id { get; set; }
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        public CharacterInfo CharacterInfo { get; set; }
+
+        [ForeignKey("UserItem")]
+        public long? ItemUniqueID { get; set; }
+        public UserItem UserItem { get; set; }
+    }
+
+    public class QuestInventoryItem
+    {
+        public long id { get; set; }
+
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        public CharacterInfo CharacterInfo { get; set; }
+
+        [ForeignKey("UserItem")]
+        public long? ItemUniqueID { get; set; }
+        public UserItem UserItem { get; set; }
+    }
+
+    public class CurrentRefineItem
+    {
+        public long id { get; set; }
+
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        public CharacterInfo CharacterInfo { get; set; }
+
+        [ForeignKey("UserItem")]
+        public long? ItemUniqueID { get; set; }
+        public UserItem UserItem { get; set; }
+    }
+
+    public class UserBuff
+    {
+        [Key]
+        public int Index { get; set; }
+
+        public BuffType Type { get; set; }
+        [NotMapped]
+        public MapObject Caster { get; set; }
+        public bool Visible { get; set; }
+        [NotMapped]
+        public uint ObjectID { get; set; }
+
+        public long DBObjectID
+        {
+            get { return ObjectID; }
+            set { ObjectID = (uint) value; }
+        }
+        public long ExpireTime { get; set; }
+        public int[] Values;
+
+        public string DbValues
+        {
+            get { return string.Join(",", Values); }
+            set { Values = value.Split(',').Select(int.Parse).ToArray(); }
+        }
+        public bool Infinite { get; set; }
+
+        public bool RealTime { get; set; }
+        public DateTime? RealTimeExpire { get; set; } = SqlDateTime.MinValue.Value;
+
+        public bool Paused { get; set; }
+        [ForeignKey("CharacterInfo")]
+        public int CharacterIndex { get; set; }
+        public CharacterInfo CharacterInfo { get; set; }
+    }
+
+    public class GameShopPurchase
+    {
+        public long id { get; set; }
+
+        public int GameShopItemIndex { get; set; }
+        public int GameShopItemQty { get; set; }
+
+        [ForeignKey("CharacterInfo")]
+        public int? CharacterIndex { get; set; }
+        public CharacterInfo CharacterInfo { get; set; }
     }
 }

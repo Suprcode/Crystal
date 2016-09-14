@@ -124,7 +124,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.毒雾:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
-                    if (ob.Dead) return;
+                    if (ob.Dead) return;              
 
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
@@ -192,6 +192,14 @@ namespace Server.MirObjects
 
                     ob.Teleport(ExitMap, newExit, false);
 
+                    Value = Value - 1;
+
+                    if(Value < 1)
+                    {
+                        ExpireTime = Envir.Time;
+                        return;
+                    }
+                    
                     break;
             }
         }
