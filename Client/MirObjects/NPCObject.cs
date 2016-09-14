@@ -28,7 +28,7 @@ namespace Client.MirObjects
         public int BaseIndex, FrameIndex, FrameInterval, 
             EffectFrameIndex, EffectFrameInterval, QuestIndex;
 
-        public ushort Image;
+        public int Image;
         public Color Colour = Color.White;
 
         public QuestIcon QuestIcon = QuestIcon.None;

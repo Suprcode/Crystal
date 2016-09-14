@@ -63,15 +63,15 @@ namespace Client
         public static int RemainingErrorLogs = 100;
 
         //Graphics
-        public static bool FullScreen = true, TopMost = true;
+        public static bool FullScreen = false, TopMost = true;
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
         public static int Resolution = 1024;
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
 
         //Network
-        public static bool UseConfig = false;
+        public static bool UseConfig = true;
         public static string IPAddress = "127.0.0.1";
         public static int Port = 7000;
         public const int TimeOut = 5000;
@@ -158,13 +158,13 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_Host = @"http://mirfiles.co.uk/mir2/cmir/patch/"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
         public static string P_Password = string.Empty;
         public static string P_ServerName = string.Empty;
-        public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
+        public static string P_BrowserAddress = "http://cm2cn.esy.es/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 

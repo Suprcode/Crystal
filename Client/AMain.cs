@@ -253,7 +253,7 @@ namespace Launcher
                 using (WebClient client = new WebClient())
                 {
                     if (Settings.P_NeedLogin)
-                        client.Credentials = new NetworkCredential(Settings.P_Login, Settings.Password);
+                        client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
                     else
                         client.Credentials = new NetworkCredential("", "");
 
