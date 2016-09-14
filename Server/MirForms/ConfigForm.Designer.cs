@@ -605,6 +605,7 @@
         private System.Windows.Forms.CheckBox AccountCheckBox;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox SaveDelayTextBox;
+        private System.Windows.Forms.CheckBox UseSQLServerCheckbox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.CheckBox SafeZoneBorderCheckBox;

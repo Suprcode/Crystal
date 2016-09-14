@@ -78,7 +78,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show("Could not get Patch Information.");
+                    MessageBox.Show("无法获得补丁信息.");
                     Completed = true;
                     return;
                 }
@@ -97,13 +97,13 @@ namespace Launcher
             }
             catch (EndOfStreamException ex)
             {
-                MessageBox.Show("End of stream found. Host is likely using a pre version 1.1.0.0 patch system");
+                MessageBox.Show("已到流结尾. 服务器使用的是1.1.0.0版本以前的更新系统");
                 Completed = true;
                 SaveError(ex.ToString());
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error");
+                MessageBox.Show(ex.ToString(), "错误");
                 Completed = true;
                 SaveError(ex.ToString());
             }
@@ -237,7 +237,7 @@ namespace Launcher
             }
             catch
             {
-                MessageBox.Show(string.Format("Failed to download file: {0}", fileName));
+                MessageBox.Show(string.Format("文件下载失败: {0}", fileName));
             }
         }
 
@@ -318,7 +318,7 @@ namespace Launcher
             Launch_pb.Enabled = false;
             ProgressCurrent_pb.Width = 5;
             TotalProg_pb.Width = 5;
-            Version_label.Text = "Version " + Application.ProductVersion;
+            Version_label.Text = "版本 " + Application.ProductVersion;
 
             if (Settings.P_ServerName != String.Empty)
             {
@@ -465,7 +465,7 @@ namespace Launcher
                 {
                     
                     ActionLabel.Text = "";
-                    CurrentFile_label.Text = "Up to date.";
+                    CurrentFile_label.Text = "已是最新版.";
                     SpeedLabel.Text = "";
                     ProgressCurrent_pb.Width = 550;
                     TotalProg_pb.Width = 550;
@@ -476,13 +476,13 @@ namespace Launcher
                     TotalPercent_label.Text = "100%";
                     InterfaceTimer.Enabled = false;
                     Launch_pb.Enabled = true;
-                    if (ErrorFound) MessageBox.Show("One or more files failed to download, check Error.txt for details.", "Failed to Download.");
+                    if (ErrorFound) MessageBox.Show("一个或多个文件下载失败, 检查 Error.txt 中的详细信息.", "下载失败.");
                     ErrorFound = false;
 
                     if (CleanFiles)
                     {
                         CleanFiles = false;
-                        MessageBox.Show("Your files have been cleaned up.", "Clean Files");
+                        MessageBox.Show("文件已经清理成功.", "清理系统");
                     }
 
                     if (Restart)
@@ -507,8 +507,8 @@ namespace Launcher
                 CurrentPercent_label.Visible = true;
                 TotalPercent_label.Visible = true;
 
-                if (LabelSwitch) ActionLabel.Text = string.Format("{0} Files Remaining", _fileCount - _currentCount);
-                else ActionLabel.Text = string.Format("{0:#,##0}MB Remaining",  ((_totalBytes) - (_completedBytes + _currentBytes)) / 1024 / 1024);
+                if (LabelSwitch) ActionLabel.Text = string.Format("{0} 文件剩余", _fileCount - _currentCount);
+                else ActionLabel.Text = string.Format("{0:#,##0}MB 剩余",  ((_totalBytes) - (_completedBytes + _currentBytes)) / 1024 / 1024);
 
                 //ActionLabel.Text = string.Format("{0:#,##0}MB / {1:#,##0}MB", (_completedBytes + _currentBytes) / 1024 / 1024, _totalBytes / 1024 / 1024);
 
@@ -543,7 +543,7 @@ namespace Launcher
 
         private void Credit_label_Click(object sender, EventArgs e)
         {
-            if (Credit_label.Text == "Powered by Crystal M2") Credit_label.Text = "Designed by Breezer";
+            if (Credit_label.Text == "Powered by Crystal M2") Credit_label.Text = "Designed by Breezer zhzhwcn汉化";
             else Credit_label.Text = "Powered by Crystal M2";
         }
 

@@ -555,7 +555,7 @@ namespace Client.MirControls
             WeaponImage2.Visible = false;
             MountImage.Visible = false;
 
-            if (ViewerItem.Info.RequiredGender == RequiredGender.Male)
+            if (ViewerItem.Info.RequiredGender == RequiredGender.男)
                 PreviewImage.Index = 32 + (6 * (Direction - 1));
             else
                 PreviewImage.Index = 840 + (6 * (Direction - 1));
