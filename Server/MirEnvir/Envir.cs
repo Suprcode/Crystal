@@ -164,8 +164,8 @@ namespace Server.MirEnvir
         public List<MapRespawn> SavedSpawns = new List<MapRespawn>();
 
         public List<Rank_Character_Info> RankTop = new List<Rank_Character_Info>();
-        public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[5];
-        public int[] RankBottomLevel = new int[6];
+        public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[10];
+        public int[] RankBottomLevel = new int[11];
 
         static Envir()
         {
