@@ -29,17 +29,17 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>..\..\Server\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,7 +48,7 @@
     <OutputPath>..\..\Server\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -113,6 +113,10 @@
     <Compile Include="Migrations\201609130751593_AddMissingAttrs2.cs" />
     <Compile Include="Migrations\201609130751593_AddMissingAttrs2.Designer.cs">
       <DependentUpon>201609130751593_AddMissingAttrs2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609140840250_AddMissingAttrs3.cs" />
+    <Compile Include="Migrations\201609140840250_AddMissingAttrs3.Designer.cs">
+      <DependentUpon>201609140840250_AddMissingAttrs3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MirDatabase\DataContext.cs" />
@@ -424,6 +428,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609130751593_AddMissingAttrs2.resx">
       <DependentUpon>201609130751593_AddMissingAttrs2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609140840250_AddMissingAttrs3.resx">
+      <DependentUpon>201609140840250_AddMissingAttrs3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>
