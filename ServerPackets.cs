@@ -2369,7 +2369,7 @@ namespace ServerPackets
             ObjectID = reader.ReadUInt32();
             Name = reader.ReadString();
             NameColour = Color.FromArgb(reader.ReadInt32());
-            Image = reader.ReadUInt16();
+            Image = reader.ReadInt32();
             Colour = Color.FromArgb(reader.ReadInt32());
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Direction = (MirDirection)reader.ReadByte();
