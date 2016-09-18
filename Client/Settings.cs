@@ -76,9 +76,9 @@ namespace Client
         public static string IPAddress = "127.0.0.1";
         public static int Port = 7000;
 #else
-        public static bool UseConfig = true;
-        public static string IPAddress = "127.0.0.1";
-        public static int Port = 7000;
+        public static bool UseConfig = false;
+        public static string IPAddress = "122.114.158.120";
+        public static int Port = 23333;
 #endif
 
         public const int TimeOut = 5000;
@@ -165,13 +165,13 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @"http://mirfiles.co.uk/mir2/cmir/patch/"; //ftp://212.67.209.184
+        public static string P_Host = @"http://patch.cm2cn.org/"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
-        public static bool P_NeedLogin = true;
+        public static bool P_NeedLogin = false;
         public static string P_Login = "mir";
         public static string P_Password = "mir";
         public static string P_ServerName = "C#中文版";
-        public static string P_BrowserAddress = "http://cm2cn.esy.es/";
+        public static string P_BrowserAddress = "http://www.cm2cn.org/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 
