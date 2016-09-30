@@ -1016,7 +1016,7 @@ namespace Server.MirEnvir
         {
             foreach (var item in GameShopList)
             {
-                var dbItem = ctx.GameShopItems.FirstOrDefault(i => i.ItemIndex == item.ItemIndex);
+                var dbItem = ctx.GameShopItems.FirstOrDefault(i => i.GIndex == item.GIndex);
                 if (dbItem == null)
                 {
                     ctx.GameShopItems.Add(item);
@@ -1025,9 +1025,9 @@ namespace Server.MirEnvir
                 {
                     ctx.Entry(dbItem).CurrentValues.SetValues(item);
                 }
-                
+                ctx.SaveChanges();
             }
-            ctx.SaveChanges();
+            
         }
 
         public void SaveDragon(DataContext ctx)
@@ -1537,7 +1537,7 @@ namespace Server.MirEnvir
                         MonsterIndex = ctx.MonsterInfos.Max(i => (int?)i.Index) ?? 0;
                         NPCIndex = ctx.NpcInfos.Max(i => (int?)i.Index) ?? 0;
                         QuestIndex = ctx.QuestInfos.Max(i => (int?)i.Index) ?? 0;
-                        GameshopIndex = ctx.GameShopItems.Max(i => (int?)i.ItemIndex) ?? 0;
+                        GameshopIndex = ctx.GameShopItems.Max(i => (int?)i.GIndex) ?? 0;
                         ConquestIndex = ctx.ConquestInfos.Max(i => (int?)i.Index) ?? 0;
                         RespawnIndex = ctx.RespawnInfos.Max(i => (int?)i.RespawnIndex) ?? 0;
                         MapInfoList = ctx.MapInfos.AsNoTracking().ToList();
@@ -1720,11 +1720,11 @@ namespace Server.MirEnvir
                 {
                     using (var ctx = new DataContext())
                     {
-                        NextAccountID = (ctx.AccountInfos.Max(i => (int?)i.Index) ?? 0) + 1;
-                        NextCharacterID = (ctx.CharacterInfos.Max(i => (int?)i.Index) ?? 0) + 1;
-                        NextUserItemID = (ctx.UserItems.Max(i => (long?) i.UniqueID) ?? 0) + 1;
+                        NextAccountID = (ctx.AccountInfos.Max(i => (int?)i.Index) ?? 0);
+                        NextCharacterID = (ctx.CharacterInfos.Max(i => (int?)i.Index) ?? 0);
+                        NextUserItemID = (ctx.UserItems.Max(i => (long?) i.UniqueID) ?? 0);
                         GuildCount = ctx.Guilds.Count();
-                        NextGuildID = (ctx.Guilds.Max(g => (int?) g.Guildindex) ?? 0) + 1;
+                        NextGuildID = (ctx.Guilds.Max(g => (int?) g.Guildindex) ?? 0);
                         AccountList = ctx.AccountInfos.AsNoTracking().ToList();
                         CharacterList = ctx.CharacterInfos.Include(c => c.AccountInfo).AsNoTracking().ToList();
                         CharacterList.ForEach(x =>
@@ -1926,7 +1926,14 @@ namespace Server.MirEnvir
                 int count = 0;
 
                 GuildList.Clear();
-
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        GuildList = ctx.Guilds.AsNoTracking().ToList();
+                    }
+                    return;
+                }
                 for (int i = 0; i < GuildCount; i++)
                 {
                     GuildObject newGuild;

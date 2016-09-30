@@ -3521,7 +3521,7 @@ public class ExpireInfo
 
 public class GameShopItem
 {
-    [Key]
+    public int id { get; set; }
     public int ItemIndex { get; set; }
     public int GIndex { get; set; }
     [NotMapped]
@@ -3529,9 +3529,12 @@ public class GameShopItem
 
     public int ItemInfoIndex { get; set; }
 
-    public uint GoldPrice { get; set; } = 0;
-    public uint CreditPrice { get; set; } = 0;
-    public uint Count { get; set; } = 1;
+    public uint GoldPrice = 0;
+    public long DBGoldPrice { get { return GoldPrice;} set { GoldPrice = (uint) value; } }
+    public uint CreditPrice = 0;
+    public long DBCreditPrice { get { return CreditPrice; } set { CreditPrice = (uint) value; } }
+    public uint Count = 1;
+    public long DBCount { get { return Count; } set { Count = (uint) value; } }
     public string Class { get; set; } = "";
     public string Category { get; set; } = "";
     public int Stock { get; set; } = 0;

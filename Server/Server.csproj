@@ -32,7 +32,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\..\Server\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -117,6 +117,18 @@
     <Compile Include="Migrations\201609140840250_AddMissingAttrs3.cs" />
     <Compile Include="Migrations\201609140840250_AddMissingAttrs3.Designer.cs">
       <DependentUpon>201609140840250_AddMissingAttrs3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609270718255_DestoryGameShopItemTable.cs" />
+    <Compile Include="Migrations\201609270718255_DestoryGameShopItemTable.Designer.cs">
+      <DependentUpon>201609270718255_DestoryGameShopItemTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609270719241_RecreateGameShopItemTable.cs" />
+    <Compile Include="Migrations\201609270719241_RecreateGameShopItemTable.Designer.cs">
+      <DependentUpon>201609270719241_RecreateGameShopItemTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609270751265_AddMissingAttrs4.cs" />
+    <Compile Include="Migrations\201609270751265_AddMissingAttrs4.Designer.cs">
+      <DependentUpon>201609270751265_AddMissingAttrs4.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MirDatabase\DataContext.cs" />
@@ -431,6 +443,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609140840250_AddMissingAttrs3.resx">
       <DependentUpon>201609140840250_AddMissingAttrs3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609270718255_DestoryGameShopItemTable.resx">
+      <DependentUpon>201609270718255_DestoryGameShopItemTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609270719241_RecreateGameShopItemTable.resx">
+      <DependentUpon>201609270719241_RecreateGameShopItemTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609270751265_AddMissingAttrs4.resx">
+      <DependentUpon>201609270751265_AddMissingAttrs4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>

@@ -53,6 +53,7 @@ namespace Server.MirObjects
             get { return string.Join(",", WarringGuilds.Select(w => w.Guildindex).ToList()); }
             set
             {
+                if(string.IsNullOrEmpty(value)) return;
                 if (Settings.UseSQLServer)
                 {
                     using (var ctx = new DataContext())
@@ -79,6 +80,7 @@ namespace Server.MirObjects
             get { return string.Join(",", AllyGuilds.Select(w => w.Guildindex).ToList()); }
             set
             {
+                if (string.IsNullOrEmpty(value)) return;
                 if (Settings.UseSQLServer)
                 {
                     using (var ctx = new DataContext())
