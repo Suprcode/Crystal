@@ -103,31 +103,6 @@ namespace Server.MirEnvir
 
             Collected = true;
 
-            if (Parcel)
-            {
-                if(Items.Count > 0 && Gold > 0)
-                {
-                    if(!Settings.MailAutoSendGold || !Settings.MailAutoSendItems)
-                    {
-                        Collected = false;
-                    }
-                }
-                if(Items.Count > 0)
-                {
-                    if (!Settings.MailAutoSendItems)
-                    {
-                        Collected = false;
-                    }
-                }
-                else
-                {
-                    if (!Settings.MailAutoSendGold)
-                    {
-                        Collected = false;
-                    }
-                }
-            }
-
             if (SMain.Envir.Mail.Contains(this)) return;
 
             SMain.Envir.Mail.Add(this); //add to postbox
@@ -170,7 +145,7 @@ namespace Server.MirEnvir
                 Gold = Gold,
                 Items = Items,
                 Opened = Opened,
-                Collected = Collected,
+                Collected = true,
                 DateSent = DateSent
             };
         }

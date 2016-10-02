@@ -16958,49 +16958,36 @@ namespace Server.MirObjects
             GetMail();
         }
 
-        public void CollectMail(ulong mailID)
-        {
+        public void CollectMail(ulong mailID) {
             MailInfo mail = Info.Mail.SingleOrDefault(e => e.MailID == mailID);
 
             if (mail == null) return;
-
-            if (!mail.Collected)
-            {
-                ReceiveChat("Mail must be collected from the post office.", ChatType.System);
+            if (!this.InSafeZone) {
+                ReceiveChat("Must be in safe zone to collect items.", ChatType.System);
                 return;
             }
-
-            if (mail.Items.Count > 0)
-            {
-                if (!CanGainItems(mail.Items.ToArray()))
-                {
+            if (mail.Items.Count > 0) {
+                if (!CanGainItems(mail.Items.ToArray())) {
                     ReceiveChat("Cannot collect items when bag is full.", ChatType.System);
                     return;
                 }
-
-                for (int i = 0; i < mail.Items.Count; i++)
-                {
+         
+                for (int i = 0; i < mail.Items.Count; i++) {
                     GainItem(mail.Items[i]);
                 }
             }
 
-            if (mail.Gold > 0)
-            {
+            if (mail.Gold > 0) {
                 uint count = mail.Gold;
-
                 if (count + Account.Gold >= uint.MaxValue)
                     count = uint.MaxValue - Account.Gold;
-
                 GainGold(count);
             }
 
             mail.Items = new List<UserItem>();
             mail.Gold = 0;
-
             mail.Collected = true;
-
             Enqueue(new S.ParcelCollected { Result = 1 });
-
             GetMail();
         }
 
