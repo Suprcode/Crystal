@@ -6105,20 +6105,20 @@ namespace Client.MirScenes
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
-                count++;                    
+                count++;
+                if (fishingItem)
+                    text = string.Format("Flexibility + {0}" + (addValue > 0 ? " (+{1})" : ""), minValue + addValue, addValue);
+                else
+                    text = string.Format("Critical Chance + {0}" + (addValue > 0 ? " (+{1})" : ""), minValue + addValue, addValue);
                 MirLabel CRITICALRATELabel = new MirLabel
                 {
                     AutoSize = true,
                     ForeColour = addValue > 0 ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
-                    Text = string.Format("Critical Chance + {0}" + (addValue > 0 ? " (+{1})" : ""), minValue + addValue, addValue)
+                    Parent = ItemLabel,
+                    Text =  text
                 };
-
-                if(fishingItem)
-                {
-                    CRITICALRATELabel.Text = string.Format("Flexibility: + {0}" + (addValue > 0 ? " (+{1})" : ""), minValue + addValue, addValue);
-                }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALRATELabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, CRITICALRATELabel.DisplayRectangle.Bottom));
@@ -6142,7 +6142,6 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Critical Damage + {0}", minValue + addValue)
                     Text = string.Format("Critical Damage: + {0}" + (addValue > 0 ? " (+{1})" : ""), minValue + addValue, addValue)
                 };
 
@@ -6293,15 +6292,15 @@ namespace Client.MirScenes
                 {
                     if (HoverItem.Info.Type == ItemType.Float)
                     {
-                        ACLabel.Text = string.Format("Nibble Chance + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Nibble Chance + {0}~{1}%" + (addValue > 0 ? " (+{2})" : ""), minValue, maxValue + addValue);
                     }
                     else if (HoverItem.Info.Type == ItemType.Finder)
                     {
-                        ACLabel.Text = string.Format("Finder Increase + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Finder Increase + {0}~{1}% " + (addValue > 0 ? " (+{2})" : ""), minValue, maxValue + addValue);
                     }
                     else
                     {
-                        ACLabel.Text = string.Format("Success Chance + " + (addValue > 0 ? "{0}% (+{1})" : "{0}%"), maxValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Success Chance + {0}% " + (addValue > 0 ? " (+{1})" : ""), maxValue, maxValue + addValue);
                     }
                 }
 
@@ -6351,7 +6350,7 @@ namespace Client.MirScenes
             maxValue = 0;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.HP : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (!fishingItem && (minValue > 0 || maxValue > 0 || addValue > 0))
             {
                 count++;
                 MirLabel MAXHPLabel = new MirLabel
@@ -6801,7 +6800,7 @@ namespace Client.MirScenes
             #endregion
 
             #region FASTRUN
-            minValue = realItem.CanFastRun==true?1:0;
+            /*minValue = realItem.CanFastRun==true?1:0;
             maxValue = 0;
             addValue = 0;
 
@@ -6820,7 +6819,7 @@ namespace Client.MirScenes
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, BAGWEIGHTLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, BAGWEIGHTLabel.DisplayRectangle.Bottom));
-            }
+            }*/
 
             #endregion
 
@@ -6987,7 +6986,7 @@ namespace Client.MirScenes
             }
             else
             {
-                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height - 4);
+            ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height - 4);
             }
             return null;
         }
@@ -7415,7 +7414,7 @@ namespace Client.MirScenes
 
             #region CURSED
 
-            if ((!HoverItem.Info.NeedIdentify || HoverItem.Identified) && HoverItem.Cursed)
+            /*if ((!HoverItem.Info.NeedIdentify || HoverItem.Identified) && HoverItem.Cursed)
             {
                 count++;
                 MirLabel CURSEDLabel = new MirLabel
@@ -7430,7 +7429,7 @@ namespace Client.MirScenes
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CURSEDLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, CURSEDLabel.DisplayRectangle.Bottom));
-            }
+            }*/
 
             #endregion
 
@@ -7947,7 +7946,6 @@ namespace Client.MirScenes
                 NotControl = true,
                 Parent = this,
                 Opacity = 0.7F,
-              //  Visible = false
             };
 
             //Name Info Label
