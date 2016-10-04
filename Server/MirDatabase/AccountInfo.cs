@@ -36,6 +36,10 @@ namespace Server.MirDatabase
         public List<CharacterInfo> Characters = new List<CharacterInfo>();
 
         public UserItem[] Storage = new UserItem[80];
+
+        public bool AddedStorage;
+        public DateTime AddedStorageExpire;
+
         public uint Gold;
         public uint Credit;
 
@@ -211,11 +215,12 @@ namespace Server.MirDatabase
             return list;
         }
 
-        public int ResizeStorage()
-        {
-            if (Storage.Length == 80)
-                Array.Resize(ref Storage, Storage.Length + 80);
 
+
+        public int ResizeStorage() {
+            if (!(Storage.Length >= 160)) { }
+                Array.Resize(ref Storage, Storage.Length + 80);
+            AddedStorage = true;
             return Storage.Length;
         }
     }

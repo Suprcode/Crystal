@@ -787,6 +787,7 @@ namespace Server.MirObjects
             bool hiding = false;
             bool isGM = false;
             bool mentalState = false;
+            bool storeUpg = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -809,6 +810,10 @@ namespace Server.MirObjects
                         isGM = true;
                         if (!IsGM) removeBuff = true;
                         break;
+                    case BuffType.Storage:
+                        storeUpg = true;
+                        if (DateTime.Now > Account.AddedStorageExpire && Account.AddedStorage) removeBuff = true;
+                        break;
                 }
 
                 if (removeBuff)
@@ -820,6 +825,11 @@ namespace Server.MirObjects
                     {
                         case BuffType.Hiding:
                             Hidden = false;
+                            break;
+                        case BuffType.Storage:
+                            Account.AddedStorage = false;
+                            this.ReceiveChat("Your storage expansion has expired", ChatType.System);
+                            GetUserInfo();
                             break;
                     }
                 }
@@ -838,6 +848,11 @@ namespace Server.MirObjects
             if (IsGM && !isGM)
             {
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { 0 }, Infinite = true });
+            }
+
+            if (Account.AddedStorage && !storeUpg)
+            {
+                AddBuff(new Buff { Type = BuffType.Storage, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { 0 }, Infinite = true });
             }
         }
         private void ProcessRegen()
@@ -2234,7 +2249,8 @@ namespace Server.MirObjects
                 QuestInventory = new UserItem[Info.QuestInventory.Length],
                 Gold = Account.Gold,
                 Credit = Account.Credit,
-                AddedStorage = Account.Storage.Length > 80
+                AddedStorage = Account.AddedStorage,
+                AddedStorageExpire = Account.AddedStorageExpire
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -4729,14 +4745,14 @@ namespace Server.MirObjects
 
                     case "ADDSTORAGE":
                         {
-                            int openLevel = Account.Storage.Length / 4;
-                            uint openGold = (uint)(openLevel * 1000000);
-                            if (Account.Gold >= openGold)
-                            {
+                            if (parts.Length < 2) return;
+                            if (parts[1] == null || int.Parse(parts[1]) <= 0) parts[1] = "1";
+                            uint openGold = (uint)(250000 * int.Parse(parts[1]));
+                            if (Account.Gold >= openGold) {
                                 Account.Gold -= openGold;
                                 Enqueue(new S.LoseGold { Gold = openGold });
                                 Enqueue(new S.ResizeStorage { Size = Account.ResizeStorage() });
-                                ReceiveChat("Storage size increased.", ChatType.System);
+                                GetUserInfo();
                             }
                             else
                             {
@@ -10506,6 +10522,12 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
+                    if (!Account.AddedStorage && (from > 80 || to > 80))
+                    {
+                        ReceiveChat("You require a storage expansion pass to do that.", ChatType.System);
+                        Enqueue(p);
+                        return;
+                    }
                     NPCObject ob = null;
                     for (int i = 0; i < CurrentMap.NPCs.Count; i++)
                     {
@@ -10609,6 +10631,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (!Account.AddedStorage && (to > 80 || from > 80)) {
+                ReceiveChat("You require a storage expansion pass to do that.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
             if (Account.Storage[to] == null)
             {
                 Account.Storage[to] = temp;
@@ -10626,6 +10654,13 @@ namespace Server.MirObjects
         public void TakeBackItem(int from, int to)
         {
             S.TakeBackItem p = new S.TakeBackItem { From = from, To = to, Success = false };
+
+            if (!Account.AddedStorage && (to > 80 || from > 80))
+            {
+                ReceiveChat("You require a storage expansion pass to do that.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
 
             if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.StorageKey, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -10689,6 +10724,7 @@ namespace Server.MirObjects
             }
             Enqueue(p);
         }
+
         public void EquipItem(MirGridType grid, ulong id, int to)
         {
             S.EquipItem p = new S.EquipItem { Grid = grid, UniqueID = id, To = to, Success = false };
@@ -10712,6 +10748,7 @@ namespace Server.MirObjects
                     array = Info.Inventory;
                     break;
                 case MirGridType.Storage:
+
                     if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
@@ -10747,6 +10784,13 @@ namespace Server.MirObjects
                 if (temp == null || temp.UniqueID != id) continue;
                 index = i;
                 break;
+            }
+
+            if (!Account.AddedStorage && grid == MirGridType.Storage && index > 80)
+            {
+                ReceiveChat("You require a storage expansion pass to do that.", ChatType.System);
+                Enqueue(p);
+                return;
             }
 
             if (temp == null || index == -1)
@@ -10886,9 +10930,19 @@ namespace Server.MirObjects
                             break;
                         case 4: //Exp
                             time = item.Info.Durability;
-
                             AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
                             break;
+                        case 5: //Drop
+                            time = item.Info.Durability;
+                            AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.Luck + item.Luck } });
+                            break;
+                        case 6: //Storage
+                            time = item.Info.Durability;
+                            Enqueue(new S.ResizeStorage { Size = Account.ResizeStorage() });
+                            Account.AddedStorageExpire = DateTime.Now.AddDays(time);
+                            ReceiveChat(String.Format("Storage size increased for {0} days", time), ChatType.System);
+                            break;
+
                     }
                     break;
                 case ItemType.Scroll:
@@ -11206,13 +11260,20 @@ namespace Server.MirObjects
             }
 
             UserItem temp = null;
-
-
+            int index = -1;
             for (int i = 0; i < array.Length; i++)
             {
                 if (array[i] == null || array[i].UniqueID != id) continue;
                 temp = array[i];
+                index = i;
                 break;
+            }
+
+            if (!Account.AddedStorage && grid == MirGridType.Storage && index > 80)
+            {
+                ReceiveChat("You require a storage expansion pass to do that.", ChatType.System);
+                Enqueue(p);
+                return;
             }
 
             if (temp == null || count >= temp.Count || FreeSpace(array) == 0)
@@ -11373,6 +11434,13 @@ namespace Server.MirObjects
                 break;
             }
 
+            if (!Account.AddedStorage && gridFrom == MirGridType.Storage && index > 80)
+            {
+                ReceiveChat("You require a storage expansion pass to do that.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
             if (tempFrom == null || tempFrom.Info.StackSize == 1 || index == -1)
             {
                 Enqueue(p);
@@ -11381,12 +11449,21 @@ namespace Server.MirObjects
 
 
             UserItem tempTo = null;
+            int index2 = -1;
 
             for (int i = 0; i < arrayTo.Length; i++)
             {
                 if (arrayTo[i] == null || arrayTo[i].UniqueID != toID) continue;
+                index2 = i;
                 tempTo = arrayTo[i];
                 break;
+            }
+
+            if (!Account.AddedStorage && gridTo == MirGridType.Storage && index2 > 80)
+            {
+                ReceiveChat("You require a storage expansion pass to do that.", ChatType.System);
+                Enqueue(p);
+                return;
             }
 
             if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count == tempTo.Info.StackSize)

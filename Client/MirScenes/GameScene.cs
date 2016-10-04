@@ -1755,6 +1755,8 @@ namespace Client.MirScenes
                     return 7;
 
                 case BuffType.MagicBooster:
+                    return 235;
+                case BuffType.Storage:
                     return 73;
                 case BuffType.MagicShield:
                     return 30;
@@ -1868,6 +1870,7 @@ namespace Client.MirScenes
             Credit = p.Credit;
 
             InventoryDialog.RefreshInventory();
+            StorageDialog.RefreshStorage(2);
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
         }
@@ -5350,13 +5353,11 @@ namespace Client.MirScenes
             InventoryDialog.RefreshInventory2();
         }
 
-        private void ResizeStorage(S.ResizeStorage p)
-        {
+        private void ResizeStorage(S.ResizeStorage p) {
             User.AddedStorage = true;
 
             Array.Resize(ref Storage, p.Size);
-
-            StorageDialog.RefreshStorage2();
+            StorageDialog.RefreshStorage(2);
         }
 
         private void MailCost(S.MailCost p)
@@ -10007,204 +10008,208 @@ namespace Client.MirScenes
             {
                 //magic
                 case BuffType.TemporalFlux:
-                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
+                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.", (int)(MapObject.User.MaxMP * 0.3F));
                     break;
                 case BuffType.Hiding:
-                    text = "Hiding\nInvisible to many monsters.\n";
+                    text = "Hiding\nInvisible to many monsters.";
                     break;
                 case BuffType.Haste:
-                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.\n", Values[0]);
+                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.", Values[0]);
                     break;
                 case BuffType.SwiftFeet:
-                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.\n", Values[0]);
+                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.", Values[0]);
                     break;
                 case BuffType.Fury:
-                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.\n", Values[0]);
+                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.", Values[0]);
                     break;
                 case BuffType.LightBody:
-                    text = string.Format("Light Body\nIncreases Agility by: {0}.\n", Values[0]);
+                    text = string.Format("Light Body\nIncreases Agility by: {0}.", Values[0]);
                     break;
                 case BuffType.SoulShield:
-                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.", Values[0]);
                     break;
                 case BuffType.BlessedArmour:
-                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.", Values[0]);
                     break;
                 case BuffType.ProtectionField:
-                    text = string.Format("Protection Field\nIncreases AC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("Protection Field\nIncreases AC by: 0-{0}.", Values[0]);
                     break;
                 case BuffType.Rage:
-                    text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("Rage\nIncreases DC by: 0-{0}.", Values[0]);
                     break;
                 case BuffType.ImmortalSkin:
-                    text = string.Format("ImmortalSkin\nIncreases AC by: 0-{0}.\nDecreases DC by: 0-{1}.\n", Values[0], Values[1]);
+                    text = string.Format("ImmortalSkin\nIncreases AC by: 0-{0}.\nDecreases DC by: 0-{1}.", Values[0], Values[1]);
                     break;
                 case BuffType.CounterAttack:
-                    text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
+                    text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.", Values[0], Values[0]);
                     break;
                 case BuffType.UltimateEnhancer:
                     if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Values[0]);
+                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.", Values[0]);
                     }
                     else if (GameScene.User.Class == MirClass.Taoist)
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Values[0]);
+                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.", Values[0]);
                     }
                     else
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Values[0]);
+                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.", Values[0]);
                     }
                     break;
                 case BuffType.EnergyShield:
-                    text = string.Format("Energy Shield\n{0}% chance to gain {1} HP when attacked\n", Math.Round((1 / (decimal)Values[0]) * 100), Values[1]);
+                    text = string.Format("Energy Shield\n{0}% chance to gain {1} HP when attacked", Math.Round((1 / (decimal)Values[0]) * 100), Values[1]);
                     break;
                 case BuffType.Curse:
-                    text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Values[0]);
+                    text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.", Values[0]);
                     break;
                 case BuffType.MoonLight:
-                    text = "Moon Light\nInvisible to players and many\nmonsters when at a distance.\n";
+                    text = "Moon Light\nInvisible to players and many\nmonsters when at a distance.";
                     break;
                 case BuffType.DarkBody:
-                    text = "Dark Body\nInvisible to many monsters and able to move.\n";
+                    text = "Dark Body\nInvisible to many monsters and able to move.";
                     break;
                 case BuffType.VampireShot:
-                    text = string.Format("Vampire Shot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("Vampire Shot\nGives you a vampiric ability\nthat can be released with\ncertain skills.", Values[0]);
                     break;
                 case BuffType.PoisonShot:
-                    text = string.Format("Poison Shot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("Poison Shot\nGives you a poison ability\nthat can be released with\ncertain skills.", Values[0]);
                     break;
                 case BuffType.Concentration:
-                    text = "Concentrating\nIncreases chance on element extraction.\n";
+                    text = "Concentrating\nIncreases chance on element extraction.";
                     break;
                 case BuffType.MentalState:
                     switch (Values[0])
                     {
                         case 0:
-                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Values[0]);
+                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.", Values[0]);
                             break;
                         case 1:
-                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Values[0]);
+                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.", Values[0]);
                             break;
                         case 2:
-                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Values[0]);
+                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.", Values[0]);
                             break;
                     }
                     break;
                 case BuffType.MagicBooster:
-                    text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
+                    text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.", Values[0], Values[1]);
                     break;
                 case BuffType.MagicShield:
-                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", (Values[0] + 2) * 10);
+                    text = string.Format("Magic Shield\nReduces damage by {0}%.", (Values[0] + 2) * 10);
+                    break;
+                case BuffType.Storage:
+                    text = string.Format(String.Format("Storage Expansion\nYou have increased storage.\n"));
                     break;
 
                 //special
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)Values[0];
-                    text = "GameMaster\n";
+                    text = "GameMaster";
 
-                    if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
-                    if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
-                    if (options.HasFlag(GMOptions.Observer)) text += "-Observer\n";
+                    if (options.HasFlag(GMOptions.GameMaster)) text += "\n-Invisible";
+                    if (options.HasFlag(GMOptions.Superman)) text += "\n-Superman";
+                    if (options.HasFlag(GMOptions.Observer)) text += "\n-Observer";
                     break;
                 case BuffType.General:
-                    text = string.Format("Mirian Advantage\nExpRate increased by {0}%\n", Values[0]);
+                    text = string.Format("Mirian Advantage\nExpRate increased by {0}%", Values[0]);
 
                     if (Values.Length > 1)
-                        text += string.Format("DropRate increased by {0}%\n", Values[1]);
+                        text += string.Format("DropRate increased by {0}%", Values[1]);
                     if (Values.Length > 2)
-                        text += string.Format("GoldRate increased by {0}%\n", Values[2]);
+                        text += string.Format("GoldRate increased by {0}%", Values[2]);
                     break;
                 case BuffType.Exp:
-                    text = string.Format("Exp Rate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Exp Rate\nIncreased by {0}%", Values[0]);
                     break;
                 case BuffType.Gold:
-                    text = string.Format("Gold Rate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Gold Rate\nIncreased by {0}%", Values[0]);
                     break;
                 case BuffType.Drop:
-                    text = string.Format("Drop Rate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("Drop Rate\nIncreased by {0}%", Values[0]);
                     break;
                 case BuffType.BagWeight:
-                    text = string.Format("Bag Weight\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    text = string.Format("Bag Weight\nIncreases BagWeight by: {0}.", Values[0]);
                     break;
                 case BuffType.Transform:
-                    text = string.Format("Transform\nDisguises your appearance.\n");
+                    text = string.Format("Transform\nDisguises your appearance.");
                     break;
                 case BuffType.RelationshipEXP:
-                    text = string.Format("Love is in the Air\nExpRate increased by: {0}%.\n", Values[0]);
+                    text = string.Format("Love is in the Air\nExpRate increased by: {0}%.", Values[0]);
                     break;
                 case BuffType.Mentee:
-                    text = string.Format("In Training\nLearn skill points twice as quick.\nExpRate increased by: {0}%.\n", Values[0]);
+                    text = string.Format("In Training\nLearn skill points twice as quick.\nExpRate increased by: {0}%.", Values[0]);
                     break;
                 case BuffType.Mentor:
-                    text = string.Format("Mentorship Empowerment\nDamage to monsters increased by {0}%.\n", Values[0]);
+                    text = string.Format("Mentorship Empowerment\nDamage to monsters increased by {0}%.", Values[0]);
                     break;
                 case BuffType.Guild:
                     text = string.Format("Guild Charge\n");
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
                 case BuffType.Rested:
-                    text = string.Format("Rested\nIncreases Exp Rate by {0}%\n", Values[0]);
+                    text = string.Format("Rested\nIncreases Exp Rate by {0}%", Values[0]);
                     break;
 
                 //stats
                 case BuffType.Impact:
-                    text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("Impact\nIncreases DC by: 0-{0}.", Values[0]);
                     break;
                 case BuffType.Magic:
-                    text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("Magic\nIncreases MC by: 0-{0}.", Values[0]);
                     break;
                 case BuffType.Taoist:
-                    text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("Taoist\nIncreases SC by: 0-{0}.", Values[0]);
                     break;
                 case BuffType.Storm:
-                    text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
+                    text = string.Format("Storm\nIncreases A.Speed by: {0}.", Values[0]);
                     break;
                 case BuffType.HealthAid:
-                    text = string.Format("Health Aid\nIncreases HP by: {0}.\n", Values[0]);
+                    text = string.Format("Health Aid\nIncreases HP by: {0}.", Values[0]);
                     break;
                 case BuffType.ManaAid:
-                    text = string.Format("Mana Aid\nIncreases MP by: {0}.\n", Values[0]);
+                    text = string.Format("Mana Aid\nIncreases MP by: {0}.", Values[0]);
                     break;
                 case BuffType.Defence:
-                    text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.\n", Values[0]);
+                    text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.", Values[0]);
                     break;
                 case BuffType.MagicDefence:
-                    text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
+                    text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.", Values[0]);
                     break;
                 case BuffType.WonderDrug:
-                    text = string.Format("Wonder Drug\n");
+                    text = string.Format("Premium Drug");
                     switch (Values[0])
                     {
                         case 0:
-                            text += string.Format("Increases Exp Rate by {0}%\n", Values[1]);
+                            text += string.Format("\nIncreases Exp Rate by {0}%", Values[1]);
                             break;
                         case 1:
-                            text += string.Format("Increases Drop Rate by {0}%\n", Values[1]);
+                            text += string.Format("\nIncreases Drop Rate by {0}%", Values[1]);
                             break;
                         case 2:
-                            text += string.Format("Increases HP by: {0}.\n", Values[1]);
+                            text += string.Format("\nIncreases HP by: {0}.", Values[1]);
                             break;
                         case 3:
-                            text += string.Format("Increases MP by: {0}.\n", Values[1]);
+                            text += string.Format("\nIncreases MP by: {0}.", Values[1]);
                             break;
                         case 4:
-                            text += string.Format("Increases Max AC by: {0}-{0}.\n", Values[1]);
+                            text += string.Format("\nIncreases Max AC by: {0}-{0}.", Values[1]);
                             break;
                         case 5:
-                            text += string.Format("Increases Max MAC by: {0}-{0}.\n", Values[1]);
+                            text += string.Format("\nIncreases Max MAC by: {0}-{0}.", Values[1]);
                             break;
                         case 6:
-                            text += string.Format("Increases A.Speed by: {0}.\n", Values[1]);
+                            text += string.Format("\nIncreases A.Speed by: {0}.", Values[1]);
                             break;
                     }
                     break;
                 case BuffType.Knapsack:
-                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.", Values[0]);
                     break;
             }
 
-            text += string.Format("Expire: {0}", Infinite ? "Never" : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
+
+            text += string.Format(Infinite ? "" : "\nExpire: {0}",  Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
 
             if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
 

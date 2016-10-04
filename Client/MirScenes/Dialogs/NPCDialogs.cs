@@ -1626,7 +1626,7 @@ namespace Client.MirScenes.Dialogs
             };
             Storage1Button.Click += (o, e) =>
             {
-                RefreshStorage1();
+                RefreshStorage(1);
             };
 
             Storage2Button = new MirButton
@@ -1636,14 +1636,14 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(80, 36),
                 Library = Libraries.Title,
                 Parent = this,
-                PressedIndex = 746,
+                PressedIndex = 745,
                 Sound = SoundList.ButtonA,
                 Visible = true
             };
             Storage2Button.Click += (o, e) =>
             {
                 
-                RefreshStorage2();
+                RefreshStorage(2);
             };
             RentButton = new MirButton
             {
@@ -1693,11 +1693,11 @@ namespace Client.MirScenes.Dialogs
             };
             CloseButton.Click += (o, e) => Hide();
 
-            Grid = new MirItemCell[10 * 16];
-
+            //or add max vale in here (e.g. 8 * maxVal(2)) //GameScene.User.AddedStorage
+            Grid = new MirItemCell[10 * (8 * 2)];
             for (int x = 0; x < 10; x++)
             {
-                for (int y = 0; y < 16; y++)
+                for (int y = 0; y < (8 * 2); y++)
                 {
                     int idx = 10 * y + x;
 
@@ -1716,73 +1716,61 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
-        {
+        public void Hide() {
             Visible = false;
         }
 
-        public void Show()
-        {
+        public void Show() {
             GameScene.Scene.InventoryDialog.Show();
-            RefreshStorage1();
-
+            RefreshStorage(1);
             Visible = true;
         }
 
-        public void RefreshStorage1()
+        public void RefreshStorage(int StorageTab)
         {
             if (GameScene.User == null) return;
 
-            Storage1Button.Index = 743;
-            Storage1Button.HoverIndex = 743;
-            Storage2Button.Index = 746;
-            Storage2Button.HoverIndex = 746;
-
-            foreach (var grid in Grid)
+            switch (StorageTab)
             {
-                if (grid.ItemSlot < 80)
-                    grid.Visible = true;
-                else
-                    grid.Visible = false;
-            }
+                case 1:
+                    Storage1Button.Index = 743;
+                    Storage1Button.HoverIndex = 743;
+                    Storage2Button.Index = 746;
+                    Storage2Button.HoverIndex = 746;
+                    LockedPage.Visible = false;
 
-            RentButton.Visible = false;
-            LockedPage.Visible = false;
-        }
+                    foreach (var grid in Grid) {
+                        if (grid.ItemSlot < 80) { grid.Visible = true; }
+                        else { grid.Visible = false; }
+                    }
+                    break;
+                case 2:
+                    Storage1Button.Index = 744;
+                    Storage1Button.HoverIndex = 744;
+                    Storage2Button.Index = 745;
+                    Storage2Button.HoverIndex = 745;
 
-        public void RefreshStorage2()
-        {
-            if (GameScene.User == null) return;
+                    if (!GameScene.User.AddedStorage) { LockedPage.Visible = true; }
+                    else { LockedPage.Visible = false; }
 
-            Storage1Button.Index = 744;
-            Storage1Button.HoverIndex = 744;
-            Storage2Button.Index = 745;
-            Storage2Button.HoverIndex = 745;
-
-            if (GameScene.User.AddedStorage)
-            {
-                RentButton.Visible = false;
-                LockedPage.Visible = false;
-            }
-            else
-            {
-                RentButton.Visible = true;
-                LockedPage.Visible = true;
-            }
-
-            foreach (var grid in Grid)
-            {
-                if (grid.ItemSlot < 80 || !GameScene.User.AddedStorage)
-                    grid.Visible = false;
-                else
-                    grid.Visible = true;
+                    foreach (var grid in Grid) {
+                        if (grid.ItemSlot >= 80) {
+                            grid.Visible = true;
+                            if (!GameScene.User.AddedStorage) {
+                                //grid.Locked = true;
+                                grid.BorderColour = Color.Empty;
+                            } else {
+                                //grid.Locked = false;
+                                grid.BorderColour = Color.Lime;
+                            }
+                        } else { grid.Visible = false; }
+                    }
+                    break;
             }
         }
 
-        public MirItemCell GetCell(ulong id)
-        {
-            for (int i = 0; i < Grid.Length; i++)
-            {
+        public MirItemCell GetCell(ulong id) {
+            for (int i = 0; i < Grid.Length; i++) {
                 if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
                 return Grid[i];
             }
