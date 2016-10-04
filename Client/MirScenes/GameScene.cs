@@ -10099,7 +10099,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Shield\nReduces damage by {0}%.", (Values[0] + 2) * 10);
                     break;
                 case BuffType.Storage:
-                    text = string.Format(String.Format("Storage Expansion\nYou have increased storage.\n"));
+                    text = string.Format(String.Format("Storage Expansion\nYou have increased storage."));
                     break;
 
                 //special
