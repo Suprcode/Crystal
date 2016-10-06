@@ -990,6 +990,7 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Hide();
         }
 
+        #region ProcessPackets
         public override void ProcessPacket(Packet p)
         {
             switch (p.Index)
@@ -1616,7 +1617,9 @@ namespace Client.MirScenes
                     break;
             }
         }
+        #endregion
 
+        #region Buffs
         public void CreateBuff(Buff buff)
         {
             string text = "";
@@ -1657,6 +1660,7 @@ namespace Client.MirScenes
             
             switch (buff.Type)
             {
+                #region Spells - Taoist
                 case BuffType.UltimateEnhancer:
                     if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
                     {
@@ -1671,6 +1675,8 @@ namespace Client.MirScenes
                         text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     }
                     break;
+                #endregion
+                #region Drugs
                 case BuffType.Impact:
                     text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
@@ -1695,6 +1701,7 @@ namespace Client.MirScenes
                 case BuffType.MagicDefence:
                     text = string.Format("Max MAC increased by {0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
                     break;
+                    #endregion
             }
 
             if (text != "") GameScene.Scene.ChatDialog.ReceiveChat(text, ChatType.Hint);
@@ -1745,39 +1752,43 @@ namespace Client.MirScenes
             switch (type)
             {
                 //Skills
-                case BuffType.Fury:
-                    return 76;
-                case BuffType.Rage:
-                    return 49;
-                case BuffType.ImmortalSkin:
-                    return 80;
+                #region Spells - Warrior
                 case BuffType.CounterAttack:
                     return 7;
-
+                case BuffType.Rage:
+                    return 49;
+                case BuffType.ProtectionField:
+                    return 50;
+                case BuffType.Fury:
+                    return 76;
+                case BuffType.ImmortalSkin:
+                    return 80;
+                #endregion
+                #region Spells - Wizard
                 case BuffType.MagicBooster:
                     return 235;
-                case BuffType.Storage:
-                    return 73;
                 case BuffType.MagicShield:
                     return 30;
-
+                case BuffType.TemporalFlux:
+                    return 261;
+                #endregion
+                #region Spells - Taoist
                 case BuffType.Hiding:
                     return 17;
-                case BuffType.Haste:
-                    return 60;
                 case BuffType.SoulShield:
                     return 13;
                 case BuffType.BlessedArmour:
                     return 14;
-                case BuffType.ProtectionField:
-                    return 50;
                 case BuffType.UltimateEnhancer:
                     return 35;
                 case BuffType.Curse:
                     return 45;
                 case BuffType.EnergyShield:
                     return 57;
-
+                #endregion
+                #region Spells - Assassin
+                case BuffType.Haste:
+                    return 60;
                 case BuffType.SwiftFeet:
                     return 67;
                 case BuffType.LightBody:
@@ -1786,7 +1797,8 @@ namespace Client.MirScenes
                     return 65;
                 case BuffType.DarkBody:
                     return 70;
-
+                #endregion
+                #region Spells - Archer
                 case BuffType.Concentration:
                     return 96;
                 case BuffType.VampireShot:
@@ -1795,8 +1807,10 @@ namespace Client.MirScenes
                     return 102;
                 case BuffType.MentalState:
                     return 199;
-
-                //Special
+                #endregion
+                #region Other
+                case BuffType.Storage:
+                    return 73;
                 case BuffType.GameMaster:
                     return 173;
                 case BuffType.General:
@@ -1807,7 +1821,6 @@ namespace Client.MirScenes
                     return 162;
                 case BuffType.Gold:
                     return 168;
-                case BuffType.Knapsack:
                 case BuffType.BagWeight:
                     return 235;
                 case BuffType.Transform:
@@ -1822,10 +1835,8 @@ namespace Client.MirScenes
                     return 203;
                 case BuffType.Rested:
                     return 240;
-                case BuffType.TemporalFlux:
-                    return 261;
-
-                //Stats
+                #endregion
+                #region Drugs
                 case BuffType.Impact:
                     return 249;
                 case BuffType.Magic:
@@ -1842,17 +1853,22 @@ namespace Client.MirScenes
                     return 166;
                 case BuffType.MagicDefence:
                     return 158;
-                case BuffType.WonderDrug:
+                case BuffType.PremiumDrug:
                     return 252;
+                #endregion
                 default:
                     return 0;
+
             }
         }
+        #endregion
+
         private void KeepAlive(S.KeepAlive p)
         {
             if (p.Time == 0) return;
             PingTime = (CMain.Time - p.Time);
         }
+
         private void MapInformation(S.MapInformation p)
         {
             if (MapControl != null && !MapControl.IsDisposed)
@@ -1861,6 +1877,7 @@ namespace Client.MirScenes
             MapControl.LoadMap();
             InsertControl(0, MapControl);
         }
+
         private void UserInformation(S.UserInformation p)
         {
             User = new UserObject(p.ObjectID);
@@ -10006,31 +10023,7 @@ namespace Client.MirScenes
 
             switch (Type)
             {
-                //magic
-                case BuffType.TemporalFlux:
-                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.", (int)(MapObject.User.MaxMP * 0.3F));
-                    break;
-                case BuffType.Hiding:
-                    text = "Hiding\nInvisible to many monsters.";
-                    break;
-                case BuffType.Haste:
-                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.", Values[0]);
-                    break;
-                case BuffType.SwiftFeet:
-                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.", Values[0]);
-                    break;
-                case BuffType.Fury:
-                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.", Values[0]);
-                    break;
-                case BuffType.LightBody:
-                    text = string.Format("Light Body\nIncreases Agility by: {0}.", Values[0]);
-                    break;
-                case BuffType.SoulShield:
-                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.", Values[0]);
-                    break;
-                case BuffType.BlessedArmour:
-                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.", Values[0]);
-                    break;
+                #region Spells - Warrior
                 case BuffType.ProtectionField:
                     text = string.Format("Protection Field\nIncreases AC by: 0-{0}.", Values[0]);
                     break;
@@ -10043,6 +10036,11 @@ namespace Client.MirScenes
                 case BuffType.CounterAttack:
                     text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.", Values[0], Values[0]);
                     break;
+                case BuffType.Fury:
+                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.", Values[0]);
+                    break;
+                #endregion
+                #region Spells - Taoist
                 case BuffType.UltimateEnhancer:
                     if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
                     {
@@ -10063,12 +10061,34 @@ namespace Client.MirScenes
                 case BuffType.Curse:
                     text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.", Values[0]);
                     break;
+                case BuffType.SoulShield:
+                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.", Values[0]);
+                    break;
+                case BuffType.BlessedArmour:
+                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.", Values[0]);
+                    break;
+                case BuffType.Hiding:
+                    text = "Hiding\nInvisible to many monsters.";
+                    break;
+                #endregion
+                #region Spells - Assassin
                 case BuffType.MoonLight:
                     text = "Moon Light\nInvisible to players and many\nmonsters when at a distance.";
                     break;
                 case BuffType.DarkBody:
                     text = "Dark Body\nInvisible to many monsters and able to move.";
                     break;
+                case BuffType.LightBody:
+                    text = string.Format("Light Body\nIncreases Agility by: {0}.", Values[0]);
+                    break;
+                case BuffType.Haste:
+                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.", Values[0]);
+                    break;
+                case BuffType.SwiftFeet:
+                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.", Values[0]);
+                    break;
+                #endregion
+                #region Spells - Archer
                 case BuffType.VampireShot:
                     text = string.Format("Vampire Shot\nGives you a vampiric ability\nthat can be released with\ncertain skills.", Values[0]);
                     break;
@@ -10092,17 +10112,22 @@ namespace Client.MirScenes
                             break;
                     }
                     break;
+                #endregion
+                #region Spells - Wizard
                 case BuffType.MagicBooster:
                     text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.", Values[0], Values[1]);
                     break;
                 case BuffType.MagicShield:
                     text = string.Format("Magic Shield\nReduces damage by {0}%.", (Values[0] + 2) * 10);
                     break;
+                case BuffType.TemporalFlux:
+                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.", (int)(MapObject.User.MaxMP * 0.3F));
+                    break;
+                #endregion
+                #region Other
                 case BuffType.Storage:
                     text = string.Format(String.Format("Storage Expansion\nYou have increased storage."));
                     break;
-
-                //special
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)Values[0];
                     text = "GameMaster";
@@ -10150,8 +10175,8 @@ namespace Client.MirScenes
                 case BuffType.Rested:
                     text = string.Format("Rested\nIncreases Exp Rate by {0}%", Values[0]);
                     break;
-
-                //stats
+                #endregion
+                #region Drugs
                 case BuffType.Impact:
                     text = string.Format("Impact\nIncreases DC by: 0-{0}.", Values[0]);
                     break;
@@ -10176,7 +10201,7 @@ namespace Client.MirScenes
                 case BuffType.MagicDefence:
                     text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.", Values[0]);
                     break;
-                case BuffType.WonderDrug:
+                case BuffType.PremiumDrug:
                     text = string.Format("Premium Drug");
                     switch (Values[0])
                     {
@@ -10203,16 +10228,10 @@ namespace Client.MirScenes
                             break;
                     }
                     break;
-                case BuffType.Knapsack:
-                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.", Values[0]);
-                    break;
+                #endregion
             }
-
-
             text += string.Format(Infinite ? "" : "\nExpire: {0}",  Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
-
             if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
-
             return text;
         }
 
