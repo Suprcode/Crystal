@@ -15509,20 +15509,7 @@ namespace Server.MirObjects
                     RefreshBagWeight();
                     MyGuild.NeedSave = true;
                     break;
-                case 2://request list
-                    if (!GuildCanRequestItems) return;
-                    GuildCanRequestItems = false;
-                    for (int i = 0; i < MyGuild.StoredItems.Length; i++)
-                    {
-                        if (MyGuild.StoredItems[i] == null) continue;
-                        UserItem item = MyGuild.StoredItems[i].Item;
-                        if (item == null) continue;
-                        //CheckItemInfo(item.Info);
-                        CheckItem(item);
-                    }
-                    Enqueue(new S.GuildStorageList() { Items = MyGuild.StoredItems });
-                    break;
-                case 3: // Move Item
+                case 2: // Move Item
                     GuildStorageItem q = null;
                     if (!MyGuildRank.Options.HasFlag(RankOptions.CanStoreItem))
                     {
@@ -15564,6 +15551,19 @@ namespace Server.MirObjects
 
                     MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 2, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
                     MyGuild.NeedSave = true;
+                    break;
+                case 3://request list
+                    if (!GuildCanRequestItems) return;
+                    GuildCanRequestItems = false;
+                    for (int i = 0; i < MyGuild.StoredItems.Length; i++)
+                    {
+                        if (MyGuild.StoredItems[i] == null) continue;
+                        UserItem item = MyGuild.StoredItems[i].Item;
+                        if (item == null) continue;
+                        //CheckItemInfo(item.Info);
+                        CheckItem(item);
+                    }
+                    Enqueue(new S.GuildStorageList() { Items = MyGuild.StoredItems });
                     break;
             }
 
