@@ -3180,23 +3180,22 @@ namespace Server.MirObjects
         public void RefreshNameColour()
         {
             Color colour = Color.White;
-
-            if (WarZone)
+            
+            if (PKPoints >= 200)
+                colour = Color.Red;
+            else if (WarZone)
             {
                 if (MyGuild == null)
                     colour = Color.Green;
                 else
                     colour = Color.Blue;
             }
-            else if (PKPoints >= 200)
-                colour = Color.Red;
             else if (Envir.Time < BrownTime)
                 colour = Color.SaddleBrown;
             else if (PKPoints >= 100)
                 colour = Color.Yellow;
 
             if (colour == NameColour) return;
-
 
             NameColour = colour;
             if ((MyGuild == null) || (!MyGuild.IsAtWar()))
