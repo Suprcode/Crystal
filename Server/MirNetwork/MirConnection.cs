@@ -1569,7 +1569,7 @@ namespace Server.MirNetwork
                 {
                     if (Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
                     {
-			if (petUpdate.CustomName.length <= 12)
+			if (petUpdate.CustomName.Length <= 12)
                         	Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName
                         Player.Info.IntelligentCreatures[i].SlotIndex = petUpdate.SlotIndex;
                         Player.Info.IntelligentCreatures[i].Filter = petUpdate.Filter;
