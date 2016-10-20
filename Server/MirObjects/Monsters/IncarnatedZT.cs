@@ -12,6 +12,7 @@ namespace Server.MirObjects.Monsters
         protected internal IncarnatedZT(MonsterInfo info) : base(info)
         {
             AvoidFireWall = false;
+            Stoned = false;
         }
 
         protected override void Attack()
