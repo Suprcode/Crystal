@@ -167,16 +167,17 @@ namespace Server.MirObjects.Monsters
         public override void PoisonDamage(int damage, MapObject attacker)
         {
             damage = damage * (-1);
-            if (attacker == null) return;
+            if (attacker == null || (attacker is MonsterObject && attacker.Master == null)) return;
 
-            if (_currentAttacker != null && _currentAttacker != attacker)
+            if (_currentAttacker != null && (_currentAttacker != attacker || _currentAttacker != attacker.Master))
             {
                 OutputAverage();
                 ResetStats();
             }
+            
             if (_currentAttacker == null)
                 _StartTime = Envir.Time;
-            _currentAttacker = (PlayerObject)attacker;
+            _currentAttacker = attacker is MonsterObject ? (PlayerObject)attacker.Master : (PlayerObject)attacker;
             _hitCount++;
             _totalDamage += damage;
             _lastAttackTime = Envir.Time;
@@ -185,7 +186,7 @@ namespace Server.MirObjects.Monsters
             if (_StartTime == 0)
                 timespend = 1000;
             double Dps = _totalDamage / (timespend * 0.001);
-            _currentAttacker.ReceiveChat(string.Format("{1} inflicted {0} Damage, Dps: {2:#.00}.", damage, "Your poison", Dps), ChatType.Trainer);
+            _currentAttacker.ReceiveChat(string.Format("{1} inflicted {0} Damage, Dps: {2:#.00}.", damage, attacker is MonsterObject ? "Your pets poison" : "Your poison", Dps), ChatType.Trainer);
             Poisoned = true;
         }
 
