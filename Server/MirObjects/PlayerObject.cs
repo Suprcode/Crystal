@@ -1690,9 +1690,8 @@ namespace Server.MirObjects
 
                 return;
             }
-
-
         }
+
         private void AddItem(UserItem item)
         {
             if (item.Info.StackSize > 1) //Stackable
@@ -16044,6 +16043,16 @@ namespace Server.MirObjects
                         UserItem temp = TradePair[p].Info.Trade[t];
 
                         if (temp == null) continue;
+
+                        if(FreeSpace(TradePair[p].Info.Inventory) < 1)
+                        {
+                            TradePair[p].GainItemMail(temp, 1);
+                            Report.ItemMailed("TradeCancel", temp, temp.Count, 1);
+
+                            TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            TradePair[p].Info.Trade[t] = null;
+                            continue;
+                        }
 
                         for (int i = 0; i < TradePair[p].Info.Inventory.Length; i++)
                         {

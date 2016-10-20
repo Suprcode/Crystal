@@ -333,6 +333,7 @@ namespace Client
                 TrackedQuests[i] = Reader.ReadInt32("Q-" + Charname, "Quest-" + i.ToString(), -1);
             }
         }
+
         public static void SaveTrackedQuests(string Charname)
         {
             //Quests
