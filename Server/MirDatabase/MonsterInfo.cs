@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -205,6 +206,7 @@ namespace Server.MirDatabase
 
         public void LoadDrops()
         {
+            Debug.WriteLine("Load Drops: " + Name);
             Drops.Clear();
             string path = Path.Combine(Settings.DropPath, Name + ".txt");
             if (!File.Exists(path))

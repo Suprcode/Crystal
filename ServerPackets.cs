@@ -2369,7 +2369,7 @@ namespace ServerPackets
             ObjectID = reader.ReadUInt32();
             Name = reader.ReadString();
             NameColour = Color.FromArgb(reader.ReadInt32());
-            Image = reader.ReadUInt16();
+            Image = reader.ReadInt32();
             Colour = Color.FromArgb(reader.ReadInt32());
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Direction = (MirDirection)reader.ReadByte();
@@ -3946,7 +3946,7 @@ namespace ServerPackets
             writer.Write(User);
             writer.Write(Item != null);
             if (Item == null) return;
-            writer.Write(Item.UserId);
+            writer.Write(Item.UserId ?? 0);
             Item.Item.Save(writer);
         }
     }

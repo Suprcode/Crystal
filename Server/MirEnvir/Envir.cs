@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -1315,15 +1317,48 @@ namespace Server.MirEnvir
                         var dbGuild = ctx.Guilds.FirstOrDefault(g => g.Guildindex == guildObject.Guildindex);
                         if (dbGuild == null)
                         {
-                            ctx.Guilds.Add(guildObject);
+                            dbGuild = guildObject;
+                            ctx.Guilds.Add(dbGuild);
                         }
                         else
                         {
                             ctx.Entry(dbGuild).CurrentValues.SetValues(guildObject);
                         }
-                        
+                        ctx.SaveChanges();
+                        foreach (var rank in guildObject.Ranks)
+                        {
+                            rank.GuildIndex = dbGuild.Guildindex;
+                            ctx.Ranks.AddOrUpdate(rank);
+                            ctx.SaveChanges();
+                            foreach (var member in rank.Members)
+                            {
+                                member.RankId = rank.id;
+                                ctx.GuildMembers.AddOrUpdate(member);
+                            }
+                            ctx.SaveChanges();
+                        }
+                        foreach (var buff in guildObject.BuffList)
+                        {
+                            buff.GuildIndex = dbGuild.Guildindex;
+                            ctx.GuildBuffs.AddOrUpdate(buff);
+                        }
+                        ctx.SaveChanges();
+                        ctx.GuildStorageItems.RemoveRange(
+                            ctx.GuildStorageItems.Where(i => i.GuildIndex == guildObject.Guildindex));
+                        ctx.SaveChanges();
+                        foreach (var item in guildObject.StoredItems)
+                        {
+                            
+                            ctx.GuildStorageItems.Add(new GuildStorageItem
+                            {
+                                GuildIndex = guildObject.Guildindex,
+                                ItemUniqueID = item?.Item?.UniqueID,
+                                UserId = item?.UserId
+                            });
+                        }
+                        ctx.SaveChanges();
                     }
-                    ctx.SaveChanges();
+                    
                 }
                 return;
             }
@@ -1776,15 +1811,41 @@ namespace Server.MirEnvir
                         AccountList.ForEach(x =>
                         {
                             x.Characters = CharacterList.Where(c => c.AccountInfoIndex == x.Index).ToList();
+                            var storageItems =
+                                ctx.StorageItems.AsNoTracking().Where(i => i.AccountIndex == x.Index).Include(i => i.UserItem).ToList();
+                            Array.Resize(ref x.Storage, storageItems.Count <= 80 ? 80 : storageItems.Count);
+                            int storageIndex = 0;
+                            foreach (var item in storageItems)
+                            {
+                                if (item.UserItemUniqueID != null)
+                                {
+                                    if (item.UserItem != null && SMain.Envir.BindItem(item.UserItem) &&
+                                        storageIndex < x.Storage.Length)
+                                    {
+                                        x.Storage[storageIndex] = item.UserItem;
+                                    }
+                                }
+                                storageIndex++;
+                            }
+
                         });
                         foreach (AuctionInfo auction in Auctions)
                             auction.CharacterInfo.AccountInfo.Auctions.Remove(auction);
-                        Auctions = new LinkedList<AuctionInfo>(ctx.AuctionInfos.Include(a => a.CharacterInfo).Include(a => a.CharacterInfo.AccountInfo).AsNoTracking().ToList());
-                        NextAuctionID = (Auctions.Max(a => (long?) a.AuctionID) ?? 0) + 1;
+                        Auctions =
+                            new LinkedList<AuctionInfo>(
+                                ctx.AuctionInfos.Include(a => a.CharacterInfo)
+                                    .Include(a => a.CharacterInfo.AccountInfo)
+                                    .Include(a => a.Item)
+                                    .AsNoTracking()
+                                    .ToList());
+                        NextAuctionID = (Auctions.Max(a => (long?) a.AuctionID) ?? 0);
                         foreach (var auction in Auctions)
                         {
                             if (!BindItem(auction.Item) || !BindCharacter(auction)) continue;
                             auction.CharacterInfo.AccountInfo.Auctions.AddLast(auction);
+                            var accountInfo =
+                                AccountList.FirstOrDefault(i => i.Index == auction.CharacterInfo.AccountInfo.Index);
+                            if (accountInfo != null) accountInfo.Auctions.AddLast(auction);
                         }
                         NextMailID = (ctx.Mails.Max(m => (long?) m.MailID) ?? 0) + 1;
                         Mail = ctx.Mails.AsNoTracking().ToList();
@@ -1930,8 +1991,26 @@ namespace Server.MirEnvir
                 {
                     using (var ctx = new DataContext())
                     {
-                        GuildList = ctx.Guilds.AsNoTracking().ToList();
+                        var BaseGuildList = ctx.Guilds.AsNoTracking().ToList();
+                        GuildList.Clear();
+                        foreach (var baseGuildObject in BaseGuildList)
+                        {
+                            var guild = new GuildObject();
+                            Functions.CopyProperties(guild, baseGuildObject);
+                            GuildList.Add(guild);
+                        }
+                        GuildList.ForEach(g =>
+                        {
+                            g.StoredItems = ctx.GuildStorageItems.Include(i => i.Item).Include(i => i.Item.Info).AsNoTracking().Where(i => i.GuildIndex == g.Guildindex).ToArray();
+                            for (int i = 0; i < g.StoredItems.Length; i++)
+                            {
+                                if (g.StoredItems[i].ItemUniqueID == null) g.StoredItems[i] = null;
+                            }
+                            g.Ranks = ctx.Ranks.AsNoTracking().Include(r => r.GuildMembers).Where(r => r.GuildIndex == g.Guildindex).ToList();
+                            g.Ranks.ForEach(r => r.Members = r.GuildMembers.ToList());
+                        });
                     }
+                    
                     return;
                 }
                 for (int i = 0; i < GuildCount; i++)

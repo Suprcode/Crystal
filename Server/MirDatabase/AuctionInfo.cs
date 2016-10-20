@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,27 +14,10 @@ namespace Server.MirDatabase
     {
         [Key]
         public long AuctionID { get; set; }
-
-        public long UserItemUniqueID
-        {
-            get
-            {
-                return Item.UniqueID;
-            }
-            set
-            {
-                if (value > 0)
-                {
-                    using (var ctx = new DataContext())
-                    {
-                        Item = ctx.UserItems.FirstOrDefault(i => i.UniqueID == value);
-                    }
-                }
-            }
-        }
-        [NotMapped]
-        public UserItem Item;
-        public DateTime ConsignmentDate;
+        [ForeignKey("Item")]
+        public long UserItemUniqueID { get; set; }
+        public UserItem Item { get; set; }
+        public DateTime ConsignmentDate { get; set; }
         public uint Price;
         public long DBPrice { get { return Price; } set { Price = (uint) value; } }
         [ForeignKey("CharacterInfo")]
@@ -67,16 +51,23 @@ namespace Server.MirDatabase
             {
                 using (var ctx = new DataContext())
                 {
+                    ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, Item);
+                    var info = this;
+                    info.UserItemUniqueID = Item.UniqueID;
+                    info.CharacterIndex = CharacterInfo.Index;
+                    info.Item = null;
+                    info.CharacterInfo = null;
                     var dbInfo = ctx.AuctionInfos.FirstOrDefault(i => i.AuctionID == AuctionID);
                     if (dbInfo == null)
                     {
-                        ctx.AuctionInfos.Add(this);
+                        ctx.AuctionInfos.Add(info);
                     }
                     else
                     {
-                        ctx.Entry(dbInfo).CurrentValues.SetValues(this);
+                        ctx.Entry(dbInfo).CurrentValues.SetValues(info);
                     }
                     ctx.SaveChanges();
+                    this.AuctionID = info.AuctionID;
                 }
                 return;
             }
