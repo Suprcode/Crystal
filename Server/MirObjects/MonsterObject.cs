@@ -213,6 +213,8 @@ namespace Server.MirObjects
                     return new HellLord(info);
                 case 99:
                     return new HellBomb(info);
+                case 100:
+                    return new VenomSpider(info);
 
                 //unfinished
                 case 253:

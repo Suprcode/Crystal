@@ -1126,7 +1126,7 @@ namespace Client.MirControls
                                     }
                                     //if (ItemArray[ItemSlot] == null)
                                     //{
-                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 3, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 2, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
                                         Locked = true;
                                         GameScene.SelectedCell.Locked = true;
                                         GameScene.SelectedCell = null;

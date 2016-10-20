@@ -2222,7 +2222,7 @@ namespace Client.MirScenes.Dialogs
                     StoragePage.Visible = true;
                     StorageButton.Index = 106;
                     if (!StorageRequested)
-                        Network.Enqueue(new C.GuildStorageItemChange() { Type = 2 });
+                        Network.Enqueue(new C.GuildStorageItemChange() { Type = 3 });
                     break;
                 case 3:
                     RankPage.Visible = true;
