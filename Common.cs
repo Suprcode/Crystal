@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -2496,6 +2497,27 @@ public static class Functions
         }
         return rv;
     }
+
+    public static void CopyProperties(object destinationObject, object sourceObject, bool overwriteAll = true)
+    {
+        if (sourceObject != null)
+        {
+            PropertyInfo[] sourceProps = sourceObject.GetType().GetProperties();
+            List<string> sourcePropNames = sourceProps.Select(p => p.Name).ToList();
+            foreach (PropertyInfo pi in destinationObject.GetType().GetProperties())
+            {
+                if (sourcePropNames.Contains(pi.Name))
+                {
+                    PropertyInfo sourceProp = sourceProps.First(srcProp => srcProp.Name == pi.Name);
+                    if (sourceProp.PropertyType == pi.PropertyType)
+                        if (overwriteAll || pi.GetValue(destinationObject, null) == null)
+                        {
+                            pi.SetValue(destinationObject, sourceProp.GetValue(sourceObject, null), null);
+                        }
+                }
+            }
+        }
+    }
 }
 
 public class SelectInfo
@@ -3522,7 +3544,7 @@ public class ExpireInfo
 
 public class GameShopItem
 {
-    [Key]
+    public int id { get; set; }
     public int ItemIndex { get; set; }
     public int GIndex { get; set; }
     [NotMapped]
@@ -3530,9 +3552,12 @@ public class GameShopItem
 
     public int ItemInfoIndex { get; set; }
 
-    public uint GoldPrice { get; set; } = 0;
-    public uint CreditPrice { get; set; } = 0;
-    public uint Count { get; set; } = 1;
+    public uint GoldPrice = 0;
+    public long DBGoldPrice { get { return GoldPrice;} set { GoldPrice = (uint) value; } }
+    public uint CreditPrice = 0;
+    public long DBCreditPrice { get { return CreditPrice; } set { CreditPrice = (uint) value; } }
+    public uint Count = 1;
+    public long DBCount { get { return Count; } set { Count = (uint) value; } }
     public string Class { get; set; } = "";
     public string Category { get; set; } = "";
     public int Stock { get; set; } = 0;
@@ -4508,7 +4533,7 @@ public abstract class Packet
             try
             {
                 short id = reader.ReadInt16();
-
+                Debug.WriteLine(id);
                 p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
                 if (p == null) return null;
 
@@ -5888,6 +5913,55 @@ public class MineZone
 #endregion
 
 #region "Guild Related"
+
+public class BaseGuildObject
+{
+    [Key]
+    public int Guildindex { get; set; } = 0;
+    public string Name { get; set; } = "";
+    public byte Level { get; set; } = 0;
+    public byte SparePoints { get; set; } = 0;
+    public long Experience { get; set; } = 0;
+    public uint Gold = 0;
+    public long DBGold { get { return Gold; } set { Gold = (uint)value; } }
+    public int Votes { get; set; } = 0;
+    public DateTime LastVoteAttempt { get; set; }
+    public bool Voting { get; set; } = false;
+    public bool NeedSave { get; set; } = false;
+    public int Membercount { get; set; } = 0;
+    public long MaxExperience { get; set; } = 0;
+    public long NextExpUpdate { get; set; } = 0;
+    public int MemberCap { get; set; } = 0;
+    public List<string> Notice = new List<string>();
+    public string DBNotice
+    {
+        get { return string.Join("|_|-*-|_|", Notice); }
+        set
+        {
+            Notice = value.Split(new[] { "|_|-*-|_|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        }
+    }
+    [NotMapped]
+    public List<Rank> Ranks = new List<Rank>();
+    [NotMapped]
+    public GuildStorageItem[] StoredItems = new GuildStorageItem[112];
+    [NotMapped]
+    public List<GuildBuff> BuffList = new List<GuildBuff>();
+
+
+    public List<BaseGuildObject> WarringGuilds = new List<BaseGuildObject>();
+
+    public string DBWarringGuilds { get; set; }
+
+    public ushort FlagImage = 1000;
+    public Color FlagColour = Color.White;
+    //[NotMapped]
+    //public ConquestObject Conquest; // TODO Fix Guild Bugs First
+    public string DBAllyGuilds { get; set; }
+    public int AllyCount;
+
+    public List<BaseGuildObject> AllyGuilds = new List<BaseGuildObject>();
+}
 public class ItemVolume
 {
     public ItemInfo Item;
@@ -5897,10 +5971,15 @@ public class ItemVolume
 
 public class Rank
 {
+    public int id { get; set; }
     public List<GuildMember> Members = new List<GuildMember>();
-    public string Name = "";
-    public int Index = 0;
-    public RankOptions Options = (RankOptions)0;
+    public ICollection<GuildMember> GuildMembers { get; set; }
+    public string Name { get; set; } = "";
+    public int Index { get; set; } = 0;
+    public RankOptions Options { get; set; } = (RankOptions)0;
+    [ForeignKey("Guild")]
+    public int GuildIndex { get; set; }
+    public BaseGuildObject Guild { get; set; }
     public Rank() 
     {
     }
@@ -5928,8 +6007,14 @@ public class Rank
 
 public class GuildStorageItem
 {
-    public UserItem Item;
-    public long UserId = 0;
+    public int id { get; set; }
+    public UserItem Item { get; set; }
+    [ForeignKey("Item")]
+    public long? ItemUniqueID { get; set; }
+    public long? UserId { get;set; } = 0;
+    [ForeignKey("Guild")]
+    public int GuildIndex { get; set; }
+    public BaseGuildObject Guild { get; set; }
     public GuildStorageItem()
     {
     }
@@ -5941,18 +6026,22 @@ public class GuildStorageItem
     public void save(BinaryWriter writer)
     {
         Item.Save(writer);
-        writer.Write(UserId);
+        writer.Write(UserId ?? 0);
     }
 }
 
 public class GuildMember
 {
-    public string name = "";
-    public int Id;
+    public string name { get; set; } = "";
+    [Key]
+    public int Id { get; set; }
     public object Player;
-    public DateTime LastLogin;
-    public bool hasvoted;
-    public bool Online;
+    public DateTime LastLogin { get; set; }
+    public bool hasvoted { get; set; }
+    public bool Online { get; set; }
+    [ForeignKey("Rank")]
+    public int RankId { get; set; }
+    public Rank Rank { get; set; }
 
     public GuildMember()
     {}
@@ -5963,7 +6052,7 @@ public class GuildMember
         LastLogin = DateTime.FromBinary(reader.ReadInt64());
         hasvoted = reader.ReadBoolean();
         Online = reader.ReadBoolean();
-        Online = Offline ? false: Online;
+        Online = !Offline && Online;
     }
     public void save(BinaryWriter writer)
     {
@@ -6004,8 +6093,8 @@ public class GuildBuffInfo
     public byte BuffMc;
     public byte BuffSc;
     public byte BuffAttack;
-    public int  BuffMaxHp;
-    public int  BuffMaxMp;
+    public int BuffMaxHp;
+    public int BuffMaxMp;
     public byte BuffMineRate;
     public byte BuffGemRate;
     public byte BuffFishRate;
@@ -6014,7 +6103,7 @@ public class GuildBuffInfo
     public byte BuffSkillRate;
     public byte BuffHpRegen;
     public byte BuffMPRegen;
-    
+
     public byte BuffDropRate;
     public byte BuffGoldRate;
 
@@ -6247,10 +6336,14 @@ public class GuildBuffInfo
 
 public class GuildBuff
 {
-    public int Id;
+//    [ForeignKey("Info")]
+    public int Id { get; set; }
     public GuildBuffInfo Info;
-    public bool Active = false;
-    public int ActiveTimeRemaining;
+    public bool Active { get; set; } = false;
+    public int ActiveTimeRemaining { get; set; }
+    [ForeignKey("Guild")]
+    public int GuildIndex { get; set; }
+    public BaseGuildObject Guild { get; set; }
 
     public bool UsingGuildSkillIcon
     {

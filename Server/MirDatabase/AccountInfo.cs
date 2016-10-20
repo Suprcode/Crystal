@@ -147,6 +147,51 @@ namespace Server.MirDatabase
                         characterInfo.Save(writer);
                     }
                     ctx.SaveChanges();
+                    int storageIndex = 0;
+                    foreach (var item in Storage)
+                    {
+                        var dbItem =
+                            ctx.StorageItems.OrderBy(i => i.id).Where(i => i.AccountIndex == Index).Skip(storageIndex).Take(1).FirstOrDefault();
+                        if (item == null)
+                        {
+                            if (dbItem != null)
+                            {
+                                dbItem.AccountIndex = Index;
+                                dbItem.UserItemUniqueID = null;
+                            }
+                            else
+                            {
+                                dbItem = new StorageItem()
+                                {
+                                    AccountIndex = Index,
+                                    UserItemUniqueID = null
+                                };
+                                ctx.StorageItems.Add(dbItem);
+                                ctx.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            ctx.UserItems.AddOrUpdate(i => new { i.UniqueID }, item);
+                            if (dbItem != null)
+                            {
+                                dbItem.AccountIndex = Index;
+                                dbItem.UserItemUniqueID = item.UniqueID;
+                            }
+                            else
+                            {
+                                dbItem = new StorageItem()
+                                {
+                                    AccountIndex = Index,
+                                    UserItemUniqueID = item.UniqueID
+                                };
+                                ctx.StorageItems.Add(dbItem);
+                                ctx.SaveChanges();
+                            }
+                        }
+                        storageIndex++;
+                    }
+                    ctx.SaveChanges();
                 }
                 return;
             }
@@ -241,5 +286,16 @@ namespace Server.MirDatabase
 
             return Storage.Length;
         }
+    }
+
+    public class StorageItem
+    {
+        public int id { get; set; }
+        [ForeignKey("UserItem")]
+        public long? UserItemUniqueID { get; set; }
+        public UserItem UserItem { get; set; }
+        [ForeignKey("AccountInfo")]
+        public int AccountIndex { get; set; }
+        public AccountInfo AccountInfo { get; set; }
     }
 }

@@ -3946,7 +3946,7 @@ namespace ServerPackets
             writer.Write(User);
             writer.Write(Item != null);
             if (Item == null) return;
-            writer.Write(Item.UserId);
+            writer.Write(Item.UserId ?? 0);
             Item.Item.Save(writer);
         }
     }

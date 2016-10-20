@@ -59,7 +59,7 @@ namespace Server.MirDatabase
 
         public MagicInfo()
         {
-
+            
         }
 
         public MagicInfo (BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
@@ -122,7 +122,8 @@ namespace Server.MirDatabase
 
         public Spell Spell { get; set; }
         [NotMapped]
-        public MagicInfo Info;
+        public MagicInfo Info => GetMagicInfo(Spell);
+
         [ForeignKey("CharacterInfo")]
         public int CharacterIndex { get; set; }
         
@@ -158,12 +159,12 @@ namespace Server.MirDatabase
         {
             Spell = spell;
             
-            Info = GetMagicInfo(Spell);
+            //Info = GetMagicInfo(Spell);
         }
         public UserMagic(BinaryReader reader)
         {
             Spell = (Spell) reader.ReadByte();
-            Info = GetMagicInfo(Spell);
+            //Info = GetMagicInfo(Spell);
 
             Level = reader.ReadByte();
             Key = reader.ReadByte();

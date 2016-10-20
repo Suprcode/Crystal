@@ -37,8 +37,8 @@ namespace Server.MirDatabase
         }
         public List<UserItem> Items = new List<UserItem>();
 
-        public DateTime? DateSent { get; set; } = SqlDateTime.MinValue.Value;
-        public DateTime? DateOpened { get; set; } = SqlDateTime.MinValue.Value;
+        public DateTime? DateSent { get; set; } = DateTime.MinValue;
+        public DateTime? DateOpened { get; set; } = DateTime.MinValue;
         [NotMapped]
         public bool Sent
         {
@@ -112,17 +112,27 @@ namespace Server.MirDatabase
                         ctx.Entry(dbMail).CurrentValues.SetValues(this);
                     }
                     ctx.SaveChanges();
+                    ctx.MailItems.RemoveRange(ctx.MailItems.Where(i => i.MailID == MailID));
+                    ctx.SaveChanges();
+                    if(Collected) return;
                     foreach (var item in Items)
                     {
                         var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);
                         if (dbItem == null)
                         {
-                            ctx.UserItems.Add(item);
+                            dbItem = item;
+                            ctx.UserItems.Add(dbItem);
                         }
                         else
                         {
                             ctx.Entry(dbItem).CurrentValues.SetValues(item);
                         }
+                        ctx.SaveChanges();
+                        ctx.MailItems.Add(new MailItem()
+                        {
+                            MailID = MailID,
+                            ItemUniqueID = dbItem.UniqueID
+                        });
                         ctx.SaveChanges();
                     }
                 }

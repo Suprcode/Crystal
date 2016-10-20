@@ -29,14 +29,14 @@ namespace Server.MirDatabase
         public string DbKillTaskCount
         {
             get { return string.Join(",", KillTaskCount); }
-            set { KillTaskCount = value.Split(',').Select(int.Parse).ToList(); }
+            set { if(!string.IsNullOrEmpty(value)) KillTaskCount = value.Split(',').Select(int.Parse).ToList(); }
         }
 
         public List<long> ItemTaskCount { get; set; } = new List<long>();
         public string DbItemTaskCount
         {
             get { return string.Join(",", ItemTaskCount); }
-            set { ItemTaskCount = value.Split(',').Select(long.Parse).ToList(); }
+            set { if (!string.IsNullOrEmpty(value)) ItemTaskCount = value.Split(',').Select(long.Parse).ToList(); }
         }
 
         public List<bool> FlagTaskSet { get; set; } = new List<bool>();
@@ -45,7 +45,7 @@ namespace Server.MirDatabase
             get { return string.Join(",", FlagTaskSet); }
             set
             {
-                FlagTaskSet = value.Split(',').Select(bool.Parse).ToList();
+                if (!string.IsNullOrEmpty(value)) FlagTaskSet = value.Split(',').Select(bool.Parse).ToList();
             }
         }
 

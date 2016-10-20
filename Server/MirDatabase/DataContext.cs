@@ -13,6 +13,7 @@ namespace Server.MirDatabase
         public DbSet<InventoryItem> Inventories { get; set; }
         public DbSet<EquipmentItem> Equipments { get; set; }
         public DbSet<QuestInventoryItem> QuestInventories { get; set; }
+        public DbSet<StorageItem> StorageItems { get; set; }
         public DbSet<UserMagic> UserMagics { get; set; }
         public DbSet<CurrentRefineItem> CurrentRefines { get; set; }
         //public DbSet<PetInfo> PetInfos { get; set; } 
@@ -46,7 +47,11 @@ namespace Server.MirDatabase
 
         public DbSet<AuctionInfo> AuctionInfos { get; set; }
         public DbSet<RespawnSave> RespawnSaves { get; set; }
-        public DbSet<GuildObject> Guilds { get; set; }
+        public DbSet<BaseGuildObject> Guilds { get; set; }
+        public DbSet<Rank> Ranks { get; set; }
+        public DbSet<GuildMember> GuildMembers { get; set; }
+        public DbSet<GuildBuff> GuildBuffs { get; set; }
+        public DbSet<GuildStorageItem> GuildStorageItems { get; set; }
 
         public DataContext() : base("Mir")
         {

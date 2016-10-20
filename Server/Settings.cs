@@ -37,7 +37,7 @@ namespace Server
         public static byte[] VersionHash;
         public static string GMPassword = "C#Mir 4.0";
         public static bool Multithreaded = true;
-        public static int ThreadLimit = 2;
+        public static int ThreadLimit = 5;
         public static bool TestServer = false;
         public static bool EnforceDBChecks = true;
 
