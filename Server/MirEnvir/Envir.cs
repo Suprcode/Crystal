@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 76;
+        public const int Version = 77;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -164,8 +164,8 @@ namespace Server.MirEnvir
         public List<MapRespawn> SavedSpawns = new List<MapRespawn>();
 
         public List<Rank_Character_Info> RankTop = new List<Rank_Character_Info>();
-        public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[5];
-        public int[] RankBottomLevel = new int[6];
+        public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[10];//stupple
+        public int[] RankBottomLevel = new int[11];//stupple
 
         static Envir()
         {

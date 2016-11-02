@@ -673,11 +673,11 @@ namespace Client.MirObjects
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
-                        if (Class == MirClass.Wizard || Class == MirClass.Archer)
+                        if (Class == MirClass.Wizard || Class == MirClass.Archer || Class == MirClass.HighWizard || Class == MirClass.HighArcher )
                         {
                             MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         }
-                        else if (Class == MirClass.Taoist)
+                        else if (Class == MirClass.Taoist || Class == MirClass.HighTaoist)
                         {
                             MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         }

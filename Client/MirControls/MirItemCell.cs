@@ -1645,9 +1645,9 @@ namespace Client.MirControls
                     }
                     break;
                 case MirClass.HighArcher:
-                    if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Archer))
+                    if (!Item.Info.RequiredClass.HasFlag(RequiredClass.HighArcher))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Archers cannot use this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("HighArcher cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;

@@ -925,48 +925,26 @@ public enum SpecialItemMode : short
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredClass : byte
+public enum RequiredClass : ushort
 {
-    //Warrior = 0,
-    //Wizard = 1,
-    //Taoist = 2,
-    //Assassin = 3,
-    //Archer = 4,
-    //HighWarrior = 5,
-    //HighWizard = 6,
-    //HighTaoist = 7,
-    //HighAssassin = 8,
-    //HighArcher = 9,
-
-    //WarWizTao = 10,
-
-    //WarHighWar = 11,
-    //WizHighWiz = 12,
-    //TaoHighTao = 13,
-    //AssHighAss = 14,
-    //ArcHighArc = 15,
-
-    //WarWizTaoAssArc = 16,
-    //All = 17,
-    //None = 18,
-    //High = 19,
-
+    
     Warrior = 1,
     Wizard = 2,
     Taoist = 4,
     Assassin = 8,
     Archer = 16,
-    HighWarrior = 11,
-    HighWizard = 12,
-    HighTaoist = 13,
-    HighAssassin = 14,
-    HighArcher = 15,
-    AllHigh = HighWarrior | HighWizard | HighTaoist | HighAssassin | HighArcher,
-    WarWizTao = Warrior | Wizard | Taoist,
-    None = AllLow | AllHigh,
-    AllLow = Warrior | Wizard | Taoist | Assassin | Archer,
-    
 
+    HighWarrior = 30,
+    HighWizard = 60,
+    HighTaoist = 120,
+    HighAssassin = 240,
+    HighArcher = 482,
+
+    High = HighWarrior | HighWizard | HighTaoist | HighAssassin | HighArcher,
+    WarWizTao = Warrior | Wizard | Taoist,
+    AllWarWizTao = HighWarrior | HighWizard | HighTaoist | WarWizTao,
+    Low = WarWizTao | Assassin | Archer,
+    None = Low | High
 
 }
 [Flags]
@@ -2455,7 +2433,7 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if (((byte)info.RequiredClass == (1 << (byte)job)) && (Origin.RequiredGender == info.RequiredGender))
+                if (((ushort)info.RequiredClass == (1 << (ushort)job)) && (Origin.RequiredGender == info.RequiredGender))
                     return info;
         }
         return Origin;
@@ -2468,7 +2446,7 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if ((byte)info.RequiredClass == (1 << (byte)job))
+                if ((ushort)info.RequiredClass == (1 << (ushort)job))
                     if ((info.RequiredType == RequiredType.Level) && (info.RequiredAmount <= level) && (output.RequiredAmount <= info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
                         output = info;
         }
@@ -2535,56 +2513,7 @@ public static class Functions
         return rv;
     }
 }
-//public static bool EqualClass(RequiredClass requiredClass, MirClass job) ///stupple
-//{
-//    bool isEqual = false;
-//    byte byteJob = (byte)job;
-//    switch (requiredClass)
-//    {
-//        case RequiredClass.Warrior:
-//        case RequiredClass.Wizard:
-//        case RequiredClass.Taoist:
-//        case RequiredClass.Assassin:
-//        case RequiredClass.Archer:
-//        case RequiredClass.HighWarrior:
-//        case RequiredClass.HighWizard:
-//        case RequiredClass.HighTaoist:
-//        case RequiredClass.HighAssassin:
-//        case RequiredClass.HighArcher:
-//            isEqual = ((byte)requiredClass == byteJob);
-//            break;
-//        case RequiredClass.WarWizTao:
-//            isEqual = (byteJob < 3);
-//            break;
-//        case RequiredClass.WarHighWar:
-//            isEqual = (byteJob == 0 || byteJob == 5);
-//            break;
-//        case RequiredClass.WizHighWiz:
-//            isEqual = (byteJob == 1 || byteJob == 6);
-//            break;
-//        case RequiredClass.TaoHighTao:
-//            isEqual = (byteJob == 2 || byteJob == 7);
-//            break;
-//        case RequiredClass.AssHighAss:
-//            isEqual = (byteJob == 3 || byteJob == 8);
-//            break;
-//        case RequiredClass.ArcHighArc:
-//            isEqual = (byteJob == 4 || byteJob == 9);
-//            break;
-//        case RequiredClass.WarWizTaoAssArc:
-//            isEqual = (byteJob <= 4);
-//            break;
-//        case RequiredClass.High:
-//            isEqual = (byteJob > 4 && byteJob < 10);
-//            break;
-//        case RequiredClass.All:
-//        case RequiredClass.None:
-//            isEqual = true;
-//            break;
-//    }
 
-//    return isEqual;
-//}
 public class SelectInfo
 {
     public int Index;
@@ -2690,7 +2619,16 @@ public class ItemInfo
         Type = (ItemType) reader.ReadByte();
         if (version >= 40) Grade = (ItemGrade)reader.ReadByte();
         RequiredType = (RequiredType) reader.ReadByte();
-        RequiredClass = (RequiredClass) reader.ReadByte();
+        if (version <= 76)
+              {
+            
+                RequiredClass = (RequiredClass) reader.ReadByte();
+                }
+                        else
+              {
+                RequiredClass = (RequiredClass) reader.ReadUInt16();
+                            }
+         //   RequiredClass = (RequiredClass) reader.ReadInt32(); // stupple ushort
         RequiredGender = (RequiredGender) reader.ReadByte();
         if(version >= 17) Set = (ItemSet)reader.ReadByte();
 
@@ -2815,7 +2753,7 @@ public class ItemInfo
         writer.Write((byte) Type);
         writer.Write((byte) Grade);
         writer.Write((byte) RequiredType);
-        writer.Write((byte) RequiredClass);
+        writer.Write((ushort) RequiredClass);
         writer.Write((byte) RequiredGender);
         writer.Write((byte) Set);
 
@@ -2996,7 +2934,7 @@ public class ItemInfo
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
                              "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63}",
-            Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
+            Name, (byte)Type, (byte)Grade, (byte)RequiredType, (ushort)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
@@ -3891,7 +3829,9 @@ public class ClientQuestInfo
         MinLevelNeeded = reader.ReadInt32();
         MaxLevelNeeded = reader.ReadInt32();
         QuestNeeded = reader.ReadInt32();
-        ClassNeeded = (RequiredClass)reader.ReadByte();
+
+
+        ClassNeeded = (RequiredClass)reader.ReadInt16(); //stupple?
         Type = (QuestType)reader.ReadByte();
         RewardGold = reader.ReadUInt32();
         RewardExp = reader.ReadUInt32();
@@ -3931,7 +3871,7 @@ public class ClientQuestInfo
         writer.Write(MinLevelNeeded);
         writer.Write(MaxLevelNeeded);
         writer.Write(QuestNeeded);
-        writer.Write((byte)ClassNeeded);
+        writer.Write((ushort)ClassNeeded);
         writer.Write((byte)Type);
         writer.Write(RewardGold);
         writer.Write(RewardExp);

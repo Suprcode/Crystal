@@ -119,7 +119,7 @@ namespace Client.MirGraphics
                                           UpArcHair = new MLibrary[9],
                                           UpArcHumEffect = new MLibrary[3],
 
-                                          UpMounts = new MLibrary[5],
+                                          
                                           UpFishingM = new MLibrary[2],
                                           UpFishingF = new MLibrary[2],
 
@@ -258,8 +258,7 @@ namespace Client.MirGraphics
             for (int i = 0; i < UpArcHumEffect.Length; i++)
                 UpArcHumEffect[i] = new MLibrary(Settings.UpArcHumEffectPath + i.ToString("00"));
 
-            for (int i = 0; i < UpMounts.Length; i++)
-                UpMounts[i] = new MLibrary(Settings.UpMountPath + i.ToString("00"));
+           
 
             for (int i = 0; i < UpFishingM.Length; i++)
                 UpFishingM[i] = new MLibrary(Settings.UpFishingPath + i.ToString("00M"));

@@ -75,7 +75,16 @@ namespace Server.MirDatabase
             }
 
             RequiredQuest = reader.ReadInt32();
-            RequiredClass = (RequiredClass)reader.ReadByte();
+            if (Envir.LoadVersion <= 76)
+            {
+
+                RequiredClass = (RequiredClass)reader.ReadByte();
+            }
+            else
+            {
+                RequiredClass = (RequiredClass)reader.ReadUInt16();
+            }
+            //RequiredClass = (RequiredClass)reader.ReadInt32();
             Type = (QuestType)reader.ReadByte();
             GotoMessage = reader.ReadString();
             KillMessage = reader.ReadString();
@@ -94,7 +103,7 @@ namespace Server.MirDatabase
             writer.Write(RequiredMinLevel);
             writer.Write(RequiredMaxLevel);
             writer.Write(RequiredQuest);
-            writer.Write((byte)RequiredClass);
+            writer.Write((ushort)RequiredClass);
             writer.Write((byte)Type);
             writer.Write(GotoMessage);
             writer.Write(KillMessage);
@@ -436,7 +445,7 @@ namespace Server.MirDatabase
         public string ToText()
         {
             return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
+                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (ushort)RequiredClass);
         }
 
         public override string ToString()

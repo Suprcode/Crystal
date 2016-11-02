@@ -719,6 +719,9 @@ namespace Client.MirObjects
                         {
                             WingLibrary = (WingEffect - 1) < (altAnim ? Libraries.UpWarHumEffect.Length : Libraries.UpCHumEffect.Length) ? (altAnim ? Libraries.UpWarHumEffect[WingEffect - 1] : Libraries.UpCHumEffect[WingEffect - 1]) : null;
                         }
+
+
+
                         #endregion
 
                         #region Offsets
@@ -814,11 +817,15 @@ namespace Client.MirObjects
                         }
                         #endregion
 
+
                         #region WingEffects
                         if (WingEffect > 0 && WingEffect < 100)
                         {
                             WingLibrary = (WingEffect - 1) < (altAnim ? Libraries.UpWizHumEffect.Length : Libraries.UpCHumEffect.Length) ? (altAnim ? Libraries.UpWizHumEffect[WingEffect - 1] : Libraries.UpCHumEffect[WingEffect - 1]) : null;
+
                         }
+                        
+
                         #endregion
 
                         #region Offsets
@@ -1037,6 +1044,8 @@ namespace Client.MirObjects
                     #region High Arc //stupple
                     case MirClass.HighArcher:
 
+
+
                         #region WeaponType
                         if (HasClassWeapon)
                         {
@@ -1112,10 +1121,11 @@ namespace Client.MirObjects
                         #region WingEffects
                         if (WingEffect > 0 && WingEffect < 100)
                         {
+
                             WingLibrary = (WingEffect - 1) < (altAnim ? Libraries.UpArcHumEffect.Length : Libraries.UpCHumEffect.Length) ? (altAnim ? Libraries.UpArcHumEffect[WingEffect - 1] : Libraries.UpCHumEffect[WingEffect - 1]) : null;
                         }
+                         
                         #endregion
-
                         #region Offsets
                         ArmourOffSet = Gender == MirGender.Male ? 0 : altAnim ? 384 : 1112;
                         HairOffSet = Gender == MirGender.Male ? 0 : altAnim ? 384 : 1112;
@@ -1140,6 +1150,8 @@ namespace Client.MirObjects
             if (MountType > -1 && RidingMount && showMount)
             {
                 MountLibrary = MountType < Libraries.Mounts.Length ? Libraries.Mounts[MountType] : null;
+
+
             }
             else
             {
@@ -1432,7 +1444,7 @@ namespace Client.MirObjects
 
                 if (CurrentAction == MirAction.Standing)
                 {
-                    if (Class == MirClass.Archer && HasClassWeapon)
+                    if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
                         CurrentAction = MirAction.Standing;
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
@@ -1561,8 +1573,10 @@ namespace Client.MirObjects
                         switch (Class)
                         {
                             case MirClass.Archer:
+                            case MirClass.HighArcher:
                                 Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
+                            case MirClass.HighAssassin:
                             case MirClass.Assassin:
                                 if(GameScene.DoubleSlash)
                                     Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
@@ -1772,7 +1786,7 @@ namespace Client.MirObjects
                 }
 
                 //ArcherTest - Need to check for bow weapon only
-                if (Class == MirClass.Archer && HasClassWeapon)
+                if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
                 {
                     switch (CurrentAction)
                     {
@@ -1786,7 +1800,7 @@ namespace Client.MirObjects
                 }
 
                 //Assassin sneekyness
-                if (Class == MirClass.Assassin && Sneaking && (CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
+                if ((Class == MirClass.Assassin || Class == MirClass.HighAssassin) && Sneaking && (CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
                 {
                     Frames.Frames.TryGetValue(MirAction.Sneek, out Frame);
                 }
@@ -4770,7 +4784,7 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (Weapon >= 0 && Class == MirClass.Assassin)
+            if (Weapon >= 0 && Class == MirClass.Assassin || Class == MirClass.HighAssassin)
             {
                 SoundManager.PlaySound(SoundList.SwingShort);
                 return;
@@ -4946,7 +4960,7 @@ namespace Client.MirObjects
                 else
                     DrawWeapon2();
 
-                if (Class == MirClass.Archer && HasClassWeapon)
+                if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
                     DrawWeapon2();
             }
 
