@@ -27,7 +27,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>2016.10.16.2207</AssemblyVersion>
+    <AssemblyVersion>2016.11.5.1000</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -263,6 +263,7 @@
     <Compile Include="MirObjects\Monsters\ManectricKing.cs" />
     <Compile Include="MirObjects\Monsters\TrollBomber.cs" />
     <Compile Include="MirObjects\Monsters\ManectricBlest.cs" />
+    <Compile Include="MirObjects\Monsters\VenomSpider.cs" />
     <Compile Include="MirObjects\Monsters\WingedTigerLord.cs" />
     <Compile Include="MirObjects\Monsters\Tornado.cs" />
     <Compile Include="MirObjects\Monsters\Hugger.cs" />
