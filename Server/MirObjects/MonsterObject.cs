@@ -516,7 +516,7 @@ namespace Server.MirObjects
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed - rMSpeed);
                         break;
-
+                    
                     case BuffType.PetEnhancer:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + buff.Values[0]);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);

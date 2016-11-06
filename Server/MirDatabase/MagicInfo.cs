@@ -13,13 +13,14 @@ namespace Server.MirDatabase
         public string Name;
         public Spell Spell;
         public byte BaseCost, LevelCost, Icon;
-        public byte Level1, Level2, Level3;
-        public ushort Need1, Need2, Need3;
+        public byte Level1, Level2, Level3, Level4;
+        public ushort Need1, Need2, Need3, Need4;
         public uint DelayBase = 1800, DelayReduction;
         public ushort PowerBase, PowerBonus;
         public ushort MPowerBase, MPowerBonus;
         public float MultiplierBase = 1.0f, MultiplierBonus;
         public byte Range = 9;
+        public bool HumUpTrain = false;
 
         public override string ToString()
         {
@@ -41,9 +42,13 @@ namespace Server.MirDatabase
             Level1 = reader.ReadByte();
             Level2 = reader.ReadByte();
             Level3 = reader.ReadByte();
+            if (version > 75)
+                Level4 = reader.ReadByte();
             Need1 = reader.ReadUInt16();
             Need2 = reader.ReadUInt16();
             Need3 = reader.ReadUInt16();
+            if (version > 75)
+                Need4 = reader.ReadUInt16();
             DelayBase = reader.ReadUInt32();
             DelayReduction = reader.ReadUInt32();
             PowerBase = reader.ReadUInt16();
@@ -58,6 +63,8 @@ namespace Server.MirDatabase
                 MultiplierBase = reader.ReadSingle();
                 MultiplierBonus = reader.ReadSingle();
             }
+            if (version > 75)
+                HumUpTrain = reader.ReadBoolean();
         }
 
         public void Save(BinaryWriter writer)
@@ -70,9 +77,11 @@ namespace Server.MirDatabase
             writer.Write(Level1);
             writer.Write(Level2);
             writer.Write(Level3);
+            writer.Write(Level4);
             writer.Write(Need1);
             writer.Write(Need2);
             writer.Write(Need3);
+            writer.Write(Need4);
             writer.Write(DelayBase);
             writer.Write(DelayReduction);
             writer.Write(PowerBase);
@@ -82,6 +91,7 @@ namespace Server.MirDatabase
             writer.Write(Range);
             writer.Write(MultiplierBase);
             writer.Write(MultiplierBonus);
+            writer.Write(HumUpTrain);
         }
     }
 
@@ -157,15 +167,18 @@ namespace Server.MirDatabase
                     Level1 = Info.Level1,
                     Level2 = Info.Level2,
                     Level3 = Info.Level3,
+                    Level4 = Info.Level4,
                     Need1 = Info.Need1,
                     Need2 = Info.Need2,
                     Need3 = Info.Need3,
+                    Need4 = Info.Need4,
                     Level = Level,
                     Key = Key,
                     Experience = Experience,
                     IsTempSpell = IsTempSpell,
                     Delay = GetDelay(),
                     Range = Info.Range,
+                    IsHumUpTrain = Info.HumUpTrain,
                     CastTime = (CastTime != 0) && (SMain.Envir.Time > CastTime)? SMain.Envir.Time - CastTime: 0
             };
         }

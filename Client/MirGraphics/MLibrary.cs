@@ -45,6 +45,18 @@ namespace Client.MirGraphics
         public static readonly MLibrary
             Items = new MLibrary(Settings.DataPath + "Items"),
             StateItems = new MLibrary(Settings.DataPath + "StateItem"),
+            StateItemsArcM = new MLibrary(Settings.DataPath + "StateItem_Archer_Man"),
+            StateItemsArcW = new MLibrary(Settings.DataPath + "StateItem_Archer_Woman"),
+            StateItemsAssM = new MLibrary(Settings.DataPath + "StateItem_Assassin_Man"),
+            StateItemsAssW = new MLibrary(Settings.DataPath + "StateItem_Assassin_Woman"),
+            StateItemsComM = new MLibrary(Settings.DataPath + "StateItem_Common_Man"),
+            StateItemsComW = new MLibrary(Settings.DataPath + "StateItem_Common_Woman"),
+            StateItemsTaoM = new MLibrary(Settings.DataPath + "StateItem_Monk_Man"),
+            StateItemsTaoW = new MLibrary(Settings.DataPath + "StateItem_Monk_Woman"),
+            StateItemsWarM = new MLibrary(Settings.DataPath + "StateItem_Warrior_Man"),
+            StateItemsWarW = new MLibrary(Settings.DataPath + "StateItem_Warrior_Woman"),
+            StateItemsWizM = new MLibrary(Settings.DataPath + "StateItem_Wizard_Man"),
+            StateItemsWizW = new MLibrary(Settings.DataPath + "StateItem_Wizard_Woman"),
             FloorItems = new MLibrary(Settings.DataPath + "DNItems");
 
         //Deco
@@ -72,6 +84,45 @@ namespace Client.MirGraphics
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
                                           Pets = new MLibrary[12],
+
+
+                                          //humup //stupple
+                                          UpCArmours = new MLibrary[25],
+                                          UpCWeapons = new MLibrary[100],
+                                          UpCHair = new MLibrary[9],
+                                          UpCHumEffect = new MLibrary[3],
+
+                                          UpWarArmours = new MLibrary[9],
+                                          UpWarWeapons = new MLibrary[6],
+                                          UpWarHair = new MLibrary[9],
+                                          UpWarHumEffect = new MLibrary[3],
+
+                                          UpWizArmours = new MLibrary[9],
+                                          UpWizWeapons = new MLibrary[6],
+                                          UpWizHair = new MLibrary[9],
+                                          UpWizHumEffect = new MLibrary[3],
+
+                                          UpTaoArmours = new MLibrary[9],
+                                          UpTaoWeapons = new MLibrary[6],
+                                          UpTaoHair = new MLibrary[9],
+                                          UpTaoHumEffect = new MLibrary[3],
+
+                                          UpAssArmours = new MLibrary[9],
+                                          UpAssWeaponsR = new MLibrary[10],
+                                          UpAssWeaponsL = new MLibrary[10],
+                                          UpAssHair = new MLibrary[9],
+                                          UpAssHumEffect = new MLibrary[3],
+
+                                          UpArcArmours = new MLibrary[9],
+                                          UpArcWeapons = new MLibrary[9],
+                                          UpArcWeaponsS = new MLibrary[9],
+                                          UpArcHair = new MLibrary[9],
+                                          UpArcHumEffect = new MLibrary[3],
+
+                                          UpMounts = new MLibrary[5],
+                                          UpFishingM = new MLibrary[2],
+                                          UpFishingF = new MLibrary[2],
+
                                           Transform = new MLibrary[28],
                                           TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
@@ -123,7 +174,99 @@ namespace Client.MirGraphics
 
             for (int i = 0; i < ARHumEffect.Length; i++)
                 ARHumEffect[i] = new MLibrary(Settings.ARHumEffectPath + i.ToString("00"));
+            //HumUp started   //stupple
+            for (int i = 0; i < UpCArmours.Length; i++)
+                UpCArmours[i] = new MLibrary(Settings.UpCArmourPath + i.ToString("00"));
 
+            for (int i = 0; i < UpCWeapons.Length; i++)
+                UpCWeapons[i] = new MLibrary(Settings.UpCWeaponPath + i.ToString("00"));
+
+            for (int i = 0; i < UpCHair.Length; i++)
+                UpCHair[i] = new MLibrary(Settings.UpCHairPath + i.ToString("00"));
+
+            for (int i = 0; i < UpCHumEffect.Length; i++)
+                UpCHumEffect[i] = new MLibrary(Settings.UpCHumEffectPath + i.ToString("00"));
+
+
+            for (int i = 0; i < UpWarArmours.Length; i++)
+                UpWarArmours[i] = new MLibrary(Settings.UpWarArmourPath + i.ToString("00"));
+
+            for (int i = 0; i < UpWarWeapons.Length; i++)
+                UpWarWeapons[i] = new MLibrary(Settings.UpWarWeaponPath + i.ToString("00"));
+
+            for (int i = 0; i < UpWarHair.Length; i++)
+                UpWarHair[i] = new MLibrary(Settings.UpWarHairPath + i.ToString("00"));
+
+            for (int i = 0; i < UpWarHumEffect.Length; i++)
+                UpWarHumEffect[i] = new MLibrary(Settings.UpWarHumEffectPath + i.ToString("00"));
+
+
+            for (int i = 0; i < UpWizArmours.Length; i++)
+                UpWizArmours[i] = new MLibrary(Settings.UpWizArmourPath + i.ToString("00"));
+
+            for (int i = 0; i < UpWizWeapons.Length; i++)
+                UpWizWeapons[i] = new MLibrary(Settings.UpWizWeaponPath + i.ToString("00"));
+
+            for (int i = 0; i < UpWizHair.Length; i++)
+                UpWizHair[i] = new MLibrary(Settings.UpWizHairPath + i.ToString("00"));
+
+            for (int i = 0; i < UpWizHumEffect.Length; i++)
+                UpWizHumEffect[i] = new MLibrary(Settings.UpWizHumEffectPath + i.ToString("00"));
+
+
+            for (int i = 0; i < UpTaoArmours.Length; i++)
+                UpTaoArmours[i] = new MLibrary(Settings.UpTaoArmourPath + i.ToString("00"));
+
+            for (int i = 0; i < UpTaoWeapons.Length; i++)
+                UpTaoWeapons[i] = new MLibrary(Settings.UpTaoWeaponPath + i.ToString("00"));
+
+            for (int i = 0; i < UpTaoHair.Length; i++)
+                UpTaoHair[i] = new MLibrary(Settings.UpTaoHairPath + i.ToString("00"));
+
+            for (int i = 0; i < UpTaoHumEffect.Length; i++)
+                UpTaoHumEffect[i] = new MLibrary(Settings.UpTaoHumEffectPath + i.ToString("00"));
+
+
+            for (int i = 0; i < UpAssArmours.Length; i++)
+                UpAssArmours[i] = new MLibrary(Settings.UpAssArmourPath + i.ToString("00"));
+
+            for (int i = 0; i < UpAssWeaponsR.Length; i++)
+                UpAssWeaponsR[i] = new MLibrary(Settings.UpAssWeaponRPath + i.ToString("00"));
+
+            for (int i = 0; i < UpAssWeaponsL.Length; i++)
+                UpAssWeaponsL[i] = new MLibrary(Settings.UpAssWeaponLPath + i.ToString("00"));
+
+            for (int i = 0; i < UpAssHair.Length; i++)
+                UpAssHair[i] = new MLibrary(Settings.UpAssHairPath + i.ToString("00"));
+
+            for (int i = 0; i < UpAssHumEffect.Length; i++)
+                UpAssHumEffect[i] = new MLibrary(Settings.UpAssHumEffectPath + i.ToString("00"));
+
+
+            for (int i = 0; i < UpArcArmours.Length; i++)
+                UpArcArmours[i] = new MLibrary(Settings.UpArcArmourPath + i.ToString("00"));
+
+            for (int i = 0; i < UpArcWeapons.Length; i++)
+                UpArcWeapons[i] = new MLibrary(Settings.UpArcWeaponPath + i.ToString("00"));
+
+            for (int i = 0; i < UpArcWeaponsS.Length; i++)
+                UpArcWeaponsS[i] = new MLibrary(Settings.UpArcWeaponSPath + i.ToString("00"));
+
+            for (int i = 0; i < UpArcHair.Length; i++)
+                UpArcHair[i] = new MLibrary(Settings.UpArcHairPath + i.ToString("00"));
+
+            for (int i = 0; i < UpArcHumEffect.Length; i++)
+                UpArcHumEffect[i] = new MLibrary(Settings.UpArcHumEffectPath + i.ToString("00"));
+
+            for (int i = 0; i < UpMounts.Length; i++)
+                UpMounts[i] = new MLibrary(Settings.UpMountPath + i.ToString("00"));
+
+            for (int i = 0; i < UpFishingM.Length; i++)
+                UpFishingM[i] = new MLibrary(Settings.UpFishingPath + i.ToString("00M"));
+
+            for (int i = 0; i < UpFishingF.Length; i++)
+                UpFishingF[i] = new MLibrary(Settings.UpFishingPath + i.ToString("00F"));
+            ///Hum End //stupple 
             //Other
             for (int i = 0; i < Monsters.Length; i++)
                 Monsters[i] = new MLibrary(Settings.MonsterPath + i.ToString("000"));

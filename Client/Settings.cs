@@ -49,6 +49,43 @@ namespace Client
                             CHumEffectPath = @".\Data\CHumEffect\",
                             AHumEffectPath = @".\Data\AHumEffect\",
                             ARHumEffectPath = @".\Data\ARHumEffect\",
+                            //stupple HUMUP stared
+                            UpCArmourPath = @".\Data\HumUp\UpCArmour\",
+                            UpCWeaponPath = @".\Data\HumUp\UpCWeapon\",
+                            UpCHairPath = @".\Data\HumUp\UpCHair\",
+                            UpCHumEffectPath = @".\Data\HumUp\UpCHumEffect\",
+
+                            UpWarArmourPath = @".\Data\HumUp\UpWarArmour\",
+                            UpWarWeaponPath = @".\Data\HumUp\UpWarWeapon\",
+                            UpWarHairPath = @".\Data\HumUp\UpWarHair\",
+                            UpWarHumEffectPath = @".\Data\HumUp\UpWarHumEffect\",
+
+                            UpWizArmourPath = @".\Data\HumUp\UpWizArmour\",
+                            UpWizWeaponPath = @".\Data\HumUp\UpWizWeapon\",
+                            UpWizHairPath = @".\Data\HumUp\UpWizHair\",
+                            UpWizHumEffectPath = @".\Data\HumUp\UpWizHumEffect\",
+
+                            UpTaoArmourPath = @".\Data\HumUp\UpTaoArmour\",
+                            UpTaoWeaponPath = @".\Data\HumUp\UpTaoWeapon\",
+                            UpTaoHairPath = @".\Data\HumUp\UpTaoHair\",
+                            UpTaoHumEffectPath = @".\Data\HumUp\UpTaoHumEffect\",
+
+                            UpAssArmourPath = @".\Data\HumUp\UpAssArmour\",
+                            UpAssWeaponRPath = @".\Data\HumUp\UpAssWeaponR\",
+                            UpAssWeaponLPath = @".\Data\HumUp\UpAssWeaponL\",
+                            UpAssHairPath = @".\Data\HumUp\UpAssHair\",
+                            UpAssHumEffectPath = @".\Data\HumUp\UpAssHumEffect\",
+
+                            UpArcArmourPath = @".\Data\HumUp\UpArcArmour\",
+                            UpArcWeaponPath = @".\Data\HumUp\UpArcWeapon\",
+                            UpArcWeaponSPath = @".\Data\HumUp\UpArcWeaponS\",
+                            UpArcHairPath = @".\Data\HumUp\UpArcHair\",
+                            UpArcHumEffectPath = @".\Data\HumUp\UpArcHumEffect\",
+
+
+                            UpMountPath = @".\Data\HumUp\UpMount\",
+                            UpFishingPath = @".\Data\HumUp\UpFishing\",
+                            //STupple Humup end
                             MountPath = @".\Data\Mount\",
                             FishingPath = @".\Data\Fishing\",
                             PetsPath = @".\Data\Pet\",
