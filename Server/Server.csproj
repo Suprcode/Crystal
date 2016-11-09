@@ -262,6 +262,7 @@
     <Compile Include="MirObjects\Monsters\ManectricKing.cs" />
     <Compile Include="MirObjects\Monsters\TrollBomber.cs" />
     <Compile Include="MirObjects\Monsters\ManectricBlest.cs" />
+    <Compile Include="MirObjects\Monsters\VenomSpider.cs" />
     <Compile Include="MirObjects\Monsters\WingedTigerLord.cs" />
     <Compile Include="MirObjects\Monsters\Tornado.cs" />
     <Compile Include="MirObjects\Monsters\Hugger.cs" />
