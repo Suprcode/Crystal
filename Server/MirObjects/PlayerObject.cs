@@ -10227,6 +10227,13 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
+                    
+                    if (Info.Equipment[to] != null &&
+                        Info.Equipment[to].Info.Bind.HasFlag(BindMode.DontStore))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
                     array = Account.Storage;
                     break;
                 default:
