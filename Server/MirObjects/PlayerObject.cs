@@ -9693,32 +9693,29 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
+            for (int i = 0; i < Buffs.Count; i++)
             {
-                for (int i = 0; i < Buffs.Count; i++)
+                switch (Buffs[i].Type)
                 {
-                    switch (Buffs[i].Type)
-                    {
-                        //case BuffType.Hiding:
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                        case BuffType.EnergyShield:
-                            int rate = Buffs[i].Values[0];
+                    //case BuffType.Hiding:
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
 
-                            if (Envir.Random.Next(rate) == 0)
-                            {
-                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                    SetHP(MaxHP);
-                                else
-                                    ChangeHP(Buffs[i].Values[1]);
-                            }
-                            break;
-                    }
+                        if (Envir.Random.Next(rate) == 0)
+                        {
+                            if (HP + ( (ushort)Buffs[i].Values[1] ) >= MaxHP)
+                                SetHP(MaxHP);
+                            else                           
+                                ChangeHP(Buffs[i].Values[1]);                            
+                        }
+                        break;
                 }
             }
-
+            
             switch (type)
             {
                 case DefenceType.ACAgility:
@@ -9786,8 +9783,6 @@ namespace Server.MirObjects
                 }
                 return 0;
             }
-
-
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
@@ -9879,29 +9874,26 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
+            for (int i = 0; i < Buffs.Count; i++)
             {
-                for (int i = 0; i < Buffs.Count; i++)
+                switch (Buffs[i].Type)
                 {
-                    switch (Buffs[i].Type)
-                    {
-                        //case BuffType.Hiding:
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                        case BuffType.EnergyShield:
-                            int rate = Buffs[i].Values[0];
+                    //case BuffType.Hiding:
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
 
-                            if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
-                            {
-                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                    SetHP(MaxHP);
-                                else
-                                    ChangeHP(Buffs[i].Values[1]);
-                            }
-                            break;
-                    }
+                        if (Envir.Random.Next(rate) == 0)
+                        {
+                            if (HP + ( (ushort)Buffs[i].Values[1] ) >= MaxHP)
+                                SetHP(MaxHP);
+                            else                           
+                                ChangeHP(Buffs[i].Values[1]);                            
+                        }
+                        break;
                 }
             }
 
