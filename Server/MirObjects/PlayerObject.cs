@@ -9693,8 +9693,6 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
-            {
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     switch (Buffs[i].Type)
@@ -9708,7 +9706,7 @@ namespace Server.MirObjects
 
                             if (Envir.Random.Next(rate) == 0)
                             {
-                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                            if (HP + ( (ushort)Buffs[i].Values[1] ) >= MaxHP)
                                     SetHP(MaxHP);
                                 else
                                     ChangeHP(Buffs[i].Values[1]);
@@ -9716,7 +9714,6 @@ namespace Server.MirObjects
                             break;
                     }
                 }
-            }
 
             switch (type)
             {
@@ -9785,8 +9782,6 @@ namespace Server.MirObjects
                 }
                 return 0;
             }
-
-
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
@@ -9878,8 +9873,6 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
-            {
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     switch (Buffs[i].Type)
@@ -9901,7 +9894,6 @@ namespace Server.MirObjects
                             break;
                     }
                 }
-            }
 
             switch (type)
             {
@@ -10220,6 +10212,13 @@ namespace Server.MirObjects
                     }
 
                     if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    
+                    if (Info.Equipment[to] != null &&
+                        Info.Equipment[to].Info.Bind.HasFlag(BindMode.DontStore))
                     {
                         Enqueue(p);
                         return;
