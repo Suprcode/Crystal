@@ -28,6 +28,10 @@ namespace Server.MirForms.VisualMapInfo.Control
 
         public int X, Y;
 
+        public byte Direction;
+
+        public ushort RandomDelay;
+
         public ushort tempRange;
         public ushort Range
         {
@@ -222,6 +226,8 @@ namespace Server.MirForms.VisualMapInfo.Control
             RespawnDetail.Count.Text = Count.Text;
             RespawnDetail.Delay.Text = Delay.Text;
             RespawnDetail.RoutePath.Text = RoutePath;
+            RespawnDetail.Direction.Text = Direction.ToString();
+            RespawnDetail.RDelay.Text = RandomDelay.ToString();
 
             RespawnDetail.ShowDialog();
 
@@ -231,6 +237,8 @@ namespace Server.MirForms.VisualMapInfo.Control
             Count.Text = RespawnDetail.Count.Text;
             Delay.Text = RespawnDetail.Delay.Text;
             RoutePath = RespawnDetail.RoutePath.Text;
+            Direction = byte.Parse(RespawnDetail.Direction.Text);
+            RandomDelay = ushort.Parse(RespawnDetail.RDelay.Text);
 
             RespawnDetail.Dispose();
         }
