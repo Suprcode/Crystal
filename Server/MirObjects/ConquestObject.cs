@@ -367,32 +367,32 @@ namespace Server.MirObjects
             
             if (StartType != ConquestType.Forced)
             {
-            if (WarIsOn && start > now || finish <= now)
-            {
-                EndWar(Info.Game);
-            }
-            else if (start <= now && finish > now && CheckDay())
-            {
-                if (!WarIsOn)
+                if (WarIsOn && (start > now && finish <= now))
                 {
-                    if (Info.Type == ConquestType.Request)
+                    EndWar(Info.Game);
+                }
+                else if (start <= now && finish > now && CheckDay())
+                {
+                    if (!WarIsOn)
                     {
-                        if (AttackerID != -1)
+                        if (Info.Type == ConquestType.Request)
+                        {
+                            if (AttackerID != -1)
+                            {
+                                GameType = Info.Game;
+                                StartType = Info.Type;
+                                StartWar(Info.Game);
+                            }
+                        }
+                        else
                         {
                             GameType = Info.Game;
                             StartType = Info.Type;
                             StartWar(Info.Game);
                         }
-                    }
-                    else
-                    {
-                        GameType = Info.Game;
-                        StartType = Info.Type;
-                        StartWar(Info.Game);
-                    }
 
+                    }
                 }
-            }
             }
             ScheduleTimer = Envir.Time + Settings.Minute;
         }
@@ -506,9 +506,12 @@ namespace Server.MirObjects
                 FlagList[i].UpdateColour();
             }
 
-            UpdatePlayers(Guild);
-            if (tmpPrevious != null) UpdatePlayers(tmpPrevious);
-            NeedSave = true;
+            if (Guild != null)
+            {
+                UpdatePlayers(Guild);
+                if (tmpPrevious != null) UpdatePlayers(tmpPrevious);
+                NeedSave = true;
+            }
         }
 
         public void UpdatePlayers(GuildObject tempGuild)
