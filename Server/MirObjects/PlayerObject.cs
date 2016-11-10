@@ -5613,7 +5613,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             MoonLightAttack = true;
@@ -9700,7 +9699,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -9886,7 +9884,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -10021,7 +10018,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
