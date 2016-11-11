@@ -221,7 +221,18 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected Items?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < SelectedItems.Count; i++) Envir.Remove(SelectedItems[i]);
+            for (int i = 0; i < SelectedItems.Count; i++)
+            {
+                Envir.Remove(SelectedItems[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.RemoveRange(ctx.GameShopItems.Where(item => item.id == SelectedItems[i].id));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             LoadGameShopItems();
             UpdateInterface();

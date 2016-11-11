@@ -40,7 +40,16 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected Monsters?", "Remove Monsters?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++) Envir.Remove(_selectedMonsterInfos[i]);
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
+                Envir.Remove(_selectedMonsterInfos[i]);
+                using (var ctx = new DataContext())
+                {
+                    ctx.MonsterInfos.RemoveRange(
+                        ctx.MonsterInfos.Where(info => info.Index == _selectedMonsterInfos[i].Index));
+                    ctx.SaveChanges();
+                }
+            }
 
             if (Envir.MonsterInfoList.Count == 0) Envir.MonsterIndex = 0;
 

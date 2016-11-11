@@ -18,8 +18,8 @@ namespace Server.MirDatabase
         [NotMapped]
         public QuestInfo Info;
 
-        public DateTime? StartDateTime { get; set; } = DateTime.MinValue;
-        public DateTime? EndDateTime { get; set; } = DateTime.MaxValue;
+        public DateTime? StartDateTime { get; set; } = null;
+        public DateTime? EndDateTime { get; set; } = null;
         [ForeignKey("CharacterInfo")]
         public int CharacterIndex { get; set; }
         

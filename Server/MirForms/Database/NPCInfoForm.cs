@@ -52,7 +52,18 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected NPCs?", "Remove NPCs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++) Envir.Remove(_selectedNPCInfos[i]);
+            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            {
+                Envir.Remove(_selectedNPCInfos[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.NpcInfos.RemoveRange(ctx.NpcInfos.Where(info => info.Index == _selectedNPCInfos[i].Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             if (Envir.NPCInfoList.Count == 0) Envir.NPCIndex = 0;
 

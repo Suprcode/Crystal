@@ -589,7 +589,25 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected maps?", "Remove Maps?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedMapInfos.Count; i++) Envir.Remove(_selectedMapInfos[i]);
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
+                Envir.Remove(_selectedMapInfos[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.RemoveRange(ctx.MapInfos.Where(m => m.Index == _selectedMapInfos[i].Index));
+                        ctx.SafeZoneInfos.RemoveRange(
+                            ctx.SafeZoneInfos.Where(info => info.MapInfoIndex == _selectedMapInfos[i].Index));
+                        ctx.MovementInfos.RemoveRange(
+                            ctx.MovementInfos.Where(info => info.MapIndex == _selectedMapInfos[i].Index));
+                        ctx.RespawnInfos.RemoveRange(
+                            ctx.RespawnInfos.Where(info => info.MapInfoIndex == _selectedMapInfos[i].Index));
+                        ctx.MineZones.RemoveRange(ctx.MineZones.Where(m => m.MapInfoIndex == _selectedMapInfos[i].Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             if (Envir.MapInfoList.Count == 0) Envir.MapIndex = 0;
 
