@@ -650,6 +650,18 @@ namespace Client.MirObjects
 
             if (RidingMount) return;
 
+            if (CurrentEffect == SpellEffect.MagicShieldUp)
+            {
+                if (ShieldEffect != null)
+                {
+                    ShieldEffect.Clear();
+                    ShieldEffect.Remove();
+                }
+
+                MagicShield = true;
+                Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
+            }
+
             if (WingEffect >= 100)
             {
                 switch(WingEffect)
