@@ -18878,7 +18878,7 @@ namespace Server.MirObjects
 
         public void GameshopBuy(int GIndex, byte Quantity)
         {
-            if (Quantity < 1) return;
+            if (Quantity < 1 || Quantity > 99) return;
 
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
@@ -18906,6 +18906,8 @@ namespace Server.MirObjects
                 SMain.EnqueueDebugging(Info.Name + " is trying to buy Something that doesn't exist.");
                 return;
             }
+
+            if (((decimal)(Quantity * Product.Count) / Product.Info.StackSize) > 5) return;
 
             if (Product.Stock != 0)
             {
