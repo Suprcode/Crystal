@@ -2998,8 +2998,7 @@ namespace Client.MirScenes
                             obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
                             break;
                         case DamageType.Critical:
-                            if (p.Damage > 0)
-                                obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.Red : Color.Red, 50) { Offset = 15 });
+                            obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.Red : Color.Red, 50) { Offset = 15 });
                             break;
                     }
 

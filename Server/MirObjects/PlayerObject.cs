@@ -9766,13 +9766,6 @@ namespace Server.MirObjects
 
             damage += attacker.AttackBonus;
 
-            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
-            {
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
-                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
-                BroadcastDamageIndicator(DamageType.Critical);
-            }
-
             if (Envir.Random.Next(100) < Reflect)
             {
                 if (attacker.IsAttackTarget(this))
@@ -9793,6 +9786,13 @@ namespace Server.MirObjects
             {
                 BroadcastDamageIndicator(DamageType.Miss);
                 return 0;
+            }
+
+            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
+            {
+                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
+                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
+                BroadcastDamageIndicator(DamageType.Critical);
             }
 
             if (MagicShield)
