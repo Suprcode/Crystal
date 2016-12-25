@@ -38,6 +38,8 @@ namespace Server
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
             UseSQLServerCheckbox.Checked = Settings.UseSQLServer;
+            UseConnStringCheckBox.Checked = Settings.UseConnString;
+            ConnStringTextBox.Text = Settings.ConnString;
 
             ServerVersionLabel.Text = Application.ProductVersion;
             DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
@@ -83,6 +85,8 @@ namespace Server
                 Settings.SaveDelay = tempshort;
 
             Settings.UseSQLServer = UseSQLServerCheckbox.Checked;
+            Settings.UseConnString = UseConnStringCheckBox.Checked;
+            Settings.ConnString = ConnStringTextBox.Text;
 
             Settings.AllowNewAccount = AccountCheckBox.Checked;
             Settings.AllowChangePassword = PasswordCheckBox.Checked;
