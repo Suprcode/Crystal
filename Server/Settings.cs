@@ -81,7 +81,8 @@ namespace Server
         public static int SaveDelay = 5;
         public static short CredxGold = 30;
         public static bool UseSQLServer = false;
-
+        public static bool UseConnString = false;
+        public static string ConnString = "Server=tcp:127.0.0.1,1433;Database=Mir;User ID=sa;Password=1234.abcd;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True;TrustServerCertificate=True;";
         //Game
         public static List<long> ExperienceList = new List<long>();
         public static List<long> OrbsExpList = new List<long>();
@@ -310,6 +311,8 @@ namespace Server
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
             CredxGold = Reader.ReadInt16("Database", "CredxGold", CredxGold);
             UseSQLServer = Reader.ReadBoolean("Database", "UseSQLServer", UseSQLServer);
+            UseConnString = Reader.ReadBoolean("Database", "UseConnString", UseConnString);
+            ConnString = Reader.ReadString("Database", "ConnString", ConnString);
 
             //Game
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
@@ -508,6 +511,8 @@ namespace Server
             Reader.Write("Database", "SaveDelay", SaveDelay);
             Reader.Write("Database", "CredxGold", CredxGold);
             Reader.Write("Database", "UseSQLServer", UseSQLServer);
+            Reader.Write("Database", "UseConnString", UseConnString);
+            Reader.Write("Database", "ConnString", ConnString);
             //Game
             Reader.Write("Game", "DropRate", DropRate);
             Reader.Write("Game", "ExpRate", ExpRate);

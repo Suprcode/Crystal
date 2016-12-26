@@ -64,6 +64,8 @@
             this.PasswordCheckBox = new System.Windows.Forms.CheckBox();
             this.AccountCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.SaveAccount = new System.Windows.Forms.Button();
+            this.SaveDBButton = new System.Windows.Forms.Button();
             this.UseSQLServerCheckbox = new System.Windows.Forms.CheckBox();
             this.SaveDelayTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -71,8 +73,9 @@
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
-            this.SaveDBButton = new System.Windows.Forms.Button();
-            this.SaveAccount = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.ConnStringTextBox = new System.Windows.Forms.TextBox();
+            this.UseConnStringCheckBox = new System.Windows.Forms.CheckBox();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -447,6 +450,9 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.UseConnStringCheckBox);
+            this.tabPage4.Controls.Add(this.ConnStringTextBox);
+            this.tabPage4.Controls.Add(this.label12);
             this.tabPage4.Controls.Add(this.SaveAccount);
             this.tabPage4.Controls.Add(this.SaveDBButton);
             this.tabPage4.Controls.Add(this.UseSQLServerCheckbox);
@@ -459,6 +465,26 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "数据库";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // SaveAccount
+            // 
+            this.SaveAccount.Location = new System.Drawing.Point(101, 62);
+            this.SaveAccount.Name = "SaveAccount";
+            this.SaveAccount.Size = new System.Drawing.Size(81, 23);
+            this.SaveAccount.TabIndex = 28;
+            this.SaveAccount.Text = "SaveAccount";
+            this.SaveAccount.UseVisualStyleBackColor = true;
+            this.SaveAccount.Click += new System.EventHandler(this.SaveAccount_Click);
+            // 
+            // SaveDBButton
+            // 
+            this.SaveDBButton.Location = new System.Drawing.Point(20, 62);
+            this.SaveDBButton.Name = "SaveDBButton";
+            this.SaveDBButton.Size = new System.Drawing.Size(75, 23);
+            this.SaveDBButton.TabIndex = 27;
+            this.SaveDBButton.Text = "SaveDB";
+            this.SaveDBButton.UseVisualStyleBackColor = true;
+            this.SaveDBButton.Click += new System.EventHandler(this.SaveDBButton_Click);
             // 
             // UseSQLServerCheckbox
             // 
@@ -528,25 +554,31 @@
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
             // 
-            // SaveDBButton
+            // label12
             // 
-            this.SaveDBButton.Location = new System.Drawing.Point(20, 62);
-            this.SaveDBButton.Name = "SaveDBButton";
-            this.SaveDBButton.Size = new System.Drawing.Size(75, 23);
-            this.SaveDBButton.TabIndex = 27;
-            this.SaveDBButton.Text = "SaveDB";
-            this.SaveDBButton.UseVisualStyleBackColor = true;
-            this.SaveDBButton.Click += new System.EventHandler(this.SaveDBButton_Click);
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(18, 95);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(71, 12);
+            this.label12.TabIndex = 29;
+            this.label12.Text = "ConnString:";
             // 
-            // SaveAccount
+            // ConnStringTextBox
             // 
-            this.SaveAccount.Location = new System.Drawing.Point(101, 62);
-            this.SaveAccount.Name = "SaveAccount";
-            this.SaveAccount.Size = new System.Drawing.Size(81, 23);
-            this.SaveAccount.TabIndex = 28;
-            this.SaveAccount.Text = "SaveAccount";
-            this.SaveAccount.UseVisualStyleBackColor = true;
-            this.SaveAccount.Click += new System.EventHandler(this.SaveAccount_Click);
+            this.ConnStringTextBox.Location = new System.Drawing.Point(96, 92);
+            this.ConnStringTextBox.Name = "ConnStringTextBox";
+            this.ConnStringTextBox.Size = new System.Drawing.Size(305, 21);
+            this.ConnStringTextBox.TabIndex = 30;
+            // 
+            // UseConnStringCheckBox
+            // 
+            this.UseConnStringCheckBox.AutoSize = true;
+            this.UseConnStringCheckBox.Location = new System.Drawing.Point(121, 41);
+            this.UseConnStringCheckBox.Name = "UseConnStringCheckBox";
+            this.UseConnStringCheckBox.Size = new System.Drawing.Size(102, 16);
+            this.UseConnStringCheckBox.TabIndex = 31;
+            this.UseConnStringCheckBox.Text = "UseConnString";
+            this.UseConnStringCheckBox.UseVisualStyleBackColor = true;
             // 
             // ConfigForm
             // 
@@ -622,5 +654,8 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button SaveDBButton;
         private System.Windows.Forms.Button SaveAccount;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox ConnStringTextBox;
+        private System.Windows.Forms.CheckBox UseConnStringCheckBox;
     }
 }

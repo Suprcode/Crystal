@@ -467,7 +467,18 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected Items?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedItemInfos.Count; i++) Envir.Remove(_selectedItemInfos[i]);
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
+                Envir.Remove(_selectedItemInfos[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.RemoveRange(ctx.ItemInfos.Where(item => item.Index == _selectedItemInfos[i].Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             if (Envir.ItemInfoList.Count == 0) Envir.ItemIndex = 0;
 

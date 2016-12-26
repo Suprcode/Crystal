@@ -1632,7 +1632,7 @@ public class InIReader
             if (String.CompareOrdinal(_contents[a], "[" + section + "]") == 0)
                 for (int b = a + 1; b < _contents.Count; b++)
                     if (String.CompareOrdinal(_contents[b].Split('=')[0], key) == 0)
-                        return _contents[b].Split('=')[1];
+                        return _contents[b].Replace(key + "=", "");
                     else if (_contents[b].StartsWith("[") && _contents[b].EndsWith("]"))
                         return null;
         return null;

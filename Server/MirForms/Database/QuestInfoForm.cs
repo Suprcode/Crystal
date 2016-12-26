@@ -42,7 +42,19 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected Quests?", "Remove Quests?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedQuestInfos.Count; i++) Envir.Remove(_selectedQuestInfos[i]);
+            for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
+                Envir.Remove(_selectedQuestInfos[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.RemoveRange(
+                            ctx.QuestInfos.Where(info => info.Index == _selectedQuestInfos[i].Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             if (Envir.QuestInfoList.Count == 0) Envir.QuestIndex = 0;
 

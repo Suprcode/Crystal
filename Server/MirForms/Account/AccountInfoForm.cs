@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -417,6 +418,16 @@ namespace Server
             if (MessageBox.Show("Are you sure you want to wipe all characters from the database?", "Notice",
                  MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
             {
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.CharacterInfos.RemoveRange(ctx.CharacterInfos.Where(i => true));
+                        ctx.AuctionInfos.RemoveRange(ctx.AuctionInfos.Where(i => true));
+                        ctx.Guilds.RemoveRange(ctx.Guilds.Where(g => true));
+                        ctx.SaveChanges();
+                    }
+                }
                 for (int i = 0; i < SMain.Envir.AccountList.Count; i++)
                 {
                     AccountInfo account = SMain.Envir.AccountList[i];
@@ -426,6 +437,7 @@ namespace Server
 
                 SMain.Envir.Auctions.Clear();
                 SMain.Envir.GuildList.Clear();
+                
 
                 MessageBox.Show("All characters and associated data has been cleared", "Notice",
                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);

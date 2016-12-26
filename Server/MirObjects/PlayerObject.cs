@@ -14338,6 +14338,11 @@ namespace Server.MirObjects
 
                         Account.Auctions.Remove(auction);
                         Envir.Auctions.Remove(auction);
+                        using (var ctx = new DataContext())
+                        {
+                            ctx.AuctionInfos.RemoveRange(ctx.AuctionInfos.Where(i => i.AuctionID == auction.AuctionID));
+                            ctx.SaveChanges();
+                        }
                         GainItem(auction.Item);
                         MarketSearch(MatchName);
 
@@ -14355,6 +14360,11 @@ namespace Server.MirObjects
 
                     Account.Auctions.Remove(auction);
                     Envir.Auctions.Remove(auction);
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AuctionInfos.RemoveRange(ctx.AuctionInfos.Where(i => i.AuctionID == auction.AuctionID));
+                        ctx.SaveChanges();
+                    }
                     GainGold(gold);
                     Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, auction.Price, gold, auction.Price - gold) });
                     MarketSearch(MatchName);

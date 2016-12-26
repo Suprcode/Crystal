@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Web.UI;
 using Server.MirEnvir;
 using Server.MirObjects;
 
@@ -58,6 +59,10 @@ namespace Server.MirDatabase
 #if DEBUG
             Database.Log = s => Debug.WriteLine(s);
 #endif
+            if (Settings.UseConnString && !string.IsNullOrEmpty(Settings.ConnString))
+            {
+                Database.Connection.ConnectionString = Settings.ConnString;
+            }
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
