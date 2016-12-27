@@ -657,7 +657,7 @@ namespace Server.MirEnvir
 
                         Process();
 
-                        if (Time >= saveTime)
+                        if (Time >= saveTime && Players.Count == 0)
                         {
                             saveTime = Time + Settings.SaveDelay * Settings.Minute;
                             BeginSaveAccounts();
@@ -1613,7 +1613,7 @@ namespace Server.MirEnvir
                                 ctx.SafeZoneInfos.AsNoTracking().Where(i => i.MapInfoIndex == x.Index).ToList();
                             x.SafeZones.ForEach(z => z.Info = x);
                             x.Movements = ctx.MovementInfos.AsNoTracking().Where(i => i.SourceMapIndex == x.Index).ToList();
-                            x.NPCs = ctx.NpcInfos.AsNoTracking().Where(i => i.MapIndex == i.Index).ToList();
+                            x.NPCs = ctx.NpcInfos.AsNoTracking().Where(i => i.MapIndex == x.Index).ToList();
                         });
                         ItemInfoList = ctx.ItemInfos.AsNoTracking().ToList();
                         ItemInfoList.ForEach(x =>
@@ -1794,6 +1794,7 @@ namespace Server.MirEnvir
                         {
                             var Inventoryitems =
                                 ctx.Inventories.Include(i => i.UserItem)
+                                    .Include(i => i.UserItem.Info)
                                     .AsNoTracking()
                                     .Where(i => i.CharacterIndex == x.Index)
                                     .ToList();
@@ -1807,6 +1808,7 @@ namespace Server.MirEnvir
                             }
                             var EquipmentItems =
                                 ctx.Equipments.Include(e => e.UserItem)
+                                    .Include(e => e.UserItem.Info)
                                     .AsNoTracking()
                                     .Where(e => e.CharacterIndex == x.Index)
                                     .ToList();
@@ -1819,6 +1821,7 @@ namespace Server.MirEnvir
                             }
                             var QuestInventorys =
                                 ctx.QuestInventories.Include(i => i.UserItem)
+                                    .Include(i => i.UserItem.Info)
                                     .AsNoTracking()
                                     .Where(i => i.CharacterIndex == x.Index)
                                     .ToList();

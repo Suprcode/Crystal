@@ -146,6 +146,10 @@
     <Compile Include="Migrations\201610180718115_AddMissingAttrs5.Designer.cs">
       <DependentUpon>201610180718115_AddMissingAttrs5.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612270245407_AddMissingAttrs6.cs" />
+    <Compile Include="Migrations\201612270245407_AddMissingAttrs6.Designer.cs">
+      <DependentUpon>201612270245407_AddMissingAttrs6.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MirDatabase\DataContext.cs" />
     <Compile Include="MirDatabase\MailInfo.cs" />
@@ -481,6 +485,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610180718115_AddMissingAttrs5.resx">
       <DependentUpon>201610180718115_AddMissingAttrs5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612270245407_AddMissingAttrs6.resx">
+      <DependentUpon>201612270245407_AddMissingAttrs6.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>

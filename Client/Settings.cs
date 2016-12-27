@@ -77,7 +77,7 @@ namespace Client
         public static int Port = 7000;
 #else
         public static bool UseConfig = false;
-        public static string IPAddress = "122.114.158.120";
+        public static string IPAddress = "118.193.132.86";
         public static int Port = 23333;
 #endif
 

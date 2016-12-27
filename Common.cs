@@ -3098,8 +3098,9 @@ public class UserItem
         set { MaxDura = (ushort) value; }
     }
     public uint Count { get; set; } = 1;
+    public long DBCount { get { return Count;} set { Count = (uint) value; } }
     public uint GemCount { get; set; } = 0;
-
+    public long DBGemCount { get { return GemCount;} set { GemCount = (uint) value; } }
     public byte AC { get; set; }
     public byte MAC { get; set; }
     public byte DC { get; set; }

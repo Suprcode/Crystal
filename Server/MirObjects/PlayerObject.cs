@@ -1301,6 +1301,13 @@ namespace Server.MirObjects
                     temp = Info.Equipment[i];
 
                     if (temp == null) continue;
+                    if (temp.Info == null)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                        }
+                    }
                     if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
                     if ((temp.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == temp.UniqueID)) continue; //CHECK THIS
 
@@ -1367,6 +1374,13 @@ namespace Server.MirObjects
                 UserItem temp = Info.Inventory[i];
 
                 if (temp == null) continue;
+                if (temp.Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                    }
+                }
                 if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
                 if (temp.WeddingRing != -1) continue;
 
@@ -1419,6 +1433,13 @@ namespace Server.MirObjects
                     temp = Info.Equipment[i];
 
                     if (temp == null) continue;
+                    if (temp.Info == null)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                        }
+                    }
                     if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
                     if ((temp.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == temp.UniqueID)) continue; //CHECK THIS
 
@@ -1472,6 +1493,13 @@ namespace Server.MirObjects
                 UserItem temp = Info.Inventory[i];
 
                 if (temp == null) continue;
+                if (temp.Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                    }
+                }
                 if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
                 if (temp.WeddingRing != -1) continue;
 
@@ -2484,7 +2512,17 @@ namespace Server.MirObjects
             {
                 UserItem item = Info.Inventory[i];
                 if (item != null)
+                {
+                    if (item.Info == null)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                        }
+                    }
                     CurrentBagWeight = (ushort)Math.Min(ushort.MaxValue, CurrentBagWeight + item.Weight);
+                }
+                    
             }
         }
 
@@ -2525,6 +2563,13 @@ namespace Server.MirObjects
             {
                 UserItem temp = Info.Equipment[i];
                 if (temp == null) continue;
+                if (temp.Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                    }
+                }
                 ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
                 if (RealItem.Type == ItemType.武器 || RealItem.Type == ItemType.火把)
                     CurrentHandWeight = (ushort)Math.Min(byte.MaxValue, CurrentHandWeight + temp.Weight);
@@ -2902,7 +2947,13 @@ namespace Server.MirObjects
             {
                 UserItem temp = Slots[i];
                 if (temp == null) continue;
-
+                if (temp.Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                    }
+                }
                 ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
 
                 CurrentWearWeight = (ushort)Math.Min(ushort.MaxValue, CurrentWearWeight + temp.Weight);
@@ -9130,6 +9181,13 @@ namespace Server.MirObjects
             for (int i = 0; i < Info.Equipment.Length; i++)
             {
                 UserItem item = Info.Equipment[i];
+                if (item != null && item.Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                    }
+                }
                 if (item != null && item.Info.Type == ItemType.护身符 && item.Info.Shape == shape && item.Count >= count)
                     return item;
             }
@@ -9141,6 +9199,13 @@ namespace Server.MirObjects
             for (int i = 0; i < Info.Equipment.Length; i++)
             {
                 UserItem item = Info.Equipment[i];
+                if (item != null && item.Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                    }
+                }
                 if (item != null && item.Info.Type == ItemType.护身符 && item.Count >= count)
                 {
                     if (shape == 0)
@@ -9161,6 +9226,13 @@ namespace Server.MirObjects
         private UserItem GetBait(int count)
         {
             UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
+            if (item != null && item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                }
+            }
             if (item == null || item.Info.Type != ItemType.武器 || (item.Info.Shape != 49 && item.Info.Shape != 50)) return null;
 
             UserItem bait = item.Slots[(int)FishingSlot.Bait];
@@ -9173,6 +9245,13 @@ namespace Server.MirObjects
         private UserItem GetFishingItem(FishingSlot type)
         {
             UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
+            if (item != null && item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                }
+            }
             if (item == null || item.Info.Type != ItemType.武器 || (item.Info.Shape != 49 && item.Info.Shape != 50)) return null;
 
             UserItem fishingItem = item.Slots[(int)type];
@@ -9184,6 +9263,13 @@ namespace Server.MirObjects
         private void DeleteFishingItem(FishingSlot type)
         {
             UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
+            if (item != null && item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                }
+            }
             if (item == null || item.Info.Type != ItemType.武器 || (item.Info.Shape != 49 && item.Info.Shape != 50)) return;
 
             UserItem slotItem = Info.Equipment[(int)EquipmentSlot.Weapon].Slots[(int)type];
@@ -9196,7 +9282,13 @@ namespace Server.MirObjects
         private void DamagedFishingItem(FishingSlot type, int lossDura)
         {
             UserItem item = GetFishingItem(type);
-
+            if (item != null && item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                }
+            }
             if (item != null)
             {
                 if (item.CurrentDura <= 0)
@@ -10753,6 +10845,13 @@ namespace Server.MirObjects
                 Enqueue(p);
                 return;
             }
+            if (temp.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                }
+            }
             if ((Info.Equipment[to] != null) && (Info.Equipment[to].Cursed) && (!UnlockCurse))
             {
                 Enqueue(p);
@@ -10826,7 +10925,13 @@ namespace Server.MirObjects
                 Enqueue(p);
                 return;
             }
-
+            if (item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                }
+            }
             if (Dead && !(item.Info.Type == ItemType.卷轴 && item.Info.Shape == 6))
             {
                 Enqueue(p);
@@ -11371,7 +11476,13 @@ namespace Server.MirObjects
                 tempFrom = arrayFrom[i];
                 break;
             }
-
+            if (tempFrom != null && tempFrom.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    tempFrom.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == tempFrom.ItemIndex);
+                }
+            }
             if (tempFrom == null || tempFrom.Info.StackSize == 1 || index == -1)
             {
                 Enqueue(p);
@@ -11380,14 +11491,20 @@ namespace Server.MirObjects
 
 
             UserItem tempTo = null;
-
+            
             for (int i = 0; i < arrayTo.Length; i++)
             {
                 if (arrayTo[i] == null || arrayTo[i].UniqueID != toID) continue;
                 tempTo = arrayTo[i];
                 break;
             }
-
+            if (tempTo != null && tempTo.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    tempTo.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == tempTo.ItemIndex);
+                }
+            }
             if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count == tempTo.Info.StackSize)
             {
                 Enqueue(p);
@@ -12126,6 +12243,13 @@ namespace Server.MirObjects
 
                 if (item.Item != null)
                 {
+                    if (item.Item.Info == null)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            item.Item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.Item.ItemIndex);
+                        }
+                    }
                     if (!CanGainItem(item.Item)) continue;
 
                     if (item.Item.Info.ShowGroupPickup && IsGroupMember(this))
@@ -12355,7 +12479,13 @@ namespace Server.MirObjects
         private bool CanUseItem(UserItem item)
         {
             if (item == null) return false;
-
+            if (item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                }
+            }
             switch (Gender)
             {
                 case MirGender.Male:
@@ -12626,6 +12756,13 @@ namespace Server.MirObjects
         }
         private bool CanEquipItem(UserItem item, int slot)
         {
+            if (item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
+                }
+            }
             switch ((EquipmentSlot)slot)
             {
                 case EquipmentSlot.Weapon:
@@ -12749,12 +12886,34 @@ namespace Server.MirObjects
 
             if (item.Info.Type == ItemType.武器 || item.Info.Type == ItemType.火把)
             {
-                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentHandWeight > MaxHandWeight)
+                if (Info.Equipment[slot] != null && Info.Equipment[slot].Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        var itemIndex = Info.Equipment[slot].ItemIndex;
+                        Info.Equipment[slot].Info =
+                            ctx.ItemInfos.FirstOrDefault(info => info.Index == itemIndex);
+                    }
+                }
+                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentHandWeight >
+                    MaxHandWeight)
                     return false;
             }
             else
+            {
+                if (Info.Equipment[slot] != null && Info.Equipment[slot].Info == null)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        var itemIndex = Info.Equipment[slot].ItemIndex;
+                        Info.Equipment[slot].Info =
+                            ctx.ItemInfos.FirstOrDefault(info => info.Index == itemIndex);
+                    }
+                }
                 if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentWearWeight > MaxWearWeight)
                     return false;
+            }
+                
 
             if (RidingMount && item.Info.Type != ItemType.火把)
             {
@@ -12880,6 +13039,13 @@ namespace Server.MirObjects
         }
         private void DamageItem(UserItem item, int amount, bool isChanged = false)
         {
+            if (item != null && item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(i => i.Index == item.ItemIndex);
+                }
+            }
             if (item == null || item.CurrentDura == 0 || item.Info.Type == ItemType.护身符) return;
             if ((item.WeddingRing == Info.Married) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID)) return;
             if (item.Info.Strong > 0) amount = Math.Max(1, amount - item.Info.Strong);
