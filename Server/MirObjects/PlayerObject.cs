@@ -10954,11 +10954,11 @@ namespace Server.MirObjects
                         case 2: //MysteryWater
                             if (UnlockCurse)
                             {
-                                ReceiveChat("You can already unequip a cursed item.", ChatType.Hint);
+                                ReceiveChat("你已经可以脱下诅咒的装备了.", ChatType.Hint);
                                 Enqueue(p);
                                 return;
                             }
-                            ReceiveChat("You can now unequip a cursed item.", ChatType.Hint);
+                            ReceiveChat("你现在可以脱下诅咒的装备了.", ChatType.Hint);
                             UnlockCurse = true;
                             break;
                         case 3: //Buff
@@ -11062,7 +11062,7 @@ namespace Server.MirObjects
                             temp.CurrentDura = temp.MaxDura;
                             temp.DuraChanged = false;
 
-                            ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
+                            ReceiveChat("你的武器已经完好如新了", ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 6: //ResurrectionScroll
@@ -11076,16 +11076,16 @@ namespace Server.MirObjects
                             if (item.Info.Price > 0)
                             {
                                 GainCredit(item.Info.Price);
-                                ReceiveChat(String.Format("{0} Credits have been added to your Account", item.Info.Price), ChatType.Hint);
+                                ReceiveChat(String.Format("{0} 点数加到账号", item.Info.Price), ChatType.Hint);
                             }
                             break;
                         case 8: //MapShoutScroll
                             HasMapShout = true;
-                            ReceiveChat("You have been given one free shout across your current map", ChatType.Hint);
+                            ReceiveChat("你可以在当前地图喊一句话了", ChatType.Hint);
                             break;
                         case 9://ServerShoutScroll
                             HasServerShout = true;
-                            ReceiveChat("You have been given one free shout across the server", ChatType.Hint);
+                            ReceiveChat("你可以在整个服务器喊一句话了", ChatType.Hint);
                             break;
                         case 10://GuildSkillScroll
                             MyGuild.NewBuff(item.Info.Effect, false);
@@ -11096,6 +11096,8 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
+                            break;
+                        case 12://LotteryTicket
                             break;
                     }
                     break;

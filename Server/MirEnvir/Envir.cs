@@ -1613,7 +1613,7 @@ namespace Server.MirEnvir
                                 ctx.SafeZoneInfos.AsNoTracking().Where(i => i.MapInfoIndex == x.Index).ToList();
                             x.SafeZones.ForEach(z => z.Info = x);
                             x.Movements = ctx.MovementInfos.AsNoTracking().Where(i => i.SourceMapIndex == x.Index).ToList();
-                            x.NPCs = ctx.NpcInfos.AsNoTracking().Where(i => i.MapIndex == x.Index).ToList();
+                            //x.NPCs = ctx.NpcInfos.AsNoTracking().Where(i => i.MapIndex == x.Index).ToList();
                         });
                         ItemInfoList = ctx.ItemInfos.AsNoTracking().ToList();
                         ItemInfoList.ForEach(x =>
