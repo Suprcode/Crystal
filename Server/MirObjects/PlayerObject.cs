@@ -11098,6 +11098,37 @@ namespace Server.MirObjects
                             }
                             break;
                         case 12://LotteryTicket
+                            foreach (DropInfo drop in Envir.LotteryTicketDrops)
+                            {
+                                int rate = (int)(drop.Chance / (Settings.DropRate));
+
+                                if (rate < 1) rate = 1;
+
+                                if (Envir.Random.Next(rate) != 0) continue;
+
+                                if (drop.Gold > 0)
+                                {
+                                    int lowerGoldRange = (int)(drop.Gold / 2);
+                                    int upperGoldRange = (int)(drop.Gold + drop.Gold / 2);
+
+                                    if (lowerGoldRange > upperGoldRange) lowerGoldRange = upperGoldRange;
+
+                                    int gold = Envir.Random.Next(lowerGoldRange, upperGoldRange);
+
+                                    if (gold <= 0) continue;
+
+                                    GainGold((uint) gold);
+                                    break;
+                                }
+                                UserItem _item = Envir.CreateDropItem(drop.Item);
+                                if (_item == null) continue;
+
+                                if (drop.QuestRequired) continue;
+
+                                if (_item.Count < 1) _item.Count = 1;
+                                GainItem(_item);
+                                break;
+                            }
                             break;
                     }
                     break;

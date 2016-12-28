@@ -44,6 +44,7 @@ namespace Server
         public static string DefaultNPCFilename = "00Default";
         public static string FishingDropFilename = "00Fishing";
 	    public static string AwakeningDropFilename = "00Awakening";
+        public static string LotteryTicketDropFilename = "00LotteryTicket";
         public static string StrongboxDropFilename = "00Strongbox";
         public static string BlackstoneDropFilename = "00Blackstone";
         public static string MonsterNPCFilename = "00Monster";

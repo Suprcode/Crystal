@@ -159,6 +159,7 @@ namespace Server.MirEnvir
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
+        public List<DropInfo> LotteryTicketDrops = new List<DropInfo>();
 
         public List<DropInfo> StrongboxDrops = new List<DropInfo>();
         public List<DropInfo> BlackstoneDrops = new List<DropInfo>();
@@ -2155,6 +2156,44 @@ namespace Server.MirEnvir
             });
         }
 
+        public void LoadLotteryTicketDrops()
+        {
+            LotteryTicketDrops.Clear();
+            
+            string path = Path.Combine(Settings.DropPath, Settings.LotteryTicketDropFilename + ".txt");
+
+            if (!File.Exists(path))
+            {
+                FileStream newfile = File.Create(path);
+                newfile.Close();
+            }
+
+            string[] lines = File.ReadAllLines(path);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                DropInfo drop = DropInfo.FromLine(lines[i]);
+                if (drop == null)
+                {
+                    SMain.Enqueue(string.Format("不能加载彩票掉率: {0}", lines[i]));
+                    continue;
+                }
+
+                LotteryTicketDrops.Add(drop);
+            }
+
+            LotteryTicketDrops.Sort((drop1, drop2) =>
+            {
+                if (drop1.Gold > 0 && drop2.Gold == 0)
+                    return 1;
+                if (drop1.Gold == 0 && drop2.Gold > 0)
+                    return -1;
+
+                return drop1.Item.Type.CompareTo(drop2.Item.Type);
+            });
+        }
         public void LoadStrongBoxDrops()
         {
             StrongboxDrops.Clear();
@@ -2489,6 +2528,7 @@ namespace Server.MirEnvir
 
             LoadFishingDrops();
             LoadAwakeningMaterials();
+            LoadLotteryTicketDrops();
             LoadStrongBoxDrops();
             LoadBlackStoneDrops();
             SMain.Enqueue("已经加载掉率.");
