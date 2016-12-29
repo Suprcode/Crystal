@@ -29,7 +29,7 @@ namespace Client.MirNetwork
 
             ConnectAttempt++;
 
-            _client = new TcpClient {NoDelay = true};
+            _client = new TcpClient {NoDelay = true,ReceiveTimeout = 2000, SendTimeout = 2000};
             _client.BeginConnect(Settings.IPAddress, Settings.Port, Connection, null);
 
         }
