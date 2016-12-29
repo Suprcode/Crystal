@@ -661,40 +661,22 @@ namespace Server.MirDatabase
                         ctx.UserBuffs.Add(userBuff);
                     }
                     ctx.SaveChanges();
-                    ctx.Mails.RemoveRange(ctx.Mails.Where(m => m.CharacterIndex == Index));
-                    foreach (var mailInfo in Mail)
-                    {
-                        var dbMail = ctx.Mails.FirstOrDefault(m => m.MailID == mailInfo.MailID);
-                        if (dbMail == null)
-                        {
-                            ctx.Mails.Add(mailInfo);
-                        }
-                        else
-                        {
-                            ctx.Entry(dbMail).CurrentValues.SetValues(mailInfo);
-                        }
-                    }
+                    ctx.Mails.RemoveRange(ctx.Mails.Where(m => m.RecipientIndex == Index));
                     ctx.SaveChanges();
+                    foreach (MailInfo mail in Mail)
+                        mail.Save(writer);
                     ctx.UserIntelligentCreatures.RemoveRange(
                         ctx.UserIntelligentCreatures.Where(i => i.CharacterIndex == Index));
                     foreach (var userIntelligentCreature in IntelligentCreatures)
                     {
-                        var dbUserIntelligentCreature =
-                            ctx.UserIntelligentCreatures.FirstOrDefault(i => i.Index == userIntelligentCreature.Index);
-                        if (dbUserIntelligentCreature == null)
-                        {
-                            ctx.UserIntelligentCreatures.Add(userIntelligentCreature);
-                        }
-                        else
-                        {
-                            ctx.Entry(dbUserIntelligentCreature).CurrentValues.SetValues(userIntelligentCreature);
-                        }
-                        
+                        userIntelligentCreature.CharacterIndex = Index;
+                        ctx.UserIntelligentCreatures.Add(userIntelligentCreature);
                     }
                     ctx.SaveChanges();
                     ctx.Friends.RemoveRange(ctx.Friends.Where(f => f.CharacterIndex == Index));
                     foreach (var friendInfo in Friends)
                     {
+                        friendInfo.CharacterIndex = Index;
                         ctx.Friends.Add(friendInfo);
                     }
 

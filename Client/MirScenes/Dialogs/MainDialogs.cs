@@ -917,7 +917,8 @@ namespace Client.MirScenes.Dialogs
                     string[] parts = l.Text.Split(':', ' ');
                     if (parts.Length == 0) return;
 
-                    string name = Regex.Replace(parts[0], "[^A-Za-z0-9]", "");
+                    string name = Regex.Replace(parts[0], "=>$", "");
+                    name = Regex.Replace(name, "^/", "");
 
                     ChatTextBox.SetFocus();
                     ChatTextBox.Text = string.Format("/{0} ", name);

@@ -1881,6 +1881,23 @@ namespace Server.MirEnvir
                         }
                         NextMailID = (ctx.Mails.Max(m => (long?) m.MailID) ?? 0) + 1;
                         Mail = ctx.Mails.AsNoTracking().ToList();
+                        Mail.ForEach(x =>
+                        {
+                            if (x.RecipientIndex != 0)
+                            {
+                                x.RecipientInfo = CharacterList.FirstOrDefault(c => c.Index == x.RecipientIndex);
+                            }
+                            if (x.CharacterIndex != 0)
+                            {
+                                x.CharacterInfo = CharacterList.FirstOrDefault(c => c.Index == x.CharacterIndex);
+                            }
+                            x.Items =
+                                ctx.MailItems.AsNoTracking().Where(item => item.MailID == x.MailID)
+                                    .Include(item => item.UserItem)
+                                    .Include(item => item.UserItem.Info)
+                                    .Select(item => item.UserItem)
+                                    .ToList();
+                        });
                         var respawnSaves = ctx.RespawnSaves.AsNoTracking().ToList();
                         foreach (var Saved in respawnSaves)
                         {

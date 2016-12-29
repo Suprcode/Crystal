@@ -102,19 +102,24 @@ namespace Server.MirDatabase
             {
                 using (var ctx = new DataContext())
                 {
+                    var _mail = this;
+                    _mail.RecipientIndex = _mail.RecipientInfo?.Index ?? 0;
+                    _mail.CharacterIndex = _mail.CharacterInfo?.Index ?? 0;
+                    _mail.RecipientInfo = null;
+                    _mail.CharacterInfo = null;
                     var dbMail = ctx.Mails.FirstOrDefault(m => m.MailID == MailID);
                     if (dbMail == null)
                     {
-                        ctx.Mails.Add(this);
+                        ctx.Mails.Add(_mail);
                     }
                     else
                     {
-                        ctx.Entry(dbMail).CurrentValues.SetValues(this);
+                        ctx.Entry(dbMail).CurrentValues.SetValues(_mail);
                     }
                     ctx.SaveChanges();
                     ctx.MailItems.RemoveRange(ctx.MailItems.Where(i => i.MailID == MailID));
                     ctx.SaveChanges();
-                    if(Collected) return;
+                    if(Items.Count < 1) return;
                     foreach (var item in Items)
                     {
                         var dbItem = ctx.UserItems.FirstOrDefault(i => i.UniqueID == item.UniqueID);

@@ -1830,6 +1830,13 @@ namespace Server.MirObjects
         }
         public void CheckItem(UserItem item)
         {
+            if (item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(i => i.Index == item.ItemIndex);
+                }
+            }
             CheckItemInfo(item.Info);
 
             for (int i = 0; i < item.Slots.Length; i++)

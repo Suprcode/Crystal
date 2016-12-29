@@ -51,7 +51,7 @@ namespace Server.MirDatabase
         public MirConnection Connection;
         
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
-        public bool AdminAccount;
+        public bool AdminAccount { get; set; } = false;
 
         public AccountInfo()
         {
