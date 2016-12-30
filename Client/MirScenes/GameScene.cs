@@ -7481,7 +7481,7 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    Text = "不能被使用到以下物品: ";
+                    Text = "可以被使用到: ";
                 }
                 MirLabel GemUseOn = new MirLabel
                 {

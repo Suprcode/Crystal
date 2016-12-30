@@ -658,13 +658,16 @@ namespace Server.MirEnvir
 
                         Process();
 
-                        if (Time >= saveTime && Players.Count == 0)
+                        if (Time >= saveTime)
                         {
                             saveTime = Time + Settings.SaveDelay * Settings.Minute;
-                            BeginSaveAccounts();
-                            SaveGuilds();
-                            SaveGoods();
-                            SaveConquests();
+                            if (!Settings.UseSQLServer)
+                            {
+                                BeginSaveAccounts();
+                                SaveGuilds();
+                                SaveGoods();
+                                SaveConquests();
+                            }
                         }
 
                         if (Time >= userTime)
@@ -1604,19 +1607,19 @@ namespace Server.MirEnvir
                         GameshopIndex = ctx.GameShopItems.Max(i => (int?)i.GIndex) ?? 0;
                         ConquestIndex = ctx.ConquestInfos.Max(i => (int?)i.Index) ?? 0;
                         RespawnIndex = ctx.RespawnInfos.Max(i => (int?)i.RespawnIndex) ?? 0;
-                        MapInfoList = ctx.MapInfos.AsNoTracking().ToList();
+                        MapInfoList = ctx.MapInfos.ToList();
 
                         MapInfoList.ForEach(x =>
                         {
                             x.Respawns =
-                                ctx.RespawnInfos.AsNoTracking().Where(i => i.MapInfoIndex == x.Index).ToList();
+                                ctx.RespawnInfos.Where(i => i.MapInfoIndex == x.Index).ToList();
                             x.SafeZones =
-                                ctx.SafeZoneInfos.AsNoTracking().Where(i => i.MapInfoIndex == x.Index).ToList();
+                                ctx.SafeZoneInfos.Where(i => i.MapInfoIndex == x.Index).ToList();
                             x.SafeZones.ForEach(z => z.Info = x);
-                            x.Movements = ctx.MovementInfos.AsNoTracking().Where(i => i.SourceMapIndex == x.Index).ToList();
-                            //x.NPCs = ctx.NpcInfos.AsNoTracking().Where(i => i.MapIndex == x.Index).ToList();
+                            x.Movements = ctx.MovementInfos.Where(i => i.SourceMapIndex == x.Index).ToList();
+                            //x.NPCs = ctx.NpcInfos.Where(i => i.MapIndex == x.Index).ToList();
                         });
-                        ItemInfoList = ctx.ItemInfos.AsNoTracking().ToList();
+                        ItemInfoList = ctx.ItemInfos.ToList();
                         ItemInfoList.ForEach(x =>
                         {
                             if (x.RandomStatsId < Settings.RandomItemStatsList.Count)
@@ -1625,19 +1628,19 @@ namespace Server.MirEnvir
                             }
 
                         });
-                        MonsterInfoList = ctx.MonsterInfos.AsNoTracking().ToList();
-                        NPCInfoList = ctx.NpcInfos.AsNoTracking().ToList();
-                        QuestInfoList = ctx.QuestInfos.AsNoTracking().ToList();
+                        MonsterInfoList = ctx.MonsterInfos.ToList();
+                        NPCInfoList = ctx.NpcInfos.ToList();
+                        QuestInfoList = ctx.QuestInfos.ToList();
                         QuestInfoList.ForEach(q =>
                         {
                             q.LoadInfo();
                         });
-                        DragonInfo = ctx.DragonInfos.AsNoTracking().FirstOrDefault() ?? new DragonInfo();
-                        MagicInfoList = ctx.MagicInfos.AsNoTracking().ToList();
+                        DragonInfo = ctx.DragonInfos.FirstOrDefault() ?? new DragonInfo();
+                        MagicInfoList = ctx.MagicInfos.ToList();
                         FillMagicInfoList();
                         UpdateMagicInfo();
                         GameShopList.Clear();
-                        var gameShopList = ctx.GameShopItems.AsNoTracking().ToList();
+                        var gameShopList = ctx.GameShopItems.ToList();
                         foreach (var shopItem in gameShopList)
                         {
                             if (SMain.Envir.BindGameShop(shopItem))
@@ -1645,7 +1648,7 @@ namespace Server.MirEnvir
                                 GameShopList.Add(shopItem);
                             }
                         }
-                        ConquestInfos = ctx.ConquestInfos.AsNoTracking().ToList();
+                        ConquestInfos = ctx.ConquestInfos.ToList();
                         RespawnTick = new RespawnTimer();
                     }
                     Settings.LinkGuildCreationItems(ItemInfoList);
@@ -1789,14 +1792,14 @@ namespace Server.MirEnvir
                         NextUserItemID = (ctx.UserItems.Max(i => (long?) i.UniqueID) ?? 0);
                         GuildCount = ctx.Guilds.Count();
                         NextGuildID = (ctx.Guilds.Max(g => (int?) g.Guildindex) ?? 0);
-                        AccountList = ctx.AccountInfos.AsNoTracking().ToList();
-                        CharacterList = ctx.CharacterInfos.Include(c => c.AccountInfo).AsNoTracking().ToList();
+                        AccountList = ctx.AccountInfos.ToList();
+                        CharacterList = ctx.CharacterInfos.Include(c => c.AccountInfo).ToList();
                         CharacterList.ForEach(x =>
                         {
                             var Inventoryitems =
                                 ctx.Inventories.Include(i => i.UserItem)
                                     .Include(i => i.UserItem.Info)
-                                    .AsNoTracking()
+                                    
                                     .Where(i => i.CharacterIndex == x.Index)
                                     .ToList();
                             for (int i = 0; i < Inventoryitems.Count; i++)
@@ -1810,7 +1813,7 @@ namespace Server.MirEnvir
                             var EquipmentItems =
                                 ctx.Equipments.Include(e => e.UserItem)
                                     .Include(e => e.UserItem.Info)
-                                    .AsNoTracking()
+                                    
                                     .Where(e => e.CharacterIndex == x.Index)
                                     .ToList();
                             for (int i = 0; i < EquipmentItems.Count; i++)
@@ -1823,7 +1826,7 @@ namespace Server.MirEnvir
                             var QuestInventorys =
                                 ctx.QuestInventories.Include(i => i.UserItem)
                                     .Include(i => i.UserItem.Info)
-                                    .AsNoTracking()
+                                    
                                     .Where(i => i.CharacterIndex == x.Index)
                                     .ToList();
                             for (int i = 0; i < QuestInventorys.Count; i++)
@@ -1833,7 +1836,7 @@ namespace Server.MirEnvir
                                     x.QuestInventory[i] = QuestInventorys[i].UserItem;
                                 }
                             }
-                            x.Magics = ctx.UserMagics.AsNoTracking().Where(m => m.CharacterIndex == x.Index).ToList();
+                            x.Magics = ctx.UserMagics.Where(m => m.CharacterIndex == x.Index).ToList();
                             x.Magics.ForEach(m =>
                             {
                                 m.CastTime = 0;
@@ -1844,7 +1847,7 @@ namespace Server.MirEnvir
                         {
                             x.Characters = CharacterList.Where(c => c.AccountInfoIndex == x.Index).ToList();
                             var storageItems =
-                                ctx.StorageItems.AsNoTracking().Where(i => i.AccountIndex == x.Index).Include(i => i.UserItem).ToList();
+                                ctx.StorageItems.Where(i => i.AccountIndex == x.Index).Include(i => i.UserItem).ToList();
                             Array.Resize(ref x.Storage, storageItems.Count <= 80 ? 80 : storageItems.Count);
                             int storageIndex = 0;
                             foreach (var item in storageItems)
@@ -1868,7 +1871,7 @@ namespace Server.MirEnvir
                                 ctx.AuctionInfos.Include(a => a.CharacterInfo)
                                     .Include(a => a.CharacterInfo.AccountInfo)
                                     .Include(a => a.Item)
-                                    .AsNoTracking()
+                                    
                                     .ToList());
                         NextAuctionID = (Auctions.Max(a => (long?) a.AuctionID) ?? 0);
                         foreach (var auction in Auctions)
@@ -1880,7 +1883,7 @@ namespace Server.MirEnvir
                             if (accountInfo != null) accountInfo.Auctions.AddLast(auction);
                         }
                         NextMailID = (ctx.Mails.Max(m => (long?) m.MailID) ?? 0) + 1;
-                        Mail = ctx.Mails.AsNoTracking().ToList();
+                        Mail = ctx.Mails.ToList();
                         Mail.ForEach(x =>
                         {
                             if (x.RecipientIndex != 0)
@@ -1892,13 +1895,13 @@ namespace Server.MirEnvir
                                 x.CharacterInfo = CharacterList.FirstOrDefault(c => c.Index == x.CharacterIndex);
                             }
                             x.Items =
-                                ctx.MailItems.AsNoTracking().Where(item => item.MailID == x.MailID)
+                                ctx.MailItems.Where(item => item.MailID == x.MailID)
                                     .Include(item => item.UserItem)
                                     .Include(item => item.UserItem.Info)
                                     .Select(item => item.UserItem)
                                     .ToList();
                         });
-                        var respawnSaves = ctx.RespawnSaves.AsNoTracking().ToList();
+                        var respawnSaves = ctx.RespawnSaves.ToList();
                         foreach (var Saved in respawnSaves)
                         {
                             foreach (MapRespawn Respawn in SavedSpawns)
@@ -2040,7 +2043,7 @@ namespace Server.MirEnvir
                 {
                     using (var ctx = new DataContext())
                     {
-                        var BaseGuildList = ctx.Guilds.AsNoTracking().ToList();
+                        var BaseGuildList = ctx.Guilds.ToList();
                         GuildList.Clear();
                         foreach (var baseGuildObject in BaseGuildList)
                         {
@@ -2050,12 +2053,12 @@ namespace Server.MirEnvir
                         }
                         GuildList.ForEach(g =>
                         {
-                            g.StoredItems = ctx.GuildStorageItems.Include(i => i.Item).Include(i => i.Item.Info).AsNoTracking().Where(i => i.GuildIndex == g.Guildindex).ToArray();
+                            g.StoredItems = ctx.GuildStorageItems.Include(i => i.Item).Include(i => i.Item.Info).Where(i => i.GuildIndex == g.Guildindex).ToArray();
                             for (int i = 0; i < g.StoredItems.Length; i++)
                             {
                                 if (g.StoredItems[i].ItemUniqueID == null) g.StoredItems[i] = null;
                             }
-                            g.Ranks = ctx.Ranks.AsNoTracking().Include(r => r.GuildMembers).Where(r => r.GuildIndex == g.Guildindex).ToList();
+                            g.Ranks = ctx.Ranks.Include(r => r.GuildMembers).Where(r => r.GuildIndex == g.Guildindex).ToList();
                             g.Ranks.ForEach(r => r.Members = r.GuildMembers.ToList());
                         });
                     }

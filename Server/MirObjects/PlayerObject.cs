@@ -19126,7 +19126,13 @@ namespace Server.MirObjects
                 SMain.EnqueueDebugging(Info.Name + " is trying to buy Something that doesn't exist.");
                 return;
             }
-
+            if (Product.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    Product.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == Product.ItemIndex);
+                }
+            }
             if (Product.Stock != 0)
             {
 
