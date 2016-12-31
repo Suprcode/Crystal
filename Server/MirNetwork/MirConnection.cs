@@ -1567,9 +1567,10 @@ namespace Server.MirNetwork
                 //Update the creature info
                 for (int i = 0; i < Player.Info.IntelligentCreatures.Count; i++)
                 {
-                    if (Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
+                    if (Player.SummonedCreatureType != petUpdate.PetType && Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
                     {
-                        Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName;
+                        if (petUpdate.CustomName.Length <= 12)
+                            Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName;
                         Player.Info.IntelligentCreatures[i].SlotIndex = petUpdate.SlotIndex;
                         Player.Info.IntelligentCreatures[i].Filter = petUpdate.Filter;
                         Player.Info.IntelligentCreatures[i].petMode = petUpdate.petMode;

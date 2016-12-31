@@ -1113,20 +1113,16 @@ namespace Client.MirControls
                         {
                             case MirGridType.GuildStorage: //From Guild Storage
                                 if (GameScene.SelectedCell.GridType == MirGridType.GuildStorage)
-                                {
-                                    //if (Item != null)
-                                    //{
-                                        //GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
-                                        //return;
-                                    //}
+                                {                                    
                                     if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
                                     {
                                         GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
                                         return;
                                     }
+                                       
                                     //if (ItemArray[ItemSlot] == null)
                                     //{
-                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 3, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 2, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
                                         Locked = true;
                                         GameScene.SelectedCell.Locked = true;
                                         GameScene.SelectedCell = null;

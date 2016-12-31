@@ -1690,9 +1690,8 @@ namespace Server.MirObjects
 
                 return;
             }
-
-
         }
+
         private void AddItem(UserItem item)
         {
             if (item.Info.StackSize > 1) //Stackable
@@ -3180,23 +3179,22 @@ namespace Server.MirObjects
         public void RefreshNameColour()
         {
             Color colour = Color.White;
-
-            if (WarZone)
+            
+            if (PKPoints >= 200)
+                colour = Color.Red;
+            else if (WarZone)
             {
                 if (MyGuild == null)
                     colour = Color.Green;
                 else
                     colour = Color.Blue;
             }
-            else if (PKPoints >= 200)
-                colour = Color.Red;
             else if (Envir.Time < BrownTime)
                 colour = Color.SaddleBrown;
             else if (PKPoints >= 100)
                 colour = Color.Yellow;
 
             if (colour == NameColour) return;
-
 
             NameColour = colour;
             if ((MyGuild == null) || (!MyGuild.IsAtWar()))
@@ -4339,11 +4337,10 @@ namespace Server.MirObjects
                         break;
 
                     case "CREATEGUILD":
-                        if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
-                        player = Envir.GetPlayer(parts[1]);
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                        if (!IsGM && player != this) return;
+                        player = parts.Length < 3 ? this : Envir.GetPlayer(parts[1]);
 
                         if (player == null)
                         {
@@ -4352,23 +4349,25 @@ namespace Server.MirObjects
                         }
                         if (player.MyGuild != null)
                         {
-                            ReceiveChat(string.Format("Player {0} is already in a guild.", parts[1]), ChatType.System);
+                            ReceiveChat(string.Format("Player {0} is already in a guild.", player.Name), ChatType.System);
                             return;
                         }
-                        if ((parts[2].Length < 3) || (parts[2].Length > 20))
+
+                        String gName = parts.Length < 3 ? parts[2] : parts[1];
+                        if ((gName.Length < 3) || (gName.Length > 20))
                         {
                             ReceiveChat("Guildname is restricted to 3-20 characters.", ChatType.System);
                             return;
                         }
-                        GuildObject guild = Envir.GetGuild(parts[2]);
+                        GuildObject guild = Envir.GetGuild(gName);
                         if (guild != null)
                         {
-                            ReceiveChat(string.Format("Guild {0} already exists.", parts[2]), ChatType.System);
+                            ReceiveChat(string.Format("Guild {0} already exists.", gName), ChatType.System);
                             return;
                         }
                         player.CanCreateGuild = true;
-                        if (player.CreateGuild(parts[2]))
-                            ReceiveChat(string.Format("Successfully created guild {0}", parts[2]), ChatType.System);
+                        if (player.CreateGuild(gName))
+                            ReceiveChat(string.Format("Successfully created guild {0}", gName), ChatType.System);
                         else
                             ReceiveChat("Failed to create guild", ChatType.System);
                         player.CanCreateGuild = false;
@@ -5613,7 +5612,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             MoonLightAttack = true;
@@ -9694,13 +9692,10 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
-            {
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -9710,7 +9705,7 @@ namespace Server.MirObjects
 
                             if (Envir.Random.Next(rate) == 0)
                             {
-                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                            if (HP + ( (ushort)Buffs[i].Values[1] ) >= MaxHP)
                                     SetHP(MaxHP);
                                 else
                                     ChangeHP(Buffs[i].Values[1]);
@@ -9718,7 +9713,6 @@ namespace Server.MirObjects
                             break;
                     }
                 }
-            }
 
             switch (type)
             {
@@ -9787,8 +9781,6 @@ namespace Server.MirObjects
                 }
                 return 0;
             }
-
-
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
@@ -9880,13 +9872,10 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
-            {
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -9904,7 +9893,6 @@ namespace Server.MirObjects
                             break;
                     }
                 }
-            }
 
             switch (type)
             {
@@ -10021,7 +10009,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -10224,6 +10211,13 @@ namespace Server.MirObjects
                     }
 
                     if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    
+                    if (Info.Equipment[to] != null &&
+                        Info.Equipment[to].Info.Bind.HasFlag(BindMode.DontStore))
                     {
                         Enqueue(p);
                         return;
@@ -15416,7 +15410,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (!InSafeZone)
+            if (!InSafeZone && Type != 3)
             {
                 Enqueue(p);
                 ReceiveChat("You cannot use guild storage outside safezones.", ChatType.System);
@@ -15510,20 +15504,7 @@ namespace Server.MirObjects
                     RefreshBagWeight();
                     MyGuild.NeedSave = true;
                     break;
-                case 2://request list
-                    if (!GuildCanRequestItems) return;
-                    GuildCanRequestItems = false;
-                    for (int i = 0; i < MyGuild.StoredItems.Length; i++)
-                    {
-                        if (MyGuild.StoredItems[i] == null) continue;
-                        UserItem item = MyGuild.StoredItems[i].Item;
-                        if (item == null) continue;
-                        //CheckItemInfo(item.Info);
-                        CheckItem(item);
-                    }
-                    Enqueue(new S.GuildStorageList() { Items = MyGuild.StoredItems });
-                    break;
-                case 3: // Move Item
+                case 2: // Move Item
                     GuildStorageItem q = null;
                     if (!MyGuildRank.Options.HasFlag(RankOptions.CanStoreItem))
                     {
@@ -15565,6 +15546,19 @@ namespace Server.MirObjects
 
                     MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 2, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
                     MyGuild.NeedSave = true;
+                    break;
+                case 3://request list
+                    if (!GuildCanRequestItems) return;
+                    GuildCanRequestItems = false;
+                    for (int i = 0; i < MyGuild.StoredItems.Length; i++)
+                    {
+                        if (MyGuild.StoredItems[i] == null) continue;
+                        UserItem item = MyGuild.StoredItems[i].Item;
+                        if (item == null) continue;
+                        //CheckItemInfo(item.Info);
+                        CheckItem(item);
+                    }
+                    Enqueue(new S.GuildStorageList() { Items = MyGuild.StoredItems });
                     break;
             }
 
@@ -16044,6 +16038,16 @@ namespace Server.MirObjects
                         UserItem temp = TradePair[p].Info.Trade[t];
 
                         if (temp == null) continue;
+
+                        if(FreeSpace(TradePair[p].Info.Inventory) < 1)
+                        {
+                            TradePair[p].GainItemMail(temp, 1);
+                            Report.ItemMailed("TradeCancel", temp, temp.Count, 1);
+
+                            TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            TradePair[p].Info.Trade[t] = null;
+                            continue;
+                        }
 
                         for (int i = 0; i < TradePair[p].Info.Inventory.Length; i++)
                         {
@@ -16876,7 +16880,7 @@ namespace Server.MirObjects
 
             totalGold = gold + parcelCost;
 
-            if (Account.Gold < totalGold)
+            if (Account.Gold < totalGold || Account.Gold < gold || gold > totalGold)
             {
                 Enqueue(new S.MailSent { Result = -1 });
                 return;
