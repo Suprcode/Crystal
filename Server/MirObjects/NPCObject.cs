@@ -1482,6 +1482,9 @@ namespace Server.MirObjects
         OpenGate,
         CloseGate,
         Break,
+        AddGuildNameList,
+        DelGuildNameList,
+        ClearGuildNameList,
     }
     public enum CheckType
     {
@@ -1526,5 +1529,6 @@ namespace Server.MirObjects
         CheckPermission,
         ConquestAvailable,
         ConquestOwner,
+        CheckGuildNameList
     }
 }

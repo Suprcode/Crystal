@@ -5680,7 +5680,6 @@ namespace Client.MirScenes
             if (HoverItem.RefineAdded > 0)
             nameLabel.Text = "(*)" + nameLabel.Text;
 
-
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, nameLabel.DisplayRectangle.Bottom));
 
