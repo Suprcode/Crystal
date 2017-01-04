@@ -2666,7 +2666,7 @@ namespace Server.MirObjects
 
             if (Old_MountType != MountType)
             {
-                RefreshMount();
+                RefreshMount(false);
             }
         }
 
@@ -16093,7 +16093,7 @@ namespace Server.MirObjects
 
         #region Mounts
 
-        public void RefreshMount()
+        public void RefreshMount(bool refreshStats = true)
         {
             if (RidingMount)
             {
@@ -16122,7 +16122,8 @@ namespace Server.MirObjects
                 RidingMount = false;
             }
 
-            RefreshStats();
+            if(refreshStats)
+                RefreshStats();
 
             Broadcast(GetMountInfo());
             Enqueue(GetMountInfo());
