@@ -1219,7 +1219,7 @@ namespace Client.MirControls
                                     {
                                         Network.Enqueue(new C.DepositTradeItem { From = GameScene.SelectedCell.ItemSlot, To = x });
 
-                                        MirItemCell temp = GameScene.Scene.StorageDialog.Grid[x];
+                                        MirItemCell temp = GameScene.Scene.TradeDialog.Grid[x];
                                         if (temp != null) temp.Locked = true;
                                         GameScene.SelectedCell.Locked = true;
                                         GameScene.SelectedCell = null;
