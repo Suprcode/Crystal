@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -330,7 +331,27 @@ namespace Server
 
         private void AddConq_button_Click(object sender, EventArgs e)
         {
-            Envir.ConquestInfos.Add(new ConquestInfo { Index = ++Envir.ConquestIndex, Location = new Point(0, 0), Size = 10, Name = "Conquest Wall", MapIndex = 1, PalaceIndex = 2});
+            var newConqInfo = new ConquestInfo
+            {
+                Location = new Point(0, 0),
+                Size = 10,
+                Name = "Conquest Wall",
+                MapIndex = 1,
+                PalaceIndex = 2
+            };
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Add(newConqInfo);
+                    ctx.SaveChanges();
+                }
+            }
+            else
+            {
+                newConqInfo.Index = ++Envir.ConquestIndex;
+            }
+            Envir.ConquestInfos.Add(newConqInfo);
             UpdateInterface();
         }
 
@@ -339,7 +360,27 @@ namespace Server
             
             if (selectedConquest != null)
             {
-                 selectedConquest.ConquestGuards.Add(new ConquestArcherInfo { Location = new Point(0, 0), Name = "Guard", Index = ++selectedConquest.GuardIndex, MobIndex = 1, RepairCost = 1000 });
+                var newGuard = new ConquestArcherInfo
+                {
+                    Location = new Point(0, 0),
+                    Name = "Guard",
+                    ConquestInfoIndex = selectedConquest.Index,
+                    MobIndex = 1,
+                    RepairCost = 1000
+                };
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestArcherInfos.Add(newGuard);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    newGuard.Index = ++selectedConquest.GuardIndex;
+                }
+                 selectedConquest.ConquestGuards.Add(newGuard);
                  UpdateInterface();
             }
             
@@ -374,8 +415,6 @@ namespace Server
         {
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                    Envir.SaveConquests(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -385,6 +424,15 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             selectedConquest.Name = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void LocX_textbox_TextChanged(object sender, EventArgs e)
@@ -401,6 +449,15 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             selectedConquest.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void LocY_textbox_TextChanged(object sender, EventArgs e)
@@ -417,6 +474,15 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             selectedConquest.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Size_textbox_TextChanged(object sender, EventArgs e)
@@ -433,6 +499,15 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             selectedConquest.Size = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ArchXLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -448,6 +523,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedArcher.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestArcherInfos.Attach(selectedArcher);
+                    ctx.Entry(selectedArcher).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ArchYLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -463,6 +547,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedArcher.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestArcherInfos.Attach(selectedArcher);
+                    ctx.Entry(selectedArcher).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ConquestMap_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -471,7 +564,15 @@ namespace Server
 
             MapInfo temp = (MapInfo)ConquestMap_combo.SelectedItem;
             selectedConquest.MapIndex = temp.Index;
-
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void PalaceMap_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -480,7 +581,15 @@ namespace Server
 
             MapInfo temp = (MapInfo)PalaceMap_combo.SelectedItem;
             selectedConquest.PalaceIndex = temp.Index;
-
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ArcherIndex_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -489,19 +598,57 @@ namespace Server
 
             MonsterInfo temp = (MonsterInfo)ArcherIndex_combo.SelectedItem;
             selectedArcher.MobIndex = temp.Index;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestArcherInfos.Attach(selectedArcher);
+                    ctx.Entry(selectedArcher).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ArcherName_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedArcher.Name = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestArcherInfos.Attach(selectedArcher);
+                    ctx.Entry(selectedArcher).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void AddGate_button_Click(object sender, EventArgs e)
         {
             if (selectedConquest != null)
             {
-                selectedConquest.ConquestGates.Add(new ConquestGateInfo { Location = new Point(0, 0), Name = "Gate", Index = ++selectedConquest.GateIndex, MobIndex = 1, RepairCost = 1000 });
+                var newGate = new ConquestGateInfo
+                {
+                    Location = new Point(0, 0),
+                    Name = "Gate",
+                    MobIndex = 1,
+                    RepairCost = 1000,
+                    ConquestInfoIndex = selectedConquest.Index
+                };
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestGateInfos.Add(newGate);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    newGate.Index = ++selectedConquest.GateIndex;
+                }
+                selectedConquest.ConquestGates.Add(newGate);
                 UpdateInterface();
             }
         }
@@ -533,6 +680,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedGate.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestGateInfos.Attach(selectedGate);
+                    ctx.Entry(selectedGate).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void GateIndex_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -541,6 +697,15 @@ namespace Server
 
             MonsterInfo temp = (MonsterInfo)GateIndex_combo.SelectedItem;
             selectedGate.MobIndex = temp.Index;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestGateInfos.Attach(selectedGate);
+                    ctx.Entry(selectedGate).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void GateYLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -556,13 +721,42 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedGate.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestGateInfos.Attach(selectedGate);
+                    ctx.Entry(selectedGate).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void AddWall_button_Click(object sender, EventArgs e)
         {
             if (selectedConquest != null)
             {
-                selectedConquest.ConquestWalls.Add(new ConquestWallInfo { Location = new Point(0, 0), Name = "Wall", Index = ++selectedConquest.WallIndex, MobIndex = 1, RepairCost = 1000 });
+                var newWall = new ConquestWallInfo
+                {
+                    Location = new Point(0, 0),
+                    Name = "Wall",
+                    ConquestInfoIndex = selectedConquest.Index,
+                    MobIndex = 1,
+                    RepairCost = 1000
+                };
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestWallInfos.Add(newWall);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    newWall.Index = ++selectedConquest.WallIndex;
+                }
+                selectedConquest.ConquestWalls.Add(newWall);
                 UpdateInterface();
             }
         }
@@ -585,6 +779,15 @@ namespace Server
 
             MonsterInfo temp = (MonsterInfo)WallIndex_combo.SelectedItem;
             selectedWall.MobIndex = temp.Index;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestWallInfos.Attach(selectedWall);
+                    ctx.Entry(selectedWall).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void WallXLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -600,6 +803,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedWall.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestWallInfos.Attach(selectedWall);
+                    ctx.Entry(selectedWall).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void WallYLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -615,6 +827,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedWall.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestWallInfos.Attach(selectedWall);
+                    ctx.Entry(selectedWall).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ArcherCost_textbox_TextChanged(object sender, EventArgs e)
@@ -630,6 +851,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedArcher.RepairCost = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestArcherInfos.Attach(selectedArcher);
+                    ctx.Entry(selectedArcher).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void GateCost_textbox_TextChanged(object sender, EventArgs e)
@@ -645,6 +875,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedGate.RepairCost = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestGateInfos.Attach(selectedGate);
+                    ctx.Entry(selectedGate).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void WallCost_textbox_TextChanged(object sender, EventArgs e)
@@ -660,12 +899,30 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedWall.RepairCost = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestWallInfos.Attach(selectedWall);
+                    ctx.Entry(selectedWall).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void GateName_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedGate.Name = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestGateInfos.Attach(selectedGate);
+                    ctx.Entry(selectedGate).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Walls_gb_Enter(object sender, EventArgs e)
@@ -677,6 +934,15 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             selectedWall.Name = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestWallInfos.Attach(selectedWall);
+                    ctx.Entry(selectedWall).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
 
@@ -684,12 +950,30 @@ namespace Server
         {
             if (ActiveControl != sender) return;
                 selectedConquest.Type = (ConquestType)WarType_combo.SelectedItem;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void WarMode_combo_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedConquest.Game = (ConquestGame)WarMode_combo.SelectedItem;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void WarTimes_gb_Enter(object sender, EventArgs e)
@@ -701,47 +985,128 @@ namespace Server
         {
             if (ActiveControl != sender) return;
                 selectedConquest.StartHour = (byte)StartHour_num.Value;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void WarLength_num_ValueChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
                 selectedConquest.WarLength = (int)WarLength_num.Value;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Mon_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             selectedConquest.Monday = Mon_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Tue_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             selectedConquest.Tuesday = Tue_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Wed_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             selectedConquest.Wednesday = Wed_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Thu_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             selectedConquest.Thursday = Thu_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Fri_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             selectedConquest.Friday = Fri_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Sat_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             selectedConquest.Saturday = Sat_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Sun_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             selectedConquest.Sunday = Sun_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void RemoveConq_button_Click(object sender, EventArgs e)
@@ -749,6 +1114,25 @@ namespace Server
             if (selectedConquest == null) return;
 
             if (MessageBox.Show("Are you sure you want to remove the selected Conquest?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestArcherInfos.RemoveRange(
+                        ctx.ConquestArcherInfos.Where(i => i.ConquestInfoIndex == selectedConquest.Index));
+                    ctx.ConquestFlagInfos.RemoveRange(
+                        ctx.ConquestFlagInfos.Where(i => i.ConquestInfoIndex == selectedConquest.Index));
+                    ctx.ConquestGateInfos.RemoveRange(
+                        ctx.ConquestGateInfos.Where(i => i.ConquestInfoIndex == selectedConquest.Index));
+                    ctx.ConquestSiegeInfos.RemoveRange(
+                        ctx.ConquestSiegeInfos.Where(i => i.ConquestInfoIndex == selectedConquest.Index));
+                    ctx.ConquestWallInfos.RemoveRange(
+                        ctx.ConquestWallInfos.Where(i => i.ConquestInfoIndex == selectedConquest.Index));
+                    ctx.ConquestInfos.RemoveRange(ctx.ConquestInfos.Where(i => i.Index == selectedConquest.Index));
+                    ctx.SaveChanges();
+                }
+            }
 
             Envir.ConquestInfos.Remove(selectedConquest);
 
@@ -774,7 +1158,19 @@ namespace Server
         private void RemoveGuard_button_Click(object sender, EventArgs e)
         {
             if (Guards_listbox.SelectedItem != null)
+            {
                 selectedConquest.ConquestGuards.Remove((ConquestArcherInfo)Guards_listbox.SelectedItem);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestArcherInfos.RemoveRange(
+                            ctx.ConquestArcherInfos.Where(
+                                info => info.Index == ((ConquestArcherInfo) Guards_listbox.SelectedItem).Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateInterface();
         }
@@ -782,7 +1178,19 @@ namespace Server
         private void RemoveGate_button_Click(object sender, EventArgs e)
         {
             if (Gates_listbox.SelectedItem != null)
+            {
                 selectedConquest.ConquestGates.Remove((ConquestGateInfo)Gates_listbox.SelectedItem);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestGateInfos.RemoveRange(
+                            ctx.ConquestGateInfos.Where(
+                                info => info.Index == ((ConquestGateInfo)Gates_listbox.SelectedItem).Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateInterface();
         }
@@ -790,7 +1198,19 @@ namespace Server
         private void RemoveWall_button_Click(object sender, EventArgs e)
         {
             if (Walls_listbox.SelectedItem != null)
+            {
                 selectedConquest.ConquestWalls.Remove((ConquestWallInfo)Walls_listbox.SelectedItem);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestWallInfos.RemoveRange(
+                            ctx.ConquestWallInfos.Where(
+                                info => info.Index == ((ConquestWallInfo)Walls_listbox.SelectedItem).Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateInterface();
         }
@@ -809,6 +1229,15 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             selectedConquest.KingLocation.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ObLocY_textbox_TextChanged(object sender, EventArgs e)
@@ -825,6 +1254,15 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             selectedConquest.KingLocation.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ObSize_textbox_TextChanged(object sender, EventArgs e)
@@ -841,6 +1279,15 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             selectedConquest.KingSize = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestInfos.Attach(selectedConquest);
+                    ctx.Entry(selectedConquest).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Siege_listbox_SelectedIndexChanged(object sender, EventArgs e)
@@ -859,7 +1306,27 @@ namespace Server
         {
             if (selectedConquest != null)
             {
-                selectedConquest.ConquestSieges.Add(new ConquestSiegeInfo { Location = new Point(0, 0), Name = "Siege", Index = ++selectedConquest.SiegeIndex, MobIndex = 1, RepairCost = 1000 });
+                var newSiege = new ConquestSiegeInfo
+                {
+                    Location = new Point(0, 0),
+                    Name = "Siege",
+                    ConquestInfoIndex = selectedConquest.Index,
+                    MobIndex = 1,
+                    RepairCost = 1000
+                };
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestSiegeInfos.Add(newSiege);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    newSiege.Index = ++selectedConquest.SiegeIndex;
+                }
+                selectedConquest.ConquestSieges.Add(newSiege);
                 UpdateInterface();
             }
         }
@@ -867,7 +1334,19 @@ namespace Server
         private void RemoveSiege_button_Click(object sender, EventArgs e)
         {
             if (Siege_listbox.SelectedItem != null)
+            {
                 selectedConquest.ConquestSieges.Remove((ConquestSiegeInfo)Siege_listbox.SelectedItem);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestSiegeInfos.RemoveRange(
+                            ctx.ConquestSiegeInfos.Where(
+                                info => info.Index == ((ConquestSiegeInfo) Siege_listbox.SelectedItem).Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateInterface();
         }
@@ -885,6 +1364,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedSiege.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestSiegeInfos.Attach(selectedSiege);
+                    ctx.Entry(selectedSiege).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void SiegeYLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -900,12 +1388,30 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedSiege.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestSiegeInfos.Attach(selectedSiege);
+                    ctx.Entry(selectedSiege).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void SiegeName_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedSiege.Name = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestSiegeInfos.Attach(selectedSiege);
+                    ctx.Entry(selectedSiege).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void SiegeCost_textbox_TextChanged(object sender, EventArgs e)
@@ -921,6 +1427,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedSiege.RepairCost = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestSiegeInfos.Attach(selectedSiege);
+                    ctx.Entry(selectedSiege).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void SiegeIndex_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -929,12 +1444,33 @@ namespace Server
 
             MonsterInfo temp = (MonsterInfo)SiegeIndex_combo.SelectedItem;
             selectedSiege.MobIndex = temp.Index;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestSiegeInfos.Attach(selectedSiege);
+                    ctx.Entry(selectedSiege).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void RemoveFlag_button_Click(object sender, EventArgs e)
         {
             if (Flags_listbox.SelectedItem != null)
+            {
                 selectedConquest.ConquestFlags.Remove((ConquestFlagInfo)Flags_listbox.SelectedItem);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestFlagInfos.RemoveRange(
+                            ctx.ConquestFlagInfos.Where(
+                                info => info.Index == ((ConquestFlagInfo) Flags_listbox.SelectedItem).Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateInterface();
         }
@@ -943,7 +1479,26 @@ namespace Server
         {
             if (selectedConquest != null)
             {
-                selectedConquest.ConquestFlags.Add(new ConquestFlagInfo { Location = new Point(0, 0), Name = "Flag", Index = ++selectedConquest.FlagIndex });
+                var newFlag = new ConquestFlagInfo
+                {
+                    Location = new Point(0, 0),
+                    Name = "Flag",
+                    ConquestInfoIndex = selectedConquest.Index,
+                    ConquestFlagType = ConquestFlagType.Flag
+                };
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestFlagInfos.Add(newFlag);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    newFlag.Index = ++selectedConquest.FlagIndex;
+                }
+                selectedConquest.ConquestFlags.Add(newFlag);
                 UpdateInterface();
             }
         }
@@ -961,6 +1516,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedFlag.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedFlag);
+                    ctx.Entry(selectedFlag).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void FlagYLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -976,12 +1540,30 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedFlag.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedFlag);
+                    ctx.Entry(selectedFlag).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void FlagName_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedFlag.Name = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedFlag);
+                    ctx.Entry(selectedFlag).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Flags_listbox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1000,12 +1582,30 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             selectedFlag.FileName = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedFlag);
+                    ctx.Entry(selectedFlag).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void FullMap_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedConquest.FullMap = FullMap_checkbox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedFlag);
+                    ctx.Entry(selectedFlag).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
 
@@ -1026,7 +1626,26 @@ namespace Server
         {
             if (selectedConquest != null)
             {
-                selectedConquest.ControlPoints.Add(new ConquestFlagInfo { Location = new Point(0, 0), Name = "Control Point", Index = ++selectedConquest.ControlPointIndex });
+                var newFlag = new ConquestFlagInfo
+                {
+                    Location = new Point(0, 0),
+                    Name = "Control Point",
+                    ConquestInfoIndex = selectedConquest.Index,
+                    ConquestFlagType = ConquestFlagType.Control_Point
+                };
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestFlagInfos.Add(newFlag);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    newFlag.Index = ++selectedConquest.ControlPointIndex;
+                }
+                selectedConquest.ControlPoints.Add(newFlag);
                 UpdateInterface();
             }
         }
@@ -1034,7 +1653,19 @@ namespace Server
         private void RemoveControl_button_Click(object sender, EventArgs e)
         {
             if (Controls_listbox.SelectedItem != null)
+            {
                 selectedConquest.ControlPoints.Remove((ConquestFlagInfo)Controls_listbox.SelectedItem);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ConquestFlagInfos.RemoveRange(
+                            ctx.ConquestFlagInfos.Where(
+                                info => info.Index == ((ConquestFlagInfo)Controls_listbox.SelectedItem).Index));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateInterface();
         }
@@ -1052,6 +1683,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedControlPoint.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedControlPoint);
+                    ctx.Entry(selectedControlPoint).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ControlYLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -1067,18 +1707,45 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             selectedControlPoint.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedControlPoint);
+                    ctx.Entry(selectedControlPoint).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ControlName_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedControlPoint.Name = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedControlPoint);
+                    ctx.Entry(selectedControlPoint).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ControlFilename_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             selectedControlPoint.FileName = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.ConquestFlagInfos.Attach(selectedControlPoint);
+                    ctx.Entry(selectedControlPoint).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
     }
 }

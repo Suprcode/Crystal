@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -192,6 +193,15 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[6], out info.Rate)) return;
 
             info.Index = ++SMain.EditEnvir.NPCIndex;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.NpcInfos.Attach(info);
+                    ctx.Entry(info).State = EntityState.Added;
+                    ctx.SaveChanges();
+                }
+            }
             SMain.EditEnvir.NPCInfoList.Add(info);
         }
         public string ToText()

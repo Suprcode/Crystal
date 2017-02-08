@@ -3135,12 +3135,59 @@ public class UserItem
     public int WeddingRing { get; set; } = -1;
 
     public UserItem[] Slots = new UserItem[5];
+    private string dbSlots = "";
+
+    public string DBSlots
+    {
+        get
+        {
+            var currentSlots = string.Join(",", Slots.Select(i => i?.UniqueID.ToString() ?? "null"));
+            if (!String.Equals(dbSlots, currentSlots, StringComparison.CurrentCulture))
+            {
+                dbSlots = currentSlots;
+            }
+            return dbSlots;
+        }
+        set { dbSlots = value; }
+    }
+
 
     public DateTime? BuybackExpiryDate { get; set; } = SqlDateTime.MinValue.Value;
 
     public ExpireInfo ExpireInfo;
 
 	public Awake Awake = new Awake();
+
+    public byte[] DBAwake
+    {
+        get
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(stream))
+                {
+                    Awake.Save(writer);
+                }
+                stream.Flush();
+                return stream.GetBuffer();
+            }
+        }
+        set
+        {
+            if (value == null)
+            {
+                Awake = new Awake();
+                return;
+            }
+            using (var stream = new MemoryStream(value))
+            {
+                using (var reader = new BinaryReader(stream))
+                {
+                    Awake = new Awake(reader);
+                }
+            }
+        }
+    }
     [NotMapped]
     public bool IsAdded
     {
@@ -3519,6 +3566,11 @@ public class UserItem
             };
 
         return item;
+    }
+
+    public void LoadSlots(string slots)
+    {
+        //only for server so extend this method in server.
     }
 
 }
@@ -4534,7 +4586,7 @@ public abstract class Packet
             try
             {
                 short id = reader.ReadInt16();
-                Debug.WriteLine(id);
+                
                 p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
                 if (p == null) return null;
 
@@ -6338,6 +6390,8 @@ public class GuildBuffInfo
 public class GuildBuff
 {
 //    [ForeignKey("Info")]
+    [Key]
+    public int Index { get; set; }
     public int Id { get; set; }
     public GuildBuffInfo Info;
     public bool Active { get; set; } = false;

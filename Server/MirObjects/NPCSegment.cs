@@ -2,6 +2,7 @@
 using Server.MirEnvir;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -2490,6 +2491,15 @@ namespace Server.MirObjects
 
                         player.Account.Gold -= gold;
                         player.Enqueue(new S.LoseGold { Gold = gold });
+                        if (Settings.UseSQLServer)
+                        {
+                            using (var ctx = new DataContext())
+                            {
+                                ctx.AccountInfos.Attach(player.Account);
+                                ctx.Entry(player.Account).State = EntityState.Modified;
+                                ctx.SaveChanges();
+                            }
+                        }
                         break;
                     case ActionType.GiveGuildGold:
                         if (!uint.TryParse(param[0], out gold)) return;

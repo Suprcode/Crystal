@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -701,8 +702,6 @@ namespace Server
             //do something to save it all
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                    Envir.SaveMagics(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -760,6 +759,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Icon = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtSkillLvl1Req_TextChanged(object sender, EventArgs e)
@@ -770,6 +778,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Level1 = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtSkillLvl2Req_TextChanged(object sender, EventArgs e)
@@ -780,6 +797,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Level2 = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtSkillLvl3Req_TextChanged(object sender, EventArgs e)
@@ -790,6 +816,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Level3 = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtSkillLvl1Points_TextChanged(object sender, EventArgs e)
@@ -800,6 +835,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Need1 = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtSkillLvl2Points_TextChanged(object sender, EventArgs e)
@@ -810,6 +854,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Need2 = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtSkillLvl3Points_TextChanged(object sender, EventArgs e)
@@ -820,6 +873,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Need3 = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtMPBase_TextChanged(object sender, EventArgs e)
@@ -830,6 +892,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.BaseCost = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtMPIncrease_TextChanged(object sender, EventArgs e)
@@ -840,6 +911,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.LevelCost = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtDmgBaseMin_TextChanged(object sender, EventArgs e)
@@ -850,6 +930,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.PowerBase = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             UpdateMagicForm();
         }
 
@@ -865,6 +954,15 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.PowerBonus =  (ushort)(temp - _selectedMagicInfo.PowerBase);
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             UpdateMagicForm();
         }
 
@@ -876,6 +974,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.MPowerBase = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             UpdateMagicForm();
         }
 
@@ -892,6 +999,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.MPowerBonus = (ushort)(temp - _selectedMagicInfo.MPowerBase);
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             UpdateMagicForm();
         }
 
@@ -903,6 +1019,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.DelayBase = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtDelayReduction_TextChanged(object sender, EventArgs e)
@@ -913,6 +1038,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.DelayReduction = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtRange_TextChanged(object sender, EventArgs e)
@@ -923,6 +1057,15 @@ namespace Server
             
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Range = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void txtDmgMultBase_TextChanged(object sender, EventArgs e)
@@ -934,6 +1077,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.MultiplierBase = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             UpdateMagicForm(1);
         }
 
@@ -945,6 +1097,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.MultiplierBonus = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MagicInfos.Attach(_selectedMagicInfo);
+                    ctx.Entry(_selectedMagicInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             UpdateMagicForm(2);
         }
     }

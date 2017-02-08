@@ -875,9 +875,43 @@ namespace Server.MirDatabase
             if (Inventory.Length >= 86) return Inventory.Length;
 
             if (Inventory.Length == 46)
+            {
                 Array.Resize(ref Inventory, Inventory.Length + 8);
+                if (Settings.UseSQLServer)
+                {
+                    using(var ctx = new DataContext())
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            ctx.Inventories.Add(new InventoryItem()
+                            {
+                                CharacterIndex = Index,
+                                ItemUniqueID = null,
+                            });
+                            ctx.SaveChanges();
+                        }
+                    }
+                }
+            }
             else
+            {
                 Array.Resize(ref Inventory, Inventory.Length + 4);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            ctx.Inventories.Add(new InventoryItem()
+                            {
+                                CharacterIndex = Index,
+                                ItemUniqueID = null,
+                            });
+                            ctx.SaveChanges();
+                        }
+                    }
+                }
+            }
 
             return Inventory.Length;
         }
@@ -1283,6 +1317,8 @@ namespace Server.MirDatabase
         public BuffType Type { get; set; }
         [NotMapped]
         public MapObject Caster { get; set; }
+
+        public string CasterName { get; set; }
         public bool Visible { get; set; }
         [NotMapped]
         public uint ObjectID { get; set; }

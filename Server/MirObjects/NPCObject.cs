@@ -3,6 +3,7 @@ using Server.MirEnvir;
 using Server.MirObjects;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -1342,6 +1343,7 @@ namespace Server.MirObjects
             {
                 player.Account.Gold -= cost;
                 player.Enqueue(new S.LoseGold { Gold = cost });
+
                 if (Conq != null) Conq.GoldStorage += (cost - baseCost);
             }
             player.GainItem(item);
@@ -1363,6 +1365,18 @@ namespace Server.MirObjects
             {
                 BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
                 player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player) });
+            }
+
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.CharacterInfos.Attach(player.Info);
+                    ctx.AccountInfos.Attach(player.Account);
+                    ctx.Entry(player.Info).State = EntityState.Modified;
+                    ctx.Entry(player.Account).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
             }
         }
         public void Sell(PlayerObject player, UserItem item)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Server.MirDatabase
 {
     public class QuestProgressInfo
     {
-        [Key]
+        public int id { get; set; }
         public int Index { get; set; }
         [NotMapped]
         public QuestInfo Info;
@@ -253,7 +254,15 @@ namespace Server.MirDatabase
                 //if (Info.KillTasks[i].Monster.Index != mobIndex) continue;
                 if (!mInfo.Name.StartsWith(Info.KillTasks[i].Monster.Name, StringComparison.OrdinalIgnoreCase)) continue;
                 KillTaskCount[i]++;
-
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestProgressInfos.Attach(this);
+                        ctx.Entry(this).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
                 return;
             }
         }
@@ -267,6 +276,15 @@ namespace Server.MirDatabase
                     Aggregate<UserItem, long>(0, (current, item) => current + item.Count);
 
                 ItemTaskCount[i] = count;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestProgressInfos.Attach(this);
+                        ctx.Entry(this).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
         }
 
@@ -279,6 +297,15 @@ namespace Server.MirDatabase
                     if (Info.FlagTasks[i].Number != j || !Flags[j]) continue;
 
                     FlagTaskSet[i] = Flags[j];
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            ctx.QuestProgressInfos.Attach(this);
+                            ctx.Entry(this).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
                     break;
                 }
             }

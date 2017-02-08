@@ -1872,26 +1872,6 @@
             this.Flags_listbox.TabIndex = 19;
             this.Flags_listbox.SelectedIndexChanged += new System.EventHandler(this.Flags_listbox_SelectedIndexChanged);
             // 
-            // AddConq_button
-            // 
-            this.AddConq_button.Location = new System.Drawing.Point(175, 231);
-            this.AddConq_button.Name = "AddConq_button";
-            this.AddConq_button.Size = new System.Drawing.Size(27, 23);
-            this.AddConq_button.TabIndex = 10;
-            this.AddConq_button.Text = "+";
-            this.AddConq_button.UseVisualStyleBackColor = true;
-            this.AddConq_button.Click += new System.EventHandler(this.AddConq_button_Click);
-            // 
-            // RemoveConq_button
-            // 
-            this.RemoveConq_button.Location = new System.Drawing.Point(11, 231);
-            this.RemoveConq_button.Name = "RemoveConq_button";
-            this.RemoveConq_button.Size = new System.Drawing.Size(27, 23);
-            this.RemoveConq_button.TabIndex = 11;
-            this.RemoveConq_button.Text = "-";
-            this.RemoveConq_button.UseVisualStyleBackColor = true;
-            this.RemoveConq_button.Click += new System.EventHandler(this.RemoveConq_button_Click);
-            // 
             // ConquestInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

@@ -45,7 +45,7 @@ namespace Server.MirDatabase
         public DbSet<ConquestGateInfo> ConquestGateInfos { get; set; }
         public DbSet<ConquestWallInfo> ConquestWallInfos { get; set; }
         public DbSet<ConquestSiegeInfo> ConquestSiegeInfos { get; set; }
-
+        public DbSet<ConquestFlagInfo> ConquestFlagInfos { get; set; }
         public DbSet<AuctionInfo> AuctionInfos { get; set; }
         public DbSet<RespawnSave> RespawnSaves { get; set; }
         public DbSet<BaseGuildObject> Guilds { get; set; }

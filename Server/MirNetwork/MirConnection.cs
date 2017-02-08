@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Net.Sockets;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -738,6 +739,15 @@ namespace Server.MirNetwork
             temp.Deleted = true;
             temp.DeleteDate = SMain.Envir.Now;
             SMain.Envir.RemoveRank(temp);
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.CharacterInfos.Attach(temp);
+                    ctx.Entry(temp).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
         private void StartGame(C.StartGame p)
@@ -998,7 +1008,15 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.AMode = p.Mode;
-
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.CharacterInfos.Attach(Player.Info);
+                    ctx.Entry(Player.Info).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             Enqueue(new S.ChangeAMode {Mode = Player.AMode});
         }
         private void ChangePMode(C.ChangePMode p)
@@ -1008,7 +1026,15 @@ namespace Server.MirNetwork
                 return;
 
             Player.PMode = p.Mode;
-
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.CharacterInfos.Attach(Player.Info);
+                    ctx.Entry(Player.Info).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             Enqueue(new S.ChangePMode { Mode = Player.PMode });
         }
         private void ChangeTrade(C.ChangeTrade p)
@@ -1016,6 +1042,15 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.AllowTrade = p.AllowTrade;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.CharacterInfos.Attach(Player.Info);
+                    ctx.Entry(Player.Info).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
         private void Attack(C.Attack p)
         {
@@ -1116,6 +1151,15 @@ namespace Server.MirNetwork
                 }
 
                 magic.Key = p.Key;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.UserMagics.Attach(magic);
+                        ctx.Entry(magic).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
         }
         private void Magic(C.Magic p)
@@ -1574,6 +1618,15 @@ namespace Server.MirNetwork
                         Player.Info.IntelligentCreatures[i].SlotIndex = petUpdate.SlotIndex;
                         Player.Info.IntelligentCreatures[i].Filter = petUpdate.Filter;
                         Player.Info.IntelligentCreatures[i].petMode = petUpdate.petMode;
+                        if (Settings.UseSQLServer)
+                        {
+                            using (var ctx = new DataContext())
+                            {
+                                ctx.UserIntelligentCreatures.Attach(Player.Info.IntelligentCreatures[i]);
+                                ctx.Entry(Player.Info.IntelligentCreatures[i]).State = EntityState.Modified;
+                                ctx.SaveChanges();
+                            }
+                        }
                     }
                     else continue;
                 }

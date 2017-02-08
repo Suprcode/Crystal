@@ -577,6 +577,7 @@ namespace Server
             // InterfaceTimer
             // 
             this.InterfaceTimer.Enabled = true;
+            this.InterfaceTimer.Interval = 1000;
             this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
             // 
             // monsterTunerToolStripMenuItem

@@ -263,12 +263,38 @@ namespace Server.MirDatabase
 
         public void CreateSafeZone()
         {
-            SafeZones.Add(new SafeZoneInfo { Info = this });
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newSafeZone = new SafeZoneInfo() {MapInfoIndex = Index, Info = this};
+                    ctx.SafeZoneInfos.Add(newSafeZone);
+                    ctx.SaveChanges();
+                    SafeZones.Add(newSafeZone);
+                }
+            }
+            else
+            {
+                SafeZones.Add(new SafeZoneInfo { Info = this });
+            }
         }
 
         public void CreateRespawnInfo()
         {
-            Respawns.Add(new RespawnInfo { RespawnIndex = ++SMain.EditEnvir.RespawnIndex });
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newRespawn = new RespawnInfo() {MapInfoIndex = Index};
+                    ctx.RespawnInfos.Add(newRespawn);
+                    ctx.SaveChanges();
+                    Respawns.Add(newRespawn);
+                }
+            }
+            else
+            {
+                Respawns.Add(new RespawnInfo { RespawnIndex = ++SMain.EditEnvir.RespawnIndex });
+            }
         }
 
         public override string ToString()
@@ -283,7 +309,20 @@ namespace Server.MirDatabase
 
         public void CreateMovementInfo()
         {
-            Movements.Add(new MovementInfo());
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newMovement = new MovementInfo() {SourceMapIndex = Index};
+                    ctx.MovementInfos.Add(newMovement);
+                    ctx.SaveChanges();
+                    Movements.Add(new MovementInfo());
+                }
+            }
+            else
+            {
+                Movements.Add(new MovementInfo());
+            }
         }
 
         public static void FromText(string text)

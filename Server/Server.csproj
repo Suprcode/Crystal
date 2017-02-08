@@ -98,6 +98,7 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Migrations\201609120849364_AddMissingAttrs.cs" />
     <Compile Include="Migrations\201609120849364_AddMissingAttrs.Designer.cs">
       <DependentUpon>201609120849364_AddMissingAttrs.cs</DependentUpon>
@@ -153,6 +154,34 @@
     <Compile Include="Migrations\201612290508068_AddMissingAttrs7.cs" />
     <Compile Include="Migrations\201612290508068_AddMissingAttrs7.Designer.cs">
       <DependentUpon>201612290508068_AddMissingAttrs7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701110944066_AddMissingAttrs8.cs" />
+    <Compile Include="Migrations\201701110944066_AddMissingAttrs8.Designer.cs">
+      <DependentUpon>201701110944066_AddMissingAttrs8.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701200345407_AddMissingAttrs9.cs" />
+    <Compile Include="Migrations\201701200345407_AddMissingAttrs9.Designer.cs">
+      <DependentUpon>201701200345407_AddMissingAttrs9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702060557163_DestoryQuestProgressTable.cs" />
+    <Compile Include="Migrations\201702060557163_DestoryQuestProgressTable.Designer.cs">
+      <DependentUpon>201702060557163_DestoryQuestProgressTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702060559014_RecreateQuestProgressTable.cs" />
+    <Compile Include="Migrations\201702060559014_RecreateQuestProgressTable.Designer.cs">
+      <DependentUpon>201702060559014_RecreateQuestProgressTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702060726304_AddMissingAttrs10.cs" />
+    <Compile Include="Migrations\201702060726304_AddMissingAttrs10.Designer.cs">
+      <DependentUpon>201702060726304_AddMissingAttrs10.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702080825500_DestoryGuildBuffTable.cs" />
+    <Compile Include="Migrations\201702080825500_DestoryGuildBuffTable.Designer.cs">
+      <DependentUpon>201702080825500_DestoryGuildBuffTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702080831162_RecreateGuildBuffTable.cs" />
+    <Compile Include="Migrations\201702080831162_RecreateGuildBuffTable.Designer.cs">
+      <DependentUpon>201702080831162_RecreateGuildBuffTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MirDatabase\DataContext.cs" />
@@ -495,6 +524,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612290508068_AddMissingAttrs7.resx">
       <DependentUpon>201612290508068_AddMissingAttrs7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701110944066_AddMissingAttrs8.resx">
+      <DependentUpon>201701110944066_AddMissingAttrs8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701200345407_AddMissingAttrs9.resx">
+      <DependentUpon>201701200345407_AddMissingAttrs9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702060557163_DestoryQuestProgressTable.resx">
+      <DependentUpon>201702060557163_DestoryQuestProgressTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702060559014_RecreateQuestProgressTable.resx">
+      <DependentUpon>201702060559014_RecreateQuestProgressTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702060726304_AddMissingAttrs10.resx">
+      <DependentUpon>201702060726304_AddMissingAttrs10.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702080825500_DestoryGuildBuffTable.resx">
+      <DependentUpon>201702080825500_DestoryGuildBuffTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702080831162_RecreateGuildBuffTable.resx">
+      <DependentUpon>201702080831162_RecreateGuildBuffTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>

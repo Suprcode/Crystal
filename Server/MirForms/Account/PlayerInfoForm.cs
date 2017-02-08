@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -68,6 +69,16 @@ namespace Server
 
             info.Name = NameTextBox.Text;
             info.Level = Convert.ToByte(LevelTextBox.Text);
+
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.CharacterInfos.Attach(info);
+                    ctx.Entry(info).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void SendMessageButton_Click(object sender, EventArgs e)

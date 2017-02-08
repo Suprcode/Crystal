@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -182,8 +183,6 @@ namespace Server
         {
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                    Envir.SaveQuests(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -276,7 +275,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].Name = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshQuestList();
         }
@@ -286,7 +296,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].Group = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void QTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -294,7 +315,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].Type = (QuestType)QTypeComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void QFileNameTextBox_TextChanged(object sender, EventArgs e)
@@ -302,7 +334,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].FileName = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
         }
 
@@ -311,7 +354,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].GotoMessage = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
         }
 
@@ -320,7 +374,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].KillMessage = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
         }
 
@@ -329,7 +394,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].ItemMessage = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void QFlagTextBox_TextChanged(object sender, EventArgs e)
@@ -337,7 +413,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].FlagMessage = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
 
@@ -355,7 +442,18 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].RequiredMinLevel = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void RequiredMaxLevelTextBox_TextChanged(object sender, EventArgs e)
@@ -372,7 +470,18 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].RequiredMaxLevel = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void RequiredQuestComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -382,8 +491,19 @@ namespace Server
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
             {
                 QuestInfo temp = (QuestInfo)RequiredQuestComboBox.SelectedItem;
-                
-                _selectedQuestInfos[i].RequiredQuest = temp.Index;
+
+                {
+                    _selectedQuestInfos[i].RequiredQuest = temp.Index;
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                            ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
+                }
             }
         }
 
@@ -392,7 +512,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
+            {
                 _selectedQuestInfos[i].RequiredClass = (RequiredClass)RequiredClassComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.QuestInfos.Attach(_selectedQuestInfos[i]);
+                        ctx.Entry(_selectedQuestInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void OpenQButton_Click(object sender, EventArgs e)

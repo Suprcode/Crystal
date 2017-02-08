@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -485,6 +486,20 @@ namespace Server.MirObjects
                 Buffs[i].Infinite = false;
                 Buffs[i].ExpireTime = Envir.Time;
             }
+            if (Settings.UseSQLServer)
+            {
+                var playerObject = this as PlayerObject;
+                if (playerObject != null)
+                {
+                    var charIndex = playerObject.Info.Index;
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.UserBuffs.RemoveRange(
+                            ctx.UserBuffs.Where(buff => buff.CharacterIndex == charIndex && buff.Type == b));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         public bool CheckStacked()
@@ -521,6 +536,23 @@ namespace Server.MirObjects
             if (effects) Broadcast(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
             
             BroadcastHealthChange();
+
+            if (this is PlayerObject)
+            {
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        var playerObject = this as PlayerObject;
+                        if (playerObject != null)
+                        {
+                            ctx.CharacterInfos.Attach(playerObject.Info);
+                            ctx.Entry(playerObject.Info).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
+                }
+            }
             
             return true;
         }

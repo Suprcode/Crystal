@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Drawing;
 using System.Windows.Forms;
 using Server.MirDatabase;
@@ -65,6 +66,15 @@ namespace Server
             if (ActiveControl != sender) return;
 
             Envir.DragonInfo.MapFileName = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void XTextBox_TextChanged(object sender, EventArgs e)
@@ -81,6 +91,15 @@ namespace Server
 
 
             Envir.DragonInfo.Location.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void YTextBox_TextChanged(object sender, EventArgs e)
@@ -97,6 +116,15 @@ namespace Server
 
 
             Envir.DragonInfo.Location.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void MonsterNameTextBox_TextChanged(object sender, EventArgs e)
@@ -104,6 +132,15 @@ namespace Server
             if (ActiveControl != sender) return;
 
             Envir.DragonInfo.MonsterName = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void BodyNameTextBox_TextChanged(object sender, EventArgs e)
@@ -111,14 +148,21 @@ namespace Server
             if (ActiveControl != sender) return;
 
             Envir.DragonInfo.BodyName = ActiveControl.Text;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void DragonInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                    Envir.SaveDragon(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -129,6 +173,15 @@ namespace Server
             if (ActiveControl != sender) return;
 
             Envir.DragonInfo.Enabled = EnableDragonCheckBox.Checked;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             UpdateInterface();
         }
 
@@ -146,6 +199,15 @@ namespace Server
 
 
             Envir.DragonInfo.DropAreaTop.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void DropAreaTopYTextBox_TextChanged(object sender, EventArgs e)
@@ -162,6 +224,15 @@ namespace Server
 
 
             Envir.DragonInfo.DropAreaTop.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void DropAreaBottomXTextBox_TextChanged(object sender, EventArgs e)
@@ -178,6 +249,15 @@ namespace Server
 
 
             Envir.DragonInfo.DropAreaBottom.X = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void DropAreaBottomYTextBox_TextChanged(object sender, EventArgs e)
@@ -194,6 +274,15 @@ namespace Server
 
 
             Envir.DragonInfo.DropAreaBottom.Y = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void Level1ExpTextBox_TextChanged(object sender, EventArgs e)
@@ -210,6 +299,15 @@ namespace Server
 
 
             Envir.DragonInfo.Exps[Convert.ToInt32(ActiveControl.Tag)] = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.DragonInfos.Attach(Envir.DragonInfo);
+                    ctx.Entry(Envir.DragonInfo).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
     }
 }

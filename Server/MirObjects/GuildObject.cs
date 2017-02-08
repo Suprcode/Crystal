@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -33,6 +34,41 @@ namespace Server.MirObjects
             Name = name;
             Rank Owner = new Rank() { Name = "Leader", Options = (RankOptions)255 , Index = 0};
             GuildMember Leader = new GuildMember() { name = owner.Info.Name, Player = owner, Id = owner.Info.Index, LastLogin = Envir.Now, Online = true};
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.Guilds.Attach(this);
+                    ctx.Entry(this).State = EntityState.Added;
+                    ctx.SaveChanges();
+                    Owner.GuildIndex = Guildindex;
+                    
+                    ctx.Ranks.Attach(Owner);
+                    ctx.Entry(Owner).State = EntityState.Added;
+                    ctx.SaveChanges();
+                    Leader.RankId = Owner.id;
+                    ctx.GuildMembers.Attach(Leader);
+                    ctx.Entry(Leader).State = EntityState.Added;
+                    ctx.SaveChanges();
+                    foreach (var guildBuff in BuffList)
+                    {
+                        guildBuff.GuildIndex = Guildindex;
+                        ctx.GuildBuffs.Attach(guildBuff);
+                        ctx.Entry(guildBuff).State = EntityState.Added;
+                    }
+                    ctx.SaveChanges();
+                    for (int i = 0; i < StoredItems.Length; i++)
+                    {
+                        ctx.GuildStorageItems.Add(new GuildStorageItem()
+                        {
+                            GuildIndex = Guildindex,
+                            ItemUniqueID = null,
+                            UserId = null
+                        });
+                    }
+                    ctx.SaveChanges();
+                }
+            }
             Owner.Members.Add(Leader);
             Ranks.Add(Owner);
             Membercount++;
@@ -194,7 +230,7 @@ namespace Server.MirObjects
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {
-                    if (Ranks[i].Members[j].Id == member.Info.Index)
+                    if (Ranks[i].Members[j].Id == member.Info.Index || Ranks[i].Members[j].name == member.Info.Name)
                     {
                         if (online)
                         {
@@ -325,6 +361,26 @@ namespace Server.MirObjects
                         player.Enqueue(new ServerPackets.GuildMemberChange() { Name = Member.name, Status = (byte)5, RankIndex = (byte)MemberRank.Index });
                         player.GuildMembersChanged = true;
                     }
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var dbMember = ctx.GuildMembers.FirstOrDefault(m => m.name == membername);
+                    if (dbMember != null)
+                    {
+                        dbMember.RankId = Ranks[RankIndex].id;
+                    }
+                    else
+                    {
+                        ctx.GuildMembers.Add(new GuildMember()
+                        {
+                            name = membername,
+                            RankId = Ranks[RankIndex].id
+                        });
+                    }
+                    ctx.SaveChanges();
+                }
+            }
             return true;
         }
 
@@ -337,6 +393,16 @@ namespace Server.MirObjects
             }
             int NewIndex = Ranks.Count > 1? Ranks.Count -1: 1;
             Rank NewRank = new Rank(){Index = NewIndex, Name = String.Format("Rank-{0}",NewIndex), Options = (RankOptions)0};
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    NewRank.GuildIndex = Guildindex;
+                    ctx.Ranks.Attach(NewRank);
+                    ctx.Entry(NewRank).State = EntityState.Added;
+                    ctx.SaveChanges();
+                }
+            }
             Ranks.Insert(NewIndex, NewRank);
             Ranks[Ranks.Count - 1].Index = Ranks.Count - 1;
             List<Rank> NewRankList = new List<Rank>();
@@ -368,6 +434,15 @@ namespace Server.MirObjects
             NewRankList.Add(Ranks[RankIndex]);
             SendServerPacket(new ServerPackets.GuildMemberChange() { Name = Self.Name, Status = (byte)7, Ranks = NewRankList });
             NeedSave = true;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.Ranks.Attach(Ranks[RankIndex]);
+                    ctx.Entry(Ranks[RankIndex]).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             return true;
         }
         public bool ChangeRankName(PlayerObject Self, string RankName, byte RankIndex)
@@ -407,6 +482,15 @@ namespace Server.MirObjects
                     }
                 }
             NeedSave = true;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.Ranks.Attach(Ranks[RankIndex]);
+                    ctx.Entry(Ranks[RankIndex]).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             return true;
         }
 
@@ -455,6 +539,15 @@ namespace Server.MirObjects
             MemberRank.Members.Remove(Member);
             NeedSave = true;
             Membercount--;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.Guilds.Attach(this);
+                    ctx.Entry(this).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             return true;
         }
 
@@ -481,6 +574,14 @@ namespace Server.MirObjects
                 formermember.Enqueue(new ServerPackets.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (RankOptions)0 });
                 formermember.BroadcastInfo();
             }
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.GuildMembers.RemoveRange(ctx.GuildMembers.Where(m => m.name == name));
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         public Rank FindRank(string name)
@@ -504,6 +605,15 @@ namespace Server.MirObjects
                         player.GuildNoticeChanged = true;
                     }
             SendServerPacket(new ServerPackets.GuildNoticeChange() { update = -1 });
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.Guilds.Attach(this);
+                    ctx.Entry(this).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         public void SendServerPacket(Packet p)
@@ -714,7 +824,16 @@ namespace Server.MirObjects
             {
                 ChargeForBuff(Buff);
             }
-
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    Buff.GuildIndex = Guildindex;
+                    ctx.GuildBuffs.Attach(Buff);
+                    ctx.Entry(Buff).State = EntityState.Added;
+                    ctx.SaveChanges();
+                }
+            }
             BuffList.Add(Buff);
             List<GuildBuff> NewBuff = new List<GuildBuff>();
             NewBuff.Add(Buff);
@@ -744,6 +863,17 @@ namespace Server.MirObjects
             Buff.Active = true;
             Buff.ActiveTimeRemaining = Buff.Info.TimeLimit;
             Gold -= (uint)Buff.Info.ActivationCost;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.GuildBuffs.Attach(Buff);
+                    ctx.Entry(Buff).State = EntityState.Modified;
+                    ctx.Guilds.Attach(this);
+                    ctx.Entry(this).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             List<GuildBuff> NewBuff = new List<GuildBuff>();
             NewBuff.Add(Buff);
             SendServerPacket(new ServerPackets.GuildBuffList { ActiveBuffs = NewBuff });

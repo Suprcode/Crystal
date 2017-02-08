@@ -100,7 +100,13 @@ namespace Server.MirEnvir
         {
             string type = string.Empty;
             string task = string.Empty;
-
+            if (item.Info == null)
+            {
+                using (var ctx = new DataContext())
+                {
+                    item.Info = ctx.ItemInfos.FirstOrDefault(i => i.Index == item.ItemIndex);
+                }
+            }
             switch (state)
             {
                 case 1:

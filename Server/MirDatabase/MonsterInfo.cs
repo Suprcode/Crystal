@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -333,6 +334,15 @@ namespace Server.MirDatabase
             //if (28 + count * 3 > data.Length) return;
 
             info.Index = ++SMain.EditEnvir.MonsterIndex;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.MonsterInfos.Attach(info);
+                    ctx.Entry(info).State = EntityState.Added;
+                    ctx.SaveChanges();
+                }
+            }
             SMain.EditEnvir.MonsterInfoList.Add(info);
         }
         public string ToText()

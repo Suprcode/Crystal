@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -37,8 +38,6 @@ namespace Server
         {
             if (Settings.UseSQLServer)
             {
-                using(var ctx = new DataContext())
-                    Envir.SaveGameShop(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -175,7 +174,18 @@ namespace Server
             GoldPrice_textbox.BackColor = SystemColors.Window;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].GoldPrice = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void GPPrice_textbox_TextChanged(object sender, EventArgs e)
@@ -193,7 +203,18 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].CreditPrice = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             if (ActiveControl.Text != "") GoldPrice_textbox.Text = (temp * Settings.CredxGold).ToString();
         }
@@ -204,7 +225,18 @@ namespace Server
             string temp = ActiveControl.Text;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].Class = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void TopItem_checkbox_CheckedChanged(object sender, EventArgs e)
@@ -212,7 +244,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].TopItem = TopItem_checkbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Remove_button_Click(object sender, EventArgs e)
@@ -243,7 +286,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].Deal = DealofDay_checkbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Category_textbox_TextChanged(object sender, EventArgs e)
@@ -252,7 +306,18 @@ namespace Server
             string temp = ActiveControl.Text;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].Category = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Stock_textbox_TextChanged(object sender, EventArgs e)
@@ -270,7 +335,18 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].Stock = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             GetStats();
         }
@@ -280,7 +356,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < SelectedItems.Count; i++)
+            {
                 SelectedItems[i].iStock = Individual_checkbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.GameShopItems.Attach(SelectedItems[i]);
+                        ctx.Entry(SelectedItems[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
         }
 
@@ -325,6 +412,15 @@ namespace Server
 
             ActiveControl.BackColor = SystemColors.Window;
             SelectedItems[0].Count = temp;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.GameShopItems.Attach(SelectedItems[0]);
+                    ctx.Entry(SelectedItems[0]).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         private void ClassFilter_lb_SelectedIndexChanged(object sender, EventArgs e)

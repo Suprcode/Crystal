@@ -57,7 +57,7 @@ namespace Server.MirDatabase
         public List<ConquestGateInfo> ConquestGates = new List<ConquestGateInfo>();
         public List<ConquestWallInfo> ConquestWalls = new List<ConquestWallInfo>();
         public List<ConquestSiegeInfo> ConquestSieges = new List<ConquestSiegeInfo>();
-public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
+        public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
         public int GuardIndex { get; set; }
         public int GateIndex { get; set; }
         public int WallIndex { get; set; }
@@ -83,7 +83,30 @@ public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
 
 //King of the hill
         public Point KingLocation;
+
+        public string DBKingLocation
+        {
+            get { return KingLocation.X + "," + KingLocation.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    KingLocation.X = 0;
+                    KingLocation.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    KingLocation.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    KingLocation.Y = result;
+                }
+            }
+        }
         public ushort KingSize;
+        public int DBKingSize { get { return KingSize; } set { KingSize = (ushort) value; } }
         public Point ObjectLoc;
         public string DBObjectLoc
         {
@@ -541,11 +564,35 @@ public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
 
     public class ConquestFlagInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
         public Point Location;
-        public string Name;
-        public string FileName = string.Empty;
 
+        public string DBLocation
+        {
+            get { return Location.X + "," + Location.Y; }
+            set
+            {
+                var tempArray = value.Split(',');
+                if (tempArray.Length != 2)
+                {
+                    Location.X = 0;
+                    Location.Y = 0;
+                }
+                else
+                {
+                    int result = 0;
+                    int.TryParse(tempArray[0], out result);
+                    Location.X = result;
+                    int.TryParse(tempArray[1], out result);
+                    Location.Y = result;
+                }
+            }
+        }
+        public string Name { get; set; }
+        public string FileName { get; set; } = string.Empty;
+        public int ConquestInfoIndex { get; set; }
+        public ConquestFlagType ConquestFlagType { get; set; } = ConquestFlagType.Flag;
         public ConquestFlagInfo()
         {
 
@@ -572,5 +619,11 @@ public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
         {
             return string.Format("{0} - {1} ({2})", Index, Name, Location);
         }
+    }
+
+    public enum ConquestFlagType
+    {
+        Flag,
+        Control_Point
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -194,6 +195,16 @@ namespace Server
                 _selectedAccountInfos[0].AccountID = ActiveControl.Text;
                 _selectedAccountInfos[0].Update();
 
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[0]);
+                        ctx.Entry(_selectedAccountInfos[0]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+
                 AutoResize();
                 AccountInfoListView.EndUpdate();
             }
@@ -208,6 +219,15 @@ namespace Server
             {
                 _selectedAccountInfos[i].Password = ActiveControl.Text;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             AutoResize();
@@ -223,6 +243,15 @@ namespace Server
             {
                 _selectedAccountInfos[i].UserName = ActiveControl.Text;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             AutoResize();
@@ -243,15 +272,37 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            {
                 _selectedAccountInfos[i].BirthDate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void QuestionTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            
+
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            {
                 _selectedAccountInfos[i].SecretQuestion = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void AnswerTextBox_TextChanged(object sender, EventArgs e)
@@ -259,7 +310,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            {
                 _selectedAccountInfos[i].SecretAnswer = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void EMailTextBox_TextChanged(object sender, EventArgs e)
@@ -268,7 +330,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            {
                 _selectedAccountInfos[i].EMailAddress = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         
         private void DayBanButton_Click(object sender, EventArgs e)
@@ -283,6 +356,15 @@ namespace Server
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = expiry;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             RefreshInterface();
@@ -302,6 +384,15 @@ namespace Server
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = expiry;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             RefreshInterface();
@@ -320,6 +411,15 @@ namespace Server
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = DateTime.MaxValue;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             RefreshInterface();
@@ -336,6 +436,15 @@ namespace Server
             {
                 _selectedAccountInfos[i].Banned = false;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
             AutoResize();
             AccountInfoListView.EndUpdate();
@@ -350,6 +459,15 @@ namespace Server
             {
                 _selectedAccountInfos[i].BanReason = ActiveControl.Text;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             AutoResize();
@@ -374,6 +492,15 @@ namespace Server
             {
                 _selectedAccountInfos[i].ExpiryDate = temp;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             AutoResize();
@@ -388,6 +515,7 @@ namespace Server
         private void AccountInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (SMain.Envir.Running) return;
+            if (Settings.UseSQLServer) return;
 
             SMain.Envir.SaveAccounts();
         }
@@ -401,6 +529,15 @@ namespace Server
             {
                 _selectedAccountInfos[i].AdminAccount = AdminCheckBox.CheckState == CheckState.Checked ? true : false;
                 _selectedAccountInfos[i].Update();
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.AccountInfos.Attach(_selectedAccountInfos[i]);
+                        ctx.Entry(_selectedAccountInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
             AutoResize();
             AccountInfoListView.EndUpdate();
@@ -422,9 +559,44 @@ namespace Server
                 {
                     using (var ctx = new DataContext())
                     {
-                        ctx.CharacterInfos.RemoveRange(ctx.CharacterInfos.Where(i => true));
-                        ctx.AuctionInfos.RemoveRange(ctx.AuctionInfos.Where(i => true));
-                        ctx.Guilds.RemoveRange(ctx.Guilds.Where(g => true));
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM MailInfoes;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM MailItems;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM EquipmentItems;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM InventoryItems;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM QuestInventoryItems;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM StorageItems;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM UserItems;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM UserMagics;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM UserBuffs;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM FriendInfoes;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM GameShopPurchases;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM UserIntelligentCreatures;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM QuestProgressInfoes;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM GuildBuffs;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM GuildMembers;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM GuildStorageItems;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM Ranks;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM BaseGuildObjects;");
+                        ctx.Database.ExecuteSqlCommand("DELETE FROM CharacterInfoes;");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('MailInfoes', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('MailItems', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('EquipmentItems', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('InventoryItems', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('QuestInventoryItems', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('StorageItems', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('UserItems', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('UserMagics', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('UserBuffs', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('FriendInfoes', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('GameShopPurchases', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('UserIntelligentCreatures', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('QuestProgressInfoes', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('GuildBuffs', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('GuildMembers', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('GuildStorageItems', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Ranks', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('BaseGuildObjects', RESEED, 0);");
+                        ctx.Database.ExecuteSqlCommand("DBCC CHECKIDENT('CharacterInfoes', RESEED, 0);");
                         ctx.SaveChanges();
                     }
                 }
@@ -440,7 +612,7 @@ namespace Server
                 
 
                 MessageBox.Show("All characters and associated data has been cleared", "Notice",
-               MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
         }
     }

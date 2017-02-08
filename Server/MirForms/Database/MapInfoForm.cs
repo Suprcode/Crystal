@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -47,8 +48,6 @@ namespace Server
         {
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                    Envir.SaveMaps(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -596,14 +595,15 @@ namespace Server
                 {
                     using (var ctx = new DataContext())
                     {
-                        ctx.MapInfos.RemoveRange(ctx.MapInfos.Where(m => m.Index == _selectedMapInfos[i].Index));
+                        var index = _selectedMapInfos[i].Index;
+                        ctx.MapInfos.RemoveRange(ctx.MapInfos.Where(m => m.Index == index));
                         ctx.SafeZoneInfos.RemoveRange(
-                            ctx.SafeZoneInfos.Where(info => info.MapInfoIndex == _selectedMapInfos[i].Index));
+                            ctx.SafeZoneInfos.Where(info => info.MapInfoIndex == index));
                         ctx.MovementInfos.RemoveRange(
-                            ctx.MovementInfos.Where(info => info.MapIndex == _selectedMapInfos[i].Index));
+                            ctx.MovementInfos.Where(info => info.MapIndex == index));
                         ctx.RespawnInfos.RemoveRange(
-                            ctx.RespawnInfos.Where(info => info.MapInfoIndex == _selectedMapInfos[i].Index));
-                        ctx.MineZones.RemoveRange(ctx.MineZones.Where(m => m.MapInfoIndex == _selectedMapInfos[i].Index));
+                            ctx.RespawnInfos.Where(info => info.MapInfoIndex == index));
+                        ctx.MineZones.RemoveRange(ctx.MineZones.Where(m => m.MapInfoIndex == index));
                         ctx.SaveChanges();
                     }
                 }
@@ -628,14 +628,36 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].FileName = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MapNameTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].Title = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMapList();
         }
@@ -654,14 +676,36 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].MiniMap = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void LightsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].Light = (LightSetting)LightsComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
 
@@ -678,7 +722,17 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected SafeZones?", "Remove SafeZones?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedSafeZoneInfos.Count; i++) _info.SafeZones.Remove(_selectedSafeZoneInfos[i]);
+            for (int i = 0; i < _selectedSafeZoneInfos.Count; i++)
+            {
+                _info.SafeZones.Remove(_selectedSafeZoneInfos[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.SafeZoneInfos.RemoveRange(ctx.SafeZoneInfos.Where(info => info.id == _selectedSafeZoneInfos[i].id));
+                    }
+                }
+            }
 
             UpdateSafeZoneInterface();
         }
@@ -701,7 +755,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedSafeZoneInfos.Count; i++)
+            {
                 _selectedSafeZoneInfos[i].Location.X = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.SafeZoneInfos.Attach(_selectedSafeZoneInfos[i]);
+                        ctx.Entry(_selectedSafeZoneInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshSafeZoneList();
         }
@@ -720,7 +785,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedSafeZoneInfos.Count; i++)
+            {
                 _selectedSafeZoneInfos[i].Location.Y = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.SafeZoneInfos.Attach(_selectedSafeZoneInfos[i]);
+                        ctx.Entry(_selectedSafeZoneInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshSafeZoneList();
         }
@@ -739,14 +815,36 @@ namespace Server
 
 
             for (int i = 0; i < _selectedSafeZoneInfos.Count; i++)
+            {
                 _selectedSafeZoneInfos[i].Size = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.SafeZoneInfos.Attach(_selectedSafeZoneInfos[i]);
+                        ctx.Entry(_selectedSafeZoneInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void StartPointCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedSafeZoneInfos.Count; i++)
+            {
                 _selectedSafeZoneInfos[i].StartPoint = StartPointCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.SafeZoneInfos.Attach(_selectedSafeZoneInfos[i]);
+                        ctx.Entry(_selectedSafeZoneInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshSafeZoneList();
         }
@@ -766,7 +864,19 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected Respawns?", "Remove Respawns?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedRespawnInfos.Count; i++) _info.Respawns.Remove(_selectedRespawnInfos[i]);
+            for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
+                _info.Respawns.Remove(_selectedRespawnInfos[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.RemoveRange(
+                            ctx.RespawnInfos.Where(info => info.id == _selectedRespawnInfos[i].id));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateRespawnInterface();
         }
@@ -783,7 +893,18 @@ namespace Server
             if (info == null) return;
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].MonsterIndex = info.Index;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
 
@@ -803,7 +924,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].Location.X = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -822,7 +954,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].Location.Y = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -841,7 +984,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].Count = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -860,7 +1014,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].Spread = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -890,6 +1055,15 @@ namespace Server
                     _selectedRespawnInfos[i].Delay = temp;
                     _selectedRespawnInfos[i].RespawnTicks = 0;
                 }
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
 
             RefreshRespawnList();
@@ -910,7 +1084,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].Direction = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -920,7 +1105,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].RoutePath = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -946,7 +1142,15 @@ namespace Server
                 RespawnInfo info = RespawnInfo.FromText(respawns[i]);
 
                 if (info == null) continue;
-
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        info.MapInfoIndex = _info.Index;
+                        ctx.RespawnInfos.Add(info);
+                        ctx.SaveChanges();
+                    }
+                }
                 _info.Respawns.Add(info);
             }
 
@@ -970,7 +1174,19 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected Movements?", "Remove Movements?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedMovementInfos.Count; i++) _info.Movements.Remove(_selectedMovementInfos[i]);
+            for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
+                _info.Movements.Remove(_selectedMovementInfos[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.RemoveRange(
+                            ctx.MovementInfos.Where(info => info.id == _selectedMovementInfos[i].id));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             UpdateMovementInterface();
         }
@@ -989,7 +1205,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].Source.X = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMovementList();
         }
@@ -1008,7 +1235,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].Source.Y = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMovementList();
         }
@@ -1027,7 +1265,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].Destination.X = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMovementList();
         }
@@ -1046,7 +1295,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].Destination.Y = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMovementList();
         }
@@ -1059,7 +1319,18 @@ namespace Server
             if (info == null) return;
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].MapIndex = info.Index;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMovementList();
 
@@ -1069,7 +1340,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].NeedHole = NeedHoleMCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void NeedScriptMCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1077,7 +1359,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].NeedMove = NeedMoveMCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MovementInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1120,7 +1413,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].BigMap = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
 
@@ -1130,98 +1434,252 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoTeleport = NoTeleportCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoReconnectCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoReconnect = NoReconnectCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoReconnectTextbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoReconnectMap = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoRandomCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoRandom = NoRandomCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoEscapeCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoEscape = NoEscapeCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoRecallCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoRecall = NoRecallCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoDrugCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoDrug = NoDrugCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoPositionCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoPosition = NoPositionCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoThrowItemCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoThrowItem = NoThrowItemCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoDropPlayerCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoDropPlayer = NoDropPlayerCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoDropMonsterCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoDropMonster = NoDropMonsterCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NoNamesCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoNames = NoNamesCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void FightCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].Fight = FightCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void FireCheckbox_CheckStateChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].Fire = FireCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void FireTextbox_TextChanged(object sender, EventArgs e)
         {
@@ -1238,14 +1696,36 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].FireDamage = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void LightningCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].Lightning = LightningCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void LightningTextbox_TextChanged(object sender, EventArgs e)
         {
@@ -1262,7 +1742,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].LightningDamage = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ClearHButton_Click(object sender, EventArgs e)
@@ -1285,7 +1776,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].MapDarkLight = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MZDeletebutton_Click(object sender, EventArgs e)
@@ -1294,15 +1796,38 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected MineZones?", "Remove MineZones?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedMineZones.Count; i++) _info.MineZones.Remove(_selectedMineZones[i]);
+            for (int i = 0; i < _selectedMineZones.Count; i++)
+            {
+                _info.MineZones.Remove(_selectedMineZones[i]);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MineZones.RemoveRange(ctx.MineZones.Where(z => z.id == _selectedMineZones[i].id));
+                        ctx.SaveChanges();
+                    }
+                }
+            }
             UpdateMineZoneInterface();
         }
 
         private void MZAddbutton_Click(object sender, EventArgs e)
         {
             if (_info == null) return;
-
-            _info.MineZones.Add(new MineZone());
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newMineZone = new MineZone() {MapInfoIndex = _info.Index};
+                    ctx.MineZones.Add(newMineZone);
+                    ctx.SaveChanges();
+                    _info.MineZones.Add(newMineZone);
+                }
+            }
+            else
+            {
+                _info.MineZones.Add(new MineZone());
+            }
             UpdateMineZoneInterface();
         }
 
@@ -1326,7 +1851,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMineZones.Count; i++)
+            {
                 _selectedMineZones[i].Mine = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MineZones.Attach(_selectedMineZones[i]);
+                        ctx.Entry(_selectedMineZones[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
             RefreshMineZoneList();
         }
 
@@ -1345,7 +1881,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMineZones.Count; i++)
+            {
                 _selectedMineZones[i].Location.X = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MineZones.Attach(_selectedMineZones[i]);
+                        ctx.Entry(_selectedMineZones[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
             RefreshMineZoneList();
         }
 
@@ -1364,7 +1911,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMineZones.Count; i++)
+            {
                 _selectedMineZones[i].Location.Y = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MineZones.Attach(_selectedMineZones[i]);
+                        ctx.Entry(_selectedMineZones[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
             RefreshMineZoneList();
         }
 
@@ -1383,7 +1941,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMineZones.Count; i++)
+            {
                 _selectedMineZones[i].Size = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MineZones.Attach(_selectedMineZones[i]);
+                        ctx.Entry(_selectedMineZones[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
             RefreshMineZoneList();
         }
 
@@ -1438,7 +2007,15 @@ namespace Server
                     mi.LightningDamage = MirForms.ConvertMapInfo.MapInfo[i].LightningDamage;
                 if (MirForms.ConvertMapInfo.MapInfo[i].MapLight == true)
                     mi.MapDarkLight = MirForms.ConvertMapInfo.MapInfo[i].MapLightValue;
-
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        mi.Index = 0;
+                        ctx.MapInfos.Add(mi);
+                        ctx.SaveChanges();
+                    }
+                }
                 Envir.MapInfoList.Add(mi);
             }
 
@@ -1461,6 +2038,15 @@ namespace Server
                     newmoveinfo.NeedHole = false;
                     newmoveinfo.NeedMove = false;
 
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            newmoveinfo.SourceMapIndex = MirForms.ConvertMapInfo.MapMovements[j].fromIndex;
+                            ctx.MovementInfos.Add(newmoveinfo);
+                            ctx.SaveChanges();
+                        }
+                    }
                     Envir.MapInfoList[Envir.MapInfoList.FindIndex(a => a.Index == (MirForms.ConvertMapInfo.MapMovements[j].fromIndex))].Movements.Add(newmoveinfo);
                 }
                 catch (Exception)
@@ -1479,6 +2065,15 @@ namespace Server
                     mz.Size = (ushort)MirForms.ConvertMapInfo.MineInfo[i].Range;
                     mz.Mine = (byte)MirForms.ConvertMapInfo.MineInfo[i].MineIndex;
 
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            mz.MapInfoIndex = MirForms.ConvertMapInfo.MineInfo[i].MapIndex;
+                            ctx.MineZones.Add(mz);
+                            ctx.SaveChanges();
+                        }
+                    }
                     Envir.MapInfoList[MirForms.ConvertMapInfo.MineInfo[i].MapIndex - 1].MineZones.Add(mz);
                 }
                 catch (Exception) { continue; }
@@ -1617,7 +2212,15 @@ namespace Server
 
                     int index = Envir.MapInfoList.FindIndex(a => a.FileName == MirForms.ConvertMonGenInfo.monGenList[i].Map);
                     if (index == -1) continue;
-
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            respawnInfo.MapInfoIndex = index;
+                            ctx.RespawnInfos.Add(respawnInfo);
+                            ctx.SaveChanges();
+                        }
+                    }
                     Envir.MapInfoList[index].Respawns.Add(respawnInfo);
                     hasImported = true;
                 }
@@ -1690,7 +2293,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].MineIndex = Convert.ToByte(MineComboBox.SelectedIndex);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MineZoneComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1698,7 +2312,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMineZones.Count; i++)
+            {
                 _selectedMineZones[i].Mine = Convert.ToByte(MineZoneComboBox.SelectedIndex);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MineZones.Attach(_selectedMineZones[i]);
+                        ctx.Entry(_selectedMineZones[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMineZoneList();
         }
@@ -1708,7 +2333,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoMount = NoMountCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void NeedBridleCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1716,7 +2352,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NeedBridle = NeedBridleCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void NoFightCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1724,7 +2371,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].NoFight = NoFightCheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MusicTextBox_TextChanged(object sender, EventArgs e)
@@ -1741,7 +2399,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
                 _selectedMapInfos[i].Music = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MapInfos.Attach(_selectedMapInfos[i]);
+                        ctx.Entry(_selectedMapInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void RandomTextBox_TextChanged(object sender, EventArgs e)
@@ -1759,7 +2428,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++)
+            {
                 _selectedRespawnInfos[i].RandomDelay = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                        ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshRespawnList();
         }
@@ -1774,6 +2454,15 @@ namespace Server
                 {
                     _selectedRespawnInfos[i].RespawnTicks = _selectedRespawnInfos[i].Delay;
                     _selectedRespawnInfos[i].Delay = 0;
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                            ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
                 }
             }
             else
@@ -1783,6 +2472,15 @@ namespace Server
                 {
                     _selectedRespawnInfos[i].Delay = _selectedRespawnInfos[i].RespawnTicks;
                     _selectedRespawnInfos[i].RespawnTicks = 0;
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                            ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
                 }
             }
             RefreshRespawnList();
@@ -1797,6 +2495,15 @@ namespace Server
                 for (int i = 0; i < _selectedRespawnInfos.Count; i++)
                 {
                     _selectedRespawnInfos[i].SaveRespawnTime = chkrespawnsave.Checked;
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            ctx.RespawnInfos.Attach(_selectedRespawnInfos[i]);
+                            ctx.Entry(_selectedRespawnInfos[i]).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
                 }
             }
             RefreshRespawnList();
@@ -1811,7 +2518,18 @@ namespace Server
             if (info == null) return;
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
+            {
                 _selectedMovementInfos[i].ConquestIndex = info.Index;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MovementInfos.Attach(_selectedMovementInfos[i]);
+                        ctx.Entry(_selectedMovementInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMovementList();
         }

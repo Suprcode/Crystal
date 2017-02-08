@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -173,7 +174,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            {
                 _selectedNPCInfos[i].FileName = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.NpcInfos.Attach(_selectedNPCInfos[i]);
+                        ctx.Entry(_selectedNPCInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshNPCList();
         }
@@ -182,7 +194,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            {
                 _selectedNPCInfos[i].Name = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.NpcInfos.Attach(_selectedNPCInfos[i]);
+                        ctx.Entry(_selectedNPCInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void NXTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -199,7 +222,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            {
                 _selectedNPCInfos[i].Location.X = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.NpcInfos.Attach(_selectedNPCInfos[i]);
+                        ctx.Entry(_selectedNPCInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshNPCList();
         }
@@ -218,7 +252,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            {
                 _selectedNPCInfos[i].Location.Y = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.NpcInfos.Attach(_selectedNPCInfos[i]);
+                        ctx.Entry(_selectedNPCInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshNPCList();
         }
@@ -237,7 +282,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            {
                 _selectedNPCInfos[i].Image = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.NpcInfos.Attach(_selectedNPCInfos[i]);
+                        ctx.Entry(_selectedNPCInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
         }
         private void NRateTextBox_TextChanged(object sender, EventArgs e)
@@ -255,7 +311,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            {
                 _selectedNPCInfos[i].Rate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.NpcInfos.Attach(_selectedNPCInfos[i]);
+                        ctx.Entry(_selectedNPCInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MapComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -265,7 +332,18 @@ namespace Server
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
             {
                 MapInfo temp = (MapInfo)MapComboBox.SelectedItem;
-                _selectedNPCInfos[i].MapIndex = temp.Index;
+                {
+                    _selectedNPCInfos[i].MapIndex = temp.Index;
+                    if (Settings.UseSQLServer)
+                    {
+                        using (var ctx = new DataContext())
+                        {
+                            ctx.NpcInfos.Attach(_selectedNPCInfos[i]);
+                            ctx.Entry(_selectedNPCInfos[i]).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
+                }
             }
 
         }
@@ -274,10 +352,6 @@ namespace Server
         {
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                {
-                    Envir.SaveNPCs(ctx);
-                }
                 return;
             }
             Envir.SaveDB();

@@ -282,7 +282,20 @@ namespace Server.MirDatabase
         public int ResizeStorage()
         {
             if (Storage.Length == 80)
+            {
                 Array.Resize(ref Storage, Storage.Length + 80);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        for (int i = 0; i < 80; i++)
+                        {
+                            ctx.StorageItems.Add(new StorageItem() {AccountIndex = Index, UserItemUniqueID = null});
+                        }
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             return Storage.Length;
         }

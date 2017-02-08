@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -212,7 +213,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Name = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshMonsterList();
         }
@@ -231,7 +243,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].AI = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void EffectTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -248,7 +271,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Effect = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void LevelTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -266,7 +300,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Level = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void LightTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -284,7 +329,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Light = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void ViewRangeTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -302,7 +358,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].ViewRange = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void HPTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -319,7 +386,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].HP = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void ExperienceTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -336,7 +414,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Experience = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -353,7 +442,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MinAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -371,7 +471,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MaxAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -389,7 +500,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MinMAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -407,7 +529,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MaxMAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -424,7 +557,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MinDC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -442,7 +586,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MaxDC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -460,7 +615,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MinMC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -478,7 +644,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MaxMC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -496,7 +673,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MinSC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -514,7 +702,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MaxSC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void AccuracyTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -532,7 +731,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Accuracy = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void AgilityTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -550,7 +760,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Agility = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void ASpeedTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -568,7 +789,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].AttackSpeed = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MSpeedTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -585,27 +817,72 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].MoveSpeed = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void CanPushCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].CanPush = CanPushCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void CanTameCheckBox_CheckedChanged(object sender, EventArgs e)
-        {if (ActiveControl != sender) return;
+        {
+            if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].CanTame = CanTameCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void AutoRevCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].AutoRev = AutoRevCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void UndeadCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -613,14 +890,23 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Undead = UndeadCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MonsterInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                    Envir.SaveMonsters(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -662,7 +948,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].CoolEye = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ImageComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -670,7 +967,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Image = (Monster)ImageComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.MonsterInfos.Attach(_selectedMonsterInfos[i]);
+                        ctx.Entry(_selectedMonsterInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
         }
 

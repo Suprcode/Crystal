@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -489,7 +490,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Name = ActiveControl.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
 
             RefreshItemList();
         }
@@ -498,35 +510,90 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Type = (ItemType)ITypeComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void RTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].RequiredType = (RequiredType) RTypeComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void RGenderComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].RequiredGender = (RequiredGender)RGenderComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void RClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].RequiredClass = (RequiredClass)RClassComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void StartItemCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].StartItem = StartItemCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void WeightTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -543,7 +610,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Weight = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void ImageTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -560,7 +638,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Image = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void DuraTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -577,7 +666,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Durability = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void ShapeTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -594,7 +694,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Shape = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void SSizeTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -611,7 +722,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].StackSize = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void PriceTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -628,7 +750,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Price = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void RAmountTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -645,7 +778,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].RequiredAmount = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void LightTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -664,9 +808,20 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-            
+
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Light = (byte)(temp + (_selectedItemInfos[i].Light / 15)*15);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -683,7 +838,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MinAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -700,7 +866,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MaxAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -717,7 +894,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MinMAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -735,7 +923,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MaxMAC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -753,7 +952,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MinDC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -771,7 +981,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MaxDC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -789,7 +1010,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MinMC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -807,7 +1039,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MaxMC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MinSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -825,7 +1068,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MinSC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MaxSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -843,7 +1097,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MaxSC = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void HPTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -860,7 +1125,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].HP = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void MPTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -878,7 +1154,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MP = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void AccuracyTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -896,7 +1183,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Accuracy = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void AgilityTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -914,7 +1212,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Agility = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void ASpeedTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -932,7 +1241,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].AttackSpeed = (byte) temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void LuckTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -950,7 +1270,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Luck = (byte) temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void BWeightText_TextChanged(object sender, EventArgs e)
         {
@@ -968,7 +1299,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].BagWeight = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void HWeightTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -986,7 +1328,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].HandWeight = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void WWeightTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -1004,7 +1357,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].WearWeight = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
         private void EffectTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -1022,15 +1386,24 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Effect = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ItemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (Settings.UseSQLServer)
             {
-                using (var ctx = new DataContext())
-                    Envir.SaveItems(ctx);
                 return;
             }
             Envir.SaveDB();
@@ -1055,7 +1428,19 @@ namespace Server
                 ItemInfo info = ItemInfo.FromText(items[i]);
 
                 if (info == null) continue;
-                info.Index = ++Envir.ItemIndex;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Add(info);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    info.Index = ++Envir.ItemIndex;
+                }
+                
                 Envir.ItemInfoList.Add(info);
 
             }
@@ -1114,7 +1499,18 @@ namespace Server
             foreach (var info in items.Select(ItemInfo.FromText).Where(info => info != null))
             {
                 count++;
-                info.Index = ++Envir.ItemIndex;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Add(info);
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    info.Index = ++Envir.ItemIndex;
+                }
                 Envir.ItemInfoList.Add(info);
             }
 
@@ -1127,7 +1523,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Set = (ItemSet)ISetComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ACRateTextbox_TextChanged(object sender, EventArgs e)
@@ -1145,7 +1552,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MaxAcRate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MacRateTextbox_TextChanged(object sender, EventArgs e)
@@ -1163,7 +1581,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MaxMacRate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MagicResisttextBox_TextChanged(object sender, EventArgs e)
@@ -1181,7 +1610,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MagicResist = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void PoisonResisttextBox_TextChanged(object sender, EventArgs e)
@@ -1199,7 +1639,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].PoisonResist = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void HealthRecoveryTextbox_TextChanged(object sender, EventArgs e)
@@ -1217,7 +1668,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].HealthRecovery = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void SpellRecoverytextBox_TextChanged(object sender, EventArgs e)
@@ -1235,7 +1697,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].SpellRecovery = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void PoisonRecoverytextBox_TextChanged(object sender, EventArgs e)
@@ -1253,7 +1726,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].PoisonRecovery = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void HporMpRatetextbox_TextChanged(object sender, EventArgs e)
@@ -1271,7 +1755,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].HPrate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Holytextbox_TextChanged(object sender, EventArgs e)
@@ -1289,7 +1784,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Holy = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Freezingtextbox_TextChanged(object sender, EventArgs e)
@@ -1307,7 +1813,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Freezing = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void PoisonAttacktextbox_TextChanged(object sender, EventArgs e)
@@ -1325,7 +1842,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].PoisonAttack = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ClassBasedcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1333,7 +1861,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].ClassBased = ClassBasedcheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void LevelBasedcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1341,7 +1880,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].LevelBased = LevelBasedcheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_dontdropcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1349,7 +1899,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_dontdropcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DontDrop : _selectedItemInfos[i].Bind ^= BindMode.DontDrop);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_dontdeathdropcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1357,7 +1918,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_dontdeathdropcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DontDeathdrop : _selectedItemInfos[i].Bind ^= BindMode.DontDeathdrop);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_destroyondropcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1365,7 +1937,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_destroyondropcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DestroyOnDrop : _selectedItemInfos[i].Bind ^= BindMode.DestroyOnDrop);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_dontsellcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1373,7 +1956,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_dontsellcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DontSell : _selectedItemInfos[i].Bind ^= BindMode.DontSell);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_donttradecheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1381,7 +1975,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_donttradecheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DontTrade : _selectedItemInfos[i].Bind ^= BindMode.DontTrade);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_dontrepaircheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1389,7 +1994,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_dontrepaircheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DontRepair : _selectedItemInfos[i].Bind ^= BindMode.DontRepair);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_dontstorecheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1397,7 +2013,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_dontstorecheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DontStore : _selectedItemInfos[i].Bind ^= BindMode.DontStore);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_dontupgradecheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1405,7 +2032,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_dontupgradecheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.DontUpgrade : _selectedItemInfos[i].Bind ^= BindMode.DontUpgrade);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void NeedIdentifycheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1413,7 +2051,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].NeedIdentify = NeedIdentifycheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ShowGroupPickupcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1421,7 +2070,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].ShowGroupPickup = ShowGroupPickupcheckbox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void BindOnEquipcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1429,7 +2089,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (BindOnEquipcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.BindOnEquip : _selectedItemInfos[i].Bind ^= BindMode.BindOnEquip);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MPratetextBox_TextChanged(object sender, EventArgs e)
@@ -1447,7 +2118,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].MPrate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void HpDrainRatetextBox_TextChanged(object sender, EventArgs e)
@@ -1465,7 +2147,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].HpDrainRate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
 
@@ -1474,7 +2167,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (ParalysischeckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Paralize : _selectedItemInfos[i].Unique ^= SpecialItemMode.Paralize);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void TeleportcheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1482,7 +2186,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (TeleportcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Teleport : _selectedItemInfos[i].Unique ^= SpecialItemMode.Teleport);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ClearcheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1490,7 +2205,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (ClearcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Clearring : _selectedItemInfos[i].Unique ^= SpecialItemMode.Clearring);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ProtectioncheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1498,7 +2224,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (ProtectioncheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Protection : _selectedItemInfos[i].Unique ^= SpecialItemMode.Protection);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void RevivalcheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1506,7 +2243,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (RevivalcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Revival : _selectedItemInfos[i].Unique ^= SpecialItemMode.Revival);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void MusclecheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1514,7 +2262,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (MusclecheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Muscle : _selectedItemInfos[i].Unique ^= SpecialItemMode.Muscle);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void FlamecheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1522,7 +2281,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (FlamecheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Flame : _selectedItemInfos[i].Unique ^= SpecialItemMode.Flame);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void HealingcheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1530,7 +2300,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (HealingcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Healing : _selectedItemInfos[i].Unique ^= SpecialItemMode.Healing);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ProbecheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1538,7 +2319,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (ProbecheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Probe : _selectedItemInfos[i].Unique ^= SpecialItemMode.Probe);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void SkillcheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1546,7 +2338,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (SkillcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Skill : _selectedItemInfos[i].Unique ^= SpecialItemMode.Skill);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void NoDuraLosscheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1554,7 +2357,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Unique = (NoDuraLosscheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.NoDuraLoss : _selectedItemInfos[i].Unique ^= SpecialItemMode.NoDuraLoss);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void StrongTextbox_TextChanged(object sender, EventArgs e)
@@ -1572,7 +2386,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Strong = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void CriticalRatetextBox_TextChanged(object sender, EventArgs e)
@@ -1590,7 +2415,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].CriticalRate = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void CriticalDamagetextBox_TextChanged(object sender, EventArgs e)
@@ -1608,7 +2444,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].CriticalDamage = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ReflecttextBox_TextChanged(object sender, EventArgs e)
@@ -1626,7 +2473,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Reflect = temp;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void Bind_DontSpecialRepaircheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1634,7 +2492,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (Bind_DontSpecialRepaircheckBox.Checked ? _selectedItemInfos[i].Bind |= BindMode.NoSRepair : _selectedItemInfos[i].Bind ^= BindMode.NoSRepair);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void LightIntensitytextBox_TextChanged(object sender, EventArgs e)
@@ -1657,7 +2526,18 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Light = (byte)((_selectedItemInfos[i].Light % 15) + (15 * temp));
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void RandomStatstextBox_TextChanged(object sender, EventArgs e)
@@ -1686,6 +2566,15 @@ namespace Server
                     _selectedItemInfos[i].RandomStats = Settings.RandomItemStatsList[temp];
                 else
                     _selectedItemInfos[i].RandomStats = null;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
             }
         }
 
@@ -1694,7 +2583,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].CanMine = PickaxecheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void IGradeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1702,7 +2602,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Grade = (ItemGrade)IGradeComboBox.SelectedItem;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void FastRunCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1710,7 +2621,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].CanFastRun = FastRunCheckBox.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void TooltipTextBox_TextChanged(object sender, EventArgs e)
@@ -1718,7 +2640,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].ToolTip = TooltipTextBox.Text;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void CanAwakening_CheckedChanged(object sender, EventArgs e)
@@ -1726,7 +2659,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].CanAwakening = CanAwaken.Checked;
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void BreakOnDeathcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1734,7 +2678,18 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (BreakOnDeathcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.BreakOnDeath : _selectedItemInfos[i].Bind ^= BindMode.BreakOnDeath);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void ItemInfoForm_Load(object sender, EventArgs e)
@@ -1759,7 +2714,18 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             for (int i = 0; i < _selectedItemInfos.Count; i++)
+            {
                 _selectedItemInfos[i].Bind = (NoWeddingRingcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.NoWeddingRing : _selectedItemInfos[i].Bind ^= BindMode.NoWeddingRing);
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        ctx.ItemInfos.Attach(_selectedItemInfos[i]);
+                        ctx.Entry(_selectedItemInfos[i]).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                }
+            }
         }
 
         private void label50_Click(object sender, EventArgs e)

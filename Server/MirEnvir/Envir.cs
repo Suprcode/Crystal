@@ -716,9 +716,13 @@ namespace Server.MirEnvir
 
                 StopNetwork();
                 StopEnvir();
-                SaveAccounts();
-                SaveGuilds(true);
-                SaveConquests(true);
+                if (!Settings.UseSQLServer)
+                {
+                    SaveAccounts();
+                    SaveGuilds(true);
+                    SaveConquests(true);
+                }
+                
 
             }
             catch (Exception ex)
@@ -1802,6 +1806,7 @@ namespace Server.MirEnvir
                                     
                                     .Where(i => i.CharacterIndex == x.Index)
                                     .ToList();
+                            Array.Resize(ref x.Inventory, Inventoryitems.Count);
                             for (int i = 0; i < Inventoryitems.Count; i++)
                             {
 
@@ -2817,9 +2822,29 @@ namespace Server.MirEnvir
                     c.Enqueue(new ServerPackets.NewAccount {Result = 7});
                     return;
                 }
-
-                AccountList.Add(new AccountInfo(p) {Index = ++NextAccountID, CreationIP = c.IPAddress});
-
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        var account = new AccountInfo(p) {CreationIP = c.IPAddress};
+                        ctx.AccountInfos.Add(account);
+                        ctx.SaveChanges();
+                        AccountList.Add(account);
+                        for (int i = 0; i < account.Storage.Length; i++)
+                        {
+                            ctx.StorageItems.Add(new StorageItem()
+                            {
+                                AccountIndex = account.Index,
+                                UserItemUniqueID = null
+                            });
+                        }
+                        ctx.SaveChanges();
+                    }
+                }
+                else
+                {
+                    AccountList.Add(new AccountInfo(p) {Index = ++NextAccountID, CreationIP = c.IPAddress});
+                }
 
                 c.Enqueue(new ServerPackets.NewAccount {Result = 8});
             }
@@ -2877,6 +2902,15 @@ namespace Server.MirEnvir
             }
 
             account.Password = p.NewPassword;
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.AccountInfos.Attach(account);
+                    ctx.Entry(account).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             c.Enqueue(new ServerPackets.ChangePassword {Result = 6});
         }
         public void Login(ClientPackets.Login p, MirConnection c)
@@ -2957,7 +2991,15 @@ namespace Server.MirEnvir
 
             account.LastDate = Now;
             account.LastIP = c.IPAddress;
-
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.AccountInfos.Attach(account);
+                    ctx.Entry(account).State = EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+            }
             SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
@@ -3025,7 +3067,44 @@ namespace Server.MirEnvir
                 CharacterInfo info = new CharacterInfo(p, c) { Index = ++NextCharacterID, AccountInfo = c.Account };
                 var whiteSpacePattern = new Regex(@"\s+");
                 info.Name = whiteSpacePattern.Replace(info.Name, "");
-
+                if (Settings.UseSQLServer)
+                {
+                    using (var ctx = new DataContext())
+                    {
+                        info.Index = 0;
+                        info.AccountInfoIndex = info.AccountInfo.Index;
+                        //info.AccountInfo = null;
+                        ctx.CharacterInfos.Attach(info);
+                        ctx.Entry(info).State = EntityState.Added;
+                        ctx.SaveChanges();
+                        //info.AccountInfo = c.Account;
+                        for (int i = 0; i < info.Inventory.Length; i++)
+                        {
+                            ctx.Inventories.Add(new InventoryItem()
+                            {
+                                CharacterIndex = info.Index,
+                                ItemUniqueID = null
+                            });
+                        }
+                        for (int i = 0; i < info.QuestInventory.Length; i++)
+                        {
+                            ctx.QuestInventories.Add(new QuestInventoryItem()
+                            {
+                                CharacterIndex = info.Index,
+                                ItemUniqueID = null
+                            });
+                        }
+                        for (int i = 0; i < info.Equipment.Length; i++)
+                        {
+                            ctx.Equipments.Add(new EquipmentItem()
+                            {
+                                CharacterIndex = info.Index,
+                                ItemUniqueID = null
+                            });
+                        }
+                        ctx.SaveChanges();
+                    }
+                }
                 c.Account.Characters.Add(info);
                 CharacterList.Add(info);
 
@@ -3109,19 +3188,71 @@ namespace Server.MirEnvir
 
         public void CreateAccountInfo()
         {
-            AccountList.Add(new AccountInfo {Index = ++NextAccountID});
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newAccount = new AccountInfo();
+                    ctx.AccountInfos.Add(newAccount);
+                    ctx.SaveChanges();
+                    AccountList.Add(newAccount);
+                }
+            }
+            else
+            {
+                AccountList.Add(new AccountInfo { Index = ++NextAccountID });
+            }
         }
         public void CreateMapInfo()
         {
-            MapInfoList.Add(new MapInfo {Index = ++MapIndex});
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newMap = new MapInfo();
+                    ctx.MapInfos.Add(newMap);
+                    ctx.SaveChanges();
+                    MapInfoList.Add(newMap);
+                }
+            }
+            else
+            {
+                MapInfoList.Add(new MapInfo {Index = ++MapIndex});
+            }
         }
         public void CreateItemInfo(ItemType type = ItemType.无)
         {
-            ItemInfoList.Add(new ItemInfo { Index = ++ItemIndex, Type = type, RandomStatsId = 255});
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newItem = new ItemInfo() {Type = type, RandomStatsId = 255};
+                    ctx.ItemInfos.Add(newItem);
+                    ctx.SaveChanges();
+                    ItemInfoList.Add(newItem);
+                }
+            }
+            else
+            {
+                ItemInfoList.Add(new ItemInfo { Index = ++ItemIndex, Type = type, RandomStatsId = 255 });
+            }
         }
         public void CreateMonsterInfo()
         {
-            MonsterInfoList.Add(new MonsterInfo {Index = ++MonsterIndex});
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newMonster = new MonsterInfo();
+                    ctx.MonsterInfos.Add(newMonster);
+                    ctx.SaveChanges();
+                    MonsterInfoList.Add(newMonster);
+                }
+            }
+            else
+            {
+                MonsterInfoList.Add(new MonsterInfo {Index = ++MonsterIndex});
+            }
         }
         public void CreateNPCInfo()
         {
@@ -3129,7 +3260,20 @@ namespace Server.MirEnvir
         }
         public void CreateQuestInfo()
         {
-            QuestInfoList.Add(new QuestInfo { Index = ++QuestIndex });
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    var newQuest = new QuestInfo();
+                    ctx.QuestInfos.Add(newQuest);
+                    ctx.SaveChanges();
+                    QuestInfoList.Add(newQuest);
+                }
+            }
+            else
+            {
+                QuestInfoList.Add(new QuestInfo { Index = ++QuestIndex });
+            }
         }
 
         public void AddToGameShop(ItemInfo Info)
@@ -3178,11 +3322,22 @@ namespace Server.MirEnvir
         {
             UserItem item = new UserItem(info)
                 {
-                    UniqueID = ++NextUserItemID,
                     CurrentDura = info.Durability,
                     MaxDura = info.Durability
                 };
-
+            if (Settings.UseSQLServer)
+            {
+                using (var ctx = new DataContext())
+                {
+                    ctx.UserItems.Attach(item);
+                    ctx.Entry(item).State = EntityState.Added;
+                    ctx.SaveChanges();
+                }
+            }
+            else
+            {
+                item.UniqueID = ++NextUserItemID;
+            }
             UpdateItemExpiry(item);
 
             return item;
