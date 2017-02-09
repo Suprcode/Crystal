@@ -794,6 +794,8 @@ namespace Server.MirObjects
 
         public override void Die()
         {
+            if (Dead) return;
+
             base.Die();
 
             if (Dead)

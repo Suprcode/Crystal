@@ -1499,7 +1499,6 @@ namespace Server.MirEnvir
             catch (Exception ex)
             {
             }
-
         }
 
         private void SaveConquests(bool forced = false)

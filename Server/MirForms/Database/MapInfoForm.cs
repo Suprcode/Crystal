@@ -2281,11 +2281,19 @@ namespace Server
 
             MirForms.VisualMapInfo.VForm VForm = new MirForms.VisualMapInfo.VForm();
             MirForms.VisualMapInfo.Class.VisualizerGlobal.MapInfo = _selectedMapInfos[0];
+            VForm.FormClosed += VForm_Disposed;
+
             VForm.ShowDialog();
 
             _selectedMapInfos[0] = MirForms.VisualMapInfo.Class.VisualizerGlobal.MapInfo;
             UpdateMineZoneInterface();
             UpdateRespawnInterface();
+        }
+
+        private void VForm_Disposed(object sender, EventArgs e)
+        {
+            RefreshRespawnList();
+            RefreshMineZoneList();
         }
 
         private void MineComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -2393,7 +2401,6 @@ namespace Server
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
-
 
             ActiveControl.BackColor = SystemColors.Window;
 

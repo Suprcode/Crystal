@@ -2484,6 +2484,17 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(224, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(304, 1, 8, 1000));
 
+            //12 - AngryBird
+            HelperPets.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 7, 0, 100));         // pickup??
+            frame.Frames.Add(MirAction.Attack2, new Frame(152, 8, 0, 100));         //bow
+            frame.Frames.Add(MirAction.Attack3, new Frame(216, 9, 0, 100));         //spin?
+            frame.Frames.Add(MirAction.Attack4, new Frame(296, 9, 0, 100));         //hover?
+            frame.Frames.Add(MirAction.Die, new Frame(224, 8, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(304, 1, 8, 1000));
+
             #endregion
 
             /*

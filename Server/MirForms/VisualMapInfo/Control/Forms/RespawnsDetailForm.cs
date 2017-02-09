@@ -29,6 +29,8 @@ namespace Server.MirForms.VisualMapInfo.Control.Forms
             if (Count.Text == string.Empty) Count.Text = "0";
             if (Delay.Text == string.Empty) Delay.Text = "0";
             if (RoutePath.Text == string.Empty) RoutePath.Text = "";
+            if (Direction.Text == string.Empty) Direction.Text = "0";
+            if (RDelay.Text == string.Empty) RDelay.Text = "0";
 
             this.Close();
         }

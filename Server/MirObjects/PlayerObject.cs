@@ -1768,9 +1768,8 @@ namespace Server.MirObjects
 
                 return;
             }
-
-
         }
+
         private void AddItem(UserItem item)
         {
             if (item.Info.StackSize > 1) //Stackable
@@ -2860,7 +2859,7 @@ namespace Server.MirObjects
 
             if (Old_MountType != MountType)
             {
-                RefreshMount();
+                RefreshMount(false);
             }
         }
 
@@ -4537,11 +4536,10 @@ namespace Server.MirObjects
                         break;
 
                     case "CREATEGUILD":
-                        if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
 
-                        player = Envir.GetPlayer(parts[1]);
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                        if (!IsGM && player != this) return;
+                        player = parts.Length < 3 ? this : Envir.GetPlayer(parts[1]);
 
                         if (player == null)
                         {
@@ -4550,23 +4548,25 @@ namespace Server.MirObjects
                         }
                         if (player.MyGuild != null)
                         {
-                            ReceiveChat(string.Format("Player {0} is already in a guild.", parts[1]), ChatType.System);
+                            ReceiveChat(string.Format("Player {0} is already in a guild.", player.Name), ChatType.System);
                             return;
                         }
-                        if ((parts[2].Length < 3) || (parts[2].Length > 20))
+
+                        String gName = parts.Length < 3 ? parts[2] : parts[1];
+                        if ((gName.Length < 3) || (gName.Length > 20))
                         {
                             ReceiveChat("Guildname is restricted to 3-20 characters.", ChatType.System);
                             return;
                         }
-                        GuildObject guild = Envir.GetGuild(parts[2]);
+                        GuildObject guild = Envir.GetGuild(gName);
                         if (guild != null)
                         {
-                            ReceiveChat(string.Format("Guild {0} already exists.", parts[2]), ChatType.System);
+                            ReceiveChat(string.Format("Guild {0} already exists.", gName), ChatType.System);
                             return;
                         }
                         player.CanCreateGuild = true;
-                        if (player.CreateGuild(parts[2]))
-                            ReceiveChat(string.Format("Successfully created guild {0}", parts[2]), ChatType.System);
+                        if (player.CreateGuild(gName))
+                            ReceiveChat(string.Format("Successfully created guild {0}", gName), ChatType.System);
                         else
                             ReceiveChat("Failed to create guild", ChatType.System);
                         player.CanCreateGuild = false;
@@ -5853,7 +5853,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             MoonLightAttack = true;
@@ -9993,13 +9992,10 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
-            {
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -10009,7 +10005,7 @@ namespace Server.MirObjects
 
                             if (Envir.Random.Next(rate) == 0)
                             {
-                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                            if (HP + ( (ushort)Buffs[i].Values[1] ) >= MaxHP)
                                     SetHP(MaxHP);
                                 else
                                     ChangeHP(Buffs[i].Values[1]);
@@ -10017,7 +10013,6 @@ namespace Server.MirObjects
                             break;
                     }
                 }
-            }
 
             switch (type)
             {
@@ -10070,13 +10065,6 @@ namespace Server.MirObjects
 
             damage += attacker.AttackBonus;
 
-            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
-            {
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
-                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
-                BroadcastDamageIndicator(DamageType.Critical);
-            }
-
             if (Envir.Random.Next(100) < Reflect)
             {
                 if (attacker.IsAttackTarget(this))
@@ -10086,8 +10074,6 @@ namespace Server.MirObjects
                 }
                 return 0;
             }
-
-
 
             if (MagicShield)
                 damage -= damage * (MagicShieldLv + 2) / 10;
@@ -10099,6 +10085,13 @@ namespace Server.MirObjects
             {
                 BroadcastDamageIndicator(DamageType.Miss);
                 return 0;
+            }
+
+            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
+            {
+                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
+                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
+                BroadcastDamageIndicator(DamageType.Critical);
             }
 
             if (MagicShield)
@@ -10179,13 +10172,10 @@ namespace Server.MirObjects
         {
             int armour = 0;
 
-            if (Hidden)
-            {
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -10203,7 +10193,6 @@ namespace Server.MirObjects
                             break;
                     }
                 }
-            }
 
             switch (type)
             {
@@ -10320,7 +10309,6 @@ namespace Server.MirObjects
                 {
                     switch (Buffs[i].Type)
                     {
-                        //case BuffType.Hiding:
                         case BuffType.MoonLight:
                         case BuffType.DarkBody:
                             Buffs[i].ExpireTime = 0;
@@ -10542,6 +10530,13 @@ namespace Server.MirObjects
                     }
 
                     if (ob == null || !Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    
+                    if (Info.Equipment[to] != null &&
+                        Info.Equipment[to].Info.Bind.HasFlag(BindMode.DontStore))
                     {
                         Enqueue(p);
                         return;
@@ -16685,7 +16680,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (!InSafeZone)
+            if (!InSafeZone && Type != 3)
             {
                 Enqueue(p);
                 ReceiveChat("You cannot use guild storage outside safezones.", ChatType.System);
@@ -17391,6 +17386,16 @@ namespace Server.MirObjects
 
                         if (temp == null) continue;
 
+                        if(FreeSpace(TradePair[p].Info.Inventory) < 1)
+                        {
+                            TradePair[p].GainItemMail(temp, 1);
+                            Report.ItemMailed("TradeCancel", temp, temp.Count, 1);
+
+                            TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            TradePair[p].Info.Trade[t] = null;
+                            continue;
+                        }
+
                         for (int i = 0; i < TradePair[p].Info.Inventory.Length; i++)
                         {
                             if (TradePair[p].Info.Inventory[i] != null) continue;
@@ -17435,7 +17440,7 @@ namespace Server.MirObjects
 
         #region Mounts
 
-        public void RefreshMount()
+        public void RefreshMount(bool refreshStats = true)
         {
             if (RidingMount)
             {
@@ -17464,6 +17469,7 @@ namespace Server.MirObjects
                 RidingMount = false;
             }
 
+            if(refreshStats)
             RefreshStats();
 
             Broadcast(GetMountInfo());
@@ -20566,7 +20572,7 @@ namespace Server.MirObjects
 
         public void GameshopBuy(int GIndex, byte Quantity)
         {
-            if (Quantity < 1) return;
+            if (Quantity < 1 || Quantity > 99) return;
 
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
@@ -20601,6 +20607,8 @@ namespace Server.MirObjects
                     Product.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == Product.ItemIndex);
                 }
             }
+            if (((decimal)(Quantity * Product.Count) / Product.Info.StackSize) > 5) return;
+
             if (Product.Stock != 0)
             {
 

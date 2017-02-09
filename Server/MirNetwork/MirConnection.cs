@@ -1611,7 +1611,7 @@ namespace Server.MirNetwork
                 //Update the creature info
                 for (int i = 0; i < Player.Info.IntelligentCreatures.Count; i++)
                 {
-                    if (Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
+                    if (Player.SummonedCreatureType != petUpdate.PetType && Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
                     {
                         if (petUpdate.CustomName.Length <= 12)
                             Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName;

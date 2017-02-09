@@ -230,11 +230,6 @@ namespace Server.MirDatabase
 
             Map map = new Map(this);
 
-            if(map.Info.FileName == "orc25")
-            {
-
-            }
-
             if (!map.Load()) return;
 
             SMain.Envir.MapList.Add(map);

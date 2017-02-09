@@ -401,8 +401,6 @@ namespace ClientPackets
         }
     }
 
-
-
     public sealed class RetrieveTradeItem : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.RetrieveTradeItem; } }

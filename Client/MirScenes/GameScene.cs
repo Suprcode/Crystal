@@ -4936,8 +4936,6 @@ namespace Client.MirScenes
                     User.RefreshStats();
                     break;
                 case 1://retrieve
-
-
                     fromCell = GuildDialog.StorageGrid[p.From];
 
                     if (fromCell == null) return;
@@ -4969,12 +4967,9 @@ namespace Client.MirScenes
                     Bind(toCell.Item);
                     if (fromCell.Item != null) 
                         Bind(fromCell.Item);
-
                     break;
-
                 case 3://failstore
                     fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
-
                     toCell = GuildDialog.StorageGrid[p.To];
 
                     if (toCell == null || fromCell == null) return;
@@ -4984,7 +4979,6 @@ namespace Client.MirScenes
                     break;
                 case 4://failretrieve
                     toCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
-
                     fromCell = GuildDialog.StorageGrid[p.To];
 
                     if (toCell == null || fromCell == null) return;
@@ -4993,7 +4987,9 @@ namespace Client.MirScenes
                     fromCell.Locked = false;
                     break;
                 case 5://failmove
-                    
+                    fromCell = GuildDialog.StorageGrid[p.To];
+                    toCell = GuildDialog.StorageGrid[p.From];
+
                     if (toCell == null || fromCell == null) return;
 
                     GuildDialog.StorageGrid[p.From].Locked = false;
@@ -5683,7 +5679,6 @@ namespace Client.MirScenes
 
             if (HoverItem.RefineAdded > 0)
             nameLabel.Text = "(*)" + nameLabel.Text;
-
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, nameLabel.DisplayRectangle.Bottom));

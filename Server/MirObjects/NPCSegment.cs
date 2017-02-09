@@ -203,6 +203,25 @@ namespace Server.MirObjects
                         CheckList.Add(new NPCChecks(CheckType.CheckNameList, fileName));
                     break;
 
+                //cant use stored var
+                case "CHECKGUILDNAMELIST":
+                    if (parts.Length < 2) return;
+
+                    quoteMatch = regexQuote.Match(line);
+
+                    listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Settings.NameListPath + listPath;
+
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if (File.Exists(fileName))
+                        CheckList.Add(new NPCChecks(CheckType.CheckGuildNameList, fileName));
+                    break;
                 case "ISADMIN":
                     CheckList.Add(new NPCChecks(CheckType.IsAdmin));
                     break;
@@ -518,6 +537,27 @@ namespace Server.MirObjects
                     break;
 
                 //cant use stored var
+                case "ADDGUILDNAMELIST":
+                    if (parts.Length < 2) return;
+
+                    quoteMatch = regexQuote.Match(line);
+
+                    listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Settings.NameListPath + listPath;
+
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if (!File.Exists(fileName))
+                        File.Create(fileName).Close();
+
+                    acts.Add(new NPCActions(ActionType.AddGuildNameList, fileName));
+                    break;
+                //cant use stored var
                 case "DELNAMELIST":
                     if (parts.Length < 2) return;
 
@@ -538,6 +578,25 @@ namespace Server.MirObjects
                     break;
 
                 //cant use stored var
+                case "DELGUILDNAMELIST":
+                    if (parts.Length < 2) return;
+
+                    quoteMatch = regexQuote.Match(line);
+
+                    listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Settings.NameListPath + listPath;
+
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if (File.Exists(fileName))
+                        acts.Add(new NPCActions(ActionType.DelGuildNameList, fileName));
+                    break;
+                //cant use stored var
                 case "CLEARNAMELIST":
                     if (parts.Length < 2) return;
 
@@ -555,6 +614,25 @@ namespace Server.MirObjects
 
                     if (File.Exists(fileName))
                         acts.Add(new NPCActions(ActionType.ClearNameList, fileName));
+                    break;
+                //cant use stored var
+                case "CLEARGUILDNAMELIST":
+                    if (parts.Length < 2) return;
+
+                    quoteMatch = regexQuote.Match(line);
+
+                    listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Settings.NameListPath + listPath;
+
+                    sDirectory = Path.GetDirectoryName(fileName);
+                    Directory.CreateDirectory(sDirectory);
+
+                    if (File.Exists(fileName))
+                        acts.Add(new NPCActions(ActionType.ClearGuildNameList, fileName));
                     break;
 
                 case "GIVEHP":
@@ -1888,6 +1966,17 @@ namespace Server.MirObjects
                         failed = !read.Contains(player.Name);
                         break;
 
+                    case CheckType.CheckGuildNameList:
+                        if (!File.Exists(param[0]))
+                        {
+                            failed = true;
+                            break;
+                        }
+                        
+                        read = File.ReadAllLines(param[0]);
+                        failed = player.MyGuild == null || !read.Contains(player.MyGuild.Name);
+                        break;
+
                     case CheckType.IsAdmin:
                         failed = !player.IsGM;
                         break;
@@ -2691,12 +2780,34 @@ namespace Server.MirObjects
                         }
                         break;
 
+
+                    case ActionType.AddGuildNameList:
+                        tempString = param[0];
+                        if (player.MyGuild == null) break;
+                        if (File.ReadAllLines(tempString).All(t => player.MyGuild.Name != t))
+                        {
+                            using (var line = File.AppendText(tempString))
+                            {
+                                line.WriteLine(player.MyGuild.Name);
+                            }
+                        }
+                        break;
                     case ActionType.DelNameList:
                         tempString = param[0];
                         File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.Name).ToList());
                         break;
 
+                    case ActionType.DelGuildNameList:
+                        if (player.MyGuild == null) break;
+                        tempString = param[0];
+                        File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.MyGuild.Name).ToList());
+                        break;
                     case ActionType.ClearNameList:
+                        tempString = param[0];
+                        File.WriteAllLines(tempString, new string[] { });
+                        break;
+                    case ActionType.ClearGuildNameList:
+                        if (player.MyGuild == null) break;
                         tempString = param[0];
                         File.WriteAllLines(tempString, new string[] { });
                         break;
