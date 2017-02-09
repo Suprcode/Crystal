@@ -1840,8 +1840,8 @@ namespace Server.MirObjects
                     {
                         using (var ctx = new DataContext())
                         {
-                            //ctx.UserItems.Attach(item);
-                            //ctx.Entry(item).State = EntityState.Added;
+                            ctx.UserItems.Attach(item);
+                            ctx.Entry(item).State = EntityState.Added;
                             var dbIvt = ctx.Inventories.Where(ivt => ivt.CharacterIndex == Info.Index).OrderBy(ivt => ivt.id).Skip(i).FirstOrDefault();
                             if (dbIvt != null)
                             {
@@ -1863,8 +1863,8 @@ namespace Server.MirObjects
                     {
                         using (var ctx = new DataContext())
                         {
-                            //ctx.UserItems.Attach(item);
-                            //ctx.Entry(item).State = EntityState.Added;
+                            ctx.UserItems.Attach(item);
+                            ctx.Entry(item).State = EntityState.Added;
                             var dbIvt = ctx.Inventories.Where(ivt => ivt.CharacterIndex == Info.Index).OrderBy(ivt => ivt.id).Skip(i).FirstOrDefault();
                             if (dbIvt != null)
                             {
@@ -1885,8 +1885,8 @@ namespace Server.MirObjects
                 {
                     using (var ctx = new DataContext())
                     {
-                        //ctx.UserItems.Attach(item);
-                        //ctx.Entry(item).State = EntityState.Added;
+                        ctx.UserItems.Attach(item);
+                        ctx.Entry(item).State = EntityState.Added;
                         var dbIvt = ctx.Inventories.Where(ivt => ivt.CharacterIndex == Info.Index).OrderBy(ivt => ivt.id).Skip(i).FirstOrDefault();
                         if (dbIvt != null)
                         {
