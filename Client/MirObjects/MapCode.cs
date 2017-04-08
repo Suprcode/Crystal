@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Client.MirScenes;
+using Launcher;
 
 namespace Client.MirObjects
 {
@@ -147,6 +149,16 @@ namespace Client.MirObjects
             initiate();
         }
 
+        public void ApplyOldCells(CellInfo[,] cellInfo)
+        {
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                    if (cellInfo?[x, y] != null)
+                    {
+                        MapCells[x, y].CellObjects = cellInfo[x, y].CellObjects;
+                    }
+        }
+
         private void initiate()
         {
             if (File.Exists(FileName))
@@ -155,6 +167,16 @@ namespace Client.MirObjects
             }
             else
             {
+                var info =
+                    AMain.DownloadInfoList.FirstOrDefault(
+                        i => string.Equals(i.FileName, FileName.Trim('.'), StringComparison.CurrentCultureIgnoreCase));
+                if (info != null)
+                {
+                    AMain.Downlaod(info, () =>
+                    {
+                        if(GameScene.Scene.MapControl.FileName == FileName) GameScene.Scene.MapControl.LoadMap(true);
+                    });
+                }
                 Width = 1000;
                 Height = 1000;
                 MapCells = new CellInfo[Width, Height];
@@ -261,7 +283,7 @@ namespace Client.MirObjects
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
 
-
+                        
                     }
             }
             catch (Exception ex)
@@ -310,6 +332,7 @@ namespace Client.MirObjects
 
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
+
                     }
             }
             catch (Exception ex)
@@ -351,6 +374,7 @@ namespace Client.MirObjects
 
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
+
                     }
             }
             catch (Exception ex)
@@ -398,6 +422,7 @@ namespace Client.MirObjects
 
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
+
                     }
 
             }
@@ -444,6 +469,7 @@ namespace Client.MirObjects
 
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
+
                     }
             }
             catch (Exception ex)
@@ -609,6 +635,7 @@ namespace Client.MirObjects
 
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
+
                     }
             }
             catch (Exception ex)

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Client.MirScenes;
+using Launcher;
 using Microsoft.DirectX.DirectSound;
 
 namespace Client.MirSounds
@@ -14,21 +17,44 @@ namespace Client.MirSounds
 
         private MemoryStream _mStream;
         private bool _loop;
+        private bool _downloading = false;
 
         public SoundLibrary(int index, string fileName, bool loop)
         {
             Index = index;
-
+            _loop = loop;
             fileName = Path.Combine(Settings.SoundPath, fileName);
-            if (!File.Exists(fileName)) return;
+            if (!File.Exists(fileName))
+            {
+                DownLoad(fileName);
+                return;
+            }
 
             _mStream = new MemoryStream(File.ReadAllBytes(fileName));
-
-            _loop = loop;
 
             _bufferList = new List<SecondaryBuffer>();
 
             Play();
+        }
+
+        private void DownLoad(string fileName)
+        {
+            if(_downloading) return;
+            _downloading = true;
+            var info =
+                    AMain.DownloadInfoList.FirstOrDefault(
+                        i => string.Equals(i.FileName, fileName.Trim('.'), StringComparison.CurrentCultureIgnoreCase));
+            if (info != null)
+            {
+                AMain.Downlaod(info, (() =>
+                {
+                    _downloading = false;
+                    _mStream = new MemoryStream(File.ReadAllBytes(fileName));
+
+                    _bufferList = new List<SecondaryBuffer>();
+                    if(_loop) Play();
+                }));
+            }
         }
 
         public void Play()

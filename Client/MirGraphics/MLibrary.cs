@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.IO.Compression;
+using System.Linq;
+using Client.MirScenes;
+using Launcher;
 
 namespace Client.MirGraphics
 {
@@ -469,6 +473,7 @@ namespace Client.MirGraphics
         private int[] _indexList;
         private int _count;
         private bool _initialized;
+        private bool _downloading = false;
 
         private BinaryReader _reader;
         private FileStream _fStream;
@@ -481,10 +486,10 @@ namespace Client.MirGraphics
         public void Initialize()
         {
             int CurrentVersion = 0;
-            _initialized = true;
 
             if (!File.Exists(_fileName))
                 return;
+            _initialized = true;
             try
             {
 
@@ -512,10 +517,31 @@ namespace Client.MirGraphics
             }
         }
 
+        public void DownLoad()
+        {
+            if(_downloading) return;
+            _downloading = true;
+            var info =
+                    AMain.DownloadInfoList.FirstOrDefault(
+                        i => string.Equals(i.FileName, _fileName.Trim('.'), StringComparison.CurrentCultureIgnoreCase));
+            if (info != null)
+            {
+                AMain.Downlaod(info, (() =>
+                {
+                    _downloading = false;
+                    GameScene.Scene.Redraw();
+                }));
+            }
+        }
+
         private bool CheckImage(int index)
         {
+            Debug.WriteLine("Loading Lib File:" + _fileName);
             if (!_initialized)
+            {
+                DownLoad();
                 Initialize();
+            }
 
             if (_images == null || index < 0 || index >= _images.Length)
                 return false;
@@ -540,7 +566,11 @@ namespace Client.MirGraphics
 
         public Point GetOffSet(int index)
         {
-            if (!_initialized) Initialize();
+            if (!_initialized)
+            {
+                DownLoad();
+                Initialize();
+            }
 
             if (_images == null || index < 0 || index >= _images.Length)
                 return Point.Empty;
@@ -555,7 +585,11 @@ namespace Client.MirGraphics
         }
         public Size GetSize(int index)
         {
-            if (!_initialized) Initialize();
+            if (!_initialized)
+            {
+                DownLoad();
+                Initialize();
+            }
             if (_images == null || index < 0 || index >= _images.Length)
                 return Size.Empty;
 
@@ -570,7 +604,10 @@ namespace Client.MirGraphics
         public Size GetTrueSize(int index)
         {
             if (!_initialized)
+            {
+                DownLoad();
                 Initialize();
+            }
 
             if (_images == null || index < 0 || index >= _images.Length)
                 return Size.Empty;

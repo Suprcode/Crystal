@@ -8333,22 +8333,24 @@ namespace Client.MirScenes
             Click += OnMouseClick;
         }
 
-        public void LoadMap()
+        public void LoadMap(bool reload = false)
         {
-            GameScene.Scene.NPCDialog.Hide();
-            Objects.Clear();
-            Effects.Clear();
-            Doors.Clear();
+            if (!reload)
+            {
+                GameScene.Scene.NPCDialog.Hide();
+                Objects.Clear();
+                Effects.Clear();
+                Doors.Clear();
 
-            if (User != null)
-                Objects.Add(User);
-
-
+                if (User != null)
+                    Objects.Add(User);
+            }
 
             MapObject.MouseObject = null;
             MapObject.TargetObject = null;
             MapObject.MagicObject = null;
             MapReader Map = new MapReader(FileName);
+            if(reload) Map.ApplyOldCells(M2CellInfo);
             M2CellInfo = Map.MapCells;
             Width = Map.Width;
             Height = Map.Height;

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using Client;
 
 
@@ -24,6 +25,7 @@ namespace Launcher
         
         public List<FileInformation> OldList;
         public Queue<FileInformation> DownloadList;
+        public static List<FileInformation> DownloadInfoList;
 
         private Stopwatch _stopwatch = Stopwatch.StartNew();
 
@@ -34,6 +36,10 @@ namespace Launcher
         private Point dragFormPoint;
 
         private string oldClientName = "OldClient.exe";
+        private List<string> AlwaysUpdateFileExts = new List<string>()
+        {
+            ".exe",".dll",".lst"
+        };
 
         private Config ConfigForm = new Config();
 
@@ -67,6 +73,7 @@ namespace Launcher
             {
                 OldList = new List<FileInformation>();
                 DownloadList = new Queue<FileInformation>();
+                DownloadInfoList = new List<FileInformation>();
 
                 byte[] data = Download(Settings.P_PatchFileName);
 
@@ -93,6 +100,7 @@ namespace Launcher
 
 
                 _fileCount = DownloadList.Count;
+                //DownloadInfoList = DownloadList.ToList();
                 BeginDownload();
             }
             catch (EndOfStreamException ex)
@@ -183,9 +191,56 @@ namespace Launcher
                     File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + oldClientName);
                     Restart = true;
                 }
-
+                DownloadInfoList.Add(old);
+                if (info == null && !AlwaysUpdateFileExts.Contains(Path.GetExtension(old.FileName))) return;
                 DownloadList.Enqueue(old);
                 _totalBytes += old.Compressed;
+            }
+        }
+
+        public static void Downlaod(FileInformation info, Action downloadCompleteAction = null)
+        {
+            string fileName = info.FileName.Replace(@"\", "/");
+
+            if (fileName != "PList.gz")
+                fileName += ".gz";
+
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadDataCompleted += (o, e) =>
+                    {
+                        if (e.Error != null)
+                        {
+                            File.AppendAllText(@".\Error.txt",
+                                   string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " 无法下载. (" + e.Error.Message + ")", Environment.NewLine));
+                        }
+                        else
+                        {
+
+                            if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
+                                Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
+
+                            if (!File.Exists(Settings.P_Client + info.FileName))
+                            {
+                                File.WriteAllBytes(Settings.P_Client + info.FileName, e.Result);
+                                File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
+                                downloadCompleteAction?.Invoke();
+                            }
+                        }
+                        
+                    };
+
+                    if (Settings.P_NeedLogin) client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
+
+                    client.DownloadDataAsync(new Uri(Settings.P_Host + fileName));
+                }
+            }
+            catch(Exception e)
+            {
+                File.AppendAllText(@".\Error.txt",
+                    $"[{DateTime.Now}] {info.FileName + " 无法下载. (" + e + ")"}{Environment.NewLine}");
             }
         }
 
@@ -195,7 +250,6 @@ namespace Launcher
 
             if (fileName != "PList.gz")
                 fileName += ".gz";
-
             try
             {
                 using (WebClient client = new WebClient())
@@ -209,7 +263,7 @@ namespace Launcher
                             if (e.Error != null)
                             {
                                 File.AppendAllText(@".\Error.txt",
-                                       string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " could not be downloaded. (" + e.Error.Message + ")", Environment.NewLine));
+                                       string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " 无法下载. (" + e.Error.Message + ")", Environment.NewLine));
                                 ErrorFound = true;
                             }
                             else
@@ -520,8 +574,8 @@ namespace Launcher
                     CurrentPercent_label.Text = ((int)(100 * _currentBytes / _currentFile.Compressed)).ToString() + "%";
                     ProgressCurrent_pb.Width = (int)( 5.5 * (100 * _currentBytes / _currentFile.Compressed));
                 }
-                TotalPercent_label.Text = ((int)(100 * (_completedBytes + _currentBytes) / _totalBytes)).ToString() + "%";
-                TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + _currentBytes) / _totalBytes));
+                TotalPercent_label.Text = _totalBytes == 0 ? "0" : ((int)(100 * (_completedBytes + _currentBytes) / _totalBytes)).ToString() + "%";
+                TotalProg_pb.Width = _totalBytes == 0 ? 0 : (int)(5.5 * (100 * (_completedBytes + _currentBytes) / _totalBytes));
             }
             catch
 
