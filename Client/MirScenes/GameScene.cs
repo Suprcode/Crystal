@@ -7908,10 +7908,24 @@ namespace Client.MirScenes
             if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
             {
                 count++;
+
+                MirLabel IDLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.DarkKhaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "Item Description:"
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, IDLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, IDLabel.DisplayRectangle.Bottom));
+
                 MirLabel TOOLTIPLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = Color.Goldenrod,
+                    ForeColour = Color.Khaki,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
