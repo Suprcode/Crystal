@@ -5926,7 +5926,7 @@ namespace Client.MirScenes
             maxValue = 0;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Luck : 0;
 
-            if (minValue > 0 || addValue != 0)
+            if (minValue != 0 || addValue > 0)
             {
                 count++;
 
@@ -5940,7 +5940,7 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", minValue + Math.Abs(addValue));
+                    text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", Math.Abs(minValue + addValue));
                 }
 
                 MirLabel LUCKLabel = new MirLabel
