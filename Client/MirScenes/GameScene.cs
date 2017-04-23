@@ -5926,7 +5926,7 @@ namespace Client.MirScenes
             maxValue = 0;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Luck : 0;
 
-            if (minValue != 0 || addValue > 0)
+            if (minValue != 0 || addValue != 0)
             {
                 count++;
 
