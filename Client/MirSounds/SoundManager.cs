@@ -263,6 +263,7 @@ namespace Client.MirSounds
             PetOlympic = 10508,
             PetFrog = 10510,
             PetMonkey = 10511,
+            PetAngryBird = 10512,
             PetPickup = 10520;
     }
 }

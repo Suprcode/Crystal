@@ -165,7 +165,8 @@ public enum IntelligentCreatureType : byte
     OlympicFlame = 8,
     BabySnowMan = 9,
     Frog = 10,
-    BabyMonkey = 11
+    BabyMonkey = 11,
+    AngryBird = 12
 }
 
 //1 blank mob files
@@ -616,6 +617,7 @@ public enum Monster : ushort
     BabySnowMan = 10009,//unknown
     Frog = 10010,//unknown
     BabyMonkey = 10011,//unknown
+    AngryBird = 10012,
 }
 
 public enum MirAction : byte
