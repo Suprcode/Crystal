@@ -7491,6 +7491,9 @@ namespace Server.MirObjects
                 Cell cell = CurrentMap.GetCell(location);
 
                 bool blocking = false;
+
+                if (InSafeZone) blocking = true;
+
                 if (cell.Objects != null)
                 {
                     for (int c = cell.Objects.Count - 1; c >= 0; c--)
@@ -9219,9 +9222,9 @@ namespace Server.MirObjects
                 return magic;
             }
 
-
             return null;
         }
+
         public void LevelMagic(UserMagic magic)
         {
             byte exp = (byte)(Envir.Random.Next(3) + 1);
