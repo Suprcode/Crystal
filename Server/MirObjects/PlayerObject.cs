@@ -10990,6 +10990,42 @@ namespace Server.MirObjects
                                 return;
                             }
                             break;
+                        case 12://LotteryTicket                                                                                    
+                            if (Envir.Random.Next(item.Info.Effect * 32) == 1) // 1st prize : 1,000,000
+                            {
+                                ReceiveChat("You won 1st Prize! Received 1,000,000 gold", ChatType.Hint);
+                                GainGold(1000000);
+                            }
+                            else if (Envir.Random.Next(item.Info.Effect * 16) == 1)  // 2nd prize : 200,000
+                            {
+                                ReceiveChat("You won 2nd Prize! Received 200,000 gold", ChatType.Hint);
+                                GainGold(200000);
+                            }
+                            else if (Envir.Random.Next(item.Info.Effect * 8) == 1)  // 3rd prize : 100,000
+                            {
+                                ReceiveChat("You won 3rd Prize! Received 100,000 gold", ChatType.Hint);
+                                GainGold(100000);
+                            }
+                            else if (Envir.Random.Next(item.Info.Effect * 4) == 1) // 4th prize : 10,000
+                            {
+                                ReceiveChat("You won 4th Prize! Received 10,000 gold", ChatType.Hint);
+                                GainGold(10000);
+                            }
+                            else if (Envir.Random.Next(item.Info.Effect * 2) == 1)  // 5th prize : 1,000
+                            {
+                                ReceiveChat("You won 5th Prize! Received 1,000 gold", ChatType.Hint);
+                                GainGold(1000);
+                            }
+                            else if (Envir.Random.Next(item.Info.Effect) == 1)  // 6th prize 500
+                            {
+                                ReceiveChat("You won 6th Prize! Received 500 gold", ChatType.Hint);
+                                GainGold(500);
+                            }
+                            else
+                            {
+                                ReceiveChat("You haven't won anything.", ChatType.Hint);
+                            }
+                            break;
                     }
                     break;
                 case ItemType.Book:

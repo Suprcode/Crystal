@@ -70,6 +70,7 @@
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
+            this.label12 = new System.Windows.Forms.Label();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -117,7 +118,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(407, 300);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "General";
+            this.tabPage1.Text = "Version";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -192,9 +193,9 @@
             this.VersionCheckBox.AutoSize = true;
             this.VersionCheckBox.Location = new System.Drawing.Point(89, 42);
             this.VersionCheckBox.Name = "VersionCheckBox";
-            this.VersionCheckBox.Size = new System.Drawing.Size(95, 17);
+            this.VersionCheckBox.Size = new System.Drawing.Size(137, 17);
             this.VersionCheckBox.TabIndex = 3;
-            this.VersionCheckBox.Text = "Check Version";
+            this.VersionCheckBox.Text = "Check for client version";
             this.VersionCheckBox.UseVisualStyleBackColor = true;
             // 
             // VPathBrowseButton
@@ -367,9 +368,9 @@
             this.AllowArcherCheckBox.AutoSize = true;
             this.AllowArcherCheckBox.Location = new System.Drawing.Point(24, 197);
             this.AllowArcherCheckBox.Name = "AllowArcherCheckBox";
-            this.AllowArcherCheckBox.Size = new System.Drawing.Size(119, 17);
+            this.AllowArcherCheckBox.Size = new System.Drawing.Size(185, 17);
             this.AllowArcherCheckBox.TabIndex = 13;
-            this.AllowArcherCheckBox.Text = "Allow Create Archer";
+            this.AllowArcherCheckBox.Text = "Allow Creation of the Archer Class";
             this.AllowArcherCheckBox.UseVisualStyleBackColor = true;
             // 
             // AllowAssassinCheckBox
@@ -377,9 +378,9 @@
             this.AllowAssassinCheckBox.AutoSize = true;
             this.AllowAssassinCheckBox.Location = new System.Drawing.Point(24, 173);
             this.AllowAssassinCheckBox.Name = "AllowAssassinCheckBox";
-            this.AllowAssassinCheckBox.Size = new System.Drawing.Size(129, 17);
+            this.AllowAssassinCheckBox.Size = new System.Drawing.Size(195, 17);
             this.AllowAssassinCheckBox.TabIndex = 12;
-            this.AllowAssassinCheckBox.Text = "Allow Create Assassin";
+            this.AllowAssassinCheckBox.Text = "Allow Creation of the Assassin Class";
             this.AllowAssassinCheckBox.UseVisualStyleBackColor = true;
             // 
             // StartGameCheckBox
@@ -387,9 +388,9 @@
             this.StartGameCheckBox.AutoSize = true;
             this.StartGameCheckBox.Location = new System.Drawing.Point(24, 135);
             this.StartGameCheckBox.Name = "StartGameCheckBox";
-            this.StartGameCheckBox.Size = new System.Drawing.Size(107, 17);
+            this.StartGameCheckBox.Size = new System.Drawing.Size(220, 17);
             this.StartGameCheckBox.TabIndex = 11;
-            this.StartGameCheckBox.Text = "Allow Start Game";
+            this.StartGameCheckBox.Text = "Allow Characters to Login to Game World";
             this.StartGameCheckBox.UseVisualStyleBackColor = true;
             // 
             // DCharacterCheckBox
@@ -397,9 +398,9 @@
             this.DCharacterCheckBox.AutoSize = true;
             this.DCharacterCheckBox.Location = new System.Drawing.Point(24, 112);
             this.DCharacterCheckBox.Name = "DCharacterCheckBox";
-            this.DCharacterCheckBox.Size = new System.Drawing.Size(134, 17);
+            this.DCharacterCheckBox.Size = new System.Drawing.Size(142, 17);
             this.DCharacterCheckBox.TabIndex = 10;
-            this.DCharacterCheckBox.Text = "Allow Delete Character";
+            this.DCharacterCheckBox.Text = "Allow Character Deletion";
             this.DCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // NCharacterCheckBox
@@ -407,9 +408,9 @@
             this.NCharacterCheckBox.AutoSize = true;
             this.NCharacterCheckBox.Location = new System.Drawing.Point(24, 89);
             this.NCharacterCheckBox.Name = "NCharacterCheckBox";
-            this.NCharacterCheckBox.Size = new System.Drawing.Size(125, 17);
+            this.NCharacterCheckBox.Size = new System.Drawing.Size(167, 17);
             this.NCharacterCheckBox.TabIndex = 9;
-            this.NCharacterCheckBox.Text = "Allow New Character";
+            this.NCharacterCheckBox.Text = "Allow New Character Creation";
             this.NCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // LoginCheckBox
@@ -417,9 +418,9 @@
             this.LoginCheckBox.AutoSize = true;
             this.LoginCheckBox.Location = new System.Drawing.Point(24, 66);
             this.LoginCheckBox.Name = "LoginCheckBox";
-            this.LoginCheckBox.Size = new System.Drawing.Size(80, 17);
+            this.LoginCheckBox.Size = new System.Drawing.Size(144, 17);
             this.LoginCheckBox.TabIndex = 8;
-            this.LoginCheckBox.Text = "Allow Login";
+            this.LoginCheckBox.Text = "Allow Accounts To Login";
             this.LoginCheckBox.UseVisualStyleBackColor = true;
             // 
             // PasswordCheckBox
@@ -427,9 +428,9 @@
             this.PasswordCheckBox.AutoSize = true;
             this.PasswordCheckBox.Location = new System.Drawing.Point(24, 43);
             this.PasswordCheckBox.Name = "PasswordCheckBox";
-            this.PasswordCheckBox.Size = new System.Drawing.Size(140, 17);
+            this.PasswordCheckBox.Size = new System.Drawing.Size(213, 17);
             this.PasswordCheckBox.TabIndex = 7;
-            this.PasswordCheckBox.Text = "Allow Change Password";
+            this.PasswordCheckBox.Text = "Allow Users To Change Their Password";
             this.PasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // AccountCheckBox
@@ -437,13 +438,14 @@
             this.AccountCheckBox.AutoSize = true;
             this.AccountCheckBox.Location = new System.Drawing.Point(24, 20);
             this.AccountCheckBox.Name = "AccountCheckBox";
-            this.AccountCheckBox.Size = new System.Drawing.Size(119, 17);
+            this.AccountCheckBox.Size = new System.Drawing.Size(161, 17);
             this.AccountCheckBox.TabIndex = 6;
-            this.AccountCheckBox.Text = "Allow New Account";
+            this.AccountCheckBox.Text = "Allow New Account Creation";
             this.AccountCheckBox.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label12);
             this.tabPage4.Controls.Add(this.SaveDelayTextBox);
             this.tabPage4.Controls.Add(this.label6);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -489,9 +491,9 @@
             this.SafeZoneHealingCheckBox.AutoSize = true;
             this.SafeZoneHealingCheckBox.Location = new System.Drawing.Point(24, 43);
             this.SafeZoneHealingCheckBox.Name = "SafeZoneHealingCheckBox";
-            this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(112, 17);
+            this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(181, 17);
             this.SafeZoneHealingCheckBox.TabIndex = 1;
-            this.SafeZoneHealingCheckBox.Text = "SafeZone Healing";
+            this.SafeZoneHealingCheckBox.Text = "Enable auto-healing in SafeZone";
             this.SafeZoneHealingCheckBox.UseVisualStyleBackColor = true;
             this.SafeZoneHealingCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneHealingCheckBox_CheckedChanged);
             // 
@@ -500,9 +502,9 @@
             this.SafeZoneBorderCheckBox.AutoSize = true;
             this.SafeZoneBorderCheckBox.Location = new System.Drawing.Point(24, 20);
             this.SafeZoneBorderCheckBox.Name = "SafeZoneBorderCheckBox";
-            this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(107, 17);
+            this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(142, 17);
             this.SafeZoneBorderCheckBox.TabIndex = 0;
-            this.SafeZoneBorderCheckBox.Text = "SafeZone Border";
+            this.SafeZoneBorderCheckBox.Text = "Show SafeZone Borders";
             this.SafeZoneBorderCheckBox.UseVisualStyleBackColor = true;
             this.SafeZoneBorderCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneBorderCheckBox_CheckedChanged);
             // 
@@ -510,6 +512,15 @@
             // 
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(188, 19);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(43, 13);
+            this.label12.TabIndex = 26;
+            this.label12.Text = "minutes";
             // 
             // ConfigForm
             // 
@@ -519,7 +530,7 @@
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.configTabs);
             this.Name = "ConfigForm";
-            this.Text = "ConfigForm";
+            this.Text = "Server Config Form";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConfigForm_FormClosed);
             this.configTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -582,5 +593,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label12;
     }
 }

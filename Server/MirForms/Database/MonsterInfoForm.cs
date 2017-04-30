@@ -342,6 +342,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinAC = temp;
@@ -360,6 +371,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxAC = temp;
@@ -378,6 +400,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinMAC = temp;
@@ -396,6 +429,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxMAC = temp;
@@ -413,6 +457,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinDC = temp;
@@ -431,6 +486,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxDC = temp;
@@ -449,6 +515,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinMC = temp;
@@ -467,6 +544,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxMC = temp;
@@ -485,6 +573,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinSC = temp;
@@ -503,6 +602,17 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
+            //Check Value of cell is betweel 0 and 65535(Max possible value)
+            int number = 0;
+            if (Int32.TryParse(ActiveControl.Text, out number))
+            {
+                if (number >= 0 && number <= 65535)
+                    return;
+                else
+                    ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxSC = temp;
