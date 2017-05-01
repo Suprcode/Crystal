@@ -4627,7 +4627,7 @@ namespace Client.MirScenes
         {
             for (int i = 0; i < p.Listings.Count; i++)
                 Bind(p.Listings[i].Item);
-
+            TrustMerchantDialog.SearchTextBox.Text = "";
             TrustMerchantDialog.Show();
             TrustMerchantDialog.UserMode = p.UserMode;
             TrustMerchantDialog.Listings = p.Listings;

@@ -22,7 +22,7 @@ namespace Client.MirControls
                     return NPCDropDialog.TargetItem;
 
                 if (GridType == MirGridType.TrustMerchant)
-                    return TrustMerchantDialog.Selected != null ? TrustMerchantDialog.Selected.Listing.Item : null;
+                    return TrustMerchantDialog.SellItemSlot;
 
                 if (ItemArray != null && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
                     return ItemArray[_itemSlot];
@@ -32,6 +32,8 @@ namespace Client.MirControls
             {
                 if (GridType == MirGridType.DropPanel)
                     NPCDropDialog.TargetItem = value;
+                else if (GridType == MirGridType.TrustMerchant)
+                    TrustMerchantDialog.SellItemSlot = value;
                 else if (ItemArray != null && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
                     ItemArray[_itemSlot] = value;
 
@@ -176,7 +178,7 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.QuestInventory) return;
+            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
 
             if(GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
 
@@ -228,7 +230,7 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant) return;
+            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect) return;
 
             base.OnMouseClick(e);
 
@@ -270,7 +272,7 @@ namespace Client.MirControls
         
         public void UseItem()
         {
-            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.GuildStorage) return;
+            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.GuildStorage) return;
 
             if (MapObject.User.Fishing) return;
             if (MapObject.User.RidingMount && Item.Info.Type != ItemType.Scroll && Item.Info.Type != ItemType.Potion && Item.Info.Type != ItemType.Torch) return;
