@@ -472,6 +472,7 @@ namespace ServerPackets
         public uint Gold, Credit;
 
         public bool AddedStorage;
+        public DateTime AddedStorageExpire;
 
         public List<ClientMagic> Magics = new List<ClientMagic>();
 
@@ -549,6 +550,8 @@ namespace ServerPackets
                 IntelligentCreatures.Add(new ClientIntelligentCreature(reader));
             SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
             CreatureSummoned = reader.ReadBoolean();
+
+            AddedStorageExpire = DateTime.FromBinary(reader.ReadInt64());
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -629,6 +632,9 @@ namespace ServerPackets
                 IntelligentCreatures[i].Save(writer);
             writer.Write((byte)SummonedCreatureType);
             writer.Write(CreatureSummoned);
+
+            writer.Write(AddedStorage);
+            writer.Write(AddedStorageExpire.ToBinary());
         }
     }
     public sealed class UserLocation : Packet

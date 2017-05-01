@@ -902,19 +902,21 @@ namespace Server.MirObjects
                     player.Enqueue(new S.MailSendRequest());
                     break;
                 case CollectParcelKey:
-
                     sbyte result = 0;
-
-                    if (player.GetMailAwaitingCollectionAmount() < 1)
-                    {
-                        result = -1;
-                    }
-                    else
-                    {
-                        foreach (var mail in player.Info.Mail)
+                    if (player.InSafeZone) {
+                        if (player.GetMailAwaitingCollectionAmount() < 1)
                         {
-                            if (mail.Parcel) mail.Collected = true;
+                            result = -1;
                         }
+                        else
+                        {
+                            foreach (var mail in player.Info.Mail)
+                            {
+                                if (mail.Parcel) mail.Collected = true;
+                            }
+                        }
+                    } else {
+                        result = -1;
                     }
                     player.Enqueue(new S.ParcelCollected { Result = result });
                     player.GetMail();

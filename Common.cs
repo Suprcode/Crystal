@@ -1195,6 +1195,7 @@ public enum BuffType : byte
     Guild,
     Prison,
     Rested,
+    Storage,
 
     //stats
     Impact = 200,

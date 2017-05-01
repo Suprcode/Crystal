@@ -43,6 +43,7 @@ namespace Client.MirObjects
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40];
         public int BeltIdx = 6;
         public bool AddedStorage = false;
+        public DateTime AddedStorageExpire;
 
         public List<ClientMagic> Magics = new List<ClientMagic>();
         public List<ItemSets> ItemSets = new List<ItemSets>();
@@ -99,6 +100,7 @@ namespace Client.MirObjects
             QuestInventory = info.QuestInventory;
 
             AddedStorage = info.AddedStorage;
+            AddedStorageExpire = info.AddedStorageExpire;
 
             Magics = info.Magics;
             for (int i = 0; i < Magics.Count; i++ )
