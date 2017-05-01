@@ -49,11 +49,11 @@ namespace Client.MirScenes.Dialogs
 
         public MirButton Armours, Helmets, Belts, Boots, Stones;// Drapery Items
         public MirButton Necklace, Bracelets, Rings;// Accessories Items
-        public MirButton RecoveryPotion, PowerUp, Other; //Consumable Items
+        public MirButton RecoveryPotion, PowerUp, Scroll, Script; //Consumable Items
         public MirButton Gem, Orb, Awake; //Enhanced Equipment
         public MirButton Warrior, Wizard, Taoist, Assassin, Archer; //Books
         public MirButton Materials, Fish, Meat, Ore; //Crafting System
-        public MirButton NoveltyPets, NoveltyEquipment, Mounts, MountEquipment; //Pets
+        public MirButton NoveltyPets, NoveltyEquipment, Mounts, Reins, Bells, Ribbon, Mask; //Pets
 
         public TrustMerchantDialog()
         {
@@ -418,7 +418,7 @@ namespace Client.MirScenes.Dialogs
             };
             PowerUp.Click += (o, e) => SwitchTab(18);
 
-            Other = new MirButton
+            Scroll = new MirButton
             {
                 Index = 922,
                 PressedIndex = 923,
@@ -427,11 +427,26 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Location = new Point(13, PowerUp.Location.Y + 23),
                 Parent = this,
+                Text = "Scrolls + Oils",
+                CenterText = true,
+                Visible = false,
+            };
+            Scroll.Click += (o, e) => SwitchTab(19);
+
+            Script = new MirButton
+            {
+                Index = 922,
+                PressedIndex = 923,
+                HoverIndex = 923,
+                Library = Libraries.Prguse2,
+                Sound = SoundList.ButtonA,
+                Location = new Point(13, Scroll.Location.Y + 23),
+                Parent = this,
                 Text = "Other Items",
                 CenterText = true,
                 Visible = false,
             };
-            Other.Click += (o, e) => SwitchTab(19);
+            Script.Click += (o, e) => SwitchTab(20);
             #endregion
 
             EnhEquipButton = new MirButton
@@ -463,7 +478,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Gem.Click += (o, e) => SwitchTab(20);
+            Gem.Click += (o, e) => SwitchTab(21);
 
             Orb = new MirButton
             {
@@ -478,7 +493,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Orb.Click += (o, e) => SwitchTab(21);
+            Orb.Click += (o, e) => SwitchTab(22);
 
             Awake = new MirButton
             {
@@ -493,7 +508,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Awake.Click += (o, e) => SwitchTab(22);
+            Awake.Click += (o, e) => SwitchTab(23);
             #endregion
 
             BooksButton = new MirButton
@@ -526,7 +541,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Warrior.Click += (o, e) => SwitchTab(23);
+            Warrior.Click += (o, e) => SwitchTab(24);
 
             Wizard = new MirButton
             {
@@ -541,7 +556,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Wizard.Click += (o, e) => SwitchTab(24);
+            Wizard.Click += (o, e) => SwitchTab(25);
 
             Taoist = new MirButton
             {
@@ -556,7 +571,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Taoist.Click += (o, e) => SwitchTab(25);
+            Taoist.Click += (o, e) => SwitchTab(26);
 
             Assassin = new MirButton
             {
@@ -571,7 +586,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Assassin.Click += (o, e) => SwitchTab(26);
+            Assassin.Click += (o, e) => SwitchTab(27);
 
             Archer = new MirButton
             {
@@ -586,7 +601,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Archer.Click += (o, e) => SwitchTab(27);
+            Archer.Click += (o, e) => SwitchTab(28);
             #endregion
 
             CraftingSystemButton = new MirButton
@@ -619,7 +634,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Materials.Click += (o, e) => SwitchTab(28);
+            Materials.Click += (o, e) => SwitchTab(29);
 
             Fish = new MirButton
             {
@@ -634,7 +649,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Fish.Click += (o, e) => SwitchTab(29);
+            Fish.Click += (o, e) => SwitchTab(30);
 
             Meat = new MirButton
             {
@@ -649,7 +664,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Meat.Click += (o, e) => SwitchTab(30);
+            Meat.Click += (o, e) => SwitchTab(31);
 
             Ore = new MirButton
             {
@@ -664,7 +679,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Ore.Click += (o, e) => SwitchTab(31);
+            Ore.Click += (o, e) => SwitchTab(32);
             #endregion
 
             PetsItemButton = new MirButton
@@ -696,7 +711,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            NoveltyPets.Click += (o, e) => SwitchTab(32);
+            NoveltyPets.Click += (o, e) => SwitchTab(33);
 
             NoveltyEquipment = new MirButton
             {
@@ -711,7 +726,7 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            NoveltyEquipment.Click += (o, e) => SwitchTab(33);
+            NoveltyEquipment.Click += (o, e) => SwitchTab(34);
 
             Mounts = new MirButton
             {
@@ -726,9 +741,9 @@ namespace Client.MirScenes.Dialogs
                 CenterText = true,
                 Visible = false,
             };
-            Mounts.Click += (o, e) => SwitchTab(34);
+            Mounts.Click += (o, e) => SwitchTab(35);
 
-            MountEquipment = new MirButton
+            Reins = new MirButton
             {
                 Index = 922,
                 PressedIndex = 923,
@@ -737,11 +752,56 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Location = new Point(13, Mounts.Location.Y + 23),
                 Parent = this,
-                Text = "  Mount Equip",
+                Text = "  Reins",
                 CenterText = true,
                 Visible = false,
             };
-            MountEquipment.Click += (o, e) => SwitchTab(35);
+            Reins.Click += (o, e) => SwitchTab(36);
+
+            Bells = new MirButton
+            {
+                Index = 922,
+                PressedIndex = 923,
+                HoverIndex = 923,
+                Library = Libraries.Prguse2,
+                Sound = SoundList.ButtonA,
+                Location = new Point(13, Reins.Location.Y + 23),
+                Parent = this,
+                Text = "  Bells",
+                CenterText = true,
+                Visible = false,
+            };
+            Bells.Click += (o, e) => SwitchTab(37);
+
+            Ribbon = new MirButton
+            {
+                Index = 922,
+                PressedIndex = 923,
+                HoverIndex = 923,
+                Library = Libraries.Prguse2,
+                Sound = SoundList.ButtonA,
+                Location = new Point(13, Bells.Location.Y + 23),
+                Parent = this,
+                Text = "  Ribbon",
+                CenterText = true,
+                Visible = false,
+            };
+            Ribbon.Click += (o, e) => SwitchTab(38);
+
+            Mask = new MirButton
+            {
+                Index = 922,
+                PressedIndex = 923,
+                HoverIndex = 923,
+                Library = Libraries.Prguse2,
+                Sound = SoundList.ButtonA,
+                Location = new Point(13, Ribbon.Location.Y + 23),
+                Parent = this,
+                Text = "  Mask",
+                CenterText = true,
+                Visible = false,
+            };
+            Mask.Click += (o, e) => SwitchTab(39);
             #endregion
 
             #region Market Buttons
@@ -1172,11 +1232,6 @@ namespace Client.MirScenes.Dialogs
                     Boots.Visible = true;
                     Stones.Visible = true;
                     SetLocations(2);
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Armour, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Helmet, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Belt, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Boots, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Stone, Usermode = false });
                     break;
                 case 3:
                     setdefault();
@@ -1185,20 +1240,15 @@ namespace Client.MirScenes.Dialogs
                     Bracelets.Visible = true;
                     Rings.Visible = true;
                     SetLocations(3);
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Necklace, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Bracelet, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Ring, Usermode = false });
                     break;
                 case 4:
                     setdefault();
                     ConsumableItemsButton.Index = 921;
                     RecoveryPotion.Visible = true;
                     PowerUp.Visible = true;
-                    Other.Visible = true;
+                    Scroll.Visible = true;
+                    Script.Visible = true;
                     SetLocations(4);
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Potion, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Scroll, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Script, Usermode = false });
                     break;
                 case 5:
                     setdefault();
@@ -1206,8 +1256,6 @@ namespace Client.MirScenes.Dialogs
                     Gem.Visible = true;
                     Orb.Visible = true;
                     Awake.Visible = true;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Gem, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Awakening, Usermode = false });
                     SetLocations(5);
                     break;
                 case 6:
@@ -1228,10 +1276,6 @@ namespace Client.MirScenes.Dialogs
                     Fish.Visible = true;
                     Meat.Visible = true;
                     Ore.Visible = true;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.CraftingMaterial, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Fish, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Meat, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Ore, Usermode = false });
                     SetLocations(7);
                     break;
                 case 8:
@@ -1240,14 +1284,10 @@ namespace Client.MirScenes.Dialogs
                     NoveltyPets.Visible = true;
                     NoveltyEquipment.Visible = true;
                     Mounts.Visible = true;
-                    MountEquipment.Visible = true;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Pets, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Mount, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Reins, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Bells, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Saddle, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Mask, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Food, Usermode = false });
+                    Reins.Visible = true;
+                    Bells.Visible = true;
+                    Ribbon.Visible = true;
+                    Mask.Visible = true;
                     SetLocations(8);
                     break;
                 case 9:
@@ -1311,41 +1351,50 @@ namespace Client.MirScenes.Dialogs
                 case 17:
                     RecoveryPotion.Index = 923;
                     PowerUp.Index = 922;
-                    Other.Index = 922;
+                    Scroll.Index = 922;
+                    Script.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Potion, Usermode = false, MaxShape = 2 });
                     break;
                 case 18:
                     RecoveryPotion.Index = 922;
                     PowerUp.Index = 923;
-                    Other.Index = 922;
+                    Scroll.Index = 922;
+                    Script.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Potion, Usermode = false, MinShape = 3, MaxShape = 4 });
                     break;
                 case 19:
                     RecoveryPotion.Index = 922;
                     PowerUp.Index = 922;
-                    Other.Index = 923;
+                    Scroll.Index = 923;
+                    Script.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Scroll, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Script, Usermode = false });
                     break;
                 case 20:
+                    RecoveryPotion.Index = 922;
+                    PowerUp.Index = 922;
+                    Scroll.Index = 922;
+                    Script.Index = 923;
+                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Script, Usermode = false });
+                    break;
+                case 21:
                     Gem.Index = 923;
                     Orb.Index = 922;
                     Awake.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Gem, Usermode = false, MinShape = 3, MaxShape = 3 });
                     break;
-                case 21:
+                case 22:
                     Gem.Index = 922;
                     Orb.Index = 923;
                     Awake.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Gem, Usermode = false, MinShape = 4, MaxShape = 4 });
                     break;
-                case 22:
+                case 23:
                     Gem.Index = 922;
                     Orb.Index = 922;
                     Awake.Index = 923;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Awakening, Usermode = false });
                     break;
-                case 23:
+                case 24:
                     Warrior.Index = 923;
                     Wizard.Index = 922;
                     Taoist.Index = 922;
@@ -1353,7 +1402,7 @@ namespace Client.MirScenes.Dialogs
                     Archer.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MaxShape = 30 });
                     break;
-                case 24:
+                case 25:
                     Warrior.Index = 922;
                     Wizard.Index = 923;
                     Taoist.Index = 922;
@@ -1361,7 +1410,7 @@ namespace Client.MirScenes.Dialogs
                     Archer.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 31, MaxShape = 60 });
                     break;
-                case 25:
+                case 26:
                     Warrior.Index = 922;
                     Wizard.Index = 922;
                     Taoist.Index = 923;
@@ -1369,7 +1418,7 @@ namespace Client.MirScenes.Dialogs
                     Archer.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 61, MaxShape = 90 });
                     break;
-                case 26:
+                case 27:
                     Warrior.Index = 922;
                     Wizard.Index = 922;
                     Taoist.Index = 922;
@@ -1377,7 +1426,7 @@ namespace Client.MirScenes.Dialogs
                     Archer.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 91, MaxShape = 120 });
                     break;
-                case 27:
+                case 28:
                     Warrior.Index = 922;
                     Wizard.Index = 922;
                     Taoist.Index = 922;
@@ -1385,73 +1434,105 @@ namespace Client.MirScenes.Dialogs
                     Archer.Index = 923;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 121, MaxShape = 150 });
                     break;
-                case 28:
+                case 29:
                     Materials.Index = 923;
                     Fish.Index = 922;
                     Meat.Index = 922;
                     Ore.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.CraftingMaterial, Usermode = false });
                     break;
-                case 29:
+                case 30:
                     Materials.Index = 922;
                     Fish.Index = 923;
                     Meat.Index = 922;
                     Ore.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Fish, Usermode = false });
                     break;
-                case 30:
+                case 31:
                     Materials.Index = 922;
                     Fish.Index = 922;
                     Meat.Index = 923;
                     Ore.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Meat, Usermode = false });
                     break;
-                case 31:
+                case 32:
                     Materials.Index = 922;
                     Fish.Index = 922;
                     Meat.Index = 922;
                     Ore.Index = 923;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Ore, Usermode = false });
                     break;
-
-                case 32:
+                case 33:
                     NoveltyPets.Index = 923;
                     NoveltyEquipment.Index = 922;
                     Mounts.Index = 922;
-                    MountEquipment.Index = 922;
+                    Reins.Index = 922;
+                    Bells.Index = 922;
+                    Ribbon.Index = 922;
+                    Mask.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Pets, Usermode = false, MinShape = 0, MaxShape = 13 });
-                    break;
-                case 33:
-                    NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 923;
-                    Mounts.Index = 922;
-                    MountEquipment.Index = 922;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Pets, Usermode = false, MinShape = 20, MaxShape = 28 });
                     break;
                 case 34:
                     NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 922;
-                    Mounts.Index = 923;
-                    MountEquipment.Index = 922;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Mount, Usermode = false });
+                    NoveltyEquipment.Index = 923;
+                    Mounts.Index = 922;
+                    Reins.Index = 922;
+                    Bells.Index = 922;
+                    Ribbon.Index = 922;
+                    Mask.Index = 922;
+                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Pets, Usermode = false, MinShape = 20, MaxShape = 28 });
                     break;
                 case 35:
                     NoveltyPets.Index = 922;
                     NoveltyEquipment.Index = 922;
+                    Mounts.Index = 923;
+                    Reins.Index = 922;
+                    Bells.Index = 922;
+                    Ribbon.Index = 922;
+                    Mask.Index = 922;
+                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Mount, Usermode = false });
+                    break;
+                case 36:
+                    NoveltyPets.Index = 922;
+                    NoveltyEquipment.Index = 922;
                     Mounts.Index = 922;
-                    MountEquipment.Index = 923;
+                    Reins.Index = 923;
+                    Bells.Index = 922;
+                    Ribbon.Index = 922;
+                    Mask.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Reins, Usermode = false });
+                    break;
+                case 37:
+                    NoveltyPets.Index = 922;
+                    NoveltyEquipment.Index = 922;
+                    Mounts.Index = 922;
+                    Reins.Index = 922;
+                    Bells.Index = 923;
+                    Ribbon.Index = 922;
+                    Mask.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Bells, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Saddle, Usermode = false });
+                    break;
+                case 38:
+                    NoveltyPets.Index = 922;
+                    NoveltyEquipment.Index = 922;
+                    Mounts.Index = 922;
+                    Reins.Index = 922;
+                    Bells.Index = 922;
+                    Ribbon.Index = 923;
+                    Mask.Index = 922;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Ribbon, Usermode = false });
+                    break;
+                case 39:
+                    NoveltyPets.Index = 922;
+                    NoveltyEquipment.Index = 922;
+                    Mounts.Index = 922;
+                    Reins.Index = 922;
+                    Bells.Index = 922;
+                    Ribbon.Index = 922;
+                    Mask.Index = 923;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Mask, Usermode = false });
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Food, Usermode = false });
                     break;
             }
-
-
-
-
         }
 
         private void TextBox_TextChanged(object sender, EventArgs e)
@@ -1540,8 +1621,10 @@ namespace Client.MirScenes.Dialogs
             RecoveryPotion.Visible = false;
             PowerUp.Index = 922;
             PowerUp.Visible = false;
-            Other.Index = 922;
-            Other.Visible = false;
+            Scroll.Index = 922;
+            Scroll.Visible = false;
+            Script.Index = 922;
+            Script.Visible = false;
             
             EnhEquipButton.Index = 920;
             Gem.Index = 922;
@@ -1580,8 +1663,14 @@ namespace Client.MirScenes.Dialogs
             NoveltyEquipment.Visible = false;
             Mounts.Index = 922;
             Mounts.Visible = false;
-            MountEquipment.Index = 922;
-            MountEquipment.Visible = false;
+            Reins.Index = 922;
+            Reins.Visible = false;
+            Bells.Index = 922;
+            Bells.Visible = false;
+            Ribbon.Index = 922;
+            Ribbon.Visible = false;
+            Mask.Index = 922;
+            Mask.Visible = false;
         }
 
         public void SetLocations(int i)
@@ -1636,7 +1725,7 @@ namespace Client.MirScenes.Dialogs
                         DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
                         AccessoriesItemsButton.Location = new Point(7, DraperyItemsButton.Location.Y + 23);
                         ConsumableItemsButton.Location = new Point(7, AccessoriesItemsButton.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, Other.Location.Y + 23);
+                        EnhEquipButton.Location = new Point(7, Script.Location.Y + 23);
                         BooksButton.Location = new Point(7, EnhEquipButton.Location.Y + 23);
                         CraftingSystemButton.Location = new Point(7, BooksButton.Location.Y + 23);
                         PetsItemButton.Location = new Point(7, CraftingSystemButton.Location.Y + 23);
