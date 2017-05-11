@@ -2254,7 +2254,7 @@ namespace Client.MirScenes.Dialogs
                 AttkSpdLabel.Text = string.Format("{0}", MapObject.User.ASpeed);
                 AccLabel.Text = string.Format("+{0}", MapObject.User.Accuracy);
                 AgilLabel.Text = string.Format("+{0}", MapObject.User.Agility);
-                LuckLabel.Text = string.Format("+{0}", MapObject.User.Luck);
+                LuckLabel.Text = string.Format("{0}", MapObject.User.Luck);
             };
 
             StatePage = new MirImageControl
