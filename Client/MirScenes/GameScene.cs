@@ -5969,7 +5969,7 @@ namespace Client.MirScenes
             maxValue = 0;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Luck : 0;
 
-            if (minValue > 0 || addValue != 0)
+            if (minValue != 0 || addValue != 0)
             {
                 count++;
 
@@ -5983,7 +5983,7 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", minValue + Math.Abs(addValue));
+                    text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", Math.Abs(minValue + addValue));
                 }
 
                 MirLabel LUCKLabel = new MirLabel
@@ -7951,10 +7951,24 @@ namespace Client.MirScenes
             if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
             {
                 count++;
+
+                MirLabel IDLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.DarkKhaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "Item Description:"
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, IDLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, IDLabel.DisplayRectangle.Bottom));
+
                 MirLabel TOOLTIPLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = Color.Goldenrod,
+                    ForeColour = Color.Khaki,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
