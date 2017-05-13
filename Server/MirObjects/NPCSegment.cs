@@ -1334,6 +1334,12 @@ namespace Server.MirObjects
                 case "PARCELAMOUNT":
                     newValue = player.GetMailAwaitingCollectionAmount().ToString();
                     break;
+                case "GUILDNAME":
+                    if (player.MyGuild == null) return "No Guild";
+                    else
+                        newValue = player.MyGuild.Name + " Guild";
+                    break;
+
                 default:
                     newValue = string.Empty;
                     break;
