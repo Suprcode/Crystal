@@ -387,7 +387,8 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.NPCAwakeDialog.Hide();
             GameScene.Scene.RefineDialog.Hide();
             GameScene.Scene.StorageDialog.Hide();
-            GameScene.Scene.TrustMerchantDialog.Hide();          
+            GameScene.Scene.TrustMerchantDialog.Hide();
+            GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
 
         public void Show()

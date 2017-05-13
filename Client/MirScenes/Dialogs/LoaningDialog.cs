@@ -119,7 +119,7 @@ namespace Client.MirScenes.Dialogs
         public void RefreshInterface()
         {
             NameLabel.Text = GameScene.User.Name;
-            RentalPeriodLabel.Text = string.Format("Rental Period: {0} Days", RentalDays.ToString());
+            RentalPeriodLabel.Text = string.Format("Rental Period: {0} Days", RentalDays);
 
             GameScene.Scene.GuestRentingDialog.RefreshInterface();
             GameScene.Scene.GuestLoaningDialog.RefreshInterface();
