@@ -47,19 +47,30 @@ namespace Client.MirScenes.Dialogs
         public MirButton ShowAllButton, WeaponButton, DraperyItemsButton, AccessoriesItemsButton, ConsumableItemsButton;
         public MirButton EnhEquipButton, BooksButton, CraftingSystemButton, PetsItemButton;
 
-        public MirButton Armours, Helmets, Belts, Boots, Stones;// Drapery Items
-        public MirButton Necklace, Bracelets, Rings;// Accessories Items
-        public MirButton RecoveryPotion, PowerUp, Scroll, Script; //Consumable Items
-        public MirButton Gem, Orb, Awake; //Enhanced Equipment
-        public MirButton Warrior, Wizard, Taoist, Assassin, Archer; //Books
-        public MirButton Materials, Fish, Meat, Ore; //Crafting System
-        public MirButton NoveltyPets, NoveltyEquipment, Mounts, Reins, Bells, Ribbon, Mask; //Pets
+        public MirLabel ShowAllLabel, WeaponLabel, DraperyItemsLabel, AccessoriesItemsLabel, ConsumableItemsLabel;
+        public MirLabel EnhEquipLabel, BooksLabel, CraftingSystemLabel, PetsItemLabel;
+
+        public MirButton ArmoursSubBtn, HelmetsSubBtn, BeltsSubBtn, BootsSubBtn, StonesSubBtn;// Drapery Items
+        public MirButton NecklaceSubBtn, BraceletsSubBtn, RingsSubBtn;// Accessories Items
+        public MirButton RecoveryPotionSubBtn, PowerUpSubBtn, ScrollSubBtn, ScriptSubBtn; //Consumable Items
+        public MirButton GemSubBtn, OrbSubBtn, AwakeSubBtn; //Enhanced Equipment
+        public MirButton WarriorSubBtn, WizardSubBtn, TaoistSubBtn, AssassinSubBtn, ArcherSubBtn; //Books
+        public MirButton MaterialsSubBtn, FishSubBtn, MeatSubBtn, OreSubBtn; //Crafting System
+        public MirButton NoveltyPetsSubBtn, NoveltyEquipmentSubBtn, MountsSubBtn, ReinsSubBtn, BellsSubBtn, RibbonSubBtn, MaskSubBtn; //Pets
+
+        public MirLabel ArmoursLabel, HelmetsLabel, BeltsLabel, BootsLabel, StonesLabel;// Drapery Items
+        public MirLabel NecklaceLabel, BraceletsLabel, RingsLabel;// Accessories Items
+        public MirLabel RecoveryPotionLabel, PowerUpLabel, ScrollLabel, ScriptLabel; //Consumable Items
+        public MirLabel GemLabel, OrbLabel, AwakeLabel; //Enhanced Equipment
+        public MirLabel WarriorLabel, WizardLabel, TaoistLabel, AssassinLabel, ArcherLabel; //Books
+        public MirLabel MaterialsLabel, FishLabel, MeatLabel, OreLabel; //Crafting System
+        public MirLabel NoveltyPetsLabel, NoveltyEquipmentLabel, MountsLabel, ReinsLabel, BellsLabel, RibbonLabel, MaskLabel; //Pets
+
+        public MirLabel totalGold;
 
         public TrustMerchantDialog()
         {
-
-
-            Index = 787;
+            Index = 786;
             Library = Libraries.Title;
             Sort = true;
 
@@ -67,10 +78,10 @@ namespace Client.MirScenes.Dialogs
 
             MarketButton = new MirButton
             {
-                Index = 790,
-                PressedIndex = 789,
+                Index = 789,
+                PressedIndex = 788,
                 Library = Libraries.Title,
-                Location = new Point(9, 32),
+                Location = new Point(9, 35),
                 Parent = this,
             };
             MarketButton.Click += (o, e) =>
@@ -86,10 +97,10 @@ namespace Client.MirScenes.Dialogs
             };
             ConsignmentButton = new MirButton
             {
-                Index = 792,
-                PressedIndex = 791,
+                Index = 791,
+                PressedIndex = 790,
                 Library = Libraries.Title,
-                Location = new Point(104, 32),
+                Location = new Point(79, 35),
                 Parent = this,
                 Visible = true,
             };
@@ -119,7 +130,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 241,
                 PressedIndex = 242,
                 Library = Libraries.Prguse2,
-                Location = new Point(252, 419),
+                Location = new Point(264, 416),
                 Sound = SoundList.ButtonA,
                 Parent = this,
             };
@@ -137,7 +148,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 244,
                 PressedIndex = 245,
                 Library = Libraries.Prguse2,
-                Location = new Point(321, 419),
+                Location = new Point(330, 416),
                 Sound = SoundList.ButtonA,
                 Parent = this,
             };
@@ -158,7 +169,7 @@ namespace Client.MirScenes.Dialogs
             PageLabel = new MirLabel
             {
                 Size = new Size(70, 18),
-                Location = new Point(260, 419),
+                Location = new Point(270, 416),
                 DrawFormat = TextFormatFlags.HorizontalCenter,
                 Text = "0/0",
                 NotControl = true,
@@ -171,7 +182,7 @@ namespace Client.MirScenes.Dialogs
 
             MarketPage = new MirImageControl()
             {
-                Index = 787,
+                Index = 786,
                 Library = Libraries.Title,
                 Visible = false,
                 Sort = true,
@@ -179,630 +190,945 @@ namespace Client.MirScenes.Dialogs
 
             ConsignmentPage = new MirImageControl()
             {
-                Index = 788,
+                Index = 787,
                 Library = Libraries.Title,
                 Visible = false,
                 Sort = true,
             };
 
+            #region Filter Buttons
             ShowAllButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, 60),
+                Location = new Point(1, 67),
                 Parent = this,
-                Text = "Show All Items",
-                CenterText = true,
             };
-
-
             ShowAllButton.Click += (o, e) => SwitchTab(0);
+
+            ShowAllLabel = new MirLabel
+            {
+                Size = new Size(99, 18),
+                Location = new Point(2, 1),
+                Parent = ShowAllButton,
+                Text = "Show All Items",
+                NotControl = true,
+            };                        
 
             WeaponButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, ShowAllButton.Location.Y + 23),
+                Location = new Point(12, ShowAllButton.Location.Y + 20),
                 Parent = this,
-                Text = "Weapon Items",
-                CenterText = true,
                 Visible = true,
             };
-
             WeaponButton.Click += (o, e) => SwitchTab(1);
 
-            DraperyItemsButton = new MirButton
+            WeaponLabel = new MirLabel
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Size = new Size(99, 18),
+                Location = new Point(2, 1),
+                Parent = WeaponButton,
+                Text = "Weapon Items",
+                NotControl = true,
+            };
+
+           DraperyItemsButton = new MirButton
+            {
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, WeaponButton.Location.Y + 23),
+                Location = new Point(12, WeaponButton.Location.Y + 20),
                 Parent = this,
-                Text = "Drapery Items",
-                CenterText = true,
                 Visible = true,
             };
+
             DraperyItemsButton.Click += (o, e) => SwitchTab(2);
 
+            DraperyItemsLabel = new MirLabel
+            {
+                Size = new Size(99, 18),
+                Location = new Point(2, 1),
+                Parent = DraperyItemsButton,
+                Text = "Drapery Items",
+                NotControl = true,
+            };        
+
             #region Drapery Filtering.
-            Armours = new MirButton
+            ArmoursSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, DraperyItemsButton.Location.Y + 23),
+                Location = new Point(12, DraperyItemsButton.Location.Y + 20),
                 Parent = this,
-                Text = "Armours",
-                CenterText = true,
                 Visible = false,
             };
-            Armours.Click += (o, e) => SwitchTab(9);
 
-            Helmets = new MirButton
+            ArmoursSubBtn.Click += (o, e) => SwitchTab(9);
+
+            ArmoursLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = ArmoursSubBtn,
+                Text = "Amours",
+                NotControl = true,
+            };
+
+            HelmetsSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Armours.Location.Y + 23),
+                Location = new Point(12, ArmoursSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            HelmetsSubBtn.Click += (o, e) => SwitchTab(10);
+
+            HelmetsLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = HelmetsSubBtn,
                 Text = "Helmets",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Helmets.Click += (o, e) => SwitchTab(10);
 
-            Belts = new MirButton
+            BeltsSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Helmets.Location.Y + 23),
+                Location = new Point(12, HelmetsSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            BeltsSubBtn.Click += (o, e) => SwitchTab(11);
+
+            BeltsLabel = new MirLabel
+            {
+                Size = new Size(99, 18),
+                Location = new Point(18, 1),
+                Parent = BeltsSubBtn,
                 Text = "Belts",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Belts.Click += (o, e) => SwitchTab(11);
 
-            Boots = new MirButton
+            BootsSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Belts.Location.Y + 23),
+                Location = new Point(12, BeltsSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            BootsSubBtn.Click += (o, e) => SwitchTab(12);
+
+            BootsLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = BootsSubBtn,
                 Text = "Boots",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Boots.Click += (o, e) => SwitchTab(12);
 
-            Stones = new MirButton
+            StonesSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Boots.Location.Y + 23),
+                Location = new Point(12, BootsSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "Stones",
-                CenterText = true,
                 Visible = false,
             };
-            Stones.Click += (o, e) => SwitchTab(13);
+
+            StonesSubBtn.Click += (o, e) => SwitchTab(13);
+
+            StonesLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = StonesSubBtn,
+                Text = "Stones",
+                NotControl = true,
+            };
             #endregion
 
             AccessoriesItemsButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, DraperyItemsButton.Location.Y + 23),
+                Location = new Point(12, DraperyItemsButton.Location.Y + 20),
                 Parent = this,
-                Text = "Accessorie Items",
-                CenterText = true,
                 Visible = true,
             };
+
             AccessoriesItemsButton.Click += (o, e) => SwitchTab(3);
 
+            AccessoriesItemsLabel = new MirLabel
+            {
+                Size = new Size(99, 18),
+                Location = new Point(2, 1),
+                Parent = AccessoriesItemsButton,
+                Text = "Accessory Items",
+                NotControl = true,
+            };
+
             #region Accessories Items
-            Necklace = new MirButton
+            NecklaceSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, AccessoriesItemsButton.Location.Y + 23),
+                Location = new Point(12, AccessoriesItemsButton.Location.Y + 20),
                 Parent = this,
-                Text = "Necklace",
-                CenterText = true,
                 Visible = false,
             };
-            Necklace.Click += (o, e) => SwitchTab(14);
 
-            Bracelets = new MirButton
+            NecklaceSubBtn.Click += (o, e) => SwitchTab(14);
+
+            NecklaceLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = NecklaceSubBtn,
+                Text = "Necklaces",
+                NotControl = true,
+            };
+
+            BraceletsSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Necklace.Location.Y + 23),
+                Location = new Point(12, NecklaceSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            BraceletsSubBtn.Click += (o, e) => SwitchTab(15);
+
+            BraceletsLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = BraceletsSubBtn,
                 Text = "Bracelets",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Bracelets.Click += (o, e) => SwitchTab(15);
 
-            Rings = new MirButton
+            RingsSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Bracelets.Location.Y + 23),
+                Location = new Point(12, BraceletsSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "Rings",
-                CenterText = true,
                 Visible = false,
             };
-            Rings.Click += (o, e) => SwitchTab(16);
+
+            RingsSubBtn.Click += (o, e) => SwitchTab(16);
+
+            RingsLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = RingsSubBtn,
+                Text = "Rings",
+                NotControl = true,
+            };
             #endregion
 
             ConsumableItemsButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, AccessoriesItemsButton.Location.Y + 23),
+                Location = new Point(12, AccessoriesItemsButton.Location.Y + 20),
                 Parent = this,
-                Text = "Consumable Items",
-                CenterText = true,
                 Visible = true,
             };
 
             ConsumableItemsButton.Click += (o, e) => SwitchTab(4);
 
+            ConsumableItemsLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(2, 1),
+                Parent = ConsumableItemsButton,
+                Text = "Cosumable Items",
+                NotControl = true,
+            };
+
             #region Consumable Items
-            RecoveryPotion = new MirButton
+            RecoveryPotionSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, ConsumableItemsButton.Location.Y + 23),
+                Location = new Point(12, ConsumableItemsButton.Location.Y + 20),
                 Parent = this,
-                Text = "  Recovery Pots",
-                CenterText = true,
                 Visible = false,
             };
-            RecoveryPotion.Click += (o, e) => SwitchTab(17);
 
-            PowerUp = new MirButton
-            {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
-                Library = Libraries.Prguse2,
-                Sound = SoundList.ButtonA,
-                Location = new Point(13, RecoveryPotion.Location.Y + 23),
-                Parent = this,
-                Text = "Buff Potions",
-                CenterText = true,
-                Visible = false,
-            };
-            PowerUp.Click += (o, e) => SwitchTab(18);
+            RecoveryPotionSubBtn.Click += (o, e) => SwitchTab(17);
 
-            Scroll = new MirButton
+            RecoveryPotionLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
-                Library = Libraries.Prguse2,
-                Sound = SoundList.ButtonA,
-                Location = new Point(13, PowerUp.Location.Y + 23),
-                Parent = this,
-                Text = "Scrolls + Oils",
-                CenterText = true,
-                Visible = false,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = RecoveryPotionSubBtn,
+                Text = "Recovery Pots",
+                NotControl = true,
             };
-            Scroll.Click += (o, e) => SwitchTab(19);
 
-            Script = new MirButton
+            PowerUpSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Scroll.Location.Y + 23),
+                Location = new Point(12, RecoveryPotionSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "Other Items",
-                CenterText = true,
                 Visible = false,
             };
-            Script.Click += (o, e) => SwitchTab(20);
+
+            PowerUpSubBtn.Click += (o, e) => SwitchTab(18);
+
+            PowerUpLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = PowerUpSubBtn,
+                Text = "Buff Pots",
+                NotControl = true,
+            };
+
+            ScrollSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
+                Library = Libraries.Prguse2,
+                Sound = SoundList.ButtonA,
+                Location = new Point(12, PowerUpSubBtn.Location.Y + 20),
+                Parent = this,
+                Visible = false,
+            };
+
+            ScrollSubBtn.Click += (o, e) => SwitchTab(19);
+
+            ScrollLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = ScrollSubBtn,
+                Text = "Scrolls / Oils",
+                NotControl = true,
+            };
+
+            ScriptSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
+                Library = Libraries.Prguse2,
+                Sound = SoundList.ButtonA,
+                Location = new Point(12, ScrollSubBtn.Location.Y + 20),
+                Parent = this,
+                Visible = false,
+            };
+
+            ScriptSubBtn.Click += (o, e) => SwitchTab(20);
+
+            ScriptLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = ScriptSubBtn,
+                Text = "Misc Items",
+                NotControl = true,
+            };
             #endregion
 
             EnhEquipButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, ConsumableItemsButton.Location.Y + 23),
+                Location = new Point(12, ConsumableItemsButton.Location.Y + 20),
                 Parent = this,
-                Text = "Enhancing Equip",
-                CenterText = true,
                 Visible = true,
             };
+
             EnhEquipButton.Click += (o, e) => SwitchTab(5);
 
+            EnhEquipLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(2, 1),
+                Parent = EnhEquipButton,
+                Text = "Enhancment Items",
+                NotControl = true,
+            };
+
             #region Enhancing Equipment
-            Gem = new MirButton
+            GemSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, EnhEquipButton.Location.Y + 23),
+                Location = new Point(12, EnhEquipButton.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            GemSubBtn.Click += (o, e) => SwitchTab(21);
+
+            GemLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = GemSubBtn,
                 Text = "Gems",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Gem.Click += (o, e) => SwitchTab(21);
 
-            Orb = new MirButton
+            OrbSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Gem.Location.Y + 23),
+                Location = new Point(12, GemSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            OrbSubBtn.Click += (o, e) => SwitchTab(22);
+
+            OrbLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = OrbSubBtn,
                 Text = "Orbs",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Orb.Click += (o, e) => SwitchTab(22);
 
-            Awake = new MirButton
+            AwakeSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Orb.Location.Y + 23),
+                Location = new Point(12, OrbSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "Awakening",
-                CenterText = true,
                 Visible = false,
             };
-            Awake.Click += (o, e) => SwitchTab(23);
+
+            AwakeSubBtn.Click += (o, e) => SwitchTab(23);
+
+            AwakeLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = AwakeSubBtn,
+                Text = "Awakening",
+                NotControl = true,
+            };
             #endregion
 
             BooksButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, EnhEquipButton.Location.Y + 23),
+                Location = new Point(12, EnhEquipButton.Location.Y + 20),
                 Parent = this,
-                Text = "Books",
-                CenterText = true,
                 Visible = true,
             };
 
             BooksButton.Click += (o, e) => SwitchTab(6);
 
+            BooksLabel = new MirLabel
+            {
+                Size = new Size(99, 18),
+                Location = new Point(2, 1),
+                Parent = BooksButton,
+                Text = "Books",
+                NotControl = true,
+            };
+
             #region Class Books
-            Warrior = new MirButton
+            WarriorSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, BooksButton.Location.Y + 23),
+                Location = new Point(12, BooksButton.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            WarriorSubBtn.Click += (o, e) => SwitchTab(24);
+
+            WarriorLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = WarriorSubBtn,
                 Text = "Warrior",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Warrior.Click += (o, e) => SwitchTab(24);
 
-            Wizard = new MirButton
+            WizardSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Warrior.Location.Y + 23),
+                Location = new Point(12, WarriorSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            WizardSubBtn.Click += (o, e) => SwitchTab(25);
+
+            WizardLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = WizardSubBtn,
                 Text = "Wizard",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Wizard.Click += (o, e) => SwitchTab(25);
 
-            Taoist = new MirButton
+            TaoistSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Wizard.Location.Y + 23),
+                Location = new Point(12, WizardSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            TaoistSubBtn.Click += (o, e) => SwitchTab(26);
+
+            TaoistLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = TaoistSubBtn,
                 Text = "Taoist",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Taoist.Click += (o, e) => SwitchTab(26);
 
-            Assassin = new MirButton
+            AssassinSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Taoist.Location.Y + 23),
+                Location = new Point(12, TaoistSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            AssassinSubBtn.Click += (o, e) => SwitchTab(27);
+
+            AssassinLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = AssassinSubBtn,
                 Text = "Assassin",
-                CenterText = true,
-                Visible = false,
-            };
-            Assassin.Click += (o, e) => SwitchTab(27);
+                NotControl = true,
 
-            Archer = new MirButton
+            };
+
+            ArcherSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Assassin.Location.Y + 23),
+                Location = new Point(12, AssassinSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "Archer",
-                CenterText = true,
                 Visible = false,
             };
-            Archer.Click += (o, e) => SwitchTab(28);
+
+            ArcherSubBtn.Click += (o, e) => SwitchTab(28);
+
+            ArcherLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = ArcherSubBtn,
+                Text = "Archer",
+                NotControl = true,
+            };
             #endregion
 
             CraftingSystemButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, BooksButton.Location.Y + 23),
+                Location = new Point(12, BooksButton.Location.Y + 20),
                 Parent = this,
-                Text = "Crafting System",
-                CenterText = true,
                 Visible = true,
             };
 
             CraftingSystemButton.Click += (o, e) => SwitchTab(7);
 
+            CraftingSystemLabel = new MirLabel
+            {
+                Size = new Size(99, 18),
+                Location = new Point(2, 1),
+                Parent = CraftingSystemButton,
+                Text = "Crafting Items",
+                NotControl = true,
+            };
+
             #region Crafting System (CraftingMaterials)
-            Materials = new MirButton
+            MaterialsSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, CraftingSystemButton.Location.Y + 23),
+                Location = new Point(12, CraftingSystemButton.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            MaterialsSubBtn.Click += (o, e) => SwitchTab(29);
+
+            MaterialsLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = MaterialsSubBtn,
                 Text = "Materials",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Materials.Click += (o, e) => SwitchTab(29);
 
-            Fish = new MirButton
+            FishSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Materials.Location.Y + 23),
+                Location = new Point(12, MaterialsSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            FishSubBtn.Click += (o, e) => SwitchTab(30);
+
+            FishLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = FishSubBtn,
                 Text = "Fish",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Fish.Click += (o, e) => SwitchTab(30);
 
-            Meat = new MirButton
+            MeatSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Fish.Location.Y + 23),
+                Location = new Point(12, FishSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            MeatSubBtn.Click += (o, e) => SwitchTab(31);
+
+            MeatLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = MeatSubBtn,
                 Text = "Meat",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Meat.Click += (o, e) => SwitchTab(31);
 
-            Ore = new MirButton
+            OreSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Meat.Location.Y + 23),
+                Location = new Point(12, MeatSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "Ores",
-                CenterText = true,
                 Visible = false,
             };
-            Ore.Click += (o, e) => SwitchTab(32);
+
+            OreSubBtn.Click += (o, e) => SwitchTab(32);
+
+            OreLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = OreSubBtn,
+                Text = "Ore",
+                NotControl = true,
+            };
             #endregion
 
             PetsItemButton = new MirButton
             {
-                Index = 920,
-                PressedIndex = 921,
-                HoverIndex = 921,
+                Index = 915,
+                PressedIndex = 914,
+                HoverIndex = 914,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(7, CraftingSystemButton.Location.Y + 23),
+                Location = new Point(12, CraftingSystemButton.Location.Y + 20),
                 Parent = this,
-                Text = "Pet Equipment",
-                CenterText = true,
                 Visible = true,
             };
+
             PetsItemButton.Click += (o, e) => SwitchTab(8);
 
+            PetsItemLabel = new MirLabel
+            {
+                Size = new Size(99, 18),
+                Location = new Point(2, 1),
+                Parent = PetsItemButton,
+                Text = "Pet Equipment",
+                NotControl = true,
+            };
+
             #region Pets & Mounts
-            NoveltyPets = new MirButton
+            NoveltyPetsSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, PetsItemButton.Location.Y + 23),
+                Location = new Point(12, PetsItemButton.Location.Y + 20),
                 Parent = this,
-                Text = "  Novelty Pets",
-                CenterText = true,
                 Visible = false,
             };
-            NoveltyPets.Click += (o, e) => SwitchTab(33);
 
-            NoveltyEquipment = new MirButton
+            NoveltyPetsSubBtn.Click += (o, e) => SwitchTab(33);
+
+            NoveltyPetsLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = NoveltyPetsSubBtn,
+                Text = "Novelty Pets",
+                NotControl = true,
+            };
+
+            NoveltyEquipmentSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, NoveltyPets.Location.Y + 23),
+                Location = new Point(12, NoveltyPetsSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "  Novelty Equip",
-                CenterText = true,
                 Visible = false,
             };
-            NoveltyEquipment.Click += (o, e) => SwitchTab(34);
 
-            Mounts = new MirButton
+            NoveltyEquipmentSubBtn.Click += (o, e) => SwitchTab(34);
+
+            NoveltyEquipmentLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = NoveltyEquipmentSubBtn,
+                Text = "Novelty Equip",
+                NotControl = true,
+            };
+
+            MountsSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, NoveltyEquipment.Location.Y + 23),
+                Location = new Point(12, NoveltyEquipmentSubBtn.Location.Y + 20),
                 Parent = this,
+                Visible = false,
+            };
+
+            MountsSubBtn.Click += (o, e) => SwitchTab(35);
+
+            MountsLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = MountsSubBtn,
                 Text = "Mounts",
-                CenterText = true,
-                Visible = false,
+                NotControl = true,
             };
-            Mounts.Click += (o, e) => SwitchTab(35);
 
-            Reins = new MirButton
+            ReinsSubBtn = new MirButton
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Mounts.Location.Y + 23),
+                Location = new Point(12, MountsSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "  Reins",
-                CenterText = true,
                 Visible = false,
             };
-            Reins.Click += (o, e) => SwitchTab(36);
 
-            Bells = new MirButton
+            ReinsSubBtn.Click += (o, e) => SwitchTab(36);
+
+            ReinsLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = ReinsSubBtn,
+                Text = "Reins",
+                NotControl = true,
+            };
+
+            BellsSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Reins.Location.Y + 23),
+                Location = new Point(12, ReinsSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "  Bells",
-                CenterText = true,
                 Visible = false,
             };
-            Bells.Click += (o, e) => SwitchTab(37);
 
-            Ribbon = new MirButton
+            BellsSubBtn.Click += (o, e) => SwitchTab(37);
+
+            BellsLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = BellsSubBtn,
+                Text = "Bells",
+                NotControl = true,
+            };
+
+            RibbonSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Bells.Location.Y + 23),
+                Location = new Point(12, BellsSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "  Ribbon",
-                CenterText = true,
                 Visible = false,
             };
-            Ribbon.Click += (o, e) => SwitchTab(38);
 
-            Mask = new MirButton
+            RibbonSubBtn.Click += (o, e) => SwitchTab(38);
+
+            RibbonLabel = new MirLabel
             {
-                Index = 922,
-                PressedIndex = 923,
-                HoverIndex = 923,
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = RibbonSubBtn,
+                Text = "Ribbons",
+                NotControl = true,
+            };
+
+            MaskSubBtn = new MirButton
+            {
+                Index = 917,
+                PressedIndex = 916,
+                HoverIndex = 916,
                 Library = Libraries.Prguse2,
                 Sound = SoundList.ButtonA,
-                Location = new Point(13, Ribbon.Location.Y + 23),
+                Location = new Point(12, RibbonSubBtn.Location.Y + 20),
                 Parent = this,
-                Text = "  Mask",
-                CenterText = true,
                 Visible = false,
             };
-            Mask.Click += (o, e) => SwitchTab(39);
+
+            MaskSubBtn.Click += (o, e) => SwitchTab(39);
+
+            MaskLabel = new MirLabel
+            {
+                Size = new Size(100, 18),
+                Location = new Point(18, 1),
+                Parent = MaskSubBtn,
+                Text = "Mask",
+                NotControl = true,
+            };
             #endregion
+#endregion
 
             #region Market Buttons
 
@@ -812,7 +1138,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 438,
                 PressedIndex = 439,
                 Library = Libraries.Prguse,
-                Location = new Point(200, 448),
+                Location = new Point(202, 437),
                 Sound = SoundList.ButtonA,
                 Parent = this,
             };
@@ -835,7 +1161,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 664,
                 PressedIndex = 665,
                 Library = Libraries.Prguse,
-                Location = new Point(172, 448),
+                Location = new Point(174, 437),
                 Sound = SoundList.ButtonA,
                 Parent = this,
             };
@@ -853,11 +1179,11 @@ namespace Client.MirScenes.Dialogs
 
             BuyButton = new MirButton
             {
-                Index = 796,
-                HoverIndex = 797,
-                PressedIndex = 798,
+                Index = 703,
+                HoverIndex = 704,
+                PressedIndex = 705,
                 Library = Libraries.Title,
-                Location = new Point(380, 448),
+                Location = new Point(380, 437),
                 Sound = SoundList.ButtonA,
                 Parent = this,
             };
@@ -901,8 +1227,8 @@ namespace Client.MirScenes.Dialogs
 
             SearchTextBox = new MirTextBox
             {
-                Location = new Point(12, 452),
-                Size = new Size(108, 1),
+                Location = new Point(335, 35),
+                Size = new Size(140, 1),
                 MaxLength = 20,
                 Parent = this,
                 CanLoseFocus = true,
@@ -919,7 +1245,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 481,
                 PressedIndex = 482,
                 Library = Libraries.Title,
-                Location = new Point(122, 448),
+                Location = new Point(124, 437),
                 Sound = SoundList.ButtonA,
                 Parent = this,
             };
@@ -941,6 +1267,19 @@ namespace Client.MirScenes.Dialogs
 
             #endregion
 
+            #region Gold Label
+            totalGold = new MirLabel
+            {
+                Size = new Size(100, 20),
+                DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
+
+                Location = new Point(6, 441),
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 8F),
+            };
+            #endregion
+
             #region ItemCell
 
 
@@ -950,7 +1289,7 @@ namespace Client.MirScenes.Dialogs
                 GridType = MirGridType.TrustMerchant,
                 Library = Libraries.Items,
                 Parent = this,
-                Location = new Point(47, 104),
+                Location = new Point(54, 104),
                 ItemSlot = 0,
                 Visible = false
             };
@@ -958,7 +1297,7 @@ namespace Client.MirScenes.Dialogs
 
             PriceTextBox = new MirTextBox
             {
-                Location = new Point(15, 165),
+                Location = new Point(20, 165),
                 Size = new Size(100, 1),
                 MaxLength = 20,
                 Parent = this,
@@ -970,12 +1309,12 @@ namespace Client.MirScenes.Dialogs
 
             SellItemButton = new MirButton
             {
-                Index = 793,
-                PressedIndex = 794,
-                HoverIndex = 795,
+                Index = 700,
+                PressedIndex = 702,
+                HoverIndex = 701,
                 Library = Libraries.Title,
                 Sound = SoundList.ButtonA,
-                Location = new Point(40, 195),
+                Location = new Point(47, 188),
                 Parent = this,
                 Visible = false,
                 Enabled = false
@@ -996,7 +1335,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Rows[i] = new AuctionRow
                 {
-                    Location = new Point(127, 82 + i * 33),
+                    Location = new Point(141, 82 + i * 33),
                     Parent = this,
                 };
                 Rows[i].Click += (o, e) =>
@@ -1016,6 +1355,7 @@ namespace Client.MirScenes.Dialogs
         {
 
             PageLabel.Text = string.Format("{0}/{1}", Page + 1, PageCount);
+            totalGold.Text = GameScene.Gold.ToString("###,###,##0");
 
             for (int i = 0; i < 10; i++)
                 if (i + Page * 10 >= Listings.Count)
@@ -1118,8 +1458,8 @@ namespace Client.MirScenes.Dialogs
         }
         public void TMerchantDialog(byte TMDid)
         {
-            MarketButton.Index = 790;
-            ConsignmentButton.Index = 792;
+            MarketButton.Index = 789;
+            ConsignmentButton.Index = 791;
 
 
             setdefault();
@@ -1127,13 +1467,14 @@ namespace Client.MirScenes.Dialogs
             switch (TMDid)
             {
                 case 0:
-                    Index = 787;
-                    MarketButton.Index = 789;
-                    BuyButton.Index = 796;
-                    BuyButton.HoverIndex = 797;
-                    BuyButton.PressedIndex = 798;
+                    Index = 786;
+                    MarketButton.Index = 788;
+                    BuyButton.Index = 703;
+                    BuyButton.HoverIndex = 704;
+                    BuyButton.PressedIndex = 705;                    
                     SwitchTab(0);
                     setvalues(0);
+                    //GameScene.Scene.InventoryDialog.Hide();
                     Network.Enqueue(new C.MarketSearch
                     {
                         Match = "",
@@ -1142,12 +1483,13 @@ namespace Client.MirScenes.Dialogs
                     });
                     break;
                 case 1:
-                    Index = 788;
-                    BuyButton.Index = 799;
-                    BuyButton.HoverIndex = 800;
-                    BuyButton.PressedIndex = 801;
-                    ConsignmentButton.Index = 791;
+                    Index = 787;
+                    BuyButton.Index = 706;
+                    BuyButton.HoverIndex = 707;
+                    BuyButton.PressedIndex = 708;
+                    ConsignmentButton.Index = 790;
                     setvalues(1);
+                    //GameScene.Scene.InventoryDialog.Show();
                     Network.Enqueue(new C.MarketSearch
                     {
                         Match = "",
@@ -1213,323 +1555,323 @@ namespace Client.MirScenes.Dialogs
             {
                 case 0:
                     setdefault();
-                    ShowAllButton.Index = 921;
+                    ShowAllButton.Index = 914;
                     SetLocations(0);
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Nothing, Usermode = false });
                     break;
                 case 1:
                     setdefault();
-                    WeaponButton.Index = 921;
+                    WeaponButton.Index = 914;
                     SetLocations(1);
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Weapon, Usermode = false });
                     break;
                 case 2:
                     setdefault();
-                    DraperyItemsButton.Index = 921;
-                    Armours.Visible = true;
-                    Helmets.Visible = true;
-                    Belts.Visible = true;
-                    Boots.Visible = true;
-                    Stones.Visible = true;
+                    DraperyItemsButton.Index = 914;
+                    ArmoursSubBtn.Visible = true;
+                    HelmetsSubBtn.Visible = true;
+                    BeltsSubBtn.Visible = true;
+                    BootsSubBtn.Visible = true;
+                    StonesSubBtn.Visible = true;
                     SetLocations(2);
                     break;
                 case 3:
                     setdefault();
-                    AccessoriesItemsButton.Index = 921;
-                    Necklace.Visible = true;
-                    Bracelets.Visible = true;
-                    Rings.Visible = true;
+                    AccessoriesItemsButton.Index = 914;
+                    NecklaceSubBtn.Visible = true;
+                    BraceletsSubBtn.Visible = true;
+                    RingsSubBtn.Visible = true;
                     SetLocations(3);
                     break;
                 case 4:
                     setdefault();
-                    ConsumableItemsButton.Index = 921;
-                    RecoveryPotion.Visible = true;
-                    PowerUp.Visible = true;
-                    Scroll.Visible = true;
-                    Script.Visible = true;
+                    ConsumableItemsButton.Index = 914;
+                    RecoveryPotionSubBtn.Visible = true;
+                    PowerUpSubBtn.Visible = true;
+                    ScrollSubBtn.Visible = true;
+                    ScriptSubBtn.Visible = true;
                     SetLocations(4);
                     break;
                 case 5:
                     setdefault();
-                    EnhEquipButton.Index = 921;
-                    Gem.Visible = true;
-                    Orb.Visible = true;
-                    Awake.Visible = true;
+                    EnhEquipButton.Index = 914;
+                    GemSubBtn.Visible = true;
+                    OrbSubBtn.Visible = true;
+                    AwakeSubBtn.Visible = true;
                     SetLocations(5);
                     break;
                 case 6:
                     setdefault();
-                    BooksButton.Index = 921;
-                    Warrior.Visible = true;
-                    Wizard.Visible = true;
-                    Taoist.Visible = true;
-                    Assassin.Visible = true;
-                    Archer.Visible = true;
+                    BooksButton.Index = 914;
+                    WarriorSubBtn.Visible = true;
+                    WizardSubBtn.Visible = true;
+                    TaoistSubBtn.Visible = true;
+                    AssassinSubBtn.Visible = true;
+                    ArcherSubBtn.Visible = true;
                     SetLocations(6);
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false });
                     break;
                 case 7:
                     setdefault();
-                    CraftingSystemButton.Index = 921;
-                    Materials.Visible = true;
-                    Fish.Visible = true;
-                    Meat.Visible = true;
-                    Ore.Visible = true;
+                    CraftingSystemButton.Index = 914;
+                    MaterialsSubBtn.Visible = true;
+                    FishSubBtn.Visible = true;
+                    MeatSubBtn.Visible = true;
+                    OreSubBtn.Visible = true;
                     SetLocations(7);
                     break;
                 case 8:
                     setdefault();
-                    PetsItemButton.Index = 921;
-                    NoveltyPets.Visible = true;
-                    NoveltyEquipment.Visible = true;
-                    Mounts.Visible = true;
-                    Reins.Visible = true;
-                    Bells.Visible = true;
-                    Ribbon.Visible = true;
-                    Mask.Visible = true;
+                    PetsItemButton.Index = 914;
+                    NoveltyPetsSubBtn.Visible = true;
+                    NoveltyEquipmentSubBtn.Visible = true;
+                    MountsSubBtn.Visible = true;
+                    ReinsSubBtn.Visible = true;
+                    BellsSubBtn.Visible = true;
+                    RibbonSubBtn.Visible = true;
+                    MaskSubBtn.Visible = true;
                     SetLocations(8);
                     break;
                 case 9:
-                    Armours.Index = 923;
-                    Helmets.Index = 922;
-                    Belts.Index = 922;
-                    Boots.Index = 922;
-                    Stones.Index = 922;
+                    ArmoursSubBtn.Index = 916;
+                    HelmetsSubBtn.Index = 917;
+                    BeltsSubBtn.Index = 917;
+                    BootsSubBtn.Index = 917;
+                    StonesSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Armour, Usermode = false });
                     break;
                 case 10:
-                    Armours.Index = 922;
-                    Helmets.Index = 923;
-                    Belts.Index = 922;
-                    Boots.Index = 922;
-                    Stones.Index = 922;
+                    ArmoursSubBtn.Index = 917;
+                    HelmetsSubBtn.Index = 916;
+                    BeltsSubBtn.Index = 917;
+                    BootsSubBtn.Index = 917;
+                    StonesSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Helmet, Usermode = false });
                     break;
                 case 11:
-                    Armours.Index = 922;
-                    Helmets.Index = 922;
-                    Belts.Index = 923;
-                    Boots.Index = 922;
-                    Stones.Index = 922;
+                    ArmoursSubBtn.Index = 917;
+                    HelmetsSubBtn.Index = 917;
+                    BeltsSubBtn.Index = 916;
+                    BootsSubBtn.Index = 917;
+                    StonesSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Belt, Usermode = false });
                     break;
                 case 12:
-                    Armours.Index = 922;
-                    Helmets.Index = 922;
-                    Belts.Index = 922;
-                    Boots.Index = 923;
-                    Stones.Index = 922;
+                    ArmoursSubBtn.Index = 917;
+                    HelmetsSubBtn.Index = 917;
+                    BeltsSubBtn.Index = 917;
+                    BootsSubBtn.Index = 916;
+                    StonesSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Boots, Usermode = false });
                     break;
                 case 13:
-                    Armours.Index = 922;
-                    Helmets.Index = 922;
-                    Belts.Index = 922;
-                    Boots.Index = 922;
-                    Stones.Index = 923;
+                    ArmoursSubBtn.Index = 917;
+                    HelmetsSubBtn.Index = 917;
+                    BeltsSubBtn.Index = 917;
+                    BootsSubBtn.Index = 917;
+                    StonesSubBtn.Index = 916;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Stone, Usermode = false });
                     break;
                 case 14:
-                    Necklace.Index = 923;
-                    Bracelets.Index = 922;
-                    Rings.Index = 922;
+                    NecklaceSubBtn.Index = 916;
+                    BraceletsSubBtn.Index = 917;
+                    RingsSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Necklace, Usermode = false });
                     break;
                 case 15:
-                    Necklace.Index = 922;
-                    Bracelets.Index = 923;
-                    Rings.Index = 922;
+                    NecklaceSubBtn.Index = 917;
+                    BraceletsSubBtn.Index = 916;
+                    RingsSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Bracelet, Usermode = false });
                     break;
                 case 16:
-                    Necklace.Index = 922;
-                    Bracelets.Index = 922;
-                    Rings.Index = 923;
+                    NecklaceSubBtn.Index = 917;
+                    BraceletsSubBtn.Index = 917;
+                    RingsSubBtn.Index = 916;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Ring, Usermode = false });
                     break;
                 case 17:
-                    RecoveryPotion.Index = 923;
-                    PowerUp.Index = 922;
-                    Scroll.Index = 922;
-                    Script.Index = 922;
+                    RecoveryPotionSubBtn.Index = 916;
+                    PowerUpSubBtn.Index = 917;
+                    ScrollSubBtn.Index = 917;
+                    ScriptSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Potion, Usermode = false, MaxShape = 2 });
                     break;
                 case 18:
-                    RecoveryPotion.Index = 922;
-                    PowerUp.Index = 923;
-                    Scroll.Index = 922;
-                    Script.Index = 922;
+                    RecoveryPotionSubBtn.Index = 917;
+                    PowerUpSubBtn.Index = 916;
+                    ScrollSubBtn.Index = 917;
+                    ScriptSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Potion, Usermode = false, MinShape = 3, MaxShape = 4 });
                     break;
                 case 19:
-                    RecoveryPotion.Index = 922;
-                    PowerUp.Index = 922;
-                    Scroll.Index = 923;
-                    Script.Index = 922;
+                    RecoveryPotionSubBtn.Index = 917;
+                    PowerUpSubBtn.Index = 917;
+                    ScrollSubBtn.Index = 916;
+                    ScriptSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Scroll, Usermode = false });
                     break;
                 case 20:
-                    RecoveryPotion.Index = 922;
-                    PowerUp.Index = 922;
-                    Scroll.Index = 922;
-                    Script.Index = 923;
+                    RecoveryPotionSubBtn.Index = 917;
+                    PowerUpSubBtn.Index = 917;
+                    ScrollSubBtn.Index = 917;
+                    ScriptSubBtn.Index = 916;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Script, Usermode = false });
                     break;
                 case 21:
-                    Gem.Index = 923;
-                    Orb.Index = 922;
-                    Awake.Index = 922;
+                    GemSubBtn.Index = 916;
+                    OrbSubBtn.Index = 917;
+                    AwakeSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Gem, Usermode = false, MinShape = 3, MaxShape = 3 });
                     break;
                 case 22:
-                    Gem.Index = 922;
-                    Orb.Index = 923;
-                    Awake.Index = 922;
+                    GemSubBtn.Index = 917;
+                    OrbSubBtn.Index = 916;
+                    AwakeSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Gem, Usermode = false, MinShape = 4, MaxShape = 4 });
                     break;
                 case 23:
-                    Gem.Index = 922;
-                    Orb.Index = 922;
-                    Awake.Index = 923;
+                    GemSubBtn.Index = 917;
+                    OrbSubBtn.Index = 917;
+                    AwakeSubBtn.Index = 916;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Awakening, Usermode = false });
                     break;
                 case 24:
-                    Warrior.Index = 923;
-                    Wizard.Index = 922;
-                    Taoist.Index = 922;
-                    Assassin.Index = 922;
-                    Archer.Index = 922;
+                    WarriorSubBtn.Index = 916;
+                    WizardSubBtn.Index = 917;
+                    TaoistSubBtn.Index = 917;
+                    AssassinSubBtn.Index = 917;
+                    ArcherSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MaxShape = 30 });
                     break;
                 case 25:
-                    Warrior.Index = 922;
-                    Wizard.Index = 923;
-                    Taoist.Index = 922;
-                    Assassin.Index = 922;
-                    Archer.Index = 922;
+                    WarriorSubBtn.Index = 917;
+                    WizardSubBtn.Index = 916;
+                    TaoistSubBtn.Index = 917;
+                    AssassinSubBtn.Index = 917;
+                    ArcherSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 31, MaxShape = 60 });
                     break;
                 case 26:
-                    Warrior.Index = 922;
-                    Wizard.Index = 922;
-                    Taoist.Index = 923;
-                    Assassin.Index = 922;
-                    Archer.Index = 922;
+                    WarriorSubBtn.Index = 917;
+                    WizardSubBtn.Index = 917;
+                    TaoistSubBtn.Index = 916;
+                    AssassinSubBtn.Index = 917;
+                    ArcherSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 61, MaxShape = 90 });
                     break;
                 case 27:
-                    Warrior.Index = 922;
-                    Wizard.Index = 922;
-                    Taoist.Index = 922;
-                    Assassin.Index = 923;
-                    Archer.Index = 922;
+                    WarriorSubBtn.Index = 917;
+                    WizardSubBtn.Index = 917;
+                    TaoistSubBtn.Index = 917;
+                    AssassinSubBtn.Index = 916;
+                    ArcherSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 91, MaxShape = 120 });
                     break;
                 case 28:
-                    Warrior.Index = 922;
-                    Wizard.Index = 922;
-                    Taoist.Index = 922;
-                    Assassin.Index = 922;
-                    Archer.Index = 923;
+                    WarriorSubBtn.Index = 917;
+                    WizardSubBtn.Index = 917;
+                    TaoistSubBtn.Index = 917;
+                    AssassinSubBtn.Index = 917;
+                    ArcherSubBtn.Index = 916;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Book, Usermode = false, MinShape = 121, MaxShape = 150 });
                     break;
                 case 29:
-                    Materials.Index = 923;
-                    Fish.Index = 922;
-                    Meat.Index = 922;
-                    Ore.Index = 922;
+                    MaterialsSubBtn.Index = 916;
+                    FishSubBtn.Index = 917;
+                    MeatSubBtn.Index = 917;
+                    OreSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.CraftingMaterial, Usermode = false });
                     break;
                 case 30:
-                    Materials.Index = 922;
-                    Fish.Index = 923;
-                    Meat.Index = 922;
-                    Ore.Index = 922;
+                    MaterialsSubBtn.Index = 917;
+                    FishSubBtn.Index = 916;
+                    MeatSubBtn.Index = 917;
+                    OreSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Fish, Usermode = false });
                     break;
                 case 31:
-                    Materials.Index = 922;
-                    Fish.Index = 922;
-                    Meat.Index = 923;
-                    Ore.Index = 922;
+                    MaterialsSubBtn.Index = 917;
+                    FishSubBtn.Index = 917;
+                    MeatSubBtn.Index = 916;
+                    OreSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Meat, Usermode = false });
                     break;
                 case 32:
-                    Materials.Index = 922;
-                    Fish.Index = 922;
-                    Meat.Index = 922;
-                    Ore.Index = 923;
+                    MaterialsSubBtn.Index = 917;
+                    FishSubBtn.Index = 917;
+                    MeatSubBtn.Index = 917;
+                    OreSubBtn.Index = 916;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Ore, Usermode = false });
                     break;
                 case 33:
-                    NoveltyPets.Index = 923;
-                    NoveltyEquipment.Index = 922;
-                    Mounts.Index = 922;
-                    Reins.Index = 922;
-                    Bells.Index = 922;
-                    Ribbon.Index = 922;
-                    Mask.Index = 922;
+                    NoveltyPetsSubBtn.Index = 916;
+                    NoveltyEquipmentSubBtn.Index = 917;
+                    MountsSubBtn.Index = 917;
+                    ReinsSubBtn.Index = 917;
+                    BellsSubBtn.Index = 917;
+                    RibbonSubBtn.Index = 917;
+                    MaskSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Pets, Usermode = false, MinShape = 0, MaxShape = 13 });
                     break;
                 case 34:
-                    NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 923;
-                    Mounts.Index = 922;
-                    Reins.Index = 922;
-                    Bells.Index = 922;
-                    Ribbon.Index = 922;
-                    Mask.Index = 922;
+                    NoveltyPetsSubBtn.Index = 917;
+                    NoveltyEquipmentSubBtn.Index = 916;
+                    MountsSubBtn.Index = 917;
+                    ReinsSubBtn.Index = 917;
+                    BellsSubBtn.Index = 917;
+                    RibbonSubBtn.Index = 917;
+                    MaskSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Pets, Usermode = false, MinShape = 20, MaxShape = 28 });
                     break;
                 case 35:
-                    NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 922;
-                    Mounts.Index = 923;
-                    Reins.Index = 922;
-                    Bells.Index = 922;
-                    Ribbon.Index = 922;
-                    Mask.Index = 922;
+                    NoveltyPetsSubBtn.Index = 917;
+                    NoveltyEquipmentSubBtn.Index = 917;
+                    MountsSubBtn.Index = 916;
+                    ReinsSubBtn.Index = 917;
+                    BellsSubBtn.Index = 917;
+                    RibbonSubBtn.Index = 917;
+                    MaskSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Mount, Usermode = false });
                     break;
                 case 36:
-                    NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 922;
-                    Mounts.Index = 922;
-                    Reins.Index = 923;
-                    Bells.Index = 922;
-                    Ribbon.Index = 922;
-                    Mask.Index = 922;
+                    NoveltyPetsSubBtn.Index = 917;
+                    NoveltyEquipmentSubBtn.Index = 917;
+                    MountsSubBtn.Index = 917;
+                    ReinsSubBtn.Index = 916;
+                    BellsSubBtn.Index = 917;
+                    RibbonSubBtn.Index = 917;
+                    MaskSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Reins, Usermode = false });
                     break;
                 case 37:
-                    NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 922;
-                    Mounts.Index = 922;
-                    Reins.Index = 922;
-                    Bells.Index = 923;
-                    Ribbon.Index = 922;
-                    Mask.Index = 922;
+                    NoveltyPetsSubBtn.Index = 917;
+                    NoveltyEquipmentSubBtn.Index = 917;
+                    MountsSubBtn.Index = 917;
+                    ReinsSubBtn.Index = 917;
+                    BellsSubBtn.Index = 916;
+                    RibbonSubBtn.Index = 917;
+                    MaskSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Bells, Usermode = false });
                     break;
                 case 38:
-                    NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 922;
-                    Mounts.Index = 922;
-                    Reins.Index = 922;
-                    Bells.Index = 922;
-                    Ribbon.Index = 923;
-                    Mask.Index = 922;
+                    NoveltyPetsSubBtn.Index = 917;
+                    NoveltyEquipmentSubBtn.Index = 917;
+                    MountsSubBtn.Index = 917;
+                    ReinsSubBtn.Index = 917;
+                    BellsSubBtn.Index = 917;
+                    RibbonSubBtn.Index = 916;
+                    MaskSubBtn.Index = 917;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Ribbon, Usermode = false });
                     break;
                 case 39:
-                    NoveltyPets.Index = 922;
-                    NoveltyEquipment.Index = 922;
-                    Mounts.Index = 922;
-                    Reins.Index = 922;
-                    Bells.Index = 922;
-                    Ribbon.Index = 922;
-                    Mask.Index = 923;
+                    NoveltyPetsSubBtn.Index = 917;
+                    NoveltyEquipmentSubBtn.Index = 917;
+                    MountsSubBtn.Index = 917;
+                    ReinsSubBtn.Index = 917;
+                    BellsSubBtn.Index = 917;
+                    RibbonSubBtn.Index = 917;
+                    MaskSubBtn.Index = 916;
                     Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = ItemType.Mask, Usermode = false });
                     break;
             }
@@ -1593,84 +1935,84 @@ namespace Client.MirScenes.Dialogs
         }
         public void setdefault()
         {
-            ShowAllButton.Index = 920;
-            WeaponButton.Index = 920;
+            ShowAllButton.Index = 915;
+            WeaponButton.Index = 915;
             
-            DraperyItemsButton.Index = 920;
-            Armours.Index = 922;
-            Armours.Visible = false;
-            Helmets.Index = 922;
-            Helmets.Visible = false;
-            Belts.Index = 922;
-            Belts.Visible = false;
-            Boots.Index = 922;
-            Boots.Visible = false;
-            Stones.Index = 922;
-            Stones.Visible = false;
-            
-            AccessoriesItemsButton.Index = 920;
-            Necklace.Index = 922;
-            Necklace.Visible = false;
-            Bracelets.Index = 922;
-            Bracelets.Visible = false;
-            Rings.Index = 922;
-            Rings.Visible = false;
-            
-            ConsumableItemsButton.Index = 920;
-            RecoveryPotion.Index = 922;
-            RecoveryPotion.Visible = false;
-            PowerUp.Index = 922;
-            PowerUp.Visible = false;
-            Scroll.Index = 922;
-            Scroll.Visible = false;
-            Script.Index = 922;
-            Script.Visible = false;
-            
-            EnhEquipButton.Index = 920;
-            Gem.Index = 922;
-            Gem.Visible = false;
-            Orb.Index = 922;
-            Orb.Visible = false;
-            Awake.Index = 922;
-            Awake.Visible = false;
-            
-            BooksButton.Index = 920;
-            Warrior.Index = 922;
-            Warrior.Visible = false;
-            Wizard.Index = 922;
-            Wizard.Visible = false;
-            Taoist.Index = 922;
-            Taoist.Visible = false;
-            Assassin.Index = 922;
-            Assassin.Visible = false;
-            Archer.Index = 922;
-            Archer.Visible = false;
+            DraperyItemsButton.Index = 915;
+            ArmoursSubBtn.Index = 917;
+            ArmoursSubBtn.Visible = false;
+            HelmetsSubBtn.Index = 917;
+            HelmetsSubBtn.Visible = false;
+            BeltsSubBtn.Index = 917;
+            BeltsSubBtn.Visible = false;
+            BootsSubBtn.Index = 917;
+            BootsSubBtn.Visible = false;
+            StonesSubBtn.Index = 917;
+            StonesSubBtn.Visible = false;
 
-            CraftingSystemButton.Index = 920;
-            Materials.Index = 922;
-            Materials.Visible = false;
-            Fish.Index = 922;
-            Fish.Visible = false;
-            Meat.Index = 922;
-            Meat.Visible = false;
-            Ore.Index = 922;
-            Ore.Visible = false;
+            AccessoriesItemsButton.Index = 915;
+            NecklaceSubBtn.Index = 917;
+            NecklaceSubBtn.Visible = false;
+            BraceletsSubBtn.Index = 917;
+            BraceletsSubBtn.Visible = false;
+            RingsSubBtn.Index = 917;
+            RingsSubBtn.Visible = false;
 
-            PetsItemButton.Index = 920;
-            NoveltyPets.Index = 922;
-            NoveltyPets.Visible = false;
-            NoveltyEquipment.Index = 922;
-            NoveltyEquipment.Visible = false;
-            Mounts.Index = 922;
-            Mounts.Visible = false;
-            Reins.Index = 922;
-            Reins.Visible = false;
-            Bells.Index = 922;
-            Bells.Visible = false;
-            Ribbon.Index = 922;
-            Ribbon.Visible = false;
-            Mask.Index = 922;
-            Mask.Visible = false;
+            ConsumableItemsButton.Index = 915;
+            RecoveryPotionSubBtn.Index = 917;
+            RecoveryPotionSubBtn.Visible = false;
+            PowerUpSubBtn.Index = 917;
+            PowerUpSubBtn.Visible = false;
+            ScrollSubBtn.Index = 917;
+            ScrollSubBtn.Visible = false;
+            ScriptSubBtn.Index = 917;
+            ScriptSubBtn.Visible = false;
+
+            EnhEquipButton.Index = 915;
+            GemSubBtn.Index = 917;
+            GemSubBtn.Visible = false;
+            OrbSubBtn.Index = 917;
+            OrbSubBtn.Visible = false;
+            AwakeSubBtn.Index = 917;
+            AwakeSubBtn.Visible = false;
+
+            BooksButton.Index = 915;
+            WarriorSubBtn.Index = 917;
+            WarriorSubBtn.Visible = false;
+            WizardSubBtn.Index = 917;
+            WizardSubBtn.Visible = false;
+            TaoistSubBtn.Index = 917;
+            TaoistSubBtn.Visible = false;
+            AssassinSubBtn.Index = 917;
+            AssassinSubBtn.Visible = false;
+            ArcherSubBtn.Index = 917;
+            ArcherSubBtn.Visible = false;
+
+            CraftingSystemButton.Index = 915;
+            MaterialsSubBtn.Index = 917;
+            MaterialsSubBtn.Visible = false;
+            FishSubBtn.Index = 917;
+            FishSubBtn.Visible = false;
+            MeatSubBtn.Index = 917;
+            MeatSubBtn.Visible = false;
+            OreSubBtn.Index = 917;
+            OreSubBtn.Visible = false;
+
+            PetsItemButton.Index = 915;
+            NoveltyPetsSubBtn.Index = 917;
+            NoveltyPetsSubBtn.Visible = false;
+            NoveltyEquipmentSubBtn.Index = 917;
+            NoveltyEquipmentSubBtn.Visible = false;
+            MountsSubBtn.Index = 917;
+            MountsSubBtn.Visible = false;
+            ReinsSubBtn.Index = 917;
+            ReinsSubBtn.Visible = false;
+            BellsSubBtn.Index = 917;
+            BellsSubBtn.Visible = false;
+            RibbonSubBtn.Index = 917;
+            RibbonSubBtn.Visible = false;
+            MaskSubBtn.Index = 917;
+            MaskSubBtn.Visible = false;
         }
 
         public void SetLocations(int i)
@@ -1681,94 +2023,94 @@ namespace Client.MirScenes.Dialogs
                 case 1:
                 case 8://8
                     {
-                        ShowAllButton.Location = new Point(7, 60);
-                        WeaponButton.Location = new Point(7, ShowAllButton.Location.Y + 23);
-                        DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
-                        AccessoriesItemsButton.Location = new Point(7, DraperyItemsButton.Location.Y + 23);
-                        ConsumableItemsButton.Location = new Point(7, AccessoriesItemsButton.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, ConsumableItemsButton.Location.Y + 23);
-                        BooksButton.Location = new Point(7, EnhEquipButton.Location.Y + 23);
-                        CraftingSystemButton.Location = new Point(7, BooksButton.Location.Y + 23);
-                        PetsItemButton.Location = new Point(7, CraftingSystemButton.Location.Y + 23);
+                        ShowAllButton.Location = new Point(12, 67);
+                        WeaponButton.Location = new Point(12, ShowAllButton.Location.Y + 20);
+                        DraperyItemsButton.Location = new Point(12, WeaponButton.Location.Y + 20);
+                        AccessoriesItemsButton.Location = new Point(12, DraperyItemsButton.Location.Y + 20);
+                        ConsumableItemsButton.Location = new Point(12, AccessoriesItemsButton.Location.Y + 20);
+                        EnhEquipButton.Location = new Point(12, ConsumableItemsButton.Location.Y + 20);
+                        BooksButton.Location = new Point(12, EnhEquipButton.Location.Y + 20);
+                        CraftingSystemButton.Location = new Point(12, BooksButton.Location.Y + 20);
+                        PetsItemButton.Location = new Point(12, CraftingSystemButton.Location.Y + 20);
                         break;
                     }
                 case 2:
                     {
-                        ShowAllButton.Location = new Point(7, 60);
-                        WeaponButton.Location = new Point(7, ShowAllButton.Location.Y + 23);
-                        DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
-                        AccessoriesItemsButton.Location = new Point(7, Stones.Location.Y + 23);
-                        ConsumableItemsButton.Location = new Point(7, AccessoriesItemsButton.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, ConsumableItemsButton.Location.Y + 23);
-                        BooksButton.Location = new Point(7, EnhEquipButton.Location.Y + 23);
-                        CraftingSystemButton.Location = new Point(7, BooksButton.Location.Y + 23);
-                        PetsItemButton.Location = new Point(7, CraftingSystemButton.Location.Y + 23);
+                        ShowAllButton.Location = new Point(12, 67);
+                        WeaponButton.Location = new Point(12, ShowAllButton.Location.Y + 20);
+                        DraperyItemsButton.Location = new Point(12, WeaponButton.Location.Y + 20);
+                        AccessoriesItemsButton.Location = new Point(12, StonesSubBtn.Location.Y + 20);
+                        ConsumableItemsButton.Location = new Point(12, AccessoriesItemsButton.Location.Y + 20);
+                        EnhEquipButton.Location = new Point(12, ConsumableItemsButton.Location.Y + 20);
+                        BooksButton.Location = new Point(12, EnhEquipButton.Location.Y + 20);
+                        CraftingSystemButton.Location = new Point(12, BooksButton.Location.Y + 20);
+                        PetsItemButton.Location = new Point(12, CraftingSystemButton.Location.Y + 20);
                         break;
                     }
                 case 3:
                     {
-                        ShowAllButton.Location = new Point(7, 60);
-                        WeaponButton.Location = new Point(7, ShowAllButton.Location.Y + 23);
-                        DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
-                        AccessoriesItemsButton.Location = new Point(7, DraperyItemsButton.Location.Y + 23);
-                        ConsumableItemsButton.Location = new Point(7, Rings.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, ConsumableItemsButton.Location.Y + 23);
-                        BooksButton.Location = new Point(7, EnhEquipButton.Location.Y + 23);
-                        CraftingSystemButton.Location = new Point(7, BooksButton.Location.Y + 23);
-                        PetsItemButton.Location = new Point(7, CraftingSystemButton.Location.Y + 23);
+                        ShowAllButton.Location = new Point(12, 67);
+                        WeaponButton.Location = new Point(12, ShowAllButton.Location.Y + 20);
+                        DraperyItemsButton.Location = new Point(12, WeaponButton.Location.Y + 20);
+                        AccessoriesItemsButton.Location = new Point(12, DraperyItemsButton.Location.Y + 20);
+                        ConsumableItemsButton.Location = new Point(12, RingsSubBtn.Location.Y + 20);
+                        EnhEquipButton.Location = new Point(12, ConsumableItemsButton.Location.Y + 20);
+                        BooksButton.Location = new Point(12, EnhEquipButton.Location.Y + 20);
+                        CraftingSystemButton.Location = new Point(12, BooksButton.Location.Y + 20);
+                        PetsItemButton.Location = new Point(12, CraftingSystemButton.Location.Y + 20);
                         break;
                     }
                 case 4:
                     {
-                        ShowAllButton.Location = new Point(7, 60);
-                        WeaponButton.Location = new Point(7, ShowAllButton.Location.Y + 23);
-                        DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
-                        AccessoriesItemsButton.Location = new Point(7, DraperyItemsButton.Location.Y + 23);
-                        ConsumableItemsButton.Location = new Point(7, AccessoriesItemsButton.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, Script.Location.Y + 23);
-                        BooksButton.Location = new Point(7, EnhEquipButton.Location.Y + 23);
-                        CraftingSystemButton.Location = new Point(7, BooksButton.Location.Y + 23);
-                        PetsItemButton.Location = new Point(7, CraftingSystemButton.Location.Y + 23);
+                        ShowAllButton.Location = new Point(12, 67);
+                        WeaponButton.Location = new Point(12, ShowAllButton.Location.Y + 20);
+                        DraperyItemsButton.Location = new Point(12, WeaponButton.Location.Y + 20);
+                        AccessoriesItemsButton.Location = new Point(12, DraperyItemsButton.Location.Y + 20);
+                        ConsumableItemsButton.Location = new Point(12, AccessoriesItemsButton.Location.Y + 20);
+                        EnhEquipButton.Location = new Point(12, ScriptSubBtn.Location.Y + 20);
+                        BooksButton.Location = new Point(12, EnhEquipButton.Location.Y + 20);
+                        CraftingSystemButton.Location = new Point(12, BooksButton.Location.Y + 20);
+                        PetsItemButton.Location = new Point(12, CraftingSystemButton.Location.Y + 20);
                         break;
                     }
                 case 5:
                     {
-                        ShowAllButton.Location = new Point(7, 60);
-                        WeaponButton.Location = new Point(7, ShowAllButton.Location.Y + 23);
-                        DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
-                        AccessoriesItemsButton.Location = new Point(7, DraperyItemsButton.Location.Y + 23);
-                        ConsumableItemsButton.Location = new Point(7, AccessoriesItemsButton.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, ConsumableItemsButton.Location.Y + 23);
-                        BooksButton.Location = new Point(7, Awake.Location.Y + 23);
-                        CraftingSystemButton.Location = new Point(7, BooksButton.Location.Y + 23);
-                        PetsItemButton.Location = new Point(7, CraftingSystemButton.Location.Y + 23);
+                        ShowAllButton.Location = new Point(12, 67);
+                        WeaponButton.Location = new Point(12, ShowAllButton.Location.Y + 20);
+                        DraperyItemsButton.Location = new Point(12, WeaponButton.Location.Y + 20);
+                        AccessoriesItemsButton.Location = new Point(12, DraperyItemsButton.Location.Y + 20);
+                        ConsumableItemsButton.Location = new Point(12, AccessoriesItemsButton.Location.Y + 20);
+                        EnhEquipButton.Location = new Point(12, ConsumableItemsButton.Location.Y + 20);
+                        BooksButton.Location = new Point(12, AwakeSubBtn.Location.Y + 20);
+                        CraftingSystemButton.Location = new Point(12, BooksButton.Location.Y + 20);
+                        PetsItemButton.Location = new Point(12, CraftingSystemButton.Location.Y + 20);
                         break;
                     }
                 case 6:
                     {
-                        ShowAllButton.Location = new Point(7, 60);
-                        WeaponButton.Location = new Point(7, ShowAllButton.Location.Y + 23);
-                        DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
-                        AccessoriesItemsButton.Location = new Point(7, DraperyItemsButton.Location.Y + 23);
-                        ConsumableItemsButton.Location = new Point(7, AccessoriesItemsButton.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, ConsumableItemsButton.Location.Y + 23);
-                        BooksButton.Location = new Point(7, EnhEquipButton.Location.Y + 23);
-                        CraftingSystemButton.Location = new Point(7, Archer.Location.Y + 23);
-                        PetsItemButton.Location = new Point(7, CraftingSystemButton.Location.Y + 23);
+                        ShowAllButton.Location = new Point(12, 67);
+                        WeaponButton.Location = new Point(12, ShowAllButton.Location.Y + 20);
+                        DraperyItemsButton.Location = new Point(12, WeaponButton.Location.Y + 20);
+                        AccessoriesItemsButton.Location = new Point(12, DraperyItemsButton.Location.Y + 20);
+                        ConsumableItemsButton.Location = new Point(12, AccessoriesItemsButton.Location.Y + 20);
+                        EnhEquipButton.Location = new Point(12, ConsumableItemsButton.Location.Y + 20);
+                        BooksButton.Location = new Point(12, EnhEquipButton.Location.Y + 20);
+                        CraftingSystemButton.Location = new Point(12, ArcherSubBtn.Location.Y + 20);
+                        PetsItemButton.Location = new Point(12, CraftingSystemButton.Location.Y + 20);
                         break;
                     }
 
                 case 7:
                     {
-                        ShowAllButton.Location = new Point(7, 60);
-                        WeaponButton.Location = new Point(7, ShowAllButton.Location.Y + 23);
-                        DraperyItemsButton.Location = new Point(7, WeaponButton.Location.Y + 23);
-                        AccessoriesItemsButton.Location = new Point(7, DraperyItemsButton.Location.Y + 23);
-                        ConsumableItemsButton.Location = new Point(7, AccessoriesItemsButton.Location.Y + 23);
-                        EnhEquipButton.Location = new Point(7, ConsumableItemsButton.Location.Y + 23);
-                        BooksButton.Location = new Point(7, EnhEquipButton.Location.Y + 23);
-                        CraftingSystemButton.Location = new Point(7, BooksButton.Location.Y + 23);
-                        PetsItemButton.Location = new Point(7, Ore.Location.Y + 23);
+                        ShowAllButton.Location = new Point(12, 67);
+                        WeaponButton.Location = new Point(12, ShowAllButton.Location.Y + 20);
+                        DraperyItemsButton.Location = new Point(12, WeaponButton.Location.Y + 20);
+                        AccessoriesItemsButton.Location = new Point(12, DraperyItemsButton.Location.Y + 20);
+                        ConsumableItemsButton.Location = new Point(12, AccessoriesItemsButton.Location.Y + 20);
+                        EnhEquipButton.Location = new Point(12, ConsumableItemsButton.Location.Y + 20);
+                        BooksButton.Location = new Point(12, EnhEquipButton.Location.Y + 20);
+                        CraftingSystemButton.Location = new Point(12, BooksButton.Location.Y + 20);
+                        PetsItemButton.Location = new Point(12, OreSubBtn.Location.Y + 20);
                         break;
                     }
             }
@@ -1804,13 +2146,14 @@ namespace Client.MirScenes.Dialogs
             public MirImageControl IconImage, SelectedImage;
             public bool Selected = false;
 
-            Size IconArea = new Size(34, 32);
+            Size IconArea = new Size(36, 32);
 
             public AuctionRow()
             {
-                Size = new Size(354, 32);
+                Size = new Size(337, 34);
                 Sound = SoundList.ButtonA;
-                BorderColour = Color.Lime;
+                BorderColour = Color.FromArgb(255,200,100,0);
+                Location = new Point(2, 0);
 
                 BeforeDraw += AuctionRow_BeforeDraw;
 
@@ -1818,7 +2161,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     AutoSize = true,
                     Size = new Size(140, 20),
-                    Location = new Point(38, 8),
+                    Location = new Point(38, 7),
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     NotControl = true,
                     Parent = this,
@@ -1828,7 +2171,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     AutoSize = true,
                     Size = new Size(178, 20),
-                    Location = new Point(170, 8),
+                    Location = new Point(160, 7),
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     NotControl = true,
                     Parent = this,
@@ -1838,7 +2181,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     AutoSize = true,
                     Size = new Size(148, 20),
-                    Location = new Point(256, 0),
+                    Location = new Point(240, 0),
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     NotControl = true,
                     Parent = this,
@@ -1846,27 +2189,35 @@ namespace Client.MirScenes.Dialogs
 
                 IconImage = new MirImageControl
                 {
-                    Index = 0,
-                    Library = Libraries.Prguse,
-                    Location = new Point(0, 0),
+                    //Index = 0,
+                    //Library = Libraries.Prguse,
+                    Size = new Size(36, 32),
+                    Location = new Point(1, 1),
                     Parent = this,
                 };
 
-
                 SelectedImage = new MirImageControl
                 {
-                    Index = 545,
+                    /*Index = 545,
                     Library = Libraries.Prguse,
                     Location = new Point(-5, -3),
                     Parent = this,
                     Visible = false,
-                    NotControl = true
+                    NotControl = true*/
+                    Size = new Size(339, 34),
+                    Location = new Point (0, 0),
+                    Border = true,
+                    BorderColour = Color.FromArgb(255, 210, 100, 0),
+                    NotControl = true,
+                    Visible = false,
+                    Parent = this,                   
+                    
                 };
 
                 ExpireLabel = new MirLabel
                 {
                     AutoSize = true,
-                    Location = new Point(256, 14),
+                    Location = new Point(240, 14),
                     Size = new Size(110, 22),
                     DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                     Parent = this,
