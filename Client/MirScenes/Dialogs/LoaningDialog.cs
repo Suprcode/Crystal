@@ -19,7 +19,7 @@ namespace Client.MirScenes.Dialogs
         public MirLabel NameLabel, RentalPeriodLabel;
         public MirButton LockButton, SetRentalPeriodButton, ConfirmButton, CloseButton;
         public static UserItem LoanItem;
-        public int RentalDays;
+        public uint RentalDays;
 
         public LoaningDialog()
         {
@@ -179,12 +179,14 @@ namespace Client.MirScenes.Dialogs
 
             inputBox.OKButton.Click += (o1, e1) =>
             {
-                if (int.TryParse(inputBox.InputTextBox.Text, out RentalDays))
+                if (uint.TryParse(inputBox.InputTextBox.Text, out RentalDays))
                 {
                     if (RentalDays >= 1 && RentalDays <= 30)
                     {
                         RefreshInterface();
                         inputBox.Dispose();
+
+                        Network.Enqueue(new C.RentalPeriod { Days = RentalDays });
                     }
                 }
                 else
@@ -217,6 +219,7 @@ namespace Client.MirScenes.Dialogs
         public string GuestName;
         public bool GuestItemLocked;
         public static UserItem GuestLoanItem;
+        public uint GuestRentalDays;
 
         public GuestLoaningDialog()
         {
@@ -290,6 +293,7 @@ namespace Client.MirScenes.Dialogs
         public void RefreshInterface()
         {
             NameLabel.Text = GuestName;
+            RentalPeriodLabel.Text = string.Format("Rental Period: {0} Days", GuestRentalDays);
 
             if (GuestLoanItem != null)
                 GameScene.Bind(GuestLoanItem);

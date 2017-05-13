@@ -2137,6 +2137,23 @@ public sealed class AwakeningNeedMaterials : Packet
         }
     }
 
+    public sealed class RentalPeriod : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RentalPeriod; } }
+
+        public uint Days;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Days = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Days);
+        }
+    }
+
     public sealed class DepositRentalItem : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.DepositRentalItem; } }

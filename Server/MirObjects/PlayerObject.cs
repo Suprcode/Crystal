@@ -317,6 +317,7 @@ namespace Server.MirObjects
 
         public PlayerObject RentalPartner = null;
         public uint RentalGoldAmount = 0;
+        public uint RentalPeriodLength = 0;
         public bool RentalGoldLocked = false;
         public bool RentalItemLocked = false;
 
@@ -19359,6 +19360,19 @@ namespace Server.MirObjects
 
             Enqueue(new S.LoseGold { Gold = amount });
             RentalPartner.Enqueue(new S.RentalGold { Amount = amount });
+        }
+
+        public void RentalPeriod(uint days)
+        {
+            if (RentalPartner == null)
+                return;
+
+            if (RentalItemLocked)
+                return;
+
+            RentalPeriodLength = days;
+
+            RentalPartner.Enqueue(new S.RentalPeriod { Days = days });
         }
 
         public void DepositRentalItem(int from, int to)

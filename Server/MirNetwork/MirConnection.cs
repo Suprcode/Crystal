@@ -584,6 +584,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.RentalGold:
                     RentalGold((C.RentalGold)p);
                     break;
+                case (short)ClientPacketIds.RentalPeriod:
+                    RentalPeriod((C.RentalPeriod)p);
+                    break;
                 case (short)ClientPacketIds.DepositRentalItem:
                     DepositRentalItem((C.DepositRentalItem)p);
                     break;
@@ -1698,6 +1701,14 @@ namespace Server.MirNetwork
                 return;
 
             Player.RentalGold(p.Amount);
+        }
+
+        private void RentalPeriod(C.RentalPeriod p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RentalPeriod(p.Days);
         }
 
         private void DepositRentalItem(C.DepositRentalItem p)

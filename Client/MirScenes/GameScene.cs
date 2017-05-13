@@ -1630,6 +1630,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.RentalGold:
                     RentalGold((S.RentalGold)p);
                     break;
+                case (short)ServerPacketIds.RentalPeriod:
+                    RentalPeriod((S.RentalPeriod)p);
+                    break;
                 case (short)ServerPacketIds.DepositRentalItem:
                     DepositRentalItem((S.DepositRentalItem)p);
                     break;
@@ -8221,6 +8224,12 @@ namespace Client.MirScenes
             RentingDialog.RefreshInterface();
         }
 
+        private void RentalPeriod(S.RentalPeriod p)
+        {
+            GuestLoaningDialog.GuestRentalDays = p.Days;
+            LoaningDialog.RefreshInterface();
+        }
+
         private void DepositRentalItem(S.DepositRentalItem p)
         {
             MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
@@ -8239,7 +8248,8 @@ namespace Client.MirScenes
             fromCell.Item = null;
             User.RefreshStats();
 
-            LoaningDialog.LoaningInputRentalPeroid();
+            if (LoaningDialog.RentalDays == 0)
+                LoaningDialog.LoaningInputRentalPeroid();
         }
 
         private void RetrieveRentalItem(S.RetrieveRentalItem p)

@@ -1453,6 +1453,7 @@ public enum ServerPacketIds : short
 
     RentalAccept,
     RentalGold,
+    RentalPeriod,
     DepositRentalItem,
     RetrieveRentalItem,
     RentItem,
@@ -1595,6 +1596,7 @@ public enum ClientPacketIds : short
 
     RentalRequest,
     RentalGold,
+    RentalPeriod,
     DepositRentalItem,
     RetrieveRentalItem,
     RentalCancel,
@@ -4628,6 +4630,8 @@ public abstract class Packet
                 return new C.RentalRequest();
             case (short)ClientPacketIds.RentalGold:
                 return new C.RentalGold();
+            case (short)ClientPacketIds.RentalPeriod:
+                return new C.RentalPeriod();
             case (short)ClientPacketIds.DepositRentalItem:
                 return new C.DepositRentalItem();
             case (short)ClientPacketIds.RetrieveRentalItem:
@@ -5095,6 +5099,8 @@ public abstract class Packet
                 return new S.RentalAccept();
             case (short)ServerPacketIds.RentalGold:
                 return new S.RentalGold();
+            case (short)ServerPacketIds.RentalPeriod:
+                return new S.RentalPeriod();
             case (short)ServerPacketIds.DepositRentalItem:
                 return new S.DepositRentalItem();
             case (short)ServerPacketIds.RetrieveRentalItem:
