@@ -72,6 +72,7 @@ namespace Server.MirDatabase
         public byte MentalStateLvl;
 
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];
+        public UserItem LoanItem = null;
         public UserItem CurrentRefine = null;
         public long CollectTime = 0;
         public List<UserMagic> Magics = new List<UserMagic>();

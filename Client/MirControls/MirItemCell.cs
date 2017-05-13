@@ -24,6 +24,12 @@ namespace Client.MirControls
                 if (GridType == MirGridType.TrustMerchant)
                     return TrustMerchantDialog.Selected != null ? TrustMerchantDialog.Selected.Listing.Item : null;
 
+                if (GridType == MirGridType.Renting)
+                    return LoaningDialog.LoanItem;
+
+                if (GridType == MirGridType.GuestRenting)
+                    return GuestLoaningDialog.GuestLoanItem;
+
                 if (ItemArray != null && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
                     return ItemArray[_itemSlot];
                 return null;
@@ -32,6 +38,10 @@ namespace Client.MirControls
             {
                 if (GridType == MirGridType.DropPanel)
                     NPCDropDialog.TargetItem = value;
+                else if (GridType == MirGridType.Renting)
+                    LoaningDialog.LoanItem = value;
+                else if (GridType == MirGridType.GuestRenting)
+                    GuestLoaningDialog.GuestLoanItem = value;
                 else if (ItemArray != null && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
                     ItemArray[_itemSlot] = value;
 
@@ -74,6 +84,7 @@ namespace Client.MirControls
                         return MailComposeParcelDialog.Items;
                     case MirGridType.Refine:
                         return GameScene.Refine;
+
                     default:
                         throw new NotImplementedException();
                 }
@@ -958,7 +969,35 @@ namespace Client.MirControls
                                 break;
                             #endregion
 
+                            #region From Item Renting Dialog
 
+                            case MirGridType.Renting:
+                                if (GameScene.User.RentalItemLocked)
+                                {
+                                    GameScene.Scene.ChatDialog.ReceiveChat("Unable to remove locked item, cancel item rental and try again.", ChatType.System);
+                                    GameScene.SelectedCell = null;
+                                    return;
+                                }
+
+                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
+                                {
+                                    GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
+                                    GameScene.SelectedCell = null;
+                                    return;
+                                }
+
+                                if (Item == null)
+                                {
+                                    Network.Enqueue(new C.RetrieveRentalItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+
+                                    Locked = true;
+                                    GameScene.SelectedCell.Locked = true;
+                                    GameScene.SelectedCell = null;
+                                    return;
+                                }
+
+                                break;
+                                #endregion
                         }
                         break;
                     #endregion
@@ -1287,7 +1326,28 @@ namespace Client.MirControls
 
                     #endregion
 
+                    #region To Item Renting Dialog
 
+                    case MirGridType.Renting:
+                        switch (GameScene.SelectedCell.GridType)
+                        {
+                            case MirGridType.Inventory:
+             
+                                if (Item == null)
+                                {
+                                    Network.Enqueue(new C.DepositRentalItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                    Locked = true;
+                                    GameScene.SelectedCell.Locked = true;
+                                    GameScene.SelectedCell = null;
+                                    return;
+                                }
+
+                                break;
+                        }
+
+                        break;
+
+                    #endregion
 
                     #region To Awakening
                     case MirGridType.AwakenItem:

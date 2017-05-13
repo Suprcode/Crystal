@@ -112,6 +112,11 @@ namespace Client.MirScenes
 
         public ReportDialog ReportDialog;
 
+        public LoaningDialog LoaningDialog;
+        public RentingDialog RentingDialog;
+        public GuestLoaningDialog GuestLoaningDialog;
+        public GuestRentingDialog GuestRentingDialog;
+
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
@@ -248,6 +253,11 @@ namespace Client.MirScenes
             GameShopDialog = new GameShopDialog { Parent = this, Visible = false };
 
             ReportDialog = new ReportDialog { Parent = this, Visible = false };
+
+            LoaningDialog = new LoaningDialog { Parent = this, Visible = false };
+            RentingDialog = new RentingDialog { Parent = this, Visible = false };
+            GuestLoaningDialog = new GuestLoaningDialog { Parent = this, Visible = false };
+            GuestRentingDialog = new GuestRentingDialog { Parent = this, Visible = false };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -529,6 +539,9 @@ namespace Client.MirScenes
                         break;
                     case KeybindOptions.Trade:
                         Network.Enqueue(new C.TradeRequest());
+                        break;
+                    case KeybindOptions.Rental:
+                        Network.Enqueue(new C.RentalRequest());
                         break;
                     case KeybindOptions.ChangePetmode:
                         switch (PMode)
@@ -1610,6 +1623,33 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.Opendoor:
                     Opendoor((S.Opendoor)p);
+                    break;
+                case (short)ServerPacketIds.RentalAccept:
+                    RentalAccept((S.RentalAccept)p);
+                    break;
+                case (short)ServerPacketIds.RentalGold:
+                    RentalGold((S.RentalGold)p);
+                    break;
+                case (short)ServerPacketIds.DepositRentalItem:
+                    DepositRentalItem((S.DepositRentalItem)p);
+                    break;
+                case (short)ServerPacketIds.RetrieveRentalItem:
+                    RetrieveRentalItem((S.RetrieveRentalItem)p);
+                    break;
+                case (short)ServerPacketIds.RentItem:
+                    RentItem((S.RentItem)p);
+                    break;
+                case (short)ServerPacketIds.RentalCancel:
+                    RentalCancel((S.RentalCancel)p);
+                    break;
+                case (short)ServerPacketIds.RentalLock:
+                    RentalLock((S.RentalLock)p);
+                    break;
+                case (short)ServerPacketIds.RentalPartnerLock:
+                    RentalPartnerLock((S.RentalPartnerLock)p);
+                    break;
+                case (short)ServerPacketIds.RentalCanConfirm:
+                    RentalCanConfirm((S.RentalCanConfirm)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -5348,9 +5388,9 @@ namespace Client.MirScenes
 
         private void ResizeStorage(S.ResizeStorage p)
         {
-            User.AddedStorage = true;
-
             Array.Resize(ref Storage, p.Size);
+            User.HasExpandedStorage = p.HasExpandedStorage;
+            User.ExpandedStorageExpiryTime = p.ExpiryTime;
 
             StorageDialog.RefreshStorage2();
         }
@@ -8159,6 +8199,115 @@ namespace Client.MirScenes
         public void Opendoor(S.Opendoor p)
         {
             MapControl.OpenDoor(p.DoorIndex, p.Close);
+        }
+
+        public void RentalAccept(S.RentalAccept p)
+        {
+            if (!p.Renting)
+            {
+                GuestRentingDialog.GuestName = p.Name;
+                LoaningDialog.LoaningAccept();
+            }
+            else
+            {
+                GuestLoaningDialog.GuestName = p.Name;
+                RentingDialog.RentingAccept();
+            }
+        }
+
+        private void RentalGold(S.RentalGold p)
+        {
+            GuestRentingDialog.GuestGold = p.Amount;
+            RentingDialog.RefreshInterface();
+        }
+
+        private void DepositRentalItem(S.DepositRentalItem p)
+        {
+            MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
+            MirItemCell toCell = LoaningDialog.ItemCell;
+
+            if (toCell == null || fromCell == null)
+                return;
+ 
+            toCell.Locked = false;
+            fromCell.Locked = false;
+         
+            if (!p.Success)
+                return;
+
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+
+            LoaningDialog.LoaningInputRentalPeroid();
+        }
+
+        private void RetrieveRentalItem(S.RetrieveRentalItem p)
+        {
+            MirItemCell fromCell = LoaningDialog.ItemCell;
+            MirItemCell toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+
+            if (toCell == null || fromCell == null)
+                return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success)
+                return;
+
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+        }
+
+        private void RentItem(S.RentItem p)
+        {
+            GuestLoaningDialog.GuestLoanItem = p.LoanItem;
+            RentingDialog.RefreshInterface();
+        }
+
+        private void RentalCancel(S.RentalCancel p)
+        {
+            User.RentalGoldLocked = false;
+            User.RentalItemLocked = false;
+
+            LoaningDialog.LoaningReset();
+            RentingDialog.RentingReset();
+
+            MirMessageBox messageBox = new MirMessageBox("Rental deal cancelled.\r\nTo deal correctly you must face the other party.", MirMessageBoxButtons.OK);
+            messageBox.Show();
+        }
+
+        public void RentalLock(S.RentalLock p)
+        {
+            if (!p.Success)
+            {
+                MirMessageBox messageBox = new MirMessageBox("Unable to lock selection.\r\nRental fee and rental item are required.", MirMessageBoxButtons.OK);
+                messageBox.Show();
+                return;
+            }
+
+            User.RentalGoldLocked = p.GoldLocked;
+            User.RentalItemLocked = p.ItemLocked;
+
+            if (User.RentalGoldLocked)
+                RentingDialog.RentingLock();
+            else if (User.RentalItemLocked)
+                LoaningDialog.LoaningLock();
+        }
+
+        public void RentalPartnerLock(S.RentalPartnerLock p)
+        {
+            if (p.GoldLocked)
+                GuestRentingDialog.RentingLock();
+            else if (p.ItemLocked)
+                GuestLoaningDialog.LoaningLock();
+        }
+
+        public void RentalCanConfirm(S.RentalCanConfirm p)
+        {
+            LoaningDialog.ConfirmButton.Enabled = true;
         }
 
         #region Disposable

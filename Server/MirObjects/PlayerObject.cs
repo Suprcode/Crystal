@@ -22,8 +22,8 @@ namespace Server.MirObjects
 
         public long LastRecallTime, LastRevivalTime, LastTeleportTime, LastProbeTime, MenteeEXP;
 
-        public short Looks_Armour = 0, Looks_Weapon = -1;
-        public byte Looks_Wings = 0;
+		public short Looks_Armour = 0, Looks_Weapon = -1, Looks_WeaponEffect = 0;
+		public byte Looks_Wings = 0;
 
         public bool WarZone = false;
 
@@ -315,6 +315,11 @@ namespace Server.MirObjects
         public bool TradeLocked = false;
         public uint TradeGoldAmount = 0;
 
+        public PlayerObject RentalPartner = null;
+        public uint RentalGoldAmount = 0;
+        public bool RentalGoldLocked = false;
+        public bool RentalItemLocked = false;
+
         private long LastRankUpdate = Envir.Time;
 
         public List<QuestProgressInfo> CurrentQuests
@@ -461,7 +466,19 @@ namespace Server.MirObjects
             }
             Buffs.Clear();
 
+            for (int i = 0; i < PoisonList.Count; i++)
+            {
+                Poison poison = PoisonList[i];
+                poison.Owner = null;
+                poison.TickTime -= Envir.Time;
+
+                Info.Poisons.Add(poison);
+            }
+
+            PoisonList.Clear();
+
             TradeCancel();
+            RentalCancel();
             RefineCancel();
             LogoutRelationship();
             LogoutMentor();
@@ -645,6 +662,13 @@ namespace Server.MirObjects
                 ReceiveChat("New mail has arrived.", ChatType.System);
 
                 GetMail();
+            }
+
+            if (Account.ExpandedStorageExpiryDate < Envir.Now && Account.HasExpandedStorage)
+            {
+                Account.HasExpandedStorage = false;
+                ReceiveChat("Expanded storage has expired.", ChatType.System);
+                Enqueue(new S.ResizeStorage { Size = Account.Storage.Length, HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
             }
 
             if (Envir.Time > IncreaseLoyaltyTime && Mount.HasMount)
@@ -837,7 +861,7 @@ namespace Server.MirObjects
 
             if (IsGM && !isGM)
             {
-                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { 0 }, Infinite = true });
+                AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { 0 }, Infinite = true, Visible = true });
             }
         }
         private void ProcessRegen()
@@ -2233,7 +2257,8 @@ namespace Server.MirObjects
                 QuestInventory = new UserItem[Info.QuestInventory.Length],
                 Gold = Account.Gold,
                 Credit = Account.Credit,
-                AddedStorage = Account.Storage.Length > 80
+                HasExpandedStorage = Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
+                ExpandedStorageExpiryTime = Account.ExpandedStorageExpiryDate
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -2490,14 +2515,16 @@ namespace Server.MirObjects
         private void RefreshEquipmentStats()
         {
             short OldLooks_Weapon = Looks_Weapon;
-            short OldLooks_Armour = Looks_Armour;
+			short OldLooks_WeaponEffect = Looks_WeaponEffect;
+			short OldLooks_Armour = Looks_Armour;
             short Old_MountType = MountType;
             byte OldLooks_Wings = Looks_Wings;
             byte OldLight = Light;
 
             Looks_Armour = 0;
             Looks_Weapon = -1;
-            Looks_Wings = 0;
+			Looks_WeaponEffect = 0;
+			Looks_Wings = 0;
             Light = 0;
             CurrentWearWeight = 0;
             CurrentHandWeight = 0;
@@ -2609,10 +2636,13 @@ namespace Server.MirObjects
                     Looks_Wings = RealItem.Effect;
                 }
 
-                if (RealItem.Type == ItemType.Weapon)
-                    Looks_Weapon = RealItem.Shape;
+				if (RealItem.Type == ItemType.Weapon)
+				{
+					Looks_Weapon = RealItem.Shape;
+					Looks_WeaponEffect = RealItem.Effect;
+				}
 
-                if (RealItem.Type == ItemType.Mount)
+				if (RealItem.Type == ItemType.Mount)
                 {
                     MountType = RealItem.Shape;
                     //RealItem.Effect;
@@ -2654,7 +2684,7 @@ namespace Server.MirObjects
                 MaxWearWeight = Math.Min(ushort.MaxValue, (ushort)(MaxWearWeight * 2));
                 MaxHandWeight = Math.Min(ushort.MaxValue, (ushort)(MaxHandWeight * 2));
             }
-            if ((OldLooks_Armour != Looks_Armour) || (OldLooks_Weapon != Looks_Weapon) || (OldLooks_Wings != Looks_Wings) || (OldLight != Light))
+            if ((OldLooks_Armour != Looks_Armour) || (OldLooks_Weapon != Looks_Weapon) || (OldLooks_WeaponEffect != Looks_WeaponEffect) || (OldLooks_Wings != Looks_Wings) || (OldLight != Light))
             {
                 Broadcast(GetUpdateInfo());
 
@@ -4728,14 +4758,27 @@ namespace Server.MirObjects
 
                     case "ADDSTORAGE":
                         {
-                            int openLevel = Account.Storage.Length / 4;
-                            uint openGold = (uint)(openLevel * 1000000);
-                            if (Account.Gold >= openGold)
+                            TimeSpan addedTime = new TimeSpan(10, 0, 0, 0);
+                            uint cost = 1000000;
+
+                            if (Account.Gold >= cost)
                             {
-                                Account.Gold -= openGold;
-                                Enqueue(new S.LoseGold { Gold = openGold });
-                                Enqueue(new S.ResizeStorage { Size = Account.ResizeStorage() });
-                                ReceiveChat("Storage size increased.", ChatType.System);
+                                Account.Gold -= cost;
+                                Account.HasExpandedStorage = true;
+
+                                if (Account.ExpandedStorageExpiryDate > Envir.Now)
+                                {
+                                    Account.ExpandedStorageExpiryDate = Account.ExpandedStorageExpiryDate + addedTime;
+                                    ReceiveChat("Expanded storage time extended, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                }
+                                else
+                                {
+                                    Account.ExpandedStorageExpiryDate = Envir.Now + addedTime;
+                                    ReceiveChat("Storage expanded, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                }
+
+                                Enqueue(new S.LoseGold { Gold = cost });
+                                Enqueue(new S.ResizeStorage { Size = Account.ExpandStorage(), HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
                             }
                             else
                             {
@@ -5113,7 +5156,11 @@ namespace Server.MirObjects
                     //break;
                 }
 
-                if (TradePartner != null) TradeCancel();
+                if (TradePartner != null)
+                    TradeCancel();
+
+                if (RentalPartner != null)
+                    RentalCancel();
 
                 Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
@@ -5271,7 +5318,11 @@ namespace Server.MirObjects
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + GetDelayTime(MoveDelay);
 
-            if (TradePartner != null) TradeCancel();
+            if (TradePartner != null)
+                TradeCancel();
+
+            if (RentalPartner != null)
+                RentalCancel();
 
             if (RidingMount) DecreaseMountLoyalty(1);
 
@@ -5312,7 +5363,12 @@ namespace Server.MirObjects
                     UpdateConcentration();//Update & send to client
                 }
             }
-            if (TradePartner != null) TradeCancel();
+
+            if (TradePartner != null)
+                TradeCancel();
+
+            if (RentalPartner != null)
+                RentalCancel();
 
             if (Hidden && !HasClearRing && !Sneaking)
             {
@@ -5464,7 +5520,11 @@ namespace Server.MirObjects
                 CurrentMap.GetCell(CurrentLocation).Add(this);
                 AddObjects(dir, 1);
 
-                if (TradePartner != null) TradeCancel();
+                if (TradePartner != null)
+                    TradeCancel();
+
+                if (RentalPartner != null)
+                    RentalCancel();
 
                 Enqueue(new S.Pushed { Direction = Direction, Location = CurrentLocation });
                 Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -9443,7 +9503,12 @@ namespace Server.MirObjects
             if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
             //Cancel actions
-            if (TradePartner != null) TradeCancel();
+            if (TradePartner != null)
+                TradeCancel();
+
+            if (RentalPartner != null)
+                RentalCancel();
+
             if (RidingMount) RefreshMount();
             if (ActiveBlizzard) ActiveBlizzard = false;
 
@@ -9519,7 +9584,8 @@ namespace Server.MirObjects
             {
                 ObjectID = ObjectID,
                 Weapon = Looks_Weapon,
-                Armour = Looks_Armour,
+				WeaponEffect = Looks_WeaponEffect,
+				Armour = Looks_Armour,
                 Light = Light,
                 WingEffect = Looks_Wings
             };
@@ -9557,7 +9623,8 @@ namespace Server.MirObjects
                 Direction = Direction,
                 Hair = Hair,
                 Weapon = Looks_Weapon,
-                Armour = Looks_Armour,
+				WeaponEffect = Looks_WeaponEffect,
+				Armour = Looks_Armour,
                 Light = Light,
                 Poison = CurrentPoison,
                 Dead = Dead,
@@ -19201,6 +19268,318 @@ namespace Server.MirObjects
             {
                 Enqueue(new S.Opendoor() { DoorIndex = Doorindex });
                 Broadcast(new S.Opendoor() { DoorIndex = Doorindex });
+            }
+        }
+
+        public void RentalRequest()
+        {
+            if (RentalPartner != null)
+            {
+                ReceiveChat("You are already renting an item to another player.", ChatType.System);
+                return;
+            }
+                
+            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+            Cell cell = CurrentMap.GetCell(target);
+            PlayerObject rentingPlayer = null;
+
+            if (cell.Objects == null || cell.Objects.Count < 1)
+                return;
+
+            for (int i = 0; i < cell.Objects.Count; i++)
+            {
+                MapObject obj = cell.Objects[i];
+
+                if (obj.Race != ObjectType.Player)
+                    continue;
+
+                rentingPlayer = Envir.GetPlayer(obj.Name);
+            }
+
+            if (rentingPlayer == null)
+            {
+                ReceiveChat(string.Format("You must face someone to be able to rent items."), ChatType.System);
+                return;
+            }
+
+            if (rentingPlayer != null)
+            {
+                if (!Functions.FacingEachOther(Direction, CurrentLocation, rentingPlayer.Direction, rentingPlayer.CurrentLocation))
+                {
+                    ReceiveChat(string.Format("You must face someone to be able to rent items."), ChatType.System);
+                    return;
+                }
+
+                if (rentingPlayer == this)
+                {
+                    ReceiveChat("You cannont rent items to yourself.", ChatType.System);
+                    return;
+                }
+
+                if (rentingPlayer.Dead || Dead)
+                {
+                    ReceiveChat("Cannot rent items when dead.", ChatType.System);
+                    return;
+                }
+
+                if (!Functions.InRange(rentingPlayer.CurrentLocation, CurrentLocation, Globals.DataRange) || rentingPlayer.CurrentMap != CurrentMap)
+                {
+                    ReceiveChat(string.Format("Player {0} is not within range.", rentingPlayer.Info.Name), ChatType.System);
+                    return;
+                }
+
+                if (rentingPlayer.RentalPartner != null)
+                {
+                    ReceiveChat(string.Format("Player {0} is busy renting an item from someone.", rentingPlayer.Info.Name), ChatType.System);
+                    return;
+                }
+
+                RentalPartner = rentingPlayer;
+                rentingPlayer.RentalPartner = this;
+
+                Enqueue(new S.RentalAccept { Name = rentingPlayer.Info.Name, Renting = false });
+                RentalPartner.Enqueue(new S.RentalAccept { Name = Info.Name, Renting = true });
+            }
+        }
+
+        public void RentalGold(uint amount)
+        {
+            
+            if (RentalPartner == null)
+                return;
+
+            if (Account.Gold < amount)
+                return;
+
+            if (RentalGoldLocked)
+                return;
+
+            RentalGoldAmount += amount;
+            Account.Gold -= amount;
+
+            Enqueue(new S.LoseGold { Gold = amount });
+            RentalPartner.Enqueue(new S.RentalGold { Amount = amount });
+        }
+
+        public void DepositRentalItem(int from, int to)
+        {
+            S.DepositRentalItem p = new S.DepositRentalItem { From = from, To = to, Success = false };
+
+            if (RentalItemLocked)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (from < 0 || from >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= 1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.Inventory[from];
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.LoanItem == null)
+            {
+                Info.LoanItem = temp;
+                Info.Inventory[from] = null;
+                RefreshBagWeight();
+                RentItem();
+
+                Report.ItemMoved("DepositRentalItem", temp, MirGridType.Inventory, MirGridType.Renting, from, to);
+
+                p.Success = true;
+                Enqueue(p);
+                return;
+            }
+
+            Enqueue(p);
+        }
+
+        public void RetrieveRentalItem(int from, int to)
+        {
+            S.RetrieveRentalItem p = new S.RetrieveRentalItem { From = from, To = to, Success = false };
+
+            if (from < 0 || from >= 1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (to < 0 || to >= Info.Inventory.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            UserItem temp = Info.LoanItem;
+
+            if (temp == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            {
+                ReceiveChat("Too heavy to get back.", ChatType.System);
+                Enqueue(p);
+                return;
+            }
+
+            if (Info.Inventory[to] == null)
+            {
+                Info.Inventory[to] = temp;
+                Info.LoanItem = null;
+
+                p.Success = true;
+                RefreshBagWeight();
+                RentItem();
+
+                Report.ItemMoved("RetrieveRentalItem", temp, MirGridType.Renting, MirGridType.Inventory, from, to);
+            }
+
+            Enqueue(p);
+        }
+
+        public void RentItem()
+        {
+            if (RentalPartner == null)
+                return;
+
+            if (Info.LoanItem != null)
+                RentalPartner.CheckItem(Info.LoanItem);
+
+            RentalPartner.Enqueue(new S.RentItem { LoanItem = Info.LoanItem });
+        }
+
+        public void RentalCancel()
+        {
+            RentalUnlock();
+
+            if (RentalPartner == null)
+                return;
+  
+            PlayerObject[] RentalPair = new PlayerObject[2] { RentalPartner, this };
+
+            for (int p = 0; p < 2; p++)
+            {
+                if (RentalPair[p] != null)
+                {
+                    if (RentalPair[p].Info.LoanItem != null)
+                    {
+                        UserItem temp = RentalPair[p].Info.LoanItem;
+
+                        if (temp == null)
+                            continue;
+
+                        // Player has no room in inventory
+                        if (FreeSpace(RentalPair[p].Info.Inventory) < 1)
+                        {
+                            RentalPair[p].GainItemMail(temp, 1);
+                            Report.ItemMailed("RentalCancel", temp, temp.Count, 1);
+
+                            RentalPair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            RentalPair[p].Info.LoanItem = null;
+                            continue;
+                        }
+
+                        for (int i = 0; i < RentalPair[p].Info.Inventory.Length; i++)
+                        {
+                            if (RentalPair[p].Info.Inventory[i] != null)
+                                continue;
+
+                            // Put item back in inventory
+                            if (RentalPair[p].CanGainItem(temp))
+                                RentalPair[p].RetrieveRentalItem(0, i);
+                            else //Send item to mailbox if it can no longer be stored
+                            {
+                                RentalPair[p].GainItemMail(temp, 1);
+                                Report.ItemMailed("RentalCancel", temp, temp.Count, 1);
+
+                                RentalPair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            }
+
+                            RentalPair[p].Info.LoanItem = null;
+
+                            break;
+                        }
+                    }
+ 
+                    // Put back gold.
+                    if (RentalPair[p].RentalGoldAmount > 0)
+                    {
+                        Report.GoldChanged("RentalCancel", RentalPair[p].RentalGoldAmount, false);
+
+                        RentalPair[p].GainGold(RentalPair[p].RentalGoldAmount);
+                        RentalPair[p].RentalGoldAmount = 0;
+                    }
+
+                    RentalPair[p].RentalPartner = null;
+                    RentalPair[p].Enqueue(new S.RentalCancel());
+                }
+            }
+        }
+
+        public void RentalGoldLock()
+        {
+            S.RentalLock p = new S.RentalLock { Success = false, GoldLocked = false, ItemLocked = false };
+
+            if (RentalGoldAmount > 0)
+            {
+                RentalGoldLocked = true;
+                p.GoldLocked = true;
+                p.Success = true;
+
+                RentalPartner.Enqueue(new S.RentalPartnerLock { GoldLocked = RentalGoldLocked });
+            }
+
+            if (RentalGoldLocked && RentalPartner.RentalItemLocked)
+                RentalPartner.Enqueue(new S.RentalCanConfirm());
+
+            Enqueue(p);
+        }
+
+        public void RentalItemLock()
+        {
+            S.RentalLock p = new S.RentalLock { Success = false, GoldLocked = false, ItemLocked = false };
+
+            if (Info.LoanItem != null)
+            {
+                RentalItemLocked = true;
+                p.ItemLocked = true;
+                p.Success = true;
+
+                RentalPartner.Enqueue(new S.RentalPartnerLock { ItemLocked = RentalItemLocked });
+            }
+
+            if (RentalItemLocked && RentalPartner.RentalGoldLocked)
+                Enqueue(new S.RentalCanConfirm());
+            
+            Enqueue(p);
+        }
+
+        public void RentalUnlock()
+        {
+            RentalGoldLocked = false;
+            RentalItemLocked = false;
+
+            if (RentalPartner != null)
+            {
+                RentalPartner.RentalGoldLocked = false;
+                RentalPartner.RentalItemLocked = false;
             }
         }
     }

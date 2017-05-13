@@ -808,6 +808,8 @@ public enum MirGridType : byte
     AwakenItem = 14,
     Mail = 15,
     Refine = 16,
+    Renting = 17,
+    GuestRenting = 18,
 }
 
 public enum EquipmentSlot : byte
@@ -1448,6 +1450,16 @@ public enum ServerPacketIds : short
     GameShopStock,
     Rankings,
     Opendoor,
+
+    RentalAccept,
+    RentalGold,
+    DepositRentalItem,
+    RetrieveRentalItem,
+    RentItem,
+    RentalCancel,
+    RentalLock,
+    RentalPartnerLock,
+    RentalCanConfirm,
 }
 
 public enum ClientPacketIds : short
@@ -1580,6 +1592,14 @@ public enum ClientPacketIds : short
     ReportIssue,
     GetRanking,
     Opendoor,
+
+    RentalRequest,
+    RentalGold,
+    DepositRentalItem,
+    RetrieveRentalItem,
+    RentalCancel,
+    RentalGoldLock,
+    RentalItemLock,
 }
 
 public enum ConquestType : byte
@@ -4604,6 +4624,20 @@ public abstract class Packet
                 return new C.GetRanking();
             case (short)ClientPacketIds.Opendoor:
                 return new C.Opendoor();
+            case (short)ClientPacketIds.RentalRequest:
+                return new C.RentalRequest();
+            case (short)ClientPacketIds.RentalGold:
+                return new C.RentalGold();
+            case (short)ClientPacketIds.DepositRentalItem:
+                return new C.DepositRentalItem();
+            case (short)ClientPacketIds.RetrieveRentalItem:
+                return new C.RetrieveRentalItem();
+            case (short)ClientPacketIds.RentalCancel:
+                return new C.RentalCancel();
+            case (short)ClientPacketIds.RentalGoldLock:
+                return new C.RentalGoldLock();
+            case (short)ClientPacketIds.RentalItemLock:
+                return new C.RentalItemLock();
             default:
                 return null;
         }
@@ -5057,6 +5091,24 @@ public abstract class Packet
                 return new S.Rankings();
             case (short)ServerPacketIds.Opendoor:
                 return new S.Opendoor();
+            case (short)ServerPacketIds.RentalAccept:
+                return new S.RentalAccept();
+            case (short)ServerPacketIds.RentalGold:
+                return new S.RentalGold();
+            case (short)ServerPacketIds.DepositRentalItem:
+                return new S.DepositRentalItem();
+            case (short)ServerPacketIds.RetrieveRentalItem:
+                return new S.RetrieveRentalItem();
+            case (short)ServerPacketIds.RentItem:
+                return new S.RentItem();
+            case (short)ServerPacketIds.RentalCancel:
+                return new S.RentalCancel();
+            case (short)ServerPacketIds.RentalLock:
+                return new S.RentalLock();
+            case (short)ServerPacketIds.RentalPartnerLock:
+                return new S.RentalPartnerLock();
+            case (short)ServerPacketIds.RentalCanConfirm:
+                return new S.RentalCanConfirm();
             default:
                 return null;
         }

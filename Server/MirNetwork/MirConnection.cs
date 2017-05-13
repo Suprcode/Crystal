@@ -578,6 +578,28 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.Opendoor:
                     Opendoor((C.Opendoor)p);
                     break;
+                case (short)ClientPacketIds.RentalRequest:
+                    RentalRequest((C.RentalRequest)p);
+                    break;
+                case (short)ClientPacketIds.RentalGold:
+                    RentalGold((C.RentalGold)p);
+                    break;
+                case (short)ClientPacketIds.DepositRentalItem:
+                    DepositRentalItem((C.DepositRentalItem)p);
+                    break;
+                case (short)ClientPacketIds.RetrieveRentalItem:
+                    RetrieveRentalItem((C.RetrieveRentalItem)p);
+                    break;
+                case (short)ClientPacketIds.RentalCancel:
+                    RentalCancel((C.RentalCancel)p);
+                    break;
+                case (short)ClientPacketIds.RentalGoldLock:
+                    RentalGoldLock((C.RentalGoldLock)p);
+                    break;
+                case (short)ClientPacketIds.RentalItemLock:
+                    RentalItemLock((C.RentalItemLock)p);
+                    break;
+
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1660,6 +1682,62 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
             Player.Opendoor(p.DoorIndex);
+        }
+
+        private void RentalRequest(C.RentalRequest p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RentalRequest();
+        }
+
+        private void RentalGold(C.RentalGold p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RentalGold(p.Amount);
+        }
+
+        private void DepositRentalItem(C.DepositRentalItem p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.DepositRentalItem(p.From, p.To);
+        }
+
+        private void RetrieveRentalItem(C.RetrieveRentalItem p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RetrieveRentalItem(p.From, p.To);
+        }
+
+        private void RentalCancel(C.RentalCancel p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RentalCancel();
+        }
+
+        private void RentalGoldLock(C.RentalGoldLock p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RentalGoldLock();
+        }
+
+        private void RentalItemLock(C.RentalItemLock p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RentalItemLock();
         }
     }
 }

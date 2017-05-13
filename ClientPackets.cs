@@ -1082,15 +1082,11 @@ namespace ClientPackets
     {
         public override short Index { get { return (short)ClientPacketIds.TradeRequest; } }
 
-        //public string Name;
         protected override void ReadPacket(BinaryReader reader)
-        {
-            //Name = reader.ReadString();
-        }
+        {  }
+
         protected override void WritePacket(BinaryWriter writer)
-        {
-            //writer.Write(Name);
-        }
+        { }
     }
 
     public sealed class TradeGold : Packet
@@ -2111,5 +2107,104 @@ public sealed class AwakeningNeedMaterials : Packet
         {
             writer.Write(DoorIndex);
         }
+    }
+
+    public sealed class RentalRequest : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RentalRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class RentalGold : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RentalGold; } }
+
+        public uint Amount;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Amount = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Amount);
+        }
+    }
+
+    public sealed class DepositRentalItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DepositRentalItem; } }
+
+        public int From, To;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
+
+    public sealed class RetrieveRentalItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RetrieveRentalItem; } }
+
+        public int From, To;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
+
+    public sealed class RentalCancel : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RentalCancel; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class RentalGoldLock : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RentalGoldLock; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class RentalItemLock : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RentalItemLock; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
     }
 }

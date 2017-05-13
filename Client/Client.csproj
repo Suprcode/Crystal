@@ -189,6 +189,7 @@
     <Compile Include="MirScenes\Dialogs\HelpDialog.cs" />
     <Compile Include="MirScenes\Dialogs\IntelligentCreatureDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\KeyboardLayoutDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\LoaningDialog.cs" />
     <Compile Include="MirScenes\Dialogs\MailDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MainDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MentorDialog.cs" />
@@ -196,6 +197,8 @@
     <Compile Include="MirScenes\Dialogs\NPCDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\RankingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\RelationshipDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\RentalManagementDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\RentingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ReportDialog.cs" />
     <Compile Include="MirScenes\Dialogs\TradeDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\TrustMerchantDialog.cs" />
