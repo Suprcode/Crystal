@@ -56,6 +56,7 @@ namespace Server.MirObjects
                 return false;
             }
         }
+
         protected override bool CanMove
         {
             get
@@ -63,6 +64,7 @@ namespace Server.MirObjects
                 return Envir.Time > MoveTime && Envir.Time > ActionTime;
             }
         }
+
         public override string Name
         {
             get { return Master == null ? CustomName : (Dead ? CustomName : string.Format("{0}_{1}'s Pet", CustomName, Master.Name)); }
