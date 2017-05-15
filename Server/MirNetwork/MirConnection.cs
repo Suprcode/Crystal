@@ -602,7 +602,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.RentalItemLock:
                     RentalItemLock((C.RentalItemLock)p);
                     break;
-
+                case (short)ClientPacketIds.RentalConfirm:
+                    RentalConfirm((C.RentalConfirm)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1749,6 +1751,14 @@ namespace Server.MirNetwork
                 return;
 
             Player.RentalItemLock();
+        }
+
+        private void RentalConfirm(C.RentalConfirm p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RentalConfirm();
         }
     }
 }

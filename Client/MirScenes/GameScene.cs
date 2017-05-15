@@ -1654,6 +1654,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.RentalCanConfirm:
                     RentalCanConfirm((S.RentalCanConfirm)p);
                     break;
+                case (short)ServerPacketIds.RentalConfirm:
+                    RentalConfirm((S.RentalConfirm)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -7780,6 +7783,39 @@ namespace Client.MirScenes
 
             #endregion
 
+            if (HoverItem.LoanInfo != null)
+            {
+                count++;
+                MirLabel OWNERLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Khaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "Item Loaned From: " + HoverItem.LoanInfo.LoanOwnerName
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, OWNERLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, OWNERLabel.DisplayRectangle.Bottom));
+
+                double remainingTime = (HoverItem.LoanInfo.LoanExpiryDate - DateTime.Now).TotalSeconds;
+
+                count++;
+                MirLabel RENTALLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.DarkKhaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = remainingTime > 0 ? string.Format("Loan Expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Expired"
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RENTALLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, RENTALLabel.DisplayRectangle.Bottom));
+            }
+
             if (count > 0)
             {
                 ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
@@ -8332,6 +8368,15 @@ namespace Client.MirScenes
         public void RentalCanConfirm(S.RentalCanConfirm p)
         {
             LoaningDialog.ConfirmButton.Enabled = true;
+        }
+
+        public void RentalConfirm(S.RentalConfirm p)
+        {
+            User.RentalGoldLocked = false;
+            User.RentalItemLocked = false;
+
+            LoaningDialog.LoaningReset();
+            RentingDialog.RentingReset();
         }
 
         #region Disposable

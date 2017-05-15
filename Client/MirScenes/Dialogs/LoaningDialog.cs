@@ -84,7 +84,7 @@ namespace Client.MirScenes.Dialogs
             };
             ConfirmButton.Click += (o, e) =>
             {
-
+                Network.Enqueue(new C.RentalConfirm());
             };
 
             NameLabel = new MirLabel
@@ -188,12 +188,6 @@ namespace Client.MirScenes.Dialogs
 
                         Network.Enqueue(new C.RentalPeriod { Days = RentalDays });
                     }
-                }
-                else
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Rental peroid needs to be between 1 and 30 days.", ChatType.System);
-                    RentalDays = 0;
-                    inputBox.Dispose();
                 }
             };
 

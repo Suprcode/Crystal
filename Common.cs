@@ -1461,6 +1461,7 @@ public enum ServerPacketIds : short
     RentalLock,
     RentalPartnerLock,
     RentalCanConfirm,
+    RentalConfirm
 }
 
 public enum ClientPacketIds : short
@@ -1602,6 +1603,7 @@ public enum ClientPacketIds : short
     RentalCancel,
     RentalGoldLock,
     RentalItemLock,
+    RentalConfirm
 }
 
 public enum ConquestType : byte
@@ -2969,6 +2971,7 @@ public class UserItem
     public DateTime BuybackExpiryDate;
 
     public ExpireInfo ExpireInfo;
+    public LoanInfo LoanInfo;
 
 	public Awake Awake = new Awake();
     public bool IsAdded
@@ -3072,10 +3075,10 @@ public class UserItem
         if (version < 65) return;
 
         if (reader.ReadBoolean())
-        {
             ExpireInfo = new ExpireInfo(reader, version, Customversion);
-        }
 
+        if (reader.ReadBoolean())
+            LoanInfo = new LoanInfo(reader, version, Customversion);
     }
 
     public void Save(BinaryWriter writer)
@@ -3139,9 +3142,12 @@ public class UserItem
         writer.Write(ExpireInfo != null);
 
         if (ExpireInfo != null)
-        {
             ExpireInfo.Save(writer);
-        }
+
+        writer.Write(LoanInfo != null);
+
+        if (LoanInfo != null)
+            LoanInfo.Save(writer);
     }
 
 
@@ -3342,8 +3348,9 @@ public class UserItem
             RefinedValue = RefinedValue,
             RefineAdded = RefineAdded,
 
-            ExpireInfo = ExpireInfo
-            };
+            ExpireInfo = ExpireInfo,
+            LoanInfo = LoanInfo
+        };
 
         return item;
     }
@@ -3367,6 +3374,30 @@ public class ExpireInfo
     public void Save(BinaryWriter writer)
     {
         writer.Write(ExpiryDate.ToBinary());
+    }
+}
+
+public class LoanInfo
+{
+    public String LoanOwnerName;
+    public BindMode LoanBindingFlags = BindMode.none;
+    public DateTime LoanExpiryDate;
+
+    public LoanInfo()
+    { }
+
+    public LoanInfo(BinaryReader reader, int version = int.MaxValue, int CustomVersion = int.MaxValue)
+    {
+        LoanOwnerName = reader.ReadString();
+        LoanBindingFlags = (BindMode)reader.ReadInt16();
+        LoanExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(LoanOwnerName);
+        writer.Write((short)LoanBindingFlags);
+        writer.Write(LoanExpiryDate.ToBinary());
     }
 }
 
@@ -4642,6 +4673,8 @@ public abstract class Packet
                 return new C.RentalGoldLock();
             case (short)ClientPacketIds.RentalItemLock:
                 return new C.RentalItemLock();
+            case (short)ClientPacketIds.RentalConfirm:
+                return new C.RentalConfirm();
             default:
                 return null;
         }
@@ -5115,6 +5148,8 @@ public abstract class Packet
                 return new S.RentalPartnerLock();
             case (short)ServerPacketIds.RentalCanConfirm:
                 return new S.RentalCanConfirm();
+            case (short)ServerPacketIds.RentalConfirm:
+                return new S.RentalConfirm();
             default:
                 return null;
         }

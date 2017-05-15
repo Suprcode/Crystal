@@ -2224,4 +2224,15 @@ public sealed class AwakeningNeedMaterials : Packet
         protected override void WritePacket(BinaryWriter writer)
         { }
     }
+
+    public sealed class RentalConfirm : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RentalConfirm; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
 }
