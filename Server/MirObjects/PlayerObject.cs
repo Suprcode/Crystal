@@ -19510,9 +19510,9 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Info.LoanItem == null)
+            if (Info.LoaningItem == null)
             {
-                Info.LoanItem = temp;
+                Info.LoaningItem = temp;
                 Info.Inventory[from] = null;
                 RefreshBagWeight();
                 RentItem();
@@ -19543,7 +19543,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            UserItem temp = Info.LoanItem;
+            UserItem temp = Info.LoaningItem;
 
             if (temp == null)
             {
@@ -19561,7 +19561,7 @@ namespace Server.MirObjects
             if (Info.Inventory[to] == null)
             {
                 Info.Inventory[to] = temp;
-                Info.LoanItem = null;
+                Info.LoaningItem = null;
 
                 p.Success = true;
                 RefreshBagWeight();
@@ -19578,10 +19578,10 @@ namespace Server.MirObjects
             if (RentalPartner == null)
                 return;
 
-            if (Info.LoanItem != null)
-                RentalPartner.CheckItem(Info.LoanItem);
+            if (Info.LoaningItem != null)
+                RentalPartner.CheckItem(Info.LoaningItem);
 
-            RentalPartner.Enqueue(new S.RentItem { LoanItem = Info.LoanItem });
+            RentalPartner.Enqueue(new S.RentItem { LoanItem = Info.LoaningItem });
         }
 
         public void RentalCancel()
@@ -19597,9 +19597,9 @@ namespace Server.MirObjects
             {
                 if (RentalPair[p] != null)
                 {
-                    if (RentalPair[p].Info.LoanItem != null)
+                    if (RentalPair[p].Info.LoaningItem != null)
                     {
-                        UserItem temp = RentalPair[p].Info.LoanItem;
+                        UserItem temp = RentalPair[p].Info.LoaningItem;
 
                         if (temp == null)
                             continue;
@@ -19611,7 +19611,7 @@ namespace Server.MirObjects
                             Report.ItemMailed("RentalCancel", temp, temp.Count, 1);
 
                             RentalPair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
-                            RentalPair[p].Info.LoanItem = null;
+                            RentalPair[p].Info.LoaningItem = null;
                             continue;
                         }
 
@@ -19631,7 +19631,7 @@ namespace Server.MirObjects
                                 RentalPair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             }
 
-                            RentalPair[p].Info.LoanItem = null;
+                            RentalPair[p].Info.LoaningItem = null;
 
                             break;
                         }
@@ -19675,7 +19675,7 @@ namespace Server.MirObjects
         {
             S.RentalLock p = new S.RentalLock { Success = false, GoldLocked = false, ItemLocked = false };
 
-            if (Info.LoanItem != null)
+            if (Info.LoaningItem != null)
             {
                 RentalItemLocked = true;
                 p.ItemLocked = true;
@@ -19734,9 +19734,9 @@ namespace Server.MirObjects
             {
                 int o = p == 0 ? 1 : 0;
  
-                if (RentalPair[p].Info.LoanItem != null)
+                if (RentalPair[p].Info.LoaningItem != null)
                 {
-                    if (!RentalPair[o].CanGainItem(RentalPair[p].Info.LoanItem))
+                    if (!RentalPair[o].CanGainItem(RentalPair[p].Info.LoaningItem))
                     {
                         CanTrade = false;
                         RentalPair[p].ReceiveChat(string.Format("{0} is unable to receive the item.", RentalPair[o].Info.Name), ChatType.System);
@@ -19768,35 +19768,35 @@ namespace Server.MirObjects
                 {
                     int o = p == 0 ? 1 : 0;
 
-                    if (RentalPair[p].Info.LoanItem != null)
+                    if (RentalPair[p].Info.LoaningItem != null)
                     {
-                        u = RentalPair[p].Info.LoanItem;
+                        u = RentalPair[p].Info.LoaningItem;
+
                         u.LoanInfo = new LoanInfo {
                             LoanOwnerName = RentalPair[p].Name,
-                            LoanExpiryDate = DateTime.Now.AddMinutes(2),
+                            LoanExpiryDate = DateTime.Now.AddDays(RentalPair[p].RentalPeriodLength),
                             LoanBindingFlags = BindMode.DontDrop | BindMode.DontDeathdrop | BindMode.DontStore | BindMode.DontSell | BindMode.DontTrade
                         };
 
-                        SMain.Enqueue(u.LoanInfo.LoanBindingFlags.ToString());
-                        SMain.Enqueue(u.LoanInfo.LoanExpiryDate.ToString());
+                        for (int i = 0; i < RentalPair[p].Info.LoanedItems.Length; i++)
+                            if (RentalPair[p].Info.LoanedItems[i] == null)
+                                RentalPair[p].Info.LoanedItems[i] = u;
 
+                        RentalPair[p].Info.LoaningItem = null;
                         RentalPair[o].GainItem(u);
-                        RentalPair[p].Info.LoanItem = null;
-
+                        RentalPair[o].ReceiveChat("You have loaned " + u.FriendlyName + " from " + RentalPair[p].Name + " until " + u.LoanInfo.LoanExpiryDate.ToString(), ChatType.System);
                         Report.ItemMoved("RentalConfirm", u, MirGridType.Renting, MirGridType.Inventory, 0, -99, string.Format("Loan from {0} to {1}", RentalPair[p].Name, RentalPair[o].Name));
                     }
 
                     if (RentalPair[p].RentalGoldAmount > 0)
                     {
-                        Report.GoldChanged("RentalConfirm", RentalPair[p].RentalGoldAmount, true, string.Format("Loan from {0} to {1}", RentalPair[p].Name, RentalPair[o].Name));
-
+                        RentalPair[o].ReceiveChat("Received " + RentalPair[p].RentalGoldAmount + " gold from " + RentalPair[p].Name, ChatType.System);
                         RentalPair[o].GainGold(RentalPair[p].RentalGoldAmount);
                         RentalPair[p].RentalGoldAmount = 0;
+                        Report.GoldChanged("RentalConfirm", RentalPair[p].RentalGoldAmount, true, string.Format("Loan from {0} to {1}", RentalPair[p].Name, RentalPair[o].Name));
                     }
 
-                    RentalPair[p].ReceiveChat("Rental successful.", ChatType.System);
                     RentalPair[p].Enqueue(new S.RentalConfirm());
-
                     RentalPair[p].RentalUnlock();
                     RentalPair[p].RentalPartner = null;
                 }

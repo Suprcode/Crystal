@@ -197,7 +197,7 @@
     <Compile Include="MirScenes\Dialogs\NPCDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\RankingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\RelationshipDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\RentalManagementDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\LoaningManagementDialog.cs" />
     <Compile Include="MirScenes\Dialogs\RentingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ReportDialog.cs" />
     <Compile Include="MirScenes\Dialogs\TradeDialogs.cs" />

@@ -17,6 +17,7 @@ namespace Client.MirGraphics
             ChrSel = new MLibrary(Settings.DataPath + "ChrSel"),
             Prguse = new MLibrary(Settings.DataPath + "Prguse"),
             Prguse2 = new MLibrary(Settings.DataPath + "Prguse2"),
+            Prguse3 = new MLibrary(Settings.DataPath + "Prguse3"),
             BuffIcon = new MLibrary(Settings.DataPath + "BuffIcon"),
             Help = new MLibrary(Settings.DataPath + "Help"),
             MiniMap = new MLibrary(Settings.DataPath + "MMap"),
@@ -243,6 +244,9 @@ namespace Client.MirGraphics
             Progress++;
 
             Prguse2.Initialize();
+            Progress++;
+
+            Prguse3.Initialize();
             Progress++;
 
             Title.Initialize();

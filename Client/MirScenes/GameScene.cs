@@ -116,6 +116,7 @@ namespace Client.MirScenes
         public RentingDialog RentingDialog;
         public GuestLoaningDialog GuestLoaningDialog;
         public GuestRentingDialog GuestRentingDialog;
+        public LoaningManagementDialog LoaningManagementDialog;
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -258,6 +259,7 @@ namespace Client.MirScenes
             RentingDialog = new RentingDialog { Parent = this, Visible = false };
             GuestLoaningDialog = new GuestLoaningDialog { Parent = this, Visible = false };
             GuestRentingDialog = new GuestRentingDialog { Parent = this, Visible = false };
+            LoaningManagementDialog = new LoaningManagementDialog { Parent = this, Visible = true };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
