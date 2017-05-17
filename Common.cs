@@ -3182,9 +3182,10 @@ public class UserItem
     }
     public uint RepairPrice()
     {
-        if (Info == null || Info.Durability == 0) return 0;
+        if (Info == null || Info.Durability == 0)
+            return 0;
 
-        uint p = Info.Price;
+        var p = Info.Price;
 
         if (Info.Durability > 0)
         {
@@ -3193,7 +3194,12 @@ public class UserItem
 
         }
 
-        return (p * Count) - Price();
+        var cost = p * Count - Price();
+
+        if (LoanInfo == null)
+            return cost;
+
+        return cost * 2;
     }
 
     public uint Quality()
