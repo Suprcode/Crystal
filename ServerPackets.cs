@@ -5356,9 +5356,34 @@ namespace ServerPackets
         }
     }
 
-    public sealed class RentalAccept : Packet
+    public sealed class GetRentedItems : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.RentalAccept; } }
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.GetRentedItems; }
+        }
+
+        public List<ItemRentalInformation> RentedItems = new List<ItemRentalInformation>();
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+
+            for (var i = 0; i < count; i++)
+                RentedItems.Add(new ItemRentalInformation(reader));
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(RentedItems.Count);
+
+            foreach (var rentedItemInformation in RentedItems)
+                rentedItemInformation.Save(writer);
+        }
+    }
+
+    public sealed class ItemRentalRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ItemRentalRequest; } }
 
         public string Name;
         public bool Renting;
@@ -5376,11 +5401,11 @@ namespace ServerPackets
         }
     }
 
-    public sealed class RentalGold : Packet
+    public sealed class ItemRentalFee : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentalGold; }
+            get { return (short)ServerPacketIds.ItemRentalFee; }
         }
 
         public uint Amount;
@@ -5396,11 +5421,11 @@ namespace ServerPackets
         }
     }
 
-    public sealed class RentalPeriod : Packet
+    public sealed class ItemRentalPeriod : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentalPeriod; }
+            get { return (short)ServerPacketIds.ItemRentalPeriod; }
         }
 
         public uint Days;
@@ -5466,11 +5491,11 @@ namespace ServerPackets
         }
     }
 
-    public sealed class RentItem : Packet
+    public sealed class UpdateRentalItem : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentItem; }
+            get { return (short)ServerPacketIds.UpdateRentalItem; }
         }
 
         public bool HasData;
@@ -5493,11 +5518,11 @@ namespace ServerPackets
         }
     }
 
-    public sealed class RentalCancel : Packet
+    public sealed class CancelItemRental : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentalCancel; }
+            get { return (short)ServerPacketIds.CancelItemRental; }
         }
 
         protected override void ReadPacket(BinaryReader reader)
@@ -5507,11 +5532,11 @@ namespace ServerPackets
         { }
     }
 
-    public sealed class RentalLock : Packet
+    public sealed class ItemRentalLock : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentalLock; }
+            get { return (short)ServerPacketIds.ItemRentalLock; }
         }
 
         public bool Success;
@@ -5533,11 +5558,11 @@ namespace ServerPackets
         }
     }
 
-    public sealed class RentalPartnerLock : Packet
+    public sealed class ItemRentalPartnerLock : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentalPartnerLock; }
+            get { return (short)ServerPacketIds.ItemRentalPartnerLock; }
         }
 
         public bool GoldLocked;
@@ -5556,11 +5581,11 @@ namespace ServerPackets
         }
     }
 
-    public sealed class RentalCanConfirm : Packet
+    public sealed class CanConfirmItemRental : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentalCanConfirm; }
+            get { return (short)ServerPacketIds.CanConfirmItemRental; }
         }
 
         protected override void ReadPacket(BinaryReader reader)
@@ -5570,11 +5595,11 @@ namespace ServerPackets
         { }
     }
 
-    public sealed class RentalConfirm : Packet
+    public sealed class ConfirmItemRental : Packet
     {
         public override short Index
         {
-            get { return (short)ServerPacketIds.RentalConfirm; }
+            get { return (short)ServerPacketIds.ConfirmItemRental; }
         }
 
         protected override void ReadPacket(BinaryReader reader)

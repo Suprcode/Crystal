@@ -2109,9 +2109,15 @@ public sealed class AwakeningNeedMaterials : Packet
         }
     }
 
-    public sealed class RentalRequest : Packet
+    public sealed class GetRentedItems : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RentalRequest; } }
+        public override short Index
+        {
+            get
+            {
+                return (short)ClientPacketIds.GetRentedItems;
+            }
+        }
 
         protected override void ReadPacket(BinaryReader reader)
         { }
@@ -2120,9 +2126,20 @@ public sealed class AwakeningNeedMaterials : Packet
         { }
     }
 
-    public sealed class RentalGold : Packet
+    public sealed class ItemRentalRequest : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RentalGold; } }
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class ItemRentalFee : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalFee; } }
 
         public uint Amount;
 
@@ -2137,9 +2154,9 @@ public sealed class AwakeningNeedMaterials : Packet
         }
     }
 
-    public sealed class RentalPeriod : Packet
+    public sealed class ItemRentalPeriod : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RentalPeriod; } }
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalPeriod; } }
 
         public uint Days;
 
@@ -2192,9 +2209,9 @@ public sealed class AwakeningNeedMaterials : Packet
         }
     }
 
-    public sealed class RentalCancel : Packet
+    public sealed class CancelItemRental : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RentalCancel; } }
+        public override short Index { get { return (short)ClientPacketIds.CancelItemRental; } }
 
         protected override void ReadPacket(BinaryReader reader)
         { }
@@ -2203,9 +2220,9 @@ public sealed class AwakeningNeedMaterials : Packet
         { }
     }
 
-    public sealed class RentalGoldLock : Packet
+    public sealed class ItemRentalLockFee : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RentalGoldLock; } }
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalLockFee; } }
 
         protected override void ReadPacket(BinaryReader reader)
         { }
@@ -2214,9 +2231,9 @@ public sealed class AwakeningNeedMaterials : Packet
         { }
     }
 
-    public sealed class RentalItemLock : Packet
+    public sealed class ItemRentalLockItem : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RentalItemLock; } }
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalLockItem; } }
 
         protected override void ReadPacket(BinaryReader reader)
         { }
@@ -2225,9 +2242,9 @@ public sealed class AwakeningNeedMaterials : Packet
         { }
     }
 
-    public sealed class RentalConfirm : Packet
+    public sealed class ConfirmItemRental : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RentalConfirm; } }
+        public override short Index { get { return (short)ClientPacketIds.ConfirmItemRental; } }
 
         protected override void ReadPacket(BinaryReader reader)
         { }

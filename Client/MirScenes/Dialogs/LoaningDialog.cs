@@ -48,7 +48,7 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
                     
-                Network.Enqueue(new C.RentalItemLock());
+                Network.Enqueue(new C.ItemRentalLockItem());
             };
 
             SetRentalPeriodButton = new MirButton
@@ -81,7 +81,7 @@ namespace Client.MirScenes.Dialogs
             };
             ConfirmButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.RentalConfirm());
+                Network.Enqueue(new C.ConfirmItemRental());
             };
 
             NameLabel = new MirLabel
@@ -143,6 +143,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.User.RentalGoldAmount = 0;
             LoaningUnlock();
             GameScene.Scene.GuestLoaningDialog.LoaningReset();
+            GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
 
             RefreshInterface();
 
@@ -151,7 +152,7 @@ namespace Client.MirScenes.Dialogs
 
         public void LoaningCancel()
         {
-            Network.Enqueue(new C.RentalCancel());
+            Network.Enqueue(new C.CancelItemRental());
         }
 
         public void LoaningLock()
@@ -183,7 +184,7 @@ namespace Client.MirScenes.Dialogs
                         RefreshInterface();
                         inputBox.Dispose();
 
-                        Network.Enqueue(new C.RentalPeriod { Days = RentalDays });
+                        Network.Enqueue(new C.ItemRentalPeriod { Days = RentalDays });
                     }
                 }
             };

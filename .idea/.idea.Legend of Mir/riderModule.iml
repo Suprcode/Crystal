@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../..">
+      <sourceFolder url="file://$MODULE_DIR$/../../AutoPatcherAdmin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Client" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../ClientPackets.cs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Common.cs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../LibraryEditor" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../LibraryViewer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Notes.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../Server" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../ServerPackets.cs" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../../AutoPatcherAdmin/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Client/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../LibraryEditor/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../LibraryViewer/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../Server/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../packages" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

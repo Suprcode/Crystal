@@ -1451,17 +1451,18 @@ public enum ServerPacketIds : short
     Rankings,
     Opendoor,
 
-    RentalAccept,
-    RentalGold,
-    RentalPeriod,
+    GetRentedItems,
+    ItemRentalRequest,
+    ItemRentalFee,
+    ItemRentalPeriod,
     DepositRentalItem,
     RetrieveRentalItem,
-    RentItem,
-    RentalCancel,
-    RentalLock,
-    RentalPartnerLock,
-    RentalCanConfirm,
-    RentalConfirm
+    UpdateRentalItem,
+    CancelItemRental,
+    ItemRentalLock,
+    ItemRentalPartnerLock,
+    CanConfirmItemRental,
+    ConfirmItemRental
 }
 
 public enum ClientPacketIds : short
@@ -1595,15 +1596,16 @@ public enum ClientPacketIds : short
     GetRanking,
     Opendoor,
 
-    RentalRequest,
-    RentalGold,
-    RentalPeriod,
+    GetRentedItems,
+    ItemRentalRequest,
+    ItemRentalFee,
+    ItemRentalPeriod,
     DepositRentalItem,
     RetrieveRentalItem,
-    RentalCancel,
-    RentalGoldLock,
-    RentalItemLock,
-    RentalConfirm
+    CancelItemRental,
+    ItemRentalLockFee,
+    ItemRentalLockItem,
+    ConfirmItemRental
 }
 
 public enum ConquestType : byte
@@ -4657,24 +4659,26 @@ public abstract class Packet
                 return new C.GetRanking();
             case (short)ClientPacketIds.Opendoor:
                 return new C.Opendoor();
-            case (short)ClientPacketIds.RentalRequest:
-                return new C.RentalRequest();
-            case (short)ClientPacketIds.RentalGold:
-                return new C.RentalGold();
-            case (short)ClientPacketIds.RentalPeriod:
-                return new C.RentalPeriod();
+            case (short)ClientPacketIds.GetRentedItems:
+                return new C.GetRentedItems();
+            case (short)ClientPacketIds.ItemRentalRequest:
+                return new C.ItemRentalRequest();
+            case (short)ClientPacketIds.ItemRentalFee:
+                return new C.ItemRentalFee();
+            case (short)ClientPacketIds.ItemRentalPeriod:
+                return new C.ItemRentalPeriod();
             case (short)ClientPacketIds.DepositRentalItem:
                 return new C.DepositRentalItem();
             case (short)ClientPacketIds.RetrieveRentalItem:
                 return new C.RetrieveRentalItem();
-            case (short)ClientPacketIds.RentalCancel:
-                return new C.RentalCancel();
-            case (short)ClientPacketIds.RentalGoldLock:
-                return new C.RentalGoldLock();
-            case (short)ClientPacketIds.RentalItemLock:
-                return new C.RentalItemLock();
-            case (short)ClientPacketIds.RentalConfirm:
-                return new C.RentalConfirm();
+            case (short)ClientPacketIds.CancelItemRental:
+                return new C.CancelItemRental();
+            case (short)ClientPacketIds.ItemRentalLockFee:
+                return new C.ItemRentalLockFee();
+            case (short)ClientPacketIds.ItemRentalLockItem:
+                return new C.ItemRentalLockItem();
+            case (short)ClientPacketIds.ConfirmItemRental:
+                return new C.ConfirmItemRental();
             default:
                 return null;
         }
@@ -5128,28 +5132,30 @@ public abstract class Packet
                 return new S.Rankings();
             case (short)ServerPacketIds.Opendoor:
                 return new S.Opendoor();
-            case (short)ServerPacketIds.RentalAccept:
-                return new S.RentalAccept();
-            case (short)ServerPacketIds.RentalGold:
-                return new S.RentalGold();
-            case (short)ServerPacketIds.RentalPeriod:
-                return new S.RentalPeriod();
+            case (short)ServerPacketIds.GetRentedItems:
+                return new S.GetRentedItems();
+            case (short)ServerPacketIds.ItemRentalRequest:
+                return new S.ItemRentalRequest();
+            case (short)ServerPacketIds.ItemRentalFee:
+                return new S.ItemRentalFee();
+            case (short)ServerPacketIds.ItemRentalPeriod:
+                return new S.ItemRentalPeriod();
             case (short)ServerPacketIds.DepositRentalItem:
                 return new S.DepositRentalItem();
             case (short)ServerPacketIds.RetrieveRentalItem:
                 return new S.RetrieveRentalItem();
-            case (short)ServerPacketIds.RentItem:
-                return new S.RentItem();
-            case (short)ServerPacketIds.RentalCancel:
-                return new S.RentalCancel();
-            case (short)ServerPacketIds.RentalLock:
-                return new S.RentalLock();
-            case (short)ServerPacketIds.RentalPartnerLock:
-                return new S.RentalPartnerLock();
-            case (short)ServerPacketIds.RentalCanConfirm:
-                return new S.RentalCanConfirm();
-            case (short)ServerPacketIds.RentalConfirm:
-                return new S.RentalConfirm();
+            case (short)ServerPacketIds.UpdateRentalItem:
+                return new S.UpdateRentalItem();
+            case (short)ServerPacketIds.CancelItemRental:
+                return new S.CancelItemRental();
+            case (short)ServerPacketIds.ItemRentalLock:
+                return new S.ItemRentalLock();
+            case (short)ServerPacketIds.ItemRentalPartnerLock:
+                return new S.ItemRentalPartnerLock();
+            case (short)ServerPacketIds.CanConfirmItemRental:
+                return new S.CanConfirmItemRental();
+            case (short)ServerPacketIds.ConfirmItemRental:
+                return new S.ConfirmItemRental();
             default:
                 return null;
         }
@@ -6227,4 +6233,31 @@ public class Door
     public byte ImageIndex;
     public long LastTick;
     public Point Location;
+}
+
+public class ItemRentalInformation
+{
+    public ulong ItemId;
+    public string ItemName;
+    public string RentingPlayerName;
+    public DateTime ItemReturnDate;
+
+    public ItemRentalInformation()
+    { }
+
+    public ItemRentalInformation(BinaryReader reader)
+    {
+        ItemId = reader.ReadUInt64();
+        ItemName = reader.ReadString();
+        RentingPlayerName = reader.ReadString();
+        ItemReturnDate = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ItemId);
+        writer.Write(ItemName);
+        writer.Write(RentingPlayerName);
+        writer.Write(ItemReturnDate.ToBinary());
+    }
 }

@@ -72,7 +72,7 @@ namespace Server.MirDatabase
         public byte MentalStateLvl;
 
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16], LoanedItems = new UserItem[3];
-        public UserItem LoaningItem = null;
+        public List<ItemRentalInformation> RentedItems = new List<ItemRentalInformation>();
         public UserItem CurrentRefine = null;
         public long CollectTime = 0;
         public List<UserMagic> Magics = new List<UserMagic>();
@@ -335,6 +335,10 @@ namespace Server.MirDatabase
                     Friends.Add(new FriendInfo(reader));
             }
 
+            count = reader.ReadInt32();
+            for (var i = 0; i < count; i++)
+                RentedItems.Add(new ItemRentalInformation(reader));
+
             if (Envir.LoadVersion > 59)
             {
                 Married = reader.ReadInt32();
@@ -484,6 +488,10 @@ namespace Server.MirDatabase
             writer.Write(Friends.Count);
             for (int i = 0; i < Friends.Count; i++)
                 Friends[i].Save(writer);
+
+            writer.Write(RentedItems.Count);
+            foreach (var rentedItemInformation in RentedItems)
+                rentedItemInformation.Save(writer);
 
             writer.Write(Married);
             writer.Write(MarriedDate.ToBinary());

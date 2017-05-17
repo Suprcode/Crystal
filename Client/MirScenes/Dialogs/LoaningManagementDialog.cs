@@ -1,7 +1,12 @@
-﻿using Client.MirControls;
+﻿using System.Collections.Generic;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
 using System.Drawing;
+using System.Windows.Forms;
+using Client.MirNetwork;
+
+using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -9,6 +14,9 @@ namespace Client.MirScenes.Dialogs
     {
         public MirImageControl WindowTitle;
         public MirButton RentItemButton, RentedTabButton, BorrowedTabButton, CloseButton;
+        public ItemRow[] Rows = new ItemRow[3];
+
+        private long _lastRequestTime;
 
         public LoaningManagementDialog()
         {
@@ -70,6 +78,10 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 6,
                 Sound = SoundList.ButtonA,
             };
+            RentItemButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.ItemRentalRequest());
+            };
 
             // Close Button
 
@@ -84,6 +96,18 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            // Item Rows
+
+            for (var i = 0; i < Rows.Length; i++)
+            {
+                Rows[i] = new ItemRow
+                {
+                    Parent = this,
+                    Location = new Point(0, 78 + i * 21),
+                    Size = new Size(383, 21)
+                };
+            }
         }
 
         public void Hide()
@@ -94,6 +118,81 @@ namespace Client.MirScenes.Dialogs
         public void Show()
         {
             Visible = true;
+            RequestRentedItems();
+        }
+
+        public void ReceiveRentedItems(List<ItemRentalInformation> rentedItems)
+        {
+            for (var i = 0; i < Rows.Length; i++)
+            {
+                Rows[i].Clear();
+
+                if (rentedItems[i] != null)
+                    Rows[i].Update(rentedItems[i].ItemName,
+                        rentedItems[i].RentingPlayerName,
+                        rentedItems[i].ItemReturnDate.ToString());
+            }
+        }
+
+        private void RequestRentedItems()
+        {
+            _lastRequestTime = CMain.Time;
+            Network.Enqueue(new ClientPackets.GetRentedItems());
+        }
+
+        public sealed class ItemRow : MirControl
+        {
+            public MirLabel ItemNameLabel, RentingPlayerLabel, ReturnDateLabel;
+
+            private long _index;
+
+            public ItemRow()
+            {
+                ItemNameLabel = new MirLabel
+                {
+                    Size = new Size(128, 20),
+                    Location = new Point(5, 0),
+                    DrawFormat = TextFormatFlags.HorizontalCenter,
+                    Parent = this,
+                    NotControl = true,
+                };
+
+                RentingPlayerLabel = new MirLabel
+                {
+                    Size = new Size(128, 20),
+                    Location = new Point(137, 0),
+                    DrawFormat = TextFormatFlags.HorizontalCenter,
+                    Parent = this,
+                    NotControl = true,
+                };
+
+                ReturnDateLabel = new MirLabel
+                {
+                    Size = new Size(128, 20),
+                    Location = new Point(264, 0),
+                    DrawFormat = TextFormatFlags.HorizontalCenter,
+                    Parent = this,
+                    NotControl = true,
+                };
+            }
+
+            public void Clear()
+            {
+                Visible = false;
+
+                ItemNameLabel.Text = string.Empty;
+                RentingPlayerLabel.Text = string.Empty;
+                ReturnDateLabel.Text = string.Empty;
+            }
+
+            public void Update(string itemName, string rentingPlayerName, string returnDate)
+            {
+                ItemNameLabel.Text = itemName;
+                RentingPlayerLabel.Text = rentingPlayerName;
+                ReturnDateLabel.Text = returnDate;
+
+                Visible = true;
+            }
         }
     }
 }
