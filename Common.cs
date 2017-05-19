@@ -902,6 +902,8 @@ public enum BindMode : short
     BindOnEquip = 512,//0x0200
     NoSRepair = 1024,//0x0400
     NoWeddingRing = 2048,//0x0800
+    UnableToRent = 4096,
+    UnableToDisassemble = 8192
 }
 
 [Flags]
@@ -3387,7 +3389,7 @@ public class ExpireInfo
 
 public class LoanInfo
 {
-    public String LoanOwnerName;
+    public string LoanOwnerName;
     public BindMode LoanBindingFlags = BindMode.none;
     public DateTime LoanExpiryDate;
 
@@ -3546,9 +3548,14 @@ public class Awake
 
     public bool CheckAwakening(UserItem item, AwakeType type)
     {
-        if (item.Info.CanAwakening != true) return false;
+        if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
+            return false;
 
-        if (item.Info.Grade == ItemGrade.None) return false;
+        if (item.Info.CanAwakening != true)
+            return false;
+
+        if (item.Info.Grade == ItemGrade.None)
+            return false;
 
         if (IsMaxLevel()) return false;
 

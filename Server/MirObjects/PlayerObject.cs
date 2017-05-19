@@ -1093,93 +1093,95 @@ namespace Server.MirObjects
 
         private void ProcessItems()
         {
-            for (int i = 0; i < Info.Inventory.Length; i++)
+            for (var i = 0; i < Info.Inventory.Length; i++)
             {
-                UserItem item = Info.Inventory[i];
-                
-                if (item != null && item.ExpireInfo != null)
+                var item = Info.Inventory[i];
+
+                if (item?.ExpireInfo != null)
                 {
                     if (DateTime.Now > item.ExpireInfo.ExpiryDate)
                     {
+                        ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         Info.Inventory[i] = null;
-                        ReceiveChat(string.Format("{0} has just expired from your inventory.", item.Info.FriendlyName), ChatType.Hint);
-                    }
-                }
-                
-                if (item != null && item.LoanInfo != null)
-                {
-                    if (DateTime.Now > item.LoanInfo.LoanExpiryDate)
-                    {
-                        var player = Envir.GetCharacterInfo(item.LoanInfo.LoanOwnerName);
-                        List<UserItem> returnItems = new List<UserItem>();
-                        UserItem clonedItem = item.Clone();
-
-                        foreach (var rentedItemInformation in Info.RentedItems)
-                            if (rentedItemInformation.ItemId == clonedItem.UniqueID)
-                                Info.RentedItems.Remove(rentedItemInformation);
-
-                        clonedItem.LoanInfo = null;
-                        returnItems.Add(clonedItem);
-              
-                        MailInfo mail = new MailInfo(player.Index, true)
-                        {
-                            Sender = Info.Name,
-                            Message = clonedItem.Info.FriendlyName,
-                            Items = returnItems
-                        };
-
-                        mail.Send();
-
-                        Report.ItemMailed("RentalExpire", item, 1, 1);
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                        Info.Inventory[i] = null;
-                        ReceiveChat(string.Format("{0} has been returned to {1}.", item.Info.FriendlyName, player.Name), ChatType.Hint);
                     }
                 }
             }
 
-            for (int i = 0; i < Info.Equipment.Length; i++)
+            for (var i = 0; i < Info.Equipment.Length; i++)
             {
-                UserItem item = Info.Equipment[i];
+                var item = Info.Equipment[i];
 
-                if (item != null && item.ExpireInfo != null)
+                if (item?.ExpireInfo != null)
                 {
                     if (DateTime.Now > item.ExpireInfo.ExpiryDate)
                     {
+                        ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         Info.Equipment[i] = null;
-                        ReceiveChat(string.Format("{0} has just expired from your equipment.", item.Info.FriendlyName), ChatType.Hint);
-                    }
-                }
-
-                if (item != null && item.LoanInfo != null)
-                {
-                    if (DateTime.Now > item.LoanInfo.LoanExpiryDate)
-                    {
-                        CharacterInfo player = Envir.GetCharacterInfo(item.LoanInfo.LoanOwnerName);
-                        UserItem clonedItem = item.Clone();
-
-                        foreach (var rentedItemInformation in Info.RentedItems)
-                            if (rentedItemInformation.ItemId == clonedItem.UniqueID)
-                                Info.RentedItems.Remove(rentedItemInformation);
-
-                        clonedItem.LoanInfo = null;
-
-                        player.Player.GainItemMail(clonedItem, 1);
-                        Report.ItemMailed("RentalExpire", item, 1, 1);
-
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                        Info.Equipment[i] = null;
-                        ReceiveChat(string.Format("{0} has been returned to {1}.", item.Info.FriendlyName, player.Name), ChatType.Hint);
                     }
                 }
             }
+
+            if (Info.RentedItems.Count <= 0)
+                return;
+
+            var returnItems = new List<UserItem>();
+
+            foreach (var rentedItemInformation in Info.RentedItems)
+            {
+                if (DateTime.Now <= rentedItemInformation.ItemReturnDate)
+                    continue;
+
+                var rentingPlayer = Envir.GetCharacterInfo(rentedItemInformation.RentingPlayerName);
+
+                for (var i = 0; i < rentingPlayer.Inventory.Length; i++)
+                {
+                    if (rentingPlayer.Inventory[i]?.UniqueID != rentedItemInformation.ItemId)
+                        continue;
+
+                    returnItems.Add(rentingPlayer.Inventory[i]?.Clone());
+                    var item = rentingPlayer.Inventory[i];
+                    var rentingPlayerObject = Envir.GetPlayer(rentingPlayer.Name);
+
+                    rentingPlayer.Inventory[i] = null;
+
+                    if (rentingPlayerObject == null)
+                        continue;
+
+                    rentingPlayerObject.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
+                    rentingPlayerObject.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    rentingPlayerObject.RefreshStats();
+                }
+
+                for (var i = 0; i < rentingPlayer.Equipment.Length; i++)
+                {
+                    if (rentingPlayer.Equipment[i]?.UniqueID != rentedItemInformation.ItemId)
+                        continue;
+
+                    returnItems.Add(rentingPlayer.Equipment[i]?.Clone());
+                    var item = rentingPlayer.Equipment[i];
+                    var rentingPlayerObject = Envir.GetPlayer(rentingPlayer.Name);
+
+                    rentingPlayer.Equipment[i] = null;
+
+                    if (rentingPlayerObject == null)
+                        continue;
+
+                    rentingPlayerObject.ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
+                    rentingPlayerObject.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    rentingPlayerObject.RefreshStats();
+                }
+            }
+
+            foreach (var returnItem in returnItems)
+                ReturnRentalItem(returnItem);
         }
 
         public override void Process(DelayedAction action)
         {
-            if (action.FlaggedToRemove) return;
+            if (action.FlaggedToRemove)
+                return;
 
             switch (action.Type)
             {
@@ -1371,122 +1373,154 @@ namespace Server.MirObjects
 
         private void DeathDrop(MapObject killer)
         {
-            bool pkbodydrop = true;
-            if (CurrentMap.Info.NoDropPlayer && Race == ObjectType.Player) return;
+            var pkbodydrop = true;
+
+            if (CurrentMap.Info.NoDropPlayer && Race == ObjectType.Player)
+                return;
 
             if ((killer == null) || ((pkbodydrop) || (killer.Race != ObjectType.Player)))
             {
-                UserItem temp;
-
-                for (int i = 0; i < Info.Equipment.Length; i++)
+                for (var i = 0; i < Info.Equipment.Length; i++)
                 {
-                    temp = Info.Equipment[i];
+                    var item = Info.Equipment[i];
 
-                    if (temp == null) continue;
-                    if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                    if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontDeathdrop)) continue;
-                    if ((temp.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == temp.UniqueID)) continue; //CHECK THIS
+                    if (item == null)
+                        continue;
 
-                    if ((temp != null) && ((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
+                    if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
+                        continue;
+
+                    // TODO: Check this.
+                    if (item.WeddingRing != -1 && Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID)
+                        continue;
+
+                    if (((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
                     {
-                        if (temp.Info.Bind.HasFlag(BindMode.BreakOnDeath))
+                        if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
-                            ReceiveChat(string.Format("Your {0} shattered upon death.", temp.FriendlyName), ChatType.System2);
-                            Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
+                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                            ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
+                            Report.ItemChanged("Death Drop", item, item.Count, 1);
                         }
                     }
                     if (ItemSets.Any(set => set.Set == ItemSet.Spirit && !set.SetComplete))
                     {
-                        if (temp.Info.Set == ItemSet.Spirit)
+                        if (item.Info.Set == ItemSet.Spirit)
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                            Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
+                            Report.ItemChanged("Death Drop", item, item.Count, 1);
                         }
                     }
 
-                    if (temp.Count > 1)
+                    if (item.Count > 1)
                     {
-                        int percent = Envir.RandomomRange(10, 8);
+                        var percent = Envir.RandomomRange(10, 8);
+                        var count = (uint)Math.Ceiling(item.Count / 10F * percent);
 
-                        uint count = (uint)Math.Ceiling(temp.Count / 10F * percent);
-
-                        if (count > temp.Count)
+                        if (count > item.Count)
                             throw new ArgumentOutOfRangeException();
-
-                        UserItem temp2 = Envir.CreateFreshItem(temp.Info);
+                        
+                        var temp2 = Envir.CreateFreshItem(item.Info);
                         temp2.Count = count;
 
-                        if (DropItem(temp2, Settings.DropRange, true))
-                        {
-                            if (count == temp.Count)
-                                Info.Equipment[i] = null;
+                        if (!DropItem(temp2, Settings.DropRange, true))
+                            continue;
 
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = count });
-                            temp.Count -= count;
+                        if (count == item.Count)
+                            Info.Equipment[i] = null;
 
-                            Report.ItemChanged("DeathDrop", temp, count, 1);
-                        }
+                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                        item.Count -= count;
+
+                        Report.ItemChanged("Death Drop", item, count, 1);
                     }
                     else if (Envir.Random.Next(30) == 0)
                     {
-                        if (DropItem(temp, Settings.DropRange, true))
+                        if (ReturnRentalItem(item))
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+   
+                            ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
+                            Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
 
-                            Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
+                            continue;
                         }
+
+                        if (!DropItem(item, Settings.DropRange, true))
+                            continue;
+
+                        Info.Equipment[i] = null;
+                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+
+                        Report.ItemChanged("Death Drop", item, item.Count, 1);
                     }
                 }
 
             }
 
-            for (int i = 0; i < Info.Inventory.Length; i++)
+            for (var i = 0; i < Info.Inventory.Length; i++)
             {
-                UserItem temp = Info.Inventory[i];
+                var item = Info.Inventory[i];
 
-                if (temp == null) continue;
-                if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontDeathdrop)) continue;
-                if (temp.WeddingRing != -1) continue;
+                if (item == null)
+                    continue;
 
-                if (temp.Count > 1)
+                if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
+                    continue;
+
+                if (item.WeddingRing != -1)
+                    continue;
+
+                if (item.Count > 1)
                 {
-                    int percent = Envir.RandomomRange(10, 8);
-                    if (percent == 0) continue;
+                    var percent = Envir.RandomomRange(10, 8);
 
-                    uint count = (uint)Math.Ceiling(temp.Count / 10F * percent);
+                    if (percent == 0)
+                        continue;
 
-                    if (count > temp.Count)
+                    var count = (uint)Math.Ceiling(item.Count / 10F * percent);
+
+                    if (count > item.Count)
                         throw new ArgumentOutOfRangeException();
 
-                    UserItem temp2 = Envir.CreateFreshItem(temp.Info);
+                    var temp2 = Envir.CreateFreshItem(item.Info);
                     temp2.Count = count;
 
-                    if (DropItem(temp2, Settings.DropRange, true))
-                    {
-                        if (count == temp.Count)
-                            Info.Inventory[i] = null;
+                    if (!DropItem(temp2, Settings.DropRange, true))
+                        continue;
 
-                        Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = count });
-                        temp.Count -= count;
+                    if (count == item.Count)
+                        Info.Inventory[i] = null;
 
-                        Report.ItemChanged("DeathDrop", temp, count, 1);
-                    }
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                    item.Count -= count;
+
+                    Report.ItemChanged("DeathDrop", item, count, 1);
                 }
                 else if (Envir.Random.Next(10) == 0)
                 {
-                    if (DropItem(temp, Settings.DropRange, true))
+                    if (ReturnRentalItem(item))
                     {
                         Info.Inventory[i] = null;
-                        Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                        Report.ItemChanged("DeathDrop", temp, temp.Count, 1);
+                        ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to has been returned to it's owner.", ChatType.Hint);
+                        Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
+
+                        continue;
                     }
+
+                    if (!DropItem(item, Settings.DropRange, true))
+                        continue;
+
+                    Info.Inventory[i] = null;
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+
+                    Report.ItemChanged("DeathDrop", item, item.Count, 1);
                 }
             }
 
@@ -1496,77 +1530,106 @@ namespace Server.MirObjects
         {
             if (killer == null || killer.Race != ObjectType.Player)
             {
-                UserItem temp;
-
-                for (int i = 0; i < Info.Equipment.Length; i++)
+                for (var i = 0; i < Info.Equipment.Length; i++)
                 {
-                    temp = Info.Equipment[i];
+                    var item = Info.Equipment[i];
 
-                    if (temp == null) continue;
-                    if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                    if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontDeathdrop)) continue;
-                    if ((temp.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == temp.UniqueID)) continue; //CHECK THIS
+                    if (item == null)
+                        continue;
 
-                    if (temp.Info.Bind.HasFlag(BindMode.BreakOnDeath))
+                    if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
+                        continue;
+
+                    // TODO: Check this.
+                    if ((item.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID))
+                        continue;
+
+                    if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                     {
                         Info.Equipment[i] = null;
-                        Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
-                        ReceiveChat(string.Format("Your {0} shattered upon death.", temp.FriendlyName), ChatType.System2);
-                        Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
+                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
+                        Report.ItemChanged("RedDeathDrop", item, item.Count, 1);
                     }
 
-                    if (temp.Count > 1)
+                    if (item.Count > 1)
                     {
-                        int percent = Envir.RandomomRange(10, 4);
+                        var percent = Envir.RandomomRange(10, 4);
+                        var count = (uint)Math.Ceiling(item.Count / 10F * percent);
 
-                        uint count = (uint)Math.Ceiling(temp.Count / 10F * percent);
-
-                        if (count > temp.Count)
+                        if (count > item.Count)
                             throw new ArgumentOutOfRangeException();
 
-                        UserItem temp2 = Envir.CreateFreshItem(temp.Info);
+                        var temp2 = Envir.CreateFreshItem(item.Info);
                         temp2.Count = count;
 
-                        if (DropItem(temp2, Settings.DropRange, true))
-                        {
-                            if (count == temp.Count)
-                                Info.Equipment[i] = null;
+                        if (!DropItem(temp2, Settings.DropRange, true))
+                            continue;
 
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = count });
-                            temp.Count -= count;
+                        if (count == item.Count)
+                            Info.Equipment[i] = null;
 
-                            Report.ItemChanged("RedDeathDrop", temp, count, 1);
-                        }
+                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                        item.Count -= count;
+
+                        Report.ItemChanged("RedDeathDrop", item, count, 1);
                     }
                     else if (Envir.Random.Next(10) == 0)
                     {
-                        if (DropItem(temp, Settings.DropRange, true))
+                        if (ReturnRentalItem(item))
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                            Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
+                            ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
+                            Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
+
+                            continue;
                         }
+
+                        if (!DropItem(item, Settings.DropRange, true))
+                            continue;
+
+                        Info.Equipment[i] = null;
+                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+
+                        Report.ItemChanged("RedDeathDrop", item, item.Count, 1);
                     }
                 }
 
             }
 
-            for (int i = 0; i < Info.Inventory.Length; i++)
+            for (var i = 0; i < Info.Inventory.Length; i++)
             {
-                UserItem temp = Info.Inventory[i];
+                var item = Info.Inventory[i];
 
-                if (temp == null) continue;
-                if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontDeathdrop)) continue;
-                if (temp.WeddingRing != -1) continue;
+                if (item == null)
+                    continue;
 
-                if (!DropItem(temp, Settings.DropRange, true)) continue;
+                if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
+                    continue;
+
+                if (item.WeddingRing != -1)
+                    continue;
+
+                if (ReturnRentalItem(item))
+                {
+                    Info.Inventory[i] = null;
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+
+                    ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
+                    Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
+
+                    continue;
+                }
+
+                if (!DropItem(item, Settings.DropRange, true))
+                    continue;
 
                 Info.Inventory[i] = null;
-                Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                Report.ItemChanged("RedDeathDrop", temp, temp.Count, 1);
+                Report.ItemChanged("RedDeathDrop", item, item.Count, 1);
             }
 
             RefreshStats();
@@ -13111,11 +13174,18 @@ namespace Server.MirObjects
             //Item not found
         }
 
-        public bool TryLuckWeapon()
+        private bool TryLuckWeapon()
         {
-            UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
+            var item = Info.Equipment[(int)EquipmentSlot.Weapon];
 
-            if (item == null || item.Luck >= 7) return false;
+            if (item == null || item.Luck >= 7)
+                return false;
+
+            if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
+                return false;
+
+            if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontUpgrade))
+                return false;
 
             if (item.Luck > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
             {
@@ -14580,6 +14650,18 @@ namespace Server.MirObjects
 
                 Awake awake = item.Awake;
 
+                if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
+                {
+                    Enqueue(new S.Awakening { result = -1, removeID = -1 });
+                    return;
+                }
+
+                if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontUpgrade))
+                {
+                    Enqueue(new S.Awakening { result = -1, removeID = -1 });
+                    return;
+                }
+
                 if (!item.Info.CanAwakening)
                 {
                     Enqueue(new S.Awakening { result = -1, removeID = -1 });
@@ -14639,6 +14721,12 @@ namespace Server.MirObjects
                 {
                     if (item.UniqueID == UniqueID)
                     {
+                        if (item.LoanInfo != null)
+                        {
+                            ReceiveChat($"Unable to downgrade {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                            return;
+                        }
+
                         if (Info.AccountInfo.Gold >= item.DowngradePrice())
                         {
                             Info.AccountInfo.Gold -= item.DowngradePrice();
@@ -14677,7 +14765,21 @@ namespace Server.MirObjects
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
                 UserItem item = Info.Inventory[i];
-                if (item == null || item.UniqueID != UniqueID) continue;
+
+                if (item == null || item.UniqueID != UniqueID)
+                    continue;
+
+                if (item.Info.Bind.HasFlag(BindMode.UnableToDisassemble))
+                {
+                    ReceiveChat($"Unable to disassemble {item.FriendlyName}", ChatType.System);
+                    return;
+                }
+
+                if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.UnableToDisassemble))
+                {
+                    ReceiveChat($"Unable to disassemble {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                    return;
+                }
 
                 if (Info.AccountInfo.Gold >= item.DisassemblePrice())
                 {
@@ -14729,6 +14831,12 @@ namespace Server.MirObjects
                 {
                     if (item.UniqueID == UniqueID)
                     {
+                        if (item.LoanInfo != null)
+                        {
+                            ReceiveChat($"Unable to reset {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                            return;
+                        }
+
                         if (Info.AccountInfo.Gold >= item.ResetPrice())
                         {
                             Info.AccountInfo.Gold -= item.ResetPrice();
@@ -19534,6 +19642,20 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (item.Info.Bind.HasFlag(BindMode.UnableToRent))
+            {
+                ReceiveChat($"Unable to rent {item.FriendlyName}", ChatType.System);
+                Enqueue(packet);
+                return;
+            }
+
+            if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.UnableToRent))
+            {
+                ReceiveChat($"Unable to rent {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                Enqueue(packet);
+                return;
+            }
+
             if (ItemRentalDepositedItem == null)
             {
                 ItemRentalDepositedItem = item;
@@ -19594,7 +19716,7 @@ namespace Server.MirObjects
             Enqueue(packet);
         }
 
-        public void UpdateRentalItem()
+        private void UpdateRentalItem()
         {
             if (ItemRentalPartner == null)
                 return;
@@ -19746,6 +19868,13 @@ namespace Server.MirObjects
             if (ItemRentalPartner.ItemRentalFeeAmount <= 0)
                 return;
 
+            if (ItemRentalDepositedItem.Info.Bind.HasFlag(BindMode.UnableToRent))
+                return;
+
+            if (ItemRentalDepositedItem.LoanInfo != null &&
+                ItemRentalDepositedItem.LoanInfo.LoanBindingFlags.HasFlag(BindMode.UnableToRent))
+                return;
+
             if (!Functions.InRange(ItemRentalPartner.CurrentLocation, CurrentLocation, Globals.DataRange)
                 || ItemRentalPartner.CurrentMap != CurrentMap || !Functions.FacingEachOther(Direction, CurrentLocation,
                     ItemRentalPartner.Direction, ItemRentalPartner.CurrentLocation))
@@ -19783,9 +19912,8 @@ namespace Server.MirObjects
             item.LoanInfo = new LoanInfo
             {
                 LoanOwnerName = Name,
-                LoanExpiryDate = DateTime.Now.AddDays(ItemRentalPeriodLength),
-                LoanBindingFlags = BindMode.DontDrop | BindMode.DontDeathdrop | BindMode.DontStore | BindMode.DontSell |
-                                   BindMode.DontTrade
+                LoanExpiryDate = DateTime.Now.AddMinutes(ItemRentalPeriodLength),
+                LoanBindingFlags = BindMode.DontDrop | BindMode.DontStore | BindMode.DontSell | BindMode.DontTrade | BindMode.UnableToRent | BindMode.DontUpgrade | BindMode.UnableToDisassemble
             };
 
             var itemRentalInformation = new ItemRentalInformation
@@ -19793,7 +19921,8 @@ namespace Server.MirObjects
                 ItemId = item.UniqueID,
                 ItemName = item.FriendlyName,
                 RentingPlayerName = ItemRentalPartner.Name,
-                ItemReturnDate = item.LoanInfo.LoanExpiryDate
+                ItemReturnDate = item.LoanInfo.LoanExpiryDate,
+                
             };
 
             Info.RentedItems.Add(itemRentalInformation);
@@ -19803,7 +19932,7 @@ namespace Server.MirObjects
             ItemRentalPartner.ReceiveChat($"You have rented {item.FriendlyName} from {Name} until {item.LoanInfo.LoanExpiryDate}", ChatType.System);
 
             GainGold(ItemRentalPartner.ItemRentalFeeAmount);
-            ReceiveChat($"Received {ItemRentalPartner.ItemRentalFeeAmount} for item rental.", ChatType.System);
+            ReceiveChat($"Received {ItemRentalPartner.ItemRentalFeeAmount} gold for item rental.", ChatType.System);
             ItemRentalPartner.ItemRentalFeeAmount = 0;
 
             Enqueue(new S.ConfirmItemRental());
@@ -19813,6 +19942,36 @@ namespace Server.MirObjects
 
             ItemRentalPartner.ItemRentalPartner = null;
             ItemRentalPartner = null;
+        }
+
+        private bool ReturnRentalItem(UserItem rentedItem)
+        {
+            if (rentedItem.LoanInfo == null)
+                return false;
+
+            var owner = Envir.GetCharacterInfo(rentedItem.LoanInfo.LoanOwnerName);
+            var returnItems = new List<UserItem>();
+
+            foreach (var rentedItemInformation in owner.RentedItems)
+                if (rentedItemInformation.ItemId == rentedItem.UniqueID)
+                {
+                    owner.RentedItems.Remove(rentedItemInformation);
+                    break;
+                }
+ 
+            rentedItem.LoanInfo = null;
+            returnItems.Add(rentedItem);
+
+            var mail = new MailInfo(owner.Index, true)
+            {
+                Sender = Info.Name,
+                Message = rentedItem.Info.FriendlyName,
+                Items = returnItems
+            };
+
+            mail.Send();
+
+            return true;
         }
     }
 }
