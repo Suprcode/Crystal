@@ -335,20 +335,8 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -364,21 +352,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -393,21 +369,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -422,21 +386,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -450,21 +402,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -479,21 +419,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -508,21 +436,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -537,21 +453,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -566,21 +470,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -595,21 +487,9 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-
-            //Check Value of cell is betweel 0 and 65535(Max possible value)
-            int number = 0;
-            if (Int32.TryParse(ActiveControl.Text, out number))
-            {
-                if (number >= 0 && number <= 65535)
-                    return;
-                else
-                    ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
