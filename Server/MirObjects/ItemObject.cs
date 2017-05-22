@@ -64,6 +64,16 @@ namespace Server.MirObjects
             Item = item;
             if (Item.IsAdded)
                 NameColour = Color.Cyan;
+            if (item.Info.Grade == ItemGrade.None)
+                NameColour = Color.White;
+            if (item.Info.Grade == ItemGrade.Common)
+                NameColour = Color.Yellow;
+            if (item.Info.Grade == ItemGrade.Rare)
+                NameColour = Color.DeepSkyBlue;
+            if (item.Info.Grade == ItemGrade.Legendary)
+                NameColour = Color.DarkOrange;
+            if (item.Info.Grade == ItemGrade.Mythical)
+                NameColour = Color.Plum;
 
             CurrentMap = dropper.CurrentMap;
             CurrentLocation = dropper.CurrentLocation;
@@ -75,6 +85,16 @@ namespace Server.MirObjects
             Item = item;
             if (Item.IsAdded)
                 NameColour = Color.Cyan;
+            if (item.Info.Grade == ItemGrade.None)
+                NameColour = Color.White;
+            if (item.Info.Grade == ItemGrade.Common)
+                NameColour = Color.Yellow;
+            if (item.Info.Grade == ItemGrade.Rare)
+                NameColour = Color.DeepSkyBlue;
+            if (item.Info.Grade == ItemGrade.Legendary)
+                NameColour = Color.DarkOrange;
+            if (item.Info.Grade == ItemGrade.Mythical)
+                NameColour = Color.Plum;
 
             CurrentMap = dropper.CurrentMap;
             CurrentLocation = manualpoint;

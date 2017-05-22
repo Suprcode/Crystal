@@ -133,7 +133,7 @@ namespace Launcher
             this.Name_label.Name = "Name_label";
             this.Name_label.Size = new System.Drawing.Size(186, 22);
             this.Name_label.TabIndex = 0;
-            this.Name_label.Text = "Elijah Mir 2";
+            this.Name_label.Text = "Crystal Mir 2";
             this.Name_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.Name_label.Visible = false;
             // 
