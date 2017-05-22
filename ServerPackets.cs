@@ -1733,6 +1733,7 @@ namespace ServerPackets
         public Color NameColour;
         public Point Location;
         public ushort Image;
+        public ItemGrade grade;
 
 
         protected override void ReadPacket(BinaryReader reader)
@@ -1742,6 +1743,7 @@ namespace ServerPackets
             NameColour = Color.FromArgb(reader.ReadInt32());
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Image = reader.ReadUInt16();
+            grade = (ItemGrade)reader.ReadByte();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1752,6 +1754,7 @@ namespace ServerPackets
             writer.Write(Location.X);
             writer.Write(Location.Y);
             writer.Write(Image);
+            writer.Write((byte)grade);
         }
     }
     public sealed class ObjectGold : Packet
