@@ -1,0 +1,9 @@
+19/05/2017
+[Changes & Fixes]
+Some cleanup.
+Added BindMode for Unable To Rent for preventing items to be rented. (Set in item DB).
+Added BindMode for Unable To Disassemble. (Set in item DB).
+Rented items can be dropped on death. If this happens it is returned to owner.
+Benediction Oil now checks for Dont Upgrade flag.
+Awakening now checks for Dont Upgrade flag.
+Rented items now expire correctly if the owner or renting player are logged off.

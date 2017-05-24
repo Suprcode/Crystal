@@ -112,6 +112,12 @@ namespace Client.MirScenes
 
         public ReportDialog ReportDialog;
 
+        public ItemRentingDialog ItemRentingDialog;
+        public ItemRentDialog ItemRentDialog;
+        public GuestItemRentingDialog GuestItemRentingDialog;
+        public GuestItemRentDialog GuestItemRentDialog;
+        public ItemRentalDialog ItemRentalDialog;
+
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
@@ -248,6 +254,12 @@ namespace Client.MirScenes
             GameShopDialog = new GameShopDialog { Parent = this, Visible = false };
 
             ReportDialog = new ReportDialog { Parent = this, Visible = false };
+
+            ItemRentingDialog = new ItemRentingDialog { Parent = this, Visible = false };
+            ItemRentDialog = new ItemRentDialog { Parent = this, Visible = false };
+            GuestItemRentingDialog = new GuestItemRentingDialog { Parent = this, Visible = false };
+            GuestItemRentDialog = new GuestItemRentDialog { Parent = this, Visible = false };
+            ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -466,6 +478,7 @@ namespace Client.MirScenes
                         MailListDialog.Hide();
                         MailReadLetterDialog.Hide();
                         MailReadParcelDialog.Hide();
+                        ItemRentalDialog.Visible = false;
 
 
 
@@ -529,6 +542,9 @@ namespace Client.MirScenes
                         break;
                     case KeybindOptions.Trade:
                         Network.Enqueue(new C.TradeRequest());
+                        break;
+                    case KeybindOptions.Rental:
+                        ItemRentalDialog.Toggle();
                         break;
                     case KeybindOptions.ChangePetmode:
                         switch (PMode)
@@ -1610,6 +1626,42 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.Opendoor:
                     Opendoor((S.Opendoor)p);
+                    break;
+                case (short)ServerPacketIds.GetRentedItems:
+                    RentedItems((S.GetRentedItems) p);
+                    break;
+                case (short)ServerPacketIds.ItemRentalRequest:
+                    ItemRentalRequest((S.ItemRentalRequest)p);
+                    break;
+                case (short)ServerPacketIds.ItemRentalFee:
+                    ItemRentalFee((S.ItemRentalFee)p);
+                    break;
+                case (short)ServerPacketIds.ItemRentalPeriod:
+                    ItemRentalPeriod((S.ItemRentalPeriod)p);
+                    break;
+                case (short)ServerPacketIds.DepositRentalItem:
+                    DepositRentalItem((S.DepositRentalItem)p);
+                    break;
+                case (short)ServerPacketIds.RetrieveRentalItem:
+                    RetrieveRentalItem((S.RetrieveRentalItem)p);
+                    break;
+                case (short)ServerPacketIds.UpdateRentalItem:
+                    UpdateRentalItem((S.UpdateRentalItem)p);
+                    break;
+                case (short)ServerPacketIds.CancelItemRental:
+                    CancelItemRental((S.CancelItemRental)p);
+                    break;
+                case (short)ServerPacketIds.ItemRentalLock:
+                    ItemRentalLock((S.ItemRentalLock)p);
+                    break;
+                case (short)ServerPacketIds.ItemRentalPartnerLock:
+                    ItemRentalPartnerLock((S.ItemRentalPartnerLock)p);
+                    break;
+                case (short)ServerPacketIds.CanConfirmItemRental:
+                    CanConfirmItemRental((S.CanConfirmItemRental)p);
+                    break;
+                case (short)ServerPacketIds.ConfirmItemRental:
+                    ConfirmItemRental((S.ConfirmItemRental)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -5348,9 +5400,9 @@ namespace Client.MirScenes
 
         private void ResizeStorage(S.ResizeStorage p)
         {
-            User.AddedStorage = true;
-
             Array.Resize(ref Storage, p.Size);
+            User.HasExpandedStorage = p.HasExpandedStorage;
+            User.ExpandedStorageExpiryTime = p.ExpiryTime;
 
             StorageDialog.RefreshStorage2();
         }
@@ -7737,6 +7789,57 @@ namespace Client.MirScenes
 
             #endregion
 
+            if (HoverItem.RentalInformation?.RentalLocked == false)
+            {
+
+                count++;
+                MirLabel OWNERLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.DarkKhaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "Item rented from: " + HoverItem.RentalInformation.OwnerName
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, OWNERLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, OWNERLabel.DisplayRectangle.Bottom));
+
+                double remainingTime = (HoverItem.RentalInformation.ExpiryDate - DateTime.Now).TotalSeconds;
+
+                count++;
+                MirLabel RENTALLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Khaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = remainingTime > 0 ? string.Format("Rental expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental expired"
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RENTALLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, RENTALLabel.DisplayRectangle.Bottom));
+            }
+            else if (HoverItem.RentalInformation?.RentalLocked == true && HoverItem.RentalInformation.ExpiryDate > DateTime.Now)
+            {
+                count++;
+                var remainingTime = (HoverItem.RentalInformation.ExpiryDate - DateTime.Now).TotalSeconds;
+                var RentalLockLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.DarkKhaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = remainingTime > 0 ? string.Format("Rental lock expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental lock expired"
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RentalLockLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, RentalLockLabel.DisplayRectangle.Bottom));
+            }
+
             if (count > 0)
             {
                 ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
@@ -8173,6 +8276,135 @@ namespace Client.MirScenes
         public void Opendoor(S.Opendoor p)
         {
             MapControl.OpenDoor(p.DoorIndex, p.Close);
+        }
+
+        private void RentedItems(S.GetRentedItems p)
+        {
+            ItemRentalDialog.ReceiveRentedItems(p.RentedItems);
+        }
+
+        private void ItemRentalRequest(S.ItemRentalRequest p)
+        {
+            if (!p.Renting)
+            {
+                GuestItemRentDialog.SetGuestName(p.Name);
+                ItemRentingDialog.OpenItemRentalDialog();
+            }
+            else
+            {
+                GuestItemRentingDialog.SetGuestName(p.Name);
+                ItemRentDialog.OpenItemRentDialog();
+            }
+
+            ItemRentalDialog.Visible = false;
+        }
+
+        private void ItemRentalFee(S.ItemRentalFee p)
+        {
+            GuestItemRentDialog.SetGuestFee(p.Amount);
+            ItemRentDialog.RefreshInterface();
+        }
+
+        private void ItemRentalPeriod(S.ItemRentalPeriod p)
+        {
+            GuestItemRentingDialog.GuestRentalPeriod = p.Days;
+            ItemRentingDialog.RefreshInterface();
+        }
+
+        private void DepositRentalItem(S.DepositRentalItem p)
+        {
+            var fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
+            var toCell = ItemRentingDialog.ItemCell;
+
+            if (toCell == null || fromCell == null)
+                return;
+ 
+            toCell.Locked = false;
+            fromCell.Locked = false;
+         
+            if (!p.Success)
+                return;
+
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+
+            if (ItemRentingDialog.RentalPeriod == 0)
+                ItemRentingDialog.InputRentalPeroid();
+        }
+
+        private void RetrieveRentalItem(S.RetrieveRentalItem p)
+        {
+            var fromCell = ItemRentingDialog.ItemCell;
+            var toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+
+            if (toCell == null || fromCell == null)
+                return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success)
+                return;
+
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+        }
+
+        private void UpdateRentalItem(S.UpdateRentalItem p)
+        {
+            GuestItemRentingDialog.GuestLoanItem = p.LoanItem;
+            ItemRentDialog.RefreshInterface();
+        }
+
+        private void CancelItemRental(S.CancelItemRental p)
+        {
+            User.RentalGoldLocked = false;
+            User.RentalItemLocked = false;
+
+            ItemRentingDialog.Reset();
+            ItemRentDialog.Reset();
+
+            var messageBox = new MirMessageBox("Item rental cancelled.\r\n" +
+                                               "To complete item rental please face the other party throughout the transaction.");
+            messageBox.Show();
+        }
+
+        private void ItemRentalLock(S.ItemRentalLock p)
+        {
+            if (!p.Success)
+                return;
+            
+            User.RentalGoldLocked = p.GoldLocked;
+            User.RentalItemLocked = p.ItemLocked;
+
+            if (User.RentalGoldLocked)
+                ItemRentDialog.Lock();
+            else if (User.RentalItemLocked)
+                ItemRentingDialog.Lock();
+        }
+
+        private void ItemRentalPartnerLock(S.ItemRentalPartnerLock p)
+        {
+            if (p.GoldLocked)
+                GuestItemRentDialog.Lock();
+            else if (p.ItemLocked)
+                GuestItemRentingDialog.Lock();
+        }
+
+        private void CanConfirmItemRental(S.CanConfirmItemRental p)
+        {
+            ItemRentingDialog.EnableConfirmButton();
+        }
+
+        private void ConfirmItemRental(S.ConfirmItemRental p)
+        {
+            User.RentalGoldLocked = false;
+            User.RentalItemLocked = false;
+
+            ItemRentingDialog.Reset();
+            ItemRentDialog.Reset();
         }
 
         #region Disposable

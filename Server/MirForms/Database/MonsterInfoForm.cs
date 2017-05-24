@@ -576,7 +576,8 @@ namespace Server
                 _selectedMonsterInfos[i].CanPush = CanPushCheckBox.Checked;
         }
         private void CanTameCheckBox_CheckedChanged(object sender, EventArgs e)
-        {if (ActiveControl != sender) return;
+        {
+            if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].CanTame = CanTameCheckBox.Checked;
@@ -612,7 +613,7 @@ namespace Server
             }
 
 
-            string[] monsters = data.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] monsters = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
             for (int i = 1; i < monsters.Length; i++)

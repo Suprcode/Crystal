@@ -290,6 +290,8 @@ namespace Server
             BindOnEquipcheckbox.Checked = info.Bind.HasFlag(BindMode.BindOnEquip);
             BreakOnDeathcheckbox.Checked = info.Bind.HasFlag(BindMode.BreakOnDeath);
             NoWeddingRingcheckbox.Checked = info.Bind.HasFlag(BindMode.NoWeddingRing);
+            unableToRent_CheckBox.Checked = info.Bind.HasFlag(BindMode.UnableToRent);
+            unableToDisassemble_CheckBox.Checked = info.Bind.HasFlag(BindMode.UnableToDisassemble);
 
 
             NeedIdentifycheckbox.Checked = info.NeedIdentify;
@@ -391,6 +393,12 @@ namespace Server
                 if (BindOnEquipcheckbox.Checked != info.Bind.HasFlag(BindMode.BindOnEquip)) BindOnEquipcheckbox.CheckState = CheckState.Indeterminate;
                 if (BreakOnDeathcheckbox.Checked != info.Bind.HasFlag(BindMode.BreakOnDeath)) BreakOnDeathcheckbox.CheckState = CheckState.Indeterminate;
                 if (NoWeddingRingcheckbox.Checked != info.Bind.HasFlag(BindMode.NoWeddingRing)) NoWeddingRingcheckbox.CheckState = CheckState.Indeterminate;
+
+                if (unableToRent_CheckBox.Checked != info.Bind.HasFlag(BindMode.UnableToRent))
+                    unableToRent_CheckBox.CheckState = CheckState.Indeterminate;
+
+                if (unableToDisassemble_CheckBox.Checked != info.Bind.HasFlag(BindMode.UnableToDisassemble))
+                    unableToDisassemble_CheckBox.CheckState = CheckState.Indeterminate;
 
                 if (NeedIdentifycheckbox.Checked != info.NeedIdentify) NeedIdentifycheckbox.CheckState = CheckState.Indeterminate;
                 if (ShowGroupPickupcheckbox.Checked != info.ShowGroupPickup) ShowGroupPickupcheckbox.CheckState = CheckState.Indeterminate;
@@ -1730,6 +1738,28 @@ namespace Server
             if (ActiveControl != sender) return;
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Bind = (NoWeddingRingcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.NoWeddingRing : _selectedItemInfos[i].Bind ^= BindMode.NoWeddingRing);
+        }
+
+        private void unableToRent_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            foreach (var selectedItem in _selectedItemInfos)
+                selectedItem.Bind = unableToRent_CheckBox.Checked
+                    ? selectedItem.Bind |= BindMode.UnableToRent
+                    : selectedItem.Bind ^= BindMode.UnableToRent;
+        }
+
+        private void unableToDisassemble_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            foreach (var selectedItem in _selectedItemInfos)
+                selectedItem.Bind = unableToDisassemble_CheckBox.Checked
+                    ? selectedItem.Bind |= BindMode.UnableToDisassemble
+                    : selectedItem.Bind ^= BindMode.UnableToDisassemble;
         }
     }
 }

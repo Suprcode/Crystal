@@ -10,6 +10,7 @@ using Client.MirSounds;
 using Client.MirControls;
 using S = ServerPackets;
 using C = ClientPackets;
+using Client.MirScenes.Dialogs;
 
 namespace Client.MirObjects
 {
@@ -30,8 +31,8 @@ namespace Client.MirObjects
         public byte Hair;
         public ushort Level;
 
-        public MLibrary WeaponLibrary1, WeaponLibrary2, HairLibrary, WingLibrary, MountLibrary;
-        public int Armour, Weapon, ArmourOffSet, HairOffSet, WeaponOffSet, WingOffset, MountOffset;
+        public MLibrary WeaponLibrary1, WeaponEffectLibrary1, WeaponLibrary2, HairLibrary, WingLibrary, MountLibrary;
+        public int Armour, Weapon, WeaponEffect, ArmourOffSet, HairOffSet, WeaponOffSet, WingOffset, MountOffset;
 
         public int DieSound, FlinchSound, AttackSound;
 
@@ -132,7 +133,8 @@ namespace Client.MirObjects
             Hair = info.Hair;
 
             Weapon = info.Weapon;
-            Armour = info.Armour;
+			WeaponEffect = info.WeaponEffect;
+			Armour = info.Armour;
             Light = info.Light;
 
             Poison = info.Poison;
@@ -172,7 +174,8 @@ namespace Client.MirObjects
         public void Update(S.PlayerUpdate info)
         {
             Weapon = info.Weapon;
-            Armour = info.Armour;
+			WeaponEffect = info.WeaponEffect;
+			Armour = info.Armour;
             Light = info.Light;
             WingEffect = info.WingEffect;
 
@@ -422,13 +425,21 @@ namespace Client.MirObjects
                         }
                         else
                         {
-                            if (Weapon >= 0)
-                                WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
-                            else
-                                WeaponLibrary1 = null;
-
-                            WeaponLibrary2 = null;
-                        }
+							if (Weapon >= 0)
+							{
+								WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
+								if (WeaponEffect > 0)
+									WeaponEffectLibrary1 = WeaponEffect < Libraries.CWeaponEffect.Length ? Libraries.CWeaponEffect[WeaponEffect] : null;
+								else
+									WeaponEffectLibrary1 = null;
+							}
+							else
+							{
+								WeaponLibrary1 = null;
+								WeaponEffectLibrary1 = null;
+								WeaponLibrary2 = null;
+							}
+						}
                         #endregion
 
                         #region WingEffects
@@ -538,13 +549,21 @@ namespace Client.MirObjects
                         }
                         else
                         {
-                            if (Weapon >= 0)
-                                WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
-                            else
-                                WeaponLibrary1 = null;
-
-                            WeaponLibrary2 = null;
-                        }
+							if (Weapon >= 0)
+							{
+								WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
+								if (WeaponEffect > 0)
+									WeaponEffectLibrary1 = WeaponEffect < Libraries.CWeaponEffect.Length ? Libraries.CWeaponEffect[WeaponEffect] : null;
+								else
+									WeaponEffectLibrary1 = null;
+							}
+							else
+							{
+								WeaponLibrary1 = null;
+								WeaponEffectLibrary1 = null;
+								WeaponLibrary2 = null;
+							}
+						}
                         #endregion
 
                         #region WingEffects
@@ -577,19 +596,29 @@ namespace Client.MirObjects
                         #region Armours
                         BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
                         HairLibrary = Hair < Libraries.CHair.Length ? Libraries.CHair[Hair] : null;
-                        #endregion
+						#endregion
 
-                        #region Weapons
-                        if (Weapon >= 0)
-                            WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
-                        else
-                            WeaponLibrary1 = null;
-                        WeaponLibrary2 = null;
+						#region Weapons
 
-                        #endregion
+						if (Weapon >= 0)
+						{
+							WeaponLibrary1 = Weapon < Libraries.CWeapons.Length ? Libraries.CWeapons[Weapon] : null;
+							if (WeaponEffect > 0)
+								WeaponEffectLibrary1 = WeaponEffect < Libraries.CWeaponEffect.Length ? Libraries.CWeaponEffect[WeaponEffect] : null;
+							else
+								WeaponEffectLibrary1 = null;
+						}
+						else
+						{
+							WeaponLibrary1 = null;
+							WeaponEffectLibrary1 = null;
+							WeaponLibrary2 = null;
+						}
 
-                        #region WingEffects
-                        if (WingEffect > 0 && WingEffect < 100)
+						#endregion
+
+						#region WingEffects
+						if (WingEffect > 0 && WingEffect < 100)
                         {
                             WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
                         }
@@ -672,7 +701,7 @@ namespace Client.MirObjects
                 }
             }
 
-            long delay = 5000;
+			long delay = 5000;
 
             if (LevelEffects == LevelEffects.None) return;
 
@@ -4535,14 +4564,19 @@ namespace Client.MirObjects
             if (HairLibrary != null)
                 HairLibrary.Draw(DrawFrame + HairOffSet, DrawLocation, DrawColour, true);
         }
-        public void DrawWeapon()
-        {
-            if (Weapon < 0) return;
+		public void DrawWeapon()
+		{
+			if (Weapon < 0) return;
 
-            if (WeaponLibrary1 != null)
-                WeaponLibrary1.Draw(DrawFrame + WeaponOffSet, DrawLocation, DrawColour, true);
-        }
-        public void DrawWeapon2()
+			if (WeaponLibrary1 != null)
+			{
+				WeaponLibrary1.Draw(DrawFrame + WeaponOffSet, DrawLocation, DrawColour, true); //original
+
+				if (WeaponEffectLibrary1 != null)
+					WeaponEffectLibrary1.DrawBlend(DrawFrame + WeaponOffSet, DrawLocation, DrawColour, true, 0.4F);
+			}
+		}
+		public void DrawWeapon2()
         {
             if (Weapon == -1) return;
 
