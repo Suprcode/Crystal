@@ -64,6 +64,7 @@ namespace Server.MirObjects
             Item = item;
             if (Item.IsAdded)
                 NameColour = Color.Cyan;
+            else {
             if (item.Info.Grade == ItemGrade.None)
                 NameColour = Color.White;
             if (item.Info.Grade == ItemGrade.Common)
@@ -74,6 +75,7 @@ namespace Server.MirObjects
                 NameColour = Color.DarkOrange;
             if (item.Info.Grade == ItemGrade.Mythical)
                 NameColour = Color.Plum;
+            }
 
             CurrentMap = dropper.CurrentMap;
             CurrentLocation = dropper.CurrentLocation;
