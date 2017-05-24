@@ -36,6 +36,8 @@ namespace Server.MirDatabase
         public List<CharacterInfo> Characters = new List<CharacterInfo>();
 
         public UserItem[] Storage = new UserItem[80];
+        public bool HasExpandedStorage;
+        public DateTime ExpandedStorageExpiryDate;
         public uint Gold;
         public uint Credit;
 
@@ -89,10 +91,14 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 Characters.Add(new CharacterInfo(reader) { AccountInfo = this });
-                
             }
 
-
+            if (Envir.LoadVersion > 75)
+            {
+                HasExpandedStorage = reader.ReadBoolean();
+                ExpandedStorageExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+            }
+            
             Gold = reader.ReadUInt32();
             if (Envir.LoadVersion >= 63) Credit = reader.ReadUInt32();
 
@@ -151,6 +157,8 @@ namespace Server.MirDatabase
             for (int i = 0; i < Characters.Count; i++)
                 Characters[i].Save(writer);
 
+            writer.Write(HasExpandedStorage);
+            writer.Write(ExpandedStorageExpiryDate.ToBinary());
             writer.Write(Gold);
             writer.Write(Credit);
             writer.Write(Storage.Length);
@@ -211,7 +219,7 @@ namespace Server.MirDatabase
             return list;
         }
 
-        public int ResizeStorage()
+        public int ExpandStorage()
         {
             if (Storage.Length == 80)
                 Array.Resize(ref Storage, Storage.Length + 80);

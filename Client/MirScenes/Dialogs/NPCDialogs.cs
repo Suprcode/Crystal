@@ -387,7 +387,8 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.NPCAwakeDialog.Hide();
             GameScene.Scene.RefineDialog.Hide();
             GameScene.Scene.StorageDialog.Hide();
-            GameScene.Scene.TrustMerchantDialog.Hide();          
+            GameScene.Scene.TrustMerchantDialog.Hide();
+            GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
 
         public void Show()
@@ -1589,6 +1590,7 @@ namespace Client.MirScenes.Dialogs
         public MirItemCell[] Grid;
         public MirButton Storage1Button, Storage2Button, RentButton, ProtectButton, CloseButton;
         public MirImageControl LockedPage;
+        public MirLabel RentalLabel;
 
         public StorageDialog()
         {
@@ -1642,7 +1644,6 @@ namespace Client.MirScenes.Dialogs
             };
             Storage2Button.Click += (o, e) =>
             {
-                
                 RefreshStorage2();
             };
             RentButton = new MirButton
@@ -1654,20 +1655,22 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(283, 33),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Visible = false,
+                Visible = true,
             };
             RentButton.Click += (o, e) =>
             {
-                if (GameScene.Storage.Length == 80)
-                {
-                    MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 80 extra slots for 20,000,000 gold?", MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox;
 
-                    messageBox.OKButton.Click += (o1, a) =>
-                    {
-                        Network.Enqueue(new C.Chat { Message = "@ADDSTORAGE" });
-                    };
-                    messageBox.Show();
-                }
+                if (GameScene.User.HasExpandedStorage)
+                    messageBox = new MirMessageBox("Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?", MirMessageBoxButtons.OKCancel);
+                else
+                    messageBox = new MirMessageBox("Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?", MirMessageBoxButtons.OKCancel);
+
+                messageBox.OKButton.Click += (o1, a) =>
+                {
+                    Network.Enqueue(new C.Chat { Message = "@ADDSTORAGE" });
+                };
+                messageBox.Show();
             };
 
             ProtectButton = new MirButton
@@ -1679,7 +1682,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 115,
                 Sound = SoundList.ButtonA,
-                Visible = false
+                Visible = true
             };
             CloseButton = new MirButton
             {
@@ -1692,6 +1695,17 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            RentalLabel = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(40, 322),
+                AutoSize = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                NotControl = true,
+                Text = "Expanded Storage Locked",
+                ForeColour = Color.Red
+            };
 
             Grid = new MirItemCell[10 * 16];
 
@@ -1748,6 +1762,7 @@ namespace Client.MirScenes.Dialogs
 
             RentButton.Visible = false;
             LockedPage.Visible = false;
+            RentalLabel.Visible = false;
         }
 
         public void RefreshStorage2()
@@ -1759,20 +1774,26 @@ namespace Client.MirScenes.Dialogs
             Storage2Button.Index = 745;
             Storage2Button.HoverIndex = 745;
 
-            if (GameScene.User.AddedStorage)
+            RentalLabel.Visible = true;
+
+            if (GameScene.User.HasExpandedStorage)
             {
-                RentButton.Visible = false;
+                RentButton.Visible = true;
                 LockedPage.Visible = false;
+                RentalLabel.Text = "Expanded Storage Expires On: " + GameScene.User.ExpandedStorageExpiryTime.ToString();
+                RentalLabel.ForeColour = Color.White;
             }
             else
             {
+                RentalLabel.Text = "Expanded Storage Locked";
+                RentalLabel.ForeColour = Color.Red;
                 RentButton.Visible = true;
                 LockedPage.Visible = true;
             }
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 80 || !GameScene.User.AddedStorage)
+                if (grid.ItemSlot < 80 || !GameScene.User.HasExpandedStorage)
                     grid.Visible = false;
                 else
                     grid.Visible = true;

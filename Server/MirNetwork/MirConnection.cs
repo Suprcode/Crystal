@@ -578,6 +578,36 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.Opendoor:
                     Opendoor((C.Opendoor)p);
                     break;
+                case (short)ClientPacketIds.GetRentedItems:
+                    GetRentedItems();
+                    break;
+                case (short)ClientPacketIds.ItemRentalRequest:
+                    ItemRentalRequest();
+                    break;
+                case (short)ClientPacketIds.ItemRentalFee:
+                    ItemRentalFee((C.ItemRentalFee)p);
+                    break;
+                case (short)ClientPacketIds.ItemRentalPeriod:
+                    ItemRentalPeriod((C.ItemRentalPeriod)p);
+                    break;
+                case (short)ClientPacketIds.DepositRentalItem:
+                    DepositRentalItem((C.DepositRentalItem)p);
+                    break;
+                case (short)ClientPacketIds.RetrieveRentalItem:
+                    RetrieveRentalItem((C.RetrieveRentalItem)p);
+                    break;
+                case (short)ClientPacketIds.CancelItemRental:
+                    CancelItemRental();
+                    break;
+                case (short)ClientPacketIds.ItemRentalLockFee:
+                    ItemRentalLockFee();
+                    break;
+                case (short)ClientPacketIds.ItemRentalLockItem:
+                    ItemRentalLockItem();
+                    break;
+                case (short)ClientPacketIds.ConfirmItemRental:
+                    ConfirmItemRental();
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1660,6 +1690,86 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
             Player.Opendoor(p.DoorIndex);
+        }
+
+        private void GetRentedItems()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.GetRentedItems();
+        }
+
+        private void ItemRentalRequest()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ItemRentalRequest();
+        }
+
+        private void ItemRentalFee(C.ItemRentalFee p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.SetItemRentalFee(p.Amount);
+        }
+
+        private void ItemRentalPeriod(C.ItemRentalPeriod p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.SetItemRentalPeriodLength(p.Days);
+        }
+
+        private void DepositRentalItem(C.DepositRentalItem p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.DepositRentalItem(p.From, p.To);
+        }
+
+        private void RetrieveRentalItem(C.RetrieveRentalItem p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RetrieveRentalItem(p.From, p.To);
+        }
+
+        private void CancelItemRental()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.CancelItemRental();
+        }
+
+        private void ItemRentalLockFee()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ItemRentalLockFee();
+        }
+
+        private void ItemRentalLockItem()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ItemRentalLockItem();
+        }
+
+        private void ConfirmItemRental()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ConfirmItemRental();
         }
     }
 }

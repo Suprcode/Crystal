@@ -32,6 +32,7 @@ namespace Server
 
             SafeZoneBorderCheckBox.Checked = Settings.SafeZoneBorder;
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
+            gameMasterEffect_CheckBox.Checked = Settings.GameMasterEffect;
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
 
@@ -92,6 +93,7 @@ namespace Server
 
             Settings.SafeZoneBorder = SafeZoneBorderCheckBox.Checked;
             Settings.SafeZoneHealing = SafeZoneHealingCheckBox.Checked;
+            Settings.GameMasterEffect = gameMasterEffect_CheckBox.Checked;
         }
 
         private void IPAddressCheck(object sender, EventArgs e)
