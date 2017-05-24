@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using Client.MirNetwork;
 
@@ -10,15 +12,12 @@ using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
-    public sealed class LoaningManagementDialog : MirImageControl
+    public sealed class ItemRentalDialog : MirImageControl
     {
-        public MirImageControl WindowTitle;
-        public MirButton RentItemButton, RentedTabButton, BorrowedTabButton, CloseButton;
-        public ItemRow[] Rows = new ItemRow[3];
+        private readonly ItemRow[] _itemRows = new ItemRow[3];
+        private DateTime _lastRequestTime = DateTime.Now;
 
-        private long _lastRequestTime;
-
-        public LoaningManagementDialog()
+        public ItemRentalDialog()
         {
             Index = 1;
             Library = Libraries.Prguse3;
@@ -29,7 +28,7 @@ namespace Client.MirScenes.Dialogs
 
             // Title
 
-            WindowTitle = new MirImageControl
+            var windowTitle = new MirImageControl
             {
                 Index = 0,
                 Library = Libraries.Prguse3,
@@ -39,7 +38,7 @@ namespace Client.MirScenes.Dialogs
 
             // Rented Tab
 
-            RentedTabButton = new MirButton
+            var rentedTabButton = new MirButton
             {
                 Index = 2,
                 HoverIndex = 2,
@@ -54,7 +53,7 @@ namespace Client.MirScenes.Dialogs
 
             // Borrowed Tab
 
-            BorrowedTabButton = new MirButton
+            var borrowedTabButton = new MirButton
             {
                 Index = 3,
                 Location = new Point(81, 32),
@@ -67,7 +66,7 @@ namespace Client.MirScenes.Dialogs
 
             // Rent Item Button
 
-            RentItemButton = new MirButton
+            var rentItemButton = new MirButton
             {
                 Index = 4,
                 HoverIndex = 5,
@@ -78,14 +77,14 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 6,
                 Sound = SoundList.ButtonA,
             };
-            RentItemButton.Click += (o, e) =>
+            rentItemButton.Click += (o, e) =>
             {
                 Network.Enqueue(new C.ItemRentalRequest());
             };
 
             // Close Button
 
-            CloseButton = new MirButton
+            var closeButton = new MirButton
             {
                 HoverIndex = 361,
                 Index = 360,
@@ -95,13 +94,13 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 362,
                 Sound = SoundList.ButtonA,
             };
-            CloseButton.Click += (o, e) => Hide();
+            closeButton.Click += (o, e) => Toggle();
 
             // Item Rows
 
-            for (var i = 0; i < Rows.Length; i++)
+            for (var i = 0; i < _itemRows.Length; i++)
             {
-                Rows[i] = new ItemRow
+                _itemRows[i] = new ItemRow
                 {
                     Parent = this,
                     Location = new Point(0, 78 + i * 21),
@@ -110,45 +109,43 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
+        public void Toggle()
         {
-            Visible = false;
-        }
+            Visible = !Visible;
 
-        public void Show()
-        {
-            Visible = true;
-            RequestRentedItems();
+            if (Visible)
+                RequestRentedItems();
         }
 
         public void ReceiveRentedItems(List<ItemRentalInformation> rentedItems)
         {
-            for (var i = 0; i < Rows.Length; i++)
+            for (var i = 0; i < _itemRows.Length; i++)
             {
-                Rows[i].Clear();
+                _itemRows[i].Clear();
 
                 if (rentedItems[i] != null)
-                    Rows[i].Update(rentedItems[i].ItemName,
+                    _itemRows[i].Update(rentedItems[i].ItemName,
                         rentedItems[i].RentingPlayerName,
-                        rentedItems[i].ItemReturnDate.ToString());
+                        rentedItems[i].ItemReturnDate.ToString(CultureInfo.InvariantCulture));
             }
         }
 
         private void RequestRentedItems()
         {
-            _lastRequestTime = CMain.Time;
+            if (_lastRequestTime > CMain.Now)
+                return;
+            
+            _lastRequestTime = CMain.Now.AddSeconds(60);
             Network.Enqueue(new ClientPackets.GetRentedItems());
         }
 
-        public sealed class ItemRow : MirControl
+        private sealed class ItemRow : MirControl
         {
-            public MirLabel ItemNameLabel, RentingPlayerLabel, ReturnDateLabel;
-
-            private long _index;
+            private readonly MirLabel _itemNameLabel, _rentingPlayerLabel, _returnDateLabel;
 
             public ItemRow()
             {
-                ItemNameLabel = new MirLabel
+                _itemNameLabel = new MirLabel
                 {
                     Size = new Size(128, 20),
                     Location = new Point(5, 0),
@@ -157,7 +154,7 @@ namespace Client.MirScenes.Dialogs
                     NotControl = true,
                 };
 
-                RentingPlayerLabel = new MirLabel
+                _rentingPlayerLabel = new MirLabel
                 {
                     Size = new Size(128, 20),
                     Location = new Point(137, 0),
@@ -166,7 +163,7 @@ namespace Client.MirScenes.Dialogs
                     NotControl = true,
                 };
 
-                ReturnDateLabel = new MirLabel
+                _returnDateLabel = new MirLabel
                 {
                     Size = new Size(128, 20),
                     Location = new Point(264, 0),
@@ -180,16 +177,16 @@ namespace Client.MirScenes.Dialogs
             {
                 Visible = false;
 
-                ItemNameLabel.Text = string.Empty;
-                RentingPlayerLabel.Text = string.Empty;
-                ReturnDateLabel.Text = string.Empty;
+                _itemNameLabel.Text = string.Empty;
+                _rentingPlayerLabel.Text = string.Empty;
+                _returnDateLabel.Text = string.Empty;
             }
 
             public void Update(string itemName, string rentingPlayerName, string returnDate)
             {
-                ItemNameLabel.Text = itemName;
-                RentingPlayerLabel.Text = rentingPlayerName;
-                ReturnDateLabel.Text = returnDate;
+                _itemNameLabel.Text = itemName;
+                _rentingPlayerLabel.Text = rentingPlayerName;
+                _returnDateLabel.Text = returnDate;
 
                 Visible = true;
             }

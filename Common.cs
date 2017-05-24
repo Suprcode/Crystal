@@ -2975,7 +2975,7 @@ public class UserItem
     public DateTime BuybackExpiryDate;
 
     public ExpireInfo ExpireInfo;
-    public LoanInfo LoanInfo;
+    public RentalInformation RentalInformation;
 
 	public Awake Awake = new Awake();
     public bool IsAdded
@@ -3081,8 +3081,11 @@ public class UserItem
         if (reader.ReadBoolean())
             ExpireInfo = new ExpireInfo(reader, version, Customversion);
 
+        if (version < 76)
+            return;
+
         if (reader.ReadBoolean())
-            LoanInfo = new LoanInfo(reader, version, Customversion);
+            RentalInformation = new RentalInformation(reader, version, Customversion);
     }
 
     public void Save(BinaryWriter writer)
@@ -3144,14 +3147,10 @@ public class UserItem
         writer.Write(WeddingRing);
 
         writer.Write(ExpireInfo != null);
+        ExpireInfo?.Save(writer);
 
-        if (ExpireInfo != null)
-            ExpireInfo.Save(writer);
-
-        writer.Write(LoanInfo != null);
-
-        if (LoanInfo != null)
-            LoanInfo.Save(writer);
+        writer.Write(RentalInformation != null);
+        RentalInformation?.Save(writer);
     }
 
 
@@ -3198,7 +3197,7 @@ public class UserItem
 
         var cost = p * Count - Price();
 
-        if (LoanInfo == null)
+        if (RentalInformation == null)
             return cost;
 
         return cost * 2;
@@ -3359,7 +3358,7 @@ public class UserItem
             RefineAdded = RefineAdded,
 
             ExpireInfo = ExpireInfo,
-            LoanInfo = LoanInfo
+            RentalInformation = RentalInformation
         };
 
         return item;
@@ -3387,27 +3386,27 @@ public class ExpireInfo
     }
 }
 
-public class LoanInfo
+public class RentalInformation
 {
-    public string LoanOwnerName;
-    public BindMode LoanBindingFlags = BindMode.none;
-    public DateTime LoanExpiryDate;
+    public string OwnerName;
+    public BindMode BindingFlags = BindMode.none;
+    public DateTime ExpiryDate;
 
-    public LoanInfo()
+    public RentalInformation()
     { }
 
-    public LoanInfo(BinaryReader reader, int version = int.MaxValue, int CustomVersion = int.MaxValue)
+    public RentalInformation(BinaryReader reader, int version = int.MaxValue, int CustomVersion = int.MaxValue)
     {
-        LoanOwnerName = reader.ReadString();
-        LoanBindingFlags = (BindMode)reader.ReadInt16();
-        LoanExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+        OwnerName = reader.ReadString();
+        BindingFlags = (BindMode)reader.ReadInt16();
+        ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
     }
 
     public void Save(BinaryWriter writer)
     {
-        writer.Write(LoanOwnerName);
-        writer.Write((short)LoanBindingFlags);
-        writer.Write(LoanExpiryDate.ToBinary());
+        writer.Write(OwnerName);
+        writer.Write((short)BindingFlags);
+        writer.Write(ExpiryDate.ToBinary());
     }
 }
 

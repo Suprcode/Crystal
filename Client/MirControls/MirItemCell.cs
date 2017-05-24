@@ -25,10 +25,10 @@ namespace Client.MirControls
                     return TrustMerchantDialog.Selected != null ? TrustMerchantDialog.Selected.Listing.Item : null;
 
                 if (GridType == MirGridType.Renting)
-                    return LoaningDialog.LoanItem;
+                    return ItemRentingDialog.RentalItem;
 
                 if (GridType == MirGridType.GuestRenting)
-                    return GuestLoaningDialog.GuestLoanItem;
+                    return GuestItemRentingDialog.GuestLoanItem;
 
                 if (ItemArray != null && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
                     return ItemArray[_itemSlot];
@@ -39,9 +39,9 @@ namespace Client.MirControls
                 if (GridType == MirGridType.DropPanel)
                     NPCDropDialog.TargetItem = value;
                 else if (GridType == MirGridType.Renting)
-                    LoaningDialog.LoanItem = value;
+                    ItemRentingDialog.RentalItem = value;
                 else if (GridType == MirGridType.GuestRenting)
-                    GuestLoaningDialog.GuestLoanItem = value;
+                    GuestItemRentingDialog.GuestLoanItem = value;
                 else if (ItemArray != null && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
                     ItemArray[_itemSlot] = value;
 

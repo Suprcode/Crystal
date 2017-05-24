@@ -93,8 +93,12 @@ namespace Server.MirDatabase
                 Characters.Add(new CharacterInfo(reader) { AccountInfo = this });
             }
 
-            HasExpandedStorage = reader.ReadBoolean();
-            ExpandedStorageExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+            if (Envir.LoadVersion > 75)
+            {
+                HasExpandedStorage = reader.ReadBoolean();
+                ExpandedStorageExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+            }
+            
             Gold = reader.ReadUInt32();
             if (Envir.LoadVersion >= 63) Credit = reader.ReadUInt32();
 

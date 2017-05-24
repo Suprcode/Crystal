@@ -1097,85 +1097,31 @@ namespace Server.MirObjects
             {
                 var item = Info.Inventory[i];
 
-                if (item?.ExpireInfo != null)
-                {
-                    if (DateTime.Now > item.ExpireInfo.ExpiryDate)
-                    {
-                        ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                        Info.Inventory[i] = null;
-                    }
-                }
+                if (item?.ExpireInfo == null)
+                    continue;
+
+                if (DateTime.Now <= item.ExpireInfo.ExpiryDate)
+                    continue;
+
+                ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
+                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                Info.Inventory[i] = null;
             }
 
             for (var i = 0; i < Info.Equipment.Length; i++)
             {
                 var item = Info.Equipment[i];
 
-                if (item?.ExpireInfo != null)
-                {
-                    if (DateTime.Now > item.ExpireInfo.ExpiryDate)
-                    {
-                        ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                        Info.Equipment[i] = null;
-                    }
-                }
-            }
-
-            if (Info.RentedItems.Count <= 0)
-                return;
-
-            var returnItems = new List<UserItem>();
-
-            foreach (var rentedItemInformation in Info.RentedItems)
-            {
-                if (DateTime.Now <= rentedItemInformation.ItemReturnDate)
+                if (item?.ExpireInfo == null)
                     continue;
 
-                var rentingPlayer = Envir.GetCharacterInfo(rentedItemInformation.RentingPlayerName);
+                if (DateTime.Now <= item.ExpireInfo.ExpiryDate)
+                    continue;
 
-                for (var i = 0; i < rentingPlayer.Inventory.Length; i++)
-                {
-                    if (rentingPlayer.Inventory[i]?.UniqueID != rentedItemInformation.ItemId)
-                        continue;
-
-                    returnItems.Add(rentingPlayer.Inventory[i]?.Clone());
-                    var item = rentingPlayer.Inventory[i];
-                    var rentingPlayerObject = Envir.GetPlayer(rentingPlayer.Name);
-
-                    rentingPlayer.Inventory[i] = null;
-
-                    if (rentingPlayerObject == null)
-                        continue;
-
-                    rentingPlayerObject.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                    rentingPlayerObject.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                    rentingPlayerObject.RefreshStats();
-                }
-
-                for (var i = 0; i < rentingPlayer.Equipment.Length; i++)
-                {
-                    if (rentingPlayer.Equipment[i]?.UniqueID != rentedItemInformation.ItemId)
-                        continue;
-
-                    returnItems.Add(rentingPlayer.Equipment[i]?.Clone());
-                    var item = rentingPlayer.Equipment[i];
-                    var rentingPlayerObject = Envir.GetPlayer(rentingPlayer.Name);
-
-                    rentingPlayer.Equipment[i] = null;
-
-                    if (rentingPlayerObject == null)
-                        continue;
-
-                    rentingPlayerObject.ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
-                    rentingPlayerObject.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                    rentingPlayerObject.RefreshStats();
-                }
+                ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
+                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                Info.Equipment[i] = null;
             }
-
-            foreach (var returnItem in returnItems)
-                ReturnRentalItem(returnItem);
         }
 
         public override void Process(DelayedAction action)
@@ -1439,7 +1385,7 @@ namespace Server.MirObjects
                     }
                     else if (Envir.Random.Next(30) == 0)
                     {
-                        if (ReturnRentalItem(item))
+                        if (Envir.ReturnRentalItem(item, item.RentalInformation.OwnerName, Info))
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -1503,7 +1449,7 @@ namespace Server.MirObjects
                 }
                 else if (Envir.Random.Next(10) == 0)
                 {
-                    if (ReturnRentalItem(item))
+                    if (Envir.ReturnRentalItem(item, item.RentalInformation.OwnerName, Info))
                     {
                         Info.Inventory[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -1576,7 +1522,7 @@ namespace Server.MirObjects
                     }
                     else if (Envir.Random.Next(10) == 0)
                     {
-                        if (ReturnRentalItem(item))
+                        if (Envir.ReturnRentalItem(item, item.RentalInformation.OwnerName, Info))
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -1612,7 +1558,7 @@ namespace Server.MirObjects
                 if (item.WeddingRing != -1)
                     continue;
 
-                if (ReturnRentalItem(item))
+                if (Envir.ReturnRentalItem(item, item.RentalInformation.OwnerName, Info))
                 {
                     Info.Inventory[i] = null;
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -10798,7 +10744,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontStore))
+            if (temp.RentalInformation != null && temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontStore))
             {
                 Enqueue(p);
                 return;
@@ -11768,7 +11714,7 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if (tempTo.LoanInfo != null && tempTo.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontUpgrade))
+                    if (tempTo.RentalInformation != null && tempTo.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                     {
                         Enqueue(p);
                         return;
@@ -12299,7 +12245,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontDrop))
+            if (temp.RentalInformation != null && temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontDrop))
             {
                 Enqueue(p);
                 return;
@@ -13184,7 +13130,7 @@ namespace Server.MirObjects
             if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
                 return false;
 
-            if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontUpgrade))
+            if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                 return false;
 
             if (item.Luck > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
@@ -14188,7 +14134,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontSell))
+                if (temp.RentalInformation != null && temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontSell))
                 {
                     Enqueue(p);
                     return;
@@ -14356,7 +14302,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontSell))
+                if (temp.RentalInformation != null && temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontSell))
                 {
                     Enqueue(p);
                     return;
@@ -14656,7 +14602,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontUpgrade))
+                if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                 {
                     Enqueue(new S.Awakening { result = -1, removeID = -1 });
                     return;
@@ -14721,9 +14667,9 @@ namespace Server.MirObjects
                 {
                     if (item.UniqueID == UniqueID)
                     {
-                        if (item.LoanInfo != null)
+                        if (item.RentalInformation != null)
                         {
-                            ReceiveChat($"Unable to downgrade {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                            ReceiveChat($"Unable to downgrade {item.FriendlyName} as it belongs to {item.RentalInformation.OwnerName}", ChatType.System);
                             return;
                         }
 
@@ -14775,9 +14721,9 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.UnableToDisassemble))
+                if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.UnableToDisassemble))
                 {
-                    ReceiveChat($"Unable to disassemble {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                    ReceiveChat($"Unable to disassemble {item.FriendlyName} as it belongs to {item.RentalInformation.OwnerName}", ChatType.System);
                     return;
                 }
 
@@ -14831,9 +14777,9 @@ namespace Server.MirObjects
                 {
                     if (item.UniqueID == UniqueID)
                     {
-                        if (item.LoanInfo != null)
+                        if (item.RentalInformation != null)
                         {
-                            ReceiveChat($"Unable to reset {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                            ReceiveChat($"Unable to reset {item.FriendlyName} as it belongs to {item.RentalInformation.OwnerName}", ChatType.System);
                             return;
                         }
 
@@ -15755,7 +15701,7 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
-                    if (Info.Inventory[from].LoanInfo != null && Info.Inventory[from].LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontStore))
+                    if (Info.Inventory[from].RentalInformation != null && Info.Inventory[from].RentalInformation.BindingFlags.HasFlag(BindMode.DontStore))
                     {
                         Enqueue(p);
                         return;
@@ -16013,7 +15959,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.LoanInfo != null && temp.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontTrade))
+            if (temp.RentalInformation != null && temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontTrade))
             {
                 Enqueue(p);
                 return;
@@ -17244,7 +17190,7 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontTrade))
+                    if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontTrade))
                     {
                         ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
                         return;
@@ -18146,7 +18092,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Info.Inventory[index].LoanInfo != null && Info.Inventory[index].LoanInfo.LoanBindingFlags.HasFlag(BindMode.DontUpgrade))
+            if (Info.Inventory[index].RentalInformation != null && Info.Inventory[index].RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
             {
                 ReceiveChat(String.Format("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
@@ -19649,9 +19595,9 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (item.LoanInfo != null && item.LoanInfo.LoanBindingFlags.HasFlag(BindMode.UnableToRent))
+            if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.UnableToRent))
             {
-                ReceiveChat($"Unable to rent {item.FriendlyName} as it belongs to {item.LoanInfo.LoanOwnerName}", ChatType.System);
+                ReceiveChat($"Unable to rent {item.FriendlyName} as it belongs to {item.RentalInformation.OwnerName}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
@@ -19871,8 +19817,8 @@ namespace Server.MirObjects
             if (ItemRentalDepositedItem.Info.Bind.HasFlag(BindMode.UnableToRent))
                 return;
 
-            if (ItemRentalDepositedItem.LoanInfo != null &&
-                ItemRentalDepositedItem.LoanInfo.LoanBindingFlags.HasFlag(BindMode.UnableToRent))
+            if (ItemRentalDepositedItem.RentalInformation != null &&
+                ItemRentalDepositedItem.RentalInformation.BindingFlags.HasFlag(BindMode.UnableToRent))
                 return;
 
             if (!Functions.InRange(ItemRentalPartner.CurrentLocation, CurrentLocation, Globals.DataRange)
@@ -19909,11 +19855,11 @@ namespace Server.MirObjects
             }
 
             var item = ItemRentalDepositedItem;
-            item.LoanInfo = new LoanInfo
+            item.RentalInformation = new RentalInformation
             {
-                LoanOwnerName = Name,
-                LoanExpiryDate = DateTime.Now.AddMinutes(ItemRentalPeriodLength),
-                LoanBindingFlags = BindMode.DontDrop | BindMode.DontStore | BindMode.DontSell | BindMode.DontTrade | BindMode.UnableToRent | BindMode.DontUpgrade | BindMode.UnableToDisassemble
+                OwnerName = Name,
+                ExpiryDate = DateTime.Now.AddMinutes(ItemRentalPeriodLength),
+                BindingFlags = BindMode.DontDrop | BindMode.DontStore | BindMode.DontSell | BindMode.DontTrade | BindMode.UnableToRent | BindMode.DontUpgrade | BindMode.UnableToDisassemble
             };
 
             var itemRentalInformation = new ItemRentalInformation
@@ -19921,7 +19867,7 @@ namespace Server.MirObjects
                 ItemId = item.UniqueID,
                 ItemName = item.FriendlyName,
                 RentingPlayerName = ItemRentalPartner.Name,
-                ItemReturnDate = item.LoanInfo.LoanExpiryDate,
+                ItemReturnDate = item.RentalInformation.ExpiryDate,
                 
             };
 
@@ -19929,7 +19875,7 @@ namespace Server.MirObjects
             ItemRentalDepositedItem = null;
 
             ItemRentalPartner.GainItem(item);
-            ItemRentalPartner.ReceiveChat($"You have rented {item.FriendlyName} from {Name} until {item.LoanInfo.LoanExpiryDate}", ChatType.System);
+            ItemRentalPartner.ReceiveChat($"You have rented {item.FriendlyName} from {Name} until {item.RentalInformation.ExpiryDate}", ChatType.System);
 
             GainGold(ItemRentalPartner.ItemRentalFeeAmount);
             ReceiveChat($"Received {ItemRentalPartner.ItemRentalFeeAmount} gold for item rental.", ChatType.System);
@@ -19942,36 +19888,6 @@ namespace Server.MirObjects
 
             ItemRentalPartner.ItemRentalPartner = null;
             ItemRentalPartner = null;
-        }
-
-        private bool ReturnRentalItem(UserItem rentedItem)
-        {
-            if (rentedItem.LoanInfo == null)
-                return false;
-
-            var owner = Envir.GetCharacterInfo(rentedItem.LoanInfo.LoanOwnerName);
-            var returnItems = new List<UserItem>();
-
-            foreach (var rentedItemInformation in owner.RentedItems)
-                if (rentedItemInformation.ItemId == rentedItem.UniqueID)
-                {
-                    owner.RentedItems.Remove(rentedItemInformation);
-                    break;
-                }
- 
-            rentedItem.LoanInfo = null;
-            returnItems.Add(rentedItem);
-
-            var mail = new MailInfo(owner.Index, true)
-            {
-                Sender = Info.Name,
-                Message = rentedItem.Info.FriendlyName,
-                Items = returnItems
-            };
-
-            mail.Send();
-
-            return true;
         }
     }
 }

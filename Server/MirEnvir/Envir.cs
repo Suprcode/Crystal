@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.IO;
+using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -54,7 +55,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 75;
+        public const int Version = 76;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -200,7 +201,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long warTime, mailTime, guildTime, conquestTime;
+        private long warTime, mailTime, guildTime, conquestTime, rentalItemsTime;
         private int DailyTime = DateTime.Now.Day;
 
         private bool MagicExists(Spell spell)
@@ -854,6 +855,11 @@ namespace Server.MirEnvir
                     Conquests[i].Process();
             }
 
+            if (Time >= rentalItemsTime)
+            {
+                rentalItemsTime = Time + Settings.Minute * 5;
+                ProcessRentedItems();
+            }
 
         }
 
@@ -1445,8 +1451,6 @@ namespace Server.MirEnvir
                 }
 
                 if (count != GuildCount) GuildCount = count;
-
-                
             }
         }
 
@@ -2848,6 +2852,93 @@ namespace Server.MirEnvir
                     c.Player.CallDefaultNPC(DefaultNPCType.Daily);
                 }
             }
+        }
+
+        private void ProcessRentedItems()
+        {
+            foreach (var characterInfo in CharacterList)
+            {
+                if (characterInfo.RentedItems.Count <= 0)
+                    continue;
+
+                foreach (var rentedItemInfo in characterInfo.RentedItems)
+                {
+                    if (rentedItemInfo.ItemReturnDate >= Now)
+                        continue;
+
+                    var rentingPlayer = GetCharacterInfo(rentedItemInfo.RentingPlayerName);
+
+                    for (var i = 0; i < rentingPlayer.Inventory.Length; i++)
+                    {
+                        var item = rentingPlayer.Inventory[i];
+
+                        if (item?.RentalInformation == null)
+                            continue;
+
+                        if (Now <= item.RentalInformation.ExpiryDate)
+                            continue;
+
+                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
+                        rentingPlayer.Inventory[i] = null;
+
+                        if (rentingPlayer.Player == null)
+                            continue;
+
+                        rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
+                        rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    }
+
+                    for (var i = 0; i < rentingPlayer.Equipment.Length; i++)
+                    {
+                        var item = rentingPlayer.Equipment[i];
+
+                        if (item?.RentalInformation == null)
+                            continue;
+
+                        if (Now <= item.RentalInformation.ExpiryDate)
+                            continue;
+
+                        rentingPlayer.Equipment[i] = null;
+                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
+
+                        if (rentingPlayer.Player == null)
+                            continue;
+
+                        rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
+                        rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    }
+                }
+            }
+        }
+
+        public bool ReturnRentalItem(UserItem rentedItem, string ownerName, CharacterInfo rentingCharacterInfo)
+        {
+            if (rentedItem.RentalInformation == null)
+                return false;
+
+            var owner = GetCharacterInfo(ownerName);
+            var returnItems = new List<UserItem>();
+
+            foreach (var rentedItemInformation in owner.RentedItems)
+                if (rentedItemInformation.ItemId == rentedItem.UniqueID)
+                {
+                    owner.RentedItems.Remove(rentedItemInformation);
+                    break;
+                }
+
+            rentedItem.RentalInformation = null;
+            returnItems.Add(rentedItem);
+
+            var mail = new MailInfo(owner.Index, true)
+            {
+                Sender = rentingCharacterInfo.Name,
+                Message = rentedItem.Info.FriendlyName,
+                Items = returnItems
+            };
+
+            mail.Send();
+
+            return true;
         }
 
         private void ClearDailyQuests(CharacterInfo info)

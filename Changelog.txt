@@ -7,13 +7,3 @@ Rented items can be dropped on death. If this happens it is returned to owner.
 Benediction Oil now checks for Dont Upgrade flag.
 Awakening now checks for Dont Upgrade flag.
 Rented items now expire correctly if the owner or renting player are logged off.
-
-[Possible Bugs]
-Luck not showing after Benediction Oil?
-
-[Bugs]
-If player with rented item is not logged in past the expiry time the owner doesn't get the item back until they log back in.
-Awakening doesn't work if NPC doesn't have [@AWAKENING]
-
-[Todo]
-Send message to renting player on login if items expired while logged out.

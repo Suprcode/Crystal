@@ -112,11 +112,11 @@ namespace Client.MirScenes
 
         public ReportDialog ReportDialog;
 
-        public LoaningDialog LoaningDialog;
-        public RentingDialog RentingDialog;
-        public GuestLoaningDialog GuestLoaningDialog;
-        public GuestRentingDialog GuestRentingDialog;
-        public LoaningManagementDialog LoaningManagementDialog;
+        public ItemRentingDialog ItemRentingDialog;
+        public ItemRentDialog ItemRentDialog;
+        public GuestItemRentingDialog GuestItemRentingDialog;
+        public GuestItemRentDialog GuestItemRentDialog;
+        public ItemRentalDialog ItemRentalDialog;
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -255,11 +255,11 @@ namespace Client.MirScenes
 
             ReportDialog = new ReportDialog { Parent = this, Visible = false };
 
-            LoaningDialog = new LoaningDialog { Parent = this, Visible = false };
-            RentingDialog = new RentingDialog { Parent = this, Visible = false };
-            GuestLoaningDialog = new GuestLoaningDialog { Parent = this, Visible = false };
-            GuestRentingDialog = new GuestRentingDialog { Parent = this, Visible = false };
-            LoaningManagementDialog = new LoaningManagementDialog { Parent = this, Visible = false };
+            ItemRentingDialog = new ItemRentingDialog { Parent = this, Visible = false };
+            ItemRentDialog = new ItemRentDialog { Parent = this, Visible = false };
+            GuestItemRentingDialog = new GuestItemRentingDialog { Parent = this, Visible = false };
+            GuestItemRentDialog = new GuestItemRentDialog { Parent = this, Visible = false };
+            ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -478,7 +478,7 @@ namespace Client.MirScenes
                         MailListDialog.Hide();
                         MailReadLetterDialog.Hide();
                         MailReadParcelDialog.Hide();
-                        LoaningManagementDialog.Hide();
+                        ItemRentalDialog.Visible = false;
 
 
 
@@ -544,8 +544,7 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.TradeRequest());
                         break;
                     case KeybindOptions.Rental:
-                        if (!LoaningManagementDialog.Visible) LoaningManagementDialog.Show();
-                        else LoaningManagementDialog.Hide();
+                        ItemRentalDialog.Toggle();
                         break;
                     case KeybindOptions.ChangePetmode:
                         switch (PMode)
@@ -7790,33 +7789,33 @@ namespace Client.MirScenes
 
             #endregion
 
-            if (HoverItem.LoanInfo != null)
+            if (HoverItem.RentalInformation != null)
             {
                 count++;
                 MirLabel OWNERLabel = new MirLabel
-                {
-                    AutoSize = true,
-                    ForeColour = Color.Khaki,
-                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
-                    OutLine = true,
-                    Parent = ItemLabel,
-                    Text = "Item Loaned From: " + HoverItem.LoanInfo.LoanOwnerName
-                };
-
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, OWNERLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, OWNERLabel.DisplayRectangle.Bottom));
-
-                double remainingTime = (HoverItem.LoanInfo.LoanExpiryDate - DateTime.Now).TotalSeconds;
-
-                count++;
-                MirLabel RENTALLabel = new MirLabel
                 {
                     AutoSize = true,
                     ForeColour = Color.DarkKhaki,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = remainingTime > 0 ? string.Format("Loan Expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Expired"
+                    Text = "Item rented from: " + HoverItem.RentalInformation.OwnerName
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, OWNERLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, OWNERLabel.DisplayRectangle.Bottom));
+
+                double remainingTime = (HoverItem.RentalInformation.ExpiryDate - DateTime.Now).TotalSeconds;
+
+                count++;
+                MirLabel RENTALLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Khaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = remainingTime > 0 ? string.Format("Rental expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Expired"
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RENTALLabel.DisplayRectangle.Right + 4),
@@ -8261,43 +8260,43 @@ namespace Client.MirScenes
             MapControl.OpenDoor(p.DoorIndex, p.Close);
         }
 
-        public void RentedItems(S.GetRentedItems p)
+        private void RentedItems(S.GetRentedItems p)
         {
-            LoaningManagementDialog.ReceiveRentedItems(p.RentedItems);
+            ItemRentalDialog.ReceiveRentedItems(p.RentedItems);
         }
 
-        public void ItemRentalRequest(S.ItemRentalRequest p)
+        private void ItemRentalRequest(S.ItemRentalRequest p)
         {
             if (!p.Renting)
             {
-                GuestRentingDialog.GuestName = p.Name;
-                LoaningDialog.LoaningAccept();
+                GuestItemRentDialog.SetGuestName(p.Name);
+                ItemRentingDialog.OpenItemRentalDialog();
             }
             else
             {
-                GuestLoaningDialog.GuestName = p.Name;
-                RentingDialog.RentingAccept();
+                GuestItemRentingDialog.SetGuestName(p.Name);
+                ItemRentDialog.OpenItemRentDialog();
             }
 
-            LoaningManagementDialog.Hide();
+            ItemRentalDialog.Visible = false;
         }
 
         private void ItemRentalFee(S.ItemRentalFee p)
         {
-            GuestRentingDialog.GuestGold = p.Amount;
-            RentingDialog.RefreshInterface();
+            GuestItemRentDialog.SetGuestFee(p.Amount);
+            ItemRentDialog.RefreshInterface();
         }
 
         private void ItemRentalPeriod(S.ItemRentalPeriod p)
         {
-            GuestLoaningDialog.GuestRentalDays = p.Days;
-            LoaningDialog.RefreshInterface();
+            GuestItemRentingDialog.GuestRentalPeriod = p.Days;
+            ItemRentingDialog.RefreshInterface();
         }
 
         private void DepositRentalItem(S.DepositRentalItem p)
         {
-            MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
-            MirItemCell toCell = LoaningDialog.ItemCell;
+            var fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
+            var toCell = ItemRentingDialog.ItemCell;
 
             if (toCell == null || fromCell == null)
                 return;
@@ -8312,14 +8311,14 @@ namespace Client.MirScenes
             fromCell.Item = null;
             User.RefreshStats();
 
-            if (LoaningDialog.RentalDays == 0)
-                LoaningDialog.LoaningInputRentalPeroid();
+            if (ItemRentingDialog.RentalPeriod == 0)
+                ItemRentingDialog.InputRentalPeroid();
         }
 
         private void RetrieveRentalItem(S.RetrieveRentalItem p)
         {
-            MirItemCell fromCell = LoaningDialog.ItemCell;
-            MirItemCell toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+            var fromCell = ItemRentingDialog.ItemCell;
+            var toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
 
             if (toCell == null || fromCell == null)
                 return;
@@ -8337,8 +8336,8 @@ namespace Client.MirScenes
 
         private void UpdateRentalItem(S.UpdateRentalItem p)
         {
-            GuestLoaningDialog.GuestLoanItem = p.LoanItem;
-            RentingDialog.RefreshInterface();
+            GuestItemRentingDialog.GuestLoanItem = p.LoanItem;
+            ItemRentDialog.RefreshInterface();
         }
 
         private void CancelItemRental(S.CancelItemRental p)
@@ -8346,51 +8345,48 @@ namespace Client.MirScenes
             User.RentalGoldLocked = false;
             User.RentalItemLocked = false;
 
-            LoaningDialog.LoaningReset();
-            RentingDialog.RentingReset();
+            ItemRentingDialog.Reset();
+            ItemRentDialog.Reset();
 
-            MirMessageBox messageBox = new MirMessageBox("Item rental cancelled.\r\nTo complete item rental please face the other party throughout the transaction.", MirMessageBoxButtons.OK);
+            var messageBox = new MirMessageBox("Item rental cancelled.\r\n" +
+                                               "To complete item rental please face the other party throughout the transaction.");
             messageBox.Show();
         }
 
-        public void ItemRentalLock(S.ItemRentalLock p)
+        private void ItemRentalLock(S.ItemRentalLock p)
         {
             if (!p.Success)
-            {
-                MirMessageBox messageBox = new MirMessageBox("Unable to lock selection.\r\nRental fee and rental item are required.", MirMessageBoxButtons.OK);
-                messageBox.Show();
                 return;
-            }
-
+            
             User.RentalGoldLocked = p.GoldLocked;
             User.RentalItemLocked = p.ItemLocked;
 
             if (User.RentalGoldLocked)
-                RentingDialog.RentingLock();
+                ItemRentDialog.Lock();
             else if (User.RentalItemLocked)
-                LoaningDialog.LoaningLock();
+                ItemRentingDialog.Lock();
         }
 
-        public void ItemRentalPartnerLock(S.ItemRentalPartnerLock p)
+        private void ItemRentalPartnerLock(S.ItemRentalPartnerLock p)
         {
             if (p.GoldLocked)
-                GuestRentingDialog.RentingLock();
+                GuestItemRentDialog.Lock();
             else if (p.ItemLocked)
-                GuestLoaningDialog.LoaningLock();
+                GuestItemRentingDialog.Lock();
         }
 
-        public void CanConfirmItemRental(S.CanConfirmItemRental p)
+        private void CanConfirmItemRental(S.CanConfirmItemRental p)
         {
-            LoaningDialog.ConfirmButton.Enabled = true;
+            ItemRentingDialog.EnableConfirmButton();
         }
 
-        public void ConfirmItemRental(S.ConfirmItemRental p)
+        private void ConfirmItemRental(S.ConfirmItemRental p)
         {
             User.RentalGoldLocked = false;
             User.RentalItemLocked = false;
 
-            LoaningDialog.LoaningReset();
-            RentingDialog.RentingReset();
+            ItemRentingDialog.Reset();
+            ItemRentDialog.Reset();
         }
 
         #region Disposable
