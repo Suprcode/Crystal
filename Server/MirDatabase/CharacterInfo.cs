@@ -73,6 +73,8 @@ namespace Server.MirDatabase
 
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];
         public List<ItemRentalInformation> RentedItems = new List<ItemRentalInformation>();
+        public List<ItemRentalInformation> RentedItemsToRemove = new List<ItemRentalInformation>();
+        public bool HasRentedItem;
         public UserItem CurrentRefine = null;
         public long CollectTime = 0;
         public List<UserMagic> Magics = new List<UserMagic>();
@@ -340,6 +342,8 @@ namespace Server.MirDatabase
                 count = reader.ReadInt32();
                 for (var i = 0; i < count; i++)
                     RentedItems.Add(new ItemRentalInformation(reader));
+
+                HasRentedItem = reader.ReadBoolean();
             }
 
             if (Envir.LoadVersion > 59)
@@ -494,6 +498,8 @@ namespace Server.MirDatabase
             writer.Write(RentedItems.Count);
             foreach (var rentedItemInformation in RentedItems)
                 rentedItemInformation.Save(writer);
+
+            writer.Write(HasRentedItem);
 
             writer.Write(Married);
             writer.Write(MarriedDate.ToBinary());

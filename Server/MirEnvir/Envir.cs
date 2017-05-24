@@ -2870,6 +2870,9 @@ namespace Server.MirEnvir
 
                     for (var i = 0; i < rentingPlayer.Inventory.Length; i++)
                     {
+                        if (rentedItemInfo.ItemId != rentingPlayer?.Inventory[i]?.UniqueID)
+                            continue;
+
                         var item = rentingPlayer.Inventory[i];
 
                         if (item?.RentalInformation == null)
@@ -2879,13 +2882,16 @@ namespace Server.MirEnvir
                             continue;
 
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
+                        characterInfo.RentedItemsToRemove.Add(rentedItemInfo);
                         rentingPlayer.Inventory[i] = null;
+                        rentingPlayer.HasRentedItem = false;
 
                         if (rentingPlayer.Player == null)
                             continue;
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.RefreshStats();
                     }
 
                     for (var i = 0; i < rentingPlayer.Equipment.Length; i++)
@@ -2898,16 +2904,24 @@ namespace Server.MirEnvir
                         if (Now <= item.RentalInformation.ExpiryDate)
                             continue;
 
-                        rentingPlayer.Equipment[i] = null;
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
-
+                        characterInfo.RentedItemsToRemove.Add(rentedItemInfo);
+                        rentingPlayer.Equipment[i] = null;
+                        rentingPlayer.HasRentedItem = false;
+                        
                         if (rentingPlayer.Player == null)
                             continue;
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.RefreshStats();
                     }
                 }
+
+                foreach (var rentalInformationToRemove in characterInfo.RentedItemsToRemove)
+                    characterInfo.RentedItems.Remove(rentalInformationToRemove);
+
+                characterInfo.RentedItemsToRemove.Clear();
             }
         }
 
@@ -2919,14 +2933,10 @@ namespace Server.MirEnvir
             var owner = GetCharacterInfo(ownerName);
             var returnItems = new List<UserItem>();
 
-            foreach (var rentedItemInformation in owner.RentedItems)
-                if (rentedItemInformation.ItemId == rentedItem.UniqueID)
-                {
-                    owner.RentedItems.Remove(rentedItemInformation);
-                    break;
-                }
+            rentedItem.RentalInformation.BindingFlags = BindMode.none;
+            rentedItem.RentalInformation.RentalLocked = true;
+            rentedItem.RentalInformation.ExpiryDate = rentedItem.RentalInformation.ExpiryDate.AddMinutes(5);
 
-            rentedItem.RentalInformation = null;
             returnItems.Add(rentedItem);
 
             var mail = new MailInfo(owner.Index, true)

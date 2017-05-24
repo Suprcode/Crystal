@@ -3391,6 +3391,7 @@ public class RentalInformation
     public string OwnerName;
     public BindMode BindingFlags = BindMode.none;
     public DateTime ExpiryDate;
+    public bool RentalLocked;
 
     public RentalInformation()
     { }
@@ -3400,6 +3401,7 @@ public class RentalInformation
         OwnerName = reader.ReadString();
         BindingFlags = (BindMode)reader.ReadInt16();
         ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+        RentalLocked = reader.ReadBoolean();
     }
 
     public void Save(BinaryWriter writer)
@@ -3407,6 +3409,7 @@ public class RentalInformation
         writer.Write(OwnerName);
         writer.Write((short)BindingFlags);
         writer.Write(ExpiryDate.ToBinary());
+        writer.Write(RentalLocked);
     }
 }
 

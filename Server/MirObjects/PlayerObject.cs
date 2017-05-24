@@ -1097,30 +1097,42 @@ namespace Server.MirObjects
             {
                 var item = Info.Inventory[i];
 
-                if (item?.ExpireInfo == null)
+                if (item?.ExpireInfo?.ExpiryDate <= Envir.Now)
+                {
+                    ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.Inventory[i] = null;
+
+                    continue;
+                }
+
+                if (item?.RentalInformation?.RentalLocked != true ||
+                    !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
                     continue;
 
-                if (DateTime.Now <= item.ExpireInfo.ExpiryDate)
-                    continue;
-
-                ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                Info.Inventory[i] = null;
+                ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
+                item.RentalInformation = null;
             }
 
             for (var i = 0; i < Info.Equipment.Length; i++)
             {
                 var item = Info.Equipment[i];
 
-                if (item?.ExpireInfo == null)
+                if (item?.ExpireInfo?.ExpiryDate <= Envir.Now)
+                {
+                    ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.Equipment[i] = null;
+
+                    continue;
+                }
+
+                if (item?.RentalInformation?.RentalLocked != true ||
+                    !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
                     continue;
 
-                if (DateTime.Now <= item.ExpireInfo.ExpiryDate)
-                    continue;
-
-                ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
-                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                Info.Equipment[i] = null;
+                ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
+                item.RentalInformation = null;
             }
         }
 
@@ -19488,6 +19500,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (targetPlayer.Info.HasRentedItem)
+            {
+                ReceiveChat($"{targetPlayer.Name} is unable to rent anymore items at this time.", ChatType.System);
+                return;
+            }
+
             if (!Functions.FacingEachOther(Direction, CurrentLocation, targetPlayer.Direction,
                 targetPlayer.CurrentLocation))
             {
@@ -19584,6 +19602,13 @@ namespace Server.MirObjects
 
             if (item == null)
             {
+                Enqueue(packet);
+                return;
+            }
+
+            if (item.RentalInformation?.RentalLocked == true)
+            {
+                ReceiveChat($"Unable to rent {item.FriendlyName} until {item.RentalInformation.ExpiryDate}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
@@ -19807,7 +19832,13 @@ namespace Server.MirObjects
                 CancelItemRental();
                 return;
             }
-      
+
+            if (ItemRentalPartner.Info.HasRentedItem)
+            {
+                CancelItemRental();
+                return;
+            }
+
             if (ItemRentalDepositedItem == null)
                 return;
 
@@ -19875,6 +19906,7 @@ namespace Server.MirObjects
             ItemRentalDepositedItem = null;
 
             ItemRentalPartner.GainItem(item);
+            ItemRentalPartner.Info.HasRentedItem = true;
             ItemRentalPartner.ReceiveChat($"You have rented {item.FriendlyName} from {Name} until {item.RentalInformation.ExpiryDate}", ChatType.System);
 
             GainGold(ItemRentalPartner.ItemRentalFeeAmount);
