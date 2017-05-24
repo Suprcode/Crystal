@@ -19889,7 +19889,7 @@ namespace Server.MirObjects
             item.RentalInformation = new RentalInformation
             {
                 OwnerName = Name,
-                ExpiryDate = DateTime.Now.AddMinutes(ItemRentalPeriodLength),
+                ExpiryDate = DateTime.Now.AddDays(ItemRentalPeriodLength),
                 BindingFlags = BindMode.DontDrop | BindMode.DontStore | BindMode.DontSell | BindMode.DontTrade | BindMode.UnableToRent | BindMode.DontUpgrade | BindMode.UnableToDisassemble
             };
 

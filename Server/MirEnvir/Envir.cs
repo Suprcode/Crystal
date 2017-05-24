@@ -2935,7 +2935,7 @@ namespace Server.MirEnvir
 
             rentedItem.RentalInformation.BindingFlags = BindMode.none;
             rentedItem.RentalInformation.RentalLocked = true;
-            rentedItem.RentalInformation.ExpiryDate = rentedItem.RentalInformation.ExpiryDate.AddMinutes(5);
+            rentedItem.RentalInformation.ExpiryDate = rentedItem.RentalInformation.ExpiryDate.AddDays(1);
 
             returnItems.Add(rentedItem);
 
