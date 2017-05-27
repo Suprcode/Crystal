@@ -254,7 +254,7 @@ namespace Client.MirScenes.Dialogs
             _lockButton = new MirButton
             {
                 Index = 250,
-                Location = new Point(22, 76),
+                Location = new Point(18, 76),
                 Size = new Size(28, 25),
                 Library = Libraries.Prguse,
                 Parent = this,

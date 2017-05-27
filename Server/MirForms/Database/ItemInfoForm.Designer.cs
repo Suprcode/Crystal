@@ -153,6 +153,7 @@
             this.label32 = new System.Windows.Forms.Label();
             this.WWeightTextBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.unableToDisassemble_CheckBox = new System.Windows.Forms.CheckBox();
             this.unableToRent_CheckBox = new System.Windows.Forms.CheckBox();
             this.NoWeddingRingcheckbox = new System.Windows.Forms.CheckBox();
             this.BreakOnDeathcheckbox = new System.Windows.Forms.CheckBox();
@@ -189,7 +190,7 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.unableToDisassemble_CheckBox = new System.Windows.Forms.CheckBox();
+            this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -225,6 +226,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.globalDropNotify_CheckBox);
             this.tabPage1.Controls.Add(this.CanAwaken);
             this.tabPage1.Controls.Add(this.label56);
             this.tabPage1.Controls.Add(this.TooltipTextBox);
@@ -1483,6 +1485,17 @@
             this.tabPage3.Text = "Binding";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // unableToDisassemble_CheckBox
+            // 
+            this.unableToDisassemble_CheckBox.AutoSize = true;
+            this.unableToDisassemble_CheckBox.Location = new System.Drawing.Point(21, 320);
+            this.unableToDisassemble_CheckBox.Name = "unableToDisassemble_CheckBox";
+            this.unableToDisassemble_CheckBox.Size = new System.Drawing.Size(138, 17);
+            this.unableToDisassemble_CheckBox.TabIndex = 117;
+            this.unableToDisassemble_CheckBox.Text = "Unable To Disassemble";
+            this.unableToDisassemble_CheckBox.UseVisualStyleBackColor = true;
+            this.unableToDisassemble_CheckBox.CheckedChanged += new System.EventHandler(this.unableToDisassemble_CheckBox_CheckedChanged);
+            // 
             // unableToRent_CheckBox
             // 
             this.unableToRent_CheckBox.AutoSize = true;
@@ -1881,16 +1894,16 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
-            // unableToDisassemble_CheckBox
+            // globalDropNotify_CheckBox
             // 
-            this.unableToDisassemble_CheckBox.AutoSize = true;
-            this.unableToDisassemble_CheckBox.Location = new System.Drawing.Point(21, 320);
-            this.unableToDisassemble_CheckBox.Name = "unableToDisassemble_CheckBox";
-            this.unableToDisassemble_CheckBox.Size = new System.Drawing.Size(138, 17);
-            this.unableToDisassemble_CheckBox.TabIndex = 117;
-            this.unableToDisassemble_CheckBox.Text = "Unable To Disassemble";
-            this.unableToDisassemble_CheckBox.UseVisualStyleBackColor = true;
-            this.unableToDisassemble_CheckBox.CheckedChanged += new System.EventHandler(this.unableToDisassemble_CheckBox_CheckedChanged);
+            this.globalDropNotify_CheckBox.AutoSize = true;
+            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
+            this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
+            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
+            this.globalDropNotify_CheckBox.TabIndex = 124;
+            this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
+            this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
+            this.globalDropNotify_CheckBox.CheckedChanged += new System.EventHandler(this.globalDropNotify_CheckBox_CheckedChanged);
             // 
             // ItemInfoForm
             // 
@@ -2092,5 +2105,6 @@
         private System.Windows.Forms.CheckBox NoWeddingRingcheckbox;
         private System.Windows.Forms.CheckBox unableToRent_CheckBox;
         private System.Windows.Forms.CheckBox unableToDisassemble_CheckBox;
+        private System.Windows.Forms.CheckBox globalDropNotify_CheckBox;
     }
 }
