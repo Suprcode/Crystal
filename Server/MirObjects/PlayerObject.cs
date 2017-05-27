@@ -12555,6 +12555,14 @@ namespace Server.MirObjects
             if (item.Info.Type == ItemType.Meat)
                 item.CurrentDura = (ushort)Math.Max(0, item.CurrentDura - 2000);
 
+            if (!item.Info.GlobalDropNotify)
+                return true;
+
+            foreach (var player in Envir.Players)
+            {
+                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+            }
+
             return true;
         }
         private bool CanUseItem(UserItem item)
