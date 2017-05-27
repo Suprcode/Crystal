@@ -1411,6 +1411,12 @@ namespace Server.MirObjects
                         if (!DropItem(item, Settings.DropRange, true))
                             continue;
 
+                        if (item.Info.GlobalDropNotify)
+                            foreach (var player in Envir.Players)
+                            {
+                                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                            }
+
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
@@ -1474,6 +1480,12 @@ namespace Server.MirObjects
 
                     if (!DropItem(item, Settings.DropRange, true))
                         continue;
+
+                    if (item.Info.GlobalDropNotify)
+                        foreach (var player in Envir.Players)
+                        {
+                            player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                        }
 
                     Info.Inventory[i] = null;
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -1548,6 +1560,12 @@ namespace Server.MirObjects
                         if (!DropItem(item, Settings.DropRange, true))
                             continue;
 
+                        if (item.Info.GlobalDropNotify)
+                            foreach (var player in Envir.Players)
+                            {
+                                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                            }
+
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
@@ -1583,6 +1601,12 @@ namespace Server.MirObjects
 
                 if (!DropItem(item, Settings.DropRange, true))
                     continue;
+
+                if (item.Info.GlobalDropNotify)
+                    foreach (var player in Envir.Players)
+                    {
+                        player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                    }
 
                 Info.Inventory[i] = null;
                 Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -12554,14 +12578,6 @@ namespace Server.MirObjects
 
             if (item.Info.Type == ItemType.Meat)
                 item.CurrentDura = (ushort)Math.Max(0, item.CurrentDura - 2000);
-
-            if (!item.Info.GlobalDropNotify)
-                return true;
-
-            foreach (var player in Envir.Players)
-            {
-                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
-            }
 
             return true;
         }
