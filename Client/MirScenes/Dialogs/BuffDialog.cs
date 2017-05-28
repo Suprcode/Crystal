@@ -11,8 +11,14 @@ namespace Client.MirScenes.Dialogs
     public sealed class BuffDialog : MirImageControl
     {
         private readonly MirButton _expandCollapseButton;
+        private readonly MirLabel _buffCountLabel;
         private readonly List<MirImageControl> _buffList = new List<MirImageControl>();
+        private bool _fadedOut, _fadedIn;
         private int _buffCount;
+        private long _nextFadeTime;
+
+        private const long FadeDelay = 55;
+        private const float FadeRate = 0.2f;
 
         public BuffDialog()
         {
@@ -27,18 +33,37 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 7,
                 HoverIndex = 8,
-                Location = new Point(44 - 16, 0),
                 Size = new Size(16, 15),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 9,
                 Sound = SoundList.ButtonA,
             };
+            _expandCollapseButton.Click += (o, e) =>
+            {
+                if (_buffCount == 1)
+                    return;
+
+                Settings.ExpandedBuffWindow = !Settings.ExpandedBuffWindow;
+                UpdateWindow();
+            };
+
+            _buffCountLabel = new MirLabel
+            {
+                Parent = this,
+                AutoSize = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                Font = new Font(Settings.FontName, 10F, FontStyle.Bold),
+                NotControl = true,
+                Sort = true,
+                Visible = false,
+                ForeColour = Color.Yellow,
+                OutLineColour = Color.Black,
+            };
         }
 
         public void CreateBuff(Buff buff)
         {
-            var text = string.Empty;
             var buffImage = BuffImage(buff.Type);
 
             var buffLibrary = Libraries.BuffIcon;
@@ -64,71 +89,7 @@ namespace Client.MirScenes.Dialogs
                 Index = buffImage
             };
 
-            var mirLabel = new MirLabel
-            {
-                DrawFormat = TextFormatFlags.Right,
-                NotControl = true,
-                ForeColour = Color.Yellow,
-                Location = new Point(-7, 10),
-                Size = new Size(30, 20),
-                Parent = image
-            };
-
-            switch (buff.Type)
-            {
-                case BuffType.UltimateEnhancer:
-                    switch (GameScene.User.Class)
-                    {
-                        case MirClass.Wizard:
-                        case MirClass.Archer:
-                            text =
-                                $"MC increased by 0-{buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                            break;
-                        case MirClass.Taoist:
-                            text =
-                                $"SC increased by 0-{buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                            break;
-                        case MirClass.Warrior:
-                            break;
-                        case MirClass.Assassin:
-                            break;
-                        default:
-                            text =
-                                $"DC increased by 0-{buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                            break;
-                    }
-                    break;
-                case BuffType.Impact:
-                    text = $"DC increased by 0-{buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-                case BuffType.Magic:
-                    text = $"MC increased by 0-{buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-                case BuffType.Taoist:
-                    text = $"SC increased by 0-{buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-                case BuffType.Storm:
-                    text = $"A.Speed increased by {buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-                case BuffType.HealthAid:
-                    text = $"HP increased by {buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-                case BuffType.ManaAid:
-                    text = $"MP increased by {buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-                case BuffType.Defence:
-                    text = $"Max AC increased by {buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-                case BuffType.MagicDefence:
-                    text = $"Max MAC increased by {buff.Values[0]} for {(buff.Expire - CMain.Time) / 1000} seconds.";
-                    break;
-            }
-
-            if (text != string.Empty)
-                GameScene.Scene.ChatDialog.ReceiveChat(text, ChatType.Hint);
-
             _buffList.Insert(0, image);
-
             UpdateWindow();
         }
 
@@ -142,6 +103,9 @@ namespace Client.MirScenes.Dialogs
 
         public void UpdateBuffs()
         {
+            if (_buffList.Count == 0)
+                UpdateWindow();
+
             for (var i = 0; i < _buffList.Count; i++)
             {
                 var image = _buffList[i];
@@ -164,10 +128,20 @@ namespace Client.MirScenes.Dialogs
                 }
 
                 image.Location = new Point(Size.Width - 10 - 23 - (i * 23) + ((10 * 23) * (i / 10)), 6 + ((i / 10) * 24));
-                image.Hint = buff.ToString();
+                image.Hint = Settings.ExpandedBuffWindow ? buff.ToString() : CombinedBuffText();
                 image.Index = buffImage;
                 image.Library = buffLibrary;
-                image.Visible = GameScene.Scene.PositiveBuffsDialog.Visible;
+
+                if (Settings.ExpandedBuffWindow || !Settings.ExpandedBuffWindow && i == 0)
+                {
+                    image.Visible = true;
+                    image.Opacity = 1f;
+                }
+                else
+                {
+                    image.Visible = false;
+                    image.Opacity = 0.6f;
+                }
 
                 if (buff.Infinite || !(Math.Round((buff.Expire - CMain.Time) / 1000D) <= 5))
                     continue;
@@ -177,6 +151,43 @@ namespace Client.MirScenes.Dialogs
                 if (Math.Round(time) % 10 < 5)
                     image.Index = -1;
             }
+
+            if (IsMouseOver(CMain.MPoint))
+            { 
+                if (!_fadedIn && CMain.Time <= _nextFadeTime)
+                    return;
+
+                Opacity += FadeRate;
+                _expandCollapseButton.Opacity += FadeRate;
+
+                if (Opacity > 1f)
+                {
+                    Opacity = 1f;
+                    _expandCollapseButton.Opacity = 1f;
+                    _fadedIn = true;
+                    _fadedOut = false;
+                }
+
+                _nextFadeTime = CMain.Time + FadeDelay;
+            }
+            else
+            {
+                if (!_fadedOut && CMain.Time <= _nextFadeTime)
+                    return;
+
+                Opacity -= FadeRate;
+                _expandCollapseButton.Opacity -= FadeRate;
+
+                if (Opacity < 0f)
+                {
+                    Opacity = 0f;
+                    _expandCollapseButton.Opacity = 0f;
+                    _fadedOut = true;
+                    _fadedIn = false;
+                }
+                    
+                _nextFadeTime = CMain.Time + FadeDelay;
+            }
         }
 
         private void UpdateWindow()
@@ -185,7 +196,7 @@ namespace Client.MirScenes.Dialogs
 
             if (_buffCount == 0)
                 Visible = false;
-            else
+            else if (_buffCount > 0 && Settings.ExpandedBuffWindow)
             {
                 var oldWidth = Size.Width;
                 Visible = true;
@@ -205,9 +216,278 @@ namespace Client.MirScenes.Dialogs
                 var newY = Location.Y;
                 Location = new Point(newX, newY);
 
+                _buffCountLabel.Visible = false;
+
                 _expandCollapseButton.Location = new Point(Size.Width - 15, 0);
                 Size = new Size((_buffCount > 10 ? 10 : _buffCount) * 23, 24 + (_buffCount / 10) * 24);
             }
+            else if (_buffCount > 0 && !Settings.ExpandedBuffWindow)
+            {
+                var oldWidth = Size.Width;
+                Visible = true;
+
+                Index = 20;
+            
+                var newX = Location.X - Size.Width + oldWidth;
+                var newY = Location.Y;
+                Location = new Point(newX, newY);
+
+                _buffCountLabel.Visible = true;
+                _buffCountLabel.Text = $"{_buffCount}";
+                _buffCountLabel.Location = new Point(Size.Width / 2 - _buffCountLabel.Size.Width / 2, Size.Height / 2 - 10);
+                _buffCountLabel.BringToFront();
+
+                _expandCollapseButton.Location = new Point(Size.Width - 15, 0);
+                Size = new Size(44, 34);
+            }
+        }
+
+        private string CombinedBuffText()
+        {
+            var buffText = string.Empty;
+
+            int buffDc = 0,
+                buffMinMc = 0,
+                buffMc = 0,
+                buffSc = 0,
+                buffAttackSpeed = 0,
+                buffMovementSpeed = 0,
+                buffMinMac = 0,
+                buffMac = 0,
+                buffMinAc = 0,
+                buffAc = 0,
+                buffAgility = 0,
+                buffExp = 0,
+                buffDrop = 0,
+                buffGold = 0,
+                buffHealth = 0,
+                buffMana = 0,
+                buffBagWeight = 0;
+
+            buffText = "Active Buffs";
+
+            for (var i = 0; i < _buffList.Count; i++)
+            {
+                var buff = GameScene.Scene.Buffs[i];
+
+                switch (buff.Type)
+                {
+                    case BuffType.Haste:
+                        buffAttackSpeed += buff.Values[0];
+                        break;
+
+                    case BuffType.SwiftFeet:
+                        buffMovementSpeed += buff.Values[0];
+                        break;
+
+                    case BuffType.Fury:
+                        buffAttackSpeed += buff.Values[0];
+                        break;
+
+                    case BuffType.SoulShield:
+                        buffMac += buff.Values[0];
+                        break;
+
+                    case BuffType.BlessedArmour:
+                        buffAc += buff.Values[0];
+                        break;
+
+                    case BuffType.LightBody:
+                        buffAgility += buff.Values[0];
+                        break;
+
+                    case BuffType.UltimateEnhancer:
+                        switch (GameScene.User.Class)
+                        {
+                            case MirClass.Wizard:
+                            case MirClass.Archer:
+                                buffMc += buff.Values[0];
+                                break;
+                            case MirClass.Taoist:
+                                buffSc += buff.Values[0];
+                                break;
+                            default:
+                                buffDc += buff.Values[0];
+                                break;
+                        }
+                        break;
+
+                    case BuffType.ProtectionField:
+                        buffAc += buff.Values[0];
+                        break;
+
+                    case BuffType.Rage:
+                        buffDc += buff.Values[0];
+                        break;
+
+                    case BuffType.CounterAttack:
+                        buffAc += buff.Values[0];
+                        buffMac += buff.Values[0];
+                        break;
+
+                    case BuffType.MagicBooster:
+                        buffMinMc += buff.Values[0];
+                        buffMc += buff.Values[0];
+                        break;
+
+                    case BuffType.ImmortalSkin:
+                        buffAc += buff.Values[0];
+                        break;
+ 
+                    case BuffType.General:
+                        buffExp += buff.Values[0];
+
+                        if (buff.Values.Length > 1)
+                            buffDrop += buff.Values[1];
+                        if (buff.Values.Length > 2)
+                            buffGold += buff.Values[2];
+                        break;
+
+                    case BuffType.Exp:
+                        buffExp += buff.Values[0];
+                        break;
+
+                    case BuffType.Drop:
+                        buffDrop += buff.Values[0];
+                        break;
+
+                    case BuffType.Gold:
+                        buffGold += buff.Values[0];
+                        break;
+
+                    case BuffType.BagWeight:
+                        buffBagWeight += buff.Values[0];
+                        break;
+
+                    case BuffType.RelationshipEXP:
+                        buffExp += buff.Values[0];
+                        break;
+
+                    case BuffType.Rested:
+                        buffExp += buff.Values[0];
+                        break;
+
+                    case BuffType.Impact:
+                        buffDc += buff.Values[0];
+                        break;
+
+                    case BuffType.Magic:
+                        buffMc += buff.Values[0];
+                        break;
+
+                    case BuffType.Taoist:
+                        buffSc += buff.Values[0];
+                        break;
+
+                    case BuffType.Storm:
+                        buffAttackSpeed += buff.Values[0];
+                        break;
+
+                    case BuffType.HealthAid:
+                        buffHealth += buff.Values[0];
+                        break;
+
+                    case BuffType.ManaAid:
+                        buffMana += buff.Values[0];
+                        break;
+
+                    case BuffType.Defence:
+                        buffMinAc += buff.Values[0];
+                        buffAc += buff.Values[0];
+                        break;
+
+                    case BuffType.MagicDefence:
+                        buffMinMac += buff.Values[0];
+                        buffMac += buff.Values[0];
+                        break;
+
+                    case BuffType.WonderDrug:
+                        switch (buff.Values[0])
+                        {
+                            case 0:
+                                buffExp += buff.Values[1];
+                                break;
+                            case 1:
+                                buffDrop += buff.Values[1];
+                                break;
+                            case 2:
+                                buffHealth += buff.Values[1];
+                                break;
+                            case 3:
+                                buffMana += buff.Values[1];
+                                break;
+                            case 4:
+                                buffMinAc += buff.Values[1];
+                                buffAc += buff.Values[1];
+                                break;
+                            case 5:
+                                buffMinMac += buff.Values[1];
+                                buffMac += buff.Values[1];
+                                break;
+                            case 6:
+                                buffAttackSpeed += buff.Values[1];
+                                break;
+                        }
+                        break;
+
+                    case BuffType.Knapsack:
+                        buffBagWeight += buff.Values[0];
+                        break;
+                }
+            }
+            
+            if (buffDc > 0)
+                buffText += $"\nIncreased DC: 0-{buffDc}";
+
+            if (buffMinMc > 0 || buffMc > 0)
+                buffText += $"\nIncreased MC: {buffMinMc}-{buffMc}";
+
+            if (buffSc > 0)
+                buffText += $"\nIncreased SC: 0-{buffSc}";
+
+            if (buffMinAc > 0 || buffAc > 0)
+                buffText += $"\nIncreased AC: {buffMinAc}-{buffAc}";
+
+            if (buffMinMac > 0 || buffMac > 0)
+                buffText += $"\nIncreased MAC: {buffMinMac}-{buffMac}";
+
+            if (buffAttackSpeed > 0 || buffMovementSpeed > 0 || buffAgility > 0)
+                buffText += "\n";
+
+            if (buffAttackSpeed > 0)
+                buffText += $"\nIncreased Attack Speed: {buffAttackSpeed}";
+
+            if (buffMovementSpeed > 0)
+                buffText += $"\nIncreased Movement Speed: {buffMovementSpeed}";
+
+            if (buffAgility > 0)
+                buffText += $"\nIncreased Agility: {buffAgility}";
+
+            if (buffExp > 0 || buffDrop > 0 || buffGold > 0)
+                buffText += "\n";
+
+            if (buffExp > 0)
+                buffText += $"\nExperience Increased By: {buffExp}%";
+
+            if (buffDrop > 0)
+                buffText += $"\nDrop Rate Increased By: {buffDrop}%";
+
+            if (buffGold > 0)
+                buffText += $"\nGold Rate Increased By: {buffGold}%";
+
+            if (buffHealth > 0 || buffMana > 0 || buffBagWeight > 0)
+                buffText += "\n";
+
+            if (buffHealth > 0)
+                buffText += $"Increased Health: {buffHealth}";
+
+            if (buffMana > 0)
+                buffText += $"Increased Mana: {buffMana}";
+
+            if (buffBagWeight > 0)
+                buffText += $"Increased Bag Weight: {buffBagWeight}";
+
+            return buffText;
         }
 
         private int BuffImage(BuffType type)
@@ -318,3 +598,4 @@ namespace Client.MirScenes.Dialogs
         }
     }
 }
+

@@ -118,7 +118,7 @@ namespace Client.MirScenes
         public GuestItemRentDialog GuestItemRentDialog;
         public ItemRentalDialog ItemRentalDialog;
 
-        public BuffDialog PositiveBuffsDialog;
+        public BuffDialog BuffsDialog;
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -261,7 +261,7 @@ namespace Client.MirScenes
             GuestItemRentDialog = new GuestItemRentDialog { Parent = this, Visible = false };
             ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
-            PositiveBuffsDialog = new BuffDialog {Parent = this, Visible = true};
+            BuffsDialog = new BuffDialog {Parent = this, Visible = true};
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -966,9 +966,10 @@ namespace Client.MirScenes
 
                 messageBox.Show();
             }
-            
-            
-            PositiveBuffsDialog.UpdateBuffs();
+
+            if (BuffsDialog.Visible)
+                BuffsDialog.UpdateBuffs();
+
             MapControl.Process();
             MainDialog.Process();
             InventoryDialog.Process();
@@ -2817,13 +2818,13 @@ namespace Client.MirScenes
                     switch (p.Type)
                     {
                         case DamageType.Hit: //add damage level colours
-                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Red : Color.White, 50));
                             break;
                         case DamageType.Miss:
-                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.LightCoral : Color.LightGray, 50));
                             break;
                         case DamageType.Critical:
-                            obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.Red : Color.Red, 50) { Offset = 15 });
+                            obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.DarkRed : Color.DarkRed, 50) { Offset = 15 });
                             break;
                     }
 
@@ -4022,7 +4023,7 @@ namespace Client.MirScenes
                 }
                 
                 Buffs.Add(buff);
-                PositiveBuffsDialog.CreateBuff(buff);
+                BuffsDialog.CreateBuff(buff);
                 User.RefreshStats();
                 ShowMentalState(buff);               
             }
@@ -4062,7 +4063,7 @@ namespace Client.MirScenes
                 }
 
                 Buffs.RemoveAt(i);
-                PositiveBuffsDialog.RemoveBuff(i);
+                BuffsDialog.RemoveBuff(i);
             }
 
             if (User.ObjectID == p.ObjectID)
@@ -4923,7 +4924,7 @@ namespace Client.MirScenes
                     buff = new Buff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = "Guild", Infinite = true };
 
                     Buffs.Add(buff);
-                    PositiveBuffsDialog.CreateBuff(buff);
+                    BuffsDialog.CreateBuff(buff);
                 }
 
                 GuildDialog.UpdateActiveStats();
