@@ -277,7 +277,7 @@ namespace Client
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Trade, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.T };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Rental, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.A };
+            InputKey = new KeyBind { function = KeybindOptions.Rental, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 0, Key = Keys.A };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.ChangeAttackmode, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 1, Key = Keys.H };
             Keylist.Add(InputKey);
