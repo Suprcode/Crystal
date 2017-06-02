@@ -11,12 +11,13 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <AssemblyVersion>2017.5.28.1243</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Server Tools\LibraryEditor\</OutputPath>
+    <OutputPath>..\..\Library\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -92,12 +93,14 @@
     <Compile Include="FixedListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Function.cs" />
     <Compile Include="LMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LMain.Designer.cs">
       <DependentUpon>LMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="LockBitmap.cs" />
     <Compile Include="MLibrary.cs" />
     <Compile Include="MLibraryV0.cs" />
     <Compile Include="MLibraryV2.cs" />

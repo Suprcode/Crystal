@@ -780,6 +780,7 @@ namespace Server.MirObjects
                 else
                 {
                     UserItem item = Envir.CreateDropItem(drop.Item);
+
                     if (item == null) continue;
 
                     if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
@@ -800,13 +801,22 @@ namespace Server.MirObjects
 
         protected virtual bool DropItem(UserItem item)
         {
-            if (CurrentMap.Info.NoDropMonster) return false;
+            if (CurrentMap.Info.NoDropMonster)
+                return false;
 
             ItemObject ob = new ItemObject(this, item)
             {
                 Owner = EXPOwner,
                 OwnerTime = Envir.Time + Settings.Minute,
             };
+
+            if (!item.Info.GlobalDropNotify)
+                return ob.Drop(Settings.DropRange);
+
+            foreach (var player in Envir.Players)
+            {
+                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+            }
 
             return ob.Drop(Settings.DropRange);
         }

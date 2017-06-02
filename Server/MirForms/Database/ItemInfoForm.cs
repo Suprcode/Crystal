@@ -190,6 +190,7 @@ namespace Server
 
                 NeedIdentifycheckbox.Checked = false;
                 ShowGroupPickupcheckbox.Checked = false;
+                globalDropNotify_CheckBox.Checked = false;
                 BindOnEquipcheckbox.Checked = false;
                 ParalysischeckBox.Checked = false;
                 TeleportcheckBox.Checked = false;
@@ -296,6 +297,7 @@ namespace Server
 
             NeedIdentifycheckbox.Checked = info.NeedIdentify;
             ShowGroupPickupcheckbox.Checked = info.ShowGroupPickup;
+            globalDropNotify_CheckBox.Checked = info.GlobalDropNotify;
             
 
             ParalysischeckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Paralize);
@@ -402,6 +404,8 @@ namespace Server
 
                 if (NeedIdentifycheckbox.Checked != info.NeedIdentify) NeedIdentifycheckbox.CheckState = CheckState.Indeterminate;
                 if (ShowGroupPickupcheckbox.Checked != info.ShowGroupPickup) ShowGroupPickupcheckbox.CheckState = CheckState.Indeterminate;
+                if (globalDropNotify_CheckBox.Checked != info.GlobalDropNotify)
+                    globalDropNotify_CheckBox.CheckState = CheckState.Indeterminate;
 
                 if (ParalysischeckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Paralize)) ParalysischeckBox.CheckState = CheckState.Indeterminate;
                 if (TeleportcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Teleport)) TeleportcheckBox.CheckState = CheckState.Indeterminate;
@@ -1760,6 +1764,15 @@ namespace Server
                 selectedItem.Bind = unableToDisassemble_CheckBox.Checked
                     ? selectedItem.Bind |= BindMode.UnableToDisassemble
                     : selectedItem.Bind ^= BindMode.UnableToDisassemble;
+        }
+
+        private void globalDropNotify_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            foreach (var itemInfo in _selectedItemInfos)
+                itemInfo.GlobalDropNotify = globalDropNotify_CheckBox.Checked;
         }
     }
 }
