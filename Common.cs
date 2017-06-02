@@ -2586,7 +2586,7 @@ public class ItemInfo
     public byte Strong;
     public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
     public byte CriticalRate, CriticalDamage;
-    public bool NeedIdentify, ShowGroupPickup;
+    public bool NeedIdentify, ShowGroupPickup, GlobalDropNotify;
     public bool ClassBased;
     public bool LevelBased;
     public bool CanMine;
@@ -2695,6 +2695,10 @@ public class ItemInfo
             ClassBased = (bools & 0x04) == 0x04;
             LevelBased = (bools & 0x08) == 0x08;
             CanMine = (bools & 0x10) == 0x10;
+
+            if (version >= 77)
+                GlobalDropNotify = (bools & 0x20) == 0x20;
+
             MaxAcRate = reader.ReadByte();
             MaxMacRate = reader.ReadByte();
             Holy = reader.ReadByte();
@@ -2810,6 +2814,7 @@ public class ItemInfo
         if (ClassBased) bools |= 0x04;
         if (LevelBased) bools |= 0x08;
         if (CanMine) bools |= 0x10;
+        if (GlobalDropNotify) bools |= 0x20;
         writer.Write(bools);
         writer.Write(MaxAcRate);
         writer.Write(MaxMacRate);

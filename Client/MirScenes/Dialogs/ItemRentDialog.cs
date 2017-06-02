@@ -1,4 +1,6 @@
-﻿using Client.MirControls;
+﻿using System;
+using System.Diagnostics;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
@@ -102,7 +104,38 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(60, 42),
                 Size = new Size(150, 14),
                 DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
-                NotControl = true,
+            };
+            _rentalPriceLabel.Click += (o, e) =>
+            {
+                var clickEventArgs = e as MouseEventArgs;
+
+                if (clickEventArgs == null)
+                    return;
+
+                switch (clickEventArgs.Button)
+                {
+                    case MouseButtons.Left:
+                        if (GameScene.SelectedCell != null || GameScene.Gold <= 0)
+                            return;
+
+                        var amountBox = new MirAmountBox("Rental fee:", 116, GameScene.Gold);
+
+                        amountBox.OKButton.Click += (c, a) =>
+                        {
+                            if (amountBox.Amount <= 0)
+                                return;
+
+                            GameScene.User.RentalGoldAmount += amountBox.Amount;
+                            Network.Enqueue(new C.ItemRentalFee { Amount = GameScene.User.RentalGoldAmount });
+
+                            RefreshInterface();
+                        };
+
+                        amountBox.Show();
+                        GameScene.PickedUpGold = false;
+
+                        break;
+                }
             };
         }
 

@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 76;
+        public const int Version = 77;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -2882,7 +2882,6 @@ namespace Server.MirEnvir
                             continue;
 
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
-                        characterInfo.RentedItemsToRemove.Add(rentedItemInfo);
                         rentingPlayer.Inventory[i] = null;
                         rentingPlayer.HasRentedItem = false;
 
@@ -2905,7 +2904,6 @@ namespace Server.MirEnvir
                             continue;
 
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
-                        characterInfo.RentedItemsToRemove.Add(rentedItemInfo);
                         rentingPlayer.Equipment[i] = null;
                         rentingPlayer.HasRentedItem = false;
                         
@@ -2917,11 +2915,6 @@ namespace Server.MirEnvir
                         rentingPlayer.Player.RefreshStats();
                     }
                 }
-
-                foreach (var rentalInformationToRemove in characterInfo.RentedItemsToRemove)
-                    characterInfo.RentedItems.Remove(rentalInformationToRemove);
-
-                characterInfo.RentedItemsToRemove.Clear();
             }
         }
 
@@ -2933,6 +2926,10 @@ namespace Server.MirEnvir
             var owner = GetCharacterInfo(ownerName);
             var returnItems = new List<UserItem>();
 
+            foreach (var rentalInformation in owner.RentedItems)
+                if (rentalInformation.ItemId == rentedItem.UniqueID)
+                    owner.RentedItemsToRemove.Add(rentalInformation);
+            
             rentedItem.RentalInformation.BindingFlags = BindMode.none;
             rentedItem.RentalInformation.RentalLocked = true;
             rentedItem.RentalInformation.ExpiryDate = rentedItem.RentalInformation.ExpiryDate.AddDays(1);
@@ -2947,6 +2944,11 @@ namespace Server.MirEnvir
             };
 
             mail.Send();
+
+            foreach (var rentalInformationToRemove in owner.RentedItemsToRemove)
+                owner.RentedItems.Remove(rentalInformationToRemove);
+
+            owner.RentedItemsToRemove.Clear();
 
             return true;
         }
