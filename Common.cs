@@ -318,7 +318,7 @@ public enum Monster : ushort
     BrownFrogSpider = 138,
     ArcherGuard = 139,
     KatanaGuard = 140,
-    //BLANK_141 = 141,
+    ArcherGuard2 = 141,
     Pig = 142,
     Bull = 143,
     Bush = 144,
@@ -355,7 +355,7 @@ public enum Monster : ushort
         SiegeRepairman = 175, //not added frames
     BlueSanta = 176,//done
     BattleStandard = 177,//done
-    ArcherGuard2 = 178,//done
+    //ArcherGuard2 = 178,//done
     RedYimoogi = 179,//done
     LionRiderMale = 180, //frames not added
     LionRiderFemale = 181, //frames not added
