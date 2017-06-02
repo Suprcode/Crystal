@@ -37,4 +37,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("2017.5.28.1243")]
 
 [assembly: NeutralResourcesLanguage("en-GB")]
-
+[assembly: AssemblyVersion("2017.5.29.1350")]
+[assembly: AssemblyFileVersion("2017.5.29.1350")]

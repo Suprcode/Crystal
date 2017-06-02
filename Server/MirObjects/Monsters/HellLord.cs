@@ -234,6 +234,7 @@ namespace Server.MirObjects.Monsters
 
             HellKnight knight = (HellKnight)mob;
             knight.Owner = this;
+            knight.Lord = this;
 
             Point front = Functions.PointMove(CurrentLocation, MirDirection.DownLeft, 12);
 
