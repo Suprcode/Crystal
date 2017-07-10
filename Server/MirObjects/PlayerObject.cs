@@ -5716,7 +5716,7 @@ namespace Server.MirObjects
                 }
 
                 int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int damage = GetAttackPower(MinDC, MaxDC);
                 damage = (int)(damage * Math.Max(1, (distance * 0.35)));//range boost
                 damage = ApplyArcherState(damage);
                 int chanceToHit = 60 + (Focus ? 30 : 0) - (int)(distance * 1.5);
