@@ -169,7 +169,21 @@ namespace Server.MirObjects
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     break;
                 case Spell.MapLava:
+                    if (ob is PlayerObject)
+                    {
+                        PlayerObject pOb = (PlayerObject)ob;
+                        if (pOb.Account.AdminAccount && pOb.Observer)
+                            return;
+                    }
+                    break;
                 case Spell.MapLightning:
+                    if (ob is PlayerObject)
+                    {
+                        PlayerObject pOb = (PlayerObject)ob;
+                        if (pOb.Account.AdminAccount && pOb.Observer)
+                            return;
+                    }
+                    break;
                 case Spell.MapQuake1:
                 case Spell.MapQuake2:
                     if (Value == 0) return;

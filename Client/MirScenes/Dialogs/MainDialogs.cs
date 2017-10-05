@@ -320,7 +320,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Parent = this,
                 Location = new Point(this.Size.Width - 105, 101),
-                Size = new Size(26, 14),
+                Size = new Size(40, 14),
             };
 
             SpaceLabel = new MirLabel
