@@ -70,7 +70,7 @@ namespace Server.MirObjects
 				if (item.Info.Grade == ItemGrade.None)
 					NameColour = Color.White;
 				if (item.Info.Grade == ItemGrade.Common)
-					NameColour = Color.Yellow;
+					NameColour = Color.White;
 				if (item.Info.Grade == ItemGrade.Rare)
 					NameColour = Color.DeepSkyBlue;
 				if (item.Info.Grade == ItemGrade.Legendary)
@@ -95,7 +95,7 @@ namespace Server.MirObjects
 				if (item.Info.Grade == ItemGrade.None)
 					NameColour = Color.White;
 				if (item.Info.Grade == ItemGrade.Common)
-					NameColour = Color.Yellow;
+					NameColour = Color.White;
 				if (item.Info.Grade == ItemGrade.Rare)
 					NameColour = Color.DeepSkyBlue;
 				if (item.Info.Grade == ItemGrade.Legendary)
