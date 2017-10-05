@@ -767,7 +767,7 @@ namespace Client.MirScenes.Dialogs
         private void NPCDropPanel_AfterDraw(object sender, EventArgs e)
         {
             if (Hold)
-                Libraries.Prguse.Draw(403, 91 + DisplayLocation.X, 39 + DisplayLocation.Y);
+                Libraries.Title.Draw(295, 114 + DisplayLocation.X, 36 + DisplayLocation.Y);
         }
 
         private void NPCDropPanel_Click(object sender, EventArgs e)
