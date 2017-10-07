@@ -4490,7 +4490,7 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        String gName = parts.Length < 3 ? parts[2] : parts[1];
+                        String gName = parts.Length < 3 ? parts[1] : parts[2];
                         if ((gName.Length < 3) || (gName.Length > 20))
                         {
                             ReceiveChat("Guildname is restricted to 3-20 characters.", ChatType.System);
