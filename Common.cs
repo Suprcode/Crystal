@@ -2660,6 +2660,7 @@ public class ItemInfo
     public byte CriticalDamage { get; set; }
     public bool NeedIdentify { get; set; }
     public bool ShowGroupPickup { get; set; }
+    public bool GlobalDropNotify { get; set; }
     public bool ClassBased { get; set; }
     public bool LevelBased { get; set; }
     public bool CanMine { get; set; }
@@ -3818,7 +3819,7 @@ public class Awake
         if (item.Info.Grade == ItemGrade.无) return false;
 		if (item.Info.CanAwakening != true)
             return false;
-        if (item.Info.Grade == ItemGrade.None)
+        if (item.Info.Grade == ItemGrade.无)
             return false;
 
         if (IsMaxLevel()) return false;
@@ -6631,7 +6632,7 @@ public class Door
 
 public class ItemRentalInformation
 {
-    public ulong ItemId;
+    public long ItemId;
     public string ItemName;
     public string RentingPlayerName;
     public DateTime ItemReturnDate;
@@ -6641,7 +6642,7 @@ public class ItemRentalInformation
 
     public ItemRentalInformation(BinaryReader reader)
     {
-        ItemId = reader.ReadUInt64();
+        ItemId = reader.ReadInt64();
         ItemName = reader.ReadString();
         RentingPlayerName = reader.ReadString();
         ItemReturnDate = DateTime.FromBinary(reader.ReadInt64());

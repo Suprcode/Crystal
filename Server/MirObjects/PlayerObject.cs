@@ -1384,16 +1384,14 @@ namespace Server.MirObjects
                 {
                     var item = Info.Equipment[i];
 
-                    if (temp == null) continue;
-                    if (temp.Info == null)
+                    if (item == null) continue;
+                    if (item.Info == null)
                     {
                         using (var ctx = new DataContext())
                         {
-                            temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                            item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
                         }
                     }
-                    if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                    if ((temp.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == temp.UniqueID)) continue; //CHECK THIS
 
                     if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
                         continue;
@@ -1480,16 +1478,14 @@ namespace Server.MirObjects
             {
                 var item = Info.Inventory[i];
 
-                if (temp == null) continue;
-                if (temp.Info == null)
+                if (item == null) continue;
+                if (item.Info == null)
                 {
                     using (var ctx = new DataContext())
                     {
-                        temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                        item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
                     }
                 }
-                if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                if (temp.WeddingRing != -1) continue;
 
                 if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
                     continue;
@@ -1562,16 +1558,14 @@ namespace Server.MirObjects
                 {
                     var item = Info.Equipment[i];
 
-                    if (temp == null) continue;
-                    if (temp.Info == null)
+                    if (item == null) continue;
+                    if (item.Info == null)
                     {
                         using (var ctx = new DataContext())
                         {
-                            temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                            item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
                         }
                     }
-                    if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                    if ((temp.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == temp.UniqueID)) continue; //CHECK THIS
 
                     if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
                         continue;
@@ -1645,16 +1639,14 @@ namespace Server.MirObjects
             {
                 var item = Info.Inventory[i];
 
-                if (temp == null) continue;
-                if (temp.Info == null)
+                if (item == null) continue;
+                if (item.Info == null)
                 {
                     using (var ctx = new DataContext())
                     {
-                        temp.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == temp.ItemIndex);
+                        item.Info = ctx.ItemInfos.FirstOrDefault(info => info.Index == item.ItemIndex);
                     }
                 }
-                if (temp.Info.Bind.HasFlag(BindMode.DontDeathdrop)) continue;
-                if (temp.WeddingRing != -1) continue;
 
                 if (item.Info.Bind.HasFlag(BindMode.DontDeathdrop))
                     continue;
@@ -5082,19 +5074,22 @@ namespace Server.MirObjects
 
                             if (Account.Gold >= cost)
                             {
-                                Account.Gold -= openGold;
-                                if (Settings.UseSQLServer)
+                                Account.Gold -= cost;
+                                Account.HasExpandedStorage = true;
+
+                                if (Account.ExpandedStorageExpiryDate > Envir.Now)
                                 {
-                                    using (var ctx = new DataContext())
-                                    {
-                                        ctx.AccountInfos.Attach(Account);
-                                        ctx.Entry(Account).State = EntityState.Modified;
-                                        ctx.SaveChanges();
-                                    }
+                                    Account.ExpandedStorageExpiryDate = Account.ExpandedStorageExpiryDate + addedTime;
+                                    ReceiveChat("Expanded storage time extended, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
-                                Enqueue(new S.LoseGold { Gold = openGold });
-                                Enqueue(new S.ResizeStorage { Size = Account.ResizeStorage() });
-                                ReceiveChat("Storage size increased.", ChatType.System);
+                                else
+                                {
+                                    Account.ExpandedStorageExpiryDate = Envir.Now + addedTime;
+                                    ReceiveChat("Storage expanded, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                }
+
+                                Enqueue(new S.LoseGold { Gold = cost });
+                                Enqueue(new S.ResizeStorage { Size = Account.ExpandStorage(), HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
                             }
                             else
                             {
@@ -11648,7 +11643,7 @@ namespace Server.MirObjects
                             }
                             break;
                         case 4: //RepairOil
-                            temp = Info.Equipment[(int)EquipmentSlot.Weapon];
+                            temp = Info.Equipment[(int) EquipmentSlot.Weapon];
                             if (temp == null || temp.MaxDura == temp.CurrentDura)
                             {
                                 Enqueue(p);
@@ -11659,9 +11654,11 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
-                            temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - Math.Min(5000, temp.MaxDura - temp.CurrentDura) / 30);
+                            temp.MaxDura =
+                                (ushort) Math.Max(0,
+                                    temp.MaxDura - Math.Min(5000, temp.MaxDura - temp.CurrentDura) / 30);
 
-                            temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + 5000);
+                            temp.CurrentDura = (ushort) Math.Min(temp.MaxDura, temp.CurrentDura + 5000);
                             temp.DuraChanged = false;
                             if (Settings.UseSQLServer)
                             {
@@ -11673,16 +11670,22 @@ namespace Server.MirObjects
                                 }
                             }
                             ReceiveChat("Your weapon has been partially repaired", ChatType.Hint);
-                            Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            Enqueue(new S.ItemRepaired
+                            {
+                                UniqueID = temp.UniqueID,
+                                MaxDura = temp.MaxDura,
+                                CurrentDura = temp.CurrentDura
+                            });
                             break;
                         case 5: //WarGodOil
-                            temp = Info.Equipment[(int)EquipmentSlot.Weapon];
+                            temp = Info.Equipment[(int) EquipmentSlot.Weapon];
                             if (temp == null || temp.MaxDura == temp.CurrentDura)
                             {
                                 Enqueue(p);
                                 return;
                             }
-                            if (temp.Info.Bind.HasFlag(BindMode.DontRepair) || (temp.Info.Bind.HasFlag(BindMode.NoSRepair)))
+                            if (temp.Info.Bind.HasFlag(BindMode.DontRepair) ||
+                                (temp.Info.Bind.HasFlag(BindMode.NoSRepair)))
                             {
                                 Enqueue(p);
                                 return;
@@ -11698,9 +11701,14 @@ namespace Server.MirObjects
                                     ctx.SaveChanges();
                                 }
                             }
-                            
+
                             ReceiveChat("你的武器已经完好如新了", ChatType.Hint);
-                            Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            Enqueue(new S.ItemRepaired
+                            {
+                                UniqueID = temp.UniqueID,
+                                MaxDura = temp.MaxDura,
+                                CurrentDura = temp.CurrentDura
+                            });
                             break;
                         case 6: //ResurrectionScroll
                             if (Dead)
@@ -11720,24 +11728,26 @@ namespace Server.MirObjects
                             HasMapShout = true;
                             ReceiveChat("你可以在当前地图喊一句话了", ChatType.Hint);
                             break;
-                        case 9://ServerShoutScroll
+                        case 9: //ServerShoutScroll
                             HasServerShout = true;
                             ReceiveChat("你可以在整个服务器喊一句话了", ChatType.Hint);
                             break;
-                        case 10://GuildSkillScroll
+                        case 10: //GuildSkillScroll
                             MyGuild.NewBuff(item.Info.Effect, false);
                             break;
-                        case 11://HomeTeleport
-                            if (MyGuild != null && MyGuild.Conquest != null && !MyGuild.Conquest.WarIsOn && MyGuild.Conquest.PalaceMap != null && !TeleportRandom(200, 0, MyGuild.Conquest.PalaceMap))
+                        case 11: //HomeTeleport
+                            if (MyGuild != null && MyGuild.Conquest != null && !MyGuild.Conquest.WarIsOn &&
+                                MyGuild.Conquest.PalaceMap != null &&
+                                !TeleportRandom(200, 0, MyGuild.Conquest.PalaceMap))
                             {
                                 Enqueue(p);
                                 return;
                             }
                             break;
-                        case 12://LotteryTicket
+                        case 12: //LotteryTicket
                             foreach (DropInfo drop in Envir.LotteryTicketDrops)
                             {
-                                int rate = (int)(drop.Chance / (Settings.DropRate));
+                                int rate = (int) (drop.Chance / (Settings.DropRate));
 
                                 if (rate < 1) rate = 1;
 
@@ -11745,8 +11755,8 @@ namespace Server.MirObjects
 
                                 if (drop.Gold > 0)
                                 {
-                                    int lowerGoldRange = (int)(drop.Gold / 2);
-                                    int upperGoldRange = (int)(drop.Gold + drop.Gold / 2);
+                                    int lowerGoldRange = (int) (drop.Gold / 2);
+                                    int upperGoldRange = (int) (drop.Gold + drop.Gold / 2);
 
                                     if (lowerGoldRange > upperGoldRange) lowerGoldRange = upperGoldRange;
 
@@ -11765,7 +11775,10 @@ namespace Server.MirObjects
                                 if (_item.Count < 1) _item.Count = 1;
                                 GainItem(_item);
                                 break;
-                            
+                            }
+                            break;
+                    }
+                    break;
                 case ItemType.书籍:
                     UserMagic magic = new UserMagic((Spell)item.Info.Shape);
 

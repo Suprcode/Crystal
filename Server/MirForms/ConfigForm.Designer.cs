@@ -65,6 +65,7 @@
             this.AccountCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.label12 = new System.Windows.Forms.Label();
+            this.SaveAccount = new System.Windows.Forms.Button();
             this.SaveDBButton = new System.Windows.Forms.Button();
             this.UseSQLServerCheckbox = new System.Windows.Forms.CheckBox();
             this.SaveDelayTextBox = new System.Windows.Forms.TextBox();
@@ -76,6 +77,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.ConnStringTextBox = new System.Windows.Forms.TextBox();
             this.UseConnStringCheckBox = new System.Windows.Forms.CheckBox();
+            this.gameMasterEffect_CheckBox = new System.Windows.Forms.CheckBox();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -667,5 +669,6 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox ConnStringTextBox;
         private System.Windows.Forms.CheckBox UseConnStringCheckBox;
+        private System.Windows.Forms.CheckBox gameMasterEffect_CheckBox;
     }
 }

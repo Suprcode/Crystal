@@ -42,8 +42,8 @@ namespace Server.MirDatabase
         public List<CharacterInfo> Characters { get; set; } = new List<CharacterInfo>();
 
         public UserItem[] Storage = new UserItem[80];
-        public bool HasExpandedStorage;
-        public DateTime ExpandedStorageExpiryDate;
+        public bool HasExpandedStorage { get; set; }
+        public DateTime ExpandedStorageExpiryDate { get; set; }
         public uint Gold;
         public long DBGold { get { return Gold;} set { Gold = (uint) value; } }
         public uint Credit;
