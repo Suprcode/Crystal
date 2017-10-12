@@ -42,7 +42,7 @@ namespace Client.MirObjects
                     OutLine = true,
                     OutLineColour = Color.Black,
                     Text = Text,
-                    Font = new Font(Settings.FontName, 10F, FontStyle.Bold)
+                    Font = new Font(Settings.FontName, 8F, FontStyle.Bold)
                 };
                 DamageLabel.Disposing += label_Disposing;
 

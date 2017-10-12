@@ -433,13 +433,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -462,13 +461,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -491,13 +489,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -520,13 +517,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -548,13 +544,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -577,13 +572,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -606,13 +600,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -635,13 +628,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -664,13 +656,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -693,13 +684,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
             {
@@ -923,7 +913,7 @@ namespace Server
             }
 
 
-            string[] monsters = data.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] monsters = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
             for (int i = 1; i < monsters.Length; i++)

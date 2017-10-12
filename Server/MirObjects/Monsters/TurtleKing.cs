@@ -173,7 +173,7 @@ namespace Server.MirObjects.Monsters
                 if (!mob.Spawn(CurrentMap, Front))
                     mob.Spawn(CurrentMap, CurrentLocation);
 
-                mob.Master = this;
+                //mob.Master = this;
                 mob.Target = Target;
                 mob.ActionTime = Envir.Time + 2000;
                 SlaveList.Add(mob);

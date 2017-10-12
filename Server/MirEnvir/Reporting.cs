@@ -152,6 +152,12 @@ namespace Server.MirEnvir
                 case 1:
                     message = "Could not return item to bag after trade.";
                     break;
+                case 2:
+                    message = "Item rental expired.";
+                    break;
+                case 3:
+                    message = "Could not return item to bag after rental.";
+                    break;
                 default:
                     message = "No reason provided.";
                     break;

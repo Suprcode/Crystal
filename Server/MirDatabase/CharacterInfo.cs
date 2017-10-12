@@ -152,6 +152,9 @@ namespace Server.MirDatabase
         public UserItem[] Trade = new UserItem[10];
         public UserItem[] QuestInventory = new UserItem[40];
         public UserItem[] Refine = new UserItem[16];
+        public List<ItemRentalInformation> RentedItems = new List<ItemRentalInformation>();
+        public List<ItemRentalInformation> RentedItemsToRemove = new List<ItemRentalInformation>();
+        public bool HasRentedItem;
         public UserItem CurrentRefine = null;
         public long CollectTime { get; set; } = 0;
         public List<UserMagic> Magics = new List<UserMagic>();
@@ -428,6 +431,15 @@ namespace Server.MirDatabase
                     Friends.Add(new FriendInfo(reader));
             }
 
+            if (Envir.LoadVersion > 75)
+            {
+                count = reader.ReadInt32();
+                for (var i = 0; i < count; i++)
+                    RentedItems.Add(new ItemRentalInformation(reader));
+
+                HasRentedItem = reader.ReadBoolean();
+            }
+
             if (Envir.LoadVersion > 59)
             {
                 Married = reader.ReadInt32();
@@ -447,7 +459,6 @@ namespace Server.MirDatabase
                     GSpurchases.Add(reader.ReadInt32(), reader.ReadInt32());
                 }
             }
-
         }
 
         public void Save(BinaryWriter writer)
@@ -819,6 +830,12 @@ namespace Server.MirDatabase
             writer.Write(Friends.Count);
             for (int i = 0; i < Friends.Count; i++)
                 Friends[i].Save(writer);
+
+            writer.Write(RentedItems.Count);
+            foreach (var rentedItemInformation in RentedItems)
+                rentedItemInformation.Save(writer);
+
+            writer.Write(HasRentedItem);
 
             writer.Write(Married);
             writer.Write(MarriedDate.GetValueOrDefault().ToBinary());

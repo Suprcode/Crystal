@@ -75,6 +75,7 @@ namespace Server
         //Optional
         public static bool SafeZoneBorder = false,
                            SafeZoneHealing = false,
+                           GameMasterEffect = false,
                            GatherOrbsPerLevel = true,
                            ExpMobLevelDifference = true;
 
@@ -307,6 +308,7 @@ namespace Server
             SafeZoneHealing = Reader.ReadBoolean("Optional", "SafeZoneHealing", SafeZoneHealing);
             GatherOrbsPerLevel = Reader.ReadBoolean("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             ExpMobLevelDifference = Reader.ReadBoolean("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
+            GameMasterEffect = Reader.ReadBoolean("Optional", "GameMasterEffect", GameMasterEffect);
 
             //Database
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
@@ -507,6 +509,7 @@ namespace Server
             Reader.Write("Optional", "SafeZoneHealing", SafeZoneHealing);
             Reader.Write("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             Reader.Write("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
+            Reader.Write("Optional", "GameMasterEffect", GameMasterEffect);
 
             //Database
             Reader.Write("Database", "SaveDelay", SaveDelay);

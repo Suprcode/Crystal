@@ -1082,15 +1082,11 @@ namespace ClientPackets
     {
         public override short Index { get { return (short)ClientPacketIds.TradeRequest; } }
 
-        //public string Name;
         protected override void ReadPacket(BinaryReader reader)
-        {
-            //Name = reader.ReadString();
-        }
+        {  }
+
         protected override void WritePacket(BinaryWriter writer)
-        {
-            //writer.Write(Name);
-        }
+        { }
     }
 
     public sealed class TradeGold : Packet
@@ -2111,5 +2107,149 @@ public sealed class AwakeningNeedMaterials : Packet
         {
             writer.Write(DoorIndex);
         }
+    }
+
+    public sealed class GetRentedItems : Packet
+    {
+        public override short Index
+        {
+            get
+            {
+                return (short)ClientPacketIds.GetRentedItems;
+            }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class ItemRentalRequest : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class ItemRentalFee : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalFee; } }
+
+        public uint Amount;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Amount = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Amount);
+        }
+    }
+
+    public sealed class ItemRentalPeriod : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalPeriod; } }
+
+        public uint Days;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Days = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Days);
+        }
+    }
+
+    public sealed class DepositRentalItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DepositRentalItem; } }
+
+        public int From, To;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
+
+    public sealed class RetrieveRentalItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RetrieveRentalItem; } }
+
+        public int From, To;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
+
+    public sealed class CancelItemRental : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.CancelItemRental; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class ItemRentalLockFee : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalLockFee; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class ItemRentalLockItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ItemRentalLockItem; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
+    }
+
+    public sealed class ConfirmItemRental : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ConfirmItemRental; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        { }
+
+        protected override void WritePacket(BinaryWriter writer)
+        { }
     }
 }

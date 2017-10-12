@@ -192,6 +192,7 @@ namespace Server
 
                 NeedIdentifycheckbox.Checked = false;
                 ShowGroupPickupcheckbox.Checked = false;
+                globalDropNotify_CheckBox.Checked = false;
                 BindOnEquipcheckbox.Checked = false;
                 ParalysischeckBox.Checked = false;
                 TeleportcheckBox.Checked = false;
@@ -292,10 +293,13 @@ namespace Server
             BindOnEquipcheckbox.Checked = info.Bind.HasFlag(BindMode.BindOnEquip);
             BreakOnDeathcheckbox.Checked = info.Bind.HasFlag(BindMode.BreakOnDeath);
             NoWeddingRingcheckbox.Checked = info.Bind.HasFlag(BindMode.NoWeddingRing);
+            unableToRent_CheckBox.Checked = info.Bind.HasFlag(BindMode.UnableToRent);
+            unableToDisassemble_CheckBox.Checked = info.Bind.HasFlag(BindMode.UnableToDisassemble);
 
 
             NeedIdentifycheckbox.Checked = info.NeedIdentify;
             ShowGroupPickupcheckbox.Checked = info.ShowGroupPickup;
+            globalDropNotify_CheckBox.Checked = info.GlobalDropNotify;
             
 
             ParalysischeckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Paralize);
@@ -394,8 +398,16 @@ namespace Server
                 if (BreakOnDeathcheckbox.Checked != info.Bind.HasFlag(BindMode.BreakOnDeath)) BreakOnDeathcheckbox.CheckState = CheckState.Indeterminate;
                 if (NoWeddingRingcheckbox.Checked != info.Bind.HasFlag(BindMode.NoWeddingRing)) NoWeddingRingcheckbox.CheckState = CheckState.Indeterminate;
 
+                if (unableToRent_CheckBox.Checked != info.Bind.HasFlag(BindMode.UnableToRent))
+                    unableToRent_CheckBox.CheckState = CheckState.Indeterminate;
+
+                if (unableToDisassemble_CheckBox.Checked != info.Bind.HasFlag(BindMode.UnableToDisassemble))
+                    unableToDisassemble_CheckBox.CheckState = CheckState.Indeterminate;
+
                 if (NeedIdentifycheckbox.Checked != info.NeedIdentify) NeedIdentifycheckbox.CheckState = CheckState.Indeterminate;
                 if (ShowGroupPickupcheckbox.Checked != info.ShowGroupPickup) ShowGroupPickupcheckbox.CheckState = CheckState.Indeterminate;
+                if (globalDropNotify_CheckBox.Checked != info.GlobalDropNotify)
+                    globalDropNotify_CheckBox.CheckState = CheckState.Indeterminate;
 
                 if (ParalysischeckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Paralize)) ParalysischeckBox.CheckState = CheckState.Indeterminate;
                 if (TeleportcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Teleport)) TeleportcheckBox.CheckState = CheckState.Indeterminate;
@@ -2731,6 +2743,37 @@ namespace Server
         private void label50_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void unableToRent_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            foreach (var selectedItem in _selectedItemInfos)
+                selectedItem.Bind = unableToRent_CheckBox.Checked
+                    ? selectedItem.Bind |= BindMode.UnableToRent
+                    : selectedItem.Bind ^= BindMode.UnableToRent;
+        }
+
+        private void unableToDisassemble_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            foreach (var selectedItem in _selectedItemInfos)
+                selectedItem.Bind = unableToDisassemble_CheckBox.Checked
+                    ? selectedItem.Bind |= BindMode.UnableToDisassemble
+                    : selectedItem.Bind ^= BindMode.UnableToDisassemble;
+        }
+
+        private void globalDropNotify_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            foreach (var itemInfo in _selectedItemInfos)
+                itemInfo.GlobalDropNotify = globalDropNotify_CheckBox.Checked;
         }
     }
 }

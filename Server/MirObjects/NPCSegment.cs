@@ -1335,6 +1335,12 @@ namespace Server.MirObjects
                 case "PARCELAMOUNT":
                     newValue = player.GetMailAwaitingCollectionAmount().ToString();
                     break;
+                case "GUILDNAME":
+                    if (player.MyGuild == null) return "No Guild";
+                    else
+                        newValue = player.MyGuild.Name + " Guild";
+                    break;
+
                 default:
                     newValue = string.Empty;
                     break;
@@ -2756,7 +2762,7 @@ namespace Server.MirObjects
                     case ActionType.RemovePet:
                         for (int c = player.Pets.Count - 1; c >= 0; c--)
                         {
-                            if (string.Compare(player.Pets[c].Name, param[0], true) == 0) continue;
+                            if (string.Compare(player.Pets[c].Info.Name, param[0], true) != 0) continue;
 
                             player.Pets[c].Die();
                         }

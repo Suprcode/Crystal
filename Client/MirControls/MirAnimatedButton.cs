@@ -153,7 +153,19 @@ namespace Client.MirControls
 
         public override int Index
         {
-            get { return base.Index + OffSet; }
+            get
+            {
+                if (!Enabled)
+                    return base.Index;
+
+                if (PressedIndex >= 0 && ActiveControl == this && MouseControl == this)
+                    return PressedIndex;
+
+                if (HoverIndex >= 0 && MouseControl == this)
+                    return HoverIndex;
+
+                return base.Index + OffSet;
+            }
             set { base.Index = value; }
         }
 
@@ -222,12 +234,6 @@ namespace Client.MirControls
                 }
 
                 _nextFadeTime = CMain.Time + _fadeInDelay;
-            }
-
-            if (IsMouseOver(CMain.MPoint))
-            {
-                OffSet = 0; 
-                return;
             }
 
             if (!Visible || !_animated || _animationDelay == 0 || _animationCount == 0) return;

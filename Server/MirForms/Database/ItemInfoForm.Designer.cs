@@ -153,6 +153,8 @@
             this.label32 = new System.Windows.Forms.Label();
             this.WWeightTextBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.unableToDisassemble_CheckBox = new System.Windows.Forms.CheckBox();
+            this.unableToRent_CheckBox = new System.Windows.Forms.CheckBox();
             this.NoWeddingRingcheckbox = new System.Windows.Forms.CheckBox();
             this.BreakOnDeathcheckbox = new System.Windows.Forms.CheckBox();
             this.Bind_DontSpecialRepaircheckBox = new System.Windows.Forms.CheckBox();
@@ -188,6 +190,7 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
+            this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -223,6 +226,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.globalDropNotify_CheckBox);
             this.tabPage1.Controls.Add(this.CanAwaken);
             this.tabPage1.Controls.Add(this.label56);
             this.tabPage1.Controls.Add(this.TooltipTextBox);
@@ -1461,6 +1465,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.unableToDisassemble_CheckBox);
+            this.tabPage3.Controls.Add(this.unableToRent_CheckBox);
             this.tabPage3.Controls.Add(this.NoWeddingRingcheckbox);
             this.tabPage3.Controls.Add(this.BreakOnDeathcheckbox);
             this.tabPage3.Controls.Add(this.Bind_DontSpecialRepaircheckBox);
@@ -1480,14 +1486,36 @@
             this.tabPage3.Text = "绑定";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // unableToDisassemble_CheckBox
+            // 
+            this.unableToDisassemble_CheckBox.AutoSize = true;
+            this.unableToDisassemble_CheckBox.Location = new System.Drawing.Point(21, 320);
+            this.unableToDisassemble_CheckBox.Name = "unableToDisassemble_CheckBox";
+            this.unableToDisassemble_CheckBox.Size = new System.Drawing.Size(138, 17);
+            this.unableToDisassemble_CheckBox.TabIndex = 117;
+            this.unableToDisassemble_CheckBox.Text = "Unable To Disassemble";
+            this.unableToDisassemble_CheckBox.UseVisualStyleBackColor = true;
+            this.unableToDisassemble_CheckBox.CheckedChanged += new System.EventHandler(this.unableToDisassemble_CheckBox_CheckedChanged);
+            // 
+            // unableToRent_CheckBox
+            // 
+            this.unableToRent_CheckBox.AutoSize = true;
+            this.unableToRent_CheckBox.Location = new System.Drawing.Point(21, 297);
+            this.unableToRent_CheckBox.Name = "unableToRent_CheckBox";
+            this.unableToRent_CheckBox.Size = new System.Drawing.Size(102, 17);
+            this.unableToRent_CheckBox.TabIndex = 116;
+            this.unableToRent_CheckBox.Text = "Unable To Rent";
+            this.unableToRent_CheckBox.UseVisualStyleBackColor = true;
+            this.unableToRent_CheckBox.CheckedChanged += new System.EventHandler(this.unableToRent_CheckBox_CheckedChanged);
+            // 
             // NoWeddingRingcheckbox
             // 
             this.NoWeddingRingcheckbox.AutoSize = true;
-            this.NoWeddingRingcheckbox.Location = new System.Drawing.Point(21, 253);
+            this.NoWeddingRingcheckbox.Location = new System.Drawing.Point(21, 274);
             this.NoWeddingRingcheckbox.Name = "NoWeddingRingcheckbox";
-            this.NoWeddingRingcheckbox.Size = new System.Drawing.Size(120, 16);
+            this.NoWeddingRingcheckbox.Size = new System.Drawing.Size(130, 17);
             this.NoWeddingRingcheckbox.TabIndex = 115;
-            this.NoWeddingRingcheckbox.Text = "不能作为结婚戒指";
+            this.NoWeddingRingcheckbox.Text = "Disabled Weddingring";
             this.NoWeddingRingcheckbox.UseVisualStyleBackColor = true;
             this.NoWeddingRingcheckbox.CheckedChanged += new System.EventHandler(this.NoWeddingRingcheckbox_CheckedChanged);
             // 
@@ -1868,6 +1896,17 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
+            // globalDropNotify_CheckBox
+            // 
+            this.globalDropNotify_CheckBox.AutoSize = true;
+            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
+            this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
+            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
+            this.globalDropNotify_CheckBox.TabIndex = 124;
+            this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
+            this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
+            this.globalDropNotify_CheckBox.CheckedChanged += new System.EventHandler(this.globalDropNotify_CheckBox_CheckedChanged);
+            // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -2066,6 +2105,8 @@
         private System.Windows.Forms.CheckBox BreakOnDeathcheckbox;
         private System.Windows.Forms.Button Gameshop_button;
         private System.Windows.Forms.CheckBox NoWeddingRingcheckbox;
-
+        private System.Windows.Forms.CheckBox unableToRent_CheckBox;
+        private System.Windows.Forms.CheckBox unableToDisassemble_CheckBox;
+        private System.Windows.Forms.CheckBox globalDropNotify_CheckBox;
     }
 }

@@ -416,7 +416,7 @@
             // AgilityTextBox
             // 
             this.AgilityTextBox.Location = new System.Drawing.Point(198, 166);
-            this.AgilityTextBox.MaxLength = 3;
+            this.AgilityTextBox.MaxLength = 5;
             this.AgilityTextBox.Name = "AgilityTextBox";
             this.AgilityTextBox.Size = new System.Drawing.Size(30, 21);
             this.AgilityTextBox.TabIndex = 20;
@@ -434,7 +434,7 @@
             // AccuracyTextBox
             // 
             this.AccuracyTextBox.Location = new System.Drawing.Point(87, 166);
-            this.AccuracyTextBox.MaxLength = 3;
+            this.AccuracyTextBox.MaxLength = 5;
             this.AccuracyTextBox.Name = "AccuracyTextBox";
             this.AccuracyTextBox.Size = new System.Drawing.Size(30, 21);
             this.AccuracyTextBox.TabIndex = 19;
@@ -470,7 +470,7 @@
             // MaxSCTextBox
             // 
             this.MaxSCTextBox.Location = new System.Drawing.Point(607, 139);
-            this.MaxSCTextBox.MaxLength = 3;
+            this.MaxSCTextBox.MaxLength = 5;
             this.MaxSCTextBox.Name = "MaxSCTextBox";
             this.MaxSCTextBox.Size = new System.Drawing.Size(30, 21);
             this.MaxSCTextBox.TabIndex = 18;
@@ -487,17 +487,17 @@
             // 
             // MinSCTextBox
             // 
-            this.MinSCTextBox.Location = new System.Drawing.Point(506, 139);
-            this.MinSCTextBox.MaxLength = 3;
+            this.MinSCTextBox.Location = new System.Drawing.Point(520, 108);
+            this.MinSCTextBox.MaxLength = 5;
             this.MinSCTextBox.Name = "MinSCTextBox";
-            this.MinSCTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MinSCTextBox.Size = new System.Drawing.Size(50, 20);
             this.MinSCTextBox.TabIndex = 17;
             this.MinSCTextBox.TextChanged += new System.EventHandler(this.MinSCTextBox_TextChanged);
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(441, 142);
+            this.label23.Location = new System.Drawing.Point(468, 111);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(59, 12);
             this.label23.TabIndex = 48;
@@ -505,17 +505,17 @@
             // 
             // MaxMCTextBox
             // 
-            this.MaxMCTextBox.Location = new System.Drawing.Point(405, 139);
-            this.MaxMCTextBox.MaxLength = 3;
+            this.MaxMCTextBox.Location = new System.Drawing.Point(409, 134);
+            this.MaxMCTextBox.MaxLength = 5;
             this.MaxMCTextBox.Name = "MaxMCTextBox";
-            this.MaxMCTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MaxMCTextBox.Size = new System.Drawing.Size(50, 20);
             this.MaxMCTextBox.TabIndex = 16;
             this.MaxMCTextBox.TextChanged += new System.EventHandler(this.MaxMCTextBox_TextChanged);
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(340, 142);
+            this.label18.Location = new System.Drawing.Point(354, 137);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(59, 12);
             this.label18.TabIndex = 46;
@@ -523,17 +523,17 @@
             // 
             // MinMCTextBox
             // 
-            this.MinMCTextBox.Location = new System.Drawing.Point(304, 139);
-            this.MinMCTextBox.MaxLength = 3;
+            this.MinMCTextBox.Location = new System.Drawing.Point(409, 108);
+            this.MinMCTextBox.MaxLength = 5;
             this.MinMCTextBox.Name = "MinMCTextBox";
-            this.MinMCTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MinMCTextBox.Size = new System.Drawing.Size(50, 20);
             this.MinMCTextBox.TabIndex = 15;
             this.MinMCTextBox.TextChanged += new System.EventHandler(this.MinMCTextBox_TextChanged);
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(239, 142);
+            this.label19.Location = new System.Drawing.Point(357, 111);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(59, 12);
             this.label19.TabIndex = 44;
@@ -541,17 +541,17 @@
             // 
             // MaxDCTextBox
             // 
-            this.MaxDCTextBox.Location = new System.Drawing.Point(198, 139);
-            this.MaxDCTextBox.MaxLength = 3;
+            this.MaxDCTextBox.Location = new System.Drawing.Point(300, 134);
+            this.MaxDCTextBox.MaxLength = 5;
             this.MaxDCTextBox.Name = "MaxDCTextBox";
-            this.MaxDCTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MaxDCTextBox.Size = new System.Drawing.Size(50, 20);
             this.MaxDCTextBox.TabIndex = 14;
             this.MaxDCTextBox.TextChanged += new System.EventHandler(this.MaxDCTextBox_TextChanged);
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(133, 142);
+            this.label20.Location = new System.Drawing.Point(250, 137);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(59, 12);
             this.label20.TabIndex = 42;
@@ -559,17 +559,17 @@
             // 
             // MinDCTextBox
             // 
-            this.MinDCTextBox.Location = new System.Drawing.Point(87, 139);
-            this.MinDCTextBox.MaxLength = 3;
+            this.MinDCTextBox.Location = new System.Drawing.Point(300, 108);
+            this.MinDCTextBox.MaxLength = 5;
             this.MinDCTextBox.Name = "MinDCTextBox";
-            this.MinDCTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MinDCTextBox.Size = new System.Drawing.Size(50, 20);
             this.MinDCTextBox.TabIndex = 13;
             this.MinDCTextBox.TextChanged += new System.EventHandler(this.MinDCTextBox_TextChanged);
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(22, 142);
+            this.label21.Location = new System.Drawing.Point(253, 111);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(59, 12);
             this.label21.TabIndex = 40;
@@ -577,17 +577,17 @@
             // 
             // MaxMACTextBox
             // 
-            this.MaxMACTextBox.Location = new System.Drawing.Point(405, 112);
-            this.MaxMACTextBox.MaxLength = 3;
+            this.MaxMACTextBox.Location = new System.Drawing.Point(200, 134);
+            this.MaxMACTextBox.MaxLength = 5;
             this.MaxMACTextBox.Name = "MaxMACTextBox";
-            this.MaxMACTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MaxMACTextBox.Size = new System.Drawing.Size(50, 20);
             this.MaxMACTextBox.TabIndex = 12;
             this.MaxMACTextBox.TextChanged += new System.EventHandler(this.MaxMACTextBox_TextChanged);
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(340, 115);
+            this.label16.Location = new System.Drawing.Point(138, 137);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(59, 12);
             this.label16.TabIndex = 38;
@@ -595,17 +595,17 @@
             // 
             // MinMACTextBox
             // 
-            this.MinMACTextBox.Location = new System.Drawing.Point(304, 112);
-            this.MinMACTextBox.MaxLength = 3;
+            this.MinMACTextBox.Location = new System.Drawing.Point(200, 108);
+            this.MinMACTextBox.MaxLength = 5;
             this.MinMACTextBox.Name = "MinMACTextBox";
-            this.MinMACTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MinMACTextBox.Size = new System.Drawing.Size(50, 20);
             this.MinMACTextBox.TabIndex = 11;
             this.MinMACTextBox.TextChanged += new System.EventHandler(this.MinMACTextBox_TextChanged);
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(239, 115);
+            this.label17.Location = new System.Drawing.Point(141, 111);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(59, 12);
             this.label17.TabIndex = 14;
@@ -613,17 +613,17 @@
             // 
             // MaxACTextBox
             // 
-            this.MaxACTextBox.Location = new System.Drawing.Point(198, 112);
-            this.MaxACTextBox.MaxLength = 3;
+            this.MaxACTextBox.Location = new System.Drawing.Point(87, 134);
+            this.MaxACTextBox.MaxLength = 5;
             this.MaxACTextBox.Name = "MaxACTextBox";
-            this.MaxACTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MaxACTextBox.Size = new System.Drawing.Size(50, 20);
             this.MaxACTextBox.TabIndex = 10;
             this.MaxACTextBox.TextChanged += new System.EventHandler(this.MaxACTextBox_TextChanged);
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(133, 115);
+            this.label15.Location = new System.Drawing.Point(34, 137);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(59, 12);
             this.label15.TabIndex = 34;
@@ -632,9 +632,9 @@
             // MinACTextBox
             // 
             this.MinACTextBox.Location = new System.Drawing.Point(87, 112);
-            this.MinACTextBox.MaxLength = 3;
+            this.MinACTextBox.MaxLength = 5;
             this.MinACTextBox.Name = "MinACTextBox";
-            this.MinACTextBox.Size = new System.Drawing.Size(30, 21);
+            this.MinACTextBox.Size = new System.Drawing.Size(50, 20);
             this.MinACTextBox.TabIndex = 9;
             this.MinACTextBox.TextChanged += new System.EventHandler(this.MinACTextBox_TextChanged);
             // 
