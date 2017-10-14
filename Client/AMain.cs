@@ -185,7 +185,7 @@ namespace Launcher
                 }
 
                 DownloadList.Enqueue(old);
-                _totalBytes += old.Compressed;
+                _totalBytes += old.Length;
             }
         }
 
