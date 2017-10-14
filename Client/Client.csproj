@@ -72,7 +72,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Client.ico</ApplicationIcon>
+    <ApplicationIcon>MIR2.ICO</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>9E5B013900C639479A5BE07D94C6D9183B921CCA</ManifestCertificateThumbprint>
