@@ -18,6 +18,7 @@ namespace Server
                             ConquestsPath = @".\Conquests\",
                             NPCPath = EnvirPath + @".\NPCs\",
                             GoodsPath = EnvirPath + @".\Goods\",
+                            RecipePath = EnvirPath + @"Recipe\",
                             QuestPath = EnvirPath + @".\Quests\",
                             DropPath = EnvirPath + @".\Drops\",
                             RoutePath = EnvirPath + @".\Routes\",
@@ -429,6 +430,10 @@ namespace Server
                 Directory.CreateDirectory(NameListPath);
             if (!Directory.Exists(LogPath))
                 Directory.CreateDirectory(LogPath);
+            if (!Directory.Exists(ReportPath))
+                Directory.CreateDirectory(ReportPath);
+            if (!Directory.Exists(RecipePath))
+                Directory.CreateDirectory(RecipePath);
 
             string fileName = Path.Combine(Settings.NPCPath, DefaultNPCFilename + ".txt");
 

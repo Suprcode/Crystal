@@ -1948,6 +1948,21 @@ namespace Server.MirObjects
             Connection.SentQuestInfo.Add(info);
         }
 
+        public void CheckRecipeInfo(RecipeInfo info)
+        {
+            if (Connection.SentRecipeInfo.Contains(info)) return;
+
+            CheckItemInfo(info.Item.Info);
+
+            foreach (var ingredient in info.Ingredients)
+            {
+                CheckItemInfo(ingredient.Info);
+            }
+
+            Enqueue(new S.NewRecipeInfo { Info = info.CreateClientRecipeInfo() });
+            Connection.SentRecipeInfo.Add(info);
+        }
+
         private void SetBind()
         {
             SafeZoneInfo szi = Envir.StartPoints[Envir.Random.Next(Envir.StartPoints.Count)];
@@ -2054,6 +2069,7 @@ namespace Server.MirObjects
             GetMapInfo();
             GetUserInfo();
             GetQuestInfo();
+            GetRecipeInfo();
 
             GetCompletedQuests();
 
@@ -2405,6 +2421,13 @@ namespace Server.MirObjects
             for (int i = 0; i < Envir.QuestInfoList.Count; i++)
             {
                 CheckQuestInfo(Envir.QuestInfoList[i]);
+            }
+        }
+        private void GetRecipeInfo()
+        {
+            for (int i = 0; i < Envir.RecipeInfoList.Count; i++)
+            {
+                CheckRecipeInfo(Envir.RecipeInfoList[i]);
             }
         }
         private void GetObjects()
@@ -14109,7 +14132,7 @@ namespace Server.MirObjects
             CallDefaultNPC(DefaultNPCType.TalkMonster, talkMonster.Info.Name);
         }
 
-        public void BuyItem(ulong index, uint count)
+        public void BuyItem(ulong index, uint count, PanelType type)
         {
             if (Dead) return;
 
@@ -14124,9 +14147,29 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != NPCID) continue;
-                ob.Buy(this, index, count);
+
+                if (type == PanelType.Buy)
+                {
+                    ob.Buy(this, index, count);
+                }
             }
         }
+        public void CraftItem(ulong index, uint count, int[] slots)
+        {
+            if (Dead) return;
+
+            if (NPCPage == null) return;
+
+            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            {
+                NPCObject ob = CurrentMap.NPCs[i];
+                if (ob.ObjectID != NPCID) continue;
+
+                ob.Craft(this, index, count, slots);
+            }
+        }
+
+
         public void SellItem(ulong uniqueID, uint count)
         {
             S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };

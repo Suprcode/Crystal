@@ -9,6 +9,23 @@ using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
 
+public enum PanelType : byte
+{
+    Buy = 0,
+    Sell,
+    Repair,
+    SpecialRepair,
+    Consign,
+    Craft,
+    Refine,
+    CheckRefine,
+    Disassemble,
+    Downgrade,
+    Reset,
+    CollectRefine,
+    ReplaceWedRing,
+}
+
 public enum BlendMode : sbyte
 {
     NONE = -1,
@@ -810,6 +827,7 @@ public enum MirGridType : byte
     Refine = 16,
     Renting = 17,
     GuestRenting = 18,
+    Craft = 19
 }
 
 public enum EquipmentSlot : byte
@@ -1323,6 +1341,7 @@ public enum ServerPacketIds : short
     NPCReplaceWedRing,
     NPCStorage,
     SellItem,
+    CraftItem,
     RepairItem,
     ItemRepaired,
     NewMagic,
@@ -1464,7 +1483,8 @@ public enum ServerPacketIds : short
     ItemRentalLock,
     ItemRentalPartnerLock,
     CanConfirmItemRental,
-    ConfirmItemRental
+    ConfirmItemRental,
+    NewRecipeInfo
 }
 
 public enum ClientPacketIds : short
@@ -1514,6 +1534,7 @@ public enum ClientPacketIds : short
     TalkMonsterNPC,
     BuyItem,
     SellItem,
+    CraftItem,
     RepairItem,
     BuyItemBack,
     SRepairItem,
@@ -4525,6 +4546,8 @@ public abstract class Packet
                 return new C.BuyItem();
             case (short)ClientPacketIds.SellItem:
                 return new C.SellItem();
+            case (short)ClientPacketIds.CraftItem:
+                return new C.CraftItem();
             case (short)ClientPacketIds.RepairItem:
                 return new C.RepairItem();
             case (short)ClientPacketIds.BuyItemBack:
@@ -4900,6 +4923,8 @@ public abstract class Packet
                 return new S.NPCStorage();
             case (short)ServerPacketIds.SellItem:
                 return new S.SellItem();
+            case (short)ServerPacketIds.CraftItem:
+                return new S.CraftItem();
             case (short)ServerPacketIds.RepairItem:
                 return new S.RepairItem();
             case (short)ServerPacketIds.ItemRepaired:
@@ -5176,6 +5201,8 @@ public abstract class Packet
                 return new S.CanConfirmItemRental();
             case (short)ServerPacketIds.ConfirmItemRental:
                 return new S.ConfirmItemRental();
+            case (short)ServerPacketIds.NewRecipeInfo:
+                return new S.NewRecipeInfo();
             default:
                 return null;
         }
@@ -6279,5 +6306,38 @@ public class ItemRentalInformation
         writer.Write(ItemName);
         writer.Write(RentingPlayerName);
         writer.Write(ItemReturnDate.ToBinary());
+    }
+}
+
+public class ClientRecipeInfo
+{
+    public UserItem Item;
+    public List<UserItem> Ingredients = new List<UserItem>();
+
+    public ClientRecipeInfo()
+    {
+
+    }
+
+    public ClientRecipeInfo(BinaryReader reader)
+    {
+        Item = new UserItem(reader);
+
+        int count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+        {
+            Ingredients.Add(new UserItem(reader));
+        }
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        Item.Save(writer);
+
+        writer.Write(Ingredients.Count);
+        foreach (var ingredient in Ingredients)
+        {
+            ingredient.Save(writer);
+        }
     }
 }

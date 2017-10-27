@@ -22,21 +22,6 @@ using System.Drawing.Imaging;
 
 namespace Client.MirScenes
 {
-    public enum PanelType
-    {
-        Sell, 
-        Repair, 
-        SpecialRepair,
-        Consign, 
-        Disassemble, 
-        Downgrade,
-        Reset,
-        Refine,
-        CheckRefine,
-        CollectRefine,
-        ReplaceWedRing,
-    }
-
     public sealed class GameScene : MirScene
     {
         public static GameScene Scene;
@@ -56,6 +41,7 @@ namespace Client.MirScenes
         public ChatControlBar ChatControl;
         public InventoryDialog InventoryDialog;
         public CharacterDialog CharacterDialog;
+        public CraftDialog CraftDialog;
         public StorageDialog StorageDialog;
         public BeltDialog BeltDialog;
         public MiniMapDialog MiniMapDialog;
@@ -128,6 +114,7 @@ namespace Client.MirScenes
         public static List<ChatItem> ChatItemList = new List<ChatItem>();
         public static List<ClientQuestInfo> QuestInfoList = new List<ClientQuestInfo>();
         public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
+        public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
 
         public List<Buff> Buffs = new List<Buff>();
 
@@ -196,6 +183,7 @@ namespace Client.MirScenes
             CharacterDialog = new CharacterDialog { Parent = this, Visible = false };
             BeltDialog = new BeltDialog { Parent = this };
             StorageDialog = new StorageDialog { Parent = this, Visible = false };
+            CraftDialog = new CraftDialog { Parent = this, Visible = false };
             MiniMapDialog = new MiniMapDialog { Parent = this };
             InspectDialog = new InspectDialog { Parent = this, Visible = false };
             OptionDialog = new OptionDialog { Parent = this, Visible = false };
@@ -886,14 +874,14 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.KeepAlive() { Time = CMain.Time });
             }
 
-            MirItemCell cell = MouseControl as MirItemCell;
+            //MirItemCell cell = MouseControl as MirItemCell;
 
-            if (cell != null && HoverItem != cell.Item)
-            {
-                DisposeItemLabel();
-                HoverItem = null;
-                CreateItemLabel(cell.Item);
-            }
+            //if (cell != null && HoverItem != cell.Item)
+            //{
+            //    DisposeItemLabel();
+            //    HoverItem = null;
+            //    CreateItemLabel(cell.Item);
+            //}
 
             if (ItemLabel != null && !ItemLabel.IsDisposed)
             {
@@ -1255,6 +1243,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.SellItem:
                     SellItem((S.SellItem)p);
+                    break;
+                case (short)ServerPacketIds.CraftItem:
+                    CraftItem((S.CraftItem)p);
                     break;
                 case (short)ServerPacketIds.RepairItem:
                     RepairItem((S.RepairItem)p);
@@ -3318,6 +3309,7 @@ namespace Client.MirScenes
             if (!NPCDialog.Visible) return;
             NPCGoodsDialog.usePearls = false;
             NPCGoodsDialog.NewGoods(p.List);
+            NPCGoodsDialog.UpdatePanelType(p.Type);
             NPCGoodsDialog.Show();
 
 
@@ -3421,7 +3413,29 @@ namespace Client.MirScenes
 
             cell.Locked = false;
         }
+        private void CraftItem(S.CraftItem p)
+        {
+            if (!p.Success) return;
 
+            for (int i = 0; i < CraftDialog.Selected.Count; i++)
+            {
+                MirItemCell cell = CraftDialog.Selected[i].Key;
+                ulong oldItem = CraftDialog.Selected[i].Value;
+
+                if (cell.Item == null || cell.Item.UniqueID != oldItem)
+                {
+                    MirItemCell gridCell = CraftDialog.GetCell(oldItem);
+
+                    if (gridCell != null)
+                        gridCell.Item = null;
+                    cell.Locked = false;
+                }
+            }
+
+            CraftDialog.RefreshCraftCells(CraftDialog.RecipeItem);
+
+            User.RefreshStats();
+        }
         private void ItemRepaired(S.ItemRepaired p)
         {
             UserItem item = null;
