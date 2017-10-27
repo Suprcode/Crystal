@@ -499,8 +499,11 @@ namespace Client.MirObjects
                                 case 9: //heaven
                                 case 10: //mir
                                 case 11: //oma
-                                case 12: //spirit
                                     BodyLibrary = Armour + 3 < Libraries.AArmours.Length ? Libraries.AArmours[Armour + 3] : Libraries.AArmours[0];
+                                    break;
+
+                                case 12: //spirit
+                                    BodyLibrary = Armour + 4 < Libraries.AArmours.Length ? Libraries.AArmours[Armour + 4] : Libraries.AArmours[0];
                                     break;
 
                                 case 19:

@@ -9056,7 +9056,7 @@ namespace Client.MirScenes
                     if (x < 0) continue;
                     if (x >= Width) break;
                     int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
-                    //if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
+                    if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
                     if (M2CellInfo[x, y].Light == 0) continue;
 
                     Color lightIntensity;
