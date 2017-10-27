@@ -2587,6 +2587,7 @@ namespace ServerPackets
 
         public List<UserItem> List = new List<UserItem>();
         public float Rate;
+        public PanelType Type;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -2596,6 +2597,7 @@ namespace ServerPackets
                 List.Add(new UserItem(reader));
 
             Rate = reader.ReadSingle();
+            Type = (PanelType)reader.ReadByte();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2605,6 +2607,7 @@ namespace ServerPackets
                 List[i].Save(writer);
 
             writer.Write(Rate);
+            writer.Write((byte)Type);
         }
     }
     public sealed class NPCSell : Packet
@@ -5607,5 +5610,41 @@ namespace ServerPackets
 
         protected override void WritePacket(BinaryWriter writer)
         { }
+    }
+
+
+    public sealed class NewRecipeInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewRecipeInfo; }
+        }
+
+        public ClientRecipeInfo Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Info = new ClientRecipeInfo(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Info.Save(writer);
+        }
+    }
+    public sealed class CraftItem : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.CraftItem; } }
+
+        public bool Success;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Success = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Success);
+        }
     }
 }

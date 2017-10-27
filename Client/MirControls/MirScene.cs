@@ -190,6 +190,9 @@ namespace Client.MirControls
                 case (short)ServerPacketIds.NewQuestInfo:
                     NewQuestInfo((S.NewQuestInfo)p);
                     break;
+                case (short)ServerPacketIds.NewRecipeInfo:
+                    NewRecipeInfo((S.NewRecipeInfo)p);
+                    break;
             }
         }
 
@@ -201,6 +204,16 @@ namespace Client.MirControls
         private void NewQuestInfo(S.NewQuestInfo info)
         {
             GameScene.QuestInfoList.Add(info.Info);
+        }
+
+        private void NewRecipeInfo(S.NewRecipeInfo info)
+        {
+            GameScene.RecipeInfoList.Add(info.Info);
+
+            GameScene.Bind(info.Info.Item);
+
+            for (int j = 0; j < info.Info.Ingredients.Count; j++)
+                GameScene.Bind(info.Info.Ingredients[j]);
         }
 
         private static void Disconnect(S.Disconnect p)

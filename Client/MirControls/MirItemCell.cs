@@ -50,6 +50,17 @@ namespace Client.MirControls
             }
         }
 
+        public UserItem ShadowItem
+        {
+            get
+            {
+                if (GridType == MirGridType.Craft && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
+                    return CraftDialog.ShadowItems[_itemSlot];
+
+                return null;
+            }
+        }
+
         public UserItem[] ItemArray
         {
             get
@@ -84,6 +95,8 @@ namespace Client.MirControls
                         return MailComposeParcelDialog.Items;
                     case MirGridType.Refine:
                         return GameScene.Refine;
+                    case MirGridType.Craft:
+                        return CraftDialog.IngredientSlots;
 
                     default:
                         throw new NotImplementedException();
@@ -94,7 +107,7 @@ namespace Client.MirControls
 
         public override bool Border
         {
-            get { return (GameScene.SelectedCell == this || MouseControl == this || Locked) && GridType != MirGridType.DropPanel; }
+            get { return (GameScene.SelectedCell == this || MouseControl == this || Locked) && GridType != MirGridType.DropPanel && (GridType != MirGridType.Craft); }
         }
 
         private bool _locked;
@@ -239,7 +252,7 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant) return;
+            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.Craft) return;
 
             base.OnMouseClick(e);
 
@@ -281,7 +294,7 @@ namespace Client.MirControls
         
         public void UseItem()
         {
-            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.GuildStorage) return;
+            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.GuildStorage || GridType == MirGridType.Craft) return;
 
             if (MapObject.User.Fishing) return;
             if (MapObject.User.RidingMount && Item.Info.Type != ItemType.Scroll && Item.Info.Type != ItemType.Potion && Item.Info.Type != ItemType.Torch) return;
@@ -658,7 +671,7 @@ namespace Client.MirControls
 
         private void MoveItem()
         {
-            if (GridType == MirGridType.BuyBack || GridType == MirGridType.DropPanel || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant) return;
+            if (GridType == MirGridType.BuyBack || GridType == MirGridType.DropPanel || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.Craft) return;
 
             if (GameScene.SelectedCell != null)
             {
@@ -1918,6 +1931,21 @@ namespace Client.MirControls
                     Library.Draw(image, DisplayLocation.Add(offSet), Color.DimGray, UseOffSet, 0.8F);
                 }
             }
+            else if (ShadowItem != null)
+            {
+                CreateDisposeLabel();
+
+                if (Library != null)
+                {
+                    ushort image = ShadowItem.Info.Image;
+
+                    Size imgSize = Library.GetTrueSize(image);
+
+                    Point offSet = new Point((Size.Width - imgSize.Width) / 2, (Size.Height - imgSize.Height) / 2);
+
+                    Library.Draw(image, DisplayLocation.Add(offSet), Color.DimGray, UseOffSet, 0.8F);
+                }
+            }
             else
                 DisposeCountLabel();
         }
@@ -1928,7 +1956,12 @@ namespace Client.MirControls
             if (GridType == MirGridType.Inspect)
                 GameScene.Scene.CreateItemLabel(Item, true);
             else
-                GameScene.Scene.CreateItemLabel(Item);
+            {
+                if (Item != null)
+                    GameScene.Scene.CreateItemLabel(Item);
+                else if (ShadowItem != null)
+                    GameScene.Scene.CreateItemLabel(ShadowItem);
+            }
         }
         protected override void OnMouseLeave()
         {
@@ -1939,7 +1972,10 @@ namespace Client.MirControls
 
         private void CreateDisposeLabel()
         {
-            if (Item.Info.StackSize <= 1)
+            if (Item == null && ShadowItem == null)
+                return;
+
+            if (Item != null && ShadowItem == null && Item.Info.StackSize <= 1)
             {
                 DisposeCountLabel();
                 return;
@@ -1957,7 +1993,17 @@ namespace Client.MirControls
                 };
             }
 
-            CountLabel.Text = Item.Count.ToString("###0");
+            if (ShadowItem != null)
+            {
+                CountLabel.ForeColour = (Item == null || ShadowItem.Count > Item.Count) ? Color.Red : Color.LimeGreen;
+
+                CountLabel.Text = string.Format("{0}/{1}", Item == null ? 0 : Item.Count, ShadowItem.Count);
+            }
+            else
+            {
+                CountLabel.Text = Item.Count.ToString("###0");
+            }
+
             CountLabel.Location = new Point(Size.Width - CountLabel.Size.Width, Size.Height - CountLabel.Size.Height);
         }
         private void DisposeCountLabel()

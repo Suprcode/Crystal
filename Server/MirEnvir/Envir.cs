@@ -116,6 +116,7 @@ namespace Server.MirEnvir
         public DragonInfo DragonInfo = new DragonInfo();
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
+        public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();
         public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
 
         //User DB
@@ -1290,6 +1291,7 @@ namespace Server.MirEnvir
 
                     if (LoadVersion > 67)
                         RespawnTick = new RespawnTimer(reader);
+
                 }
 
                 Settings.LinkGuildCreationItems(ItemInfoList);
@@ -1860,6 +1862,14 @@ namespace Server.MirEnvir
             MonsterCount = 0;
 
             LoadDB();
+
+            RecipeInfoList.Clear();
+            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
+                .Select(path => Path.GetFileNameWithoutExtension(path))
+                .ToArray())
+                RecipeInfoList.Add(new RecipeInfo(recipe));
+
+            SMain.Enqueue(string.Format("{0} Recipes loaded.", RecipeInfoList.Count));
 
             for (int i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
@@ -2532,6 +2542,20 @@ namespace Server.MirEnvir
             UpdateItemExpiry(item);
 
             if (!info.NeedIdentify) item.Identified = true;
+            return item;
+        }
+
+        public UserItem CreateShopItem(ItemInfo info)
+        {
+            if (info == null) return null;
+
+            UserItem item = new UserItem(info)
+            {
+                UniqueID = ++NextUserItemID,
+                CurrentDura = info.Durability,
+                MaxDura = info.Durability,
+            };
+
             return item;
         }
 

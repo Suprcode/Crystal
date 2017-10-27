@@ -413,6 +413,8 @@ namespace Client.MirScenes.Dialogs
 
         public bool usePearls = false;//pearl currency
 
+        public PanelType PType;
+
         public NPCGoodsDialog()
         {
             Index = 1000;
@@ -433,6 +435,12 @@ namespace Client.MirScenes.Dialogs
                 {
                     SelectedItem = ((MirGoodsCell)o).Item;
                     Update();
+
+                    if (PType == PanelType.Craft)
+                    {
+                        GameScene.Scene.CraftDialog.ResetCells();
+                        GameScene.Scene.CraftDialog.RefreshCraftCells(SelectedItem);
+                    }
                 };
                 Cells[i].MouseWheel += NPCGoodsPanel_MouseWheel;
                 Cells[i].DoubleClick += (o, e) => BuyItem();
@@ -571,7 +579,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (amountBox.Amount > 0)
                     {
-                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = amountBox.Amount });
+                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = amountBox.Amount, Type = PanelType.Buy });
                     }
                 };
 
@@ -602,7 +610,7 @@ namespace Client.MirScenes.Dialogs
                 }
 
 
-                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1 });
+                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1, Type = PanelType.Buy });
             }
         }
 
@@ -667,6 +675,27 @@ namespace Client.MirScenes.Dialogs
             Update();
         }
 
+        public void UpdatePanelType(PanelType type)
+        {
+            PType = type;
+
+            if (PType == PanelType.Buy)
+            {
+                BuyButton.Index = 312;
+                BuyButton.HoverIndex = 313;
+                BuyButton.PressedIndex = 314;
+
+                BuyLabel.Index = 27;
+                BuyButton.Visible = true;
+            }
+            else if (PType == PanelType.Craft)
+            {
+                BuyLabel.Index = 12;
+                BuyButton.Visible = false;
+
+                GameScene.Scene.CraftDialog.Show();
+            }
+        }
 
         public void NewGoods(List<UserItem> list)
         {
@@ -1509,6 +1538,226 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.InventoryDialog.Show();
         }
     }
+
+
+    public sealed class CraftDialog : MirImageControl
+    {
+        public static UserItem RecipeItem;
+        public static UserItem[] IngredientSlots = new UserItem[6];
+
+        public List<KeyValuePair<MirItemCell, ulong>> Selected = new List<KeyValuePair<MirItemCell, ulong>>();
+
+        public MirItemCell[] Grid;
+        public static UserItem[] ShadowItems = new UserItem[6];
+
+        public MirButton CraftButton;
+
+        public CraftDialog()
+        {
+            Index = 661;
+            Library = Libraries.Prguse;
+            Location = new Point(0, 0);
+            Sort = true;
+            BeforeDraw += CraftDialog_BeforeDraw;
+
+            Grid = new MirItemCell[6];
+            for (int x = 0; x < 6; x++)
+            {
+                Grid[x] = new MirItemCell
+                {
+                    ItemSlot = x,
+                    GridType = MirGridType.Craft,
+                    Library = Libraries.Items,
+                    Parent = this,
+                    Size = new Size(34, 32),
+                    Location = new Point((x * 35) + 52, 55),
+                    Border = true,
+                    BorderColour = Color.Lime
+                };
+                Grid[x].Click += Grid_Click;
+            }
+
+            CraftButton = new MirButton
+            {
+                HoverIndex = 337,
+                Index = 336,
+                Location = new Point(115, 114),
+                Library = Libraries.Title,
+                Parent = this,
+                PressedIndex = 338,
+                Sound = SoundList.ButtonA,
+                GrayScale = true,
+                Enabled = false
+            };
+            CraftButton.Click += (o, e) => CraftItem();
+        }
+
+        void CraftDialog_BeforeDraw(object sender, EventArgs e)
+        {
+            if (!GameScene.Scene.InventoryDialog.Visible)
+            {
+                Hide();
+                return;
+            }
+
+            Location = new Point(GameScene.Scene.InventoryDialog.Location.X, GameScene.Scene.InventoryDialog.Location.Y + 236);
+        }
+
+
+        private void Grid_Click(object sender, EventArgs e)
+        {
+            MirItemCell cell = (MirItemCell)sender;
+
+            if (cell == null || cell.ShadowItem == null)
+                return;
+
+            if (GameScene.SelectedCell == null || GameScene.SelectedCell.GridType != MirGridType.Inventory || GameScene.SelectedCell.Locked)
+                return;
+
+            if (GameScene.SelectedCell.Item.Info != cell.ShadowItem.Info || cell.Item != null)
+                return;
+
+
+            cell.Item = GameScene.SelectedCell.Item;
+
+            Selected.Add(new KeyValuePair<MirItemCell, ulong>(GameScene.SelectedCell, GameScene.SelectedCell.Item.UniqueID));
+
+            GameScene.SelectedCell.Locked = true;
+            GameScene.SelectedCell = null;
+
+            RefreshCraftCells(RecipeItem);
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+
+            Visible = false;
+
+            ResetCells();
+        }
+
+        public void Show()
+        {
+            Visible = true;
+
+            Location = new Point(GameScene.Scene.InventoryDialog.Location.X, GameScene.Scene.InventoryDialog.Location.Y + 236);
+        }
+
+        private void CraftItem()
+        {
+            if (RecipeItem == null) return;
+
+            uint max = 99;
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i] == null || Grid[i].Item == null) continue;
+
+                uint temp = Grid[i].Item.Count / Grid[i].ShadowItem.Count;
+
+                if (temp < max) max = temp;
+            }
+
+            //TODO - Check Max slots spare against slots to be used (stacksize/quantity)
+            //TODO - GetMaxItemGain
+
+            if (RecipeItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
+                return;
+            }
+
+            if (max > 1)
+            {
+                MirAmountBox amountBox = new MirAmountBox("Craft Amount:", RecipeItem.Info.Image, max, 0, max);
+
+                amountBox.OKButton.Click += (o, e) =>
+                {
+                    if (amountBox.Amount > 0)
+                    {
+                        if (!HasCraftItems(RecipeItem, amountBox.Amount))
+                        {
+                            GameScene.Scene.ChatDialog.ReceiveChat("You do not have the required ingredients.", ChatType.System);
+                            return;
+                        }
+
+                        Network.Enqueue(new C.CraftItem { UniqueID = RecipeItem.UniqueID, Count = amountBox.Amount, Slots = Selected.Select(x => x.Key.ItemSlot).ToArray() });
+                    }
+                };
+
+                amountBox.Show();
+            }
+            else
+            {
+                Network.Enqueue(new C.CraftItem { UniqueID = RecipeItem.UniqueID, Count = 1, Slots = Selected.Select(x => x.Key.ItemSlot).ToArray() });
+            }
+        }
+
+        private bool HasCraftItems(UserItem item, uint count)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].ShadowItem == null) continue;
+
+                if (Grid[i].Item == null || Grid[i].Item.Count < (Grid[i].ShadowItem.Count * count)) return false;
+            }
+
+            return true;
+        }
+
+        public void ResetCells()
+        {
+            RecipeItem = null;
+            for (int j = 0; j < Grid.Length; j++)
+            {
+                IngredientSlots[j] = null;
+                ShadowItems[j] = null;
+            }
+
+            for (int i = 0; i < Selected.Count; i++)
+            {
+                Selected[i].Key.Locked = false;
+            }
+
+            Selected.Clear();
+        }
+
+        public MirItemCell GetCell(ulong id)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+                return Grid[i];
+            }
+            return null;
+        }
+
+        public void RefreshCraftCells(UserItem selectedItem)
+        {
+            RecipeItem = selectedItem;
+
+            CraftButton.Enabled = true;
+            CraftButton.GrayScale = false;
+
+            ClientRecipeInfo recipe = GameScene.RecipeInfoList.SingleOrDefault(x => x.Item.ItemIndex == selectedItem.ItemIndex);
+
+            for (int i = 0; i < recipe.Ingredients.Count; i++)
+            {
+                if (i >= IngredientSlots.Length) break;
+
+                ShadowItems[i] = recipe.Ingredients[i];
+
+                bool needItem = Grid[i].Item == null || Grid[i].Item.Count < Grid[i].ShadowItem.Count;
+
+                if (needItem)
+                {
+                    CraftButton.Enabled = false;
+                    CraftButton.GrayScale = true;
+                }
+            }
+        }
+    }
+
 
     public sealed class RefineDialog : MirImageControl
     {

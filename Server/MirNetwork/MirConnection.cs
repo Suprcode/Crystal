@@ -45,6 +45,7 @@ namespace Server.MirNetwork
         public PlayerObject Player;
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
+        public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
         public bool StorageSent;
 
 
@@ -340,6 +341,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.BuyItem:
                     BuyItem((C.BuyItem)p);
+                    break;
+                case (short)ClientPacketIds.CraftItem:
+                    CraftItem((C.CraftItem)p);
                     break;
                 case (short)ClientPacketIds.SellItem:
                     SellItem((C.SellItem)p);
@@ -1105,7 +1109,13 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.BuyItem(p.ItemIndex, p.Count);
+            Player.BuyItem(p.ItemIndex, p.Count, p.Type);
+        }
+        private void CraftItem(C.CraftItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.CraftItem(p.UniqueID, p.Count, p.Slots);
         }
         private void SellItem(C.SellItem p)
         {

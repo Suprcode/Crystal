@@ -763,16 +763,19 @@ namespace ClientPackets
 
         public ulong ItemIndex;
         public uint Count;
+        public PanelType Type;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             ItemIndex = reader.ReadUInt64();
             Count = reader.ReadUInt32();
+            Type = (PanelType)reader.ReadByte();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(ItemIndex);
             writer.Write(Count);
+            writer.Write((byte)Type);
         }
     }
     public sealed class SellItem : Packet
@@ -791,6 +794,37 @@ namespace ClientPackets
         {
             writer.Write(UniqueID);
             writer.Write(Count);
+        }
+    }
+    public sealed class CraftItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.CraftItem; } }
+
+        public ulong UniqueID;
+        public uint Count;
+        public int[] Slots;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadUInt64();
+            Count = reader.ReadUInt32();
+            Slots = new int[reader.ReadInt32()];
+
+            for (int i = 0; i < Slots.Length; i++)
+            {
+                Slots[i] = reader.ReadInt32();
+            }
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+            writer.Write(Count);
+            writer.Write(Slots.Length);
+
+            for (int i = 0; i < Slots.Length; i++)
+            {
+                writer.Write(Slots[i]);
+            }
         }
     }
     public sealed class RepairItem : Packet
