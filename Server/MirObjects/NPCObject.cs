@@ -1530,6 +1530,8 @@ namespace Server.MirObjects
 
                     UserItem item = player.Info.Inventory[slot];
 
+                    if (item == null || item.Info != ingredient.Info) continue;
+
                     if (item.Count > amount)
                     {
                         player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = amount });
