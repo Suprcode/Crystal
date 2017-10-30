@@ -367,7 +367,7 @@ namespace Server.MirObjects
             
             if (StartType != ConquestType.Forced)
             {
-                if (WarIsOn && (start > now && finish <= now))
+                if (WarIsOn && (now > start && finish <= now))
                 {
                     EndWar(Info.Game);
                 }

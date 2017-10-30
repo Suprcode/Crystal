@@ -718,11 +718,19 @@ namespace Client.MirScenes.Dialogs
         public void Hide()
         {
             Visible = false;
+            if (GameScene.Scene.CraftDialog.Visible)
+                GameScene.Scene.CraftDialog.Hide();
         }
         public void Show()
         {
-            GameScene.Scene.InventoryDialog.Show();
+            for (int i = 0; i < Cells.Length; i++)
+            {
+                Cells[i].Recipe = PType == PanelType.Craft;
+            }
+
             Visible = true;
+
+            GameScene.Scene.InventoryDialog.Show();
         }
     }
     public sealed class NPCDropDialog : MirImageControl
