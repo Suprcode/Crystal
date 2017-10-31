@@ -1259,7 +1259,11 @@ namespace Server.MirEnvir
                     {
                         count = reader.ReadInt32();
                         for (int i = 0; i < count; i++)
-                            MagicInfoList.Add(new MagicInfo(reader, LoadVersion, LoadCustomVersion));
+                        {
+                            var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
+                            if(!MagicExists(m.Spell))
+                                MagicInfoList.Add(m);
+                        }
                     }
                     FillMagicInfoList();
                     if (LoadVersion <= 70)
