@@ -1667,7 +1667,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             if (max > RecipeItem.Info.StackSize)
-                max = 1;
+                max = RecipeItem.Info.StackSize;
 
             //TODO - Check Max slots spare against slots to be used (stacksize/quantity)
             //TODO - GetMaxItemGain
