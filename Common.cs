@@ -940,6 +940,7 @@ public enum SpecialItemMode : short
     Probe = 0x0100,
     Skill = 0x0200,
     NoDuraLoss = 0x0400,
+    Blink = 0x800,
 }
 
 [Flags]

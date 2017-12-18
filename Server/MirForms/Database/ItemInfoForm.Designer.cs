@@ -180,6 +180,7 @@
             this.ClearcheckBox = new System.Windows.Forms.CheckBox();
             this.TeleportcheckBox = new System.Windows.Forms.CheckBox();
             this.ParalysischeckBox = new System.Windows.Forms.CheckBox();
+            this.BlinkcheckBox = new System.Windows.Forms.CheckBox();
             this.RemoveButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
             this.ItemInfoListBox = new System.Windows.Forms.ListBox();
@@ -1653,6 +1654,7 @@
             this.tabPage4.Controls.Add(this.ClearcheckBox);
             this.tabPage4.Controls.Add(this.TeleportcheckBox);
             this.tabPage4.Controls.Add(this.ParalysischeckBox);
+            this.tabPage4.Controls.Add(this.BlinkcheckBox);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(601, 390);
@@ -1791,6 +1793,17 @@
             this.ParalysischeckBox.Text = "Paralysis ring";
             this.ParalysischeckBox.UseVisualStyleBackColor = true;
             this.ParalysischeckBox.CheckedChanged += new System.EventHandler(this.ParalysischeckBox_CheckedChanged);
+            // 
+            // BlinkcheckBox
+            // 
+            this.BlinkcheckBox.AutoSize = true;
+            this.BlinkcheckBox.Location = new System.Drawing.Point(22, 290);
+            this.BlinkcheckBox.Name = "BlinkcheckBox";
+            this.BlinkcheckBox.Size = new System.Drawing.Size(49, 17);
+            this.BlinkcheckBox.TabIndex = 6;
+            this.BlinkcheckBox.Text = "Blink";
+            this.BlinkcheckBox.UseVisualStyleBackColor = true;
+            this.BlinkcheckBox.CheckedChanged += new System.EventHandler(this.BlinkcheckBox_CheckedChanged);
             // 
             // RemoveButton
             // 
@@ -2106,5 +2119,6 @@
         private System.Windows.Forms.CheckBox unableToRent_CheckBox;
         private System.Windows.Forms.CheckBox unableToDisassemble_CheckBox;
         private System.Windows.Forms.CheckBox globalDropNotify_CheckBox;
+        private System.Windows.Forms.CheckBox BlinkcheckBox;
     }
 }

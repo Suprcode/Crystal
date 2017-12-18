@@ -1848,6 +1848,9 @@ namespace Client.MirObjects
                                 case Monster.ZumaStatue:
                                 case Monster.ZumaGuardian:
                                 case Monster.RedThunderZuma:
+                                case Monster.FrozenRedZuma:
+                                case Monster.FrozenZumaStatue:
+                                case Monster.FrozenZumaGuardian:
                                 case Monster.ZumaTaurus:
                                     Stoned = false;
                                     break;
@@ -1888,6 +1891,9 @@ namespace Client.MirObjects
                                 case Monster.ZumaStatue:
                                 case Monster.ZumaGuardian:
                                 case Monster.RedThunderZuma:
+                                case Monster.FrozenRedZuma:
+                                case Monster.FrozenZumaStatue:
+                                case Monster.FrozenZumaGuardian:
                                 case Monster.ZumaTaurus:
                                     Stoned = true;
                                     return;
@@ -2225,6 +2231,7 @@ namespace Client.MirObjects
                                                 }
                                                 break;
                                             case Monster.RedThunderZuma:
+                                            case Monster.FrozenRedZuma:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
                                                 {
@@ -2743,6 +2750,9 @@ namespace Client.MirObjects
                 case Monster.ZumaStatue:
                 case Monster.ZumaGuardian:
                 case Monster.RedThunderZuma:
+                case Monster.FrozenRedZuma:
+                case Monster.FrozenZumaStatue:
+                case Monster.FrozenZumaGuardian:
                 case Monster.ZumaTaurus:
                     if (Stoned) return;
                     break;
@@ -2888,6 +2898,7 @@ namespace Client.MirObjects
                 case Monster.TurtleKing:
                     return;
                 case Monster.RedThunderZuma:
+                case Monster.FrozenRedZuma:
                 case Monster.KingScorpion:
                 case Monster.DarkDevil:
                 case Monster.Khazard:
@@ -3064,6 +3075,7 @@ namespace Client.MirObjects
                     }
                     break;
                 case Monster.RedThunderZuma:
+                case Monster.FrozenRedZuma:
                     switch (CurrentAction)
                     {
                         case MirAction.Standing:
