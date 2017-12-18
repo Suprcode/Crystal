@@ -146,7 +146,8 @@ namespace Server
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
-                             ParalysisRing = "Paralysis";
+                             ParalysisRing = "Paralysis",
+                             BlinkSkill = "Blink";
 
         public static string PKTownMapName = "3";
         public static int PKTownPositionX = 848,
@@ -369,6 +370,7 @@ namespace Server
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
             FireRing = Reader.ReadString("Items", "FireRing", FireRing);
+            BlinkSkill = Reader.ReadString("Items", "BlinkSkill", BlinkSkill);
 
             //PKTown
             PKTownMapName = Reader.ReadString("PKTown", "PKTownMapName", PKTownMapName);
@@ -575,6 +577,7 @@ namespace Server
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);
+            Reader.Write("Items", "BlinkSkill", BlinkSkill);
 
             Reader.Write("PKTown", "PKTownMapName", PKTownMapName);
             Reader.Write("PKTown", "PKTownPositionX", PKTownPositionX);

@@ -5334,6 +5334,7 @@ namespace Client.MirScenes
             GameScene.Scene.RelationshipDialog.LoverName = p.Name;
             GameScene.Scene.RelationshipDialog.Date = p.Date;
             GameScene.Scene.RelationshipDialog.MapName = p.MapName;
+            GameScene.Scene.RelationshipDialog.MarriedDays = p.MarriedDays;
             GameScene.Scene.RelationshipDialog.UpdateInterface();
         }
 

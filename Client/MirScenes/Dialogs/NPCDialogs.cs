@@ -559,7 +559,7 @@ namespace Client.MirScenes.Dialogs
                     maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
                     if (maxQuantity == 0)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do no have enough Gold.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Gold.", ChatType.System);
                         return;
                     }
                 }

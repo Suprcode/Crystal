@@ -1070,7 +1070,7 @@ namespace Client.MirScenes.Dialogs
                     AnimExDelay = 300;
                     break;
                 case IntelligentCreatureType.AngryBird:
-                    AnimDefaultIdx = 1332;
+                    AnimDefaultIdx = 1400;
                     AnimDefaultCount = 12;
                     AnimDefaultDelay = 300;
                     AnimExIdx = 1332;
