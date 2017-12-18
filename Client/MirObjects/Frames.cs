@@ -211,12 +211,12 @@ namespace Client.MirObjects
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, -4, 500));
             frame.Frames.Add(MirAction.Show, new Frame(4, 8, -8, 200));
-            frame.Frames.Add(MirAction.Hide, new Frame(11, 8, -8, 200) { Reverse = true });
-            frame.Frames.Add(MirAction.Attack1, new Frame(12, 6, 0, 100));
-            frame.Frames.Add(MirAction.Struck, new Frame(60, 2, 0, 200));
-            frame.Frames.Add(MirAction.Die, new Frame(76, 10, 0, 100));
-            frame.Frames.Add(MirAction.Dead, new Frame(85, 1, 9, 1000));
-            frame.Frames.Add(MirAction.Revive, new Frame(76, 10, 0, 100) { Reverse = true });
+            frame.Frames.Add(MirAction.Hide, new Frame(12, 8, -8, 200) { Reverse = true });
+            frame.Frames.Add(MirAction.Attack1, new Frame(20, 6, 0, 100));
+            frame.Frames.Add(MirAction.Struck, new Frame(68, 2, 0, 200));
+            frame.Frames.Add(MirAction.Die, new Frame(84, 10, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(93, 1, 9, 1000));
+            frame.Frames.Add(MirAction.Revive, new Frame(84, 10, 0, 100) { Reverse = true });
 
             //4 - ForestYeti, CaveMaggot, FrostYeti
             Monsters.Add(frame = new FrameSet());
@@ -2032,7 +2032,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Struck, new Frame(400, 4, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(432, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(441, 1, 9, 1000));
-            frame.Frames.Add(MirAction.Revive, new Frame(4432, 10, 0, 100) { Reverse = true });
+            frame.Frames.Add(MirAction.Revive, new Frame(432, 10, 0, 100) { Reverse = true });
 
             //177 - SnowYeti
             Monsters.Add(frame = new FrameSet());
