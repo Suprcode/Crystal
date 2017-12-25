@@ -56,3 +56,9 @@ Client/Client.csproj
 /AutoPatcherAdmin/obj
 
 /Build
+.vs/Legend of Mir/v15/Server/sqlite3/db.lock
+.vs/Legend of Mir/v15/Server/sqlite3/storage.ide
+.vs/Legend of Mir/v15/Server/sqlite3/storage.ide-shm
+.vs/Legend of Mir/v15/Server/sqlite3/storage.ide-wal
+Client/Client.csproj
+Server/Server.csproj
