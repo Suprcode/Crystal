@@ -256,7 +256,6 @@ namespace Server.MirObjects
         public bool UserMatch;
         public string MatchName;
         public ItemType MatchType;
-        public short MinShapes, MaxShapes;
         public int PageSent;
         public List<AuctionInfo> Search = new List<AuctionInfo>();
         public List<ItemSets> ItemSets = new List<ItemSets>();
@@ -14462,7 +14461,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (NPCPage == null )
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ConsignKey, StringComparison.CurrentCultureIgnoreCase))
             {
                 Enqueue(p);
                 return;
@@ -14607,7 +14606,7 @@ namespace Server.MirObjects
             Enqueue(new S.NPCMarket { Listings = listings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });      
         }
 
-        public void MarketSearch(string match, ItemType type)
+        public void MarketSearch(string match)
         {
             if (Dead || Envir.Time < SearchTime) return;
 
@@ -14620,7 +14619,7 @@ namespace Server.MirObjects
                 NPCObject ob = CurrentMap.NPCs[n];
                 if (ob.ObjectID != NPCID) continue;
 
-                GetMarket(match, type);
+                GetMarket(match, ItemType.Nothing);
             }
         }
         public void MarketRefresh()
@@ -14639,7 +14638,7 @@ namespace Server.MirObjects
                 GetMarket(string.Empty, MatchType);
             }
         }
-        public void MarketBuy(ulong auctionID, bool MailItems)
+        public void MarketBuy(ulong auctionID)
         {
             if (Dead)
             {
@@ -14696,28 +14695,13 @@ namespace Server.MirObjects
                     auction.Sold = true;
                     Account.Gold -= auction.Price;
                     Enqueue(new S.LoseGold { Gold = auction.Price });
-
-                    if (MailItems)
-                    {
-                        List<UserItem> mailItem = new List<UserItem>();
-                        mailItem.Add(auction.Item);
-                        MailInfo mail = new MailInfo(Info.Index)
-                        {
-                            MailID = ++Envir.NextMailID,
-                            Sender = "Auctioneer",
-                            Message = "Your item(s) are enclosed",
-                            Items = mailItem,
-                        };
-                        mail.Send();
-                    }
-                    else
                     GainItem(auction.Item);
 
                     Report.ItemChanged("BuyMarketItem", auction.Item, auction.Item.Count, 2);
 
                     Envir.MessageAccount(auction.CharacterInfo.AccountInfo, string.Format("You Sold {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price), ChatType.Hint);
                     Enqueue(new S.MarketSuccess { Message = string.Format("You brought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price) });
-                    MarketSearch(MatchName, MatchType);
+                    MarketSearch(MatchName);
                     return;
                 }
             }
@@ -14733,7 +14717,7 @@ namespace Server.MirObjects
 
             }
 
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.MarketKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCObject.ConsignmentsKey, StringComparison.CurrentCultureIgnoreCase))
             {
                 Enqueue(new S.MarketFail { Reason = 1 });
                 return;
@@ -14766,7 +14750,7 @@ namespace Server.MirObjects
                         Account.Auctions.Remove(auction);
                         Envir.Auctions.Remove(auction);
                         GainItem(auction.Item);
-                        MarketSearch(MatchName, MatchType);
+                        MarketSearch(MatchName);
 
                         Report.ItemChanged("GetBackMarketItem", auction.Item, auction.Item.Count, 2);
 
@@ -14784,7 +14768,7 @@ namespace Server.MirObjects
                     Envir.Auctions.Remove(auction);
                     GainGold(gold);
                     Enqueue(new S.MarketSuccess { Message = string.Format("You Sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, auction.Price, gold, auction.Price - gold) });
-                    MarketSearch(MatchName, MatchType);
+                    MarketSearch(MatchName);
                     return;
                 }
 
