@@ -1215,8 +1215,12 @@ namespace Server.MirNetwork
         private void MarketSearch(C.MarketSearch p)
         {
             if (Stage != GameStage.Game) return;
+            Player.UserMatch = p.Usermode;
+            Player.MinShapes = p.MinShape;
+            Player.MaxShapes = p.MaxShape;
+            Player.MarketSearch(p.Match, p.Type);
 
-            Player.MarketSearch(p.Match);
+            Player.MarketSearch(p.Match, p.Type);
         }
         private void MarketRefresh()
         {
@@ -1235,7 +1239,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.MarketBuy(p.AuctionID);
+            Player.MarketBuy(p.AuctionID, p.MailItems);
         }
         private void MarketGetBack(C.MarketGetBack p)
         {
