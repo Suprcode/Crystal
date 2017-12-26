@@ -1696,38 +1696,73 @@ namespace Client.MirControls
                         return false;
                     }
                     break;
-                case RequiredType.AC:
+                case RequiredType.MaxAC:
                     if (MapObject.User.MaxAC < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough AC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MAC:
+                case RequiredType.MaxMAC:
                     if (MapObject.User.MaxMAC < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough MAC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.DC:
+                case RequiredType.MaxDC:
                     if (MapObject.User.MaxDC < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough DC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MC:
+                case RequiredType.MaxMC:
                     if (MapObject.User.MaxMC < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough MC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.SC:
+                case RequiredType.MaxSC:
                     if (MapObject.User.MaxSC < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough SC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinAC:
+                    if (MapObject.User.MinAC < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base AC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMAC:
+                    if (MapObject.User.MinMAC < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base MAC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinDC:
+                    if (MapObject.User.MinDC < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base DC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMC:
+                    if (MapObject.User.MinMC < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base MC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinSC:
+                    if (MapObject.User.MinSC < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base SC.", ChatType.System);
                         return false;
                     }
                     break;
@@ -1834,38 +1869,73 @@ namespace Client.MirControls
                         return false;
                     }
                     break;
-                case RequiredType.AC:
+                case RequiredType.MaxAC:
                     if (MapObject.User.MaxAC < i.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough AC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MAC:
+                case RequiredType.MaxMAC:
                     if (MapObject.User.MaxMAC < i.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough MAC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.DC:
+                case RequiredType.MaxDC:
                     if (MapObject.User.MaxDC < i.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough DC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MC:
+                case RequiredType.MaxMC:
                     if (MapObject.User.MaxMC < i.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough MC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.SC:
+                case RequiredType.MaxSC:
                     if (MapObject.User.MaxSC < i.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough SC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinAC:
+                    if (MapObject.User.MinAC < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base AC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMAC:
+                    if (MapObject.User.MinMAC < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base MAC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinDC:
+                    if (MapObject.User.MinDC < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base DC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMC:
+                    if (MapObject.User.MinMC < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base MC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinSC:
+                    if (MapObject.User.MinSC < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough base SC.", ChatType.System);
                         return false;
                     }
                     break;

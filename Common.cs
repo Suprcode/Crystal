@@ -967,11 +967,16 @@ public enum RequiredGender : byte
 public enum RequiredType : byte
 {
     Level = 0,
-    AC = 1,
-    MAC = 2,
-    DC = 3,
-    MC = 4,
-    SC = 5,
+    MinAC = 1,
+    MaxAC = 2,
+    MinMAC = 3,
+    MaxMAC = 4,
+    MinDC = 5,
+    MaxDC = 6,
+    MinMC = 7,
+    MaxMC = 8,
+    MinSC = 9,
+    MaxSC = 10,
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
