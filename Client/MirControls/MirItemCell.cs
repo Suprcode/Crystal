@@ -22,7 +22,7 @@ namespace Client.MirControls
                     return NPCDropDialog.TargetItem;
 
                 if (GridType == MirGridType.TrustMerchant)
-                    return TrustMerchantDialog.SellItemSlot;
+                    return TrustMerchantDialog.Selected != null ? TrustMerchantDialog.Selected.Listing.Item : null;
 
                 if (GridType == MirGridType.Renting)
                     return ItemRentingDialog.RentalItem;
@@ -200,9 +200,9 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
+            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.QuestInventory) return;
 
-            if (GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
+            if(GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
 
             base.OnMouseClick(e);
             
@@ -252,7 +252,7 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.Craft) return;
+            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.Craft) return;
 
             base.OnMouseClick(e);
 
@@ -294,7 +294,7 @@ namespace Client.MirControls
         
         public void UseItem()
         {
-            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.GuildStorage || GridType == MirGridType.Craft) return;
+            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.GuildStorage || GridType == MirGridType.Craft) return;
 
             if (MapObject.User.Fishing) return;
             if (MapObject.User.RidingMount && Item.Info.Type != ItemType.Scroll && Item.Info.Type != ItemType.Potion && Item.Info.Type != ItemType.Torch) return;

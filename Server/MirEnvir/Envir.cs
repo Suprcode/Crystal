@@ -59,7 +59,7 @@ namespace Server.MirEnvir
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
-        public const string BackUpPath = @".\Report Files\Back Up\";
+        public const string BackUpPath = @".\Back Up\";
         public bool ResetGS = false;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;

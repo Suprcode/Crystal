@@ -13,7 +13,7 @@ namespace Server
         public const string EnvirPath = @".\Envir\",
                             ConfigPath = @".\Configs\",
                             MapPath = @".\Maps\",
-                            ExportPath = @".\Report Files\Exports\",
+                            ExportPath = @".\Exports\",
                             GuildPath = @".\Guilds\",
                             ConquestsPath = @".\Conquests\",
                             NPCPath = EnvirPath + @".\NPCs\",
@@ -24,8 +24,8 @@ namespace Server
                             RoutePath = EnvirPath + @".\Routes\",
                             NameListPath = EnvirPath + @".\NameLists\",
                             ValuePath = EnvirPath + @".\Values\",
-                            ReportPath = @".\Report Files\Reports\",
-                            LogPath = @".\Report Files\Logs\";
+                            ReportPath = @".\Reports\",
+                            LogPath = @".\Logs\";
 
 
 

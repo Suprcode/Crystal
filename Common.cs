@@ -2097,7 +2097,7 @@ public static class Globals
         MaxCharacterNameLength = 15,
         MaxCharacterCount = 4,
 
-        MaxChatLength = 115,
+        MaxChatLength = 80,
 
         MaxGroup = 15,
         
@@ -2117,8 +2117,8 @@ public static class Globals
 
     public const uint SearchDelay = 500,
                       ConsignmentLength = 7,
-                      ConsignmentCost = 1000,
-                      MinConsignment = 1000,
+                      ConsignmentCost = 5000,
+                      MinConsignment = 5000,
                       MaxConsignment = 50000000;
 
 }
