@@ -436,14 +436,14 @@ namespace Client.MirScenes.Dialogs
                     SelectedItem = ((MirGoodsCell)o).Item;
                     Update();
 
-                    if (GameScene.Scene.CraftDialog.Visible);
-                    else
-                        GameScene.Scene.CraftDialog.Show();
-
                     if (PType == PanelType.Craft)
                     {
                         GameScene.Scene.CraftDialog.ResetCells();
                         GameScene.Scene.CraftDialog.RefreshCraftCells(SelectedItem);
+
+                        if (GameScene.Scene.CraftDialog.Visible) ;
+                        else
+                            GameScene.Scene.CraftDialog.Show();
                     }
                 };
                 Cells[i].MouseWheel += NPCGoodsPanel_MouseWheel;
