@@ -12767,6 +12767,48 @@ namespace Server.MirObjects
                         return false;
                     }
                     break;
+                case RequiredType.MaxLevel:
+                    if (Level > item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You have exceeded the maximum level.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinAC:
+                    if (MinAC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base AC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMAC:
+                    if (MinMAC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base MAC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinDC:
+                    if (MinDC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base DC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMC:
+                    if (MinMC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base MC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinSC:
+                    if (MinSC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base SC.", ChatType.System);
+                        return false;
+                    }
+                    break;
             }
 
             switch (item.Info.Type)
@@ -13060,6 +13102,30 @@ namespace Server.MirObjects
                     break;
                 case RequiredType.SC:
                     if (MaxSC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxLevel:
+                    if (Level > item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinAC:
+                    if (MinAC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinMAC:
+                    if (MinMAC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinDC:
+                    if (MinDC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinMC:
+                    if (MinMC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinSC:
+                    if (MinSC < item.Info.RequiredAmount)
                         return false;
                     break;
             }

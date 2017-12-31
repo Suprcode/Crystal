@@ -972,6 +972,12 @@ public enum RequiredType : byte
     DC = 3,
     MC = 4,
     SC = 5,
+    MaxLevel = 6,
+    MinAC = 7,
+    MinMAC = 8,
+    MinDC = 9,
+    MinMC = 10,
+    MinSC = 11,
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]

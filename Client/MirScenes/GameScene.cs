@@ -6910,6 +6910,36 @@ namespace Client.MirScenes
                         if (MapObject.User.MaxSC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
+                    case RequiredType.MaxLevel:
+                        text = string.Format("Maximum Level : {0}", realItem.RequiredAmount);
+                        if (MapObject.User.Level > realItem.RequiredAmount)
+                            colour = Color.Red;
+                        break;
+                    case RequiredType.MinAC:
+                        text = string.Format("Required Base AC : {0}", realItem.RequiredAmount);
+                        if (MapObject.User.MinAC < realItem.RequiredAmount)
+                            colour = Color.Red;
+                        break;
+                    case RequiredType.MinMAC:
+                        text = string.Format("Required Base MAC : {0}", realItem.RequiredAmount);
+                        if (MapObject.User.MinMAC < realItem.RequiredAmount)
+                            colour = Color.Red;
+                        break;
+                    case RequiredType.MinDC:
+                        text = string.Format("Required Base DC : {0}", realItem.RequiredAmount);
+                        if (MapObject.User.MinDC < realItem.RequiredAmount)
+                            colour = Color.Red;
+                        break;
+                    case RequiredType.MinMC:
+                        text = string.Format("Required Base MC : {0}", realItem.RequiredAmount);
+                        if (MapObject.User.MinMC < realItem.RequiredAmount)
+                            colour = Color.Red;
+                        break;
+                    case RequiredType.MinSC:
+                        text = string.Format("Required Base SC : {0}", realItem.RequiredAmount);
+                        if (MapObject.User.MinSC < realItem.RequiredAmount)
+                            colour = Color.Red;
+                        break;
                     default:
                         text = "Unknown Type Required";
                         break;
