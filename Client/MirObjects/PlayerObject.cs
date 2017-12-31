@@ -2058,9 +2058,10 @@ namespace Client.MirObjects
 
                             #endregion
 
-                            #region LionRoar
+                            #region LionRoar, BattleCry
 
                             case Spell.LionRoar:
+                            case Spell.BattleCry:
                                 Effects.Add(new Effect(Libraries.Magic2, 710, 20, 1200, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + (Gender == MirGender.Male ? 0 : 1));
                                 break;
