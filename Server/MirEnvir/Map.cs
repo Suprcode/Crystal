@@ -2113,6 +2113,41 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
+
+                #region BattleCry
+
+                case Spell.BattleCry:
+                    location = (Point)data[2];
+
+                    for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 2; x <= location.X + 2; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                if (target.Race != ObjectType.Monster) continue;
+
+                                if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                target.Target = player;
+                                target.OperateTime = 0;
+                                train = true;
+                            }
+                        }
+                    }
+                    break;
+
+                    #endregion
             }
 
             if (train)

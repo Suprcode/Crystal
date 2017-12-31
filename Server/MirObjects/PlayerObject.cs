@@ -6572,6 +6572,7 @@ namespace Server.MirObjects
                     Purification(target, magic);
                     break;
                 case Spell.LionRoar:
+                case Spell.BattleCry:
                     CurrentMap.ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, CurrentLocation));
                     break;
                 case Spell.Revelation:

@@ -1138,6 +1138,7 @@ public enum Spell : byte
     //Custom
     Blink = 151,
     Portal = 152,
+    BattleCry = 153,
     
     //Map Events
     DigOutZombie = 200,
