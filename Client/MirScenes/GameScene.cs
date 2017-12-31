@@ -6885,27 +6885,27 @@ namespace Client.MirScenes
                         if (MapObject.User.Level < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
-                    case RequiredType.AC:
+                    case RequiredType.MaxAC:
                         text = string.Format("Required AC : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MaxAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
-                    case RequiredType.MAC:
+                    case RequiredType.MaxMAC:
                         text = string.Format("Required MAC : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MaxMAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
-                    case RequiredType.DC:
+                    case RequiredType.MaxDC:
                         text = string.Format("Required DC : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MaxDC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
-                    case RequiredType.MC:
+                    case RequiredType.MaxMC:
                         text = string.Format("Required MC : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MaxMC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
-                    case RequiredType.SC:
+                    case RequiredType.MaxSC:
                         text = string.Format("Required SC : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MaxSC < realItem.RequiredAmount)
                             colour = Color.Red;

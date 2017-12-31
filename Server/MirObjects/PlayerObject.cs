@@ -12733,35 +12733,35 @@ namespace Server.MirObjects
                         return false;
                     }
                     break;
-                case RequiredType.AC:
+                case RequiredType.MaxAC:
                     if (MaxAC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough AC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MAC:
+                case RequiredType.MaxMAC:
                     if (MaxMAC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough MAC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.DC:
+                case RequiredType.MaxDC:
                     if (MaxDC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough DC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MC:
+                case RequiredType.MaxMC:
                     if (MaxMC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough MC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.SC:
+                case RequiredType.MaxSC:
                     if (MaxSC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough SC.", ChatType.System);
@@ -13085,23 +13085,23 @@ namespace Server.MirObjects
                     if (Level < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.AC:
+                case RequiredType.MaxAC:
                     if (MaxAC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.MAC:
+                case RequiredType.MaxMAC:
                     if (MaxMAC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.DC:
+                case RequiredType.MaxDC:
                     if (MaxDC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.MC:
+                case RequiredType.MaxMC:
                     if (MaxMC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.SC:
+                case RequiredType.MaxSC:
                     if (MaxSC < item.Info.RequiredAmount)
                         return false;
                     break;
