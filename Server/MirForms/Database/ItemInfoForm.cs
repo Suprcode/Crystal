@@ -71,6 +71,7 @@ namespace Server
                 label52.Text = "Success drop";
                 label51.Text = "Max stats (all)";
                 label49.Text = "Max gem stat";
+                BlinkcheckBox.Text = "Unsure?";
             }
             else
             {
@@ -91,6 +92,7 @@ namespace Server
                 label52.Text = "Reflect:";
                 label51.Text = "Critical Dmg:";
                 label49.Text = "HP Drain:";
+                BlinkcheckBox.Text = "Blink";
             }
         }
 
@@ -208,6 +210,7 @@ namespace Server
                 FastRunCheckBox.Checked = false;
                 CanAwaken.Checked = false;
                 TooltipTextBox.Text = string.Empty;
+                BlinkcheckBox.Checked = false;
                 return;
             }
 
@@ -316,6 +319,7 @@ namespace Server
             FastRunCheckBox.Checked = info.CanFastRun;
             CanAwaken.Checked = info.CanAwakening;
             TooltipTextBox.Text = info.ToolTip;
+            BlinkcheckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Blink);
 
             for (int i = 1; i < _selectedItemInfos.Count; i++)
             {
@@ -423,7 +427,8 @@ namespace Server
                 if (FastRunCheckBox.Checked != info.CanFastRun) FastRunCheckBox.CheckState = CheckState.Indeterminate;
                 if (CanAwaken.Checked != info.CanAwakening) CanAwaken.CheckState = CheckState.Indeterminate;
                 if (TooltipTextBox.Text != info.ToolTip) TooltipTextBox.Text = string.Empty;
-            }
+                if (BlinkcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Blink)) BlinkcheckBox.CheckState = CheckState.Indeterminate;
+        }
             RefreshUniqueTab();
         }
 
@@ -435,7 +440,13 @@ namespace Server
 
             for (int i = 0; i < ItemInfoListBox.Items.Count; i++) selected.Add(ItemInfoListBox.GetSelected(i));
             ItemInfoListBox.Items.Clear();
-            for (int i = 0; i < Envir.ItemInfoList.Count; i++) ItemInfoListBox.Items.Add(Envir.ItemInfoList[i]);
+            for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+            {
+                if (ITypeFilterComboBox.SelectedItem == null ||
+                    ITypeFilterComboBox.SelectedIndex == ITypeFilterComboBox.Items.Count - 1 ||
+                    Envir.ItemInfoList[i].Type == (ItemType)ITypeFilterComboBox.SelectedItem)
+                    ItemInfoListBox.Items.Add(Envir.ItemInfoList[i]);
+            };
             for (int i = 0; i < selected.Count; i++) ItemInfoListBox.SetSelected(i, selected[i]);
 
             ItemInfoListBox.SelectedIndexChanged += ItemInfoListBox_SelectedIndexChanged;
@@ -1623,6 +1634,14 @@ namespace Server
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Bind = (Bind_DontSpecialRepaircheckBox.Checked ? _selectedItemInfos[i].Bind |= BindMode.NoSRepair : _selectedItemInfos[i].Bind ^= BindMode.NoSRepair);
+        }
+
+        private void BlinkcheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Unique = (BlinkcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Blink : _selectedItemInfos[i].Unique ^= SpecialItemMode.Blink);
         }
 
         private void LightIntensitytextBox_TextChanged(object sender, EventArgs e)

@@ -1127,7 +1127,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class ChatControlBar : MirImageControl
     {
-        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton;
+        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton, TradeButton;
 
         public ChatControlBar()
         {
@@ -1289,6 +1289,19 @@ namespace Client.MirScenes.Dialogs
                 Settings.ShowGuildChat = !Settings.ShowGuildChat;
                 ToggleChatFilter("Guild");
             };
+
+            TradeButton = new MirButton
+            {
+                Index = 2004,
+                HoverIndex = 2005,
+                PressedIndex = 2006,
+                Library = Libraries.Prguse,
+                Location = new Point(166, 1),
+                Parent = this,
+                Sound = SoundList.ButtonC,
+                Hint = "Trade (" + CMain.InputKeys.GetKey(KeybindOptions.Trade) + ")",
+            };
+            TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 
             ReportButton = new MirButton
             {
@@ -3353,6 +3366,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 433,
                 Sound = SoundList.ButtonA,
+                Hint = "Invite to Group",
             };
             GroupButton.Click += (o, e) =>
             {
@@ -3381,6 +3395,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 436,
                 Sound = SoundList.ButtonA,
+                Hint = "Add to Friends List",
             };
             FriendButton.Click += (o, e) =>
             {
@@ -3396,6 +3411,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
+                Hint = "Send Mail",
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailComposeLetterDialog.ComposeMail(Name);
 
@@ -3408,6 +3424,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 525,
                 Sound = SoundList.ButtonA,
+                Hint = "Trade",
             };
             TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 

@@ -940,6 +940,7 @@ public enum SpecialItemMode : short
     Probe = 0x0100,
     Skill = 0x0200,
     NoDuraLoss = 0x0400,
+    Blink = 0x800,
 }
 
 [Flags]
@@ -966,11 +967,17 @@ public enum RequiredGender : byte
 public enum RequiredType : byte
 {
     Level = 0,
-    AC = 1,
-    MAC = 2,
-    DC = 3,
-    MC = 4,
-    SC = 5,
+    MaxAC = 1,
+    MaxMAC = 2,
+    MaxDC = 3,
+    MaxMC = 4,
+    MaxSC = 5,
+    MaxLevel = 6,
+    MinAC = 7,
+    MinMAC = 8,
+    MinDC = 9,
+    MinMC = 10,
+    MinSC = 11,
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -1131,6 +1138,7 @@ public enum Spell : byte
     //Custom
     Blink = 151,
     Portal = 152,
+    BattleCry = 153,
     
     //Map Events
     DigOutZombie = 200,

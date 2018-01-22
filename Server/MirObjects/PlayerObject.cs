@@ -2672,7 +2672,7 @@ namespace Server.MirObjects
             FastRun = false;
 
             var skillsToAdd = new List<string>();
-            var skillsToRemove = new List<string> { Settings.HealRing, Settings.FireRing };
+            var skillsToRemove = new List<string> { Settings.HealRing, Settings.FireRing, Settings.BlinkSkill };
             short Macrate = 0, Acrate = 0, HPrate = 0, MPrate = 0;
             ItemSets.Clear();
             MirSet.Clear();
@@ -2753,8 +2753,12 @@ namespace Server.MirObjects
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) SkillNeckBoost = 3;
                     if (RealItem.Unique.HasFlag(SpecialItemMode.NoDuraLoss)) NoDuraLoss = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Blink))
+                    {
+                        skillsToAdd.Add(Settings.BlinkSkill);
+                        skillsToRemove.Remove(Settings.BlinkSkill);
+                    }
                 }
-
                 if (RealItem.CanFastRun)
                 {
                     FastRun = true;
@@ -5232,6 +5236,67 @@ namespace Server.MirObjects
                             }
                         }
                         break;
+                    case "REVIVE":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 2)
+                        {
+                            RefreshStats();
+                            SetHP(MaxHP);
+                            SetMP(MaxMP);
+                            Revive(MaxHealth, true);
+                        }
+                        else
+                        {
+                            player = Envir.GetPlayer(parts[1]);
+                            if (player == null) return;
+                            player.Revive(MaxHealth, true);
+                        }
+                        break;
+                    case "DELETESKILL":
+                        if ((!IsGM) || parts.Length < 2) return;
+                        Spell skill1;
+
+                        if (!Enum.TryParse(parts.Length > 2 ? parts[2] : parts[1], true, out skill1)) return;
+
+                        if (skill1 == Spell.None) return;
+
+                        if (parts.Length > 2)
+                        {
+                            if (!IsGM) return;
+                            player = Envir.GetPlayer(parts[1]);
+
+                            if (player == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found!", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+                        else
+                            player = this;
+
+                        if (player == null) return;
+
+                        var magics = new UserMagic(skill1);
+                        bool removed = false;
+
+                        for (var i = player.Info.Magics.Count - 1; i >= 0; i--)
+                        {
+                            if (player.Info.Magics[i].Spell != skill1) continue;
+
+                            player.Info.Magics.RemoveAt(i);
+                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                            removed = true;
+                        }
+
+                        if (removed)
+                        {
+                            ReceiveChat(string.Format("You have deleted skill {0} from player {1}", skill1.ToString(), player.Name), ChatType.Hint);
+                            player.ReceiveChat(string.Format("{0} has been removed from you.", skill1), ChatType.Hint);
+                        }
+                        else ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
+
+                        break;
                     default:
                         break;
                 }
@@ -6507,6 +6572,7 @@ namespace Server.MirObjects
                     Purification(target, magic);
                     break;
                 case Spell.LionRoar:
+                case Spell.BattleCry:
                     CurrentMap.ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, CurrentLocation));
                     break;
                 case Spell.Revelation:
@@ -12667,38 +12733,80 @@ namespace Server.MirObjects
                         return false;
                     }
                     break;
-                case RequiredType.AC:
+                case RequiredType.MaxAC:
                     if (MaxAC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough AC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MAC:
+                case RequiredType.MaxMAC:
                     if (MaxMAC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough MAC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.DC:
+                case RequiredType.MaxDC:
                     if (MaxDC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough DC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.MC:
+                case RequiredType.MaxMC:
                     if (MaxMC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough MC.", ChatType.System);
                         return false;
                     }
                     break;
-                case RequiredType.SC:
+                case RequiredType.MaxSC:
                     if (MaxSC < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough SC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MaxLevel:
+                    if (Level > item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You have exceeded the maximum level.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinAC:
+                    if (MinAC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base AC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMAC:
+                    if (MinMAC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base MAC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinDC:
+                    if (MinDC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base DC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMC:
+                    if (MinMC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base MC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinSC:
+                    if (MinSC < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base SC.", ChatType.System);
                         return false;
                     }
                     break;
@@ -12977,24 +13085,48 @@ namespace Server.MirObjects
                     if (Level < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.AC:
+                case RequiredType.MaxAC:
                     if (MaxAC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.MAC:
+                case RequiredType.MaxMAC:
                     if (MaxMAC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.DC:
+                case RequiredType.MaxDC:
                     if (MaxDC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.MC:
+                case RequiredType.MaxMC:
                     if (MaxMC < item.Info.RequiredAmount)
                         return false;
                     break;
-                case RequiredType.SC:
+                case RequiredType.MaxSC:
                     if (MaxSC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxLevel:
+                    if (Level > item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinAC:
+                    if (MinAC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinMAC:
+                    if (MinMAC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinDC:
+                    if (MinDC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinMC:
+                    if (MinMC < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinSC:
+                    if (MinSC < item.Info.RequiredAmount)
                         return false;
                     break;
             }

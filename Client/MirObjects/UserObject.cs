@@ -39,7 +39,8 @@ namespace Client.MirObjects
         public uint RentalGoldAmount;
 
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing, HasClearRing,
-            HasMuscleRing, HasParalysisRing, HasFireRing, HasHealRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss;
+            HasMuscleRing, HasParalysisRing, HasFireRing, HasHealRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss,
+            HasBlinkSkill;
 
         public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack, HpDrainRate;
         public BaseStats CoreStats = new BaseStats(0);
