@@ -68,11 +68,11 @@ namespace Server.MirObjects
         public List<UserItem> Goods = new List<UserItem>();
         public List<UserItem> UsedGoods = new List<UserItem>();
         public Dictionary<string, List<UserItem>> BuyBack = new Dictionary<string, List<UserItem>>();
-        public List<UserItem> CraftGoods = new List<UserItem>();
 
         public List<ItemType> Types = new List<ItemType>();
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<QuestInfo> Quests = new List<QuestInfo>();
+        public List<RecipeInfo> CraftGoods = new List<RecipeInfo>();
 
         public Dictionary<int, bool> VisibleLog = new Dictionary<int, bool>();
 
@@ -135,6 +135,7 @@ namespace Server.MirObjects
             Goods = new List<UserItem>();
             Types = new List<ItemType>();
             NPCPages = new List<NPCPage>();
+            CraftGoods = new List<RecipeInfo>();
 
             if (Info.IsDefault)
             {
@@ -676,14 +677,6 @@ namespace Server.MirObjects
                     if (info == null)
                         continue;
 
-                    UserItem goods = Envir.CreateShopItem(info);
-
-                    if (goods == null)
-                    {
-                        SMain.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], Info.FileName));
-                        continue;
-                    }
-
                     RecipeInfo recipe = Envir.RecipeInfoList.SingleOrDefault(x => x.MatchItem(info.Index));
 
                     if (recipe == null)
@@ -698,15 +691,7 @@ namespace Server.MirObjects
                         continue;
                     }
 
-                    uint count = 1;
-                    if (data.Length == 2)
-                        uint.TryParse(data[1], out count);
-
-                    goods.Count = count > info.StackSize ? info.StackSize : count;
-
-                    if (CraftGoods.Any(x => x.Info == goods.Info && x.Count == goods.Count)) continue;
-
-                    CraftGoods.Add(goods);
+                    CraftGoods.Add(recipe);
                 }
             }
         }
@@ -877,9 +862,9 @@ namespace Server.MirObjects
                     break;
                 case CraftKey:
                     for (int i = 0; i < CraftGoods.Count; i++)
-                        player.CheckItemInfo(CraftGoods[i].Info);
+                        player.CheckItemInfo(CraftGoods[i].Item.Info);
 
-                    player.Enqueue(new S.NPCGoods { List = CraftGoods, Rate = PriceRate(player), Type = PanelType.Craft });
+                    player.Enqueue(new S.NPCGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
                     break;
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
@@ -1443,22 +1428,22 @@ namespace Server.MirObjects
         {
             S.CraftItem p = new S.CraftItem();
 
-            UserItem goods = null;
+            RecipeInfo recipe = null;
 
             for (int i = 0; i < CraftGoods.Count; i++)
             {
-                if (CraftGoods[i].UniqueID != index) continue;
-                goods = CraftGoods[i];
+                if (CraftGoods[i].Item.UniqueID != index) continue;
+                recipe = CraftGoods[i];
                 break;
             }
+
+            UserItem goods = recipe.Item;
 
             if (goods == null || count == 0 || count > goods.Info.StackSize)
             {
                 player.Enqueue(p);
                 return;
             }
-
-            RecipeInfo recipe = Envir.RecipeInfoList.Single(x => x.MatchItem(goods.Info.Index));
 
             bool hasItems = true;
 
