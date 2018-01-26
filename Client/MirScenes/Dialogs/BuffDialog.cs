@@ -10,9 +10,9 @@ namespace Client.MirScenes.Dialogs
 {
     public sealed class BuffDialog : MirImageControl
     {
-        private readonly MirButton _expandCollapseButton;
-        private readonly MirLabel _buffCountLabel;
-        private readonly List<MirImageControl> _buffList = new List<MirImageControl>();
+        private MirButton _expandCollapseButton;
+        private MirLabel _buffCountLabel;
+        private List<MirImageControl> _buffList = new List<MirImageControl>();
         private bool _fadedOut, _fadedIn;
         private int _buffCount;
         private long _nextFadeTime;
@@ -29,6 +29,9 @@ namespace Client.MirScenes.Dialogs
             Location = new Point(Settings.ScreenWidth - 170, 0);
             Sort = true;
 
+            Opacity = 0f;
+            _fadedOut = true;
+
             _expandCollapseButton = new MirButton
             {
                 Index = 7,
@@ -38,13 +41,19 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 9,
                 Sound = SoundList.ButtonA,
+                Opacity = 0f
             };
             _expandCollapseButton.Click += (o, e) =>
             {
                 if (_buffCount == 1)
-                    return;
+                {
+                    Settings.ExpandedBuffWindow = true;
+                }
+                else
+                {
+                    Settings.ExpandedBuffWindow = !Settings.ExpandedBuffWindow;
+                }
 
-                Settings.ExpandedBuffWindow = !Settings.ExpandedBuffWindow;
                 UpdateWindow();
             };
 
@@ -101,9 +110,9 @@ namespace Client.MirScenes.Dialogs
             UpdateWindow();
         }
 
-        public void UpdateBuffs()
+        public void Process()
         {
-            if (_buffList.Count == 0)
+            if (_buffList.Count != _buffCount)
                 UpdateWindow();
 
             for (var i = 0; i < _buffList.Count; i++)
@@ -154,7 +163,7 @@ namespace Client.MirScenes.Dialogs
 
             if (IsMouseOver(CMain.MPoint))
             { 
-                if (!_fadedIn && CMain.Time <= _nextFadeTime)
+                if (_buffCount == 0 || (!_fadedIn && CMain.Time <= _nextFadeTime))
                     return;
 
                 Opacity += FadeRate;
@@ -194,12 +203,9 @@ namespace Client.MirScenes.Dialogs
         {
             _buffCount = _buffList.Count;
 
-            if (_buffCount == 0)
-                Visible = false;
-            else if (_buffCount > 0 && Settings.ExpandedBuffWindow)
+            if (_buffCount > 0 && Settings.ExpandedBuffWindow)
             {
                 var oldWidth = Size.Width;
-                Visible = true;
 
                 if (_buffCount <= 10)
                     Index = 20 + _buffCount - 1;
@@ -224,7 +230,6 @@ namespace Client.MirScenes.Dialogs
             else if (_buffCount > 0 && !Settings.ExpandedBuffWindow)
             {
                 var oldWidth = Size.Width;
-                Visible = true;
 
                 Index = 20;
             
