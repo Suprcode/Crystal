@@ -26,10 +26,10 @@ namespace Server.MirDatabase
         public UserItem Item;
         public List<UserItem> Ingredients;
 
-        public byte? RequiredFlag = null;
+        public List<int> RequiredFlag = new List<int>();
         public ushort? RequiredLevel = null;
-        public int? RequiredQuest = null;
-        public MirClass? RequiredClass = null;
+        public List<int> RequiredQuest = new List<int>();
+        public List<MirClass> RequiredClass = new List<MirClass>();
         public MirGender? RequiredGender = null;
 
         public RecipeInfo(string name)
@@ -103,16 +103,16 @@ namespace Server.MirDatabase
                                         RequiredLevel = ushort.Parse(data[1]);
                                         break;
                                     case "class":
-                                        RequiredClass = (MirClass)byte.Parse(data[1]);
+                                        RequiredClass.Add((MirClass)byte.Parse(data[1]));
                                         break;
                                     case "gender":
                                         RequiredGender = (MirGender)byte.Parse(data[1]);
                                         break;
                                     case "flag":
-                                        RequiredFlag = byte.Parse(data[1]);
+                                        RequiredFlag.Add(byte.Parse(data[1]));
                                         break;
                                     case "quest":
-                                        RequiredQuest = int.Parse(data[1]);
+                                        RequiredQuest.Add(int.Parse(data[1]));
                                         break;
                                 }
                             }
@@ -140,14 +140,26 @@ namespace Server.MirDatabase
             if (RequiredGender != null && RequiredGender.Value != player.Gender)
                 return false;
 
-            if (RequiredClass != null && RequiredClass.Value != player.Class)
+            if (RequiredClass.Count > 0 && !RequiredClass.Contains(player.Class))
                 return false;
 
-            if (RequiredFlag != null && !player.Info.Flags[RequiredFlag.Value])
-                return false;
+            if (RequiredFlag.Count > 0)
+            {
+                foreach (var flag in RequiredFlag)
+                {
+                     if(!player.Info.Flags[flag])
+                        return false;
+                }
+            }
 
-            if (RequiredQuest != null && !player.Info.CompletedQuests.Contains(RequiredQuest.Value))
-                return false;
+            if (RequiredQuest.Count > 0)
+            {
+                foreach (var quest in RequiredQuest)
+                {
+                    if (!player.Info.CompletedQuests.Contains(quest))
+                        return false;
+                }
+            }
 
             return true;
         }
