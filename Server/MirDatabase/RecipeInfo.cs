@@ -5,6 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Server.MirEnvir;
+using Server.MirObjects;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+
 namespace Server.MirDatabase
 {
     public class RecipeInfo
@@ -16,6 +25,12 @@ namespace Server.MirDatabase
 
         public UserItem Item;
         public List<UserItem> Ingredients;
+
+        public List<int> RequiredFlag = new List<int>();
+        public ushort? RequiredLevel = null;
+        public List<int> RequiredQuest = new List<int>();
+        public List<MirClass> RequiredClass = new List<MirClass>();
+        public MirGender? RequiredGender = null;
 
         public RecipeInfo(string name)
         {
@@ -37,35 +52,116 @@ namespace Server.MirDatabase
 
             Ingredients = new List<UserItem>();
 
+            var mode = "ingredients";
+
             for (int i = 0; i < lines.Count; i++)
             {
                 if (String.IsNullOrEmpty(lines[i])) continue;
 
-                var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
-
-                if (info == null)
+                if (lines[i].StartsWith("["))
                 {
-                    SMain.Enqueue(string.Format("Could not find Item: {0}, Recipe: {1}", lines[i], recipe));
+                    mode = lines[i].Substring(1, lines[i].Length - 2).ToLower();
                     continue;
                 }
 
-                uint count = 1;
-                if (data.Length == 2)
-                    uint.TryParse(data[1], out count);
+                switch (mode)
+                {
+                    case "ingredients":
+                        {
+                            var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                UserItem ingredient = SMain.Envir.CreateShopItem(info);
+                            ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
 
-                ingredient.Count = count > info.StackSize ? info.StackSize : count;
+                            if (info == null)
+                            {
+                                SMain.Enqueue(string.Format("Could not find Item: {0}, Recipe: {1}", lines[i], recipe));
+                                continue;
+                            }
 
-                Ingredients.Add(ingredient);
+                            uint count = 1;
+                            if (data.Length == 2)
+                                uint.TryParse(data[1], out count);
+
+                            UserItem ingredient = SMain.Envir.CreateShopItem(info);
+
+                            ingredient.Count = count > info.StackSize ? info.StackSize : count;
+
+                            Ingredients.Add(ingredient);
+                        }
+                        break;
+                    case "criteria":
+                        {
+                            var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (data.Length < 2) continue;
+
+                            try
+                            {
+                                switch (data[0].ToLower())
+                                {
+                                    case "level":
+                                        RequiredLevel = ushort.Parse(data[1]);
+                                        break;
+                                    case "class":
+                                        RequiredClass.Add((MirClass)byte.Parse(data[1]));
+                                        break;
+                                    case "gender":
+                                        RequiredGender = (MirGender)byte.Parse(data[1]);
+                                        break;
+                                    case "flag":
+                                        RequiredFlag.Add(byte.Parse(data[1]));
+                                        break;
+                                    case "quest":
+                                        RequiredQuest.Add(int.Parse(data[1]));
+                                        break;
+                                }
+                            }
+                            catch
+                            {
+                                SMain.Enqueue(string.Format("Could not parse option: {0}, Value: {1}", data[0], data[1]));
+                                continue;
+                            }
+                        }
+                        break;
+                }
             }
         }
 
         public bool MatchItem(int index)
         {
             return Item != null && Item.ItemIndex == index;
+        }
+
+        public bool CanCraft(PlayerObject player)
+        {
+            if (RequiredLevel != null && RequiredLevel.Value > player.Level)
+                return false;
+
+            if (RequiredGender != null && RequiredGender.Value != player.Gender)
+                return false;
+
+            if (RequiredClass.Count > 0 && !RequiredClass.Contains(player.Class))
+                return false;
+
+            if (RequiredFlag.Count > 0)
+            {
+                foreach (var flag in RequiredFlag)
+                {
+                     if(!player.Info.Flags[flag])
+                        return false;
+                }
+            }
+
+            if (RequiredQuest.Count > 0)
+            {
+                foreach (var quest in RequiredQuest)
+                {
+                    if (!player.Info.CompletedQuests.Contains(quest))
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         public ClientRecipeInfo CreateClientRecipeInfo()
@@ -80,3 +176,5 @@ namespace Server.MirDatabase
         }
     }
 }
+
+

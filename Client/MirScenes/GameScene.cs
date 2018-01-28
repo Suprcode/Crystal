@@ -955,8 +955,7 @@ namespace Client.MirScenes
                 messageBox.Show();
             }
 
-            if (BuffsDialog.Visible)
-                BuffsDialog.UpdateBuffs();
+            BuffsDialog.Process();
 
             MapControl.Process();
             MainDialog.Process();

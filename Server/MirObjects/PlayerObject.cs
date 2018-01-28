@@ -3839,6 +3839,13 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("{0} x{1} has been created.", iInfo.Name, tempCount), ChatType.System);
                         SMain.Enqueue(string.Format("Player {0} has attempted to Create {1} x{2}", Name, iInfo.Name, tempCount));
                         break;
+                    case "CLEARBUFFS":
+                        foreach (var buff in Buffs)
+                        {
+                            buff.Infinite = false;
+                            buff.ExpireTime = 0;
+                        }
+                        break;
 
                     case "CLEARBAG":
                         if (!IsGM && !Settings.TestServer) return;
