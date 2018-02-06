@@ -101,7 +101,7 @@ namespace Server.MirDatabase
                                         RequiredGender = (MirGender)byte.Parse(data[1]);
                                         break;
                                     case "flag":
-                                        RequiredFlag.Add(byte.Parse(data[1]));
+                                        RequiredFlag.Add(int.Parse(data[1]));
                                         break;
                                     case "quest":
                                         RequiredQuest.Add(int.Parse(data[1]));
