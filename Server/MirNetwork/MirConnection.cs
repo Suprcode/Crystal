@@ -22,7 +22,8 @@ namespace Server.MirNetwork
 
         private TcpClient _client;
         private ConcurrentQueue<Packet> _receiveList;
-        private Queue<Packet> _sendList, _retryList;
+        private ConcurrentQueue<Packet> _sendList; 
+        private Queue<Packet> _retryList;
 
         private bool _disconnecting;
         public bool Connected;
@@ -80,7 +81,8 @@ namespace Server.MirNetwork
 
 
             _receiveList = new ConcurrentQueue<Packet>();
-            _sendList = new Queue<Packet>(new[] { new S.Connected() });
+            _sendList = new ConcurrentQueue<Packet>();
+            _sendList.Enqueue(new S.Connected());
             _retryList = new Queue<Packet>();
 
             Connected = true;
@@ -196,9 +198,10 @@ namespace Server.MirNetwork
             if (_sendList == null || _sendList.Count <= 0) return;
 
             List<byte> data = new List<byte>();
-            while (_sendList.Count > 0)
+            while (!_sendList.IsEmpty)
             {
-                Packet p = _sendList.Dequeue();
+                Packet p;
+                if (!_sendList.TryDequeue(out p) || p == null) continue;
                 data.AddRange(p.GetPacketBytes());
             }
 
