@@ -456,7 +456,7 @@ namespace Server.MirObjects
         {
             RefreshBase();
             
-                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + PetLevel * 20);
+                MaxHP = (uint)Math.Min(uint.MaxValue, MaxHP + PetLevel * 20);
                 MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + PetLevel * 2);
                 MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + PetLevel * 2);
                 MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + PetLevel * 2);
