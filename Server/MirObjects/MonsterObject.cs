@@ -2119,7 +2119,7 @@ namespace Server.MirObjects
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
                     if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
@@ -2196,7 +2196,7 @@ namespace Server.MirObjects
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
                     break;
