@@ -10302,7 +10302,7 @@ namespace Server.MirObjects
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
                     break;
