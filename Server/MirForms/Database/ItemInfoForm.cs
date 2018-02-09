@@ -1793,5 +1793,39 @@ namespace Server
             foreach (var itemInfo in _selectedItemInfos)
                 itemInfo.GlobalDropNotify = globalDropNotify_CheckBox.Checked;
         }
+
+        private void exportClientInfoBtn_Click(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "Binary|*.dat",
+                FileName = "ItemInfo.dat",
+                InitialDirectory = Settings.ExportPath
+            };
+            DialogResult result = sfd.ShowDialog();
+            if (result != DialogResult.OK)
+                return;
+            try
+            {
+                using (FileStream stream = File.Create(sfd.FileName))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(Envir.ItemInfoList.Count);
+                        for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+                            Envir.ItemInfoList[i].Save(writer);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SMain.Enqueue(ex);
+            }
+            finally
+            {
+                MessageBox.Show(string.Format("{0} has been exported", sfd.FileName));
+            }
+        }
     }
 }

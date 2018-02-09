@@ -10,6 +10,8 @@ using Client.MirSounds;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Threading;
+using System.IO;
+
 namespace Client.MirScenes
 {
     public class SelectScene : MirScene
@@ -24,7 +26,10 @@ namespace Client.MirScenes
         public MirLabel LastAccessLabel, LastAccessLabelLabel;
         public List<SelectInfo> Characters = new List<SelectInfo>();
         private int _selected;
-
+        #region ItemInfo list Pete107 Edens Elite
+        private List<ItemInfo> itemInfos = new List<ItemInfo>();
+        bool hasItemInfo = true;
+        #endregion
         public SelectScene(List<SelectInfo> characters)
         {
             SoundManager.PlaySound(SoundList.SelectMusic, true);
@@ -213,6 +218,31 @@ namespace Client.MirScenes
                     DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                     Border = true,
                 };
+            #region ItemInfo.dat loading - Pete107 Edens Elite
+            if (File.Exists(@"./ItemInfo.dat"))
+            {
+                if (itemInfos == null ||
+                    itemInfos.Count == 0)
+                {
+                    using (FileStream stream = File.OpenRead(@"./ItemInfo.dat"))
+                    {
+                        using (BinaryReader reader = new BinaryReader(stream))
+                        {
+                            int count = reader.ReadInt32();
+                            if (count > 0)
+                            {
+                                for (int i = 0; i < count; i++)
+                                {
+                                    itemInfos.Add(new ItemInfo(reader));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+                hasItemInfo = false;
+            #endregion
             UpdateInterface();
         }
 
@@ -234,6 +264,15 @@ namespace Client.MirScenes
 
         public void StartGame()
         {
+            #region Can't start the game without the ItemInfo Pete107 Edens Elite
+            if (!hasItemInfo)
+            {
+                MirMessageBox msgBox = new MirMessageBox("ItemInfo.dat could not be found!", MirMessageBoxButtons.OK);
+                msgBox.OKButton.Click += (o, e) => Program.Form.Close();
+                msgBox.Show();
+                return;
+            }
+            #endregion
             if (!Libraries.Loaded)
             {
                 MirMessageBox message = new MirMessageBox(string.Format("Please wait, The game is still loading... {0:##0}%", Libraries.Progress / (double)Libraries.Count * 100), MirMessageBoxButtons.Cancel);
@@ -441,7 +480,9 @@ namespace Client.MirScenes
                         CMain.SetResolution(1280, 800);
                     else if (Settings.Resolution == 1366)
                         CMain.SetResolution(1366, 768);
-                    ActiveScene = new GameScene();
+                    #region Apply the ItemInfo list to the GameScene Pete107 Edens Elite
+                    ActiveScene = new GameScene() { ItemInfos = itemInfos };
+                    #endregion
                     Dispose();
                     break;
             }

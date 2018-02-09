@@ -198,7 +198,28 @@ namespace Client.MirControls
 
         private void NewItemInfo(S.NewItemInfo info)
         {
-            GameScene.ItemInfoList.Add(info.Info);
+            #region Old ItemInfo loading (1 by 1) Pete107 Edens Elite
+            //GameScene.ItemInfoList.Add(info.Info);
+            #endregion
+            #region Update existing items and add new items Pete107 Edens Elite
+            if (ItemExists(info.Info))
+            {
+                ItemInfo tmp = GameScene.ItemInfoList.Find(x => x.Index == info.Info.Index);
+                if (tmp != null)
+                    tmp.UpdateItem(info.Info);
+            }
+            else
+                GameScene.ItemInfoList.Add(info.Info);
+            #endregion
+        }
+
+        public bool ItemExists(ItemInfo info)
+        {
+            ItemInfo tmp = GameScene.ItemInfoList.Find(x => x.Index == info.Index);
+            if (tmp == null)
+                return false;
+            else
+                return true;
         }
 
         private void NewQuestInfo(S.NewQuestInfo info)

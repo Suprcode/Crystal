@@ -31,6 +31,7 @@
             this.ItemInfoPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
             this.CanAwaken = new System.Windows.Forms.CheckBox();
             this.label56 = new System.Windows.Forms.Label();
             this.TooltipTextBox = new System.Windows.Forms.TextBox();
@@ -191,7 +192,7 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
+            this.exportClientInfoBtn = new System.Windows.Forms.Button();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -208,9 +209,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ItemInfoPanel.Controls.Add(this.tabControl1);
             this.ItemInfoPanel.Enabled = false;
-            this.ItemInfoPanel.Location = new System.Drawing.Point(174, 41);
+            this.ItemInfoPanel.Location = new System.Drawing.Point(174, 40);
             this.ItemInfoPanel.Name = "ItemInfoPanel";
-            this.ItemInfoPanel.Size = new System.Drawing.Size(626, 423);
+            this.ItemInfoPanel.Size = new System.Drawing.Size(687, 420);
             this.ItemInfoPanel.TabIndex = 11;
             // 
             // tabControl1
@@ -219,10 +220,11 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(3, 3);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(609, 416);
+            this.tabControl1.Size = new System.Drawing.Size(687, 420);
             this.tabControl1.TabIndex = 117;
             // 
             // tabPage1
@@ -278,10 +280,21 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(601, 390);
+            this.tabPage1.Size = new System.Drawing.Size(679, 394);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // globalDropNotify_CheckBox
+            // 
+            this.globalDropNotify_CheckBox.AutoSize = true;
+            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
+            this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
+            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
+            this.globalDropNotify_CheckBox.TabIndex = 124;
+            this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
+            this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
+            this.globalDropNotify_CheckBox.CheckedChanged += new System.EventHandler(this.globalDropNotify_CheckBox_CheckedChanged);
             // 
             // CanAwaken
             // 
@@ -793,7 +806,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(601, 390);
+            this.tabPage2.Size = new System.Drawing.Size(646, 426);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Basic Stats";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1807,7 +1820,7 @@
             // 
             // RemoveButton
             // 
-            this.RemoveButton.Location = new System.Drawing.Point(235, 12);
+            this.RemoveButton.Location = new System.Drawing.Point(202, 12);
             this.RemoveButton.Name = "RemoveButton";
             this.RemoveButton.Size = new System.Drawing.Size(65, 23);
             this.RemoveButton.TabIndex = 9;
@@ -1817,7 +1830,7 @@
             // 
             // AddButton
             // 
-            this.AddButton.Location = new System.Drawing.Point(174, 12);
+            this.AddButton.Location = new System.Drawing.Point(141, 12);
             this.AddButton.Name = "AddButton";
             this.AddButton.Size = new System.Drawing.Size(55, 23);
             this.AddButton.TabIndex = 8;
@@ -1839,7 +1852,7 @@
             // 
             // PasteButton
             // 
-            this.PasteButton.Location = new System.Drawing.Point(363, 12);
+            this.PasteButton.Location = new System.Drawing.Point(330, 12);
             this.PasteButton.Name = "PasteButton";
             this.PasteButton.Size = new System.Drawing.Size(53, 23);
             this.PasteButton.TabIndex = 24;
@@ -1849,7 +1862,7 @@
             // 
             // CopyMButton
             // 
-            this.CopyMButton.Location = new System.Drawing.Point(306, 12);
+            this.CopyMButton.Location = new System.Drawing.Point(273, 12);
             this.CopyMButton.Name = "CopyMButton";
             this.CopyMButton.Size = new System.Drawing.Size(51, 23);
             this.CopyMButton.TabIndex = 23;
@@ -1869,9 +1882,9 @@
             // 
             // ExportAllButton
             // 
-            this.ExportAllButton.Location = new System.Drawing.Point(710, 12);
+            this.ExportAllButton.Location = new System.Drawing.Point(639, 12);
             this.ExportAllButton.Name = "ExportAllButton";
-            this.ExportAllButton.Size = new System.Drawing.Size(76, 23);
+            this.ExportAllButton.Size = new System.Drawing.Size(74, 23);
             this.ExportAllButton.TabIndex = 26;
             this.ExportAllButton.Text = "Export All";
             this.ExportAllButton.UseVisualStyleBackColor = true;
@@ -1879,7 +1892,7 @@
             // 
             // ExportSelectedButton
             // 
-            this.ExportSelectedButton.Location = new System.Drawing.Point(612, 12);
+            this.ExportSelectedButton.Location = new System.Drawing.Point(539, 12);
             this.ExportSelectedButton.Name = "ExportSelectedButton";
             this.ExportSelectedButton.Size = new System.Drawing.Size(94, 23);
             this.ExportSelectedButton.TabIndex = 27;
@@ -1889,9 +1902,9 @@
             // 
             // ImportButton
             // 
-            this.ImportButton.Location = new System.Drawing.Point(531, 12);
+            this.ImportButton.Location = new System.Drawing.Point(478, 12);
             this.ImportButton.Name = "ImportButton";
-            this.ImportButton.Size = new System.Drawing.Size(75, 23);
+            this.ImportButton.Size = new System.Drawing.Size(55, 23);
             this.ImportButton.TabIndex = 28;
             this.ImportButton.Text = "Import";
             this.ImportButton.UseVisualStyleBackColor = true;
@@ -1899,7 +1912,7 @@
             // 
             // Gameshop_button
             // 
-            this.Gameshop_button.Location = new System.Drawing.Point(422, 12);
+            this.Gameshop_button.Location = new System.Drawing.Point(389, 12);
             this.Gameshop_button.Name = "Gameshop_button";
             this.Gameshop_button.Size = new System.Drawing.Size(83, 23);
             this.Gameshop_button.TabIndex = 29;
@@ -1907,28 +1920,28 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
-            // globalDropNotify_CheckBox
+            // exportClientInfoBtn
             // 
-            this.globalDropNotify_CheckBox.AutoSize = true;
-            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
-            this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
-            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
-            this.globalDropNotify_CheckBox.TabIndex = 124;
-            this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
-            this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
-            this.globalDropNotify_CheckBox.CheckedChanged += new System.EventHandler(this.globalDropNotify_CheckBox_CheckedChanged);
+            this.exportClientInfoBtn.Location = new System.Drawing.Point(719, 12);
+            this.exportClientInfoBtn.Name = "exportClientInfoBtn";
+            this.exportClientInfoBtn.Size = new System.Drawing.Size(138, 23);
+            this.exportClientInfoBtn.TabIndex = 30;
+            this.exportClientInfoBtn.Text = "Export Client ItemInfo.dat";
+            this.exportClientInfoBtn.UseVisualStyleBackColor = true;
+            this.exportClientInfoBtn.Click += new System.EventHandler(this.exportClientInfoBtn_Click);
             // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 479);
+            this.ClientSize = new System.Drawing.Size(873, 471);
+            this.Controls.Add(this.exportClientInfoBtn);
             this.Controls.Add(this.Gameshop_button);
             this.Controls.Add(this.ImportButton);
-            this.Controls.Add(this.ExportSelectedButton);
-            this.Controls.Add(this.ExportAllButton);
             this.Controls.Add(this.ITypeFilterComboBox);
             this.Controls.Add(this.PasteButton);
+            this.Controls.Add(this.ExportSelectedButton);
+            this.Controls.Add(this.ExportAllButton);
             this.Controls.Add(this.CopyMButton);
             this.Controls.Add(this.ItemInfoPanel);
             this.Controls.Add(this.RemoveButton);
@@ -2120,5 +2133,6 @@
         private System.Windows.Forms.CheckBox unableToDisassemble_CheckBox;
         private System.Windows.Forms.CheckBox globalDropNotify_CheckBox;
         private System.Windows.Forms.CheckBox BlinkcheckBox;
+        private System.Windows.Forms.Button exportClientInfoBtn;
     }
 }

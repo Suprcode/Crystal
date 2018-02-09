@@ -2630,7 +2630,78 @@ public class ItemInfo
     public RandomItemStat RandomStats;
     public string ToolTip = string.Empty;
 
-
+    #region Update the ItemInfo Pete107 Edens Elite
+    public void UpdateItem(ItemInfo item)
+    {
+        Name = item.Name;
+        Accuracy = item.Accuracy;
+        Agility = item.Agility;
+        AttackSpeed = item.AttackSpeed;
+        BagWeight = item.BagWeight;
+        Bind = item.Bind;
+        CanAwakening = item.CanAwakening;
+        CanFastRun = item.CanFastRun;
+        CanMine = item.CanMine;
+        ClassBased = item.ClassBased;
+        CriticalDamage = item.CriticalDamage;
+        CriticalRate = item.CriticalRate;
+        Durability = item.Durability;
+        Effect = item.Effect;
+        Freezing = item.Freezing;
+        Grade = item.Grade;
+        HandWeight = item.HandWeight;
+        HealthRecovery = item.HealthRecovery;
+        Holy = item.Holy;
+        HP = item.HP;
+        HpDrainRate = item.HpDrainRate;
+        HPrate = item.HPrate;
+        Image = item.Image;
+        Index = item.Index;
+        LevelBased = item.LevelBased;
+        Light = item.Light;
+        Luck = item.Luck;
+        MagicResist = item.MagicResist;
+        MaxAC = item.MaxAC;
+        MaxAcRate = item.MaxAcRate;
+        MaxDC = item.MaxDC;
+        MaxMAC = item.MaxMAC;
+        MaxMacRate = item.MaxMacRate;
+        MaxMC = item.MaxMC;
+        MaxSC = item.MaxSC;
+        MinAC = item.MinAC;
+        MinDC = item.MinDC;
+        MinMAC = item.MinMAC;
+        MinMC = item.MinMC;
+        MinSC = item.MinSC;
+        MP = item.MP;
+        MPrate = item.MPrate;
+        Name = item.Name;
+        NeedIdentify = item.NeedIdentify;
+        PoisonAttack = item.PoisonAttack;
+        PoisonRecovery = item.PoisonRecovery;
+        PoisonResist = item.PoisonResist;
+        Price = item.Price;
+        RandomStats = item.RandomStats;
+        RandomStatsId = item.RandomStatsId;
+        Reflect = item.Reflect;
+        RequiredAmount = item.RequiredAmount;
+        RequiredClass = item.RequiredClass;
+        RequiredGender = item.RequiredGender;
+        RequiredType = item.RequiredType;
+        Set = item.Set;
+        Shape = item.Shape;
+        ShowGroupPickup = item.ShowGroupPickup;
+        SpellRecovery = item.SpellRecovery;
+        StackSize = item.StackSize;
+        StartItem = item.StartItem;
+        Strong = item.Strong;
+        ToolTip = item.ToolTip;
+        Type = item.Type;
+        Unique = item.Unique;
+        WearWeight = item.WearWeight;
+        Weight = item.Weight;
+    }
+    #endregion
     public bool IsConsumable
     {
         get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform || Type == ItemType.Script; }

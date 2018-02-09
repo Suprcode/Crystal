@@ -1800,11 +1800,11 @@ namespace Server.MirObjects
                 uint tempUint;
                 int tempInt;
                 int tempInt2;
-
+                ushort tempUShort;
                 switch (check.Type)
                 {
                     case CheckType.Level:
-                        if (!byte.TryParse(param[1], out tempByte))
+                        if (!ushort.TryParse(param[1], out tempUShort))
                         {
                             failed = true;
                             break;
@@ -1812,7 +1812,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            failed = !Compare(param[0], player.Level, tempByte);
+                            failed = !Compare(param[0], player.Level, tempUShort);
                         }
                         catch (ArgumentException)
                         {

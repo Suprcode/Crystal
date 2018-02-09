@@ -2065,7 +2065,9 @@ namespace Server.MirObjects
 
             SetLevelEffects();
 
-            GetItemInfo();
+            #region Initial Bootup use to give player the Item Info 1 by 1 Pete107 Edens Elite
+            //GetItemInfo();
+            #endregion
             GetMapInfo();
             GetUserInfo();
             GetQuestInfo();

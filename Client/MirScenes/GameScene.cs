@@ -116,6 +116,9 @@ namespace Client.MirScenes
         public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
 
+        #region Getter & Setter for ItemInfo List Pete107 Edens Elite
+        public List<ItemInfo> ItemInfos { get { return ItemInfoList; } set { ItemInfoList = value; } }
+        #endregion
         public List<Buff> Buffs = new List<Buff>();
 
         public static UserItem[] Storage = new UserItem[80];
