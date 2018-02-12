@@ -123,7 +123,7 @@ namespace Client.MirScenes.Dialogs
             {
                 _itemRows[i].Clear();
 
-                if (rentedItems[i] != null)
+                if (rentedItems.Count < i && rentedItems[i] != null)
                     _itemRows[i].Update(rentedItems[i].ItemName,
                         rentedItems[i].RentingPlayerName,
                         rentedItems[i].ItemReturnDate.ToString(CultureInfo.InvariantCulture));
