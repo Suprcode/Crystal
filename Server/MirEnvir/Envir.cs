@@ -2910,7 +2910,7 @@ namespace Server.MirEnvir
                         if (Now <= item.RentalInformation.ExpiryDate)
                             continue;
 
-                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
+                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
                         rentingPlayer.Inventory[i] = null;
                         rentingPlayer.HasRentedItem = false;
 
@@ -2932,7 +2932,7 @@ namespace Server.MirEnvir
                         if (Now <= item.RentalInformation.ExpiryDate)
                             continue;
 
-                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer);
+                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
                         rentingPlayer.Equipment[i] = null;
                         rentingPlayer.HasRentedItem = false;
                         
@@ -2945,9 +2945,20 @@ namespace Server.MirEnvir
                     }
                 }
             }
+
+            foreach (var characterInfo in CharacterList)
+            {
+                if (characterInfo.RentedItemsToRemove.Count <= 0)
+                    continue;
+
+                foreach (var rentalInformationToRemove in characterInfo.RentedItemsToRemove)
+                    characterInfo.RentedItems.Remove(rentalInformationToRemove);
+
+                characterInfo.RentedItemsToRemove.Clear();
+            }
         }
 
-        public bool ReturnRentalItem(UserItem rentedItem, string ownerName, CharacterInfo rentingCharacterInfo)
+        public bool ReturnRentalItem(UserItem rentedItem, string ownerName, CharacterInfo rentingCharacterInfo, bool removeNow = true)
         {
             if (rentedItem.RentalInformation == null)
                 return false;
@@ -2974,10 +2985,13 @@ namespace Server.MirEnvir
 
             mail.Send();
 
-            foreach (var rentalInformationToRemove in owner.RentedItemsToRemove)
-                owner.RentedItems.Remove(rentalInformationToRemove);
+            if (removeNow)
+            {
+                foreach (var rentalInformationToRemove in owner.RentedItemsToRemove)
+                    owner.RentedItems.Remove(rentalInformationToRemove);
 
-            owner.RentedItemsToRemove.Clear();
+                owner.RentedItemsToRemove.Clear();
+            }
 
             return true;
         }
