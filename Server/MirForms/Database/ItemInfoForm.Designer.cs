@@ -192,7 +192,6 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.exportClientInfoBtn = new System.Windows.Forms.Button();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -806,7 +805,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(646, 426);
+            this.tabPage2.Size = new System.Drawing.Size(679, 394);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Basic Stats";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1494,7 +1493,7 @@
             this.tabPage3.Controls.Add(this.Bind_donttradecheckbox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(601, 390);
+            this.tabPage3.Size = new System.Drawing.Size(679, 394);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Binding";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1670,7 +1669,7 @@
             this.tabPage4.Controls.Add(this.BlinkcheckBox);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(601, 390);
+            this.tabPage4.Size = new System.Drawing.Size(679, 394);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Special Stats";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1920,22 +1919,11 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
-            // exportClientInfoBtn
-            // 
-            this.exportClientInfoBtn.Location = new System.Drawing.Point(719, 12);
-            this.exportClientInfoBtn.Name = "exportClientInfoBtn";
-            this.exportClientInfoBtn.Size = new System.Drawing.Size(138, 23);
-            this.exportClientInfoBtn.TabIndex = 30;
-            this.exportClientInfoBtn.Text = "Export Client ItemInfo.dat";
-            this.exportClientInfoBtn.UseVisualStyleBackColor = true;
-            this.exportClientInfoBtn.Click += new System.EventHandler(this.exportClientInfoBtn_Click);
-            // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(873, 471);
-            this.Controls.Add(this.exportClientInfoBtn);
             this.Controls.Add(this.Gameshop_button);
             this.Controls.Add(this.ImportButton);
             this.Controls.Add(this.ITypeFilterComboBox);
@@ -2133,6 +2121,5 @@
         private System.Windows.Forms.CheckBox unableToDisassemble_CheckBox;
         private System.Windows.Forms.CheckBox globalDropNotify_CheckBox;
         private System.Windows.Forms.CheckBox BlinkcheckBox;
-        private System.Windows.Forms.Button exportClientInfoBtn;
     }
 }
