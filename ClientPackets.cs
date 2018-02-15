@@ -2286,4 +2286,22 @@ public sealed class AwakeningNeedMaterials : Packet
         protected override void WritePacket(BinaryWriter writer)
         { }
     }
+
+    public sealed class ItemFileCheck : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ItemFileCheck; } }
+        /// <summary>
+        /// The DateTime written into the .dat file
+        /// </summary>
+        public DateTime fileDateTime;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            fileDateTime = DateTime.FromBinary(reader.ReadInt64());
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(fileDateTime.ToBinary());
+        }
+    }
 }

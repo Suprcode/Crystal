@@ -1812,6 +1812,7 @@ namespace Server
                 {
                     using (BinaryWriter writer = new BinaryWriter(stream))
                     {
+                        writer.Write(DateTime.Now.ToBinary());
                         writer.Write(Envir.ItemInfoList.Count);
                         for (int i = 0; i < Envir.ItemInfoList.Count; i++)
                             Envir.ItemInfoList[i].Save(writer);

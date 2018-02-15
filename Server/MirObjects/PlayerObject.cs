@@ -1951,14 +1951,15 @@ namespace Server.MirObjects
         public void CheckRecipeInfo(RecipeInfo info)
         {
             if (Connection.SentRecipeInfo.Contains(info)) return;
-
+            //  CheckItem removal.
+            /*
             CheckItemInfo(info.Item.Info);
 
             foreach (var ingredient in info.Ingredients)
             {
                 CheckItemInfo(ingredient.Info);
             }
-
+            */
             Enqueue(new S.NewRecipeInfo { Info = info.CreateClientRecipeInfo() });
             Connection.SentRecipeInfo.Add(info);
         }
@@ -12628,7 +12629,8 @@ namespace Server.MirObjects
         public void GainItem(UserItem item)
         {
             //CheckItemInfo(item.Info);
-            CheckItem(item);
+            //  CheckItem removal.
+            //CheckItem(item);
 
             UserItem clonedItem = item.Clone();
 
@@ -13224,7 +13226,8 @@ namespace Server.MirObjects
         }
         public void GainQuestItem(UserItem item)
         {
-            CheckItem(item);
+            //  CheckItem removal.
+            //CheckItem(item);
 
             UserItem clonedItem = item.Clone();
 
@@ -13385,7 +13388,8 @@ namespace Server.MirObjects
 
             if (Lover != null)
                 loverName = Lover.Name;
-
+            //  CheckItem removal.
+            /*
             for (int i = 0; i < player.Equipment.Length; i++)
             {
                 UserItem u = player.Equipment[i];
@@ -13393,6 +13397,7 @@ namespace Server.MirObjects
 
                 CheckItem(u);
             }
+            */
             string guildname = "";
             string guildrank = "";
             GuildObject Guild = null;
@@ -14457,7 +14462,8 @@ namespace Server.MirObjects
         {
             if (Connection.StorageSent) return;
             Connection.StorageSent = true;
-
+            //  CheckItem removal.
+            /*
             for (int i = 0; i < Account.Storage.Length; i++)
             {
                 UserItem item = Account.Storage[i];
@@ -14465,7 +14471,7 @@ namespace Server.MirObjects
                 //CheckItemInfo(item.Info);
                 CheckItem(item);
             }
-
+            */
             Enqueue(new S.UserStorage { Storage = Account.Storage }); // Should be no alter before being sent.
         }
 
@@ -14585,13 +14591,14 @@ namespace Server.MirObjects
                     if (i + page * 10 >= Search.Count) break;
                     listings.Add(Search[i + page * 10].CreateClientAuction(UserMatch));
                 }
-
+                //  CheckItem removal.
+                /*
                 for (int i = 0; i < listings.Count; i++)
                 {
                     //CheckItemInfo(listings[i].Item.Info);
                     CheckItem(listings[i].Item);
                 }
-
+                */
                 PageSent = page;
                 Enqueue(new S.NPCMarketPage { Listings = listings });
             }
@@ -14617,13 +14624,14 @@ namespace Server.MirObjects
                 if (i >= Search.Count) break;
                 listings.Add(Search[i].CreateClientAuction(UserMatch));
             }
-
+            //  CheckItem removal.
+            /*
             for (int i = 0; i < listings.Count; i++)
             {
                 //CheckItemInfo(listings[i].Item.Info);
                 CheckItem(listings[i].Item);
             }
-
+            */
             Enqueue(new S.NPCMarket { Listings = listings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });      
         }
 
@@ -16030,6 +16038,8 @@ namespace Server.MirObjects
                 case 3://request list
                     if (!GuildCanRequestItems) return;
                     GuildCanRequestItems = false;
+                    //  CheckItem removal.
+                    /*
                     for (int i = 0; i < MyGuild.StoredItems.Length; i++)
                     {
                         if (MyGuild.StoredItems[i] == null) continue;
@@ -16038,6 +16048,7 @@ namespace Server.MirObjects
                         //CheckItemInfo(item.Info);
                         CheckItem(item);
                     }
+                    */
                     Enqueue(new S.GuildStorageList() { Items = MyGuild.StoredItems });
                     break;
             }
@@ -16381,7 +16392,8 @@ namespace Server.MirObjects
             TradeUnlock();
 
             if (TradePartner == null) return;
-
+            //  CheckItem removal.
+            /*
             for (int i = 0; i < Info.Trade.Length; i++)
             {
                 UserItem u = Info.Trade[i];
@@ -16390,7 +16402,7 @@ namespace Server.MirObjects
                 //TradePartner.CheckItemInfo(u.Info);
                 TradePartner.CheckItem(u);
             }
-
+            */
             TradePartner.Enqueue(new S.TradeItem { TradeItems = Info.Trade });
         }
 
@@ -17564,11 +17576,13 @@ namespace Server.MirObjects
 
             for (int i = start; i < Info.Mail.Count; i++)
             {
+                //  CheckItem removal.
+                /*
                 foreach (UserItem itm in Info.Mail[i].Items)
                 {
                     CheckItem(itm);
                 }
-
+                */
                 mail.Add(Info.Mail[i].CreateClientMail());
             }
 
@@ -19899,9 +19913,11 @@ namespace Server.MirObjects
         {
             if (ItemRentalPartner == null)
                 return;
-
+            //  CheckItem removal.
+            /*
             if (ItemRentalDepositedItem != null)
                 ItemRentalPartner.CheckItem(ItemRentalDepositedItem);
+                */
 
             ItemRentalPartner.Enqueue(new S.UpdateRentalItem { LoanItem = ItemRentalDepositedItem });
         }

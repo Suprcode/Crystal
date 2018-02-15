@@ -5647,4 +5647,36 @@ namespace ServerPackets
             writer.Write(Success);
         }
     }
+
+    public sealed class ItemInfoList : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ItemInfoList; } }
+
+        public bool FileStart = false;
+        public bool FileEnd = false;
+        public DateTime fileTime;
+        public List<ItemInfo> ItemInfos = new List<ItemInfo>();
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            FileStart = reader.ReadBoolean();
+            if (FileStart)
+                fileTime = DateTime.FromBinary(reader.ReadInt64());
+            FileEnd = reader.ReadBoolean();
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                ItemInfos.Add(new ItemInfo(reader));
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(FileStart);
+            if (FileStart)
+                writer.Write(fileTime.ToBinary());
+            writer.Write(FileEnd);
+            writer.Write(ItemInfos.Count);
+            for (int i = 0; i < ItemInfos.Count; i++)
+                ItemInfos[i].Save(writer);
+        }
+    }
 }

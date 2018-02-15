@@ -168,7 +168,8 @@ namespace Server.MirEnvir
         public List<Rank_Character_Info> RankTop = new List<Rank_Character_Info>();
         public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[5];
         public int[] RankBottomLevel = new int[6];
-
+        public DateTime DatFileTime;
+        public List<ItemInfo> DatFileItems = new List<ItemInfo>();
         static Envir()
         {
             AccountIDReg =
@@ -1856,8 +1857,34 @@ namespace Server.MirEnvir
             })).Start();
         }
         
+        public void LoadItemInfoDatFile()
+        {
+            if (!File.Exists(@".\ItemInfo.dat"))
+            {
+                SMain.Enqueue("Cannot start server without ItemInfo.dat");
+                throw new FileNotFoundException();
+            }
+            else
+            {
+                using (FileStream stream = File.OpenRead(@".\ItemInfo.dat"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        //  we only need the DT essentially as we could use the ItemInfo from the Envir
+                        //  But since theres no reloaditem command it's not a good idea.
+                        DatFileTime = DateTime.FromBinary(reader.ReadInt64());
+                        int count = reader.ReadInt32();
+                        for (int i = 0; i < count; i++)
+                            DatFileItems.Add(new ItemInfo(reader));
+                    }
+                }
+            }
+        }
+
         private void StartEnvir()
         {
+            DatFileItems.Clear();
+            LoadItemInfoDatFile();
             Players.Clear();
             StartPoints.Clear();
             StartItems.Clear();

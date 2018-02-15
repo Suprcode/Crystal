@@ -839,8 +839,11 @@ namespace Server.MirObjects
             switch (page.Key.ToUpper())
             {
                 case BuyKey:
+                    //  CheckItem removal.
+                    /*
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
+                        */
 
                     player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
@@ -848,9 +851,11 @@ namespace Server.MirObjects
                     player.Enqueue(new S.NPCSell());
                     break;
                 case BuySellKey:
+                    //  CheckItem removal.
+                    /*
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
-
+                    */
                     player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     player.Enqueue(new S.NPCSell());
                     break;
@@ -861,8 +866,11 @@ namespace Server.MirObjects
                     player.Enqueue(new S.NPCSRepair { Rate = PriceRate(player) });
                     break;
                 case CraftKey:
+                    //  CheckItem removal.
+                    /*
                     for (int i = 0; i < CraftGoods.Count; i++)
                         player.CheckItemInfo(CraftGoods[i].Item.Info);
+                    */
 
                     player.Enqueue(new S.NPCGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
                     break;
@@ -891,18 +899,21 @@ namespace Server.MirObjects
                     break;
                 case BuyBackKey:
                     if (!BuyBack.ContainsKey(player.Name)) BuyBack[player.Name] = new List<UserItem>();
-
+                    //  CheckItem removal.
+                    /*
                     for (int i = 0; i < BuyBack[player.Name].Count; i++)
                     {
                         player.CheckItem(BuyBack[player.Name][i]);
                     }
-
+                    */
                     player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
                 case BuyUsedKey:
+                    //  CheckItem removal.
+                    /*
                     for (int i = 0; i < UsedGoods.Count; i++)
                         player.CheckItem(UsedGoods[i]);
-
+                    */
                     player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
                 case ConsignKey:
@@ -978,9 +989,11 @@ namespace Server.MirObjects
                     player.Enqueue(new S.NPCReset());
                     break;
                 case PearlBuyKey:
+                    //  CheckItem removal.
+                    /*
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
-
+                    */
                     player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player) });
                     break;
             }

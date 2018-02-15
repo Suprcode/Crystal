@@ -540,6 +540,8 @@ namespace Server.MirObjects
 
         public void SendItemInfo(UserItem Item)
         {
+            //  CheckItem removal.
+            /*
             PlayerObject player = null;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
@@ -550,6 +552,7 @@ namespace Server.MirObjects
                         player.CheckItem(Item);
                     }
                 }
+            */
         }
 
         public bool HasRoom()

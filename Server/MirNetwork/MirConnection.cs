@@ -615,10 +615,70 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
                     break;
+                case (short)ClientPacketIds.ItemFileCheck:
+                    SendItemInfoToClient((C.ItemFileCheck)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
             }
+        }
+
+        public void SendItemInfoToClient(C.ItemFileCheck p)
+        {
+            //  Since I set it up to do all thise during the Select scene.
+            if (Stage != GameStage.Select)
+                return;
+            if (p.fileDateTime != SMain.Envir.DatFileTime)
+            {
+                //  Split the data in to Chunks
+                List<List<ItemInfo>> chunks = splitData(SMain.Envir.DatFileItems.Count * 5 / 100, SMain.Envir.DatFileItems);
+                //  Check if the chunks contains only one list
+                if (chunks.Count == 1)
+                {
+                    //  Only one chunk was required in the very unlikely case
+                    Enqueue(new S.ItemInfoList { FileStart = true, fileTime = SMain.Envir.DatFileTime, ItemInfos = chunks[0], FileEnd = true });
+                    return;
+                }
+                //  Loop through the chunks
+                for (int i = 0; i < chunks.Count; i++)
+                {
+                    //  First List
+                    if (i == 0)
+                        Enqueue(new S.ItemInfoList { FileStart = true, fileTime = SMain.Envir.DatFileTime, ItemInfos = chunks[i], FileEnd = false });
+                    //  Final List
+                    else if (i == chunks.Count - 1)
+                        Enqueue(new S.ItemInfoList { FileEnd = true, ItemInfos = chunks[i], FileStart = false });
+                    //  Middle
+                    else
+                        Enqueue(new S.ItemInfoList { ItemInfos = chunks[i], FileEnd = false, FileStart = false });
+
+                }
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Chop a List into chunks
+        /// </summary>
+        /// <param name="width">The amount of Chunks desired</param>
+        /// <param name="_originalList">The list to Chop into Chunks</param>
+        /// <returns>Original List in Chunks within a List</returns>
+        public List<List<ItemInfo>> splitData(int width, List<ItemInfo> _originalList)
+        {
+            List<List<ItemInfo>> _tempChunks = new List<List<ItemInfo>>();
+
+            // Determine how many lists are required 
+            int numberOfLists = (_originalList.Count / width);
+
+            for (int i = 0; i <= numberOfLists; i++)
+            {
+                List<ItemInfo> newChunk = new List<ItemInfo>();
+                newChunk = _originalList.Skip(i * width).Take(width).ToList();
+                _tempChunks.Add(newChunk);
+            }
+
+            return _tempChunks;
         }
 
         public void SoftDisconnect(byte reason)

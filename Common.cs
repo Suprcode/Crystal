@@ -1492,7 +1492,8 @@ public enum ServerPacketIds : short
     ItemRentalPartnerLock,
     CanConfirmItemRental,
     ConfirmItemRental,
-    NewRecipeInfo
+    NewRecipeInfo,
+    ItemInfoList
 }
 
 public enum ClientPacketIds : short
@@ -1636,7 +1637,8 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+    ItemFileCheck
 }
 
 public enum ConquestType : byte
@@ -4801,6 +4803,8 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.ItemFileCheck:
+                return new C.ItemFileCheck();
             default:
                 return null;
         }
@@ -5282,6 +5286,8 @@ public abstract class Packet
                 return new S.ConfirmItemRental();
             case (short)ServerPacketIds.NewRecipeInfo:
                 return new S.NewRecipeInfo();
+            case (short)ServerPacketIds.ItemInfoList:
+                return new S.ItemInfoList();
             default:
                 return null;
         }

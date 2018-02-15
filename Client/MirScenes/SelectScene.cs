@@ -26,6 +26,8 @@ namespace Client.MirScenes
         public MirLabel LastAccessLabel, LastAccessLabelLabel;
         public List<SelectInfo> Characters = new List<SelectInfo>();
         private int _selected;
+        public bool _FileSaving = false;
+        public DateTime fileTime;
         #region ItemInfo list Pete107 Edens Elite
         private List<ItemInfo> itemInfos = new List<ItemInfo>();
         bool hasItemInfo = true;
@@ -34,8 +36,6 @@ namespace Client.MirScenes
         {
             SoundManager.PlaySound(SoundList.SelectMusic, true);
             Disposing += (o, e) => SoundManager.StopSound(SoundList.SelectMusic);
-
-
             Characters = characters;
             SortList();
 
@@ -228,6 +228,7 @@ namespace Client.MirScenes
                     {
                         using (BinaryReader reader = new BinaryReader(stream))
                         {
+                            fileTime = DateTime.FromBinary(reader.ReadInt64());
                             int count = reader.ReadInt32();
                             if (count > 0)
                             {
@@ -243,6 +244,8 @@ namespace Client.MirScenes
             else
                 hasItemInfo = false;
             #endregion
+            //  Send DateTime from file to server
+            Network.Enqueue(new C.ItemFileCheck { fileDateTime = fileTime });
             UpdateInterface();
         }
 
@@ -265,6 +268,10 @@ namespace Client.MirScenes
         public void StartGame()
         {
             #region Can't start the game without the ItemInfo Pete107 Edens Elite
+            if (_FileSaving)
+            {
+                return;
+            }
             if (!hasItemInfo)
             {
                 MirMessageBox msgBox = new MirMessageBox("ItemInfo.dat could not be found!", MirMessageBoxButtons.OK);
@@ -272,6 +279,7 @@ namespace Client.MirScenes
                 msgBox.Show();
                 return;
             }
+
             #endregion
             if (!Libraries.Loaded)
             {
@@ -328,9 +336,66 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.StartGameDelay:
                     StartGame((S.StartGameDelay) p);
                     break;
+                    //  Recieve ItemInfo from the server
+                case (short)ServerPacketIds.ItemInfoList:
+                    RewriteItemInfoFile((S.ItemInfoList)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
+            }
+        }
+
+        public void RewriteItemInfoFile(S.ItemInfoList p)
+        {
+            _FileSaving = true;
+            //  Incase we only recieve one chunk.
+            if (p.FileStart && p.FileEnd)
+            {
+                fileTime = p.fileTime;
+                itemInfos.AddRange(p.ItemInfos);
+                using (FileStream stream = File.Create(@".\ItemInfo.dat"))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(fileTime.ToBinary());
+                        writer.Write(itemInfos.Count);
+                        for (int i = 0; i < itemInfos.Count; i++)
+                            itemInfos[i].Save(writer);
+                    }
+                }
+                hasItemInfo = true;
+                _FileSaving = false;
+                return;
+            }
+            else if (p.FileStart && !p.FileEnd) // Start of the Item Info list, (it's provided in chunks)
+            {
+                //  Clear the old list if it exists
+                itemInfos.Clear();
+                 //  Not exactly true, we're just preventing them from logging in while the ItemInfo list is incomplete
+                itemInfos.AddRange(p.ItemInfos);
+                fileTime = p.fileTime;
+            }
+            else if (p.FileEnd && !p.FileStart) // End of the ItemInfo list being sent from server
+            {
+                itemInfos.AddRange(p.ItemInfos);
+                using (FileStream stream = File.Create(@".\ItemInfo.dat"))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(fileTime.ToBinary());
+                        writer.Write(itemInfos.Count);
+                        for (int i = 0; i < itemInfos.Count; i++)
+                            itemInfos[i].Save(writer);
+                    }
+                }
+                hasItemInfo = true;
+                _FileSaving = false;
+                return;
+            }
+            else                //  Middle of the ItemInfo list being sent from server
+            {
+                itemInfos.AddRange(p.ItemInfos);
             }
         }
 
