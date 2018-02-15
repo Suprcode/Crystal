@@ -1878,13 +1878,30 @@ namespace Server.MirEnvir
         
         public void LoadItemInfoDatFile()
         {
+            //  Check the file Exists
             if (!File.Exists(@".\ItemInfo.dat"))
             {
-                SMain.Enqueue("Cannot start server without ItemInfo.dat");
-                throw new FileNotFoundException();
+                //  Get the time
+                DateTime dt = DateTime.Now;
+                //  Set the Envir dat file time
+                DatFileTime = dt;
+                //  Set the Envir dat file items
+                DatFileItems = ItemInfoList;
+                //  now write the file
+                using (FileStream stream = File.Create(@".\ItemInfo.dat"))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(dt.ToBinary());
+                        writer.Write(ItemInfoList.Count);
+                        for (int i = 0; i < ItemInfoList.Count; i++)
+                            ItemInfoList[i].Save(writer);
+                    }
+                }
             }
             else
             {
+                //  Read from file
                 using (FileStream stream = File.OpenRead(@".\ItemInfo.dat"))
                 {
                     using (BinaryReader reader = new BinaryReader(stream))
@@ -1903,7 +1920,7 @@ namespace Server.MirEnvir
         private void StartEnvir()
         {
             DatFileItems.Clear();
-            LoadItemInfoDatFile();
+
             Players.Clear();
             StartPoints.Clear();
             StartItems.Clear();
@@ -1913,7 +1930,7 @@ namespace Server.MirEnvir
             MonsterCount = 0;
 
             LoadDB();
-
+            LoadItemInfoDatFile();
             RecipeInfoList.Clear();
             foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
                 .Select(path => Path.GetFileNameWithoutExtension(path))
