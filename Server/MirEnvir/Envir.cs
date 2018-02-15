@@ -878,6 +878,16 @@ namespace Server.MirEnvir
 
         public void SaveDB()
         {
+            using (FileStream stream = File.Create(@"./ItemInfo.dat"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(DateTime.Now.ToBinary());
+                    writer.Write(ItemInfoList.Count);
+                    for (int i = 0; i < ItemInfoList.Count; i++)
+                        ItemInfoList[i].Save(writer);
+                }
+            }
             using (FileStream stream = File.Create(DatabasePath))
             using (BinaryWriter writer = new BinaryWriter(stream))
             {
