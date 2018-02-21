@@ -2158,7 +2158,7 @@ namespace Server.MirObjects
 
             else if (attacker.Master != null)
             {
-                if (!Functions.InRange(attacker.CurrentLocation, attacker.Master.CurrentLocation, Globals.DataRange))
+                if (attacker.CurrentMap != attacker.Master.CurrentMap || !Functions.InRange(attacker.CurrentLocation, attacker.Master.CurrentLocation, Globals.DataRange))
                     EXPOwner = null;
                 else
                 {

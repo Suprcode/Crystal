@@ -7469,7 +7469,13 @@ namespace Server.MirObjects
                     CurrentMap = CurrentMap,
                 };
                 Packet p = new S.Chat { Message = string.Format("{0} is attempting to revive {1}", Name, target.Name), Type = ChatType.Shout };
-                Envir.Broadcast(p);
+
+                for (int i = 0; i < CurrentMap.Players.Count; i++)
+                {
+                    if (!Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2)) continue;
+                    CurrentMap.Players[i].Enqueue(p);
+                }
+
                 CurrentMap.AddObject(ob);
                 ob.Spawned();
                 ConsumeItem(item, 1);
@@ -7750,12 +7756,18 @@ namespace Server.MirObjects
 
                 if (!CurrentMap.ValidPoint(location)) break;
 
-
                 Cell cell = CurrentMap.GetCell(location);
 
                 bool blocking = false;
 
                 if (InSafeZone) blocking = true;
+
+                SafeZoneInfo szi = CurrentMap.GetSafeZone(location);
+
+                if (szi != null)
+                {
+                    blocking = true;
+                }
 
                 if (cell.Objects != null)
                 {
@@ -7794,9 +7806,18 @@ namespace Server.MirObjects
 
                     if (!CurrentMap.ValidPoint(location2)) break;
 
+                    szi = CurrentMap.GetSafeZone(location2);
+
+                    if (szi != null)
+                    {
+                        break;
+                    }
+
                     cell = CurrentMap.GetCell(location2);
 
                     blocking = false;
+
+
                     if (cell.Objects != null)
                     {
                         for (int c = cell.Objects.Count - 1; c >= 0; c--)
@@ -7869,7 +7890,7 @@ namespace Server.MirObjects
 
             if (travel > 0)
             {
-                ActionTime = Envir.Time + (travel * MoveDelay);
+                ActionTime = Envir.Time + (travel * MoveDelay / 2);
 
                 Cell cell = CurrentMap.GetCell(CurrentLocation);
                 for (int i = 0; i < cell.Objects.Count; i++)
