@@ -6953,7 +6953,20 @@ namespace Server.MirObjects
                             if (ob.Pushed(this, dir, distance) == 0) continue;
 
                             if (ob.Race == ObjectType.Player)
+                            {
+                                SafeZoneInfo szi = CurrentMap.GetSafeZone(ob.CurrentLocation);
+
+                                if (szi != null)
+                                {
+                                    ((PlayerObject)ob).BindLocation = szi.Location;
+                                    ((PlayerObject)ob).BindMapIndex = CurrentMapIndex;
+                                    ob.InSafeZone = true;
+                                }
+                                else
+                                    ob.InSafeZone = false;
+
                                 ob.Attacked(this, magic.GetDamage(0), DefenceType.None, false);
+                            }
                             result = true;
                         }
                     }
@@ -7875,6 +7888,9 @@ namespace Server.MirObjects
 
                 CurrentLocation = location;
 
+
+                
+
                 Enqueue(new S.UserDash { Direction = Direction, Location = location });
                 Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = location });
 
@@ -7884,12 +7900,24 @@ namespace Server.MirObjects
 
             if (travel > 0 && !wall)
             {
+
                 if (target != null) target.Attacked(this, magic.GetDamage(0), DefenceType.None, false);
                 LevelMagic(magic);
             }
 
             if (travel > 0)
             {
+                SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
+
+                if (szi != null)
+                {
+                    BindLocation = szi.Location;
+                    BindMapIndex = CurrentMapIndex;
+                    InSafeZone = true;
+                }
+                else
+                    InSafeZone = false;
+
                 ActionTime = Envir.Time + (travel * MoveDelay / 2);
 
                 Cell cell = CurrentMap.GetCell(CurrentLocation);
@@ -7910,17 +7938,6 @@ namespace Server.MirObjects
                 {
                     Enqueue(new S.UserDash { Direction = Direction, Location = Front });
                     Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
-
-                    SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
-
-                    if (szi != null)
-                    {
-                        BindLocation = szi.Location;
-                        BindMapIndex = CurrentMapIndex;
-                        InSafeZone = true;
-                    }
-                    else
-                        InSafeZone = false;
                 }
                 else
                     Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
