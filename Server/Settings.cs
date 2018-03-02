@@ -25,7 +25,9 @@ namespace Server
                             NameListPath = EnvirPath + @".\NameLists\",
                             ValuePath = EnvirPath + @".\Values\",
                             ReportPath = @".\Reports\",
-                            LogPath = @".\Logs\";
+                            LogPath = @".\Logs\",
+                            EventsPath = EnvirPath + @".\Events\";
+
 
 
 

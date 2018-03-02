@@ -118,6 +118,8 @@ namespace Server
             this.RemoveMButton = new System.Windows.Forms.Button();
             this.AddMButton = new System.Windows.Forms.Button();
             this.MovementInfoPanel = new System.Windows.Forms.Panel();
+            this.label25 = new System.Windows.Forms.Label();
+            this.ConquestComboBox = new System.Windows.Forms.ComboBox();
             this.NeedMoveMCheckBox = new System.Windows.Forms.CheckBox();
             this.NeedHoleMCheckBox = new System.Windows.Forms.CheckBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -144,6 +146,37 @@ namespace Server
             this.label32 = new System.Windows.Forms.Label();
             this.MZXtextBox = new System.Windows.Forms.TextBox();
             this.MZListlistBox = new System.Windows.Forms.ListBox();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.panelEventRespawn = new System.Windows.Forms.Panel();
+            this.txtSpreadX = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.chkIsRespawnObjective = new System.Windows.Forms.CheckBox();
+            this.txtSpreadY = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.txtOrder = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.txtEventRespawnMonCount = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.txtEventRespawnMonName = new System.Windows.Forms.TextBox();
+            this.BtnRemoveEventRespawn = new System.Windows.Forms.Button();
+            this.btnAddEventRespawn = new System.Windows.Forms.Button();
+            this.lstEventRespawns = new System.Windows.Forms.ListBox();
+            this.panelEventInfo = new System.Windows.Forms.Panel();
+            this.chkIsSafeZone = new System.Windows.Forms.CheckBox();
+            this.ddlEventType = new System.Windows.Forms.ComboBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.txtCooldownInMins = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.txtEventSize = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.txtEventName = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.txtEventMultipleCoords = new System.Windows.Forms.TextBox();
+            this.btnRemoveEvent = new System.Windows.Forms.Button();
+            this.btnAddEvent = new System.Windows.Forms.Button();
+            this.lstEventInfos = new System.Windows.Forms.ListBox();
             this.RemoveButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
             this.MapInfoListBox = new System.Windows.Forms.ListBox();
@@ -155,8 +188,6 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ConquestComboBox = new System.Windows.Forms.ComboBox();
-            this.label25 = new System.Windows.Forms.Label();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -168,6 +199,9 @@ namespace Server
             this.MovementInfoPanel.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.MineZonepanel.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.panelEventRespawn.SuspendLayout();
+            this.panelEventInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // MapTabs
@@ -181,6 +215,7 @@ namespace Server
             this.MapTabs.Controls.Add(this.tabPage2);
             this.MapTabs.Controls.Add(this.tabPage4);
             this.MapTabs.Controls.Add(this.tabPage7);
+            this.MapTabs.Controls.Add(this.tabPage5);
             this.MapTabs.Location = new System.Drawing.Point(207, 62);
             this.MapTabs.Name = "MapTabs";
             this.MapTabs.SelectedIndex = 0;
@@ -1088,6 +1123,25 @@ namespace Server
             this.MovementInfoPanel.Size = new System.Drawing.Size(256, 205);
             this.MovementInfoPanel.TabIndex = 14;
             // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(3, 171);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(55, 13);
+            this.label25.TabIndex = 20;
+            this.label25.Text = "Conquest:";
+            // 
+            // ConquestComboBox
+            // 
+            this.ConquestComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConquestComboBox.FormattingEnabled = true;
+            this.ConquestComboBox.Location = new System.Drawing.Point(64, 168);
+            this.ConquestComboBox.Name = "ConquestComboBox";
+            this.ConquestComboBox.Size = new System.Drawing.Size(182, 21);
+            this.ConquestComboBox.TabIndex = 19;
+            this.ConquestComboBox.SelectedIndexChanged += new System.EventHandler(this.ConquestComboBox_SelectedIndexChanged);
+            // 
             // NeedMoveMCheckBox
             // 
             this.NeedMoveMCheckBox.AutoSize = true;
@@ -1352,6 +1406,334 @@ namespace Server
             this.MZListlistBox.TabIndex = 13;
             this.MZListlistBox.SelectedIndexChanged += new System.EventHandler(this.MZListlistBox_SelectedIndexChanged);
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.panelEventRespawn);
+            this.tabPage5.Controls.Add(this.BtnRemoveEventRespawn);
+            this.tabPage5.Controls.Add(this.btnAddEventRespawn);
+            this.tabPage5.Controls.Add(this.lstEventRespawns);
+            this.tabPage5.Controls.Add(this.panelEventInfo);
+            this.tabPage5.Controls.Add(this.btnRemoveEvent);
+            this.tabPage5.Controls.Add(this.btnAddEvent);
+            this.tabPage5.Controls.Add(this.lstEventInfos);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(532, 247);
+            this.tabPage5.TabIndex = 7;
+            this.tabPage5.Text = "Events";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // panelEventRespawn
+            // 
+            this.panelEventRespawn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelEventRespawn.Controls.Add(this.txtSpreadX);
+            this.panelEventRespawn.Controls.Add(this.label42);
+            this.panelEventRespawn.Controls.Add(this.chkIsRespawnObjective);
+            this.panelEventRespawn.Controls.Add(this.txtSpreadY);
+            this.panelEventRespawn.Controls.Add(this.label41);
+            this.panelEventRespawn.Controls.Add(this.txtOrder);
+            this.panelEventRespawn.Controls.Add(this.label40);
+            this.panelEventRespawn.Controls.Add(this.label28);
+            this.panelEventRespawn.Controls.Add(this.txtEventRespawnMonCount);
+            this.panelEventRespawn.Controls.Add(this.label35);
+            this.panelEventRespawn.Controls.Add(this.txtEventRespawnMonName);
+            this.panelEventRespawn.Enabled = false;
+            this.panelEventRespawn.Location = new System.Drawing.Point(374, 108);
+            this.panelEventRespawn.Name = "panelEventRespawn";
+            this.panelEventRespawn.Size = new System.Drawing.Size(156, 139);
+            this.panelEventRespawn.TabIndex = 25;
+            // 
+            // txtSpreadX
+            // 
+            this.txtSpreadX.Location = new System.Drawing.Point(56, 50);
+            this.txtSpreadX.MaxLength = 2;
+            this.txtSpreadX.Name = "txtSpreadX";
+            this.txtSpreadX.Size = new System.Drawing.Size(95, 20);
+            this.txtSpreadX.TabIndex = 22;
+            this.txtSpreadX.TextChanged += new System.EventHandler(this.txtSpreadX_TextChanged);
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(4, 52);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(48, 13);
+            this.label42.TabIndex = 21;
+            this.label42.Text = "SpreadX";
+            // 
+            // chkIsRespawnObjective
+            // 
+            this.chkIsRespawnObjective.AutoSize = true;
+            this.chkIsRespawnObjective.Location = new System.Drawing.Point(7, 118);
+            this.chkIsRespawnObjective.Name = "chkIsRespawnObjective";
+            this.chkIsRespawnObjective.Size = new System.Drawing.Size(71, 17);
+            this.chkIsRespawnObjective.TabIndex = 20;
+            this.chkIsRespawnObjective.Text = "Objective";
+            this.chkIsRespawnObjective.UseVisualStyleBackColor = true;
+            this.chkIsRespawnObjective.CheckedChanged += new System.EventHandler(this.chkIsRespawnObjective_CheckedChanged);
+            // 
+            // txtSpreadY
+            // 
+            this.txtSpreadY.Location = new System.Drawing.Point(56, 72);
+            this.txtSpreadY.MaxLength = 2;
+            this.txtSpreadY.Name = "txtSpreadY";
+            this.txtSpreadY.Size = new System.Drawing.Size(95, 20);
+            this.txtSpreadY.TabIndex = 14;
+            this.txtSpreadY.TextChanged += new System.EventHandler(this.txtSpreadY_TextChanged);
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(4, 75);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(48, 13);
+            this.label41.TabIndex = 13;
+            this.label41.Text = "SpreadY";
+            // 
+            // txtOrder
+            // 
+            this.txtOrder.Location = new System.Drawing.Point(56, 98);
+            this.txtOrder.MaxLength = 5;
+            this.txtOrder.Name = "txtOrder";
+            this.txtOrder.Size = new System.Drawing.Size(95, 20);
+            this.txtOrder.TabIndex = 12;
+            this.txtOrder.TextChanged += new System.EventHandler(this.txtOrder_TextChanged);
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(4, 100);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(33, 13);
+            this.label40.TabIndex = 11;
+            this.label40.Text = "Order";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(4, 29);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(38, 13);
+            this.label28.TabIndex = 10;
+            this.label28.Text = "Count ";
+            // 
+            // txtEventRespawnMonCount
+            // 
+            this.txtEventRespawnMonCount.Location = new System.Drawing.Point(56, 27);
+            this.txtEventRespawnMonCount.MaxLength = 2;
+            this.txtEventRespawnMonCount.Name = "txtEventRespawnMonCount";
+            this.txtEventRespawnMonCount.Size = new System.Drawing.Size(95, 20);
+            this.txtEventRespawnMonCount.TabIndex = 9;
+            this.txtEventRespawnMonCount.TextChanged += new System.EventHandler(this.txtEventRespawnMonCount_TextChanged);
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(3, 6);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(48, 13);
+            this.label35.TabIndex = 8;
+            this.label35.Text = "Monster ";
+            // 
+            // txtEventRespawnMonName
+            // 
+            this.txtEventRespawnMonName.Location = new System.Drawing.Point(56, 3);
+            this.txtEventRespawnMonName.MaxLength = 50;
+            this.txtEventRespawnMonName.Name = "txtEventRespawnMonName";
+            this.txtEventRespawnMonName.Size = new System.Drawing.Size(95, 20);
+            this.txtEventRespawnMonName.TabIndex = 4;
+            this.txtEventRespawnMonName.TextChanged += new System.EventHandler(this.txtEventRespawnMonName_TextChanged);
+            // 
+            // BtnRemoveEventRespawn
+            // 
+            this.BtnRemoveEventRespawn.Location = new System.Drawing.Point(468, 8);
+            this.BtnRemoveEventRespawn.Name = "BtnRemoveEventRespawn";
+            this.BtnRemoveEventRespawn.Size = new System.Drawing.Size(62, 23);
+            this.BtnRemoveEventRespawn.TabIndex = 24;
+            this.BtnRemoveEventRespawn.Text = "Remove";
+            this.BtnRemoveEventRespawn.UseVisualStyleBackColor = true;
+            this.BtnRemoveEventRespawn.Click += new System.EventHandler(this.BtnRemoveEventRespawn_Click);
+            // 
+            // btnAddEventRespawn
+            // 
+            this.btnAddEventRespawn.Location = new System.Drawing.Point(373, 8);
+            this.btnAddEventRespawn.Name = "btnAddEventRespawn";
+            this.btnAddEventRespawn.Size = new System.Drawing.Size(64, 23);
+            this.btnAddEventRespawn.TabIndex = 23;
+            this.btnAddEventRespawn.Text = "Add";
+            this.btnAddEventRespawn.UseVisualStyleBackColor = true;
+            this.btnAddEventRespawn.Click += new System.EventHandler(this.btnAddEventRespawn_Click);
+            // 
+            // lstEventRespawns
+            // 
+            this.lstEventRespawns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.lstEventRespawns.FormattingEnabled = true;
+            this.lstEventRespawns.Location = new System.Drawing.Point(375, 35);
+            this.lstEventRespawns.Name = "lstEventRespawns";
+            this.lstEventRespawns.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lstEventRespawns.Size = new System.Drawing.Size(154, 69);
+            this.lstEventRespawns.TabIndex = 22;
+            this.lstEventRespawns.SelectedIndexChanged += new System.EventHandler(this.lstEventRespawns_SelectedIndexChanged);
+            // 
+            // panelEventInfo
+            // 
+            this.panelEventInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelEventInfo.Controls.Add(this.chkIsSafeZone);
+            this.panelEventInfo.Controls.Add(this.ddlEventType);
+            this.panelEventInfo.Controls.Add(this.label39);
+            this.panelEventInfo.Controls.Add(this.label38);
+            this.panelEventInfo.Controls.Add(this.txtCooldownInMins);
+            this.panelEventInfo.Controls.Add(this.label37);
+            this.panelEventInfo.Controls.Add(this.txtEventSize);
+            this.panelEventInfo.Controls.Add(this.label29);
+            this.panelEventInfo.Controls.Add(this.txtEventName);
+            this.panelEventInfo.Controls.Add(this.label36);
+            this.panelEventInfo.Controls.Add(this.txtEventMultipleCoords);
+            this.panelEventInfo.Enabled = false;
+            this.panelEventInfo.Location = new System.Drawing.Point(161, 8);
+            this.panelEventInfo.Name = "panelEventInfo";
+            this.panelEventInfo.Size = new System.Drawing.Size(210, 229);
+            this.panelEventInfo.TabIndex = 21;
+            // 
+            // chkIsSafeZone
+            // 
+            this.chkIsSafeZone.AutoSize = true;
+            this.chkIsSafeZone.Location = new System.Drawing.Point(113, 32);
+            this.chkIsSafeZone.Name = "chkIsSafeZone";
+            this.chkIsSafeZone.Size = new System.Drawing.Size(84, 17);
+            this.chkIsSafeZone.TabIndex = 18;
+            this.chkIsSafeZone.Text = "Is SafeZone";
+            this.chkIsSafeZone.UseVisualStyleBackColor = true;
+            this.chkIsSafeZone.CheckedChanged += new System.EventHandler(this.chkIsSafeZone_CheckedChanged);
+            // 
+            // ddlEventType
+            // 
+            this.ddlEventType.FormattingEnabled = true;
+            this.ddlEventType.Location = new System.Drawing.Point(6, 30);
+            this.ddlEventType.Name = "ddlEventType";
+            this.ddlEventType.Size = new System.Drawing.Size(103, 21);
+            this.ddlEventType.TabIndex = 17;
+            this.ddlEventType.SelectedIndexChanged += new System.EventHandler(this.ddlEventType_SelectedIndexChanged);
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(1, 14);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(62, 13);
+            this.label39.TabIndex = 16;
+            this.label39.Text = "Event Type";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(3, 184);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(106, 13);
+            this.label38.TabIndex = 14;
+            this.label38.Text = "Cooldown In Minutes";
+            // 
+            // txtCooldownInMins
+            // 
+            this.txtCooldownInMins.Location = new System.Drawing.Point(5, 200);
+            this.txtCooldownInMins.MaxLength = 5;
+            this.txtCooldownInMins.Name = "txtCooldownInMins";
+            this.txtCooldownInMins.Size = new System.Drawing.Size(181, 20);
+            this.txtCooldownInMins.TabIndex = 13;
+            this.txtCooldownInMins.TextChanged += new System.EventHandler(this.txtCooldownInMins_TextChanged);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(2, 142);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(58, 13);
+            this.label37.TabIndex = 12;
+            this.label37.Text = "Event Size";
+            // 
+            // txtEventSize
+            // 
+            this.txtEventSize.Location = new System.Drawing.Point(5, 158);
+            this.txtEventSize.MaxLength = 5;
+            this.txtEventSize.Name = "txtEventSize";
+            this.txtEventSize.Size = new System.Drawing.Size(181, 20);
+            this.txtEventSize.TabIndex = 11;
+            this.txtEventSize.TextChanged += new System.EventHandler(this.txtEventSize_TextChanged);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(3, 56);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(66, 13);
+            this.label29.TabIndex = 10;
+            this.label29.Text = "Event Name";
+            // 
+            // txtEventName
+            // 
+            this.txtEventName.Location = new System.Drawing.Point(5, 75);
+            this.txtEventName.MaxLength = 50;
+            this.txtEventName.Name = "txtEventName";
+            this.txtEventName.Size = new System.Drawing.Size(181, 20);
+            this.txtEventName.TabIndex = 1;
+            this.txtEventName.TextChanged += new System.EventHandler(this.txtEventName_TextChanged);
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(2, 101);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(109, 13);
+            this.label36.TabIndex = 8;
+            this.label36.Text = "Multiple Coords (CSV)";
+            // 
+            // txtEventMultipleCoords
+            // 
+            this.txtEventMultipleCoords.Location = new System.Drawing.Point(5, 117);
+            this.txtEventMultipleCoords.MaxLength = 200;
+            this.txtEventMultipleCoords.Name = "txtEventMultipleCoords";
+            this.txtEventMultipleCoords.Size = new System.Drawing.Size(181, 20);
+            this.txtEventMultipleCoords.TabIndex = 4;
+            this.txtEventMultipleCoords.TextChanged += new System.EventHandler(this.txtEventMultipleCoords_TextChanged);
+            // 
+            // btnRemoveEvent
+            // 
+            this.btnRemoveEvent.Location = new System.Drawing.Point(77, 12);
+            this.btnRemoveEvent.Name = "btnRemoveEvent";
+            this.btnRemoveEvent.Size = new System.Drawing.Size(64, 23);
+            this.btnRemoveEvent.TabIndex = 20;
+            this.btnRemoveEvent.Text = "Remove";
+            this.btnRemoveEvent.UseVisualStyleBackColor = true;
+            this.btnRemoveEvent.Click += new System.EventHandler(this.btnRemoveEvent_Click);
+            // 
+            // btnAddEvent
+            // 
+            this.btnAddEvent.Location = new System.Drawing.Point(6, 12);
+            this.btnAddEvent.Name = "btnAddEvent";
+            this.btnAddEvent.Size = new System.Drawing.Size(56, 23);
+            this.btnAddEvent.TabIndex = 19;
+            this.btnAddEvent.Text = "Add";
+            this.btnAddEvent.UseVisualStyleBackColor = true;
+            this.btnAddEvent.Click += new System.EventHandler(this.btnAddEvent_Click);
+            // 
+            // lstEventInfos
+            // 
+            this.lstEventInfos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.lstEventInfos.FormattingEnabled = true;
+            this.lstEventInfos.Location = new System.Drawing.Point(6, 41);
+            this.lstEventInfos.Name = "lstEventInfos";
+            this.lstEventInfos.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lstEventInfos.Size = new System.Drawing.Size(134, 199);
+            this.lstEventInfos.TabIndex = 18;
+            this.lstEventInfos.SelectedIndexChanged += new System.EventHandler(this.lstEventInfos_SelectedIndexChanged);
+            // 
             // RemoveButton
             // 
             this.RemoveButton.Location = new System.Drawing.Point(126, 33);
@@ -1453,25 +1835,6 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
-            // ConquestComboBox
-            // 
-            this.ConquestComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ConquestComboBox.FormattingEnabled = true;
-            this.ConquestComboBox.Location = new System.Drawing.Point(64, 168);
-            this.ConquestComboBox.Name = "ConquestComboBox";
-            this.ConquestComboBox.Size = new System.Drawing.Size(182, 21);
-            this.ConquestComboBox.TabIndex = 19;
-            this.ConquestComboBox.SelectedIndexChanged += new System.EventHandler(this.ConquestComboBox_SelectedIndexChanged);
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 171);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(55, 13);
-            this.label25.TabIndex = 20;
-            this.label25.Text = "Conquest:";
-            // 
             // MapInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1508,6 +1871,11 @@ namespace Server
             this.tabPage7.ResumeLayout(false);
             this.MineZonepanel.ResumeLayout(false);
             this.MineZonepanel.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.panelEventRespawn.ResumeLayout(false);
+            this.panelEventRespawn.PerformLayout();
+            this.panelEventInfo.ResumeLayout(false);
+            this.panelEventInfo.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1637,5 +2005,36 @@ namespace Server
         private CheckBox chkRespawnEnableTick;
         private ComboBox ConquestComboBox;
         private Label label25;
+        private TabPage tabPage5;
+        private Panel panelEventRespawn;
+        private TextBox txtSpreadX;
+        private Label label42;
+        private CheckBox chkIsRespawnObjective;
+        private TextBox txtSpreadY;
+        private Label label41;
+        private TextBox txtOrder;
+        private Label label40;
+        private Label label28;
+        private TextBox txtEventRespawnMonCount;
+        private Label label35;
+        private TextBox txtEventRespawnMonName;
+        private Button BtnRemoveEventRespawn;
+        private Button btnAddEventRespawn;
+        private ListBox lstEventRespawns;
+        private Panel panelEventInfo;
+        private CheckBox chkIsSafeZone;
+        private ComboBox ddlEventType;
+        private Label label39;
+        private Label label38;
+        private TextBox txtCooldownInMins;
+        private Label label37;
+        private TextBox txtEventSize;
+        private Label label29;
+        private TextBox txtEventName;
+        private Label label36;
+        private TextBox txtEventMultipleCoords;
+        private Button btnRemoveEvent;
+        private Button btnAddEvent;
+        private ListBox lstEventInfos;
     }
 }

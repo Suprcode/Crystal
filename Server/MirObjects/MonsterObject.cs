@@ -240,7 +240,10 @@ namespace Server.MirObjects
 
         public MonsterInfo Info;
         public MapRespawn Respawn;
-        
+        public List<PlayerObject> Contributers = new List<PlayerObject>();
+        public bool Retreat = false;
+        public Point SpawnedLocation;
+
         public override string Name
         {
             get { return Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name); }
@@ -426,6 +429,8 @@ namespace Server.MirObjects
         public override void Spawned()
         {
             base.Spawned();
+            SpawnedLocation = CurrentLocation;
+
             ActionTime = Envir.Time + 2000;
             if (Info.HasSpawnScript && (SMain.Envir.MonsterNPC != null))
             {
@@ -658,7 +663,13 @@ namespace Server.MirObjects
             }
 
             if (Respawn != null)
+            {
                 Respawn.Count--;
+                if (Respawn.IsEventObjective && Respawn.Event != null)
+                    Respawn.Event.EventMonsterDied(Contributers);
+
+                Contributers.Clear();
+            }
 
             if (Master == null && EXPOwner != null)
                  Drop();
@@ -1222,6 +1233,27 @@ namespace Server.MirObjects
         protected virtual void ProcessAI()
         {
             if (Dead) return;
+
+            if (Respawn != null && Respawn.IsEventObjective)
+            {
+                //if monster is 10 yards away from the spawned location it goes into retreat
+                if (!Functions.InRange(CurrentLocation, SpawnedLocation, 10))
+                {
+                    Retreat = true;
+                    ChangeHP((int)MaxHP);
+                }
+
+                if (Retreat)
+                {
+                    if (Functions.InRange(CurrentLocation, SpawnedLocation, 2))
+                        Retreat = false;
+                    else
+                    {
+                        MoveTo(SpawnedLocation);
+                        return;
+                    }
+                }
+            }
 
             if (Master != null)
             {
@@ -2087,6 +2119,12 @@ namespace Server.MirObjects
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
+            if (Respawn.IsEventObjective && attacker.tempEvent != null)
+            {
+                if (!Contributers.Contains(attacker))
+                    Contributers.Add(attacker);
+            }
+
             ChangeHP(armour - damage);
             return damage - armour;
         }
@@ -2175,6 +2213,13 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+
+            if (Respawn.IsEventObjective && attacker.Master != null && attacker.Master is PlayerObject)
+            {
+                var playerAttacker = (PlayerObject)attacker.Master;
+                if (!Contributers.Contains(playerAttacker) && playerAttacker.tempEvent != null)
+                    Contributers.Add(playerAttacker);
+            }
 
             ChangeHP(armour - damage);
             return damage - armour;

@@ -414,6 +414,7 @@ namespace ServerPackets
         public LightSetting Lights;
         public bool Lightning, Fire;
         public byte MapDarkLight;
+        public List<MapEventClientSide> MapEvents = new List<MapEventClientSide>();
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -427,6 +428,10 @@ namespace ServerPackets
             if ((bools & 0x02) == 0x02) Fire = true;
             MapDarkLight = reader.ReadByte();
             Music = reader.ReadUInt16();
+
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                MapEvents.Add(new MapEventClientSide(reader));
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -442,6 +447,10 @@ namespace ServerPackets
             writer.Write(bools);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+
+            writer.Write(MapEvents.Count);
+            foreach (var mapEvent in MapEvents)
+                mapEvent.Save(writer);
         }
     }
     public sealed class UserInformation : Packet
@@ -2506,6 +2515,7 @@ namespace ServerPackets
         public Point Location;
         public MirDirection Direction;
         public byte MapDarkLight;
+        public List<MapEventClientSide> MapEvents = new List<MapEventClientSide>();
 
 
         protected override void ReadPacket(BinaryReader reader)
@@ -2519,6 +2529,10 @@ namespace ServerPackets
             Direction = (MirDirection)reader.ReadByte();
             MapDarkLight = reader.ReadByte();
             Music = reader.ReadUInt16();
+
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                MapEvents.Add(new MapEventClientSide(reader));
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2532,6 +2546,10 @@ namespace ServerPackets
             writer.Write((byte)Direction);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+
+            writer.Write(MapEvents.Count);
+            foreach (var mapEvent in MapEvents)
+                mapEvent.Save(writer);
         }
     }
     public sealed class ObjectTeleportOut : Packet
@@ -5645,6 +5663,92 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Success);
+        }
+    }
+    public sealed class EnterOrUpdatePublicEvent : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.EnterPublicEvent; } }
+
+        public string EventName = string.Empty;
+        public string Objective = string.Empty;
+        public int CompletedPercentage = 0;
+        public string RemainingCount = string.Empty;
+        public int Stage = 0;
+        public EnterOrUpdatePublicEvent()
+        {
+
+        }
+        public EnterOrUpdatePublicEvent(string eventName, string objective, string remainingCount, int completedPercentage, int stage)
+        {
+            EventName = eventName;
+            Objective = objective;
+            RemainingCount = remainingCount;
+            Stage = stage;
+            CompletedPercentage = completedPercentage;
+        }
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            EventName = reader.ReadString();
+            Objective = reader.ReadString();
+            RemainingCount = reader.ReadString();
+            CompletedPercentage = reader.ReadInt32();
+            Stage = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(EventName);
+            writer.Write(Objective);
+            writer.Write(RemainingCount);
+            writer.Write(CompletedPercentage);
+            writer.Write(Stage);
+        }
+    }
+    public sealed class LeavePublicEvent : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.LeavePublicEvent; } }
+
+        public string EventName;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            EventName = reader.ReadString();
+
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(EventName);
+        }
+    }
+    public sealed class ActivateEvent : Packet
+    {
+        public MapEventClientSide Event;
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ActivateEvent; }
+        }
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Event = new MapEventClientSide(reader);
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Event.Save(writer);
+        }
+    }
+    public sealed class DeactivateEvent : Packet
+    {
+        public MapEventClientSide Event;
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.DeactivateEvent; }
+        }
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Event = new MapEventClientSide(reader);
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Event.Save(writer);
         }
     }
 }

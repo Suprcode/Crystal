@@ -27,6 +27,7 @@ namespace Server.MirDatabase
         public List<NPCInfo> NPCs = new List<NPCInfo>();
         public List<MineZone> MineZones = new List<MineZone>();
         public List<Point> ActiveCoords = new List<Point>();
+        public List<PublicEventInfo> PublicEvents = new List<PublicEventInfo>();
 
         public InstanceInfo Instance;
 
@@ -101,7 +102,14 @@ namespace Server.MirDatabase
             NoFight = reader.ReadBoolean();
 
             if (Envir.LoadVersion < 53) return;
-                Music = reader.ReadUInt16(); 
+                Music = reader.ReadUInt16();
+
+            if (Envir.LoadCustomVersion >= 1)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                    PublicEvents.Add(new PublicEventInfo(reader));
+            }
 
         }
 
@@ -156,7 +164,9 @@ namespace Server.MirDatabase
 
             writer.Write(Music);
 
-            
+            writer.Write(PublicEvents.Count);
+            for (int i = 0; i < PublicEvents.Count; i++)
+                PublicEvents[i].Save(writer);
         }
 
 
@@ -184,7 +194,10 @@ namespace Server.MirDatabase
                 if (SafeZones[i].StartPoint)
                     SMain.Envir.StartPoints.Add(SafeZones[i]);
         }
-
+        public void CreatePublicEvent()
+        {
+            PublicEvents.Add(new PublicEventInfo { Info = this, Index = ++SMain.EditEnvir.MapEventIndex });
+        }
         public void CreateInstance()
         {
             if (Instance.MapList.Count == 0) return;
