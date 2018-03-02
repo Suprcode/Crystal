@@ -316,7 +316,10 @@ namespace Server.MirEnvir
 
             #region RemoveBoundaries
             foreach (var spellObj in Zone)
+            {
                 spellObj.Despawn();
+                Map.RemoveObject(spellObj);
+            }
             #endregion
         }
         public void AwardPlayers()
