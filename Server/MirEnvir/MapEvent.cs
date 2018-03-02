@@ -320,6 +320,7 @@ namespace Server.MirEnvir
                 Map.RemoveObject(spellObj);
                 spellObj.Despawn();
             }
+            Zone.Clear();
             #endregion
         }
         public void AwardPlayers()
