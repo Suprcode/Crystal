@@ -9349,7 +9349,7 @@ namespace Client.MirScenes
                     }
                 }
             }
-            if (AutoHit)
+            if (AutoHit && !User.RidingMount)
             {
                 if (CMain.Time > GameScene.AttackTime)
                 {
@@ -9399,7 +9399,7 @@ namespace Client.MirScenes
                         if (MapObject.MouseObject is NPCObject || (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User)) break;
                         if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70) break;
 
-                        if (CMain.Alt)
+                        if (CMain.Alt && !User.RidingMount)
                         {
                             User.QueuedAction = new QueuedAction { Action = MirAction.Harvest, Direction = direction, Location = User.CurrentLocation };
                             return;

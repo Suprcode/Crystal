@@ -906,23 +906,6 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (ActionFeed.Any())
-                if (User.RidingMount)
-                    switch (ActionFeed.First().Action)
-                    {
-                        case MirAction.Spell:
-                        //case MirAction.Attack1:
-                        case MirAction.Attack2:
-                        case MirAction.Attack3:
-                        case MirAction.Attack4:
-                        case MirAction.AttackRange1:
-                        case MirAction.AttackRange2:
-                        case MirAction.Mine:
-                        case MirAction.Harvest:
-                            ActionFeed.RemoveAt(0);
-                            return;
-                    }
-
 
             if (ActionFeed.Count == 0)
             {
