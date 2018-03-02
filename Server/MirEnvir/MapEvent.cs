@@ -317,8 +317,8 @@ namespace Server.MirEnvir
             #region RemoveBoundaries
             foreach (var spellObj in Zone)
             {
-                spellObj.Despawn();
                 Map.RemoveObject(spellObj);
+                spellObj.Despawn();
             }
             #endregion
         }
