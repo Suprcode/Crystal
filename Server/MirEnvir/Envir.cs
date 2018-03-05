@@ -240,15 +240,31 @@ namespace Server.MirEnvir
                         MagicInfoList[i].MultiplierBase = 1.4f;
                         MagicInfoList[i].MultiplierBonus = 0.4f;
                         break;
+                    case Spell.FrozenSword:
+                        MagicInfoList[i].MultiplierBase = 2f;
+                        MagicInfoList[i].MultiplierBonus = 0.8f;
+                        break;
                     case Spell.CrossHalfMoon:
                         MagicInfoList[i].MultiplierBase = 0.4f;
                         MagicInfoList[i].MultiplierBonus = 0.1f;
+                        break;
+                    case Spell.DoubleDragon:
+                        MagicInfoList[i].MultiplierBase = 0.6f;
+                        MagicInfoList[i].MultiplierBonus = 0.3f;
                         break;
                     case Spell.BladeAvalanche:
                         MagicInfoList[i].MultiplierBase = 1f;
                         MagicInfoList[i].MultiplierBonus = 0.4f;
                         break;
+                    case Spell.DragonAvalanche:
+                        MagicInfoList[i].MultiplierBase = 1.5f;
+                        MagicInfoList[i].MultiplierBonus = 0.8f;
+                        break;
                     case Spell.SlashingBurst:
+                        MagicInfoList[i].MultiplierBase = 3.15f;
+                        MagicInfoList[i].MultiplierBonus = 0.15f;
+                        break;
+                    case Spell.BreakingFire:
                         MagicInfoList[i].MultiplierBase = 3.25f;
                         MagicInfoList[i].MultiplierBonus = 0.25f;
                         break;
@@ -315,9 +331,13 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.ProtectionField)) MagicInfoList.Add(new MagicInfo { Name = "ProtectionField", Spell = Spell.ProtectionField, Icon = 50, Level1 = 39, Level2 = 42, Level3 = 45, Need1 = 6000, Need2 = 12000, Need3 = 18000, BaseCost = 23, LevelCost = 6, Range = 0 });
             if (!MagicExists(Spell.Rage)) MagicInfoList.Add(new MagicInfo { Name = "Rage", Spell = Spell.Rage, Icon = 49, Level1 = 44, Level2 = 47, Level3 = 50, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 20, LevelCost = 5, Range = 0 });
             if (!MagicExists(Spell.CounterAttack)) MagicInfoList.Add(new MagicInfo { Name = "CounterAttack", Spell = Spell.CounterAttack, Icon = 72, Level1 = 47, Level2 = 51, Level3 = 55, Need1 = 7000, Need2 = 11000, Need3 = 15000, BaseCost = 12, LevelCost = 4, DelayBase = 24000, Range = 0 , MultiplierBonus = 0.4f});
-            if (!MagicExists(Spell.SlashingBurst)) MagicInfoList.Add(new MagicInfo { Name = "SlashingBurst", Spell = Spell.SlashingBurst, Icon = 55, Level1 = 50, Level2 = 53, Level3 = 56, Need1 = 10000, Need2 = 16000, Need3 = 24000, BaseCost = 25, LevelCost = 4, MPowerBase = 1, PowerBase = 3, DelayBase = 14000, DelayReduction = 4000, Range = 0 , MultiplierBase = 3.25f, MultiplierBonus = 0.25f});
+            if (!MagicExists(Spell.SlashingBurst)) MagicInfoList.Add(new MagicInfo { Name = "SlashingBurst", Spell = Spell.SlashingBurst, Icon = 55, Level1 = 50, Level2 = 53, Level3 = 56, Need1 = 10000, Need2 = 16000, Need3 = 24000, BaseCost = 25, LevelCost = 4, MPowerBase = 1, PowerBase = 3, DelayBase = 14000, DelayReduction = 4000, Range = 0 , MultiplierBase = 3.15f, MultiplierBonus = 0.15f});
             if (!MagicExists(Spell.Fury)) MagicInfoList.Add(new MagicInfo { Name = "Fury", Spell = Spell.Fury, Icon = 76, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
             if (!MagicExists(Spell.ImmortalSkin)) MagicInfoList.Add(new MagicInfo { Name = "ImmortalSkin", Spell = Spell.ImmortalSkin, Icon = 80, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 1560, Need2 = 2200, Need3 = 3000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
+            if (!MagicExists(Spell.FrozenSword)) MagicInfoList.Add(new MagicInfo { Name = "FrozenSword", Spell = Spell.FrozenSword, Icon = 137, Level1 = 35, Level2 = 37, Level3 = 40, Need1 = 2000, Need2 = 4000, Need3 = 6000, BaseCost = 7, Range = 0, MultiplierBase = 2f, MultiplierBonus = 0.8f });
+            if (!MagicExists(Spell.BreakingFire)) MagicInfoList.Add(new MagicInfo { Name = "BreakingFire", Spell = Spell.BreakingFire, Icon = 120, Level1 = 55, Level2 = 58, Level3 = 61, Need1 = 12000, Need2 = 18000, Need3 = 26000, BaseCost = 30, LevelCost = 4, MPowerBase = 1, PowerBase = 3, DelayBase = 14000, DelayReduction = 4000, Range = 0, MultiplierBase = 3.25f, MultiplierBonus = 0.25f });
+            if (!MagicExists(Spell.DoubleDragon)) MagicInfoList.Add(new MagicInfo { Name = "DoubleDragon", Spell = Spell.DoubleDragon, Icon = 217, Level1 = 60, Level2 = 65, Level3 = 70, Need1 = 10000, Need2 = 15000, Need3 = 20000, BaseCost = 6, Range = 0, MultiplierBase = 0.6f, MultiplierBonus = 0.3f });
+            if (!MagicExists(Spell.DragonAvalanche)) MagicInfoList.Add(new MagicInfo { Name = "DragonAvalanche", Spell = Spell.DragonAvalanche, Icon = 215, Level1 = 80, Level2 = 83, Level3 = 86, Need1 = 5000, Need2 = 10000, Need3 = 15000, BaseCost = 30, LevelCost = 10, Range = 0, MultiplierBonus = 0.8f });
 
             //Wizard
             if (!MagicExists(Spell.FireBall)) MagicInfoList.Add(new MagicInfo { Name = "FireBall", Spell = Spell.FireBall, Icon = 0, Level1 = 7, Level2 = 9, Level3 = 11, Need1 = 200, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, MPowerBase = 8, PowerBase = 2, Range = 9 });
@@ -346,8 +366,11 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.Blink)) MagicInfoList.Add(new MagicInfo { Name = "Blink", Spell = Spell.Blink, Icon = 20, Level1 = 19, Level2 = 22, Level3 = 25, Need1 = 350, Need2 = 1000, Need3 = 2000, BaseCost = 10, LevelCost = 3, Range = 9 });
             //if (!MagicExists(Spell.FastMove)) MagicInfoList.Add(new MagicInfo { Name = "FastMove", Spell = Spell.ImmortalSkin, Icon = ?, Level1 = ?, Level2 = ?, Level3 = ?, Need1 = ?, Need2 = ?, Need3 = ?, BaseCost = ?, LevelCost = ?, DelayBase = ?, DelayReduction = ? });
             if (!MagicExists(Spell.StormEscape)) MagicInfoList.Add(new MagicInfo { Name = "StormEscape", Spell = Spell.StormEscape, Icon = 23, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 2200, Need2 = 3300, Need3 = 4400, BaseCost = 65, LevelCost = 8, MPowerBase = 12, PowerBase = 4, Range = 9 });
-            
-            
+            if (!MagicExists(Spell.ElectricBomb)) MagicInfoList.Add(new MagicInfo { Name = "ElectricBomb", Spell = Spell.ElectricBomb, Icon = 23, Level1 = 79, Level2 = 82, Level3 = 85, Need1 = 20000, Need2 = 25000, Need3 = 30000, BaseCost = 150, LevelCost = 25, MPowerBase = 45, MPowerBonus = 15, PowerBase = 25, PowerBonus = 20, Range = 9 });
+            if (!MagicExists(Spell.FreezingStorm)) MagicInfoList.Add(new MagicInfo { Name = "FreezingStorm", Spell = Spell.FreezingStorm, Icon = 32, Level1 = 80, Level2 = 83, Level3 = 86, Need1 = 25000, Need2 = 30000, Need3 = 35000, BaseCost = 170, LevelCost = 25, MPowerBase = 45, MPowerBonus = 15, PowerBase = 50, PowerBonus = 50, Range = 9 });
+            if (!MagicExists(Spell.DragonDisruptor)) MagicInfoList.Add(new MagicInfo { Name = "DragonDisruptor", Spell = Spell.DragonDisruptor, Icon = 44, Level1 = 82, Level2 = 85, Level3 = 88, Need1 = 5000, Need2 = 9000, Need3 = 14000, BaseCost = 210, LevelCost = 50, MPowerBase = 30, MPowerBonus = 25, PowerBase = 15, Range = 9 });
+            if (!MagicExists(Spell.DragonStrike)) MagicInfoList.Add(new MagicInfo { Name = "DragonStrike", Spell = Spell.DragonStrike, Icon = 209, Level1 = 88, Level2 = 92, Level3 = 97, Need1 = 15000, Need2 = 20000, Need3 = 25000, BaseCost = 255, LevelCost = 80, MPowerBase = 70, MPowerBonus = 50, PowerBase = 70, PowerBonus = 40, Range = 9 });
+
             //Taoist
             if (!MagicExists(Spell.Healing)) MagicInfoList.Add(new MagicInfo { Name = "Healing", Spell = Spell.Healing, Icon = 1, Level1 = 7, Level2 = 11, Level3 = 14, Need1 = 150, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, MPowerBase = 14, Range = 9 });
             if (!MagicExists(Spell.SpiritSword)) MagicInfoList.Add(new MagicInfo { Name = "SpiritSword", Spell = Spell.SpiritSword, Icon = 3, Level1 = 9, Level2 = 12, Level3 = 15, Need1 = 350, Need2 = 1300, Need3 = 2700, Range = 0 });
@@ -373,7 +396,10 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.PoisonCloud)) MagicInfoList.Add(new MagicInfo { Name = "PoisonCloud", Spell = Spell.PoisonCloud, Icon = 54, Level1 = 43, Level2 = 45, Level3 = 48, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 5, MPowerBase = 40, PowerBase = 20, DelayBase = 18000, DelayReduction = 2000, Range = 9 });
             if (!MagicExists(Spell.EnergyShield)) MagicInfoList.Add(new MagicInfo { Name = "EnergyShield", Spell = Spell.EnergyShield, Icon = 57, Level1 = 48, Level2 = 51, Level3 = 54, Need1 = 5000, Need2 = 9000, Need3 = 13000, BaseCost = 50, LevelCost = 20, Range = 9 });
             if (!MagicExists(Spell.PetEnhancer)) MagicInfoList.Add(new MagicInfo { Name = "PetEnhancer", Spell = Spell.PetEnhancer, Icon = 78, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 40, Range = 0 });
-            //if (!MagicExists(Spell.HealingCircle)) MagicInfoList.Add(new MagicInfo { Name = "HealingCircle", Spell = Spell.ImmortalSkin, Icon = ?, Level1 = ?, Level2 = ?, Level3 = ?, Need1 = ?, Need2 = ?, Need3 = ?, BaseCost = ?, LevelCost = ?, DelayBase = ?, DelayReduction = ? });
+            if (!MagicExists(Spell.HealingCircle)) MagicInfoList.Add(new MagicInfo { Name = "HealingCircle", Spell = Spell.HealingCircle, Icon = 86, Level1 = 50, Level2 = 55, Level3 = 60, Need1 = 7000, Need2 = 11000, Need3 = 15000, BaseCost = 28, LevelCost = 100, MPowerBase = 50, PowerBase = 40, Range = 9 });
+            if (!MagicExists(Spell.DevilVision)) MagicInfoList.Add(new MagicInfo { Name = "DevilVision", Spell = Spell.DevilVision, Icon = 211, Level1 = 43, Level2 = 45, Level3 = 48, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 5, MPowerBase = 40, PowerBase = 20, DelayBase = 18000, DelayReduction = 2000, Range = 9 });
+            if (!MagicExists(Spell.MagicAmulet)) MagicInfoList.Add(new MagicInfo { Name = "MagicAmulet", Spell = Spell.MagicAmulet, Icon = 191, Level1 = 70, Level2 = 75, Level3 = 80, Need1 = 1300, Need2 = 2700, Need3 = 4000, BaseCost = 10, LevelCost = 10, MPowerBase = 40, PowerBase = 50, Range = 9 });
+            if (!MagicExists(Spell.DragonAmulet)) MagicInfoList.Add(new MagicInfo { Name = "DragonAmulet", Spell = Spell.DragonAmulet, Icon = 78, Level1 = 90, Level2 = 95, Level3 = 100, Need1 = 1300, Need2 = 2700, Need3 = 4000, BaseCost = 15, LevelCost = 15, MPowerBase = 60, PowerBase = 60, Range = 0 });
 
             //Assassin
             if (!MagicExists(Spell.FatalSword)) MagicInfoList.Add(new MagicInfo { Name = "FatalSword", Spell = Spell.FatalSword, Icon = 58, Level1 = 7, Level2 = 9, Level3 = 12, Need1 = 500, Need2 = 1000, Need3 = 2300, Range = 0 });
@@ -1261,6 +1287,7 @@ namespace Server.MirEnvir
                         count = reader.ReadInt32();
                         for (int i = 0; i < count; i++)
                         {
+
                             var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
                             if(!MagicExists(m.Spell))
                                 MagicInfoList.Add(m);

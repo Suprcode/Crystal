@@ -147,7 +147,7 @@ namespace Client.MirScenes
 
 
         public long ToggleTime;
-        public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
+        public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleDragon, DoubleSlash, TwinDrakeBlade, FlamingSword, FrozenSword;
         public static long SpellTime;
 
         public long PingTime;
@@ -166,9 +166,11 @@ namespace Client.MirScenes
             Thrusting = false;
             HalfMoon = false;
             CrossHalfMoon = false;
+            DoubleDragon = false;
             DoubleSlash = false;
             TwinDrakeBlade = false;
             FlamingSword = false;
+            FrozenSword = false;
 
             Scene = this;
             BackColour = Color.Transparent;
@@ -734,6 +736,13 @@ namespace Client.MirScenes
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = CrossHalfMoon });
                     break;
+                case Spell.DoubleDragon:
+                    if (CMain.Time < ToggleTime) return;
+                    DoubleDragon = !DoubleDragon;
+                    ChatDialog.ReceiveChat(DoubleDragon ? "Use Double Dragon power." : "Do not use Double Dragon Power.", ChatType.Hint);
+                    ToggleTime = CMain.Time + 1000;
+                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = DoubleDragon });
+                    break;
                 case Spell.DoubleSlash:
                     if (CMain.Time < ToggleTime) return;
                     DoubleSlash = !DoubleSlash;
@@ -756,6 +765,18 @@ namespace Client.MirScenes
                     User.Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, User));
                     break;
                 case Spell.FlamingSword:
+                    if (CMain.Time < ToggleTime) return;
+                    ToggleTime = CMain.Time + 500;
+
+                    cost = magic.Level * magic.LevelCost + magic.BaseCost;
+                    if (cost > MapObject.User.MP)
+                    {
+                        Scene.OutputMessage("Not Enough Mana to cast.");
+                        return;
+                    }
+                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
+                    break;
+                case Spell.FrozenSword:
                     if (CMain.Time < ToggleTime) return;
                     ToggleTime = CMain.Time + 500;
 
@@ -874,14 +895,14 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.KeepAlive() { Time = CMain.Time });
             }
 
-            //MirItemCell cell = MouseControl as MirItemCell;
+            MirItemCell cell = MouseControl as MirItemCell;
 
-            //if (cell != null && HoverItem != cell.Item)
-            //{
-            //    DisposeItemLabel();
-            //    HoverItem = null;
-            //    CreateItemLabel(cell.Item);
-            //}
+            if (cell != null && HoverItem != cell.Item)
+            {
+                DisposeItemLabel();
+                HoverItem = null;
+                CreateItemLabel(cell.Item);
+            }
 
             if (ItemLabel != null && !ItemLabel.IsDisposed)
             {
@@ -955,7 +976,8 @@ namespace Client.MirScenes
                 messageBox.Show();
             }
 
-            BuffsDialog.Process();
+            if (BuffsDialog.Visible)
+                BuffsDialog.UpdateBuffs();
 
             MapControl.Process();
             MainDialog.Process();
@@ -2816,6 +2838,12 @@ namespace Client.MirScenes
                         case DamageType.Critical:
                             obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.DarkRed : Color.DarkRed, 50) { Offset = 15 });
                             break;
+                        case DamageType.Heal:
+                            obj.Damages.Add(new Damage("+" + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Green : Color.White, 50));
+                            break;
+                        case DamageType.Mana:
+                            obj.Damages.Add(new Damage("+" + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            break;
                     }
 
                 }
@@ -3916,6 +3944,10 @@ namespace Client.MirScenes
                     CrossHalfMoon = p.CanUse;
                     ChatDialog.ReceiveChat(CrossHalfMoon ? "Use CrossHalfMoon." : "Do not use CrossHalfMoon.", ChatType.Hint);
                     break;
+                case Spell.DoubleDragon:
+                    DoubleDragon = p.CanUse;
+                    ChatDialog.ReceiveChat(DoubleDragon ? "Use Double Dragon power." : "Do not use Double Dragon power.", ChatType.Hint);
+                    break;
                 case Spell.DoubleSlash:
                     DoubleSlash = p.CanUse;
                     ChatDialog.ReceiveChat(DoubleSlash ? "Use DoubleSlash." : "Do not use DoubleSlash.", ChatType.Hint);
@@ -3926,6 +3958,13 @@ namespace Client.MirScenes
                         ChatDialog.ReceiveChat("Your weapon is glowed by spirit of fire.", ChatType.Hint);
                     else
                         ChatDialog.ReceiveChat("The spirits of fire disappeared.", ChatType.System);
+                    break;
+                case Spell.FrozenSword:
+                    FrozenSword = p.CanUse;
+                    if (FrozenSword)
+                        ChatDialog.ReceiveChat("Your weapon is glowed by spirit of ice.", ChatType.Hint);
+                    else
+                        ChatDialog.ReceiveChat("The spirits of ice disappeared.", ChatType.System);
                     break;
             }
         }
@@ -5468,6 +5507,10 @@ namespace Client.MirScenes
                     return Color.DarkOrange;
                 case ItemGrade.Mythical:
                     return Color.Plum;
+                case ItemGrade.Godly:
+                    return Color.Red;
+                case ItemGrade.Epic:
+                    return Color.Purple;
                 default:
                     return Color.Yellow;
             }
@@ -9616,7 +9659,10 @@ namespace Client.MirScenes
                 case Spell.Poisoning:
                 case Spell.ThunderBolt:
                 case Spell.FlameDisruptor:
+                case Spell.DragonDisruptor:
                 case Spell.SoulFireBall:
+                case Spell.MagicAmulet:
+                case Spell.DragonAmulet:
                 case Spell.TurnUndead:
                 case Spell.FrostCrunch:
                 case Spell.Vampirism:
@@ -9708,6 +9754,9 @@ namespace Client.MirScenes
                     }
                     break;
                 case Spell.Blizzard:
+                case Spell.ElectricBomb:
+                case Spell.FreezingStorm:
+                case Spell.DragonStrike:
                 case Spell.MeteorStrike:
                     if (User.NextMagicObject != null)
                     {
@@ -9953,6 +10002,17 @@ namespace Client.MirScenes
             return false;
         }
         public bool CanCrossHalfMoon(Point p)
+        {
+            MirDirection dir = MirDirection.Up;
+            for (int i = 0; i < 8; i++)
+            {
+                if (HasTarget(Functions.PointMove(p, dir, 1))) return true;
+                dir = Functions.NextDir(dir);
+            }
+            return false;
+        }
+
+        public bool CanDoubleDragon(Point p)
         {
             MirDirection dir = MirDirection.Up;
             for (int i = 0; i < 8; i++)
@@ -10294,6 +10354,12 @@ namespace Client.MirScenes
                     break;
                 case BuffType.Knapsack:
                     text = string.Format("Knapsack\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    break;
+                case BuffType.Pothealth:
+                    text = string.Format("Health Potion\nGaining {0} HP every tick.\n", Values[0]);
+                    break;
+                case BuffType.Potmana:
+                    text = string.Format("Mana Potion\nGaining {0} MP every tick.\n", Values[0]);
                     break;
             }
 

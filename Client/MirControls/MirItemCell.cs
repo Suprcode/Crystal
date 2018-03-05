@@ -393,10 +393,16 @@ namespace Client.MirControls
                         }
                     }
 
-                    if (dialog.Grid[(int)EquipmentSlot.Amulet].CanWearItem(Item))
+                    if (dialog.Grid[(int)EquipmentSlot.Amulet].Item == null && dialog.Grid[(int)EquipmentSlot.Amulet].CanWearItem(Item))
                     {
                         Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Amulet });
                         dialog.Grid[(int)EquipmentSlot.Amulet].Locked = true;
+                        Locked = true;
+                    }
+                    else if (dialog.Grid[(int)EquipmentSlot.ExtraAmulet].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.ExtraAmulet });
+                        dialog.Grid[(int)EquipmentSlot.ExtraAmulet].Locked = true;
                         Locked = true;
                     }
                     break;
@@ -421,6 +427,14 @@ namespace Client.MirControls
                     {
                         Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Stone });
                         dialog.Grid[(int)EquipmentSlot.Stone].Locked = true;
+                        Locked = true;
+                    }
+                    break;
+                case ItemType.ShoulderPads:
+                    if (dialog.Grid[(int)EquipmentSlot.ShoulderPads].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.ShoulderPads });
+                        dialog.Grid[(int)EquipmentSlot.ShoulderPads].Locked = true;
                         Locked = true;
                     }
                     break;
@@ -1613,6 +1627,8 @@ namespace Client.MirControls
                     return type == ItemType.Ring;
                 case EquipmentSlot.Amulet:
                     return type == ItemType.Amulet;// && i.Info.Shape > 0;
+                case EquipmentSlot.ExtraAmulet:
+                    return type == ItemType.Amulet;// && i.Info.Shape > 0;
                 case EquipmentSlot.Boots:
                     return type == ItemType.Boots;
                 case EquipmentSlot.Belt:
@@ -1621,6 +1637,8 @@ namespace Client.MirControls
                     return type == ItemType.Stone;
                 case EquipmentSlot.Mount:
                     return type == ItemType.Mount;
+                case EquipmentSlot.ShoulderPads:
+                    return type == ItemType.ShoulderPads;
                 default:
                     return false;
             }

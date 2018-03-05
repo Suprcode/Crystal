@@ -153,6 +153,51 @@ namespace Server.MirObjects
                             TickSpeed = 2000,
                         }, Caster);
                     break;
+                case Spell.ElectricBomb:
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                    if (ob.Dead) return;
+                    if (Caster != null && Caster.ActiveBlizzard == false) return;
+                    if (!ob.IsAttackTarget(Caster)) return;
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                    if (!ob.Dead && Envir.Random.Next(8) == 0)
+                        ob.ApplyPoison(new Poison
+                        {
+                            Duration = 5 + Envir.Random.Next(Caster.Freezing),
+                            Owner = Caster,
+                            PType = PoisonType.Stun,
+                            TickSpeed = 2000,
+                        }, Caster);
+                    break;
+                case Spell.FreezingStorm:
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                    if (ob.Dead) return;
+                    if (Caster != null && Caster.ActiveBlizzard == false) return;
+                    if (!ob.IsAttackTarget(Caster)) return;
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                    if (!ob.Dead && Envir.Random.Next(8) == 0)
+                        ob.ApplyPoison(new Poison
+                        {
+                            Duration = 5 + Envir.Random.Next(Caster.Freezing),
+                            Owner = Caster,
+                            PType = PoisonType.Slow,
+                            TickSpeed = 440,
+                        }, Caster);
+                    break;
+                case Spell.DragonStrike:
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                    if (ob.Dead) return;
+                    if (Caster != null && Caster.ActiveBlizzard == false) return;
+                    if (!ob.IsAttackTarget(Caster)) return;
+                    ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                    if (!ob.Dead && Envir.Random.Next(8) == 0)
+                        ob.ApplyPoison(new Poison
+                        {
+                            Duration = 5 + Envir.Random.Next(Caster.Freezing),
+                            Owner = Caster,
+                            PType = PoisonType.Red,
+                            TickSpeed = 440,
+                        }, Caster);
+                    break;
                 case Spell.MeteorStrike:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
@@ -319,6 +364,9 @@ namespace Server.MirObjects
                     return null;
                 case Spell.PoisonCloud:
                 case Spell.Blizzard:
+                case Spell.ElectricBomb:
+                case Spell.FreezingStorm:
+                case Spell.DragonStrike:
                 case Spell.MeteorStrike:
                     if (!Show)
                         return null;

@@ -80,6 +80,28 @@ namespace Client.MirObjects
                     Blend = true;
                     Repeat = false;
                     break;
+                case Spell.ElectricBomb:
+                    MapControl.Effects.Add(new Effect(Libraries.Magic4, 200, 8, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
+                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 1);
+                    BodyLibrary = Libraries.Magic4;
+                    DrawFrame = 220;
+                    FrameInterval = 100;
+                    FrameCount = 10;
+                    Light = 4;
+                    Blend = true;
+                    Repeat = false;
+                    break;
+                case Spell.FreezingStorm:
+                    MapControl.Effects.Add(new Effect(Libraries.Magic4, 1240, 8, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
+                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 1);
+                    BodyLibrary = Libraries.Magic4;
+                    DrawFrame = 1210;
+                    FrameInterval = 100;
+                    FrameCount = 23;
+                    Light = 5;
+                    Blend = true;
+                    Repeat = false;
+                    break;
                 case Spell.MeteorStrike:
                     MapControl.Effects.Add(new Effect(Libraries.Magic2, 1600, 10, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
                     CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
@@ -88,6 +110,17 @@ namespace Client.MirObjects
                     FrameInterval = 100;
                     FrameCount = 30;
                     Light = 3;
+                    Blend = true;
+                    Repeat = false;
+                    break;
+                case Spell.DragonStrike:
+                    MapControl.Effects.Add(new Effect(Libraries.Magic6, 1302, 10, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
+                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 1);
+                    BodyLibrary = Libraries.Magic6;
+                    DrawFrame = 1268;
+                    FrameInterval = 100;
+                    FrameCount = 29;
+                    Light = 5;
                     Blend = true;
                     Repeat = false;
                     break;
