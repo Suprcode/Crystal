@@ -6,116 +6,147 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Client.MirScenes.Dialogs
 {
     public class EventDialog : MirImageControl
     {
-        public MirLabel EventName, ObjectiveTitle, Objective, Percentage, RemainingCount, CompletionPercentage;
-        MirImageControl _progress;
+        public MirLabel EventName, ObjectiveMessage;
+        //MirImageControl _progress;
         int completedPercentage = 0;
+        public List<MirLabel> MonsterObjectives = new List<MirLabel>();
+        public List<MirLabel> ObjectiveMessages = new List<MirLabel>();
+
+        public Font QuestFont = new Font(Settings.FontName, 8F);
 
         public EventDialog()
         {
-            Index = 14;
-            Library = Libraries.Prguse3;
-            Sort = true;
-            Location = new Point(Settings.ScreenWidth - 260, 300);
-            DrawImage = false;
-            Visible = false;
             Movable = true;
-
-            this.BeforeDraw += (o, e) =>
-            {
-                Libraries.Prguse3.Draw(13, this.Location.X, this.Location.Y);
-                Libraries.Prguse3.Draw(14, this.Location.X, this.Location.Y);
-
-                Libraries.Prguse3.Draw(15, new Rectangle(0, 0, (int)(completedPercentage * 2), 20), new Point(this.Location.X + 10, this.Location.Y + 184), Color.White, false);
-
-
-            };
+            Sort = false;
 
             EventName = new MirLabel
             {
                 AutoSize = true,
-                ForeColour = Color.Yellow,
-                Location = new Point(20, 40),
+                ForeColour = Color.LimeGreen,
+                Location = new Point(40 , 60),
                 Parent = this,
                 NotControl = true,
             };
-            ObjectiveTitle = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.Yellow,
-                Location = new Point(20, 80),
-                Parent = this,
-                NotControl = true,
-                Text = "Objective",
-            };
-            Objective = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.White,
-                Location = new Point(20, 100),
-                Parent = this,
-                NotControl = true,
-            };
-            RemainingCount = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.White,
-                Location = new Point(20, 140),
-                Parent = this,
-                NotControl = true,
-            };
-            CompletionPercentage = new MirLabel
-            {
-                AutoSize = true,
-                ForeColour = Color.White,
-                Location = new Point(20, 160),
-                Parent = this,
-                NotControl = true,
-            };
-            //_progress = new MirImageControl()
-            //{
-            //    Index = 687,
-            //    Library = Libraries.Prguse3,
-            //    Parent = this,
-            //    Size = new Size(200,20),
-            //    DrawImage = true,
+            Location = new Point(Settings.ScreenWidth - 200, 200);
 
-            //    Location = new Point(10, 182),
-            //};
+        }
+        public List<string> GetLines(string objective, int lineMaxLength)
+        {
+            List<string> lines = new List<string>();
+
+            if (objective.Length > lineMaxLength)
+            {
+                var words = objective.Split(' ');
+
+                if (words.Length > 1)
+                {
+                    string constructedString = string.Empty;
+                    for (int i = 0; i < words.Length ; i++)
+                    {
+                        if (constructedString.Length + words[i].Length >= lineMaxLength)
+                        {
+                            lines.Add(constructedString);
+                            constructedString = words[i];
+                        }
+                        else
+                        {
+                            if (constructedString.Length == 0)
+                                constructedString =  words[i];
+                            else
+                            constructedString = string.Format("{0} {1}", constructedString, words[i]);
+
+                            if (constructedString.Length >= lineMaxLength || i == words.Length - 1)
+                            {
+                                lines.Add(constructedString);
+                                constructedString = string.Empty;
+                            }
+                        }
+                    }
+                }
+                return lines;
+            }
+            else
+                return new List<string>() { objective };
         }
 
-        public void UpdateDialog(string eventName, string objective, int percentage, string remainingCount, int stage)
+        public void UpdateDialog(string eventName, string objectiveMsg, List<MonsterEventObjective> objectives, int stage)
         {
+            foreach (MirLabel label in MonsterObjectives)
+                label.Dispose();
+
+            foreach (MirLabel label in ObjectiveMessages)
+                label.Dispose();
+
+            ObjectiveMessages.Clear();
+            MonsterObjectives.Clear();
+
             if (!string.IsNullOrEmpty(eventName))
+            {
                 EventName.Text = eventName;
-
-
-            var splittedRemaining = remainingCount.Split('/');
-            var aliveMonsters = splittedRemaining[0];
-            var totalMonsters = splittedRemaining[1];
-
-            RemainingCount.Text = string.Format("Monsters:{0}", aliveMonsters);
+            }
+            int increment = 0;
 
             if (stage > 0)
             {
-                if (!string.IsNullOrEmpty(objective))
-                    Objective.Text = string.Format("Stage {0}:{1}", stage, objective);
+                ObjectiveMessages.Add(new MirLabel
+                {
+                    AutoSize = true,
+                    OutLine = true,
+                    Parent = this,
+                    Text = string.Format("Invasion Stage: {0}", stage),
+                    Visible = true,
+                    ForeColour = Color.GreenYellow,
+                    Location = new Point(40, 80 + increment)
+                });
+                increment += 15;
             }
-            else
+            
+
+            if (!string.IsNullOrEmpty(objectiveMsg))
             {
-                if (!string.IsNullOrEmpty(objective))
-                    Objective.Text = objective;
+                int msgWidth = Settings.Resolution > 800 ? 30 : 17;
+                List<string> msgs = GetLines(objectiveMsg, msgWidth);
+
+                for (int i = 0; i < msgs.Count; i++)
+                {
+                    ObjectiveMessages.Add(new MirLabel
+                    {
+                        AutoSize = true,
+                        OutLine = true,
+                        Parent = this,
+                        Text = msgs[i],
+                        Visible = true,
+                        ForeColour = Color.LightYellow,
+                        Location = new Point(40, 80 + increment)
+                    });
+                    increment += 15;
+                }
             }
 
-            CompletionPercentage.Text = string.Format("Completed Percentage: {0}%", percentage);
 
-            //_progress.Size = new Size(percentage * 2, 182);
-            completedPercentage = percentage;
+            foreach (var monObj in objectives)
+            {
+                MirLabel lblMon = new MirLabel
+                {
+                    Text = string.Format("{0} : {1}/{2}", monObj.MonsterName,  monObj.MonsterTotalCount - monObj.MonsterAliveCount, monObj.MonsterTotalCount),
+                    AutoSize = true,
+                    Font = QuestFont,
+                    ForeColour = Color.YellowGreen,
+                    Location = new Point(40, 80 + increment ),
+                    OutLine = true,
+                    Parent = this,
+                    Visible = true,
+                };
+                increment += 15;
 
+                MonsterObjectives.Add(lblMon);
+            }
         }
         public void Show()
         {

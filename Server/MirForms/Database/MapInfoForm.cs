@@ -227,6 +227,7 @@ namespace Server
                 txtEventSize.Text = string.Empty;
                 txtOrder.Text = string.Empty;
                 txtEventRespawnMonCount.Text = string.Empty;
+                txtObjectiveMsg.Text = string.Empty;
 
                 return;
             }
@@ -235,6 +236,8 @@ namespace Server
             txtCooldownInMins.Text = info.CooldownInMinutes.ToString();
             txtEventMultipleCoords.Text = info.MultipleCoords.ToString();
             txtEventName.Text = info.EventName.ToString();
+            txtObjectiveMsg.Text = info.ObjectiveMessage.ToString();
+
             txtEventSize.Text = info.EventSize.ToString();
             panelEventInfo.Enabled = true;
             ddlEventType.SelectedItem = (EventType)info.EventType;
@@ -2193,5 +2196,14 @@ namespace Server
 
         }
 
+        private void txtObjectiveMsg_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].ObjectiveMessage = ActiveControl.Text;
+        }
     }
 }

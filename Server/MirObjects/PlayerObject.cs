@@ -19705,17 +19705,18 @@ namespace Server.MirObjects
             if (tempEvent == null)
                 return;
 
-            var monsterNames = tempEvent.MapRespawns.Select(mr => mr.Monster.Name).Distinct().ToList();
-            var obj = (string.Format("{0}", string.Join(",", monsterNames)));
 
-            var objectiveRespawns = tempEvent.MapRespawns.Where(p => p.IsEventObjective);
-            int totalMonstersAsObj = objectiveRespawns.Select(o => o.Info.Count).Sum(o => o);
-            int aliveMonstersCount = objectiveRespawns.Select(o => o.Count).Sum(o => o);
-            var deadMonsters = totalMonstersAsObj - aliveMonstersCount;
+            List<MonsterEventObjective> monObj = tempEvent.MapRespawns.Select(o => new MonsterEventObjective()
+            {
+                MonsterName = o.Monster.Name,
+                MonsterTotalCount = o.Info.Count,
+                MonsterAliveCount = o.Count
+            }).ToList();
 
-            var remainingCount = string.Format("{0}/{1}", aliveMonstersCount, totalMonstersAsObj);
-            var completedPerc = (int)(((decimal)deadMonsters / (decimal)totalMonstersAsObj) * 100);
-            var packet = new S.EnterOrUpdatePublicEvent(tempEvent.Info.EventName, obj, remainingCount, completedPerc, tempEvent.Stage);
+            //var remainingCount = string.Format("{0}/{1}", alive, total);
+            //var completedPerc = (int)(((decimal)dead / total) * 100);
+
+            var packet = new S.EnterOrUpdatePublicEvent(tempEvent.Info.EventName, tempEvent.Info.EventType, tempEvent.Info.ObjectiveMessage, tempEvent.Stage, monObj);
 
             Enqueue(packet);
             InSafeZone = tempEvent.Info.IsSafezone;

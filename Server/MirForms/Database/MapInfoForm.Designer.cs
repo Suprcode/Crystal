@@ -163,6 +163,8 @@ namespace Server
             this.btnAddEventRespawn = new System.Windows.Forms.Button();
             this.lstEventRespawns = new System.Windows.Forms.ListBox();
             this.panelEventInfo = new System.Windows.Forms.Panel();
+            this.label26 = new System.Windows.Forms.Label();
+            this.txtObjectiveMsg = new System.Windows.Forms.TextBox();
             this.chkIsSafeZone = new System.Windows.Forms.CheckBox();
             this.ddlEventType = new System.Windows.Forms.ComboBox();
             this.label39 = new System.Windows.Forms.Label();
@@ -1584,6 +1586,8 @@ namespace Server
             this.panelEventInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelEventInfo.Controls.Add(this.label26);
+            this.panelEventInfo.Controls.Add(this.txtObjectiveMsg);
             this.panelEventInfo.Controls.Add(this.chkIsSafeZone);
             this.panelEventInfo.Controls.Add(this.ddlEventType);
             this.panelEventInfo.Controls.Add(this.label39);
@@ -1601,10 +1605,28 @@ namespace Server
             this.panelEventInfo.Size = new System.Drawing.Size(210, 229);
             this.panelEventInfo.TabIndex = 21;
             // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(3, 187);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(98, 13);
+            this.label26.TabIndex = 20;
+            this.label26.Text = "Objective Message";
+            // 
+            // txtObjectiveMsg
+            // 
+            this.txtObjectiveMsg.Location = new System.Drawing.Point(4, 203);
+            this.txtObjectiveMsg.MaxLength = 100;
+            this.txtObjectiveMsg.Name = "txtObjectiveMsg";
+            this.txtObjectiveMsg.Size = new System.Drawing.Size(202, 20);
+            this.txtObjectiveMsg.TabIndex = 19;
+            this.txtObjectiveMsg.TextChanged += new System.EventHandler(this.txtObjectiveMsg_TextChanged);
+            // 
             // chkIsSafeZone
             // 
             this.chkIsSafeZone.AutoSize = true;
-            this.chkIsSafeZone.Location = new System.Drawing.Point(113, 32);
+            this.chkIsSafeZone.Location = new System.Drawing.Point(122, 30);
             this.chkIsSafeZone.Name = "chkIsSafeZone";
             this.chkIsSafeZone.Size = new System.Drawing.Size(84, 17);
             this.chkIsSafeZone.TabIndex = 18;
@@ -1617,7 +1639,7 @@ namespace Server
             this.ddlEventType.FormattingEnabled = true;
             this.ddlEventType.Location = new System.Drawing.Point(6, 30);
             this.ddlEventType.Name = "ddlEventType";
-            this.ddlEventType.Size = new System.Drawing.Size(103, 21);
+            this.ddlEventType.Size = new System.Drawing.Size(110, 21);
             this.ddlEventType.TabIndex = 17;
             this.ddlEventType.SelectedIndexChanged += new System.EventHandler(this.ddlEventType_SelectedIndexChanged);
             // 
@@ -1633,18 +1655,18 @@ namespace Server
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(3, 184);
+            this.label38.Location = new System.Drawing.Point(115, 142);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(106, 13);
+            this.label38.Size = new System.Drawing.Size(77, 13);
             this.label38.TabIndex = 14;
-            this.label38.Text = "Cooldown In Minutes";
+            this.label38.Text = "Cooldown(Min)";
             // 
             // txtCooldownInMins
             // 
-            this.txtCooldownInMins.Location = new System.Drawing.Point(5, 200);
+            this.txtCooldownInMins.Location = new System.Drawing.Point(115, 158);
             this.txtCooldownInMins.MaxLength = 5;
             this.txtCooldownInMins.Name = "txtCooldownInMins";
-            this.txtCooldownInMins.Size = new System.Drawing.Size(181, 20);
+            this.txtCooldownInMins.Size = new System.Drawing.Size(91, 20);
             this.txtCooldownInMins.TabIndex = 13;
             this.txtCooldownInMins.TextChanged += new System.EventHandler(this.txtCooldownInMins_TextChanged);
             // 
@@ -1662,7 +1684,7 @@ namespace Server
             this.txtEventSize.Location = new System.Drawing.Point(5, 158);
             this.txtEventSize.MaxLength = 5;
             this.txtEventSize.Name = "txtEventSize";
-            this.txtEventSize.Size = new System.Drawing.Size(181, 20);
+            this.txtEventSize.Size = new System.Drawing.Size(104, 20);
             this.txtEventSize.TabIndex = 11;
             this.txtEventSize.TextChanged += new System.EventHandler(this.txtEventSize_TextChanged);
             // 
@@ -1680,7 +1702,7 @@ namespace Server
             this.txtEventName.Location = new System.Drawing.Point(5, 75);
             this.txtEventName.MaxLength = 50;
             this.txtEventName.Name = "txtEventName";
-            this.txtEventName.Size = new System.Drawing.Size(181, 20);
+            this.txtEventName.Size = new System.Drawing.Size(201, 20);
             this.txtEventName.TabIndex = 1;
             this.txtEventName.TextChanged += new System.EventHandler(this.txtEventName_TextChanged);
             // 
@@ -1698,7 +1720,7 @@ namespace Server
             this.txtEventMultipleCoords.Location = new System.Drawing.Point(5, 117);
             this.txtEventMultipleCoords.MaxLength = 200;
             this.txtEventMultipleCoords.Name = "txtEventMultipleCoords";
-            this.txtEventMultipleCoords.Size = new System.Drawing.Size(181, 20);
+            this.txtEventMultipleCoords.Size = new System.Drawing.Size(201, 20);
             this.txtEventMultipleCoords.TabIndex = 4;
             this.txtEventMultipleCoords.TextChanged += new System.EventHandler(this.txtEventMultipleCoords_TextChanged);
             // 
@@ -2036,5 +2058,7 @@ namespace Server
         private Button btnRemoveEvent;
         private Button btnAddEvent;
         private ListBox lstEventInfos;
+        private Label label26;
+        private TextBox txtObjectiveMsg;
     }
 }

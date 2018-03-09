@@ -5670,37 +5670,43 @@ namespace ServerPackets
         public override short Index { get { return (short)ServerPacketIds.EnterPublicEvent; } }
 
         public string EventName = string.Empty;
-        public string Objective = string.Empty;
-        public int CompletedPercentage = 0;
-        public string RemainingCount = string.Empty;
+        public string ObjectiveMessage = string.Empty;
+        public List<MonsterEventObjective> Objectives = new List<MonsterEventObjective>();
         public int Stage = 0;
+        public EventType Type = EventType.None;
         public EnterOrUpdatePublicEvent()
         {
 
         }
-        public EnterOrUpdatePublicEvent(string eventName, string objective, string remainingCount, int completedPercentage, int stage)
+        public EnterOrUpdatePublicEvent(string eventName, EventType type, string objective, int stage,List<MonsterEventObjective> monsters)
         {
             EventName = eventName;
-            Objective = objective;
-            RemainingCount = remainingCount;
+            ObjectiveMessage = objective;
             Stage = stage;
-            CompletedPercentage = completedPercentage;
+            Type = type;
+            Objectives = monsters;
         }
         protected override void ReadPacket(BinaryReader reader)
         {
             EventName = reader.ReadString();
-            Objective = reader.ReadString();
-            RemainingCount = reader.ReadString();
-            CompletedPercentage = reader.ReadInt32();
+            ObjectiveMessage = reader.ReadString();
             Stage = reader.ReadInt32();
+
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                Objectives.Add(new MonsterEventObjective(reader));
+            }
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(EventName);
-            writer.Write(Objective);
-            writer.Write(RemainingCount);
-            writer.Write(CompletedPercentage);
+            writer.Write(ObjectiveMessage);
             writer.Write(Stage);
+            writer.Write(Objectives.Count);
+
+            foreach (var obj in Objectives)
+                obj.Save(writer);
         }
     }
     public sealed class LeavePublicEvent : Packet

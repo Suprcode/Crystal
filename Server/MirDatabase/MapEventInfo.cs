@@ -15,6 +15,8 @@ namespace Server.MirDatabase
         public MapInfo Info;
         public int Index = 0;
 
+        public string ObjectiveMessage = string.Empty;
+
         public EventType EventType = EventType.Invasion;
         public bool IsSafezone = false;
 
@@ -38,6 +40,9 @@ namespace Server.MirDatabase
             int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
                 Respawns.Add(new EventRespawn(reader));
+
+            if (MirEnvir.Envir.LoadCustomVersion >= 2)
+                ObjectiveMessage = reader.ReadString();
         }
 
         public void Save(BinaryWriter writer)
@@ -53,6 +58,8 @@ namespace Server.MirDatabase
             writer.Write(Respawns.Count);
             for (int i = 0; i < Respawns.Count; i++)
                 Respawns[i].Save(writer);
+
+            writer.Write(ObjectiveMessage);
         }
         public override string ToString()
         {

@@ -1236,15 +1236,18 @@ namespace Server.MirObjects
 
             if (Respawn != null && Respawn.IsEventObjective)
             {
-                //if monster is 10 yards away from the spawned location it goes into retreat
-                if (!Functions.InRange(CurrentLocation, SpawnedLocation, 10))
+                //if monster is 10 yards away from the spawned location it goes into retreat or monster is outside event area
+                if (!Retreat && (!Functions.InRange(CurrentLocation, SpawnedLocation, 10) || !Functions.InRange(Respawn.Event.CurrentLocation, CurrentLocation, Respawn.Event.Info.EventSize)))
                 {
                     Retreat = true;
-                    ChangeHP((int)MaxHP);
+                    Target = null;
                 }
 
                 if (Retreat)
                 {
+                    if (HP != MaxHP)
+                        ChangeHP((int)MaxHP);
+
                     if (Functions.InRange(CurrentLocation, SpawnedLocation, 2))
                         Retreat = false;
                     else

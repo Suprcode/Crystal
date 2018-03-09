@@ -8257,8 +8257,13 @@ namespace Client.MirScenes
         }
         public void EnterPublicEvent(ServerPackets.EnterOrUpdatePublicEvent p)
         {
-            EventDialog.UpdateDialog(p.EventName, p.Objective, p.CompletedPercentage, p.RemainingCount, p.Stage);
+            EventDialog.UpdateDialog(p.EventName,p.ObjectiveMessage,p.Objectives, p.Stage);
             EventDialog.Show();
+
+            if (p.Objectives.All(o=> o.MonsterAliveCount == 0))
+            {
+                EventDialog.Hide();
+            }
         }
         public void LeavePublicEvent(ServerPackets.LeavePublicEvent p)
         {

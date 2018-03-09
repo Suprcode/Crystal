@@ -25,7 +25,6 @@ namespace Server.MirEnvir
         public List<SpellObject> Zone = new List<SpellObject>();
         public List<PlayerObject> Contributers = new List<PlayerObject>();
         public int Stage = 0;
-
         public List<PlayerObject> Players
         {
             get
@@ -184,21 +183,6 @@ namespace Server.MirEnvir
             }
 
             SpawnMonstersForInvasion(respawns);
-
-
-            var p = new S.EnterOrUpdatePublicEvent { };
-            int total = respawns.Where(r => r.IsObjective).Select(o => o.MonsterCount).Sum(o => o);
-            int alive = total;
-
-            var monsterNames = respawns.Select(mr => mr.MonsterName).Distinct().ToList();
-            var obj = (string.Format("{0}", string.Join(",", monsterNames)));
-
-            p.RemainingCount = string.Format("{0}/{1}", alive, total);
-            p.Stage = Stage;
-            p.Objective = obj;
-
-            foreach (var player in Players)
-                player.Enqueue(p);
         }
         private void SpawnMonstersForInvasion(List<EventRespawn> respawns)
         {
@@ -372,21 +356,40 @@ namespace Server.MirEnvir
 
                     if (invasionRespawns.All(o => o.Count == 0))
                     {
+
+                        foreach (var mapRespawn in MapRespawns)
+                            Map.Respawns.Remove(mapRespawn);
+
+                        MapRespawns.Clear();
+
                         Stage++;
                         SpawnInvasionMonsters(Stage);
+
+                        List<MonsterEventObjective> monObj = MapRespawns.Select(o => new MonsterEventObjective()
+                        {
+                            MonsterName = o.Monster.Name,
+                            MonsterTotalCount = o.Info.Count,
+                            MonsterAliveCount = o.Info.Count
+                        }).ToList();
+
+                        var p = new S.EnterOrUpdatePublicEvent(Info.EventName, Info.EventType, Info.ObjectiveMessage, Stage, monObj);
+
+                        foreach (var player in Players)
+                            player.Enqueue(p);
                     }
                     else
                     {
-                        var monsterNames = MapRespawns.Select(mr => mr.Monster.Name).Distinct().ToList();
-                        var obj = (string.Format("{0}", string.Join(",", monsterNames)));
+                        List<MonsterEventObjective> monObj = invasionRespawns.Select(o => new MonsterEventObjective()
+                        {
+                            MonsterName = o.Monster.Name,
+                            MonsterTotalCount = o.Info.Count,
+                            MonsterAliveCount = o.Count
+                        }).ToList();
 
-                        int total = invasionRespawns.Select(o => o.Info.Count).Sum(o => o);
-                        int alive = invasionRespawns.Select(o => o.Count).Sum(o => o);
-                        var dead = total - alive;
+                        //var remainingCount = string.Format("{0}/{1}", alive, total);
+                        //var completedPerc = (int)(((decimal)dead / total) * 100);
 
-                        var remainingCount = string.Format("{0}/{1}", alive, total);
-                        var completedPerc = (int)(((decimal)dead / total) * 100);
-                        var p = new S.EnterOrUpdatePublicEvent(Info.EventName, obj, remainingCount, completedPerc, Stage);
+                        var p = new S.EnterOrUpdatePublicEvent(Info.EventName,Info.EventType,Info.ObjectiveMessage,Stage, monObj);
 
                         foreach (var player in Players)
                             player.Enqueue(p);
@@ -395,14 +398,14 @@ namespace Server.MirEnvir
                 default:
                     var objectiveRespawns = MapRespawns.Where(o => o.IsEventObjective);
 
-                    int totalMonstersAsObj = objectiveRespawns.Select(o => o.Info.Count).Sum(o => o);
-                    int aliveMonstersCount = objectiveRespawns.Select(o => o.Count).Sum(o => o);
-                    var deadMonsters = totalMonstersAsObj - aliveMonstersCount;
+                    List<MonsterEventObjective> monObjectives = objectiveRespawns.Select(o => new MonsterEventObjective()
+                    {
+                        MonsterName = o.Monster.Name,
+                        MonsterTotalCount = o.Info.Count,
+                        MonsterAliveCount = o.Count
+                    }).ToList();
 
-                    var remainCount = string.Format("{0}/{1}", aliveMonstersCount, totalMonstersAsObj);
-                    var percent = (int)(((decimal)deadMonsters / totalMonstersAsObj) * 100);
-
-                    var packet = new S.EnterOrUpdatePublicEvent(Info.EventName, string.Empty, remainCount, percent, Stage);
+                    var packet = new S.EnterOrUpdatePublicEvent(Info.EventName, Info.EventType, Info.ObjectiveMessage, Stage, monObjectives);
 
                     foreach (var player in Players)
                         player.Enqueue(packet);

@@ -6374,6 +6374,31 @@ public class ClientRecipeInfo
     }
 
 }
+public class MonsterEventObjective
+{
+    public string MonsterName;
+    public int MonsterTotalCount;
+    public int MonsterAliveCount;
+    public MonsterEventObjective()
+    {
+
+    }
+    public MonsterEventObjective(BinaryReader reader)
+    {
+        MonsterName = reader.ReadString();
+        MonsterTotalCount = reader.ReadInt32();
+        MonsterAliveCount = reader.ReadInt32();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(MonsterName);
+        writer.Write(MonsterTotalCount);
+        writer.Write(MonsterAliveCount);
+    }
+
+
+}
+
 public class MapEventClientSide
 {
     public int Index;
