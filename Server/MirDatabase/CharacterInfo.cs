@@ -66,12 +66,12 @@ namespace Server.MirDatabase
 
         public bool NewDay;
 
-        public bool Thrusting, HalfMoon, CrossHalfMoon;
+        public bool Thrusting, HalfMoon, CrossHalfMoon, DoubleDragon;
         public bool DoubleSlash;
         public byte MentalState;
         public byte MentalStateLvl;
 
-        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];
+        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[16], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];  //pads //extraamulet
         public List<ItemRentalInformation> RentedItems = new List<ItemRentalInformation>();
         public List<ItemRentalInformation> RentedItemsToRemove = new List<ItemRentalInformation>();
         public bool HasRentedItem;
@@ -211,6 +211,7 @@ namespace Server.MirDatabase
             Thrusting = reader.ReadBoolean();
             HalfMoon = reader.ReadBoolean();
             CrossHalfMoon = reader.ReadBoolean();
+            DoubleDragon = reader.ReadBoolean();
             DoubleSlash = reader.ReadBoolean();
 
             if(Envir.LoadVersion > 46)
@@ -440,6 +441,7 @@ namespace Server.MirDatabase
             writer.Write(Thrusting);
             writer.Write(HalfMoon);
             writer.Write(CrossHalfMoon);
+            writer.Write(DoubleDragon);
             writer.Write(DoubleSlash);
             writer.Write(MentalState);
 

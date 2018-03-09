@@ -27,6 +27,10 @@ namespace Client.MirGraphics
             Magic = new MLibrary(Settings.DataPath + "Magic"),
             Magic2 = new MLibrary(Settings.DataPath + "Magic2"),
             Magic3 = new MLibrary(Settings.DataPath + "Magic3"),
+            Magic4 = new MLibrary(Settings.DataPath + "Magic4"),
+            Magic5 = new MLibrary(Settings.DataPath + "Magic5"),
+            Magic6 = new MLibrary(Settings.DataPath + "Magic6"),
+            Magic7 = new MLibrary(Settings.DataPath + "Magic7"),
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
             GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill");
@@ -52,11 +56,11 @@ namespace Client.MirGraphics
         public static readonly MLibrary
             Deco = new MLibrary(Settings.DataPath + "Deco");
 
-        public static readonly MLibrary[] CArmours = new MLibrary[42],
-                                          CWeapons = new MLibrary[55],
+        public static readonly MLibrary[] CArmours = new MLibrary[90],
+                                          CWeapons = new MLibrary[100],
 										  CWeaponEffect = new MLibrary[67],
 										  CHair = new MLibrary[9],
-                                          CHumEffect = new MLibrary[6],
+                                          CHumEffect = new MLibrary[35],
                                           AArmours = new MLibrary[17],
                                           AWeaponsL = new MLibrary[14],
                                           AWeaponsR = new MLibrary[14],

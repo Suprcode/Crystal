@@ -1913,12 +1913,13 @@ namespace Client.MirObjects
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Hide, new Frame(0, 8, 0, 500) { Reverse = true });
             frame.Frames.Add(MirAction.Standing, new Frame(64, 6, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(70, 6, 0, 100));
             frame.Frames.Add(MirAction.Attack1, new Frame(112, 8, 0, 100));
             frame.Frames.Add(MirAction.Attack2, new Frame(176, 10, 0, 100));
             frame.Frames.Add(MirAction.Struck, new Frame(256, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(280, 15, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(294, 1, 0, 1000));
-            //frame.Frames.Add(MirAction.Walking, new Frame(72, 6, 0, 100));
+            
 
             //166 - BlackTortoise
             Monsters.Add(frame = new FrameSet());
@@ -1930,7 +1931,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.AttackRange1, new Frame(248, 6, 0, 100));
             frame.Frames.Add(MirAction.Struck, new Frame(296, 2, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(312, 6, 0, 100));
-            frame.Frames.Add(MirAction.Dead, new Frame(326, 1, 5, 1000));
+            frame.Frames.Add(MirAction.Dead, new Frame(317, 1, 0, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(312, 6, 0, 100) { Reverse = true });
 
             //167 - Manticore //mage ai needed black fox will do 4 now

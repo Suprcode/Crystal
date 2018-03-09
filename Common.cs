@@ -43,7 +43,9 @@ public enum DamageType : byte
 {
     Hit = 0,
     Miss = 1,
-    Critical = 2
+    Critical = 2,
+    Heal = 3,
+    Mana = 4
 }
 
 [Flags]
@@ -89,6 +91,8 @@ public enum ItemGrade : byte
     Rare = 2,
     Legendary = 3,
     Mythical = 4,
+    Godly = 5,
+    Epic = 6,
 }
 public enum StatType : byte
 {
@@ -804,6 +808,7 @@ public enum ItemType : byte
 	Awakening = 35,
     Pets = 36,
     Transform = 37,
+    ShoulderPads = 38,
 }
 
 public enum MirGridType : byte
@@ -845,7 +850,9 @@ public enum EquipmentSlot : byte
     Belt = 10,
     Boots = 11,
     Stone = 12,
-    Mount = 13
+    Mount = 13,
+    ShoulderPads = 14,
+    ExtraAmulet = 15,
 }
 
 public enum MountSlot : byte
@@ -1039,6 +1046,10 @@ public enum Spell : byte
     SlashingBurst = 15,
     Fury = 16,
     ImmortalSkin = 17,
+    FrozenSword = 18,
+    BreakingFire = 19,
+    DoubleDragon = 20,
+    DragonAvalanche = 21,
 
     //Wizard
     FireBall = 31,
@@ -1066,6 +1077,11 @@ public enum Spell : byte
     IceThrust = 53,
     FastMove = 54,
     StormEscape = 55,
+    ElectricBomb = 56,
+    FreezingStorm = 57,
+    DragonDisruptor = 58,
+    DragonStrike = 59,
+    
 
     //Taoist
     Healing = 61,
@@ -1093,6 +1109,9 @@ public enum Spell : byte
     EnergyShield = 84,
     PetEnhancer = 85,
     HealingCircle = 86,
+    DevilVision = 87,
+    MagicAmulet = 88,
+    DragonAmulet = 89,
 
     //Assassin
     FatalSword = 91,
@@ -1236,7 +1255,9 @@ public enum BuffType : byte
     Defence,
     MagicDefence,
     WonderDrug,
-    Knapsack
+    Knapsack,
+    Pothealth,
+    Potmana
 }
 
 public enum DefenceType : byte
@@ -3534,8 +3555,8 @@ public class Awake
     public static byte Awake_HelmetRate = 1;
     public static byte Awake_ArmorRate = 5;
     public static byte AwakeChanceMin = 1;
-    public static float[] AwakeMaterialRate = new float[4] { 1.0F, 1.0F, 1.0F, 1.0F };
-    public static byte[] AwakeChanceMax = new byte[4] { 1, 2, 3, 4 };
+    public static float[] AwakeMaterialRate = new float[6] { 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F }; //new grade 
+    public static byte[] AwakeChanceMax = new byte[6] { 1, 2, 3, 4, 5, 6 };  //new grade
     public static List<List<byte>[]> AwakeMaterials = new List<List<byte>[]>();
 
     public AwakeType type;
@@ -4278,7 +4299,8 @@ public class IntelligentCreatureItemFilter
                 PetPickupOthers = !PetPickupOthers;
                 break;
         }
-        if (PetPickupGold && PetPickupWeapons && PetPickupArmours && PetPickupHelmets && PetPickupBoots && PetPickupBelts && PetPickupAccessories && PetPickupOthers)
+        bool flag = PetPickupGold && PetPickupWeapons && PetPickupArmours && PetPickupHelmets && PetPickupBoots && PetPickupBelts && PetPickupAccessories && PetPickupOthers;
+        if (flag)
         {
             PetPickupAll = true;
             PetPickupGold = false;
@@ -4291,10 +4313,13 @@ public class IntelligentCreatureItemFilter
             PetPickupOthers = false;
         }
         else
-            if (!PetPickupGold && !PetPickupWeapons && !PetPickupArmours && !PetPickupHelmets && !PetPickupBoots && !PetPickupBelts && !PetPickupAccessories && !PetPickupOthers)
+        {
+            bool flag1 = !PetPickupGold && !PetPickupWeapons && !PetPickupArmours && !PetPickupHelmets && !PetPickupBoots && !PetPickupBelts && !PetPickupAccessories && !PetPickupOthers;
+            if (flag1)
             {
                 PetPickupAll = true;
             }
+        }
     }
 
     public IntelligentCreatureItemFilter(BinaryReader reader)
@@ -5670,11 +5695,11 @@ public class ItemSets
                 case ItemSet.Mundane:
                 case ItemSet.NokChi:
                 case ItemSet.TaoProtect:
-                case ItemSet.Whisker1:
-                case ItemSet.Whisker2:
-                case ItemSet.Whisker3:
-                case ItemSet.Whisker4:
-                case ItemSet.Whisker5:
+                case ItemSet.Whisker1:    //Warrior
+                case ItemSet.Whisker2:    //Wizard
+                case ItemSet.Whisker3:    //Tao
+                case ItemSet.Whisker4:    //Assassin
+                case ItemSet.Whisker5:    //Archer
                     return 2;
                 case ItemSet.RedOrchid:
                 case ItemSet.RedFlower:

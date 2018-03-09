@@ -15,7 +15,7 @@ namespace Server.MirEnvir
         {
             get { return SMain.Envir; }
         }
-        
+
         public MapInfo Info;
 
         public int Thread = 0;
@@ -53,7 +53,7 @@ namespace Server.MirEnvir
             Doors.Add(DoorInfo);
             return DoorInfo;
         }
-        
+
         public bool OpenDoor(byte DoorIndex)
         {
             for (int i = 0; i < Doors.Count; i++)
@@ -146,7 +146,7 @@ namespace Server.MirEnvir
                         Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
-        
+
         private void LoadMapCellsv1(byte[] fileBytes)
         {
             int offSet = 21;
@@ -422,7 +422,7 @@ namespace Server.MirEnvir
                     if (light >= 100 && light <= 119)
                         Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
-                
+
         }
 
         public bool Load()
@@ -433,7 +433,7 @@ namespace Server.MirEnvir
                 if (File.Exists(fileName))
                 {
                     byte[] fileBytes = File.ReadAllBytes(fileName);
-                    switch(FindType(fileBytes))
+                    switch (FindType(fileBytes))
                     {
                         case 0:
                             LoadMapCellsv0(fileBytes);
@@ -463,7 +463,7 @@ namespace Server.MirEnvir
                             LoadMapCellsV100(fileBytes);
                             break;
                     }
-                    
+
                     for (int i = 0; i < Info.Respawns.Count; i++)
                     {
                         MapRespawn info = new MapRespawn(Info.Respawns[i]);
@@ -481,7 +481,7 @@ namespace Server.MirEnvir
                         NPCInfo info = Info.NPCs[i];
                         if (!ValidPoint(info.Location)) continue;
 
-                        AddObject(new NPCObject(info) {CurrentMap = this});
+                        AddObject(new NPCObject(info) { CurrentMap = this });
                     }
 
                     for (int i = 0; i < Info.SafeZones.Count; i++)
@@ -543,14 +543,14 @@ namespace Server.MirEnvir
                         if (!Cells[x, y].Valid) continue;
 
                         SpellObject spell = new SpellObject
-                            {
-                                ExpireTime = long.MaxValue,
-                                Value = 25,
-                                TickSpeed = 2000,
-                                Spell = Spell.Healing,
-                                CurrentLocation = new Point(x, y),
-                                CurrentMap = this
-                            };
+                        {
+                            ExpireTime = long.MaxValue,
+                            Value = 25,
+                            TickSpeed = 2000,
+                            Spell = Spell.Healing,
+                            CurrentLocation = new Point(x, y),
+                            CurrentMap = this
+                        };
 
                         Cells[x, y].Add(spell);
 
@@ -574,7 +574,7 @@ namespace Server.MirEnvir
                 Settings.MineSetList[Info.MineIndex - 1].SetDrops(Envir.ItemInfoList);
                 for (int i = 0; i < Width; i++)
                     for (int j = 0; j < Height; j++)
-                        Mine[i,j].Mine = Settings.MineSetList[Info.MineIndex - 1];
+                        Mine[i, j].Mine = Settings.MineSetList[Info.MineIndex - 1];
             }
             if (Info.MineZones.Count > 0)
             {
@@ -584,7 +584,7 @@ namespace Server.MirEnvir
                     if (Zone.Mine != 0)
                         Settings.MineSetList[Zone.Mine - 1].SetDrops(Envir.ItemInfoList);
                     if (Settings.MineSetList.Count < Zone.Mine) continue;
-                    for (int x =  Zone.Location.X - Zone.Size; x < Zone.Location.X + Zone.Size; x++)
+                    for (int x = Zone.Location.X - Zone.Size; x < Zone.Location.X + Zone.Size; x++)
                         for (int y = Zone.Location.Y - Zone.Size; y < Zone.Location.Y + Zone.Size; y++)
                         {
                             if ((x < 0) || (x >= Width) || (y < 0) || (y >= Height)) continue;
@@ -647,7 +647,7 @@ namespace Server.MirEnvir
                     Point Location;
                     if (Envir.Random.Next(4) == 0)
                     {
-                        Location = player.CurrentLocation;          
+                        Location = player.CurrentLocation;
                     }
                     else
                         Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
@@ -786,7 +786,7 @@ namespace Server.MirEnvir
                 case DelayedType.Spawn:
                     MapObject obj = (MapObject)action.Params[0];
 
-                    switch(obj.Race)
+                    switch (obj.Race)
                     {
                         case ObjectType.Monster:
                             {
@@ -1015,7 +1015,7 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ target.Level / 7 + 4 } });
+                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[] { target.Level / 7 + 4 } });
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1057,15 +1057,15 @@ namespace Server.MirEnvir
                         if (cast)
                         {
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.FireWall,
-                                    Value = value,
-                                    ExpireTime = Envir.Time + (10 + value / 2) * 1000,
-                                    TickSpeed = 2000,
-                                    Caster = player,
-                                    CurrentLocation = location,
-                                    CurrentMap = this,
-                                };
+                            {
+                                Spell = Spell.FireWall,
+                                Value = value,
+                                ExpireTime = Envir.Time + (10 + value / 2) * 1000,
+                                TickSpeed = 2000,
+                                Caster = player,
+                                CurrentLocation = location,
+                                CurrentMap = this,
+                            };
                             AddObject(ob);
                             ob.Spawned();
                         }
@@ -1225,6 +1225,103 @@ namespace Server.MirEnvir
 
                 #endregion
 
+                #region HealingCircle
+
+                case Spell.HealingCircle:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    for (int y = location.Y - 3; y <= location.Y + 2; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 3; x <= location.X + 2; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        //Only targets
+                                        if (target.IsFriendlyTarget(player))
+                                        {
+                                            if (target.Health >= target.MaxHealth) continue;
+                                            target.HealAmount = (ushort)Math.Min(ushort.MaxValue, target.HealAmount + value);
+                                            target.OperateTime = 0;
+                                            train = true;
+                                        }
+                                        break;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    break;
+
+                #endregion
+
+                #region DevilVision
+
+                case Spell.DevilVision:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 3; x <= location.X + 3; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        //Only targets
+                                        if (!target.IsAttackTarget(player)) break;
+
+                                        if (target.Attacked(player, magic.Spell == Spell.ThunderStorm && !target.Undead ? value / 10 : value, DefenceType.MAC, false) <= 0)
+                                        {
+                                            if (target.Undead)
+                                            {
+                                                target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
+                                            }
+                                            break;
+                                        }
+
+                                        train = true;
+                                        break;
+                                }
+                            }
+
+                        }
+                    }
+
+                    break;
+
+                #endregion
+
                 #region ThunderStorm
 
                 case Spell.ThunderStorm:
@@ -1353,24 +1450,24 @@ namespace Server.MirEnvir
                             if (!cast) continue;
 
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.PoisonCloud,
-                                    Value = value + bonusdmg,
-                                    ExpireTime = Envir.Time + 6000,
-                                    TickSpeed = 1000,
-                                    Caster = player,
-                                    CurrentLocation = new Point(x, y),
-                                    CastLocation = location,
-                                    Show = show,
-                                    CurrentMap = this,
-                                };
+                            {
+                                Spell = Spell.PoisonCloud,
+                                Value = value + bonusdmg,
+                                ExpireTime = Envir.Time + 6000,
+                                TickSpeed = 1000,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                            };
 
                             show = false;
 
                             AddObject(ob);
                             ob.Spawned();
                         }
-                    } 
+                    }
 
                     break;
 
@@ -1467,7 +1564,40 @@ namespace Server.MirEnvir
 
                     for (int i = 0; i < count; i++)
                     {
-                        location = Functions.PointMove(location, dir, 1);
+                        location = Functions.PointMove(location, dir, 1); //distance ??
+
+                        if (!ValidPoint(location)) continue;
+
+                        cell = GetCell(location);
+
+                        if (cell.Objects == null) continue;
+
+                        for (int o = 0; o < cell.Objects.Count; o++)
+                        {
+                            MapObject target = cell.Objects[o];
+                            if (target.Race != ObjectType.Player && target.Race != ObjectType.Monster) continue;
+
+                            if (!target.IsAttackTarget(player)) continue;
+                            if (target.Attacked(player, value, DefenceType.AC, false) > 0)
+                                train = true;
+                            break;
+                        }
+                    }
+                    break;
+
+                #endregion
+
+                #region BreakingFire
+
+                case Spell.BreakingFire:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    dir = (MirDirection)data[4];
+                    count = (int)data[5];
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        location = Functions.PointMove(location, dir, 1); //distance ??
 
                         if (!ValidPoint(location)) continue;
 
@@ -1539,7 +1669,7 @@ namespace Server.MirEnvir
                                 for (int o = 0; o < cell.Objects.Count; o++)
                                 {
                                     MapObject target = cell.Objects[o];
-                                    if (target.Race != ObjectType.Spell || ((SpellObject) target).Spell != Spell.Blizzard) continue;
+                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.Blizzard) continue;
 
                                     cast = false;
                                     break;
@@ -1548,25 +1678,147 @@ namespace Server.MirEnvir
                             if (!cast) continue;
 
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.Blizzard,
-                                    Value = value,
-                                    ExpireTime = Envir.Time + 3000,
-                                    TickSpeed = 440,
-                                    Caster = player,
-                                    CurrentLocation = new Point(x, y),
-                                    CastLocation = location,
-                                    Show = show,
-                                    CurrentMap = this,
-                                    StartTime = Envir.Time + 800,
-                                };
+                            {
+                                Spell = Spell.Blizzard,
+                                Value = value,
+                                ExpireTime = Envir.Time + 3000,
+                                TickSpeed = 440,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                                StartTime = Envir.Time + 800,
+                            };
 
                             show = false;
 
                             AddObject(ob);
                             ob.Spawned();
                         }
-                    } 
+                    }
+
+                    break;
+
+                #endregion
+
+                #region ElectricBomb
+
+                case Spell.ElectricBomb:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    train = true;
+                    show = true;
+
+                    for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 3; x <= location.X + 3; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid) continue;
+
+                            bool cast = true;
+                            if (cell.Objects != null)
+                                for (int o = 0; o < cell.Objects.Count; o++)
+                                {
+                                    MapObject target = cell.Objects[o];
+                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.ElectricBomb) continue;
+
+                                    cast = false;
+                                    break;
+                                }
+
+                            if (!cast) continue;
+
+                            SpellObject ob = new SpellObject
+                            {
+                                Spell = Spell.ElectricBomb,
+                                Value = value,
+                                ExpireTime = Envir.Time + 3000,
+                                TickSpeed = 2000,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                                StartTime = Envir.Time + 800,
+                            };
+
+                            show = false;
+
+                            AddObject(ob);
+                            ob.Spawned();
+                        }
+                    }
+
+                    break;
+
+                #endregion
+
+                #region FreezingStorm
+
+                case Spell.FreezingStorm:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    train = true;
+                    show = true;
+
+                    for (int y = location.Y - 4; y <= location.Y + 4; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 4; x <= location.X + 4; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid) continue;
+
+                            bool cast = true;
+                            if (cell.Objects != null)
+                                for (int o = 0; o < cell.Objects.Count; o++)
+                                {
+                                    MapObject target = cell.Objects[o];
+                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.FreezingStorm) continue;
+
+                                    cast = false;
+                                    break;
+                                }
+
+                            if (!cast) continue;
+
+                            SpellObject ob = new SpellObject
+                            {
+                                Spell = Spell.FreezingStorm,
+                                Value = value,
+                                ExpireTime = Envir.Time + 3000,
+                                TickSpeed = 440,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                                StartTime = Envir.Time + 800,
+                            };
+
+                            show = false;
+
+                            AddObject(ob);
+                            ob.Spawned();
+                        }
+                    }
 
                     break;
 
@@ -1633,6 +1885,67 @@ namespace Server.MirEnvir
 
                 #endregion
 
+                #region DragonStrike
+
+                case Spell.DragonStrike:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+
+                    train = true;
+                    show = true;
+
+                    for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 2; x <= location.X + 2; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid) continue;
+
+                            bool cast = true;
+                            if (cell.Objects != null)
+                                for (int o = 0; o < cell.Objects.Count; o++)
+                                {
+                                    MapObject target = cell.Objects[o];
+                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.DragonStrike) continue;
+
+                                    cast = false;
+                                    break;
+                                }
+
+                            if (!cast) continue;
+
+                            SpellObject ob = new SpellObject
+                            {
+                                Spell = Spell.DragonStrike,
+                                Value = value,
+                                ExpireTime = Envir.Time + 3000,
+                                TickSpeed = 440,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                                StartTime = Envir.Time + 800,
+                            };
+
+                            show = false;
+
+                            AddObject(ob);
+                            ob.Spawned();
+                        }
+                    }
+
+                    break;
+
+                #endregion
+
                 #region TrapHexagon
 
                 case Spell.TrapHexagon:
@@ -1663,7 +1976,7 @@ namespace Server.MirEnvir
                                 {
                                     centerTarget = (MonsterObject)target;
                                 }
-                                
+
                                 switch (target.Race)
                                 {
                                     case ObjectType.Monster:
@@ -1752,7 +2065,7 @@ namespace Server.MirEnvir
                                         if (target.IsAttackTarget(player))
                                         {
                                             target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = value, TickSpeed = 1000, Value = value2 }, player);
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ value2 } });
+                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[] { value2 } });
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1877,7 +2190,7 @@ namespace Server.MirEnvir
                                             {
                                                 target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
                                             }
-                                            
+
                                             if (target.Race == ObjectType.Player)
                                             {
                                                 PlayerObject tempOb = (PlayerObject)target;
@@ -2019,12 +2332,12 @@ namespace Server.MirEnvir
                     if (hasVampBuff)//Vampire Effect
                     {
                         //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
+                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[] { value }, Visible = true, ObjectID = player.ObjectID });
                     }
                     if (hasPoisonBuff)//Poison Effect
                     {
                         //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
+                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[] { value }, Visible = true, ObjectID = player.ObjectID });
                     }
                     break;
 
@@ -2032,7 +2345,7 @@ namespace Server.MirEnvir
 
                 #region Portal
 
-                case Spell.Portal:                  
+                case Spell.Portal:
                     value = (int)data[2];
                     location = (Point)data[3];
                     value2 = (int)data[4];
@@ -2225,7 +2538,7 @@ namespace Server.MirEnvir
 
                 if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
                     player.Enqueue(p);
-                    
+
             }
         }
 
@@ -2251,7 +2564,7 @@ namespace Server.MirEnvir
             if (Functions.InRange(location, Player.CurrentLocation, Globals.DataRange))
             {
                 Player.Enqueue(p);
-            }    
+            }
         }
 
         public bool Inactive(int count = 5)

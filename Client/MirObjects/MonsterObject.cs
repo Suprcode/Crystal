@@ -1078,6 +1078,9 @@ namespace Client.MirObjects
                     case Monster.CrystalWeaver:
                         Effects.Add(new Effect(Libraries.Effect, 680, 20, 20 * Frame.Interval, this) { DrawBehind = true, Repeat = true });
                         break;
+                    case Monster.OmaAssassin:
+                        Effects.Add(new Effect(Libraries.Effect, 990, 20, 20 * Frame.Interval, this) { DrawBehind = true, Repeat = true });
+                        break;
                 }
             }
         }

@@ -1309,9 +1309,17 @@ namespace Server.MirObjects
                     newValue = player.Info.Equipment[(int)EquipmentSlot.Amulet] != null ?
                         player.Info.Equipment[(int)EquipmentSlot.Amulet].Info.Name : "No Amulet";
                     break;
+                case "EXTRA AMULET":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.ExtraAmulet] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.ExtraAmulet].Info.Name : "No Extra Amulet";
+                    break;
                 case "STONE":
                     newValue = player.Info.Equipment[(int)EquipmentSlot.Stone] != null ?
                         player.Info.Equipment[(int)EquipmentSlot.Stone].Info.Name : "No Stone";
+                    break;
+                case "SHOULDERPADS":
+                    newValue = player.Info.Equipment[(int)EquipmentSlot.ShoulderPads] != null ?
+                        player.Info.Equipment[(int)EquipmentSlot.ShoulderPads].Info.Name : "No Shoulder Pads";   //pads
                     break;
                 case "TORCH":
                     newValue = player.Info.Equipment[(int)EquipmentSlot.Torch] != null ?

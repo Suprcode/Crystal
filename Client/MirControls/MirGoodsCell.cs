@@ -64,7 +64,8 @@ namespace Client.MirControls
                     PriceLabel.Text = string.Format("Price: {0} pearl", (uint)(Item.Price() * GameScene.NPCRate));
             }
             else
-            {
+                PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Price() * GameScene.NPCRate));
+                {
                 if (Recipe)
                 {
                     PriceLabel.Text = string.Format("Craftable Item");

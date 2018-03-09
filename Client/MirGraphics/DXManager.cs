@@ -228,10 +228,25 @@ namespace Client.MirGraphics
             CurrentSurface = surface;
             Device.SetRenderTarget(0, surface);
         }
+        //public static void SetGrayscale(bool value)
+        //{
+        //    GrayScale = value;
+        //    if (value == true)
+        //    {
+        //        if (Device.PixelShader == GrayScalePixelShader) return;
+        //        Sprite.Flush();
+        //        Device.PixelShader = GrayScalePixelShader;
+        //    }
+        //    else
+        //    {
+        //        if (Device.PixelShader == null) return;
+        //        Sprite.Flush();
+        //        Device.PixelShader = null;
+        //    }
+        //}
         public static void SetGrayscale(bool value)
         {
-            GrayScale = value;
-
+            Grayscale = value;
             if (value == true)
             {
                 if (Device.PixelShader == GrayScalePixelShader) return;
@@ -245,6 +260,8 @@ namespace Client.MirGraphics
                 Device.PixelShader = null;
             }
         }
+
+
 
         public static void AttemptReset()
         {

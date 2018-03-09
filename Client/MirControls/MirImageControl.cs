@@ -149,25 +149,44 @@ namespace Client.MirControls
             ForeColour = Color.White;
         }
 
+        //protected internal override void DrawControl()
+        //{
+        //    base.DrawControl();
+
+        //    if (DrawImage && Library != null)
+        //    {
+        //        bool oldGray = DXManager.GrayScale;
+
+        //        if (GrayScale)
+        //        {
+        //            DXManager.SetGrayscale(true);
+        //        }
+
+        //        if (Blending)
+        //            Library.DrawBlend(Index, DisplayLocation, ForeColour, false, BlendingRate);
+        //        else
+        //            Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
+
+        //        if (GrayScale) DXManager.SetGrayscale(oldGray);
+        //    }
+        //}
         protected internal override void DrawControl()
         {
             base.DrawControl();
 
+
             if (DrawImage && Library != null)
             {
-                bool oldGray = DXManager.GrayScale;
+                if (GrayScale) DXManager.SetGrayscale(1F, Color.White);
 
-                if (GrayScale)
-                {
-                    DXManager.SetGrayscale(true);
-                }
 
                 if (Blending)
                     Library.DrawBlend(Index, DisplayLocation, ForeColour, false, BlendingRate);
                 else
                     Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
 
-                if (GrayScale) DXManager.SetGrayscale(oldGray);
+
+                if (GrayScale) DXManager.SetNormal(1F, Color.White);
             }
         }
 

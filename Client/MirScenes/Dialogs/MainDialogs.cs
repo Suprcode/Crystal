@@ -2498,7 +2498,15 @@ namespace Client.MirScenes.Dialogs
                 ItemSlot = (int)EquipmentSlot.Stone,
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
-                Location = new Point(128, 242),
+                Location = new Point(127, 242),
+            };
+
+            Grid[(int)EquipmentSlot.ExtraAmulet] = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.ExtraAmulet,
+                GridType = MirGridType.Equipment,
+                Parent = CharacterPage,
+                Location = new Point(166, 242),
             };
 
             Grid[(int)EquipmentSlot.Mount] = new MirItemCell
@@ -2507,6 +2515,15 @@ namespace Client.MirScenes.Dialogs
                 GridType = MirGridType.Equipment,
                 Parent = CharacterPage,
                 Location = new Point(203, 62),
+            };
+
+            // pads
+            Grid[(int)EquipmentSlot.ShoulderPads] = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.ShoulderPads,
+                GridType = MirGridType.Equipment,
+                Parent = CharacterPage,
+                Location = new Point(86, 7),
             };
 
             // STATS I
@@ -3250,7 +3267,8 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class InspectDialog : MirImageControl
     {
-        public static UserItem[] Items = new UserItem[14];
+        public static UserItem[] Items = new UserItem[16];
+        public MirItemCell ShoulderPadsCell;
         public static uint InspectID;
 
         public string Name;
@@ -3279,7 +3297,7 @@ namespace Client.MirScenes.Dialogs
             BraceletRCell,
             RingLCell,
             RingRCell,
-            AmuletCell,
+            ExtraAmuletCell,
             BeltCell,
             BootsCell,
             StoneCell,
@@ -3543,7 +3561,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(203, 206),
             };
 
-            AmuletCell = new MirItemCell
+            ExtraAmuletCell = new MirItemCell
             {
                 ItemSlot = (int)EquipmentSlot.Amulet,
                 GridType = MirGridType.Inspect,
@@ -3574,12 +3592,28 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(128, 242),
             };
 
+            ExtraAmuletCell = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.ExtraAmulet,
+                GridType = MirGridType.Inspect,
+                Parent = CharacterPage,
+                Location = new Point(168, 242),
+            };
+
             MountCell = new MirItemCell
             {
                 ItemSlot = (int)EquipmentSlot.Mount,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
                 Location = new Point(203, 62),
+            };
+
+            ShoulderPadsCell = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.ShoulderPads,
+                GridType = MirGridType.Inspect,
+                Parent = CharacterPage,
+                Location = new Point(86, 7),
             };
         }
 
@@ -4934,7 +4968,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class CharacterDuraPanel : MirImageControl
     {
-        public MirImageControl GrayBackground, Background, Helmet, Armour, Belt, Boots, Weapon, Necklace, RightBracelet, LeftBracelet, RightRing, LeftRing, Torch, Stone, Amulet, Mount, Item1, Item2;
+        public MirImageControl GrayBackground, Background, Helmet, Armour, Belt, Boots, Weapon, Necklace, RightBracelet, LeftBracelet, RightRing, LeftRing, Torch, Stone, Amulet, Mount, Item1, Item2, ShoulderPads, ExtraAmulet;
 
         public CharacterDuraPanel()
         {
@@ -4979,7 +5013,8 @@ namespace Client.MirScenes.Dialogs
             Mount = new MirImageControl() { Index = -1, Library = Libraries.Prguse, Parent = Background, Size = new Size(12, 12), Location = new Point(43, 68) };
             Item1 = new MirImageControl() { Index = -1, Library = Libraries.Prguse, Parent = Background, Size = new Size(8, 12), Location = new Point(19, 67) };
             Item2 = new MirImageControl() { Index = -1, Library = Libraries.Prguse, Parent = Background, Size = new Size(8, 12), Location = new Point(31, 67) };
-
+            ShoulderPads = new MirImageControl() { Index = -1, Library = Libraries.Prguse, Parent = Background, Size = new Size(12, 12), Location = new Point(88, 7) };  //pads
+            ExtraAmulet = new MirImageControl() { Index = -1, Library = Libraries.Prguse, Parent = Background, Size = new Size(12, 12), Location = new Point(8, 134) };
             #endregion
         }
 
@@ -4998,6 +5033,7 @@ namespace Client.MirScenes.Dialogs
             if (GameScene.Scene.CharacterDialog.Grid[10].Item == null) { Belt.Index = -1; }
             if (GameScene.Scene.CharacterDialog.Grid[11].Item == null) { Boots.Index = -1; }
             if (GameScene.Scene.CharacterDialog.Grid[12].Item == null) { Stone.Index = -1; }
+            if (GameScene.Scene.CharacterDialog.Grid[13].Item == null) { ShoulderPads.Index = -1; }  //pads
 
             for (int i = 0; i < MapObject.User.Equipment.Length; i++)
             {
@@ -5015,6 +5051,8 @@ namespace Client.MirScenes.Dialogs
             switch (item.Info.Type)
             {
                 case ItemType.Amulet: //Based on stacks of 5000
+                    if (GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.Amulet].Item != null && item.UniqueID == GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.Amulet].Item.UniqueID)
+                    {
                     if (item.Count > AmuletWarning)
                         Amulet.Index = 2134;
                     if (item.Count <= AmuletWarning)
@@ -5023,6 +5061,18 @@ namespace Client.MirScenes.Dialogs
                         Amulet.Index = 2136;
                     if (item.Count == 0)
                         Amulet.Index = -1;
+                    }
+                    else if (GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.ExtraAmulet].Item != null && item.UniqueID == GameScene.Scene.CharacterDialog.Grid[(byte)EquipmentSlot.ExtraAmulet].Item.UniqueID)
+                    {
+                    if (item.Count > AmuletWarning)
+                        Amulet.Index = 2134;
+                    if (item.Count <= AmuletWarning)
+                        Amulet.Index = 2135;
+                    if (item.Count <= AmuletDanger)
+                        Amulet.Index = 2136;
+                    if (item.Count == 0)
+                        Amulet.Index = -1;
+                    }
                     break;
                 case ItemType.Armour:
                     if (item.CurrentDura > Warning)
@@ -5045,6 +5095,16 @@ namespace Client.MirScenes.Dialogs
                         Belt.Index = -1;
                     break;
                 case ItemType.Boots:
+                    if (item.CurrentDura > Warning)
+                        Boots.Index = 2152;
+                    if (item.CurrentDura <= Warning)
+                        Boots.Index = 2153;
+                    if (item.CurrentDura <= Danger)
+                        Boots.Index = 2154;
+                    if (item.CurrentDura == 0)
+                        Boots.Index = -1;
+                    break;
+                case ItemType.ShoulderPads:
                     if (item.CurrentDura > Warning)
                         Boots.Index = 2152;
                     if (item.CurrentDura <= Warning)

@@ -701,6 +701,32 @@ namespace Client.MirObjects
                     case 100: //Oma King Robe effect
                         Effects.Add(new SpecialEffect(Libraries.Effect, 352, 33, 3600, this, true, false, 0) { Repeat = true });
                         break;
+                    #region Armour Effects New
+                    case 101: //Blue Dragon
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1210, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1240, 32, 3200, this, true, false, 1) { Repeat = true, Delay = 500 };
+                        effect.SetStart(CMain.Time + 500);
+                        Effects.Add(effect);
+                        break;
+                    case 102: // Red Dragon
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect2 = new SpecialEffect(Libraries.Effect, 1020, 32, 3200, this, true, false, 1) { Repeat = true, Delay = 500 };
+                        effect2.SetStart(CMain.Time + 500);
+                        Effects.Add(effect2);
+                        break;
+                    case 103: // Mist
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 296, 32, 3600, this, true, false, 1) { Repeat = true });
+                        break;
+                    case 104: // Great Fox Spirit aura
+                        Effects.Add(new SpecialEffect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 375 + (CMain.Random.Next(3) * 20), 20, 1400, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 107: // Part of blue dragon (the swirling)
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 710, 40, 3000, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 108: //Great Dragon
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 760, 94, 5000, this, true, true, 0) { Repeat = true });
+                        break;
+                        #endregion
                 }
             }
 
@@ -906,6 +932,23 @@ namespace Client.MirObjects
                 return;
             }
 
+            if (ActionFeed.Any())
+                if (User.RidingMount)
+                    switch (ActionFeed.First().Action)
+                    {
+                        case MirAction.Spell:
+                        //case MirAction.Attack1:
+                        case MirAction.Attack2:
+                        case MirAction.Attack3:
+                        case MirAction.Attack4:
+                        case MirAction.AttackRange1:
+                        case MirAction.AttackRange2:
+                        case MirAction.Mine:
+                        case MirAction.Harvest:
+                            ActionFeed.RemoveAt(0);
+                            return;
+                    }
+
 
             if (ActionFeed.Count == 0)
             {
@@ -1087,7 +1130,7 @@ namespace Client.MirObjects
                         break;
                     case MirAction.Attack4:
                         Spell = (Spell)action.Params[0];
-                        Frames.Frames.TryGetValue(Spell == Spell.TwinDrakeBlade || Spell == Spell.FlamingSword ? MirAction.Attack1 : CurrentAction, out Frame);
+                        Frames.Frames.TryGetValue(Spell == Spell.TwinDrakeBlade || Spell == Spell.FlamingSword || Spell == Spell.FrozenSword ? MirAction.Attack1 : CurrentAction, out Frame);
                         break;
                     case MirAction.Spell:
                         Spell = (Spell)action.Params[0];
@@ -1114,8 +1157,24 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
                                 break;
+                            case Spell.DragonAvalanche:
+                                Frames.Frames.TryGetValue(MirAction.Attack3, out Frame);
+                                if (this == User)
+                                {
+                                    MapControl.NextAction = CMain.Time + 2500;
+                                    GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
+                                }
+                                break;
                             case Spell.SlashingBurst:
                                  Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
+                                if (this == User)
+                                {
+                                    MapControl.NextAction = CMain.Time + 2000; // 80%
+                                    GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
+                                }
+                                break;
+                            case Spell.BreakingFire:
+                                Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 if (this == User)
                                 {
                                     MapControl.NextAction = CMain.Time + 2000; // 80%
@@ -1393,6 +1452,16 @@ namespace Client.MirObjects
                                     }
                                 }
 
+                                if (GameScene.DoubleDragon)
+                                {
+                                    if (TargetObject != null || GameScene.Scene.MapControl.CanDoubleDragon(CurrentLocation))
+                                    {
+                                        magic = User.GetMagic(Spell.DoubleDragon);
+                                        if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                            Spell = Spell.DoubleDragon;
+                                    }
+                                }
+
                                 if (GameScene.DoubleSlash)
                                 {
                                     magic = User.GetMagic(Spell.DoubleSlash);
@@ -1406,6 +1475,13 @@ namespace Client.MirObjects
                                     magic = User.GetMagic(Spell.TwinDrakeBlade);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
                                         Spell = Spell.TwinDrakeBlade;
+                                }
+
+                                if (GameScene.FrozenSword && TargetObject != null)
+                                {
+                                    magic = User.GetMagic(Spell.FrozenSword);
+                                    if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
+                                        Spell = Spell.FrozenSword;
                                 }
 
                                 if (GameScene.FlamingSword)
@@ -1427,6 +1503,8 @@ namespace Client.MirObjects
                                 GameScene.TwinDrakeBlade = false;
                             if (Spell == Spell.FlamingSword)
                                 GameScene.FlamingSword = false;
+                            if (Spell == Spell.FrozenSword)
+                                GameScene.FrozenSword = false;
 
                             magic = User.GetMagic(Spell);
 
@@ -1571,11 +1649,19 @@ namespace Client.MirObjects
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
+                            case Spell.DoubleDragon:
+                                SoundManager.PlaySound(20000 + (ushort)Spell.CrossHalfMoon * 10);
+                                break;
+
                             case Spell.FlamingSword:
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
                                 break;
 
-                            
+                            case Spell.FrozenSword:
+                                SoundManager.PlaySound(20000 + (ushort)Spell.FrozenSword * 10 + 1);
+                                break;
+
+
                         }
                         break;
                     case MirAction.Attack4:
@@ -1719,6 +1805,22 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region MagicAmulet
+
+                            case Spell.MagicAmulet:
+                                SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10);
+                                break;
+
+                            #endregion
+
+                            #region DragonAmulet
+
+                            case Spell.DragonAmulet:
+                                SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10);
+                                break;
+
+                            #endregion
+
                             #region SummonSkeleton
 
                             case Spell.SummonSkeleton:
@@ -1841,6 +1943,14 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region FlameDisruptor
+
+                            case Spell.DragonDisruptor:
+                                Effects.Add(new Effect(Libraries.Magic6, 310, 6, Frame.Count * FrameInterval, this));
+                                break;
+
+                            #endregion
+
                             #region SummonShinsu
 
                             case Spell.SummonShinsu:
@@ -1950,11 +2060,29 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region DevilVision
+
+                            case Spell.DevilVision:
+                                MapControl.Effects.Add(new Effect(Libraries.Magic4, 30, 21, 1800, CurrentLocation));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.FlameField * 10);
+                                break;
+
+                            #endregion
+
                             #region MassHealing
 
                             case Spell.MassHealing:
                                 Effects.Add(new Effect(Libraries.Magic, 1790, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
+                            #region HealingCircle
+
+                            case Spell.HealingCircle:
+                                Effects.Add(new Effect(Libraries.Magic3, 620, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.MassHealing * 10);
                                 break;
 
                             #endregion
@@ -2078,12 +2206,32 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region DragonAvalanche
+
+                            case Spell.DragonAvalanche:
+                                Effects.Add(new Effect(Libraries.Magic6, 1678 + (int)Direction * 9, 9, 9 * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.BladeAvalanche * 10);
+                                break;
+
+                            #endregion
+
                             #region SlashingBurst
 
                             case Spell.SlashingBurst:
                                 //MapControl.Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, CurrentLocation));
                                 Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                SlashingBurstTime = CMain.Time + 2000;
+                                break;
+
+                            #endregion
+
+                            #region BreakingFire
+
+                            case Spell.BreakingFire:
+                                //MapControl.Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, CurrentLocation));
+                                Effects.Add(new Effect(Libraries.Magic6, 0 + (int)Direction * 10, 6, 6 * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.SlashingBurst * 10);
                                 SlashingBurstTime = CMain.Time + 2000;
                                 break;
 
@@ -2141,11 +2289,45 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region ElectricBomb
+
+                            case Spell.ElectricBomb:
+                                Effects.Add(new Effect(Libraries.Magic4, 200, 8, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.ThunderStorm * 10);
+                                //GameScene.SpellTime = CMain.Time + 6000; //Spell Delay
+                                BlizzardStopTime = CMain.Time + 3000;
+                                
+                                break;
+
+                            #endregion
+
+                            #region FreezingStorm
+
+                            case Spell.FreezingStorm:
+                                Effects.Add(new Effect(Libraries.Magic4, 1240, 8, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.Blizzard * 10);
+                                //GameScene.SpellTime = CMain.Time + 6000; //Spell Delay
+                                BlizzardStopTime = CMain.Time + 3000;
+
+                                break;
+
+                            #endregion
+
                             #region MeteorStrike
 
                             case Spell.MeteorStrike:
                                 Effects.Add(new Effect(Libraries.Magic2, 1590, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                BlizzardStopTime = CMain.Time + 3000;
+                                break;
+
+                            #endregion
+
+                            #region MeteorStrike
+
+                            case Spell.DragonStrike:
+                                Effects.Add(new Effect(Libraries.Magic6, 1302, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.MeteorStrike * 10);
                                 BlizzardStopTime = CMain.Time + 3000;
                                 break;
 
@@ -2197,6 +2379,7 @@ namespace Client.MirObjects
 
 
                         break;
+
                     case MirAction.Dead:
                         GameScene.Scene.Redraw();
                         GameScene.Scene.MapControl.SortObject(this);
@@ -3040,6 +3223,46 @@ namespace Client.MirObjects
 
                                     #endregion
 
+                                    #region MagicAmulet
+
+                                    case Spell.MagicAmulet:
+                                        Effects.Add(new Effect(Libraries.Magic4, 1260, 29, Frame.Count * FrameInterval, this));
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10 + 1);
+                                        missile = CreateProjectile(1290, Libraries.Magic4, true, 3, 30, 7);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic4, 1450, 23, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10 + 2);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+
+                                    #region DragonAmulet
+
+                                    case Spell.DragonAmulet:
+                                        Effects.Add(new Effect(Libraries.Magic6, 1658, 15, Frame.Count * FrameInterval, this));
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10 + 1);
+                                        missile = CreateProjectile(1488, Libraries.Magic6, true, 6, 30, 4);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic6, 1648, 5, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.SoulFireBall * 10 + 2);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+
                                     #region EnergyShield
 
                                     case Spell.EnergyShield:
@@ -3126,6 +3349,16 @@ namespace Client.MirObjects
 
                                     #endregion
 
+                                    #region HealingCircle
+
+                                    case Spell.HealingCircle:
+
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.MassHealing * 10 + 1);
+                                        MapControl.Effects.Add(new Effect(Libraries.Magic3, 630, 10, 1000, TargetPoint));
+                                        break;
+
+                                    #endregion
+
                                     #region IceStorm
 
                                     case Spell.IceStorm:
@@ -3180,6 +3413,20 @@ namespace Client.MirObjects
                                             MapControl.Effects.Add(new Effect(Libraries.Magic2, 140, 10, 600, TargetPoint));
                                         else
                                             ob.Effects.Add(new Effect(Libraries.Magic2, 140, 10, 600, ob));
+                                        break;
+
+                                    #endregion
+
+                                    #region FlameDisruptor
+
+                                    case Spell.DragonDisruptor:
+
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.FlameDisruptor * 10);
+
+                                        if (ob == null)
+                                            MapControl.Effects.Add(new Effect(Libraries.Magic6, 380, 9, 600, TargetPoint));
+                                        else
+                                            ob.Effects.Add(new Effect(Libraries.Magic6, 380, 9, 600, ob));
                                         break;
 
                                     #endregion
@@ -3296,6 +3543,34 @@ namespace Client.MirObjects
 
                                     case Spell.Blizzard:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        //BlizzardFreezeTime = CMain.Time + 3000;
+                                        break;
+
+                                    #endregion
+
+                                    #region ElectricBomb
+
+                                    case Spell.ElectricBomb:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.ThunderStorm * 10 + 1);
+                                        //BlizzardFreezeTime = CMain.Time + 3000;
+                                        break;
+
+                                    #endregion
+
+                                    #region FreezingStorm
+
+                                    case Spell.FreezingStorm:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.Blizzard * 10 + 1);
+                                        //BlizzardFreezeTime = CMain.Time + 3000;
+                                        break;
+
+                                    #endregion
+
+                                    #region DragonStrike
+
+                                    case Spell.DragonStrike:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.MeteorStrike * 10 + 1);
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.MeteorStrike * 10 + 2);
                                         //BlizzardFreezeTime = CMain.Time + 3000;
                                         break;
 
@@ -4940,8 +5215,14 @@ namespace Client.MirObjects
                         case Spell.CrossHalfMoon:
                             Libraries.Magic2.DrawBlend(40 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
                             break;
+                        case Spell.DoubleDragon:
+                            Libraries.Magic6.DrawBlend(1180 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                            break;
                         case Spell.FlamingSword:
                             Libraries.Magic.DrawBlend(3480 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                            break;
+                        case Spell.FrozenSword:
+                            Libraries.Magic5.DrawBlend(470 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
                             break;
                     }
                     break;
@@ -4957,6 +5238,9 @@ namespace Client.MirObjects
                             break;
                         case Spell.FlamingSword:
                             Libraries.Magic.DrawBlend(3480 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                            break;
+                        case Spell.FrozenSword:
+                            Libraries.Magic5.DrawBlend(470 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
                             break;
                     }
                     break;
