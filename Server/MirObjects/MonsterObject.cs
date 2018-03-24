@@ -2122,7 +2122,7 @@ namespace Server.MirObjects
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
-            if (Respawn.IsEventObjective && attacker.tempEvent != null)
+            if (Respawn != null && Respawn.IsEventObjective && attacker.tempEvent != null)
             {
                 if (!Contributers.Contains(attacker))
                     Contributers.Add(attacker);
