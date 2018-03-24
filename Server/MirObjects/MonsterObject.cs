@@ -2217,7 +2217,7 @@ namespace Server.MirObjects
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
-            if (Respawn.IsEventObjective && attacker.Master != null && attacker.Master is PlayerObject)
+            if (Respawn != null && Respawn.IsEventObjective && attacker.Master != null && attacker.Master is PlayerObject)
             {
                 var playerAttacker = (PlayerObject)attacker.Master;
                 if (!Contributers.Contains(playerAttacker) && playerAttacker.tempEvent != null)
