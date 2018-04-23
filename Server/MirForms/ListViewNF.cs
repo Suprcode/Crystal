@@ -1,10 +1,17 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace Server
 {
-    public class ListViewNF : ListView
+    public partial class ListViewNF : ListView
     {
         public class ListViewColumnSorter : IComparer
         {
@@ -84,6 +91,8 @@ namespace Server
 
         public ListViewNF()
         {
+            InitializeComponent();
+
             _itemSelectionChangedTimer.Interval = 1;
             _selectedIndexChangedTimer.Interval = 1;
 
