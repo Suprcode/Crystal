@@ -183,7 +183,8 @@ public enum IntelligentCreatureType : byte
     BabySnowMan = 9,
     Frog = 10,
     BabyMonkey = 11,
-    AngryBird = 12
+    AngryBird = 12,
+    Foxey = 13,
 }
 
 //1 blank mob files
@@ -635,6 +636,7 @@ public enum Monster : ushort
     Frog = 10010,//unknown
     BabyMonkey = 10011,//unknown
     AngryBird = 10012,
+    Foxey = 10013,
 }
 
 public enum MirAction : byte
