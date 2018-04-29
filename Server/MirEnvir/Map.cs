@@ -2138,7 +2138,22 @@ namespace Server.MirEnvir
                                 MapObject target = cell.Objects[i];
                                 if (target.Race != ObjectType.Monster) continue;
 
-                                if (Envir.Random.Next(10) >= 4) continue;
+                                if (magic.Level == 0)
+                                {
+                                    if (Envir.Random.Next(60) >= 4) continue;
+                                }
+                                else if (magic.Level == 1)
+                                {
+                                    if (Envir.Random.Next(45) >= 3) continue;
+                                }
+                                else if (magic.Level == 2)
+                                {
+                                    if (Envir.Random.Next(30) >= 2) continue;
+                                }
+                                else if (magic.Level == 3)
+                                {
+                                    if (Envir.Random.Next(15) >= 1) continue;
+                                }
 
                                 if (((MonsterObject)target).Info.CoolEye == 100) continue;
                                 target.Target = player;

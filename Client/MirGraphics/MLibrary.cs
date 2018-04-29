@@ -73,7 +73,7 @@ namespace Client.MirGraphics
                                           Mounts = new MLibrary[12],
                                           NPCs = new MLibrary[200],
                                           Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[13],
+                                          Pets = new MLibrary[14],
                                           Transform = new MLibrary[28],
                                           TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
