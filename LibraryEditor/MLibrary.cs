@@ -133,8 +133,7 @@ namespace LibraryEditor
         {
             string fileName = Path.ChangeExtension(FileName, ".Lib");
 
-            string file = Path.GetFileNameWithoutExtension(fileName);
-            fileName = fileName.Replace(file, file + "-converted");
+            fileName = fileName.Replace(".Lib", "-converted.Lib");
 
             if (File.Exists(fileName))
                 File.Delete(fileName);
