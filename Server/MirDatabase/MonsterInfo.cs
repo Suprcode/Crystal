@@ -208,7 +208,7 @@ namespace Server.MirDatabase
         {
             string[] data = text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (data.Length < 25) return; //28
+            if (data.Length < 28) return; //28
 
             MonsterInfo info = new MonsterInfo {Name = data[0]};
             ushort image;
@@ -244,6 +244,10 @@ namespace Server.MirDatabase
             if (!bool.TryParse(data[23], out info.CanTame)) return;
             if (!bool.TryParse(data[24], out info.CanPush)) return;
 
+            if (!bool.TryParse(data[25], out info.AutoRev)) return;
+            if (!bool.TryParse(data[26], out info.Undead)) return;
+            if (!byte.TryParse(data[27], out info.CoolEye)) return;
+
             //int count;
 
             //if (!int.TryParse(data[27], out count)) return;
@@ -255,8 +259,8 @@ namespace Server.MirDatabase
         }
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24}", Name, (ushort)Image, AI, Effect, Level, ViewRange,
-                HP, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, Light, AttackSpeed, MoveSpeed, Experience, CanTame, CanPush);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27}", Name, (ushort)Image, AI, Effect, Level, ViewRange,
+                HP, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, Light, AttackSpeed, MoveSpeed, Experience, CanTame, CanPush, AutoRev, Undead, CoolEye);
         }
 
         public override string ToString()
