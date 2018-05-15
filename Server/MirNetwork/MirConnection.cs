@@ -1092,11 +1092,11 @@ namespace Server.MirNetwork
                 return;
             }
 
-            if (p.ObjectID == Player.DefaultNPC.ObjectID)
-            {
-                Player.CallDefaultNPC(p.ObjectID, p.Key);
-                return;
-            }
+            //if (p.ObjectID == Player.DefaultNPC.ObjectID)
+            //{
+            //    Player.CallDefaultNPC(p.ObjectID, p.Key);
+            //    return;
+            //}
 
             Player.CallNPC(p.ObjectID, p.Key);
         }
