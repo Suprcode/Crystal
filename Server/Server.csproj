@@ -37,7 +37,7 @@
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -129,6 +129,12 @@
     <Compile Include="MirForms\Database\MagicInfoForm.Designer.cs">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MirForms\ListViewNF.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MirForms\ListViewNF.Designer.cs">
+      <DependentUpon>ListViewNF.cs</DependentUpon>
+    </Compile>
     <Compile Include="MirForms\Systems\ConquestInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,9 +174,6 @@
     <Compile Include="MirEnvir\Dragon.cs" />
     <Compile Include="MirEnvir\Map.cs" />
     <Compile Include="MirDatabase\MapInfo.cs" />
-    <Compile Include="MirForms\ListViewNF.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MirForms\ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>

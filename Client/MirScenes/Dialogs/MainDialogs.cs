@@ -1756,6 +1756,7 @@ namespace Client.MirScenes.Dialogs
                         NotControl = true,
                         UseOffSet = true,
                         Blending = true,
+                        BlendingRate = 1F
                     };
                     animEffect.AfterAnimation += (o, e) => animEffect.Dispose();
                     SoundManager.PlaySound(20000 + (ushort)Spell.MagicShield * 10);

@@ -432,7 +432,9 @@ namespace Client.MirObjects
 									WeaponEffectLibrary1 = WeaponEffect < Libraries.CWeaponEffect.Length ? Libraries.CWeaponEffect[WeaponEffect] : null;
 								else
 									WeaponEffectLibrary1 = null;
-							}
+
+                                WeaponLibrary2 = null;
+                            }
 							else
 							{
 								WeaponLibrary1 = null;
@@ -559,7 +561,9 @@ namespace Client.MirObjects
 									WeaponEffectLibrary1 = WeaponEffect < Libraries.CWeaponEffect.Length ? Libraries.CWeaponEffect[WeaponEffect] : null;
 								else
 									WeaponEffectLibrary1 = null;
-							}
+
+                                WeaponLibrary2 = null;
+                            }
 							else
 							{
 								WeaponLibrary1 = null;

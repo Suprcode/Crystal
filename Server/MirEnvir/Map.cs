@@ -2279,8 +2279,8 @@ namespace Server.MirEnvir
     }
     public class Cell
     {
-        public static readonly Cell HighWall = new Cell { Attribute = CellAttribute.HighWall };
-        public static readonly Cell LowWall = new Cell { Attribute = CellAttribute.LowWall };
+        public static Cell LowWall { get { return new Cell { Attribute = CellAttribute.LowWall }; } }
+        public static Cell HighWall { get { return new Cell { Attribute = CellAttribute.HighWall }; } }
 
         public bool Valid
         {
