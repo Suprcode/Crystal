@@ -132,9 +132,6 @@
     <Compile Include="MirForms\ListViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MirForms\ListViewNF.Designer.cs">
-      <DependentUpon>ListViewNF.cs</DependentUpon>
-    </Compile>
     <Compile Include="MirForms\Systems\ConquestInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
