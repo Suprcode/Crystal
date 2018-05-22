@@ -91,8 +91,6 @@ namespace Server
 
         public ListViewNF()
         {
-            InitializeComponent();
-
             _itemSelectionChangedTimer.Interval = 1;
             _selectedIndexChangedTimer.Interval = 1;
 
