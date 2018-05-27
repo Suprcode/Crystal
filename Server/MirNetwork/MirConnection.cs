@@ -184,6 +184,9 @@ namespace Server.MirNetwork
                 if (!_receiveList.TryDequeue(out p)) continue;
                 TimeOutTime = SMain.Envir.Time + Settings.TimeOut;
                 ProcessPacket(p);
+
+                if (_receiveList == null)
+                    return;
             }
 
             while (_retryList.Count > 0)
