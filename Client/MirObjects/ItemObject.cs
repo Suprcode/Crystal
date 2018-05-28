@@ -7,6 +7,7 @@ using Client.MirGraphics;
 using Client.MirScenes;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
+using Client.MirControls;
 
 namespace Client.MirObjects
 {
@@ -23,9 +24,21 @@ namespace Client.MirObjects
 
         public Size Size;
 
+        public MirAnimatedControl _effect;
+        public ItemGrade Grade;
 
         public ItemObject(uint objectID) : base(objectID)
         {
+            _effect = new MirAnimatedControl()
+            {
+                Animated = true,
+                AnimationCount = 25,
+                AnimationDelay = 100,
+                Index = 680,
+                Library = Libraries.StateEffect,
+                Loop = true,
+                Blending = true,
+            };
         }
 
 
@@ -44,6 +57,8 @@ namespace Client.MirObjects
             Size = BodyLibrary.GetTrueSize(DrawFrame);
 
             DrawY = CurrentLocation.Y;
+
+            Grade = info.Grade;
 
         }
         public void Load(S.ObjectGold info)
@@ -103,6 +118,41 @@ namespace Client.MirObjects
                 DisplayRectangle.X + (DisplayRectangle.Width - NameLabel.Size.Width) / 2,
                 DisplayRectangle.Y + (DisplayRectangle.Height - NameLabel.Size.Height) / 2 - 20);
             NameLabel.Draw();
+        }
+        public void DrawGradeEff()
+        {
+           if (Grade  > ItemGrade.Common)
+           {
+               switch (Grade)
+               {
+                   case ItemGrade.Rare:
+                       _effect.BackColour = Color.DeepSkyBlue;
+                       _effect.ForeColour = Color.DeepSkyBlue;
+                       break;
+                   case ItemGrade.Legendary:
+                       _effect.BackColour = Color.DarkOrange;
+                       _effect.ForeColour = Color.DarkOrange;
+                       break;
+                   case ItemGrade.Mythical:
+                       _effect.BackColour = Color.Purple;
+                       _effect.ForeColour = Color.Purple;
+                       break;
+               }
+           
+               if (Size.Width > 30)
+               {
+                   _effect.Index = 840;
+                   _effect.AnimationCount = 9;
+                   _effect.AnimationDelay = 150;
+                   Libraries.StateEffect.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X - (Size.Width / 2) + 10, DrawLocation.Y + (Size.Height / 2) + 20), _effect.BackColour, true, 10F);
+               }
+               else
+               {
+                   _effect.Index = 680;
+                   _effect.AnimationCount = 25;
+                   Libraries.StateEffect.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X + (Size.Width / 2), DrawLocation.Y + (Size.Height / 2)), _effect.BackColour, true, 10F);
+               }
+            }
         }
 
         public override void DrawBehindEffects(bool effectsEnabled)

@@ -8611,6 +8611,8 @@ namespace Client.MirScenes
                     ItemObject ob = Objects[i] as ItemObject;
                     if (ob == null) continue;
 
+                    ob.DrawGradeEff();
+
                     if (!ob.MouseOver(MouseLocation))
                         ob.DrawName();
                 }

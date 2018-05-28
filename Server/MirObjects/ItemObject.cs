@@ -371,6 +371,7 @@ namespace Server.MirObjects
                         Name = Item.Count > 1 ? string.Format("{0} ({1})", Name, Item.Count) : Name,
                         NameColour = NameColour,
                         Location = CurrentLocation,
+                        Grade = Item.Info.Grade,
                         Image = Item.Image
                     };
 
