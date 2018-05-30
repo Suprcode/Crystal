@@ -7,6 +7,7 @@ using Client.MirGraphics;
 using Client.MirScenes;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
+using Client.MirControls;
 
 namespace Client.MirObjects
 {
@@ -23,9 +24,21 @@ namespace Client.MirObjects
 
         public Size Size;
 
+        public MirAnimatedControl _effect;
+        public ItemGrade Grade;
 
         public ItemObject(uint objectID) : base(objectID)
         {
+            _effect = new MirAnimatedControl()
+            {
+                Animated = true,
+                AnimationCount = 10,
+                AnimationDelay = 100,
+                Index = 0,
+                Library = Libraries.DropEffects,
+                Loop = true,
+                Blending = true,
+            };
         }
 
 
@@ -45,6 +58,7 @@ namespace Client.MirObjects
 
             DrawY = CurrentLocation.Y;
 
+            Grade = info.Grade;
         }
         public void Load(S.ObjectGold info)
         {
@@ -103,6 +117,29 @@ namespace Client.MirObjects
                 DisplayRectangle.X + (DisplayRectangle.Width - NameLabel.Size.Width) / 2,
                 DisplayRectangle.Y + (DisplayRectangle.Height - NameLabel.Size.Height) / 2 - 20);
             NameLabel.Draw();
+        }
+
+        public void DrawGradeEff()
+        {
+            if (Grade > ItemGrade.Common)
+            {
+                switch (Grade)
+                {
+                    case ItemGrade.Rare:
+                        _effect.BackColour = Color.DeepSkyBlue;
+                        _effect.ForeColour = Color.DeepSkyBlue;
+                        break;
+                    case ItemGrade.Legendary:
+                        _effect.BackColour = Color.DarkOrange;
+                        _effect.ForeColour = Color.DarkOrange;
+                        break;
+                    case ItemGrade.Mythical:
+                        _effect.BackColour = Color.Purple;
+                        _effect.ForeColour = Color.Purple;
+                        break;
+                }
+                Libraries.DropEffects.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X, DrawLocation.Y), _effect.BackColour, true, 10F);
+            }
         }
 
         public override void DrawBehindEffects(bool effectsEnabled)
