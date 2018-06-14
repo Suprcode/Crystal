@@ -2183,15 +2183,16 @@ namespace Server.MirObjects
                         int left;
                         int right;
 
-                        if (!int.TryParse(param[0], out left) || !int.TryParse(param[2], out right))
-                        {
-                            failed = true;
-                            break;
-                        }
-
                         try
                         {
-                            failed = !Compare(param[1], left, right);
+                            if (!int.TryParse(param[0], out left) || !int.TryParse(param[2], out right))
+                            {
+                                failed = !Compare(param[1], param[0], param[2]);
+                            }
+                            else
+                            {
+                                failed = !Compare(param[1], left, right);
+                            }
                         }
                         catch (ArgumentException)
                         {

@@ -852,6 +852,7 @@ namespace Client.MirScenes
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i].Draw();
         }
+
         public override void Process()
         {
             if (MapControl == null || User == null)
@@ -874,14 +875,14 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.KeepAlive() { Time = CMain.Time });
             }
 
-            //MirItemCell cell = MouseControl as MirItemCell;
+            MirItemCell cell = MouseControl as MirItemCell;
 
-            //if (cell != null && HoverItem != cell.Item)
-            //{
-            //    DisposeItemLabel();
-            //    HoverItem = null;
-            //    CreateItemLabel(cell.Item);
-            //}
+            if (cell != null && HoverItem != cell.Item && HoverItem != cell.ShadowItem)
+            {
+                DisposeItemLabel();
+                HoverItem = null;
+                CreateItemLabel(cell.Item);
+            }
 
             if (ItemLabel != null && !ItemLabel.IsDisposed)
             {
@@ -8434,11 +8435,11 @@ namespace Client.MirScenes
             SoundList.Music = Music;
         }
 
+
         public void Process()
         {
             Processdoors();
             User.Process();
-
             for (int i = Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = Objects[i];
