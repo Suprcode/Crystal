@@ -8572,6 +8572,18 @@ namespace Client.MirScenes
                 }
             }
 
+            //Disables via Mir2Config.ini
+            if (Settings.ItemFloorGlow)
+            {
+                for (int i = 0; i < Objects.Count; i++)
+                {
+                    ItemObject ob = Objects[i] as ItemObject;
+                    if (ob == null) continue;
+
+                    ob.DrawGradeEffect();
+                }
+            }
+
             if (MapObject.MouseObject != null && !(MapObject.MouseObject is ItemObject))
                 MapObject.MouseObject.DrawName();
 
