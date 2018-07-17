@@ -29,8 +29,7 @@ namespace Client.MirGraphics
             Magic3 = new MLibrary(Settings.DataPath + "Magic3"),
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
-            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill"),
-            ItemEffects = new MLibrary(Settings.DataPath + "ItemEffects");
+            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill");
 
         public static readonly MLibrary
             Background = new MLibrary(Settings.DataPath + "Background");
@@ -292,9 +291,6 @@ namespace Client.MirGraphics
             Progress++;
 
             GuildSkill.Initialize();
-            Progress++;
-
-            ItemEffects.Initialize();
             Progress++;
 
             Background.Initialize();
