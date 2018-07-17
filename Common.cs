@@ -2121,8 +2121,8 @@ public static class Globals
 
     public const uint SearchDelay = 500,
                       ConsignmentLength = 7,
-                      ConsignmentCost = 5000,
-                      MinConsignment = 5000,
+                      ConsignmentCost = 1000,
+                      MinConsignment = 1000,
                       MaxConsignment = 50000000;
 
 }
