@@ -214,6 +214,8 @@ namespace Server.MirObjects
                     return new HellBomb(info);
                 case 100:
                     return new VenomSpider(info);
+                case 101:
+                    return new FeederAnt(info);
 
                 //unfinished
                 case 253:
@@ -1837,6 +1839,11 @@ namespace Server.MirObjects
             else if (attacker.Info.AI == 58) // Tao Guard - attacks Pets
             {
                 if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3) //Not Dear/Hen/Tree
+                    return true;
+            }
+            else if (attacker.Info.AI == 101)
+            {
+                if (Info.AI != 6 && Info.AI != 58 && Master == null)
                     return true;
             }
             else if (Master != null) //Pet Attacked
