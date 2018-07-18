@@ -59,6 +59,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -261,6 +262,7 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
+    <Compile Include="MirObjects\Monsters\FeederAnt.cs" />
     <Compile Include="MirObjects\Monsters\HellBomb.cs" />
     <Compile Include="MirObjects\Monsters\FlameAssassin.cs" />
     <Compile Include="MirObjects\Monsters\FlameMage.cs" />

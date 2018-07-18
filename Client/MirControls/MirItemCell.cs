@@ -13,6 +13,7 @@ namespace Client.MirControls
 {
     public sealed class MirItemCell : MirImageControl
     {
+        MirAnimatedControl GradeEffect;
 
         public UserItem Item
         {
@@ -22,7 +23,7 @@ namespace Client.MirControls
                     return NPCDropDialog.TargetItem;
 
                 if (GridType == MirGridType.TrustMerchant)
-                    return TrustMerchantDialog.Selected != null ? TrustMerchantDialog.Selected.Listing.Item : null;
+                    return TrustMerchantDialog.SellItemSlot;
 
                 if (GridType == MirGridType.Renting)
                     return ItemRentingDialog.RentalItem;
@@ -177,6 +178,20 @@ namespace Client.MirControls
 
         public MirItemCell()
         {
+            GradeEffect = new MirAnimatedControl
+            {
+                Animated = false,
+                AnimationCount = 10,
+                AnimationDelay = 100,
+                Index = 10,
+                Library = Libraries.ItemEffects,
+                Location = new Point(1, -1),
+                NotControl = true,
+                Visible = false,
+                Parent = this
+            };
+            GradeEffect.AfterDraw += GradeEffect_AfterDraw;
+
             Size = new Size(36, 32);
             GridType = MirGridType.None;
             DrawImage = false;
@@ -252,7 +267,7 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.Craft) return;
+            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.Craft) return;
 
             base.OnMouseClick(e);
 
@@ -294,7 +309,7 @@ namespace Client.MirControls
         
         public void UseItem()
         {
-            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.GuildStorage || GridType == MirGridType.Craft) return;
+            if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.GuildStorage || GridType == MirGridType.Craft) return;
 
             if (MapObject.User.Fishing) return;
             if (MapObject.User.RidingMount && Item.Info.Type != ItemType.Scroll && Item.Info.Type != ItemType.Potion && Item.Info.Type != ItemType.Torch) return;
@@ -2032,6 +2047,50 @@ namespace Client.MirControls
             }
             else
                 DisposeCountLabel();
+
+            UpdateGradeImage();
+        }
+
+        private void GradeEffect_AfterDraw(object sender, EventArgs e)
+        {
+            Library.Draw(Item.Image, DisplayLocation.Add(new Point((Size.Width - Library.GetTrueSize(Item.Image).Width) / 2, (Size.Height - Library.GetTrueSize(Item.Image).Height) / 2)), ForeColour, UseOffSet, 1F);
+        }
+
+        private void UpdateGradeImage()
+        {
+            if (Item != null)
+                switch (Item.Info.Grade)
+                {
+                    case ItemGrade.Rare:
+                        GradeEffect.Animated = true;
+                        GradeEffect.Visible = true;
+                        GradeEffect.BackColour = Color.DeepSkyBlue;
+                        GradeEffect.ForeColour = Color.DeepSkyBlue;
+                        break;
+                    case ItemGrade.Legendary:
+                        GradeEffect.Animated = true;
+                        GradeEffect.Visible = true;
+                        GradeEffect.BackColour = Color.DarkOrange;
+                        GradeEffect.ForeColour = Color.DarkOrange;
+                        break;
+                    case ItemGrade.Mythical:
+                        GradeEffect.Animated = true;
+                        GradeEffect.Visible = true;
+                        GradeEffect.BackColour = Color.Purple;
+                        GradeEffect.ForeColour = Color.Purple;
+                        break;
+                    default:
+                        GradeEffect.Animated = false;
+                        GradeEffect.Visible = false;
+                        break;
+                }
+            else
+            {
+                GradeEffect.Animated = false;
+                GradeEffect.Visible = false;
+
+
+            }
         }
 
         protected override void OnMouseEnter()

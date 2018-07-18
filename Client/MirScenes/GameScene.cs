@@ -4467,6 +4467,7 @@ namespace Client.MirScenes
             for (int i = 0; i < p.Listings.Count; i++)
                 Bind(p.Listings[i].Item);
 
+            TrustMerchantDialog.SearchTextBox.Text = "";
             TrustMerchantDialog.Show();
             TrustMerchantDialog.UserMode = p.UserMode;
             TrustMerchantDialog.Listings = p.Listings;
@@ -5778,6 +5779,10 @@ namespace Client.MirScenes
                 {
                     text = string.Format("Exp + {0}% ", minValue + addValue);
                 }
+                else if (HoverItem.Info.Type == ItemType.Charm && HoverItem.Info.Shape == 3)
+                {
+                    text = string.Format("Exp Rate + {0}% ", minValue);
+                }
                 else
                 {
                     text = string.Format(minValue + addValue > 0 ? "Luck + {0}" : "Curse + {0}", Math.Abs(minValue + addValue));
@@ -6483,7 +6488,8 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Strong + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
+                    //Text = string.Format(addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
+                    Text = string.Format(HoverItem.Info.Type == ItemType.Charm && HoverItem.Info.Shape == 3 ? "Drop Rate + {0}%" : addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, STRONGLabel.DisplayRectangle.Right + 4),
@@ -8568,6 +8574,18 @@ namespace Client.MirScenes
 
                     if (!ob.MouseOver(MouseLocation))
                         ob.DrawName();
+                }
+            }
+
+            //Disables via Mir2Config.ini
+            if (Settings.ItemFloorGlow)
+            {
+                for (int i = 0; i < Objects.Count; i++)
+                {
+                    ItemObject ob = Objects[i] as ItemObject;
+                    if (ob == null) continue;
+
+                    ob.DrawGradeEffect();
                 }
             }
 

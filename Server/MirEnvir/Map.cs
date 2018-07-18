@@ -2116,61 +2116,170 @@ namespace Server.MirEnvir
 
                 #region BattleCry
 
-                case Spell.BattleCry:
-                    location = (Point)data[2];
+                        case Spell.BattleCry:
+                            location = (Point)data[2];
 
-                    for (int y = location.Y - 2; y <= location.Y + 2; y++)
-                    {
-                        if (y < 0) continue;
-                        if (y >= Height) break;
-
-                        for (int x = location.X - 2; x <= location.X + 2; x++)
-                        {
-                            if (x < 0) continue;
-                            if (x >= Width) break;
-
-                            cell = GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            #region Level 0
+                            if (magic.Level == 0)
                             {
-                                MapObject target = cell.Objects[i];
-                                if (target.Race != ObjectType.Monster) continue;
+                                for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
 
-                                if (magic.Level == 0)
-                                {
-                                    if (Envir.Random.Next(60) >= 4) continue;
-                                }
-                                else if (magic.Level == 1)
-                                {
-                                    if (Envir.Random.Next(45) >= 3) continue;
-                                }
-                                else if (magic.Level == 2)
-                                {
-                                    if (Envir.Random.Next(30) >= 2) continue;
-                                }
-                                else if (magic.Level == 3)
-                                {
-                                    if (Envir.Random.Next(15) >= 1) continue;
-                                }
 
-                                if (((MonsterObject)target).Info.CoolEye == 100) continue;
-                                target.Target = player;
-                                target.OperateTime = 0;
-                                train = true;
+                                    for (int x = location.X - 2; x <= location.X + 2; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
                             }
-                        }
+                            #endregion
+
+                            #region Level 1
+                            else if (magic.Level == 1)
+                            {
+                                for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
+
+
+                                    for (int x = location.X - 3; x <= location.X + 3; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            #endregion
+
+                            #region Level 2
+                            else if (magic.Level == 2)
+                            {
+                                for (int y = location.Y - 4; y <= location.Y + 4; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
+
+
+                                    for (int x = location.X - 4; x <= location.X + 4; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion
+
+                            #region Level 3
+                            else if (magic.Level == 3)
+                            {
+                                for (int y = location.Y - 5; y <= location.Y + 5; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
+
+
+                                    for (int x = location.X - 5; x <= location.X + 5; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion
+
+                            if (train)
+                                player.LevelMagic(magic);
+                            break;
                     }
-                    break;
+                }
 
-                    #endregion
-            }
-
-            if (train)
-                player.LevelMagic(magic);
-
-        }
+        #endregion
 
         public void AddObject(MapObject ob)
         {

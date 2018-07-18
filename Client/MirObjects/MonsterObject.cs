@@ -316,6 +316,9 @@ namespace Client.MirObjects
                 case Monster.ArmingWeaver:
                 case Monster.SpiderWarrior:
                 case Monster.SpiderBarbarian:
+                case Monster.SoldierAnt:
+                case Monster.ArmouredAnt:
+                case Monster.FeederAnt:
                     Frames = FrameSet.Monsters[2];
                     break;
                 case Monster.CannibalPlant:
@@ -998,6 +1001,9 @@ namespace Client.MirObjects
                     break;
                 case Monster.HellBomb3:
                     Frames = FrameSet.Monsters[207];
+                    break;
+                case Monster.ShooterAnt:
+                    Frames = FrameSet.Monsters[208];
                     break;
 
 
@@ -2922,6 +2928,7 @@ namespace Client.MirObjects
                 case Monster.FlameScythe:
                 case Monster.FlameAssassin:
                 case Monster.FlameQueen:
+                case Monster.FeederAnt:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 default:

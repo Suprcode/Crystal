@@ -603,7 +603,11 @@ public enum Monster : ushort
     Ram1 = 400,
     Ram2 = 401,
     Kite = 402,
-    
+
+    SoldierAnt = 423,
+    ShooterAnt = 424,
+    ArmouredAnt = 425,
+    FeederAnt = 426,
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -806,6 +810,7 @@ public enum ItemType : byte
 	Awakening = 35,
     Pets = 36,
     Transform = 37,
+    Charm = 38,
 }
 
 public enum MirGridType : byte
@@ -2121,8 +2126,8 @@ public static class Globals
 
     public const uint SearchDelay = 500,
                       ConsignmentLength = 7,
-                      ConsignmentCost = 5000,
-                      MinConsignment = 5000,
+                      ConsignmentCost = 1000,
+                      MinConsignment = 1000,
                       MaxConsignment = 50000000;
 
 }

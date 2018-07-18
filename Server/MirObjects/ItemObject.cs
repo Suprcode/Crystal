@@ -371,8 +371,9 @@ namespace Server.MirObjects
                         Name = Item.Count > 1 ? string.Format("{0} ({1})", Name, Item.Count) : Name,
                         NameColour = NameColour,
                         Location = CurrentLocation,
-                        Image = Item.Image
-                    };
+                        Image = Item.Image,
+                        Grade = Item.Info.Grade
+                };
 
             return new S.ObjectGold
                 {
