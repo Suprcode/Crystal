@@ -4788,6 +4788,8 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class BigMapDialog : MirControl
     {
+        public List<MirImageControl> PublicEvents = new List<MirImageControl>();
+
         public BigMapDialog()
         {
             NotControl = true;
@@ -4876,11 +4878,61 @@ namespace Client.MirScenes.Dialogs
 
                 DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
             }
+            DisposeEvents();
+            for (int i = MapControl.MapEvents.Count - 1; i >= 0; i--)
+            {
+                MapEventClientSide mapEvent = MapControl.MapEvents[i];
+
+                float x = ((mapEvent.Location.X - startPointX) * scaleX) + Location.X;
+                float y = ((mapEvent.Location.Y - startPointY) * scaleY) + Location.Y;
+
+                int imgIndex = 0;
+                switch (mapEvent.EventType)
+                {
+                    case EventType.MonsterSlay:
+                        imgIndex = 2259;
+                        break;
+                    case EventType.Invasion:
+                        imgIndex = 1811;
+                        break;
+                    case EventType.DailyBoss:
+                        imgIndex = 2091;
+                        break;
+                    case EventType.WeeklyBoss:
+                        imgIndex = 2092;
+                        break;
+                }
+
+                PublicEvents.Add(new MirImageControl()
+                {
+                    Parent = this.Parent,
+                    Library = Libraries.Items,
+                    Index = imgIndex,
+                    Location = new Point((int)(x - 10), (int)(y - 10)),
+                    NotControl = false,
+                    Visible = true,
+                    Hint = mapEvent.EventName,
+                    Blending = false,
+                    Size = new Size(10, 10)
+                });
+            }
         }
+        public void DisposeEvents()
+        {
+            for (int i = 0; i < PublicEvents.Count; i++)
+                PublicEvents[i].Dispose();
 
-
+            PublicEvents.Clear();
+        }
+        public void Hide()
+        {
+            DisposeEvents();
+            Visible = false;
+        }
         public void Toggle()
         {
+            DisposeEvents();
+            
             Visible = !Visible;
 
             Redraw();

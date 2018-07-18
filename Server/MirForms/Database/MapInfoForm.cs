@@ -23,6 +23,9 @@ namespace Server
         private List<RespawnInfo> _selectedRespawnInfos;
         private List<MovementInfo> _selectedMovementInfos;
         private List<MineZone> _selectedMineZones;
+        private List<PublicEventInfo> _selectedEvents;
+        private List<EventRespawn> _selectedEventRespawns;
+
         private MapInfo _info;
 
         public MapInfoForm()
@@ -40,6 +43,10 @@ namespace Server
 
             ConquestComboBox.Items.Add(new ListItem("None", "0"));
             for (int i = 0; i < Envir.ConquestInfos.Count; i++) ConquestComboBox.Items.Add(Envir.ConquestInfos[i]);
+
+
+            ddlEventType.Items.AddRange(Enum.GetValues(typeof(EventType)).Cast<object>().ToArray());
+            ddlEventType.Select(0, 0);
 
             UpdateInterface();
         }
@@ -185,6 +192,96 @@ namespace Server
             UpdateRespawnInterface();
             UpdateMovementInterface();
             UpdateMineZoneInterface();
+            UpdateEventsInterface();
+        }
+        private void UpdateEventsInterface()
+        {
+            if (_selectedMapInfos.Count != 1)
+            {
+                lstEventInfos.Items.Clear();
+                if (_selectedEvents != null && _selectedEvents.Count > 0)
+                    _selectedEvents.Clear();
+                _info = null;
+                return;
+            }
+
+            if (_info != _selectedMapInfos[0])
+            {
+                lstEventInfos.Items.Clear();
+                _info = _selectedMapInfos[0];
+            }
+
+            if (lstEventInfos.Items.Count != _info.PublicEvents.Count)
+            {
+                lstEventInfos.Items.Clear();
+                for (int i = 0; i < _info.PublicEvents.Count; i++) lstEventInfos.Items.Add(_info.PublicEvents[i]);
+            }
+            _selectedEvents = lstEventInfos.SelectedItems.Cast<PublicEventInfo>().ToList();
+
+            if (_selectedEvents.Count == 0)
+            {
+                //Clear Text
+                txtCooldownInMins.Text = string.Empty;
+                txtEventMultipleCoords.Text = string.Empty;
+                txtEventName.Text = string.Empty;
+                txtEventSize.Text = string.Empty;
+                txtOrder.Text = string.Empty;
+                txtEventRespawnMonCount.Text = string.Empty;
+                txtObjectiveMsg.Text = string.Empty;
+
+                return;
+            }
+
+            PublicEventInfo info = _selectedEvents[0];
+            txtCooldownInMins.Text = info.CooldownInMinutes.ToString();
+            txtEventMultipleCoords.Text = info.MultipleCoords.ToString();
+            txtEventName.Text = info.EventName.ToString();
+            txtObjectiveMsg.Text = info.ObjectiveMessage.ToString();
+
+            txtEventSize.Text = info.EventSize.ToString();
+            panelEventInfo.Enabled = true;
+            ddlEventType.SelectedItem = (EventType)info.EventType;
+            chkIsSafeZone.Checked = info.IsSafezone;
+
+            lstEventRespawns.Items.Clear();
+            for (int i = 0; i < info.Respawns.Count; i++) lstEventRespawns.Items.Add(info.Respawns[i]);
+
+        }
+        private void UpdateEventRespawnInterface()
+        {
+            if (_selectedEvents == null || _selectedEvents.Count == 0)
+            {
+                lstEventRespawns.Items.Clear();
+                panelEventRespawn.Enabled = false;
+                return;
+            }
+
+            var selectedEventInfo = _selectedEvents.FirstOrDefault();
+            if (selectedEventInfo == null)
+                return;
+
+            if (lstEventRespawns.Items.Count != selectedEventInfo.Respawns.Count)
+            {
+                lstEventRespawns.Items.Clear();
+                for (int i = 0; i < selectedEventInfo.Respawns.Count; i++) lstEventRespawns.Items.Add(selectedEventInfo.Respawns[i]);
+            }
+            _selectedEventRespawns = lstEventRespawns.SelectedItems.Cast<EventRespawn>().ToList();
+
+            if (_selectedEventRespawns.Count == 0)
+            {
+                txtEventRespawnMonCount.Text = string.Empty;
+                txtEventRespawnMonName.Text = string.Empty;
+                return;
+            }
+
+            EventRespawn info = _selectedEventRespawns[0];
+            txtEventRespawnMonCount.Text = info.MonsterCount.ToString();
+            txtEventRespawnMonName.Text = info.MonsterName;
+            panelEventRespawn.Enabled = true;
+            txtOrder.Text = info.Order.ToString();
+            txtSpreadY.Text = info.SpreadY.ToString();
+            txtSpreadX.Text = info.SpreadX.ToString();
+            chkIsRespawnObjective.Checked = info.IsObjective;
         }
         private void UpdateSafeZoneInterface()
         {
@@ -517,6 +614,42 @@ namespace Server
             for (int i = 0; i < selected.Count; i++) MapInfoListBox.SetSelected(i, selected[i]);
 
             MapInfoListBox.SelectedIndexChanged += MapInfoListBox_SelectedIndexChanged;
+        }
+        private void RefreshPublicEventsList()
+        {
+            lstEventInfos.SelectedIndexChanged -= EventsListBox_SelectedIndexChanged;
+
+            List<bool> selected = new List<bool>();
+
+            for (int i = 0; i < lstEventInfos.Items.Count; i++) selected.Add(lstEventInfos.GetSelected(i));
+            lstEventInfos.Items.Clear();
+            for (int i = 0; i < _info.PublicEvents.Count; i++) lstEventInfos.Items.Add(_info.PublicEvents[i]);
+            for (int i = 0; i < selected.Count; i++) lstEventInfos.SetSelected(i, selected[i]);
+
+            lstEventInfos.SelectedIndexChanged += EventsListBox_SelectedIndexChanged;
+        }
+        private void EventsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateEventsInterface();
+        }
+
+
+        private void RefreshEventRespawnsList()
+        {
+            var selectedEvent = _selectedEvents.FirstOrDefault();
+            if (selectedEvent == null)
+                return;
+
+            lstEventRespawns.SelectedIndexChanged -= lstEventRespawns_SelectedIndexChanged;
+
+            List<bool> selected = new List<bool>();
+
+            for (int i = 0; i < lstEventRespawns.Items.Count; i++) selected.Add(lstEventRespawns.GetSelected(i));
+            lstEventRespawns.Items.Clear();
+            for (int i = 0; i < selectedEvent.Respawns.Count; i++) lstEventRespawns.Items.Add(selectedEvent.Respawns[i]);
+            for (int i = 0; i < selected.Count; i++) lstEventRespawns.SetSelected(i, selected[i]);
+
+            lstEventRespawns.SelectedIndexChanged += lstEventRespawns_SelectedIndexChanged;
         }
         private void RefreshSafeZoneList()
         {
@@ -1797,6 +1930,279 @@ namespace Server
                 _selectedMovementInfos[i].ConquestIndex = info.Index;
 
             RefreshMovementList();
+        }
+        private void btnAddEvent_Click(object sender, EventArgs e)
+        {
+            if (_info == null) return;
+
+            _info.CreatePublicEvent();
+            UpdateEventsInterface();
+        }
+
+        private void txtEventName_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].EventName = ActiveControl.Text;
+
+            //    RefreshPublicEventsList();
+        }
+
+        private void txtEventSize_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            short temp;
+
+            if (!short.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].EventSize = temp;
+
+            //   RefreshPublicEventsList();
+        }
+
+        private void txtCooldownInMins_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].CooldownInMinutes = temp;
+
+            //            RefreshPublicEventsList();
+        }
+
+        private void txtEventMultipleCoords_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].MultipleCoords = ActiveControl.Text;
+
+        }
+
+        private void lstEventInfos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateEventsInterface();
+        }
+
+        private void btnAddEventRespawn_Click(object sender, EventArgs e)
+        {
+            if (_selectedEvents == null)
+                return;
+
+            try
+            {
+                var info = _selectedEvents[0];
+                info.Respawns.Add(new EventRespawn());
+                UpdateEventRespawnInterface();
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+
+        private void lstEventRespawns_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateEventRespawnInterface();
+
+        }
+
+        private void txtEventRespawnMonName_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].MonsterName = ActiveControl.Text;
+
+            RefreshEventRespawnsList();
+        }
+
+        private void txtEventRespawnMonCount_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ushort temp;
+
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].MonsterCount = temp;
+
+            RefreshEventRespawnsList();
+
+        }
+
+        private void btnRemoveEvent_Click(object sender, EventArgs e)
+        {
+
+            if (_selectedEvents.Count == 0) return;
+
+            if (MessageBox.Show("Are you sure you want to remove the selected Public Event?", "Remove Event?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+
+            for (int i = 0; i < _selectedEvents.Count; i++) _info.PublicEvents.Remove(_selectedEvents[i]);
+
+            UpdateEventsInterface();
+        }
+
+        private void BtnRemoveEventRespawn_Click(object sender, EventArgs e)
+        {
+            if (_selectedEvents.Count == 0 || _selectedEventRespawns.Count == 0) return;
+
+            if (MessageBox.Show("Are you sure you want to remove the selected  Event Respawns?", "Remove Event Respawn ?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+
+            var selectedEvent = _selectedEvents[0];
+            for (int i = 0; i < _selectedEventRespawns.Count; i++) selectedEvent.Respawns.Remove(_selectedEventRespawns[i]);
+
+            UpdateEventRespawnInterface();
+        }
+
+        private void ddlEventType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].EventType = (EventType)ddlEventType.SelectedItem;
+        }
+
+        private void chkIsSafeZone_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].IsSafezone = chkIsSafeZone.Checked;
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ushort temp;
+
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].Order = temp;
+
+        }
+
+        private void txtSpread_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ushort temp;
+
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].SpreadY = temp;
+        }
+        private void txtOrder_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ushort temp;
+
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].Order = temp;
+
+        }
+        private void chkPatrol_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+        }
+
+        private void chkIsRespawnObjective_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].IsObjective = chkIsRespawnObjective.Checked;
+        }
+
+        private void txtSpreadX_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ushort temp;
+
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].SpreadX = temp;
+        }
+
+
+
+        private void txtSpreadY_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ushort temp;
+
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEventRespawns.Count; i++)
+                _selectedEventRespawns[i].SpreadY = temp;
+
+        }
+        private void txtObjectiveMsg_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedEvents.Count; i++)
+                _selectedEvents[i].ObjectiveMessage = ActiveControl.Text;
         }
     }
 }
