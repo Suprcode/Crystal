@@ -83,6 +83,8 @@ namespace Server.MirDatabase
         public List<Poison> Poisons = new List<Poison>();
         public List<MailInfo> Mail = new List<MailInfo>();
         public List<FriendInfo> Friends = new List<FriendInfo>();
+        public List<int> DailyEventsCompleted = new List<int>();
+        public List<int> WeeklyEventsCompleted = new List<int>();
 
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
@@ -119,17 +121,17 @@ namespace Server.MirDatabase
             Index = reader.ReadInt32();
             Name = reader.ReadString();
 
-             if (Envir.LoadVersion < 62)
-             {
-                 Level = (ushort)reader.ReadByte();
-             }
-             else
-             {
-                 Level = reader.ReadUInt16();
-             }
- 
-            Class = (MirClass) reader.ReadByte();
-            Gender = (MirGender) reader.ReadByte();
+            if (Envir.LoadVersion < 62)
+            {
+                Level = (ushort)reader.ReadByte();
+            }
+            else
+            {
+                Level = reader.ReadUInt16();
+            }
+
+            Class = (MirClass)reader.ReadByte();
+            Gender = (MirGender)reader.ReadByte();
             Hair = reader.ReadByte();
 
             CreationIP = reader.ReadString();
@@ -154,9 +156,9 @@ namespace Server.MirDatabase
             HP = reader.ReadUInt16();
             MP = reader.ReadUInt16();
             Experience = reader.ReadInt64();
-            
-            AMode = (AttackMode) reader.ReadByte();
-            PMode = (PetMode) reader.ReadByte();
+
+            AMode = (AttackMode)reader.ReadByte();
+            PMode = (PetMode)reader.ReadByte();
 
             if (Envir.LoadVersion > 34)
             {
@@ -213,7 +215,7 @@ namespace Server.MirDatabase
             CrossHalfMoon = reader.ReadBoolean();
             DoubleSlash = reader.ReadBoolean();
 
-            if(Envir.LoadVersion > 46)
+            if (Envir.LoadVersion > 46)
             {
                 MentalState = reader.ReadByte();
             }
@@ -254,7 +256,7 @@ namespace Server.MirDatabase
                 }
             }
 
-            if(Envir.LoadVersion > 42)
+            if (Envir.LoadVersion > 42)
             {
                 count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
@@ -270,7 +272,7 @@ namespace Server.MirDatabase
                 }
             }
 
-            if(Envir.LoadVersion > 43)
+            if (Envir.LoadVersion > 43)
             {
                 count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)
@@ -323,7 +325,7 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion > 56)
             {
                 if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
-                  if (CurrentRefine != null)
+                if (CurrentRefine != null)
                     SMain.Envir.BindItem(CurrentRefine);
 
                 CollectTime = reader.ReadInt64();
@@ -365,6 +367,22 @@ namespace Server.MirDatabase
                     GSpurchases.Add(reader.ReadInt32(), reader.ReadInt32());
                 }
             }
+            if (Envir.LoadCustomVersion >= 1)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                {
+                    int dailyEvent = reader.ReadInt32();
+                    DailyEventsCompleted.Add(dailyEvent);
+                }
+
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                {
+                    int weeklyEvent = reader.ReadInt32();
+                    WeeklyEventsCompleted.Add(weeklyEvent);
+                }
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -372,8 +390,8 @@ namespace Server.MirDatabase
             writer.Write(Index);
             writer.Write(Name);
             writer.Write(Level);
-            writer.Write((byte) Class);
-            writer.Write((byte) Gender);
+            writer.Write((byte)Class);
+            writer.Write((byte)Gender);
             writer.Write(Hair);
 
             writer.Write(CreationIP);
@@ -401,8 +419,8 @@ namespace Server.MirDatabase
             writer.Write(MP);
             writer.Write(Experience);
 
-            writer.Write((byte) AMode);
-            writer.Write((byte) PMode);
+            writer.Write((byte)AMode);
+            writer.Write((byte)PMode);
 
             writer.Write(PKPoints);
 
@@ -515,6 +533,14 @@ namespace Server.MirDatabase
                 writer.Write(item.Key);
                 writer.Write(item.Value);
             }
+
+            writer.Write(DailyEventsCompleted.Count);
+            for (int i = 0; i < DailyEventsCompleted.Count; i++)
+                writer.Write(DailyEventsCompleted[i]);
+
+            writer.Write(WeeklyEventsCompleted.Count);
+            for (int i = 0; i < WeeklyEventsCompleted.Count; i++)
+                writer.Write(WeeklyEventsCompleted[i]);
         }
 
         public ListViewItem CreateListView()
