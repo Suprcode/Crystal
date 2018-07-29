@@ -98,6 +98,11 @@ public enum ItemGrade : byte
     Rare = 2,
     Legendary = 3,
     Mythical = 4,
+    //New Grades
+    Junk = 5,
+    Uncommon = 6,
+    Set = 7,
+    Unique = 8,
 }
 public enum StatType : byte
 {

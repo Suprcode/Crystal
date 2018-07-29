@@ -138,6 +138,18 @@ namespace Client.MirObjects
                         _effect.BackColour = Color.Purple;
                         _effect.ForeColour = Color.Purple;
                         break;
+                    case ItemGrade.Uncommon:
+                        _effect.BackColour = Color.LimeGreen;
+                        _effect.ForeColour = Color.LimeGreen;
+                        break;
+                    case ItemGrade.Set:
+                        _effect.BackColour = Color.Lime;
+                        _effect.ForeColour = Color.Lime;
+                        break;
+                    case ItemGrade.Unique:
+                        _effect.BackColour = Color.Gold;
+                        _effect.ForeColour = Color.Gold;
+                        break;
                 }
                 Libraries.ItemEffects.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X, DrawLocation.Y), _effect.BackColour, true, 10F);
             }

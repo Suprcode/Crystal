@@ -1991,7 +1991,7 @@ namespace Client.MirScenes.Dialogs
                     UncommonBtn.Index = 916;
                     SetBtn.Index = 917;
                     UniqueBtn.Index = 917;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Grade = ItemGrade.None, Usermode = false });
+                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Grade = ItemGrade.Uncommon, Usermode = false });
                     break;
                 case 46:
                     CommonBtn.Index = 917;
@@ -2001,7 +2001,7 @@ namespace Client.MirScenes.Dialogs
                     UncommonBtn.Index = 917;
                     SetBtn.Index = 916;
                     UniqueBtn.Index = 917;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Grade = ItemGrade.None, Usermode = false });
+                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Grade = ItemGrade.Set, Usermode = false });
                     break;
                 case 47:
                     CommonBtn.Index = 917;
@@ -2011,7 +2011,7 @@ namespace Client.MirScenes.Dialogs
                     UncommonBtn.Index = 917;
                     SetBtn.Index = 917;
                     UniqueBtn.Index = 916;
-                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Grade = ItemGrade.None, Usermode = false });
+                    Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Grade = ItemGrade.Unique, Usermode = false });
                     break;
                 case 48:
                     MaterialsSubBtn.Index = 917;

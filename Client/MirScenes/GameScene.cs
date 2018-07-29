@@ -5491,6 +5491,14 @@ namespace Client.MirScenes
                     return Color.DarkOrange;
                 case ItemGrade.Mythical:
                     return Color.Plum;
+                case ItemGrade.Junk:
+                    return Color.Gray;
+                case ItemGrade.Uncommon:
+                    return Color.LimeGreen;
+                case ItemGrade.Set:
+                    return Color.Lime;
+                case ItemGrade.Unique:
+                    return Color.Gold;
                 default:
                     return Color.Yellow;
             }

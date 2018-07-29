@@ -2076,8 +2076,26 @@ namespace Client.MirControls
                     case ItemGrade.Mythical:
                         GradeEffect.Animated = true;
                         GradeEffect.Visible = true;
-                        GradeEffect.BackColour = Color.Purple;
-                        GradeEffect.ForeColour = Color.Purple;
+                        GradeEffect.BackColour = Color.Plum;
+                        GradeEffect.ForeColour = Color.Plum;
+                        break;
+                    case ItemGrade.Uncommon:
+                        GradeEffect.Animated = true;
+                        GradeEffect.Visible = true;
+                        GradeEffect.BackColour = Color.LimeGreen;
+                        GradeEffect.ForeColour = Color.LimeGreen;
+                        break;
+                    case ItemGrade.Set:
+                        GradeEffect.Animated = true;
+                        GradeEffect.Visible = true;
+                        GradeEffect.BackColour = Color.Lime;
+                        GradeEffect.ForeColour = Color.Lime;
+                        break;
+                    case ItemGrade.Unique:
+                        GradeEffect.Animated = true;
+                        GradeEffect.Visible = true;
+                        GradeEffect.BackColour = Color.Gold;
+                        GradeEffect.ForeColour = Color.Gold;
                         break;
                     default:
                         GradeEffect.Animated = false;

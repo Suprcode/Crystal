@@ -77,7 +77,15 @@ namespace Server.MirObjects
 					NameColour = Color.DarkOrange;
 				if (item.Info.Grade == ItemGrade.Mythical)
 					NameColour = Color.Plum;
-			}
+                if (item.Info.Grade == ItemGrade.Junk)
+                    NameColour = Color.Gray;
+                if (item.Info.Grade == ItemGrade.Uncommon)
+                    NameColour = Color.LimeGreen;
+                if (item.Info.Grade == ItemGrade.Set)
+                    NameColour = Color.Lime;
+                if (item.Info.Grade == ItemGrade.Unique)
+                    NameColour = Color.Gold;
+            }
 
 			CurrentMap = dropper.CurrentMap;
             CurrentLocation = dropper.CurrentLocation;
@@ -102,7 +110,15 @@ namespace Server.MirObjects
 					NameColour = Color.DarkOrange;
 				if (item.Info.Grade == ItemGrade.Mythical)
 					NameColour = Color.Plum;
-			}
+                if (item.Info.Grade == ItemGrade.Junk)
+                    NameColour = Color.Gray;
+                if (item.Info.Grade == ItemGrade.Uncommon)
+                    NameColour = Color.LimeGreen;
+                if (item.Info.Grade == ItemGrade.Set)
+                    NameColour = Color.Lime;
+                if (item.Info.Grade == ItemGrade.Unique)
+                    NameColour = Color.Gold;
+            }
 
             CurrentMap = dropper.CurrentMap;
             CurrentLocation = manualpoint;
