@@ -821,6 +821,7 @@ public enum ItemType : byte
     Pets = 36,
     Transform = 37,
     Charm = 38,
+    Recipe = 39,
 }
 
 public enum MirGridType : byte
