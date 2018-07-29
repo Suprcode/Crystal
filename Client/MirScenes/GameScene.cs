@@ -5411,7 +5411,7 @@ namespace Client.MirScenes
                 }
             }
 
-            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll || (item.Info.Type == ItemType.Script && item.Info.Effect == 1))
+            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll || (item.Info.Type == ItemType.Script && item.Info.Effect == 1) || (item.Info.Type == ItemType.Recipe && item.Info.Effect == 1))
             {
                 for (int i = 0; i < User.BeltIdx - 2; i++)
                 {
