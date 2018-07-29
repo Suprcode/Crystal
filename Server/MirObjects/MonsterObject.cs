@@ -430,7 +430,6 @@ namespace Server.MirObjects
 
         public override void Spawned()
         {
-            base.Spawned();
             SpawnedLocation = CurrentLocation;
 
             ActionTime = Envir.Time + 2000;
@@ -438,6 +437,7 @@ namespace Server.MirObjects
             {
                 SMain.Envir.MonsterNPC.Call(this,string.Format("[@_SPAWN({0})]", Info.Index));
             }
+            base.Spawned();
         }
 
         protected virtual void RefreshBase()
