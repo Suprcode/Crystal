@@ -87,6 +87,9 @@ namespace Server.MirObjects.Monsters
 
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
+            if (attacker.Info.Equipment[(int)EquipmentSlot.Weapon] == null || attacker.Info.Equipment[(int)EquipmentSlot.Weapon].Info.Shape != 92)
+                return 0;
+
             int armour = 0;
 
             switch (type)

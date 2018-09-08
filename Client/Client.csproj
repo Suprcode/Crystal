@@ -67,7 +67,7 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <DebugSymbols>false</DebugSymbols>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <LangVersion>4</LangVersion>
+    <LangVersion>latest</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -189,6 +189,7 @@
     <Compile Include="MirScenes\Dialogs\BuffDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ChatNoticeDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ChatOptionDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\EventDialog.cs" />
     <Compile Include="MirScenes\Dialogs\FishingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\FriendDialog.cs" />
     <Compile Include="MirScenes\Dialogs\GameshopDialog.cs" />

@@ -9,6 +9,15 @@ using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
 
+public enum EventType : sbyte
+{
+    None = 0,
+    MonsterSlay = 1,
+    Invasion = 2,
+    DailyBoss = 3,
+    WeeklyBoss = 4
+}
+
 public enum PanelType : byte
 {
     Buy = 0,
@@ -89,6 +98,11 @@ public enum ItemGrade : byte
     Rare = 2,
     Legendary = 3,
     Mythical = 4,
+    //New Grades
+    Junk = 5,
+    Uncommon = 6,
+    Set = 7,
+    Unique = 8,
 }
 public enum StatType : byte
 {
@@ -165,7 +179,8 @@ public enum DefaultNPCType : byte
     OnAcceptQuest,
     OnFinishQuest,
     Daily,
-    TalkMonster
+    TalkMonster,
+    EventReward
 }
 
 public enum IntelligentCreatureType : byte
@@ -603,7 +618,11 @@ public enum Monster : ushort
     Ram1 = 400,
     Ram2 = 401,
     Kite = 402,
-    
+
+    SoldierAnt = 423,
+    ShooterAnt = 424,
+    ArmouredAnt = 425,
+    FeederAnt = 426,
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -806,6 +825,8 @@ public enum ItemType : byte
 	Awakening = 35,
     Pets = 36,
     Transform = 37,
+    Charm = 38,
+    Recipe = 39,
 }
 
 public enum MirGridType : byte
@@ -923,7 +944,8 @@ public enum BindMode : short
     NoSRepair = 1024,//0x0400
     NoWeddingRing = 2048,//0x0800
     UnableToRent = 4096,
-    UnableToDisassemble = 8192
+    UnableToDisassemble = 8192,
+    NoMail = 16384
 }
 
 [Flags]
@@ -1494,7 +1516,11 @@ public enum ServerPacketIds : short
     ItemRentalPartnerLock,
     CanConfirmItemRental,
     ConfirmItemRental,
-    NewRecipeInfo
+    NewRecipeInfo,
+    LeavePublicEvent,
+    ActivateEvent,
+    DeactivateEvent,
+    EnterPublicEvent
 }
 
 public enum ClientPacketIds : short
@@ -2121,8 +2147,8 @@ public static class Globals
 
     public const uint SearchDelay = 500,
                       ConsignmentLength = 7,
-                      ConsignmentCost = 5000,
-                      MinConsignment = 5000,
+                      ConsignmentCost = 1000,
+                      MinConsignment = 1000,
                       MaxConsignment = 50000000;
 
 }
@@ -5213,6 +5239,14 @@ public abstract class Packet
                 return new S.ConfirmItemRental();
             case (short)ServerPacketIds.NewRecipeInfo:
                 return new S.NewRecipeInfo();
+            case (short)ServerPacketIds.LeavePublicEvent:
+                return new S.LeavePublicEvent();
+            case (short)ServerPacketIds.ActivateEvent:
+                return new S.ActivateEvent();
+            case (short)ServerPacketIds.DeactivateEvent:
+                return new S.DeactivateEvent();
+            case (short)ServerPacketIds.EnterPublicEvent:
+                return new S.EnterOrUpdatePublicEvent();
             default:
                 return null;
         }
@@ -6349,5 +6383,64 @@ public class ClientRecipeInfo
         {
             ingredient.Save(writer);
         }
+    }
+}
+public class MonsterEventObjective
+{
+    public string MonsterName;
+    public int MonsterTotalCount;
+    public int MonsterAliveCount;
+    public MonsterEventObjective()
+    {
+
+    }
+    public MonsterEventObjective(BinaryReader reader)
+    {
+        MonsterName = reader.ReadString();
+        MonsterTotalCount = reader.ReadInt32();
+        MonsterAliveCount = reader.ReadInt32();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(MonsterName);
+        writer.Write(MonsterTotalCount);
+        writer.Write(MonsterAliveCount);
+    }
+}
+public class MapEventClientSide
+{
+    public int Index;
+    public Point Location;
+    public int Size;
+    public bool IsActive;
+    public string EventName;
+    public EventType EventType = EventType.MonsterSlay;
+    public MapEventClientSide()
+    {
+
+    }
+    public MapEventClientSide(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Size = reader.ReadInt32();
+        IsActive = reader.ReadBoolean();
+        EventName = reader.ReadString();
+
+        int x = reader.ReadInt32();
+        int y = reader.ReadInt32();
+        Location = new Point(x, y);
+
+        EventType = (EventType)reader.ReadSByte();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Size);
+        writer.Write(IsActive);
+        writer.Write(EventName);
+
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write((sbyte)EventType);
     }
 }

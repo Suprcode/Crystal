@@ -53,12 +53,13 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Server\</OutputPath>
+    <OutputPath>..\..\Domain - Server\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -100,9 +101,11 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
+    <Compile Include="MirDatabase\MapEventInfo.cs" />
     <Compile Include="MirDatabase\MailInfo.cs" />
     <Compile Include="MirDatabase\ConquestInfo.cs" />
     <Compile Include="MirDatabase\RecipeInfo.cs" />
+    <Compile Include="MirEnvir\MapEvent.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
     <Compile Include="MirEnvir\RespawnTimer.cs" />
     <Compile Include="MirForms\Account\PlayerInfoForm.cs">
@@ -261,6 +264,7 @@
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
+    <Compile Include="MirObjects\Monsters\FeederAnt.cs" />
     <Compile Include="MirObjects\Monsters\HellBomb.cs" />
     <Compile Include="MirObjects\Monsters\FlameAssassin.cs" />
     <Compile Include="MirObjects\Monsters\FlameMage.cs" />
@@ -416,6 +420,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Database\MagicInfoForm.resx">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MirForms\Systems\ConquestInfoForm.resx">
       <DependentUpon>ConquestInfoForm.cs</DependentUpon>

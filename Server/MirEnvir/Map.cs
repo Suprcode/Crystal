@@ -36,11 +36,15 @@ namespace Server.MirEnvir
 
         public List<ConquestObject> Conquest = new List<ConquestObject>();
         public ConquestObject tempConquest;
+        public List<PublicEvent> Events = new List<PublicEvent>();
 
         public Map(MapInfo info)
         {
             Info = info;
             Thread = Envir.Random.Next(Settings.ThreadLimit);
+
+            foreach (var publicEventInfo in info.PublicEvents)
+                Events.Add(new PublicEvent(publicEventInfo, this));
         }
 
         public Door AddDoor(byte DoorIndex, Point location)
@@ -723,7 +727,7 @@ namespace Server.MirEnvir
                     InactiveCount = 0;
                 }
             }
-
+            Events.ForEach(e => e.Process());
         }
 
         private void ProcessRespawns()
@@ -2116,61 +2120,170 @@ namespace Server.MirEnvir
 
                 #region BattleCry
 
-                case Spell.BattleCry:
-                    location = (Point)data[2];
+                        case Spell.BattleCry:
+                            location = (Point)data[2];
 
-                    for (int y = location.Y - 2; y <= location.Y + 2; y++)
-                    {
-                        if (y < 0) continue;
-                        if (y >= Height) break;
-
-                        for (int x = location.X - 2; x <= location.X + 2; x++)
-                        {
-                            if (x < 0) continue;
-                            if (x >= Width) break;
-
-                            cell = GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            #region Level 0
+                            if (magic.Level == 0)
                             {
-                                MapObject target = cell.Objects[i];
-                                if (target.Race != ObjectType.Monster) continue;
+                                for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
 
-                                if (magic.Level == 0)
-                                {
-                                    if (Envir.Random.Next(60) >= 4) continue;
-                                }
-                                else if (magic.Level == 1)
-                                {
-                                    if (Envir.Random.Next(45) >= 3) continue;
-                                }
-                                else if (magic.Level == 2)
-                                {
-                                    if (Envir.Random.Next(30) >= 2) continue;
-                                }
-                                else if (magic.Level == 3)
-                                {
-                                    if (Envir.Random.Next(15) >= 1) continue;
-                                }
 
-                                if (((MonsterObject)target).Info.CoolEye == 100) continue;
-                                target.Target = player;
-                                target.OperateTime = 0;
-                                train = true;
+                                    for (int x = location.X - 2; x <= location.X + 2; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
                             }
-                        }
+                            #endregion
+
+                            #region Level 1
+                            else if (magic.Level == 1)
+                            {
+                                for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
+
+
+                                    for (int x = location.X - 3; x <= location.X + 3; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            #endregion
+
+                            #region Level 2
+                            else if (magic.Level == 2)
+                            {
+                                for (int y = location.Y - 4; y <= location.Y + 4; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
+
+
+                                    for (int x = location.X - 4; x <= location.X + 4; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion
+
+                            #region Level 3
+                            else if (magic.Level == 3)
+                            {
+                                for (int y = location.Y - 5; y <= location.Y + 5; y++)
+                                {
+                                    if (y < 0) continue;
+                                    if (y >= Height) break;
+
+
+                                    for (int x = location.X - 5; x <= location.X + 5; x++)
+                                    {
+                                        if (x < 0) continue;
+                                        if (x >= Width) break;
+
+
+                                        cell = GetCell(x, y);
+
+
+                                        if (!cell.Valid || cell.Objects == null) continue;
+
+
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject target = cell.Objects[i];
+                                            if (target.Race != ObjectType.Monster) continue;
+
+
+                                            if (((MonsterObject)target).Info.CoolEye == 100) continue;
+                                            target.Target = player;
+                                            target.OperateTime = 0;
+                                            train = true;
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion
+
+                            if (train)
+                                player.LevelMagic(magic);
+                            break;
                     }
-                    break;
+                }
 
-                    #endregion
-            }
-
-            if (train)
-                player.LevelMagic(magic);
-
-        }
+        #endregion
 
         public void AddObject(MapObject ob)
         {
@@ -2216,21 +2329,33 @@ namespace Server.MirEnvir
             }
             return null;
         }
+        public PublicEvent GetPublicEvent(Point location)
+        {
+            for (int i = 0; i<Events.Count; i++)
+            {
+                PublicEvent publicEvent = Events[i];
+                if (!publicEvent.IsActive)
+                    continue;
+	 
+                if (Functions.InRange(publicEvent.CurrentLocation, location, publicEvent.Info.EventSize))
+                    return publicEvent;
+            }
+            return null;
+        }
+//public ConquestObject GetInnerConquest(Map map, Point location)
+//{
+//    for (int i = 0; i < Conquest.Count; i++)
+//    {
+//        ConquestObject swi = Conquest[i];
+//        if (map.Info.Index != swi.Info.MapIndex) continue;
 
-        //public ConquestObject GetInnerConquest(Map map, Point location)
-        //{
-        //    for (int i = 0; i < Conquest.Count; i++)
-        //    {
-        //        ConquestObject swi = Conquest[i];
-        //        if (map.Info.Index != swi.Info.MapIndex) continue;
+//        if (Functions.InRange(swi.Info.KingLocation, location, swi.Info.KingSize) && swi.WarIsOn)
+//            return swi;
+//    }
+//    return null;
+//}
 
-        //        if (Functions.InRange(swi.Info.KingLocation, location, swi.Info.KingSize) && swi.WarIsOn)
-        //            return swi;
-        //    }
-        //    return null;
-        //}
-
-        public void Broadcast(Packet p, Point location)
+public void Broadcast(Packet p, Point location)
         {
             if (p == null) return;
 
@@ -2314,6 +2439,8 @@ namespace Server.MirEnvir
         public byte ErrorCount = 0;
 
         public List<RouteInfo> Route;
+        public bool IsEventObjective = false;
+        public PublicEvent Event;
 
         public MapRespawn(RespawnInfo info)
         {

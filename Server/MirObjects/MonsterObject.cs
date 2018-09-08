@@ -214,6 +214,8 @@ namespace Server.MirObjects
                     return new HellBomb(info);
                 case 100:
                     return new VenomSpider(info);
+                case 101:
+                    return new FeederAnt(info);
 
                 //unfinished
                 case 253:
@@ -240,7 +242,10 @@ namespace Server.MirObjects
 
         public MonsterInfo Info;
         public MapRespawn Respawn;
-        
+        public List<PlayerObject> Contributers = new List<PlayerObject>();
+        public bool Retreat = false;
+        public Point SpawnedLocation;
+
         public override string Name
         {
             get { return Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name); }
@@ -425,12 +430,14 @@ namespace Server.MirObjects
 
         public override void Spawned()
         {
-            base.Spawned();
+            SpawnedLocation = CurrentLocation;
+
             ActionTime = Envir.Time + 2000;
             if (Info.HasSpawnScript && (SMain.Envir.MonsterNPC != null))
             {
                 SMain.Envir.MonsterNPC.Call(this,string.Format("[@_SPAWN({0})]", Info.Index));
             }
+            base.Spawned();
         }
 
         protected virtual void RefreshBase()
@@ -658,7 +665,13 @@ namespace Server.MirObjects
             }
 
             if (Respawn != null)
+            {
                 Respawn.Count--;
+                if (Respawn.IsEventObjective && Respawn.Event != null)
+                    Respawn.Event.EventMonsterDied(Contributers);
+
+                Contributers.Clear();
+            }
 
             if (Master == null && EXPOwner != null)
                  Drop();
@@ -1223,6 +1236,30 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
+            if (Respawn != null && Respawn.IsEventObjective)
+            {
+                //if monster is 10 yards away from the spawned location it goes into retreat or monster is outside event area
+                if (!Retreat && (!Functions.InRange(CurrentLocation, SpawnedLocation, 10) || !Functions.InRange(Respawn.Event.CurrentLocation, CurrentLocation, Respawn.Event.Info.EventSize)))
+                {
+                    Retreat = true;
+                    Target = null;
+                }
+
+                if (Retreat)
+                {
+                    if (HP != MaxHP)
+                        ChangeHP((int)MaxHP);
+
+                    if (Functions.InRange(CurrentLocation, SpawnedLocation, 2))
+                        Retreat = false;
+                    else
+                    {
+                        MoveTo(SpawnedLocation);
+                        return;
+                    }
+                }
+            }
+            
             if (Master != null)
             {
                 if ((Master.PMode == PetMode.Both || Master.PMode == PetMode.MoveOnly))
@@ -1839,6 +1876,11 @@ namespace Server.MirObjects
                 if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3) //Not Dear/Hen/Tree
                     return true;
             }
+            else if (attacker.Info.AI == 101)
+            {
+                if (Info.AI != 6 && Info.AI != 58 && Master == null)
+                    return true;
+            }
             else if (Master != null) //Pet Attacked
             {
                 if (attacker.Master == null) //Wild Monster
@@ -2087,6 +2129,12 @@ namespace Server.MirObjects
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
+            if (Respawn != null && Respawn.IsEventObjective && attacker.tempEvent != null)
+            {
+                if (!Contributers.Contains(attacker))
+                    Contributers.Add(attacker);
+            }
+
             ChangeHP(armour - damage);
             return damage - armour;
         }
@@ -2175,6 +2223,13 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
+
+            if (Respawn != null && Respawn.IsEventObjective && attacker.Master != null && attacker.Master is PlayerObject)
+            {
+                var playerAttacker = (PlayerObject)attacker.Master;
+                if (!Contributers.Contains(playerAttacker) && playerAttacker.tempEvent != null)
+                    Contributers.Add(playerAttacker);
+            }
 
             ChangeHP(armour - damage);
             return damage - armour;

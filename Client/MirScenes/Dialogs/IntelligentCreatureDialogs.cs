@@ -1240,7 +1240,8 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class IntelligentCreatureOptionsGradeDialog : MirImageControl
     {
-        private string[] GradeStrings = { "All", "Common", "Rare", "Mythical", "Legendary" };
+        private string[] GradeStrings = { "All", "Common", "Rare", "Mythical", "Legendary",
+                                          "Junk", "Uncommon", "Set", "Unique"};
 
         public MirButton NextButton, PrevButton;
         public MirLabel GradeLabel;
@@ -1323,6 +1324,14 @@ namespace Client.MirScenes.Dialogs
                     return Color.DarkOrange;
                 case ItemGrade.Mythical:
                     return Color.Plum;
+                case ItemGrade.Junk:
+                    return Color.Gray;
+                case ItemGrade.Uncommon:
+                    return Color.LimeGreen;
+                case ItemGrade.Set:
+                    return Color.Lime;
+                case ItemGrade.Unique:
+                    return Color.Gold;
                 default:
                     return Color.White;
             }

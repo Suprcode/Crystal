@@ -29,7 +29,8 @@ namespace Client.MirGraphics
             Magic3 = new MLibrary(Settings.DataPath + "Magic3"),
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
-            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill");
+            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill"),
+            ItemEffects = new MLibrary(Settings.DataPath + "ItemEffects");
 
         public static readonly MLibrary
             Background = new MLibrary(Settings.DataPath + "Background");
@@ -67,7 +68,7 @@ namespace Client.MirGraphics
                                           ARWeaponsS = new MLibrary[19],
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
-                                          Monsters = new MLibrary[406],
+                                          Monsters = new MLibrary[427],
                                           Gates = new MLibrary[2],
                                           Flags = new MLibrary[12],
                                           Mounts = new MLibrary[12],
@@ -291,6 +292,9 @@ namespace Client.MirGraphics
             Progress++;
 
             GuildSkill.Initialize();
+            Progress++;
+
+            ItemEffects.Initialize();
             Progress++;
 
             Background.Initialize();

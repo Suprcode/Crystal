@@ -105,6 +105,7 @@ namespace Client.MirScenes
         public ItemRentalDialog ItemRentalDialog;
 
         public BuffDialog BuffsDialog;
+        public EventDialog EventDialog;
 
         //not added yet
         public KeyboardLayoutDialog KeyboardLayoutDialog;
@@ -250,6 +251,7 @@ namespace Client.MirScenes
             ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
             BuffsDialog = new BuffDialog {Parent = this, Visible = true};
+            EventDialog = new EventDialog() { Parent = this, Visible = false };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -461,7 +463,7 @@ namespace Client.MirScenes
                         QuestLogDialog.Hide();
                         NPCAwakeDialog.Hide();
                         RefineDialog.Hide();
-                        BigMapDialog.Visible = false;
+                        BigMapDialog.Hide();
                         if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
                         MailComposeLetterDialog.Hide();
                         MailComposeParcelDialog.Hide();
@@ -1657,6 +1659,18 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ConfirmItemRental:
                     ConfirmItemRental((S.ConfirmItemRental)p);
                     break;
+                case (short)ServerPacketIds.EnterPublicEvent:
+                    EnterPublicEvent((S.EnterOrUpdatePublicEvent)p);
+                    break;
+                case (short)ServerPacketIds.LeavePublicEvent:
+                    LeavePublicEvent((S.LeavePublicEvent)p);
+                    break;
+                case (short)ServerPacketIds.ActivateEvent:
+                    ActivateEvent((S.ActivateEvent)p);
+                    break;
+                case (short)ServerPacketIds.DeactivateEvent:
+                    DeactivateEvent((S.DeactivateEvent)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -1674,6 +1688,10 @@ namespace Client.MirScenes
                 MapControl.Dispose();
             MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight, Music = p.Music };
             MapControl.LoadMap();
+
+            MapControl.MapEvents.Clear();
+            MapControl.MapEvents.AddRange(p.MapEvents);
+
             InsertControl(0, MapControl);
         }
         private void UserInformation(S.UserInformation p)
@@ -3179,6 +3197,9 @@ namespace Client.MirScenes
 
             MapControl.FloorValid = false;
             MapControl.InputDelay = CMain.Time + 400;
+
+            MapControl.MapEvents.Clear();
+            MapControl.MapEvents.AddRange(p.MapEvents);
         }
         private void ObjectTeleportOut(S.ObjectTeleportOut p)
         {
@@ -4467,6 +4488,7 @@ namespace Client.MirScenes
             for (int i = 0; i < p.Listings.Count; i++)
                 Bind(p.Listings[i].Item);
 
+            TrustMerchantDialog.SearchTextBox.Text = "";
             TrustMerchantDialog.Show();
             TrustMerchantDialog.UserMode = p.UserMode;
             TrustMerchantDialog.Listings = p.Listings;
@@ -5389,7 +5411,7 @@ namespace Client.MirScenes
                 }
             }
 
-            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll || (item.Info.Type == ItemType.Script && item.Info.Effect == 1))
+            if (item.Info.Type == ItemType.Potion || item.Info.Type == ItemType.Scroll || (item.Info.Type == ItemType.Script && item.Info.Effect == 1) || (item.Info.Type == ItemType.Recipe && item.Info.Effect == 1))
             {
                 for (int i = 0; i < User.BeltIdx - 2; i++)
                 {
@@ -5469,6 +5491,14 @@ namespace Client.MirScenes
                     return Color.DarkOrange;
                 case ItemGrade.Mythical:
                     return Color.Plum;
+                case ItemGrade.Junk:
+                    return Color.Gray;
+                case ItemGrade.Uncommon:
+                    return Color.LimeGreen;
+                case ItemGrade.Set:
+                    return Color.Lime;
+                case ItemGrade.Unique:
+                    return Color.Gold;
                 default:
                     return Color.Yellow;
             }
@@ -5777,6 +5807,10 @@ namespace Client.MirScenes
                 else if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
                 {
                     text = string.Format("Exp + {0}% ", minValue + addValue);
+                }
+                else if (HoverItem.Info.Type == ItemType.Charm && HoverItem.Info.Shape == 3)
+                {
+                    text = string.Format("Exp Rate + {0}% ", minValue);
                 }
                 else
                 {
@@ -6483,7 +6517,8 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Strong + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
+                    //Text = string.Format(addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
+                    Text = string.Format(HoverItem.Info.Type == ItemType.Charm && HoverItem.Info.Shape == 3 ? "Drop Rate + {0}%" : addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, STRONGLabel.DisplayRectangle.Right + 4),
@@ -8225,6 +8260,31 @@ namespace Client.MirScenes
             ItemRentDialog.Reset();
         }
 
+        public void ActivateEvent(ServerPackets.ActivateEvent p)
+        {
+            if (!MapControl.MapEvents.Any(i => i.Index == p.Event.Index))
+                MapControl.MapEvents.Add(p.Event);
+        }
+ 	 
+        public void DeactivateEvent(ServerPackets.DeactivateEvent p)
+        {
+            MapControl.MapEvents.RemoveAll(o => o.Index == p.Event.Index);
+        }
+        public void EnterPublicEvent(ServerPackets.EnterOrUpdatePublicEvent p)
+        {
+            EventDialog.UpdateDialog(p.EventName, p.ObjectiveMessage, p.Objectives, p.Stage);
+            EventDialog.Show();
+
+            if (p.Objectives.All(o => o.MonsterAliveCount == 0))
+            {
+                EventDialog.Hide();
+            }
+        }
+        public void LeavePublicEvent(ServerPackets.LeavePublicEvent p)
+        {
+            EventDialog.Hide();
+        }
+
         #region Disposable
 
         protected override void Dispose(bool disposing)
@@ -8316,6 +8376,7 @@ namespace Client.MirScenes
 
         public static int ViewRangeX;
         public static int ViewRangeY;
+        public static List<MapEventClientSide> MapEvents = new List<MapEventClientSide>();
 
 
 
@@ -8568,6 +8629,18 @@ namespace Client.MirScenes
 
                     if (!ob.MouseOver(MouseLocation))
                         ob.DrawName();
+                }
+            }
+
+            //Disables via Mir2Config.ini
+            if (Settings.ItemFloorGlow)
+            {
+                for (int i = 0; i < Objects.Count; i++)
+                {
+                    ItemObject ob = Objects[i] as ItemObject;
+                    if (ob == null) continue;
+
+                    ob.DrawGradeEffect();
                 }
             }
 

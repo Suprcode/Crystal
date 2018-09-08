@@ -115,6 +115,9 @@ namespace Server.MirObjects
 
             string fileName = Path.Combine(Settings.NPCPath, Info.FileName + ".txt");
 
+            if (Info.FileName.Contains("-Event-"))
+                fileName = Path.Combine(Settings.EventsPath, Info.FileName);
+
             if (File.Exists(fileName))
             {
                 List<string> lines = File.ReadAllLines(fileName).ToList();
@@ -910,11 +913,11 @@ namespace Server.MirObjects
                     break;
                 case MarketKey:
                     player.UserMatch = false;
-                    player.GetMarket(string.Empty, ItemType.Nothing);
+                    player.GetMarket(string.Empty, ItemType.Nothing, ItemGrade.None);
                     break;
                 case ConsignmentsKey:
                     player.UserMatch = true;
-                    player.GetMarket(string.Empty, ItemType.Nothing);
+                    player.GetMarket(string.Empty, ItemType.Nothing, ItemGrade.None);
                     break;
                 case GuildCreateKey:
                     if (player.Info.Level < Settings.Guild_RequiredLevel)
