@@ -6733,7 +6733,7 @@ namespace Server.MirObjects
                     TrapHexagon(magic, target, out cast);
                     break;
                 case Spell.Reincarnation:
-                    Reincarnation(magic, target == null ? null : target as PlayerObject, out cast);
+                        Reincarnation(magic, target == null ? null : target as PlayerObject, out cast);
                     break;
                 case Spell.Curse:
                     Curse(magic, target == null ? location : target.CurrentLocation, out cast);
@@ -17613,6 +17613,13 @@ namespace Server.MirObjects
                     if(item.Info.Bind.HasFlag(BindMode.DontTrade))
                     {
                         ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
+                        return;
+                    }
+
+                    if (item.Info.Bind.HasFlag(BindMode.NoMail))
+                    {
+                        ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
+                        Enqueue(new S.MailSent { Result = -1 });
                         return;
                     }
 

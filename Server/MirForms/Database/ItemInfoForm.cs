@@ -297,7 +297,7 @@ namespace Server
             unableToRent_CheckBox.Checked = info.Bind.HasFlag(BindMode.UnableToRent);
             unableToDisassemble_CheckBox.Checked = info.Bind.HasFlag(BindMode.UnableToDisassemble);
 
-
+            noMailBox.Checked = info.Bind.HasFlag(BindMode.NoMail);
             NeedIdentifycheckbox.Checked = info.NeedIdentify;
             ShowGroupPickupcheckbox.Checked = info.ShowGroupPickup;
             globalDropNotify_CheckBox.Checked = info.GlobalDropNotify;
@@ -405,7 +405,7 @@ namespace Server
 
                 if (unableToDisassemble_CheckBox.Checked != info.Bind.HasFlag(BindMode.UnableToDisassemble))
                     unableToDisassemble_CheckBox.CheckState = CheckState.Indeterminate;
-
+                if (noMailBox.Checked != info.Bind.HasFlag(BindMode.NoMail)) noMailBox.CheckState = CheckState.Indeterminate;
                 if (NeedIdentifycheckbox.Checked != info.NeedIdentify) NeedIdentifycheckbox.CheckState = CheckState.Indeterminate;
                 if (ShowGroupPickupcheckbox.Checked != info.ShowGroupPickup) ShowGroupPickupcheckbox.CheckState = CheckState.Indeterminate;
                 if (globalDropNotify_CheckBox.Checked != info.GlobalDropNotify)
@@ -1792,6 +1792,14 @@ namespace Server
 
             foreach (var itemInfo in _selectedItemInfos)
                 itemInfo.GlobalDropNotify = globalDropNotify_CheckBox.Checked;
+        }
+
+        private void noMailBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Bind =
+                    (noMailBox.Checked ? _selectedItemInfos[i].Bind |= BindMode.NoMail : _selectedItemInfos[i].Bind ^= BindMode.NoMail);
         }
     }
 }

@@ -192,6 +192,7 @@
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
             this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
+            this.noMailBox = new System.Windows.Forms.CheckBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -1465,6 +1466,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.noMailBox);
             this.tabPage3.Controls.Add(this.unableToDisassemble_CheckBox);
             this.tabPage3.Controls.Add(this.unableToRent_CheckBox);
             this.tabPage3.Controls.Add(this.NoWeddingRingcheckbox);
@@ -1907,6 +1909,17 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
+            // noMailBox
+            // 
+            this.noMailBox.AutoSize = true;
+            this.noMailBox.Location = new System.Drawing.Point(21, 343);
+            this.noMailBox.Name = "noMailBox";
+            this.noMailBox.Size = new System.Drawing.Size(98, 17);
+            this.noMailBox.TabIndex = 118;
+            this.noMailBox.Text = "Unable To Mail";
+            this.noMailBox.UseVisualStyleBackColor = true;
+            this.noMailBox.CheckedChanged += new System.EventHandler(this.noMailBox_CheckedChanged);
+            // 
             // globalDropNotify_CheckBox
             // 
             this.globalDropNotify_CheckBox.AutoSize = true;
@@ -2120,5 +2133,6 @@
         private System.Windows.Forms.CheckBox unableToDisassemble_CheckBox;
         private System.Windows.Forms.CheckBox globalDropNotify_CheckBox;
         private System.Windows.Forms.CheckBox BlinkcheckBox;
+        private System.Windows.Forms.CheckBox noMailBox;
     }
 }
