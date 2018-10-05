@@ -3606,6 +3606,7 @@ namespace Client.MirScenes
 
         private void ObjectMagic(S.ObjectMagic p)
         {
+            if (Observing) p.SelfBroadcast = true;
             if (p.SelfBroadcast == false && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
