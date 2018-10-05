@@ -381,7 +381,7 @@ namespace Server.MirObjects
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];
-                if (player == this) continue;
+                if (player == this || player.Observer) continue;
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                     player.Enqueue(p);
