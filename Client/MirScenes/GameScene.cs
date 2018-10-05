@@ -32,6 +32,12 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
+        public static MapObject Camera
+        {
+            get { return MapObject.Camera; }
+            set { MapObject.Camera = value; }
+        }
+
         public static bool Observing = false;
 
         public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
@@ -859,7 +865,7 @@ namespace Client.MirScenes
 
         public override void Process()
         {
-            if (MapControl == null || User == null)
+            if (MapControl == null || (User == null && Observing == false))
                 return;
 
             if (CMain.Time >= MoveTime)
@@ -940,25 +946,25 @@ namespace Client.MirScenes
                 GuildBuffLabel.Location = new Point(x, y);
             }
 
-            if (!User.Dead) ShowReviveMessage = false;
+            //if (!User.Dead) ShowReviveMessage = false;
 
-            if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
-            {
-                ShowReviveMessage = false;
-                MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo, false);
+            //if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
+            //{
+            //    ShowReviveMessage = false;
+            //    MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo, false);
 
-                messageBox.YesButton.Click += (o, e) =>
-                {
-                    if (User.Dead) Network.Enqueue(new C.TownRevive());
-                };
+            //    messageBox.YesButton.Click += (o, e) =>
+            //    {
+            //        if (User.Dead) Network.Enqueue(new C.TownRevive());
+            //    };
 
-                messageBox.AfterDraw += (o, e) =>
-                {
-                    if (!User.Dead) messageBox.Dispose();
-                };
+            //    messageBox.AfterDraw += (o, e) =>
+            //    {
+            //        if (!User.Dead) messageBox.Dispose();
+            //    };
 
-                messageBox.Show();
-            }
+            //    messageBox.Show();
+            //}
 
             BuffsDialog.Process();
 
@@ -1736,8 +1742,8 @@ namespace Client.MirScenes
             if (p.Observing)
             {
                 User = null;
-                User = new UserObject(p.ObjectID);
-                User.Load(p);
+                var ob = new ObserverObject(p.ObjectID);
+                ob.Load(p);
 
                 Observing = true;
 
@@ -1745,7 +1751,7 @@ namespace Client.MirScenes
                 ChatDialog.Hide();
                 BeltDialog.Hide();
                 ChatControl.Hide();
-                //MiniMapDialog.Hide();
+                MiniMapDialog.Hide();
                 CharacterDuraPanel.Hide();
                 DuraStatusPanel.Hide();
             }
@@ -1757,7 +1763,7 @@ namespace Client.MirScenes
         }
         private void ObjectRemove(S.ObjectRemove p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -1768,8 +1774,7 @@ namespace Client.MirScenes
         }
         private void ObjectTurn(S.ObjectTurn p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
-                
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -1781,7 +1786,7 @@ namespace Client.MirScenes
         }
         private void ObjectWalk(S.ObjectWalk p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -1793,7 +1798,7 @@ namespace Client.MirScenes
         }
         private void ObjectRun(S.ObjectRun p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2680,7 +2685,7 @@ namespace Client.MirScenes
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             QueuedAction action = null;
 
@@ -2780,7 +2785,7 @@ namespace Client.MirScenes
         }
         private void ObjectStruck(S.ObjectStruck p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2993,7 +2998,7 @@ namespace Client.MirScenes
         }
         private void ObjectDied(S.ObjectDied p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3025,7 +3030,7 @@ namespace Client.MirScenes
         }
         private void ObjectColourChanged(S.ObjectColourChanged p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3038,7 +3043,7 @@ namespace Client.MirScenes
 
         private void ObjectGuildNameChanged(S.ObjectGuildNameChanged p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3835,7 +3840,7 @@ namespace Client.MirScenes
         }
         private void ObjectPushed(S.ObjectPushed p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3848,7 +3853,7 @@ namespace Client.MirScenes
         }
         private void ObjectName(S.ObjectName p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3982,7 +3987,7 @@ namespace Client.MirScenes
         }
         private void ObjectRangeAttack(S.ObjectRangeAttack p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4236,7 +4241,7 @@ namespace Client.MirScenes
         }
         private void ObjectDash(S.ObjectDash p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4255,7 +4260,7 @@ namespace Client.MirScenes
         }
         private void ObjectDashFail(S.ObjectDashFail p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4278,7 +4283,7 @@ namespace Client.MirScenes
         }
         private void ObjectBackStep(S.ObjectBackStep p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4304,7 +4309,7 @@ namespace Client.MirScenes
         }
         private void ObjectDashAttack(S.ObjectDashAttack p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4378,7 +4383,7 @@ namespace Client.MirScenes
         }
         private void SetObjectConcentration(S.SetObjectConcentration p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4417,7 +4422,7 @@ namespace Client.MirScenes
         }
         private void SetObjectElemental(S.SetObjectElemental p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4437,7 +4442,7 @@ namespace Client.MirScenes
 
         private void RemoveDelayedExplosion(S.RemoveDelayedExplosion p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             int effectid = DelayedExplosionEffect.GetOwnerEffectID(p.ObjectID);
             if (effectid >= 0)
@@ -4446,7 +4451,7 @@ namespace Client.MirScenes
 
         private void SetBindingShot(S.SetBindingShot p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4569,7 +4574,7 @@ namespace Client.MirScenes
         }
         private void ObjectSitDown(S.ObjectSitDown p)
         {
-            if (p.ObjectID == User.ObjectID & !Observing) return;
+            if (!Observing && p.ObjectID == User.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5292,6 +5297,8 @@ namespace Client.MirScenes
 
         private void UpdateIntelligentCreatureList(S.UpdateIntelligentCreatureList p)
         {
+            if (Observing) return;
+
             User.CreatureSummoned = p.CreatureSummoned;
             User.SummonedCreatureType = p.SummonedCreatureType;
             User.PearlCount = p.PearlCount;
@@ -8334,6 +8341,12 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
+        public static MapObject Camera
+        {
+            get { return MapObject.Camera; }
+            set { MapObject.Camera = value; }
+        }
+
         public static List<MapObject> Objects = new List<MapObject>();
 
         public const int CellWidth = 48;
@@ -8468,7 +8481,10 @@ namespace Client.MirScenes
         {
             Processdoors();
 
+            if (User != null)
+            {
                 User.Process();
+            }
 
             for (int i = Objects.Count - 1; i >= 0; i--)
             {
@@ -8554,9 +8570,7 @@ namespace Client.MirScenes
 
         protected override void CreateTexture()
         {
-            if (User == null) return;
-
-            if (!FloorValid)
+            if (!FloorValid || Camera is ObserverObject)
                 DrawFloor();
 
 
@@ -8615,8 +8629,8 @@ namespace Client.MirScenes
                 offSet -= ob.NameLabel.Size.Height + (ob.NameLabel.Border ? 1 : 0);
             }
 
-            if (MapObject.User.MouseOver(MouseLocation))
-                MapObject.User.DrawName();
+            if (Camera.MouseOver(MouseLocation))
+                Camera.DrawName();
 
 
 
@@ -8662,34 +8676,34 @@ namespace Client.MirScenes
             int index;
             int drawY, drawX;
 
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY; y++)
+            for (int y = Camera.Movement.Y - ViewRangeY; y <= Camera.Movement.Y + ViewRangeY; y++)
             {
                 if (y <= 0 || y % 2 == 1) continue;
                 if (y >= Height) break;
-                drawY = (y - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y; //Moving OffSet
+                drawY = (y - Camera.Movement.Y + OffSetY) * CellHeight + Camera.OffSetMove.Y; //Moving OffSet
 
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                for (int x = Camera.Movement.X - ViewRangeX; x <= Camera.Movement.X + ViewRangeX; x++)
                 {
                     if (x <= 0 || x % 2 == 1) continue;
                     if (x >= Width) break;
-                    drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
+                    drawX = (x - Camera.Movement.X + OffSetX) * CellWidth - OffSetX + Camera.OffSetMove.X; //Moving OffSet
                     if ((M2CellInfo[x, y].BackImage == 0) || (M2CellInfo[x, y].BackIndex == -1)) continue;
                     index = (M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
                     Libraries.MapLibs[M2CellInfo[x, y].BackIndex].Draw(index, drawX, drawY);
                 }
             }
 
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 5; y++)
+            for (int y = Camera.Movement.Y - ViewRangeY; y <= Camera.Movement.Y + ViewRangeY + 5; y++)
             {
                 if (y <= 0) continue;
                 if (y >= Height) break;
-                drawY = (y - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y; //Moving OffSet
+                drawY = (y - Camera.Movement.Y + OffSetY) * CellHeight + Camera.OffSetMove.Y; //Moving OffSet
 
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                for (int x = Camera.Movement.X - ViewRangeX; x <= Camera.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
-                    drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
+                    drawX = (x - Camera.Movement.X + OffSetX) * CellWidth - OffSetX + Camera.OffSetMove.X; //Moving OffSet
 
                     index = M2CellInfo[x, y].MiddleImage - 1;
 
@@ -8703,17 +8717,17 @@ namespace Client.MirScenes
                     Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].Draw(index, drawX, drawY);
                 }
             }
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 5; y++)
+            for (int y = Camera.Movement.Y - ViewRangeY; y <= Camera.Movement.Y + ViewRangeY + 5; y++)
             {
                 if (y <= 0) continue;
                 if (y >= Height) break;
-                drawY = (y - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y; //Moving OffSet
+                drawY = (y - Camera.Movement.Y + OffSetY) * CellHeight + Camera.OffSetMove.Y; //Moving OffSet
 
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                for (int x = Camera.Movement.X - ViewRangeX; x <= Camera.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
-                    drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
+                    drawX = (x - Camera.Movement.X + OffSetX) * CellWidth - OffSetX + Camera.OffSetMove.X; //Moving OffSet
 
                     index = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
                     if (index == -1) continue;
@@ -8772,11 +8786,11 @@ namespace Client.MirScenes
 
         private void DrawObjects()
         {
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
+            for (int y = Camera.Movement.Y - ViewRangeY; y <= Camera.Movement.Y + ViewRangeY + 25; y++)
             {
                 if (y <= 0) continue;
                 if (y >= Height) break;
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                for (int x = Camera.Movement.X - ViewRangeX; x <= Camera.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
@@ -8784,17 +8798,17 @@ namespace Client.MirScenes
                 }
             }
 
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
+            for (int y = Camera.Movement.Y - ViewRangeY; y <= Camera.Movement.Y + ViewRangeY + 25; y++)
             {
                 if (y <= 0) continue;
                 if (y >= Height) break;
-                int drawY = (y - User.Movement.Y + OffSetY + 1) * CellHeight + User.OffSetMove.Y;
+                int drawY = (y - Camera.Movement.Y + OffSetY + 1) * CellHeight + Camera.OffSetMove.Y;
 
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                for (int x = Camera.Movement.X - ViewRangeX; x <= Camera.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
-                    int drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X;
+                    int drawX = (x - Camera.Movement.X + OffSetX) * CellWidth - OffSetX + Camera.OffSetMove.X;
                     int index;
                     byte animation;
                     bool blend;
@@ -8909,7 +8923,7 @@ namespace Client.MirScenes
                     #endregion
                 }
 
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                for (int x = Camera.Movement.X - ViewRangeX; x <= Camera.Movement.X + ViewRangeX; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
@@ -8923,9 +8937,9 @@ namespace Client.MirScenes
 
             //MapObject.User.DrawMount();
 
-
+            if (Camera is UserObject)
+            {
                 MapObject.User.DrawBody();
-
 
                 if ((MapObject.User.Direction == MirDirection.Up) ||
                     (MapObject.User.Direction == MirDirection.UpLeft) ||
@@ -8941,7 +8955,7 @@ namespace Client.MirScenes
                     MapObject.User.DrawWings();
                     MapObject.User.DrawHead();
                 }
-           
+            }
 
             DXManager.SetOpacity(oldOpacity);
 

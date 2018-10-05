@@ -72,6 +72,7 @@ namespace Client.MirObjects
 
         public UserObject(uint objectID) : base(objectID)
         {
+            GameScene.Camera = this;
         }
 
         public void Load(S.UserInformation info)

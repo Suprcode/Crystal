@@ -18,6 +18,7 @@ namespace Client.MirObjects
         public static List<MirLabel> LabelList = new List<MirLabel>();
 
         public static UserObject User;
+        public static MapObject Camera;
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
         public abstract bool Blocking { get; }
@@ -92,7 +93,7 @@ namespace Client.MirObjects
             if (TargetObject == this) TargetObject = null;
             if (MagicObject == this) MagicObject = null;
 
-            if (this == User.NextMagicObject)
+            if (this == User?.NextMagicObject)
                 User.ClearMagic();
 
             MapControl.Objects.Remove(this);
@@ -308,6 +309,7 @@ namespace Client.MirObjects
         }
         public void DrawHealth()
         {
+            if(GameScene.User == null) return;
             string name = Name;
 
             if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);

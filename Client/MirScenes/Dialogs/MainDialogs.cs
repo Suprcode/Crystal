@@ -373,6 +373,8 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
+            if (GameScene.User == null) return;
+
             switch (GameScene.Scene.AMode)
             {
                 case AttackMode.Peace:
@@ -1683,6 +1685,8 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
+            if (GameScene.User == null) return;
+
             WeightLabel.Text = GameScene.User.Inventory.Count(t => t == null).ToString();
             //WeightLabel.Text = (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight).ToString();
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
@@ -2110,6 +2114,8 @@ namespace Client.MirScenes.Dialogs
 
         private void ProcessSkillDelay()
         {
+            if (GameScene.User == null) return;
+
             if (!Visible) return;
 
             int offset = BarIndex * 8;
@@ -3210,6 +3216,8 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
+            if (GameScene.User == null) return;
+
             MapControl map = GameScene.Scene.MapControl;
             if (map == null) return;
             MapNameLabel.Text = map.Title;
