@@ -8468,7 +8468,6 @@ namespace Client.MirScenes
         {
             Processdoors();
 
-            if (!GameScene.Observing)
                 User.Process();
 
             for (int i = Objects.Count - 1; i >= 0; i--)
@@ -8924,8 +8923,7 @@ namespace Client.MirScenes
 
             //MapObject.User.DrawMount();
 
-            if (!GameScene.Observing)
-            {
+
                 MapObject.User.DrawBody();
 
 
@@ -8943,7 +8941,6 @@ namespace Client.MirScenes
                     MapObject.User.DrawWings();
                     MapObject.User.DrawHead();
                 }
-            }
            
 
             DXManager.SetOpacity(oldOpacity);
