@@ -393,9 +393,7 @@ namespace Server.MirObjects
                         player.Enqueue(p);
 
                     if (player != this & player.Observers.Count > 0)
-                        ObserverBroadcast(p, player);
-                }
-            }
+                        ObserverBroadcast(p, player);            }
         }
 
         public virtual void ObserverBroadcast(Packet p, PlayerObject player)

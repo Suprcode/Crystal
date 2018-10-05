@@ -2464,27 +2464,29 @@ namespace Server.MirObjects
                 }
             }
         }
-        private void GetObjectsPassive()
+        private void GetObjectsPassive(PlayerObject player = null)
         {
-            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
+            if (player == null) player = this;
+
+            for (int y = player.CurrentLocation.Y - Globals.DataRange; y <= player.CurrentLocation.Y + Globals.DataRange; y++)
             {
                 if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
+                if (y >= player.CurrentMap.Height) break;
 
-                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
+                for (int x = player.CurrentLocation.X - Globals.DataRange; x <= player.CurrentLocation.X + Globals.DataRange; x++)
                 {
                     if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
-                    if (x < 0 || x >= CurrentMap.Width) continue;
+                    if (x >= player.CurrentMap.Width) break;
+                    if (x < 0 || x >= player.CurrentMap.Width) continue;
 
-                    Cell cell = CurrentMap.GetCell(x, y);
+                    Cell cell = player.CurrentMap.GetCell(x, y);
 
                     if (!cell.Valid || cell.Objects == null) continue;
 
                     for (int i = 0; i < cell.Objects.Count; i++)
                     {
                         MapObject ob = cell.Objects[i];
-                        if (ob == this) continue;
+                        if (ob == player) continue;
 
                         if (ob.Race == ObjectType.Deco)
                         {
@@ -2496,7 +2498,7 @@ namespace Server.MirObjects
                         if (ob.Race == ObjectType.Player)
                         {
                             PlayerObject Player = (PlayerObject)ob;
-                            Enqueue(Player.GetInfoEx(this));
+                            Enqueue(Player.GetInfoEx(player));
                         }
                         else if (ob.Race == ObjectType.Spell)
                         {
@@ -2508,9 +2510,9 @@ namespace Server.MirObjects
                         {
                             NPCObject NPC = (NPCObject)ob;
 
-                            NPC.CheckVisible(this);
+                            NPC.CheckVisible(player);
 
-                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
+                            if (NPC.VisibleLog[player.Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
                         }
                         else
                         {
@@ -2518,7 +2520,7 @@ namespace Server.MirObjects
                         }
 
                         if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
-                            ob.SendHealth(this);
+                            ob.SendHealth(player);
                     }
                 }
             }
@@ -5360,7 +5362,7 @@ namespace Server.MirObjects
             if (p != null)
                 Enqueue(p);
 
-            GetObjectsPassive();
+            GetObjectsPassive(player);
 
 
 
@@ -14260,19 +14262,7 @@ namespace Server.MirObjects
         public void Enqueue(Packet p)
         {
             if (Connection == null) return;
-
                 Connection.Enqueue(p);
-                //if (Observers.Count > 0)
-                    //EnqueueObservers(p);
-        }
-
-        public void EnqueueObservers(Packet p)
-        {
-            for (int i = 0; i < Observers.Count; i++)
-            {
-                if (Observers[i] != null)
-                    Observers[i].Enqueue(p);
-            }
         }
 
         public void SpellToggle(Spell spell, bool use)
