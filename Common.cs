@@ -2124,7 +2124,6 @@ public static class Globals
                       ConsignmentCost = 5000,
                       MinConsignment = 5000,
                       MaxConsignment = 50000000;
-
 }
 
 public static class Functions

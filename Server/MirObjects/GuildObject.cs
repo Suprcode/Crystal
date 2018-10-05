@@ -146,7 +146,7 @@ namespace Server.MirObjects
             int temp = int.MaxValue;
             writer.Write(temp);
             writer.Write(Envir.Version);
-            writer.Write(Envir.LoadVersion);
+            writer.Write(Envir.CustomVersion);
 
             int RankCount = 0;
             for (int i = Ranks.Count - 1; i >= 0; i--)
