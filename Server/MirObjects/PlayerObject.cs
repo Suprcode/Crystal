@@ -5354,7 +5354,7 @@ namespace Server.MirObjects
         public void ObserverSetup(PlayerObject player)
         {
             Observing = true;
-            Connection.Stage = GameStage.Observing;
+            //Connection.Stage = GameStage.Observing;
 
             player.Observers.Add(this);
 
