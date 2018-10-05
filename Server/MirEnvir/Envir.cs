@@ -139,6 +139,8 @@ namespace Server.MirEnvir
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
 
+        public List<PlayerObject> Observers = new List<PlayerObject>();
+
         public List<ConquestInfo> ConquestInfos = new List<ConquestInfo>();
         public List<ConquestObject> Conquests = new List<ConquestObject>();
         

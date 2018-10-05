@@ -5,6 +5,22 @@ using System.IO;
 
 namespace ServerPackets
 {
+    public sealed class Observe : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.Observe; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
     public sealed class KeepAlive : Packet
     {
         public override short Index

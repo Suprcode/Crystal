@@ -183,7 +183,7 @@
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
     <Compile Include="MirObjects\NPCObject.cs" />
-    <Compile Include="MirObjects\ObserverObject.cs" />
+    <Compile Include="MirObjects\CameraObject.cs" />
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirObjects\UserObject.cs" />

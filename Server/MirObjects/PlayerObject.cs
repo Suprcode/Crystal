@@ -5324,8 +5324,6 @@ namespace Server.MirObjects
                             return;
                         }
 
-
-                        
                         ObserverSetup(player);
 
                         break;
@@ -5355,14 +5353,19 @@ namespace Server.MirObjects
         {
             Observing = true;
             //Connection.Stage = GameStage.Observing;
+            Observer = true;
 
-            player.Observers.Add(this);
+            Envir.Observers.Add(this);
 
-            Packet p = player.GetInfoEx(this);
-            if (p != null)
-                Enqueue(p);
+           // player.Observers.Add(this);
 
-            GetObjectsPassive(player);
+
+            //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);
+            //p.Observing = true;
+
+            Enqueue(new S.Observe());
+
+            //GetObjectsPassive(player);
 
 
 
@@ -10054,11 +10057,6 @@ namespace Server.MirObjects
             if (p != null)
             {
                 p.NameColour = GetNameColour(player);
-            }
-
-            if (player.Observing)
-            {
-                p.Observing = true;
             }
 
             return p;

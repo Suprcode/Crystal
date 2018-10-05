@@ -1011,6 +1011,9 @@ namespace Client.MirScenes
         {
             switch (p.Index)
             {
+                case (short)ServerPacketIds.Observe:
+                    Observe((S.Observe)p);
+                    break;
                 case (short)ServerPacketIds.KeepAlive:
                     KeepAlive((S.KeepAlive)p);
                     break;
@@ -1672,6 +1675,23 @@ namespace Client.MirScenes
                     break;
             }
         }
+        private void Observe(S.Observe p)
+        {
+            var ob = new CameraObject(User.ObjectID);
+            ob.Load(User.CurrentLocation);
+
+            Observing = true;
+
+            User = null;
+
+            MainDialog.Hide();
+            ChatDialog.Hide();
+            BeltDialog.Hide();
+            ChatControl.Hide();
+            MiniMapDialog.Hide();
+            CharacterDuraPanel.Hide();
+            DuraStatusPanel.Hide();
+        }
 
         private void KeepAlive(S.KeepAlive p)
         {
@@ -1702,10 +1722,17 @@ namespace Client.MirScenes
 
         private void UserLocation(S.UserLocation p)
         {
+            if(Observing)
+            {
+                Camera.CurrentLocation = p.Location;
+                Camera.MapLocation = p.Location;
+                MapControl.FloorValid = false;
+                MapControl.InputDelay = CMain.Time + 400;
+                return;
+            }
+
             MapControl.NextAction = 0;
             if (User.CurrentLocation == p.Location && User.Direction == p.Direction) return;
-
-            if (Observing) return;
 
             if (Settings.DebugMode)
             {
@@ -1739,27 +1766,8 @@ namespace Client.MirScenes
         }
         private void ObjectPlayer(S.ObjectPlayer p)
         {
-            if (p.Observing)
-            {
-                User = null;
-                var ob = new ObserverObject(p.ObjectID);
-                ob.Load(p);
-
-                Observing = true;
-
-                MainDialog.Hide();
-                ChatDialog.Hide();
-                BeltDialog.Hide();
-                ChatControl.Hide();
-                MiniMapDialog.Hide();
-                CharacterDuraPanel.Hide();
-                DuraStatusPanel.Hide();
-            }
-            else
-            {
                 PlayerObject player = new PlayerObject(p.ObjectID);
                 player.Load(p);
-            }
         }
         private void ObjectRemove(S.ObjectRemove p)
         {
@@ -8571,7 +8579,7 @@ namespace Client.MirScenes
 
         protected override void CreateTexture()
         {
-            if (!FloorValid || Camera is ObserverObject)
+            if (!FloorValid || Camera is CameraObject)
                 DrawFloor();
 
 
@@ -9342,12 +9350,28 @@ namespace Client.MirScenes
         private void CheckInput()
         {
             if (AwakeningAction == true) return;
-            if (GameScene.Observing == true) return;
-
+            
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
+
+            if (CMain.Time < InputDelay) return;
+
+            if (GameScene.Observing == true)
+            {
+                if (MouseControl == this && MapButtons == MouseButtons.Left)
+                {
+                    MirDirection dir = MouseDirection();
+
+                    Network.Enqueue(new C.Walk { Direction = dir });
+                    GameScene.Scene.MapControl.FloorValid = false;
+                    MapControl.NextAction = CMain.Time + 2500;
+                }
+
+                return;
+            }
+
             if (!CanRideAttack()) AutoHit = false;
             
-            if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.LRParalysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
+            if (User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.LRParalysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
             
             if (User.NextMagic != null && !User.RidingMount)
             {

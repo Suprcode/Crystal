@@ -1258,6 +1258,7 @@ public enum ServerPacketIds : short
     ClientVersion,
     Disconnect,
     KeepAlive,
+    Observe,
     NewAccount,
     ChangePassword,
     ChangePasswordBanned,
@@ -4749,6 +4750,8 @@ public abstract class Packet
                 return new S.Disconnect();
             case (short)ServerPacketIds.KeepAlive:
                 return new S.KeepAlive();
+            case (short)ServerPacketIds.Observe:
+                return new S.Observe();
             case (short)ServerPacketIds.NewAccount:
                 return new S.NewAccount();
             case (short)ServerPacketIds.ChangePassword:

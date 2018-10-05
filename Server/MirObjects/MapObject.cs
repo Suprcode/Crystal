@@ -381,20 +381,19 @@ namespace Server.MirObjects
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];
-                if (player == this)
-                {
-                    if (player.Observers.Count > 0) ObserverBroadcast(p, player);
-                    continue;
-                }
+                if (player == this) continue;
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                {
-                    if (!player.Observing)
-                        player.Enqueue(p);
+                    player.Enqueue(p);
+            }
 
-                    if (player != this & player.Observers.Count > 0)
-                        ObserverBroadcast(p, player);
-                }
+            for (int i = Envir.Observers.Count - 1; i >= 0; i--)
+            {
+                PlayerObject observer = Envir.Observers[i];
+                if (observer == this) continue;
+
+                if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))
+                    observer.Enqueue(p);
             }
         }
 
