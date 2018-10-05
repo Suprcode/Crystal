@@ -23,6 +23,7 @@ namespace ServerPackets
             writer.Write(Time);
         }
     }
+    
     public sealed class Connected : Packet
     {
         public override short Index
@@ -699,6 +700,8 @@ namespace ServerPackets
 
         public List<BuffType> Buffs = new List<BuffType>();
 
+        public bool Observing;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
@@ -739,6 +742,7 @@ namespace ServerPackets
             }
 
             LevelEffects = (LevelEffects)reader.ReadByte();
+            Observing = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -782,6 +786,7 @@ namespace ServerPackets
             }
 
             writer.Write((byte)LevelEffects);
+            writer.Write(Observing);
         }
     }
     public sealed class ObjectRemove : Packet

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using Server.MirDatabase;
+using Server.MirEnvir;
+using Server.MirNetwork;
+using Server.MirObjects.Monsters;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ClientPackets;
-using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirNetwork;
 using S = ServerPackets;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
@@ -32,6 +28,9 @@ namespace Server.MirObjects
         {
             get { return ObjectType.Player; }
         }
+
+        public List<PlayerObject> Observers = new List<PlayerObject>();
+        public bool Observing = false;
 
         public CharacterInfo Info;
         public AccountInfo Account;
@@ -1926,9 +1925,9 @@ namespace Server.MirObjects
                 }
             }
 
-            if (Connection.SentItemInfo.Contains(info)) return;
+            //if (Connection.SentItemInfo.Contains(info)) return;
             Enqueue(new S.NewItemInfo { Info = info });
-            Connection.SentItemInfo.Add(info);
+            //Connection.SentItemInfo.Add(info);
         }
         public void CheckItem(UserItem item)
         {
@@ -2017,6 +2016,12 @@ namespace Server.MirObjects
                 CallDefaultNPC(DefaultNPCType.Daily);
             }
         }
+        private void ObserveSuccess()
+        {
+
+
+        }
+
         private void StartGameSuccess()
         {
             Connection.Stage = GameStage.Game;
@@ -2402,6 +2407,7 @@ namespace Server.MirObjects
         }
         private void GetMapInfo()
         {
+
             Enqueue(new S.MapInformation
             {
                 FileName = CurrentMap.Info.FileName,
@@ -5304,6 +5310,23 @@ namespace Server.MirObjects
                         else ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
 
                         break;
+                    case "OBS":
+                        //OBS
+                        if ((!IsGM) || parts.Length < 2) return;
+
+                        player = Envir.GetPlayer(parts[1]);
+
+                        if (player == null)
+                        {
+                            ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                            return;
+                        }
+
+
+                        
+                        ObserverSetup(player);
+
+                        break;
                     default:
                         break;
                 }
@@ -5323,6 +5346,140 @@ namespace Server.MirObjects
                 Enqueue(p);
                 Broadcast(p);
             }
+        }
+
+
+        public void ObserverSetup(PlayerObject player)
+        {
+            Observing = true;
+            Connection.Stage = GameStage.Observing;
+
+            player.Observers.Add(this);
+
+            Packet p = player.GetInfoEx(this);
+            if (p != null)
+                Enqueue(p);
+
+            GetObjectsPassive();
+
+
+
+            //S.ObserveeInformation pack = new S.ObserveeInformation
+            //{
+            //    ObjectID = player.ObjectID,
+            //    RealId = (uint)player.Info.Index,
+            //    Name = player.Name,
+            //    GuildName = "",
+            //    GuildRank = "",
+            //    NameColour = player.GetNameColour(player),
+            //    Class = player.Class,
+            //    Gender = player.Gender,
+            //    Level = player.Level,
+            //    Location = player.CurrentLocation,
+            //    Direction = player.Direction,
+            //    Hair = player.Hair,
+            //    HP = player.HP,
+            //    MP = player.MP,
+            //
+            //    Experience = player.Experience,
+            //    MaxExperience = player.MaxExperience,
+            //
+            //    LevelEffects = player.LevelEffects,
+            //
+            //    Inventory = new UserItem[player.Info.Inventory.Length],
+            //    Equipment = new UserItem[player.Info.Equipment.Length],
+            //    QuestInventory = new UserItem[player.Info.QuestInventory.Length],
+            //    Gold = player.Account.Gold,
+            //    Credit = player.Account.Credit,
+            //    HasExpandedStorage = player.Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
+            //    ExpandedStorageExpiryTime = player.Account.ExpandedStorageExpiryDate
+            //};
+            //
+            //Enqueue(pack);
+            //
+            //
+            //Enqueue(new S.MapInformation
+            //{
+            //    FileName = player.CurrentMap.Info.FileName,
+            //    Title = player.CurrentMap.Info.Title,
+            //    MiniMap = player.CurrentMap.Info.MiniMap,
+            //    Lights = player.CurrentMap.Info.Light,
+            //    BigMap = player.CurrentMap.Info.BigMap,
+            //    Lightning = player.CurrentMap.Info.Lightning,
+            //    Fire = player.CurrentMap.Info.Fire,
+            //    MapDarkLight = player.CurrentMap.Info.MapDarkLight,
+            //    Music = player.CurrentMap.Info.Music,
+            //});
+            //
+            //string guildname = "";
+            //string guildrank = "";
+            //
+            //S.UserInformation packet = new S.UserInformation
+            //{
+            //    ObjectID = player.ObjectID,
+            //    RealId = (uint)player.Info.Index,
+            //    Name = player.Name,
+            //    GuildName = guildname,
+            //    GuildRank = guildrank,
+            //    NameColour = player.GetNameColour(player),
+            //    Class = player.Class,
+            //    Gender = player.Gender,
+            //    Level = player.Level,
+            //    Location = player.CurrentLocation,
+            //    Direction = player.Direction,
+            //    Hair = player.Hair,
+            //    HP = player.HP,
+            //    MP = player.MP,
+            //
+            //    Experience = player.Experience,
+            //    MaxExperience = player.MaxExperience,
+            //
+            //    LevelEffects = player.LevelEffects,
+            //
+            //    Inventory = new UserItem[player.Info.Inventory.Length],
+            //    Equipment = new UserItem[player.Info.Equipment.Length],
+            //    QuestInventory = new UserItem[player.Info.QuestInventory.Length],
+            //    Gold = player.Account.Gold,
+            //    Credit = player.Account.Credit,
+            //    HasExpandedStorage = player.Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
+            //    ExpandedStorageExpiryTime = player.Account.ExpandedStorageExpiryDate
+            //};
+            //
+            ////Copy this method to prevent modification before sending packet information.
+            //for (int i = 0; i < player.Info.Magics.Count; i++)
+            //    packet.Magics.Add(player.Info.Magics[i].CreateClientMagic());
+            //
+            //player.Info.Inventory.CopyTo(packet.Inventory, 0);
+            //player.Info.Equipment.CopyTo(packet.Equipment, 0);
+            //player.Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
+            //
+            ////IntelligentCreature
+            //for (int i = 0; i < player.Info.IntelligentCreatures.Count; i++)
+            //    packet.IntelligentCreatures.Add(player.Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
+            //packet.SummonedCreatureType = player.SummonedCreatureType;
+            //packet.CreatureSummoned = player.CreatureSummoned;
+            //
+            //Enqueue(packet);
+
+
+
+            //SetLevelEffects();
+
+            //player.BroadcastInfo();
+            //player.BroadcastHealthChange();
+            //player.GetMapInfo();
+            //player.GetUserInfo();
+            //player.GetQuestInfo();
+            //player.GetRecipeInfo();
+
+            //player.GetCompletedQuests();
+
+            //player.GetMail();
+            //player.GetFriends();
+            //player.GetRelationship();
+
+
+
         }
 
         public void Turn(MirDirection dir)
@@ -5368,6 +5525,7 @@ namespace Server.MirObjects
             }
 
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+
         }
         public void Harvest(MirDirection dir)
         {
@@ -5533,7 +5691,7 @@ namespace Server.MirObjects
 
 
             cell = CurrentMap.GetCell(CurrentLocation);
-
+            
             for (int i = 0; i < cell.Objects.Count; i++)
             {
                 if (cell.Objects[i].Race != ObjectType.Spell) continue;
@@ -9896,6 +10054,11 @@ namespace Server.MirObjects
                 p.NameColour = GetNameColour(player);
             }
 
+            if (player.Observing)
+            {
+                p.Observing = true;
+            }
+
             return p;
         }
 
@@ -14097,7 +14260,19 @@ namespace Server.MirObjects
         public void Enqueue(Packet p)
         {
             if (Connection == null) return;
-            Connection.Enqueue(p);
+
+                Connection.Enqueue(p);
+                //if (Observers.Count > 0)
+                    //EnqueueObservers(p);
+        }
+
+        public void EnqueueObservers(Packet p)
+        {
+            for (int i = 0; i < Observers.Count; i++)
+            {
+                if (Observers[i] != null)
+                    Observers[i].Enqueue(p);
+            }
         }
 
         public void SpellToggle(Spell spell, bool use)

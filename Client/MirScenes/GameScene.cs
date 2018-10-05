@@ -32,6 +32,8 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
+        public static bool Observing = false;
+
         public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
         public static bool CanMove, CanRun;
 
@@ -314,6 +316,8 @@ namespace Client.MirScenes
         {
             //bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
             //bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
+
+            if (GameScene.Observing) return;
 
             foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
             {
@@ -1678,8 +1682,9 @@ namespace Client.MirScenes
         }
         private void UserInformation(S.UserInformation p)
         {
-            User = new UserObject(p.ObjectID);
-            User.Load(p);
+             User = new UserObject(p.ObjectID);
+             User.Load(p);
+
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
             Credit = p.Credit;
@@ -1688,10 +1693,13 @@ namespace Client.MirScenes
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
         }
+
         private void UserLocation(S.UserLocation p)
         {
             MapControl.NextAction = 0;
             if (User.CurrentLocation == p.Location && User.Direction == p.Direction) return;
+
+            if (Observing) return;
 
             if (Settings.DebugMode)
             {
@@ -1725,12 +1733,31 @@ namespace Client.MirScenes
         }
         private void ObjectPlayer(S.ObjectPlayer p)
         {
-            PlayerObject player = new PlayerObject(p.ObjectID);
-            player.Load(p);
+            if (p.Observing)
+            {
+                User = null;
+                User = new UserObject(p.ObjectID);
+                User.Load(p);
+
+                Observing = true;
+
+                MainDialog.Hide();
+                ChatDialog.Hide();
+                BeltDialog.Hide();
+                ChatControl.Hide();
+                //MiniMapDialog.Hide();
+                CharacterDuraPanel.Hide();
+                DuraStatusPanel.Hide();
+            }
+            else
+            {
+                PlayerObject player = new PlayerObject(p.ObjectID);
+                player.Load(p);
+            }
         }
         private void ObjectRemove(S.ObjectRemove p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -1741,7 +1768,8 @@ namespace Client.MirScenes
         }
         private void ObjectTurn(S.ObjectTurn p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
+                
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -1753,7 +1781,7 @@ namespace Client.MirScenes
         }
         private void ObjectWalk(S.ObjectWalk p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -1765,7 +1793,7 @@ namespace Client.MirScenes
         }
         private void ObjectRun(S.ObjectRun p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2652,7 +2680,7 @@ namespace Client.MirScenes
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             QueuedAction action = null;
 
@@ -2752,7 +2780,7 @@ namespace Client.MirScenes
         }
         private void ObjectStruck(S.ObjectStruck p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2965,7 +2993,7 @@ namespace Client.MirScenes
         }
         private void ObjectDied(S.ObjectDied p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2997,7 +3025,7 @@ namespace Client.MirScenes
         }
         private void ObjectColourChanged(S.ObjectColourChanged p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3010,7 +3038,7 @@ namespace Client.MirScenes
 
         private void ObjectGuildNameChanged(S.ObjectGuildNameChanged p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3807,7 +3835,7 @@ namespace Client.MirScenes
         }
         private void ObjectPushed(S.ObjectPushed p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3820,7 +3848,7 @@ namespace Client.MirScenes
         }
         private void ObjectName(S.ObjectName p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3954,7 +3982,7 @@ namespace Client.MirScenes
         }
         private void ObjectRangeAttack(S.ObjectRangeAttack p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4208,7 +4236,7 @@ namespace Client.MirScenes
         }
         private void ObjectDash(S.ObjectDash p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4227,7 +4255,7 @@ namespace Client.MirScenes
         }
         private void ObjectDashFail(S.ObjectDashFail p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4250,7 +4278,7 @@ namespace Client.MirScenes
         }
         private void ObjectBackStep(S.ObjectBackStep p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4276,7 +4304,7 @@ namespace Client.MirScenes
         }
         private void ObjectDashAttack(S.ObjectDashAttack p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4350,7 +4378,7 @@ namespace Client.MirScenes
         }
         private void SetObjectConcentration(S.SetObjectConcentration p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4389,7 +4417,7 @@ namespace Client.MirScenes
         }
         private void SetObjectElemental(S.SetObjectElemental p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4409,7 +4437,7 @@ namespace Client.MirScenes
 
         private void RemoveDelayedExplosion(S.RemoveDelayedExplosion p)
         {
-            //if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             int effectid = DelayedExplosionEffect.GetOwnerEffectID(p.ObjectID);
             if (effectid >= 0)
@@ -4418,7 +4446,7 @@ namespace Client.MirScenes
 
         private void SetBindingShot(S.SetBindingShot p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4541,7 +4569,7 @@ namespace Client.MirScenes
         }
         private void ObjectSitDown(S.ObjectSitDown p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID & !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -8439,7 +8467,10 @@ namespace Client.MirScenes
         public void Process()
         {
             Processdoors();
-            User.Process();
+
+            if (!GameScene.Observing)
+                User.Process();
+
             for (int i = Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = Objects[i];
@@ -8623,7 +8654,6 @@ namespace Client.MirScenes
                 _floorTexture.Disposing += FloorTexture_Disposing;
                 _floorSurface = _floorTexture.GetSurfaceLevel(0);
             }
-
 
             Surface oldSurface = DXManager.CurrentSurface;
 
@@ -8894,22 +8924,27 @@ namespace Client.MirScenes
 
             //MapObject.User.DrawMount();
 
-            MapObject.User.DrawBody();
+            if (!GameScene.Observing)
+            {
+                MapObject.User.DrawBody();
 
-            if ((MapObject.User.Direction == MirDirection.Up) ||
-                (MapObject.User.Direction == MirDirection.UpLeft) ||
-                (MapObject.User.Direction == MirDirection.UpRight) ||
-                (MapObject.User.Direction == MirDirection.Right) ||
-                (MapObject.User.Direction == MirDirection.Left))
-            {
-                MapObject.User.DrawHead();
-                MapObject.User.DrawWings();
+
+                if ((MapObject.User.Direction == MirDirection.Up) ||
+                    (MapObject.User.Direction == MirDirection.UpLeft) ||
+                    (MapObject.User.Direction == MirDirection.UpRight) ||
+                    (MapObject.User.Direction == MirDirection.Right) ||
+                    (MapObject.User.Direction == MirDirection.Left))
+                {
+                    MapObject.User.DrawHead();
+                    MapObject.User.DrawWings();
+                }
+                else
+                {
+                    MapObject.User.DrawWings();
+                    MapObject.User.DrawHead();
+                }
             }
-            else
-            {
-                MapObject.User.DrawWings();
-                MapObject.User.DrawHead();
-            }
+           
 
             DXManager.SetOpacity(oldOpacity);
 
@@ -9208,6 +9243,7 @@ namespace Client.MirScenes
             GameScene.CanRun = false;
 
             if (AwakeningAction == true) return;
+            if (GameScene.Observing == true) return;
 
             if (e.Button != MouseButtons.Left) return;
 
@@ -9294,6 +9330,7 @@ namespace Client.MirScenes
         private void CheckInput()
         {
             if (AwakeningAction == true) return;
+            if (GameScene.Observing == true) return;
 
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
             if (!CanRideAttack()) AutoHit = false;
@@ -9564,6 +9601,7 @@ namespace Client.MirScenes
 
         private void UseMagic(ClientMagic magic)
         {
+            if (GameScene.Observing == true) return;
             if (CMain.Time < GameScene.SpellTime || User.Poison.HasFlag(PoisonType.Stun))
             {
                 User.ClearMagic();

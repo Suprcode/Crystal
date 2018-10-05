@@ -1316,7 +1316,7 @@ namespace Client.MirObjects
                 FrameInterval = Frame.Interval;
                 EffectFrameInterval = Frame.EffectInterval;
 
-                if (this == User)
+                if (this == User & !GameScene.Observing)
                 {
                     switch (CurrentAction)
                     {

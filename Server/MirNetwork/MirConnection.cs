@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Server.MirNetwork
 {
-    public enum GameStage { None, Login, Select, Game, Disconnected }
+    public enum GameStage { None, Login, Select, Game, Disconnected, Observing }
 
     public class MirConnection
     {
@@ -213,6 +213,8 @@ namespace Server.MirNetwork
         private void ProcessPacket(Packet p)
         {
             if (p == null || Disconnecting) return;
+
+            
 
             switch (p.Index)
             {

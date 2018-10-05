@@ -118,6 +118,8 @@ namespace Server
             this.RemoveMButton = new System.Windows.Forms.Button();
             this.AddMButton = new System.Windows.Forms.Button();
             this.MovementInfoPanel = new System.Windows.Forms.Panel();
+            this.label25 = new System.Windows.Forms.Label();
+            this.ConquestComboBox = new System.Windows.Forms.ComboBox();
             this.NeedMoveMCheckBox = new System.Windows.Forms.CheckBox();
             this.NeedHoleMCheckBox = new System.Windows.Forms.CheckBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -155,8 +157,6 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ConquestComboBox = new System.Windows.Forms.ComboBox();
-            this.label25 = new System.Windows.Forms.Label();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -1088,6 +1088,25 @@ namespace Server
             this.MovementInfoPanel.Size = new System.Drawing.Size(256, 205);
             this.MovementInfoPanel.TabIndex = 14;
             // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(3, 171);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(55, 13);
+            this.label25.TabIndex = 20;
+            this.label25.Text = "Conquest:";
+            // 
+            // ConquestComboBox
+            // 
+            this.ConquestComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConquestComboBox.FormattingEnabled = true;
+            this.ConquestComboBox.Location = new System.Drawing.Point(64, 168);
+            this.ConquestComboBox.Name = "ConquestComboBox";
+            this.ConquestComboBox.Size = new System.Drawing.Size(182, 21);
+            this.ConquestComboBox.TabIndex = 19;
+            this.ConquestComboBox.SelectedIndexChanged += new System.EventHandler(this.ConquestComboBox_SelectedIndexChanged);
+            // 
             // NeedMoveMCheckBox
             // 
             this.NeedMoveMCheckBox.AutoSize = true;
@@ -1452,25 +1471,6 @@ namespace Server
             this.VisualizerButton.Text = "Visualizer";
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
-            // 
-            // ConquestComboBox
-            // 
-            this.ConquestComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ConquestComboBox.FormattingEnabled = true;
-            this.ConquestComboBox.Location = new System.Drawing.Point(64, 168);
-            this.ConquestComboBox.Name = "ConquestComboBox";
-            this.ConquestComboBox.Size = new System.Drawing.Size(182, 21);
-            this.ConquestComboBox.TabIndex = 19;
-            this.ConquestComboBox.SelectedIndexChanged += new System.EventHandler(this.ConquestComboBox_SelectedIndexChanged);
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 171);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(55, 13);
-            this.label25.TabIndex = 20;
-            this.label25.Text = "Conquest:";
             // 
             // MapInfoForm
             // 
