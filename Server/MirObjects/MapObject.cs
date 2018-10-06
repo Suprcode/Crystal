@@ -103,6 +103,7 @@ namespace Server.MirObjects
         }
 
         private bool _observer;
+
         public bool Observer
         {
             get
@@ -395,12 +396,6 @@ namespace Server.MirObjects
                 if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))
                     observer.Enqueue(p);
             }
-        }
-
-        public virtual void ObserverBroadcast(Packet p, PlayerObject player)
-        {
-            for (int i = player.Observers.Count - 1; i >= 0; i--)
-                player.Observers[i].Enqueue(p);
         }
 
         public virtual void BroadcastInfo()

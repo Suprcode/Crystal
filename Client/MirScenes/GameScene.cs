@@ -2867,6 +2867,7 @@ namespace Client.MirScenes
         private void DuraChanged(S.DuraChanged p)
         {
             UserItem item = null;
+
             for (int i = 0; i < User.Inventory.Length; i++)
                 if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.UniqueID)
                 {
@@ -9133,11 +9134,11 @@ namespace Client.MirScenes
             #endregion
 
             #region Map Lights
-            for (int y = MapObject.User.Movement.Y - ViewRangeY - 24; y <= MapObject.User.Movement.Y + ViewRangeY + 24; y++)
+            for (int y = MapObject.Camera.Movement.Y - ViewRangeY - 24; y <= MapObject.Camera.Movement.Y + ViewRangeY + 24; y++)
             {
                 if (y < 0) continue;
                 if (y >= Height) break;
-                for (int x = MapObject.User.Movement.X - ViewRangeX - 24; x < MapObject.User.Movement.X + ViewRangeX + 24; x++)
+                for (int x = MapObject.Camera.Movement.X - ViewRangeX - 24; x < MapObject.Camera.Movement.X + ViewRangeX + 24; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
@@ -9171,8 +9172,8 @@ namespace Client.MirScenes
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
 
                     p = new Point(
-                        (x + OffSetX - MapObject.User.Movement.X) * CellWidth + MapObject.User.OffSetMove.X,
-                        (y + OffSetY - MapObject.User.Movement.Y) * CellHeight + MapObject.User.OffSetMove.Y + 32);
+                        (x + OffSetX - MapObject.Camera.Movement.X) * CellWidth + MapObject.Camera.OffSetMove.X,
+                        (y + OffSetY - MapObject.Camera.Movement.Y) * CellHeight + MapObject.Camera.OffSetMove.Y + 32);
 
 
                     if (M2CellInfo[x, y].FrontAnimationFrame > 0)

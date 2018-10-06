@@ -29,7 +29,6 @@ namespace Server.MirObjects
             get { return ObjectType.Player; }
         }
 
-        public List<PlayerObject> Observers = new List<PlayerObject>();
         public bool Observing = false;
 
         public CharacterInfo Info;
@@ -5358,133 +5357,12 @@ namespace Server.MirObjects
             Envir.Observers.Add(this);
 
            // player.Observers.Add(this);
-
-
             //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);
             //p.Observing = true;
 
             Enqueue(new S.Observe());
 
             //GetObjectsPassive(player);
-
-
-
-            //S.ObserveeInformation pack = new S.ObserveeInformation
-            //{
-            //    ObjectID = player.ObjectID,
-            //    RealId = (uint)player.Info.Index,
-            //    Name = player.Name,
-            //    GuildName = "",
-            //    GuildRank = "",
-            //    NameColour = player.GetNameColour(player),
-            //    Class = player.Class,
-            //    Gender = player.Gender,
-            //    Level = player.Level,
-            //    Location = player.CurrentLocation,
-            //    Direction = player.Direction,
-            //    Hair = player.Hair,
-            //    HP = player.HP,
-            //    MP = player.MP,
-            //
-            //    Experience = player.Experience,
-            //    MaxExperience = player.MaxExperience,
-            //
-            //    LevelEffects = player.LevelEffects,
-            //
-            //    Inventory = new UserItem[player.Info.Inventory.Length],
-            //    Equipment = new UserItem[player.Info.Equipment.Length],
-            //    QuestInventory = new UserItem[player.Info.QuestInventory.Length],
-            //    Gold = player.Account.Gold,
-            //    Credit = player.Account.Credit,
-            //    HasExpandedStorage = player.Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
-            //    ExpandedStorageExpiryTime = player.Account.ExpandedStorageExpiryDate
-            //};
-            //
-            //Enqueue(pack);
-            //
-            //
-            //Enqueue(new S.MapInformation
-            //{
-            //    FileName = player.CurrentMap.Info.FileName,
-            //    Title = player.CurrentMap.Info.Title,
-            //    MiniMap = player.CurrentMap.Info.MiniMap,
-            //    Lights = player.CurrentMap.Info.Light,
-            //    BigMap = player.CurrentMap.Info.BigMap,
-            //    Lightning = player.CurrentMap.Info.Lightning,
-            //    Fire = player.CurrentMap.Info.Fire,
-            //    MapDarkLight = player.CurrentMap.Info.MapDarkLight,
-            //    Music = player.CurrentMap.Info.Music,
-            //});
-            //
-            //string guildname = "";
-            //string guildrank = "";
-            //
-            //S.UserInformation packet = new S.UserInformation
-            //{
-            //    ObjectID = player.ObjectID,
-            //    RealId = (uint)player.Info.Index,
-            //    Name = player.Name,
-            //    GuildName = guildname,
-            //    GuildRank = guildrank,
-            //    NameColour = player.GetNameColour(player),
-            //    Class = player.Class,
-            //    Gender = player.Gender,
-            //    Level = player.Level,
-            //    Location = player.CurrentLocation,
-            //    Direction = player.Direction,
-            //    Hair = player.Hair,
-            //    HP = player.HP,
-            //    MP = player.MP,
-            //
-            //    Experience = player.Experience,
-            //    MaxExperience = player.MaxExperience,
-            //
-            //    LevelEffects = player.LevelEffects,
-            //
-            //    Inventory = new UserItem[player.Info.Inventory.Length],
-            //    Equipment = new UserItem[player.Info.Equipment.Length],
-            //    QuestInventory = new UserItem[player.Info.QuestInventory.Length],
-            //    Gold = player.Account.Gold,
-            //    Credit = player.Account.Credit,
-            //    HasExpandedStorage = player.Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
-            //    ExpandedStorageExpiryTime = player.Account.ExpandedStorageExpiryDate
-            //};
-            //
-            ////Copy this method to prevent modification before sending packet information.
-            //for (int i = 0; i < player.Info.Magics.Count; i++)
-            //    packet.Magics.Add(player.Info.Magics[i].CreateClientMagic());
-            //
-            //player.Info.Inventory.CopyTo(packet.Inventory, 0);
-            //player.Info.Equipment.CopyTo(packet.Equipment, 0);
-            //player.Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
-            //
-            ////IntelligentCreature
-            //for (int i = 0; i < player.Info.IntelligentCreatures.Count; i++)
-            //    packet.IntelligentCreatures.Add(player.Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
-            //packet.SummonedCreatureType = player.SummonedCreatureType;
-            //packet.CreatureSummoned = player.CreatureSummoned;
-            //
-            //Enqueue(packet);
-
-
-
-            //SetLevelEffects();
-
-            //player.BroadcastInfo();
-            //player.BroadcastHealthChange();
-            //player.GetMapInfo();
-            //player.GetUserInfo();
-            //player.GetQuestInfo();
-            //player.GetRecipeInfo();
-
-            //player.GetCompletedQuests();
-
-            //player.GetMail();
-            //player.GetFriends();
-            //player.GetRelationship();
-
-
-
         }
 
         public void Turn(MirDirection dir)
