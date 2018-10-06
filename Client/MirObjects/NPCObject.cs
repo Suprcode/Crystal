@@ -399,8 +399,8 @@ namespace Client.MirObjects
             DrawY = CurrentLocation.Y;
 
             DrawLocation = new Point((Movement.X - Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(Camera.OffSetMove);
-            DrawLocation.Offset(GlobalDisplayLocationOffset);
+            UpdateDrawLocationOffset(Camera.OffSetMove);
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
 
             if (BodyLibrary != null)
                 FinalDrawLocation = DrawLocation.Add(BodyLibrary.GetOffSet(DrawFrame));

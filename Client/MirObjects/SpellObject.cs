@@ -177,8 +177,8 @@ namespace Client.MirObjects
             }
 
             DrawLocation = new Point((CurrentLocation.X - Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(GlobalDisplayLocationOffset);
-            DrawLocation.Offset(Camera.OffSetMove);
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
+            UpdateDrawLocationOffset(Camera.OffSetMove);
         }
 
         public override void Draw()

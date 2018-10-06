@@ -25,11 +25,12 @@ namespace Client.MirObjects
         public void LockOnObject(uint objectID)
         {
             LockedOn = true;
+
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != objectID) continue;
-                GameScene.Camera = (ICamera)ob;
+                GameScene.Camera = ob as ICamera;
                 return;
             }
         }

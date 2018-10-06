@@ -19,7 +19,6 @@ namespace Client.MirObjects
 
         public static UserObject User;
         public static ObserverObject Observer;
-        //public static MapObject Camera;
         public static ICamera Camera;
 
         public static MapObject MouseObject, TargetObject, MagicObject;
@@ -77,6 +76,24 @@ namespace Client.MirObjects
 
         public static List<MirLabel> DamageLabelList = new List<MirLabel>();
         public List<Damage> Damages = new List<Damage>();
+
+        public void UpdateDrawLocationOffset(Point offset)
+        {
+            var p = DrawLocation;
+
+            p.Offset(offset);
+
+            DrawLocation = p;
+        }
+
+        public void UpdateDrawLocationOffset(int x, int y)
+        {
+            var p = DrawLocation;
+
+            p.Offset(x, y);
+
+            DrawLocation = p;
+        }
 
         protected Point GlobalDisplayLocationOffset
         {

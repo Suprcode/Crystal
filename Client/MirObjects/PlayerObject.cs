@@ -14,7 +14,7 @@ using Client.MirScenes.Dialogs;
 
 namespace Client.MirObjects
 {
-    public class PlayerObject : MapObject
+    public class PlayerObject : MapObject, ICamera
     {
         public override ObjectType Race
         {
@@ -841,12 +841,12 @@ namespace Client.MirObjects
             DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
 
             DrawLocation = new Point((Movement.X - (Camera.Movement.X) + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - (Camera.Movement.Y) + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(GlobalDisplayLocationOffset);
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
 
             if (this != User)
             {
-                DrawLocation.Offset(Camera.OffSetMove);
-                DrawLocation.Offset(-OffSetMove.X, -OffSetMove.Y);
+                UpdateDrawLocationOffset(Camera.OffSetMove);
+                UpdateDrawLocationOffset(-OffSetMove.X, -OffSetMove.Y);
             }
 
             if (BodyLibrary != null && update)
