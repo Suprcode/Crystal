@@ -8589,7 +8589,7 @@ namespace Client.MirScenes
 
         protected override void CreateTexture()
         {
-            if (!FloorValid || Camera is ObserverObject)
+            if (!FloorValid || GameScene.Observing)
                 DrawFloor();
 
 
