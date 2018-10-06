@@ -32,13 +32,22 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
+        public static ObserverObject Observer
+        {
+            get { return MapObject.Observer; }
+            set { MapObject.Observer = value; }
+        }
+
         public static MapObject Camera
         {
             get { return MapObject.Camera; }
             set { MapObject.Camera = value; }
         }
 
-        public static bool Observing = false;
+        public static bool Observing
+        {
+            get { return Observer != null; }
+        }
 
         public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
         public static bool CanMove, CanRun;
@@ -1677,10 +1686,10 @@ namespace Client.MirScenes
         }
         private void Observe(S.Observe p)
         {
-            var ob = new CameraObject(User.ObjectID);
-            ob.Load(User.CurrentLocation);
+            Observer = new ObserverObject(User.ObjectID);
+            Observer.Load(User.CurrentLocation);
 
-            Observing = true;
+            Observer.LockOnObject(p.ObserveObjectID);
 
             User = null;
 
@@ -8579,7 +8588,7 @@ namespace Client.MirScenes
 
         protected override void CreateTexture()
         {
-            if (!FloorValid || Camera is CameraObject)
+            if (!FloorValid || Camera is ObserverObject)
                 DrawFloor();
 
 
@@ -9349,25 +9358,35 @@ namespace Client.MirScenes
 
         private void CheckInput()
         {
-            if (AwakeningAction == true) return;
-            
-            if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
-
             if (CMain.Time < InputDelay) return;
 
-            if (GameScene.Observing == true)
+            if (GameScene.Observing)
             {
-                if (MouseControl == this && MapButtons == MouseButtons.Left)
+                if (MouseControl == this)
                 {
-                    MirDirection dir = MouseDirection();
+                    switch(MapButtons)
+                    {
+                        case MouseButtons.Left:
+                            if (GameScene.Observer.LockedOn == true) return;
 
-                    Network.Enqueue(new C.Walk { Direction = dir });
-                    GameScene.Scene.MapControl.FloorValid = false;
-                    MapControl.NextAction = CMain.Time + 2500;
+                            MirDirection dir = MouseDirection();
+
+                            Network.Enqueue(new C.Walk { Direction = dir });
+                            GameScene.Scene.MapControl.FloorValid = false;
+                            MapControl.NextAction = CMain.Time + 2500;
+                            break;
+                        case MouseButtons.Right:
+                            GameScene.Observer.FreeMovement();
+                            break;
+                    }
                 }
 
                 return;
             }
+
+            if (AwakeningAction == true) return;
+
+            if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
 
             if (!CanRideAttack()) AutoHit = false;
             

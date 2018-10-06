@@ -18,7 +18,9 @@ namespace Client.MirObjects
         public static List<MirLabel> LabelList = new List<MirLabel>();
 
         public static UserObject User;
+        public static ObserverObject Observer;
         public static MapObject Camera;
+
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
         public abstract bool Blocking { get; }

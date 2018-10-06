@@ -8,17 +8,35 @@ using S = ServerPackets;
 
 namespace Client.MirObjects
 {
-    public class CameraObject : MapObject
+    public class ObserverObject : MapObject
     {
-        public CameraObject(uint objectID) : base(objectID)
+        public bool LockedOn { get; set; }
+        public ObserverObject(uint objectID) : base(objectID)
         {
-            GameScene.Camera = this;
+            FreeMovement();
         }
 
         public void Load(Point location)
         {
             CurrentLocation = location;
             GameScene.Scene.MapControl.AddObject(this);
+        }
+
+        public void LockOnObject(uint objectID)
+        {
+            LockedOn = true;
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != objectID) continue;
+                GameScene.Camera = ob;
+                return;
+            }
+        }
+
+        public void FreeMovement()
+        {
+            GameScene.Camera = this;
         }
 
         public override ObjectType Race => ObjectType.Player;

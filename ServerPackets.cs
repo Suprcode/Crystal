@@ -7,6 +7,8 @@ namespace ServerPackets
 {
     public sealed class Observe : Packet
     {
+        public uint ObserveObjectID;
+
         public override short Index
         {
             get { return (short)ServerPacketIds.Observe; }
@@ -14,10 +16,12 @@ namespace ServerPackets
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            ObserveObjectID = reader.ReadUInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(ObserveObjectID);
         }
     }
 

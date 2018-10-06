@@ -5363,7 +5363,7 @@ namespace Server.MirObjects
             //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);
             //p.Observing = true;
 
-            Enqueue(new S.Observe());
+            Enqueue(new S.Observe { ObserveObjectID = player.ObjectID });
 
             //GetObjectsPassive(player);
 
