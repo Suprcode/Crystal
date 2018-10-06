@@ -38,7 +38,7 @@ namespace Client.MirScenes
             set { MapObject.Observer = value; }
         }
 
-        public static MapObject Camera
+        public static ICamera Camera
         {
             get { return MapObject.Camera; }
             set { MapObject.Camera = value; }
@@ -8360,7 +8360,7 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
-        public static MapObject Camera
+        public static ICamera Camera
         {
             get { return MapObject.Camera; }
             set { MapObject.Camera = value; }
@@ -8648,8 +8648,8 @@ namespace Client.MirScenes
                 offSet -= ob.NameLabel.Size.Height + (ob.NameLabel.Border ? 1 : 0);
             }
 
-            if (Camera.MouseOver(MouseLocation))
-                Camera.DrawName();
+            if (User != null && User.MouseOver(MouseLocation))
+                User.DrawName();
 
 
 

@@ -71,7 +71,7 @@ namespace Client.MirObjects
                     Blend = false;
                     break;
                 case Spell.Blizzard:
-                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
+                    CurrentLocation = new Point(CurrentLocation.X, Math.Max(0, CurrentLocation.Y - 20));
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1550;
                     FrameInterval = 100;
@@ -82,7 +82,7 @@ namespace Client.MirObjects
                     break;
                 case Spell.MeteorStrike:
                     MapControl.Effects.Add(new Effect(Libraries.Magic2, 1600, 10, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
-                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
+                    CurrentLocation = new Point(CurrentLocation.X, Math.Max(0, CurrentLocation.Y - 20));
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1610;
                     FrameInterval = 100;

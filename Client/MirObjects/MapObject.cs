@@ -19,7 +19,8 @@ namespace Client.MirObjects
 
         public static UserObject User;
         public static ObserverObject Observer;
-        public static MapObject Camera;
+        //public static MapObject Camera;
+        public static ICamera Camera;
 
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
@@ -27,7 +28,8 @@ namespace Client.MirObjects
 
         public uint ObjectID;
         public string Name = string.Empty;
-        public Point CurrentLocation, MapLocation;
+        public Point CurrentLocation { get; set; }
+        public Point MapLocation { get; set; }
         public MirDirection Direction;
         public bool Dead, Hidden, SitDown, Sneaking;
         public PoisonType Poison;
@@ -56,7 +58,12 @@ namespace Client.MirObjects
         public MirLabel NameLabel, ChatLabel, GuildLabel;
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;
-        public Point DrawLocation, Movement, FinalDrawLocation, OffSetMove;
+
+        public Point DrawLocation { get; set; }
+        public Point Movement { get; set; }
+        public Point FinalDrawLocation { get; set; }
+        public Point OffSetMove { get; set; }
+
         public Rectangle DisplayRectangle;
         public int Light, DrawY;
         public long NextMotion, NextMotion2;

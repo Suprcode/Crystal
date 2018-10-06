@@ -743,7 +743,7 @@ namespace Client.MirObjects
                     GameScene.CanRun = false;
             }
 
-            SkipFrames = this != Camera && ActionFeed.Count > 1;
+            SkipFrames = this != User && ActionFeed.Count > 1;
 
             ProcessFrames();
 
@@ -843,7 +843,7 @@ namespace Client.MirObjects
             DrawLocation = new Point((Movement.X - (Camera.Movement.X) + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - (Camera.Movement.Y) + MapControl.OffSetY) * MapControl.CellHeight);
             DrawLocation.Offset(GlobalDisplayLocationOffset);
 
-            if (this != Camera)
+            if (this != User)
             {
                 DrawLocation.Offset(Camera.OffSetMove);
                 DrawLocation.Offset(-OffSetMove.X, -OffSetMove.Y);

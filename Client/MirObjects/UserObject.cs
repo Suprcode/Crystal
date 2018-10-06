@@ -8,7 +8,7 @@ using S = ServerPackets;
 
 namespace Client.MirObjects
 {
-    public class UserObject : PlayerObject
+    public class UserObject : PlayerObject, ICamera
     {
         public uint Id;
 
