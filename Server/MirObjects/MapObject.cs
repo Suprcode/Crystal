@@ -21,6 +21,8 @@ namespace Server.MirObjects
 
         public abstract ObjectType Race { get; }
 
+
+
         public abstract string Name { get; set; }
 
         public long ExplosionInflictedTime;

@@ -15,6 +15,8 @@ namespace Server.MirObjects
         public string GMPassword = Settings.GMPassword;
         public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor, HasMapShout, HasServerShout;
 
+        public List<ObserverObject> CurrentObservers = new List<ObserverObject>();
+
         public bool HasUpdatedBaseStats = true;
 
         public long LastRecallTime, LastRevivalTime, LastTeleportTime, LastProbeTime, MenteeEXP;
@@ -28,7 +30,6 @@ namespace Server.MirObjects
         {
             get { return ObjectType.Player; }
         }
-
 
         public CharacterInfo Info;
         public AccountInfo Account;
@@ -44,12 +45,28 @@ namespace Server.MirObjects
         public override int CurrentMapIndex
         {
             get { return Info.CurrentMapIndex; }
-            set { Info.CurrentMapIndex = value; }
+            set {
+                Info.CurrentMapIndex = value;
+                for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+                {
+                    if (CurrentObservers[i] != null)
+                        if (!CurrentObservers[i].LockedProcess())
+                            CurrentObservers.Remove(CurrentObservers[i]);
+                }
+            }
         }
         public override Point CurrentLocation
         {
             get { return Info.CurrentLocation; }
-            set { Info.CurrentLocation = value; }
+            set {
+                Info.CurrentLocation = value;
+                for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+                {
+                    if (CurrentObservers[i] != null)
+                        if (!CurrentObservers[i].LockedProcess())
+                            CurrentObservers.Remove(CurrentObservers[i]);
+                }
+            }
         }
         public override MirDirection Direction
         {
@@ -5329,7 +5346,6 @@ namespace Server.MirObjects
                         
                         ObserverSetup(play);
 
-
                         break;
                     default:
                         break;
@@ -5353,28 +5369,23 @@ namespace Server.MirObjects
         }
 
 
-        public void ObserverSetup(PlayerObject player = null)
+        public void ObserverSetup(PlayerObject Observee = null)
         {
-            uint ObjID;
-
-            if (player == null)
-                ObjID = ObjectID;
-            else
-                ObjID = player.ObjectID;
-
             Connection.Stage = GameStage.Observing;
-            Connection.Observer = new ObserverObject(this);
 
+            
+
+            Connection.Observer = new ObserverObject(this, Observee);
             Observer = true;
 
-
-            Enqueue(new S.Observe { ObserveObjectID = ObjID });
+            if (Observee != null)
+                Observee.CurrentObservers.Add(Connection.Observer);
 
             // player.Observers.Add(this);
             //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);
             //p.Observing = true;
 
-            //GetObjectsPassive(player);
+                //GetObjectsPassive(player);
         }
 
         public void Turn(MirDirection dir)
@@ -14150,6 +14161,7 @@ namespace Server.MirObjects
         public void Enqueue(Packet p)
         {
             if (Connection == null) return;
+            if (Connection.Stage != GameStage.Observing)
                 Connection.Enqueue(p);
         }
 

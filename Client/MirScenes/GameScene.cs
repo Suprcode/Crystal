@@ -1689,7 +1689,7 @@ namespace Client.MirScenes
             Observer = new ObserverObject(User.ObjectID);
             Observer.Load(User.CurrentLocation);
 
-            if (p.ObserveObjectID == User.ObjectID)
+            if (p.ObserveObjectID == 0)
                 Observer.FreeMovement();
             else
                 Observer.LockOnObject(p.ObserveObjectID);

@@ -16,6 +16,7 @@ namespace Server.MirObjects
         public MirConnection Connection;
 
         public bool LockedOn;
+        public MapObject LockedTarget;
         public const long MoveDelay = 600, MovementDelay = 2000;
         public long ActionTime, MovementTime;
 
@@ -26,12 +27,56 @@ namespace Server.MirObjects
             Connection.Enqueue(p);
         }
 
-        public ObserverObject(PlayerObject player)
+        public ObserverObject(PlayerObject player, MapObject observee)
         {
-            CurrentLocation = player.CurrentLocation;
-            CurrentMapIndex = player.CurrentMapIndex;
+            uint ObjID = 0;
+            bool mapChange = false;
+
+            if (observee != null)
+            {
+                ObjID = observee.ObjectID;
+                //observee.Observers.Add(this);
+                LockedOn = true;
+                LockedTarget = observee;
+
+                if (player.CurrentMap != observee.CurrentMap)
+                {
+                    mapChange = true;
+                }
+
+                CurrentLocation = observee.CurrentLocation;
+                CurrentMapIndex = observee.CurrentMapIndex;
+                CurrentMap = observee.CurrentMap;
+
+            }
+            else
+            {
+                CurrentLocation = player.CurrentLocation;
+                CurrentMapIndex = player.CurrentMapIndex;
+                CurrentMap = player.CurrentMap;
+            }
+
             Connection = player.Connection;
+
+
+            if (mapChange)
+            {
+                Enqueue(new S.MapChanged
+                {
+                    FileName = CurrentMap.Info.FileName,
+                    Title = CurrentMap.Info.Title,
+                    MiniMap = CurrentMap.Info.MiniMap,
+                    BigMap = CurrentMap.Info.BigMap,
+                    Lights = CurrentMap.Info.Light,
+                    Location = CurrentLocation,
+                    Direction = Direction,
+                    MapDarkLight = CurrentMap.Info.MapDarkLight,
+                    Music = CurrentMap.Info.Music
+                });
+            }
+
             Envir.Observers.Add(this);
+            Enqueue(new S.Observe { ObserveObjectID = ObjID });
         }
 
         public override Point CurrentLocation { get; set; }
@@ -126,7 +171,6 @@ namespace Server.MirObjects
 
                 return true;
             }
-
             return false;
         }
 
@@ -161,6 +205,58 @@ namespace Server.MirObjects
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
                 Music = CurrentMap.Info.Music
             });
+        }
+
+        public void Unlock()
+        {
+            LockedOn = false;
+            LockedTarget = null;
+        }
+
+        public bool LockedProcess()
+        {
+            if (LockedTarget != null)
+            {
+                if (CurrentLocation != LockedTarget.CurrentLocation)
+                {
+                    CurrentLocation = LockedTarget.CurrentLocation;
+                }
+                if (CurrentMapIndex != LockedTarget.CurrentMapIndex)
+                {
+                    CurrentMapIndex = LockedTarget.CurrentMapIndex;
+                    CurrentMap = LockedTarget.CurrentMap;
+
+                    Enqueue(new S.MapChanged
+                    {
+                        FileName = CurrentMap.Info.FileName,
+                        Title = CurrentMap.Info.Title,
+                        MiniMap = CurrentMap.Info.MiniMap,
+                        BigMap = CurrentMap.Info.BigMap,
+                        Lights = CurrentMap.Info.Light,
+                        Location = CurrentLocation,
+                        Direction = Direction,
+                        MapDarkLight = CurrentMap.Info.MapDarkLight,
+                        Music = CurrentMap.Info.Music
+                    });
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override void Process()
+        {
+            if (LockedTarget != null)
+            {
+                if (CurrentLocation != LockedTarget.CurrentLocation)
+                    CurrentLocation = LockedTarget.CurrentLocation;
+            }
+
+            base.Process();
         }
 
         public override ObjectType Race

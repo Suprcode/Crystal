@@ -626,7 +626,7 @@ namespace Server.MirEnvir
 
                         for (int i = 0; i < MapList.Count; i++)
                             MapList[i].Process();
-
+                            
                         if (DragonSystem != null) DragonSystem.Process();
 
                         Process();
