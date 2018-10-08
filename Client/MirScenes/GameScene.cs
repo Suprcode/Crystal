@@ -1687,21 +1687,18 @@ namespace Client.MirScenes
         private void Observe(S.Observe p)
         {
             Observer = new ObserverObject(User.ObjectID);
-            Observer.Load(User.CurrentLocation);
+            Observer.Load(User);
 
-            if (p.ObserveObjectID == 0)
-                Observer.FreeMovement();
-            else
+            if (p.ObserveObjectID != 0)
                 Observer.LockOnObject(p.ObserveObjectID);
 
             User = null;
 
             //BuffsDialog.Hide();
             MainDialog.Hide();
-            ChatDialog.Hide();
+            //ChatDialog.Hide();
             BeltDialog.Hide();
-            ChatControl.Hide();
-            MiniMapDialog.Hide();
+            //ChatControl.Hide();
             CharacterDuraPanel.Hide();
             DuraStatusPanel.Hide();
         }

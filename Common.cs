@@ -4735,6 +4735,8 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.ObserveMove:
+                return new C.ObserveMove();
             default:
                 return null;
         }

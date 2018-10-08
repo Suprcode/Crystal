@@ -5373,10 +5373,8 @@ namespace Server.MirObjects
         {
             Connection.Stage = GameStage.Observing;
 
-            
-
-            Connection.Observer = new ObserverObject(this, Observee);
             Observer = true;
+            Connection.Observer = new ObserverObject(this, Observee);
 
             if (Observee != null)
                 Observee.CurrentObservers.Add(Connection.Observer);

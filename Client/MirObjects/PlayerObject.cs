@@ -26,6 +26,8 @@ namespace Client.MirObjects
             get { return !Dead; }
         }
 
+        public string Name { get; set; }
+
         public MirGender Gender;
         public MirClass Class;
         public byte Hair;

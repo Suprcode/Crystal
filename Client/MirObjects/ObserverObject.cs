@@ -11,6 +11,7 @@ namespace Client.MirObjects
 
     public class ObserverObject : MapObject, ICamera
     {
+        public string Name { get; set; }
 
         public bool LockedOn { get; set; }
         public ObserverObject(uint objectID) : base(objectID)
@@ -18,9 +19,10 @@ namespace Client.MirObjects
             FreeMovement();
         }
 
-        public void Load(Point location)
+        public void Load(UserObject user)
         {
-            CurrentLocation = location;
+            CurrentLocation = user.CurrentLocation;
+            Name = user.Name;
             GameScene.Scene.MapControl.AddObject(this);
         }
 
@@ -43,7 +45,7 @@ namespace Client.MirObjects
             GameScene.Camera = this;
         }
 
-        public override ObjectType Race => ObjectType.Player;
+        public override ObjectType Race => ObjectType.Observer;
 
         public override bool Blocking => false;
 

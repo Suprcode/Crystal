@@ -3044,8 +3044,8 @@ namespace Client.MirScenes.Dialogs
             float scaleY = miniMapSize.Height / (float)map.Height;
 
             viewRect.Location = new Point(
-                (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
-                (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
+                (int)(scaleX * MapObject.Camera.CurrentLocation.X) - viewRect.Width / 2,
+                (int)(scaleY * MapObject.Camera.CurrentLocation.Y) - viewRect.Height / 2);
 
             //   viewRect.Location = viewRect.Location.Subtract(1, 1);
             if (viewRect.Right >= miniMapSize.Width)
@@ -3072,7 +3072,7 @@ namespace Client.MirScenes.Dialogs
 
                 Color colour;
 
-                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.User != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
+                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.Camera != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.Camera.Name)))
                     colour = Color.FromArgb(0, 0, 255);
                 else
                     if (ob is PlayerObject)
@@ -3216,12 +3216,12 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
-            if (GameScene.User == null) return;
+            if (GameScene.Camera == null) return;
 
             MapControl map = GameScene.Scene.MapControl;
             if (map == null) return;
             MapNameLabel.Text = map.Title;
-            LocationLabel.Text = Functions.PointToString(MapObject.User.CurrentLocation);
+            LocationLabel.Text = Functions.PointToString(MapObject.Camera.CurrentLocation);
 
             int offset = _realBigMode ? 0 : 108;
 
