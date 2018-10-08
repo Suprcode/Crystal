@@ -8,8 +8,10 @@ using S = ServerPackets;
 
 namespace Client.MirObjects
 {
+
     public class ObserverObject : MapObject, ICamera
     {
+
         public bool LockedOn { get; set; }
         public ObserverObject(uint objectID) : base(objectID)
         {
@@ -37,6 +39,7 @@ namespace Client.MirObjects
 
         public void FreeMovement()
         {
+            LockedOn = false;
             GameScene.Camera = this;
         }
 

@@ -744,7 +744,8 @@ public enum ObjectType : byte
     Spell = 4,
     Monster = 5,
     Deco = 6,
-    Creature = 7
+    Creature = 7,
+    Observer = 8
 }
 
 public enum ChatType : byte
@@ -1639,7 +1640,8 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+    ObserveMove
 }
 
 public enum ConquestType : byte

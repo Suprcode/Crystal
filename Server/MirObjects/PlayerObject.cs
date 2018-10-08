@@ -29,7 +29,6 @@ namespace Server.MirObjects
             get { return ObjectType.Player; }
         }
 
-        public bool Observing = false;
 
         public CharacterInfo Info;
         public AccountInfo Account;
@@ -5313,17 +5312,23 @@ namespace Server.MirObjects
                         break;
                     case "OBS":
                         //OBS
-                        if ((!IsGM) || parts.Length < 2) return;
+                        if ((!IsGM) || parts.Length < 1) return;
 
-                        player = Envir.GetPlayer(parts[1]);
+                        PlayerObject play = null;
 
-                        if (player == null)
+                        if (parts.Length >= 2)
                         {
-                            ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
-                            return;
-                        }
+                            play = Envir.GetPlayer(parts[1]);
 
-                        ObserverSetup(player);
+                            if (play == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+                        
+                        ObserverSetup(play);
+
 
                         break;
                     default:
@@ -5348,19 +5353,27 @@ namespace Server.MirObjects
         }
 
 
-        public void ObserverSetup(PlayerObject player)
+        public void ObserverSetup(PlayerObject player = null)
         {
-            Observing = true;
+            uint ObjID;
+
+            if (player == null)
+                ObjID = ObjectID;
+            else
+                ObjID = player.ObjectID;
+
             //Connection.Stage = GameStage.Observing;
+
             Observer = true;
 
             Envir.Observers.Add(this);
 
-           // player.Observers.Add(this);
+            Enqueue(new S.Observe { ObserveObjectID = ObjID });
+
+
+            // player.Observers.Add(this);
             //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);
             //p.Observing = true;
-
-            Enqueue(new S.Observe { ObserveObjectID = player.ObjectID });
 
             //GetObjectsPassive(player);
         }

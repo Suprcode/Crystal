@@ -601,6 +601,16 @@ namespace Client.MirScenes.Dialogs
                     return 0;
             }
         }
+
+        public void Show()
+        {
+            Visible = true;
+        }
+
+        public void Hide()
+        {
+            Visible = false;
+        }
     }
 }
 

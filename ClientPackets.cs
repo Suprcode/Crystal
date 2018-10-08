@@ -2286,4 +2286,19 @@ public sealed class AwakeningNeedMaterials : Packet
         protected override void WritePacket(BinaryWriter writer)
         { }
     }
+
+    public sealed class ObserveMove : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.Walk; } }
+
+        public MirDirection Direction;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Direction = (MirDirection)reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Direction);
+        }
+    }
 }

@@ -1789,5 +1789,15 @@ namespace Server.MirNetwork
 
             Player.ConfirmItemRental();
         }
+
+        private void ObserveMove(C.Walk p)
+        {
+            if (Stage != GameStage.Observing) return;
+
+            if (Player.ActionTime > SMain.Envir.Time)
+                _retryList.Enqueue(p);
+            else
+                Player.Walk(p.Direction);
+        }
     }
 }
