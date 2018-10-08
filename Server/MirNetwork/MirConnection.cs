@@ -44,6 +44,7 @@ namespace Server.MirNetwork
 
         public AccountInfo Account;
         public PlayerObject Player;
+        public ObserverObject Observer;
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
@@ -1790,14 +1791,14 @@ namespace Server.MirNetwork
             Player.ConfirmItemRental();
         }
 
-        private void ObserveMove(C.Walk p)
+        private void ObserveMove(C.ObserveMove p)
         {
             if (Stage != GameStage.Observing) return;
 
-            if (Player.ActionTime > SMain.Envir.Time)
+            if (Observer.ActionTime > SMain.Envir.Time)
                 _retryList.Enqueue(p);
             else
-                Player.Walk(p.Direction);
+                Observer.ObserveMove(p.Direction);
         }
     }
 }

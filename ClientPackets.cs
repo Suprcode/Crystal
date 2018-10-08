@@ -2289,7 +2289,7 @@ public sealed class AwakeningNeedMaterials : Packet
 
     public sealed class ObserveMove : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.Walk; } }
+        public override short Index { get { return (short)ClientPacketIds.ObserveMove; } }
 
         public MirDirection Direction;
         protected override void ReadPacket(BinaryReader reader)

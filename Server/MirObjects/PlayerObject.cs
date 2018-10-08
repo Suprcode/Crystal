@@ -5362,14 +5362,13 @@ namespace Server.MirObjects
             else
                 ObjID = player.ObjectID;
 
-            //Connection.Stage = GameStage.Observing;
+            Connection.Stage = GameStage.Observing;
+            Connection.Observer = new ObserverObject(this);
 
             Observer = true;
 
-            Envir.Observers.Add(this);
 
             Enqueue(new S.Observe { ObserveObjectID = ObjID });
-
 
             // player.Observers.Add(this);
             //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);

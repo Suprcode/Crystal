@@ -9376,11 +9376,13 @@ namespace Client.MirScenes
 
                             MirDirection dir = MouseDirection();
 
-                            Network.Enqueue(new C.Walk { Direction = dir });
+                            Network.Enqueue(new C.ObserveMove { Direction = dir });
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.NextAction = CMain.Time + 2500;
                             break;
                         case MouseButtons.Right:
+                            if (GameScene.Observer.LockedOn == false) return;
+
                             GameScene.Observer.FreeMovement();
                             break;
                     }

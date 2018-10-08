@@ -16,11 +16,22 @@ namespace Server.MirObjects
         public MirConnection Connection;
 
         public bool LockedOn;
+        public const long MoveDelay = 600, MovementDelay = 2000;
+        public long ActionTime, MovementTime;
+
 
         public void Enqueue(Packet p)
         {
             if (Connection == null) return;
             Connection.Enqueue(p);
+        }
+
+        public ObserverObject(PlayerObject player)
+        {
+            CurrentLocation = player.CurrentLocation;
+            CurrentMapIndex = player.CurrentMapIndex;
+            Connection = player.Connection;
+            Envir.Observers.Add(this);
         }
 
         public override Point CurrentLocation { get; set; }
@@ -56,56 +67,100 @@ namespace Server.MirObjects
             if (CheckMovement(location)) return;
 
             CurrentMap.GetCell(CurrentLocation).Remove(this);
-            RemoveObjects(dir, 1);
+            //RemoveObjects(dir, 1);
 
             CurrentLocation = location;
             CurrentMap.GetCell(CurrentLocation).Add(this);
-            AddObjects(dir, 1);
+            //AddObjects(dir, 1);
 
-            _stepCounter++;
-
-            SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
-
-            if (szi != null)
-            {
-                BindLocation = szi.Location;
-                BindMapIndex = CurrentMapIndex;
-                InSafeZone = true;
-            }
-            else
-                InSafeZone = false;
-
-
-            CheckConquest();
+            //_stepCounter++;
 
 
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + GetDelayTime(MoveDelay);
 
-            if (TradePartner != null)
-                TradeCancel();
-
-            if (ItemRentalPartner != null)
-                CancelItemRental();
-
-            if (RidingMount) DecreaseMountLoyalty(1);
-
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
 
             cell = CurrentMap.GetCell(CurrentLocation);
+        }
 
-            for (int i = 0; i < cell.Objects.Count; i++)
+        public long GetDelayTime(long original)
+        {
+            if (CurrentPoison.HasFlag(PoisonType.Slow))
             {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                SpellObject ob = (SpellObject)cell.Objects[i];
+                return original * 2;
+            }
+            return original;
+        }
 
-                ob.ProcessSpell(this);
-                //break;
+        public bool CheckMovement(Point location)
+        {
+            if (Envir.Time < MovementTime) return false;
+
+
+            //Map movements
+            for (int i = 0; i < CurrentMap.Info.Movements.Count; i++)
+            {
+                MovementInfo info = CurrentMap.Info.Movements[i];
+
+                if (info.Source != location) continue;
+
+                if (info.NeedHole)
+                {
+                    Cell cell = CurrentMap.GetCell(location);
+
+                    if (cell.Objects == null ||
+                        cell.Objects.Where(ob => ob.Race == ObjectType.Spell).All(ob => ((SpellObject)ob).Spell != Spell.DigOutZombie))
+                        continue;
+                }
+
+                Map temp = Envir.GetMap(info.MapIndex);
+
+                if (temp == null || !temp.ValidPoint(info.Destination)) continue;
+
+                CurrentMap.RemoveObject(this);
+                Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+
+                CompleteMapMovement(temp, info.Destination, CurrentMap, CurrentLocation);
+
+                return true;
             }
 
+            return false;
+        }
+
+        private void CompleteMapMovement(params object[] data)
+        {
+            if (this == null) return;
+            Map temp = (Map)data[0];
+            Point destination = (Point)data[1];
+            Map checkmap = (Map)data[2];
+            Point checklocation = (Point)data[3];
+
+            if (CurrentMap != checkmap || CurrentLocation != checklocation) return;
+
+            bool mapChanged = temp != CurrentMap;
+
+            CurrentMap = temp;
+            CurrentLocation = destination;
+
+            CurrentMap.AddObject(this);
+
+            MovementTime = Envir.Time + MovementDelay;
+
+            Enqueue(new S.MapChanged
+            {
+                FileName = CurrentMap.Info.FileName,
+                Title = CurrentMap.Info.Title,
+                MiniMap = CurrentMap.Info.MiniMap,
+                BigMap = CurrentMap.Info.BigMap,
+                Lights = CurrentMap.Info.Light,
+                Location = CurrentLocation,
+                Direction = Direction,
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music
+            });
         }
 
         public override ObjectType Race

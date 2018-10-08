@@ -390,7 +390,7 @@ namespace Server.MirObjects
 
             for (int i = Envir.Observers.Count - 1; i >= 0; i--)
             {
-                PlayerObject observer = Envir.Observers[i];
+                ObserverObject observer = Envir.Observers[i];
                 if (observer == this) continue;
 
                 if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))
