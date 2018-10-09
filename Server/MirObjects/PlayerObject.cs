@@ -1940,9 +1940,9 @@ namespace Server.MirObjects
                 }
             }
 
-            //if (Connection.SentItemInfo.Contains(info)) return;
+            if (Connection.SentItemInfo.Contains(info)) return;
             Enqueue(new S.NewItemInfo { Info = info });
-            //Connection.SentItemInfo.Add(info);
+            Connection.SentItemInfo.Add(info);
         }
         public void CheckItem(UserItem item)
         {

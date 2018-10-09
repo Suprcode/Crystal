@@ -624,6 +624,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ObserveMove:
                     ObserveMove((C.ObserveMove)p);
                     break;
+                case (short)ClientPacketIds.ObserveLock:
+                    ObserveLock((C.ObserveLock)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1802,6 +1805,15 @@ namespace Server.MirNetwork
                 _retryList.Enqueue(p);
             else
                 Observer.ObserveMove(p.Direction);
+        }
+        private void ObserveLock(C.ObserveLock p)
+        {
+            if (Stage != GameStage.Observing) return;
+
+            if (Observer.ActionTime > SMain.Envir.Time)
+                _retryList.Enqueue(p);
+            else
+                Observer.ObserveLock(p.ObjectID);
         }
     }
 }

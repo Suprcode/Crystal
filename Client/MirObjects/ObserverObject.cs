@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using Client.MirNetwork;
 using Client.MirScenes;
 using S = ServerPackets;
+using C = ClientPackets;
 
 namespace Client.MirObjects
 {
@@ -29,19 +31,28 @@ namespace Client.MirObjects
         public void LockOnObject(uint objectID)
         {
             LockedOn = true;
+            Network.Enqueue(new C.ObserveLock { ObjectID = objectID });
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != objectID) continue;
                 GameScene.Camera = ob as ICamera;
+                
                 return;
             }
         }
 
         public void FreeMovement()
         {
-            LockedOn = false;
+            if (LockedOn)
+            {
+                LockedOn = false;
+                Network.Enqueue(new C.ObserveLock { ObjectID = 0 });
+                CurrentLocation = GameScene.Camera.CurrentLocation;
+                Name = GameScene.Camera.Name;
+            }
+            
             GameScene.Camera = this;
         }
 

@@ -264,6 +264,10 @@ namespace Server.MirObjects
         {
             player.Enqueue(new S.ObjectRemove {ObjectID = ObjectID});
         }
+        public virtual void Remove(ObserverObject observer)
+        {
+            observer.Enqueue(new S.ObjectRemove { ObjectID = ObjectID });
+        }
         public virtual void Add(PlayerObject player)
         {
             if (Race == ObjectType.Merchant)
@@ -274,6 +278,28 @@ namespace Server.MirObjects
             }
 
             player.Enqueue(GetInfo());
+
+            //if (Race == ObjectType.Player)
+            //{
+            //    PlayerObject me = (PlayerObject)this;
+            //    player.Enqueue(me.GetInfoEx(player));
+            //}
+            //else
+            //{
+            //    player.Enqueue(GetInfo());
+            //}
+        }
+
+        public virtual void Add(ObserverObject observer)
+        {
+            if (Race == ObjectType.Merchant)
+            {
+                //NPCObject NPC = (NPCObject)this;
+                //NPC.CheckVisible(player, true);
+                //return;
+            }
+
+            observer.Enqueue(GetInfo());
 
             //if (Race == ObjectType.Player)
             //{

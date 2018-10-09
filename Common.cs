@@ -688,7 +688,9 @@ public enum MirAction : byte
 
     FishingCast,
     FishingWait,
-    FishingReel
+    FishingReel,
+
+    ObserveMove
 }
 
 public enum CellAttribute : byte
@@ -1496,7 +1498,9 @@ public enum ServerPacketIds : short
     ItemRentalPartnerLock,
     CanConfirmItemRental,
     ConfirmItemRental,
-    NewRecipeInfo
+    NewRecipeInfo,
+
+    ObserveLockChanged
 }
 
 public enum ClientPacketIds : short
@@ -1641,7 +1645,9 @@ public enum ClientPacketIds : short
     ItemRentalLockFee,
     ItemRentalLockItem,
     ConfirmItemRental,
-    ObserveMove
+    ObserveMove,
+    ObserveLock,
+    
 }
 
 public enum ConquestType : byte
@@ -4737,6 +4743,8 @@ public abstract class Packet
                 return new C.ConfirmItemRental();
             case (short)ClientPacketIds.ObserveMove:
                 return new C.ObserveMove();
+            case (short)ClientPacketIds.ObserveLock:
+                return new C.ObserveLock();
             default:
                 return null;
         }
@@ -5220,6 +5228,8 @@ public abstract class Packet
                 return new S.ConfirmItemRental();
             case (short)ServerPacketIds.NewRecipeInfo:
                 return new S.NewRecipeInfo();
+            case (short)ServerPacketIds.ObserveLockChanged:
+                return new S.ObserveLockChanged();
             default:
                 return null;
         }

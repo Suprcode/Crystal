@@ -2301,4 +2301,19 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write((byte)Direction);
         }
     }
+
+    public sealed class ObserveLock : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ObserveLock; } }
+
+        public uint ObjectID;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+        }
+    }
 }

@@ -332,7 +332,65 @@ namespace Client.MirScenes
             //bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
             //bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
 
-            if (GameScene.Observing) return;
+            if (GameScene.Observing)
+            {
+                MirDirection dir = MirDirection.Right;
+
+                switch (e.KeyCode)
+                {
+                    case Keys.F1:
+                        if (GameScene.Observer.LockedOn)
+                        {
+                            GameScene.Observer.FreeMovement();
+                        }
+                        else
+                        {
+                            if (MapObject.TargetObject != null)
+                            {
+
+                            }
+
+                            PlayerObject player = MapObject.MouseObject as PlayerObject;
+                            if (player != null)
+                                GameScene.Observer.LockOnObject(player.ObjectID);
+                        }
+                        break;
+                    case Keys.D:
+                        if (GameScene.Observer.LockedOn == true) return;
+                        dir = MirDirection.Right;
+                        Network.Enqueue(new C.ObserveMove { Direction = dir });
+                        GameScene.Scene.MapControl.FloorValid = false;
+                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
+                        MapControl.NextAction = CMain.Time + 100;
+                        break;
+                    case Keys.A:
+                        if (GameScene.Observer.LockedOn == true) return;
+                        dir = MirDirection.Left;
+                        Network.Enqueue(new C.ObserveMove { Direction = dir });
+                        GameScene.Scene.MapControl.FloorValid = false;
+                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
+                        MapControl.NextAction = CMain.Time + 100;
+                        break;
+                    case Keys.W:
+                        if (GameScene.Observer.LockedOn == true) return;
+                        dir = MirDirection.Up;
+                        Network.Enqueue(new C.ObserveMove { Direction = dir });
+                        GameScene.Scene.MapControl.FloorValid = false;
+                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
+                        MapControl.NextAction = CMain.Time + 100;
+                        break;
+                    case Keys.S:
+                        if (GameScene.Observer.LockedOn == true) return;
+                        dir = MirDirection.Down;
+                        Network.Enqueue(new C.ObserveMove { Direction = dir });
+                        GameScene.Scene.MapControl.FloorValid = false;
+                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
+                        MapControl.NextAction = CMain.Time + 100;
+                        break;
+
+                }
+                    return;
+            }
 
             foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
             {
@@ -1678,6 +1736,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.ConfirmItemRental:
                     ConfirmItemRental((S.ConfirmItemRental)p);
+                    break;
+                case (short)ServerPacketIds.ObserveLockChanged:
+                    ObserveLockChanged((S.ObserveLockChanged)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -3215,7 +3276,7 @@ namespace Client.MirScenes
             MapControl.Music = p.Music;
             MapControl.LoadMap();
             MapControl.NextAction = 0;
-
+        
             User.CurrentLocation = p.Location;
             User.MapLocation = p.Location;
             MapControl.AddObject(User);
@@ -3231,6 +3292,26 @@ namespace Client.MirScenes
 
             MapControl.FloorValid = false;
             MapControl.InputDelay = CMain.Time + 400;
+        }
+
+        private void ObserveLockChanged(S.ObserveLockChanged p)
+        {
+            if (!Observing) return;
+
+            MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
+            MapControl.Title = p.Title;
+            MapControl.MiniMap = p.MiniMap;
+            MapControl.BigMap = p.BigMap;
+            MapControl.Lights = p.Lights;
+            MapControl.MapDarkLight = p.MapDarkLight;
+            MapControl.Music = p.Music;
+            MapControl.LoadMap();
+            MapControl.NextAction = 0;
+
+            Observer.CurrentLocation = p.Location;
+            Observer.MapLocation = p.Location;
+
+            MapControl.FloorValid = false;
         }
         private void ObjectTeleportOut(S.ObjectTeleportOut p)
         {
@@ -8382,7 +8463,7 @@ namespace Client.MirScenes
 
         public static Point MapLocation
         {
-            get { return GameScene.User == null ? Point.Empty : new Point(MouseLocation.X / CellWidth - OffSetX, MouseLocation.Y / CellHeight - OffSetY).Add(GameScene.User.CurrentLocation); }
+            get { return GameScene.Camera == null ? Point.Empty : new Point(MouseLocation.X / CellWidth - OffSetX, MouseLocation.Y / CellHeight - OffSetY).Add(GameScene.Camera.CurrentLocation); }
         }
 
         public static MouseButtons MapButtons;
@@ -8524,7 +8605,6 @@ namespace Client.MirScenes
 
             CheckInput();
 
-
             MapObject bestmouseobject = null;
             for (int y = MapLocation.Y + 2; y >= MapLocation.Y - 2; y--)
             {
@@ -8540,7 +8620,11 @@ namespace Client.MirScenes
                     for (int i = cell.CellObjects.Count - 1; i >= 0; i--)
                     {
                         MapObject ob = cell.CellObjects[i];
-                        if (ob == MapObject.User || !ob.MouseOver(CMain.MPoint)) continue;
+                        if (ob.Name != "Eli" & ob.Name != "")
+                        {
+                            ob.Name = ob.Name;
+                        }
+                        if (ob == MapObject.Camera || !ob.MouseOver(CMain.MPoint)) continue;
 
                         if (MapObject.MouseObject != ob)
                         {
@@ -8564,6 +8648,7 @@ namespace Client.MirScenes
                 }
             }
 
+            
 
             if (MapObject.MouseObject != null)
             {
@@ -9364,23 +9449,15 @@ namespace Client.MirScenes
 
             if (GameScene.Observing)
             {
-                if (MouseControl == this)
+                if (true)
                 {
                     switch(MapButtons)
                     {
                         case MouseButtons.Left:
-                            if (GameScene.Observer.LockedOn == true) return;
-
-                            MirDirection dir = MouseDirection();
-
-                            Network.Enqueue(new C.ObserveMove { Direction = dir });
-                            GameScene.Scene.MapControl.FloorValid = false;
-                            MapControl.NextAction = CMain.Time + 2500;
-                            break;
+                            
                         case MouseButtons.Right:
-                            if (GameScene.Observer.LockedOn == false) return;
+                            
 
-                            GameScene.Observer.FreeMovement();
                             break;
                     }
                 }
