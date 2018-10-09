@@ -45,15 +45,7 @@ namespace Server.MirObjects
         public override int CurrentMapIndex
         {
             get { return Info.CurrentMapIndex; }
-            set {
-                Info.CurrentMapIndex = value;
-                for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
-                {
-                    if (CurrentObservers[i] != null)
-                        if (!CurrentObservers[i].LockedProcess())
-                            CurrentObservers.Remove(CurrentObservers[i]);
-                }
-            }
+            set { Info.CurrentMapIndex = value; }
         }
         public override Point CurrentLocation
         {
@@ -446,8 +438,14 @@ namespace Server.MirObjects
             }
 
             if (MyGuild != null) MyGuild.PlayerLogged(this, false);
+
             Envir.Players.Remove(this);
-            CurrentMap.RemoveObject(this);
+
+            if (Observer)
+                CurrentMap.RemoveObject(Connection.Observer);
+            else
+                CurrentMap.RemoveObject(this);
+
             Despawn();
 
             if (GroupMembers != null)
@@ -5379,11 +5377,12 @@ namespace Server.MirObjects
             if (Observee != null)
                 Observee.CurrentObservers.Add(Connection.Observer);
 
+            CurrentMap.RemoveObject(this);
             // player.Observers.Add(this);
             //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);
             //p.Observing = true;
 
-                //GetObjectsPassive(player);
+            //GetObjectsPassive(player);
         }
 
         public void Turn(MirDirection dir)

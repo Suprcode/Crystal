@@ -1748,10 +1748,27 @@ namespace Client.MirScenes
         private void Observe(S.Observe p)
         {
             Observer = new ObserverObject(User.ObjectID);
-            Observer.Load(User);
+            Observer.Load(p, User);
 
-            if (p.ObserveObjectID != 0)
-                Observer.LockOnObject(p.ObserveObjectID);
+            //if (p.ObserveObjectID != 0)
+            //{
+            //    MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
+            //    MapControl.Title = p.Title;
+            //    MapControl.MiniMap = p.MiniMap;
+            //    MapControl.BigMap = p.BigMap;
+            //    MapControl.Lights = p.Lights;
+            //    MapControl.MapDarkLight = p.MapDarkLight;
+            //    MapControl.Music = p.Music;
+            //    MapControl.LoadMap();
+            //    MapControl.NextAction = 0;
+            //    Observer.CurrentLocation = p.Location;
+            //    Observer.MapLocation = p.Location;
+            //    MapControl.AddObject(Observer);
+            //    MapControl.FloorValid = false;
+            //    MapControl.InputDelay = CMain.Time + 400;
+            //    //Observer.LockOnObject(p.ObserveObjectID, true);
+            //}
+            MapControl.Objects.Remove(User);
 
             User = null;
 
@@ -1835,11 +1852,17 @@ namespace Client.MirScenes
         {
             ChatDialog.ReceiveChat(p.Message, p.Type);
         }
+
         private void ObjectPlayer(S.ObjectPlayer p)
         {
-                PlayerObject player = new PlayerObject(p.ObjectID);
-                player.Load(p);
+            PlayerObject player = new PlayerObject(p.ObjectID);
+            player.Load(p);
+
+            if (Observing)
+                if (player.ObjectID == Observer.LockedID)
+                    Observer.LockOnObject(player.ObjectID, true);
         }
+
         private void ObjectRemove(S.ObjectRemove p)
         {
             if (!Observing && p.ObjectID == User.ObjectID) return;
@@ -3298,6 +3321,8 @@ namespace Client.MirScenes
         {
             if (!Observing) return;
 
+            MapControl.RemoveObject(Observer);
+
             MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
             MapControl.Title = p.Title;
             MapControl.MiniMap = p.MiniMap;
@@ -3312,6 +3337,7 @@ namespace Client.MirScenes
             Observer.MapLocation = p.Location;
 
             MapControl.FloorValid = false;
+            MapControl.InputDelay = CMain.Time + 400;
         }
         private void ObjectTeleportOut(S.ObjectTeleportOut p)
         {
@@ -8549,7 +8575,8 @@ namespace Client.MirScenes
             if (User != null)
                 Objects.Add(User);
 
-
+            if (GameScene.Observer != null)
+                Objects.Add(GameScene.Observer);
 
             MapObject.MouseObject = null;
             MapObject.TargetObject = null;

@@ -12,9 +12,7 @@ using S = ServerPackets;
 /*
 NOTES
 Removing & Adding Objects when Locked on are loading for 3 x space movement.
-Need to add PassiveGetObjects
-Need to add moving to new map
-Need to add moving to player when not in current range
+Need to add moving to new map (works on connect, fails on map change when already locked)
 Need to have access to chat / chat commands from Observer Scene
 Need to be able to return to Player
 */
@@ -26,15 +24,18 @@ namespace Server.MirObjects
     {
         public MirConnection Connection;
 
+        public override bool Blocking
+        {
+            get { return false; }
+        }
+
         public bool LockedOn {
             get { return LockedTarget == null ? false : true; }
         }
 
-
         public MapObject LockedTarget;
         public const long MoveDelay = 600, MovementDelay = 2000;
         public long ActionTime, MovementTime;
-
 
         public void Enqueue(Packet p)
         {
@@ -45,7 +46,6 @@ namespace Server.MirObjects
         public ObserverObject(PlayerObject player, MapObject observee)
         {
             uint ObjID = 0;
-            bool mapChange = false;
 
             if (observee != null)
             {
@@ -54,15 +54,9 @@ namespace Server.MirObjects
 
                 LockedTarget = observee;
 
-                if (player.CurrentMap != observee.CurrentMap)
-                {
-                    mapChange = true;
-                }
-
                 CurrentLocation = observee.CurrentLocation;
                 CurrentMapIndex = observee.CurrentMapIndex;
                 CurrentMap = observee.CurrentMap;
-
             }
             else
             {
@@ -73,11 +67,13 @@ namespace Server.MirObjects
 
             Connection = player.Connection;
 
+            CurrentMap.GetCell(CurrentLocation).Add(this);
 
-            if (mapChange)
+            if (ObjID != 0)
             {
-                Enqueue(new S.ObserveLockChanged
+                Enqueue(new S.Observe
                 {
+                    ObserveObjectID = ObjID,
                     FileName = CurrentMap.Info.FileName,
                     Title = CurrentMap.Info.Title,
                     MiniMap = CurrentMap.Info.MiniMap,
@@ -90,9 +86,13 @@ namespace Server.MirObjects
                 });
                 GetObjectsPassive();
             }
+            else
+            {
+                Enqueue(new S.Observe { ObserveObjectID = ObjID });
+            }
 
             Envir.Observers.Add(this);
-            Enqueue(new S.Observe { ObserveObjectID = ObjID });
+            
         }
 
         public void ObserveLock(uint ObjectID)
@@ -142,11 +142,14 @@ namespace Server.MirObjects
 
         private void GetObjectsPassive()
         {
-            PlayerObject player;
+            MapObject player;
             if (LockedOn && LockedTarget is PlayerObject)
                 player = (PlayerObject)LockedTarget;
             else
-                player = Connection.Player;
+                player = this;
+
+            PlayerObject mainPlayer = player == this ? Connection.Player : (PlayerObject)player;
+           
 
             for (int y = player.CurrentLocation.Y - Globals.DataRange; y <= player.CurrentLocation.Y + Globals.DataRange; y++)
             {
@@ -166,7 +169,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < cell.Objects.Count; i++)
                     {
                         MapObject ob = cell.Objects[i];
-                        if (ob == player) continue;
+                        if (ob == player & player != LockedTarget) continue;
 
                         if (ob.Race == ObjectType.Deco)
                         {
@@ -178,7 +181,7 @@ namespace Server.MirObjects
                         if (ob.Race == ObjectType.Player)
                         {
                             PlayerObject Player = (PlayerObject)ob;
-                            Enqueue(Player.GetInfoEx(player));
+                            Enqueue(Player.GetInfoEx(mainPlayer));
                         }
                         else if (ob.Race == ObjectType.Spell)
                         {
@@ -190,9 +193,9 @@ namespace Server.MirObjects
                         {
                             NPCObject NPC = (NPCObject)ob;
 
-                            NPC.CheckVisible(player);
+                            NPC.CheckVisible(mainPlayer);
 
-                            if (NPC.VisibleLog[player.Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
+                            if (NPC.VisibleLog[mainPlayer.Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
                         }
                         else
                         {
@@ -200,7 +203,7 @@ namespace Server.MirObjects
                         }
 
                         if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
-                            ob.SendHealth(player);
+                            ob.SendHealth(mainPlayer);
                     }
                 }
             }
@@ -907,31 +910,46 @@ namespace Server.MirObjects
             {
                 if (CurrentLocation != LockedTarget.CurrentLocation)
                 {
-                    CurrentLocation = LockedTarget.CurrentLocation;
-
-                    RemoveObjects(LockedTarget.Direction, 3);
-
-                    AddObjects(LockedTarget.Direction, 3);
-                }
-                if (CurrentMapIndex != LockedTarget.CurrentMapIndex)
-                {
-                    CurrentMapIndex = LockedTarget.CurrentMapIndex;
-                    CurrentMap = LockedTarget.CurrentMap;
-
-                    Enqueue(new S.ObserveLockChanged
+                    if (LockedTarget.CurrentMap != CurrentMap)
                     {
-                        FileName = CurrentMap.Info.FileName,
-                        Title = CurrentMap.Info.Title,
-                        MiniMap = CurrentMap.Info.MiniMap,
-                        BigMap = CurrentMap.Info.BigMap,
-                        Lights = CurrentMap.Info.Light,
-                        Location = CurrentLocation,
-                        Direction = Direction,
-                        MapDarkLight = CurrentMap.Info.MapDarkLight,
-                        Music = CurrentMap.Info.Music
-                    });
+                        CurrentMap.GetCell(CurrentLocation).Remove(this);
 
-                    GetObjectsPassive();
+                        CurrentMapIndex = LockedTarget.CurrentMapIndex;
+                        CurrentMap = LockedTarget.CurrentMap;
+                        CurrentLocation = LockedTarget.CurrentLocation;
+
+                        Enqueue(new S.ObserveLockChanged
+                        {
+                            FileName = CurrentMap.Info.FileName,
+                            Title = CurrentMap.Info.Title,
+                            MiniMap = CurrentMap.Info.MiniMap,
+                            BigMap = CurrentMap.Info.BigMap,
+                            Lights = CurrentMap.Info.Light,
+                            Location = CurrentLocation,
+                            Direction = Direction,
+                            MapDarkLight = CurrentMap.Info.MapDarkLight,
+                            Music = CurrentMap.Info.Music
+                        });
+
+                        CurrentMap.GetCell(CurrentLocation).Add(this);
+
+                        GetObjectsPassive();
+                    }
+                    else
+                    {
+                        CurrentMap.GetCell(CurrentLocation).Remove(this);
+
+                        CurrentLocation = LockedTarget.CurrentLocation;
+
+                        CurrentMap.GetCell(CurrentLocation).Add(this);
+                        RemoveObjects(LockedTarget.Direction, 3);
+
+                        AddObjects(LockedTarget.Direction, 3);
+                    }
+
+
+                    
+
                 }
 
                 return true;
@@ -940,17 +958,6 @@ namespace Server.MirObjects
             {
                 return false;
             }
-        }
-
-        public override void Process()
-        {
-            if (LockedTarget != null)
-            {
-                if (CurrentLocation != LockedTarget.CurrentLocation)
-                    CurrentLocation = LockedTarget.CurrentLocation;
-            }
-
-            base.Process();
         }
 
         public override ObjectType Race
