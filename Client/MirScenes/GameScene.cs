@@ -7760,12 +7760,11 @@ namespace Client.MirScenes
 
             int count = 0;
 
+            #region CombineItemLabel
 
-            #region GEM
-
-            if (realItem.Type == ItemType.Gem)
+            if (realItem.Type == ItemType.Gem || realItem.Type == ItemType.Rune)
             {
-                string text = "";
+                string text = "Hold CTRL and left click to combine with an item.";
 
                 switch (realItem.Shape)
                 {
@@ -7775,13 +7774,9 @@ namespace Client.MirScenes
                     case 2:
                         text = "Hold CTRL and left click to repair armour\nand accessory items.";
                         break;
-                    case 3:
-                    case 4:
-                        text = "Hold CTRL and left click to combine with an item.";
-                        break;
                 }
                 count++;
-                MirLabel GEMLabel = new MirLabel
+                MirLabel CombineLabel = new MirLabel
                 {
                     AutoSize = true,
                     ForeColour = Color.White,
@@ -7791,8 +7786,8 @@ namespace Client.MirScenes
                     Text = text
                 };
 
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GEMLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, GEMLabel.DisplayRectangle.Bottom));
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CombineLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, CombineLabel.DisplayRectangle.Bottom));
             }
 
             #endregion

@@ -11879,30 +11879,33 @@ namespace Server.MirObjects
                 return;
             }
 
-            switch (tempFrom.Info.Shape)
-            {
-                case 7: //Rune
-                    if (tempTo.socketCount < 1)
-                    {
-                        ReceiveChat("Item has no slots.", ChatType.Hint);
-                        return;
-                    } 
 
-                    for (int i = 0; i < tempTo.socketCount; i++)
+            if (tempFrom.Info.Type == ItemType.Rune)
+            {
+                if (tempTo.socketCount < 1)
+                {
+                    ReceiveChat("Item has no slots.", ChatType.Hint);
+                    return;
+                }
+
+                for (int i = 0; i < tempTo.socketCount; i++)
+                {
+                    if (tempTo.sockets[i] == null)
                     {
-                        if (tempTo.sockets[i] == null)
-                        {
-                            tempTo.sockets[i] = tempFrom.Info;
-                            slotLoc = i;
-                            break;
-                        }
-                        else if (i == tempTo.socketCount - 1)
-                        {
-                            ReceiveChat("Item has no available slots.", ChatType.Hint);
-                            continue;
-                        }
+                        tempTo.sockets[i] = tempFrom.Info;
+                        slotLoc = i;
+                        break;
                     }
-                    break;
+                    else if (i == tempTo.socketCount - 1)
+                    {
+                        ReceiveChat("Item has no available slots.", ChatType.Hint);
+                        continue;
+                    }
+                }
+            }
+            else if (tempFrom.Info.Type == ItemType.Gem)
+            switch (tempFrom.Info.Shape)
+            {  
                 case 1: //BoneHammer
                 case 2: //SewingSupplies
                 case 5: //SpecialHammer
