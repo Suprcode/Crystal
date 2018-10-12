@@ -806,6 +806,7 @@ public enum ItemType : byte
 	Awakening = 35,
     Pets = 36,
     Transform = 37,
+    Rune = 38
 }
 
 public enum MirGridType : byte
@@ -2984,6 +2985,7 @@ public class ItemInfo
     }
 
 }
+
 public class UserItem
 {
     public ulong UniqueID;
@@ -2998,6 +3000,9 @@ public class UserItem
 
     public RefinedValue RefinedValue = RefinedValue.None;
     public byte RefineAdded = 0;
+
+    public int socketCount = 0;
+    public ItemInfo[] sockets = new ItemInfo[3]; 
 
     public bool DuraChanged;
     public int SoulBoundId = -1;
@@ -3122,6 +3127,16 @@ public class UserItem
 
         if (reader.ReadBoolean())
             RentalInformation = new RentalInformation(reader, version, Customversion);
+
+        //SOCKETS
+        if (version < 78) return;
+
+        socketCount = reader.ReadInt32();
+        for (int i = 0; i < socketCount; i++)
+        {
+            if (reader.ReadBoolean()) continue;
+            sockets[i] = new ItemInfo(reader, version, Customversion);
+        }
     }
 
     public void Save(BinaryWriter writer)
@@ -3187,6 +3202,16 @@ public class UserItem
 
         writer.Write(RentalInformation != null);
         RentalInformation?.Save(writer);
+
+        //SOCKETS
+        writer.Write(socketCount);
+        for (int i = 0; i < socketCount; i++)
+        {
+            writer.Write(sockets[i] == null);
+            if (sockets[i] == null) continue;
+
+            sockets[i].Save(writer);
+        }
     }
 
 
@@ -3295,13 +3320,13 @@ public class UserItem
 
         switch (Info.Type)
         {
-            case ItemType.Mount:
+            case ItemType.Mount: //mount equipment
                 if (Info.Shape < 7)
                     amount = 4;
                 else if (Info.Shape < 12)
                     amount = 5;
                 break;
-            case ItemType.Weapon:
+            case ItemType.Weapon: //fishing weapons equipment
                 if (Info.Shape == 49 || Info.Shape == 50)
                     amount = 5;
                 break;
@@ -3394,7 +3419,10 @@ public class UserItem
             RefineAdded = RefineAdded,
 
             ExpireInfo = ExpireInfo,
-            RentalInformation = RentalInformation
+            RentalInformation = RentalInformation,
+
+            socketCount = socketCount,
+            sockets = sockets
         };
 
         return item;

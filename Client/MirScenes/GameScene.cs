@@ -3495,8 +3495,9 @@ namespace Client.MirScenes
             item.PoisonResist = p.Item.PoisonResist;
             item.RefinedValue = p.Item.RefinedValue;
             item.RefineAdded = p.Item.RefineAdded;
-            
 
+            item.sockets = p.Item.sockets;
+            
             GameScene.Scene.InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
 
             //MirAnimatedControl anim = new MirAnimatedControl
@@ -5551,6 +5552,8 @@ namespace Client.MirScenes
                         break;
                     case ItemType.Gem:
                         break;
+                    case ItemType.Rune:
+                        break;
                     case ItemType.Potion:
                         break;
                     case ItemType.Transform:
@@ -6761,6 +6764,69 @@ namespace Client.MirScenes
             }
             return null;
         }
+        public MirControl socketInfoLabel(UserItem item, bool Inspect = false)
+        {
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
+            HoverItem = item;
+            ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
+
+            ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+            int count = 0;
+
+
+            //SOCKETS
+            if (HoverItem.socketCount > 0) count++;
+            for (int i = 0; i < HoverItem.socketCount; i++)
+            {
+                Point l = new Point(5, ItemLabel.DisplayRectangle.Bottom + (i > 0 ? 2 : 3));
+                MirImageControl socketImg = new MirImageControl
+                {
+                    Size = new Size(2, 2),
+                    Index = item.sockets[i] != null ? item.sockets[i].Image : 2447,
+                    Library = Libraries.Prguse,
+                    Location = l,
+                    Parent = ItemLabel
+                };
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 20);
+
+                MirLabel imgLbl = new MirLabel
+                {
+                    AutoSize = true,
+                    Location = new Point(20, socketImg.Location.Y),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = (item.sockets[i] == null ? "Empty Socket" : item.sockets[i].FriendlyName)
+                };
+            }
+
+            if (count > 0)
+            {
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+                #region OUTLINE
+                MirControl outLine = new MirControl
+                {
+                    BackColour = Color.FromArgb(255, 50, 50, 50),
+                    Border = true,
+                    BorderColour = Color.Gray,
+                    NotControl = true,
+                    Parent = ItemLabel,
+                    Opacity = 0.4F,
+                    Location = new Point(0, 0)
+                };
+                outLine.Size = ItemLabel.Size;
+                #endregion
+
+                return outLine;
+            }
+            else
+            {
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height - 4);
+            }
+            return null;
+        }
+
         public MirControl AwakeInfoLabel(UserItem item, bool Inspect = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -6769,10 +6835,9 @@ namespace Client.MirScenes
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
 
             ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
-
             int count = 0;
 
-            #region AWAKENAME
+            #region AWAKENAMEF
             if (HoverItem.Awake.getAwakeLevel() > 0)
             {
                 count++;
@@ -7914,7 +7979,7 @@ namespace Client.MirScenes
             };
 
             //Name Info Label
-            MirControl[] outlines = new MirControl[9];
+            MirControl[] outlines = new MirControl[10];
             outlines[0] = NameInfoLabel(item, Inspect);
             //Attribute Info1 Label - Attack Info
             outlines[1] = AttackInfoLabel(item, Inspect);
@@ -7922,16 +7987,18 @@ namespace Client.MirScenes
             outlines[2] = DefenceInfoLabel(item, Inspect);
             //Attribute Info3 Label - Weight Info
             outlines[3] = WeightInfoLabel(item, Inspect);
+            //Socket Info Label
+            outlines[4] = socketInfoLabel(item, Inspect);
             //Awake Info Label
-            outlines[4] = AwakeInfoLabel(item, Inspect);
+            outlines[5] = AwakeInfoLabel(item, Inspect);
             //need Info Label
-            outlines[5] = NeedInfoLabel(item, Inspect);
+            outlines[6] = NeedInfoLabel(item, Inspect);
             //Bind Info Label
-            outlines[6] = BindInfoLabel(item, Inspect);
+            outlines[7] = BindInfoLabel(item, Inspect);
             //Overlap Info Label
-            outlines[7] = OverlapInfoLabel(item, Inspect);
+            outlines[8] = OverlapInfoLabel(item, Inspect);
             //Story Label
-            outlines[8] = StoryInfoLabel(item, Inspect);
+            outlines[9] = StoryInfoLabel(item, Inspect);
 
             foreach (var outline in outlines)
             {

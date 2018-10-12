@@ -318,6 +318,34 @@ namespace Client.MirObjects
                 ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
                 Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
 
+                for (int si = 0; si < temp.socketCount; si++)
+                {
+                    ItemInfo sockInfo = temp.sockets[si];
+
+                    if (sockInfo == null) continue;
+
+                    MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + sockInfo.MinAC);
+                    MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + sockInfo.MaxAC);
+                    MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + sockInfo.MinMAC);
+                    MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + sockInfo.MaxMAC);
+
+                    MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + sockInfo.MinDC);
+                    MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + sockInfo.MaxDC);
+                    MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + sockInfo.MinMC);
+                    MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + sockInfo.MaxMC);
+                    MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + sockInfo.MinSC);
+                    MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + sockInfo.MaxSC);
+
+                    Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + sockInfo.Accuracy);
+                    Agility = (byte)Math.Min(byte.MaxValue, Agility + sockInfo.Agility);
+
+                    MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + sockInfo.HP);
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + sockInfo.MP);
+
+                    ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + sockInfo.AttackSpeed)));
+                    Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + sockInfo.Luck)));
+                }
+
                 MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight)));
                 MaxWearWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxWearWeight + RealItem.WearWeight)));
                 MaxHandWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxHandWeight + RealItem.HandWeight)));

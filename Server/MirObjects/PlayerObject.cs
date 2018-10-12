@@ -2711,6 +2711,34 @@ namespace Server.MirObjects
                 ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
                 Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
 
+                for (int si = 0; si < temp.socketCount; si++)
+                {
+                    ItemInfo sockInfo = temp.sockets[si];
+
+                    if (sockInfo == null) continue;
+
+                    MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + sockInfo.MinAC);
+                    MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + sockInfo.MaxAC);
+                    MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + sockInfo.MinMAC);
+                    MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + sockInfo.MaxMAC);
+
+                    MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + sockInfo.MinDC);
+                    MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + sockInfo.MaxDC);
+                    MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + sockInfo.MinMC);
+                    MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + sockInfo.MaxMC);
+                    MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + sockInfo.MinSC);
+                    MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + sockInfo.MaxSC);
+
+                    Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + sockInfo.Accuracy);
+                    Agility = (byte)Math.Min(byte.MaxValue, Agility + sockInfo.Agility);
+
+                    MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + sockInfo.HP);
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + sockInfo.MP);
+
+                    ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + sockInfo.AttackSpeed)));
+                    Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + sockInfo.Luck)));
+                }
+
                 MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight)));
                 MaxWearWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(byte.MaxValue, MaxWearWeight + RealItem.WearWeight)));
                 MaxHandWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(byte.MaxValue, MaxHandWeight + RealItem.HandWeight)));
@@ -4362,6 +4390,18 @@ namespace Server.MirObjects
 
                         player.GainGold(count);
                         SMain.Enqueue(string.Format("Player {0} has been given {1} gold", player.Name, count));
+                        break;
+
+                    case "IWS":
+                        if (!IsGM) return;
+
+                        if (this.Info.Equipment[0] != null)
+                        {
+                            UserItem xwep = this.Info.Equipment[0];
+                            xwep.socketCount++;
+                            Enqueue(new S.RefreshItem { Item = this.Info.Equipment[0] });
+                            SMain.Enqueue(string.Format("Upgraded {0} with an extra socket.", this.Info.Equipment[0].FriendlyName));
+                        }
                         break;
 
                     case "GIVEPEARLS":
@@ -11822,8 +11862,9 @@ namespace Server.MirObjects
             }
 
             bool canRepair = false, canUpgrade = false;
+            int slotLoc = -1;
 
-            if (tempFrom.Info.Type != ItemType.Gem)
+            if (tempFrom.Info.Type != ItemType.Gem && tempFrom.Info.Type != ItemType.Rune)
             {
                 Enqueue(p);
                 return;
@@ -11831,6 +11872,28 @@ namespace Server.MirObjects
 
             switch (tempFrom.Info.Shape)
             {
+                case 7: //Rune
+                    if (tempTo.socketCount < 1)
+                    {
+                        ReceiveChat("Item has no slots.", ChatType.Hint);
+                        return;
+                    } 
+
+                    for (int i = 0; i < tempTo.socketCount; i++)
+                    {
+                        if (tempTo.sockets[i] == null)
+                        {
+                            tempTo.sockets[i] = tempFrom.Info;
+                            slotLoc = i;
+                            break;
+                        }
+                        else if (i == tempTo.socketCount - 1)
+                        {
+                            ReceiveChat("Item has no available slots.", ChatType.Hint);
+                            continue;
+                        }
+                    }
+                    break;
                 case 1: //BoneHammer
                 case 2: //SewingSupplies
                 case 5: //SpecialHammer
@@ -12124,8 +12187,6 @@ namespace Server.MirObjects
                     return;
             }
 
-
-
             RefreshBagWeight();
 
             if (canRepair && Info.Inventory[indexTo] != null)
@@ -12152,6 +12213,13 @@ namespace Server.MirObjects
             {
                 tempTo.GemCount++;
                 ReceiveChat("Item has been upgraded.", ChatType.Hint);
+                Enqueue(new S.ItemUpgraded { Item = tempTo });
+            }
+
+            if (slotLoc >= 0 && Info.Inventory[indexTo] != null)
+            {
+                tempTo.sockets[slotLoc] = tempFrom.Info;
+                ReceiveChat("Rune added to item.", ChatType.Hint);
                 Enqueue(new S.ItemUpgraded { Item = tempTo });
             }
 
