@@ -4392,18 +4392,27 @@ namespace Server.MirObjects
                         SMain.Enqueue(string.Format("Player {0} has been given {1} gold", player.Name, count));
                         break;
 
-                    case "IWS":
+                    case "ADDSOCKET":
                         if (!IsGM) return;
 
-                        if (this.Info.Equipment[0] != null)
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 1) return;
+
+                        int equipSlot = int.Parse(parts[1]);
+                        if (equipSlot < 0 || equipSlot > 11) return;
+
+                        UserItem xitem = this.Info.Equipment[int.Parse(parts[1])];
+                        if (xitem != null && xitem.socketCount < xitem.sockets.Length)
                         {
-                            UserItem xwep = this.Info.Equipment[0];
-                            xwep.socketCount++;
-                            Enqueue(new S.RefreshItem { Item = this.Info.Equipment[0] });
-                            SMain.Enqueue(string.Format("Upgraded {0} with an extra socket.", this.Info.Equipment[0].FriendlyName));
+                            xitem.socketCount++;
+                            Enqueue(new S.RefreshItem { Item = xitem });
+
+                            String outMsg = string.Format("Upgraded {0} with an extra socket.", xitem.FriendlyName);
+
+                            this.ReceiveChat(outMsg, ChatType.System);
+                            SMain.Enqueue(outMsg);
+                            return;
                         }
                         break;
-
                     case "GIVEPEARLS":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 

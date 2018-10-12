@@ -6837,7 +6837,7 @@ namespace Client.MirScenes
             ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
             int count = 0;
 
-            #region AWAKENAMEF
+            #region AWAKENAME
             if (HoverItem.Awake.getAwakeLevel() > 0)
             {
                 count++;
