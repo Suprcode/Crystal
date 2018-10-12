@@ -207,6 +207,9 @@ namespace Server
                 RISLuckChancetextBox.Text = string.Empty;
                 RISLuckStatChancetextBox.Text = string.Empty;
                 RISLuckMaxStattextBox.Text = string.Empty;
+                RISSocketChancetextBox.Text = string.Empty;
+                RISSocketMaxStattextBox.Text = string.Empty;
+                RISSocketStatChancetextBox.Text = string.Empty;
                 RISCurseChancetextBox.Text = string.Empty;
             }
             else
@@ -284,6 +287,9 @@ namespace Server
                 RISLuckChancetextBox.Text = stat.LuckChance.ToString();
                 RISLuckStatChancetextBox.Text = stat.LuckStatChance.ToString();
                 RISLuckMaxStattextBox.Text = stat.LuckMaxStat.ToString();
+                RISSocketChancetextBox.Text = stat.SocketChance.ToString();
+                RISSocketMaxStattextBox.Text = stat.SocketMaxStat.ToString();
+                RISSocketStatChancetextBox.Text = stat.SocketStatChance.ToString();
                 RISCurseChancetextBox.Text = stat.CurseChance.ToString();
             }
         }

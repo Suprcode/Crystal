@@ -801,6 +801,9 @@ namespace Server
                 stat.LuckChance = reader.ReadByte("Item" + i.ToString(), "LuckChance", 0);
                 stat.LuckStatChance = reader.ReadByte("Item" + i.ToString(), "LuckStatChance", 1);
                 stat.LuckMaxStat = reader.ReadByte("Item" + i.ToString(), "LuckMaxStat", 1);
+                stat.SocketChance = reader.ReadByte("Item" + i.ToString(), "SocketChance", 0);
+                stat.SocketStatChance = reader.ReadByte("Item" + i.ToString(), "SocketStatChance", 1);
+                stat.SocketMaxStat = reader.ReadByte("Item" + i.ToString(), "SocketMaxStat", 1);
                 stat.CurseChance = reader.ReadByte("Item" + i.ToString(), "CurseChance", 0);
                 RandomItemStatsList.Add(stat);
                 i++;
@@ -880,6 +883,9 @@ namespace Server
                 reader.Write("Item" + i.ToString(), "LuckChance", stat.LuckChance);
                 reader.Write("Item" + i.ToString(), "LuckStatChance", stat.LuckStatChance);
                 reader.Write("Item" + i.ToString(), "LuckMaxStat", stat.LuckMaxStat);
+                reader.Write("Item" + i.ToString(), "SocketChance", stat.SocketChance);
+                reader.Write("Item" + i.ToString(), "SocketStatChance", stat.SocketStatChance);
+                reader.Write("Item" + i.ToString(), "SocketMaxStat", stat.SocketMaxStat);
                 reader.Write("Item" + i.ToString(), "CurseChance", stat.CurseChance);
             }
         }

@@ -5440,6 +5440,7 @@ public class RandomItemStat
     public byte CriticalRateChance, CriticalRateStatChance, CriticalRateMaxStat, CriticalDamageChance, CriticalDamageStatChance, CriticalDamageMaxStat;
     public byte FreezeChance, FreezeStatChance, FreezeMaxStat, PoisonAttackChance, PoisonAttackStatChance, PoisonAttackMaxStat;
     public byte AttackSpeedChance, AttackSpeedStatChance, AttackSpeedMaxStat, LuckChance, LuckStatChance, LuckMaxStat;
+    public byte SocketChance, SocketMaxStat, SocketStatChance;
     public byte CurseChance;
 
     public RandomItemStat(ItemType Type = ItemType.Book)
@@ -5503,6 +5504,10 @@ public class RandomItemStat
         AccuracyChance = 30;
         AccuracyStatChance = 20;
         AccuracyMaxStat = 2;
+
+        SocketChance = 50;
+        SocketStatChance = 30;
+        SocketMaxStat = 3;
     }
     public void SetArmour()
     {
@@ -5530,6 +5535,10 @@ public class RandomItemStat
         MaxScStatChance = 20;
         MaxScMaxStat = 7;
 
+        SocketChance = 50;
+        SocketStatChance = 30;
+        SocketMaxStat = 3;
+
     }
     public void SetHelmet()
     {
@@ -5556,6 +5565,10 @@ public class RandomItemStat
         MaxScChance = 40;
         MaxScStatChance = 20;
         MaxScMaxStat = 7;
+
+        SocketChance = 80;
+        SocketStatChance = 50;
+        SocketMaxStat = 2;
     }
     public void SetBeltBoots()
     {
@@ -5586,6 +5599,10 @@ public class RandomItemStat
         AgilityChance = 60;
         AgilityStatChance = 30;
         AgilityMaxStat = 3;
+
+        SocketChance = 80;
+        SocketStatChance = 50;
+        SocketMaxStat = 2;
     }
     public void SetNecklace()
     {
@@ -5612,6 +5629,10 @@ public class RandomItemStat
         AgilityChance = 60;
         AgilityStatChance = 30;
         AgilityMaxStat = 7;
+
+        SocketChance = 50;
+        SocketStatChance = 30;
+        SocketMaxStat = 3;
     }
     public void SetBracelet()
     {
@@ -5638,6 +5659,10 @@ public class RandomItemStat
         MaxScChance = 30;
         MaxScStatChance = 30;
         MaxScMaxStat = 6;
+
+        SocketChance = 50;
+        SocketStatChance = 30;
+        SocketMaxStat = 3;
     }
     public void SetRing()
     {
@@ -5664,6 +5689,10 @@ public class RandomItemStat
         MaxScChance = 15;
         MaxScStatChance = 30;
         MaxScMaxStat = 6;
+
+        SocketChance = 50;
+        SocketStatChance = 30;
+        SocketMaxStat = 3;
     }
 
     public void SetMount()
