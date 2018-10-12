@@ -789,9 +789,10 @@ namespace Server.MirNetwork
             SMain.Envir.RemoveRank(temp);
             Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
-        private void StartGame(C.StartGame p)
+        public void StartGame(C.StartGame p)
         {
-            if (Stage != GameStage.Select) return;
+            if (Stage != GameStage.Select & Stage!= GameStage.Observing) return;
+            Observer = null;
 
             if (!Settings.AllowStartGame && (Account == null || (Account != null && !Account.AdminAccount)))
             {
@@ -900,9 +901,10 @@ namespace Server.MirNetwork
                 return;
             }
 
-            if (Stage != GameStage.Game) return;
-
-            Player.Chat(p.Message);
+            if (Stage == GameStage.Game)
+                Player.Chat(p.Message);
+            else if (Stage == GameStage.Observing)
+                Observer.Chat(p.Message);
         }
 
         private void MoveItem(C.MoveItem p)

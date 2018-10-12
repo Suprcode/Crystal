@@ -554,7 +554,9 @@ namespace Server.MirObjects
             InTrapRock = false;
 
             CurrentMap.AddObject(this);
+
             BroadcastInfo();
+
 
             if (effects) Broadcast(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
             

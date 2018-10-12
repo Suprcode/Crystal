@@ -1750,26 +1750,7 @@ namespace Client.MirScenes
             Observer = new ObserverObject(User.ObjectID);
             Observer.Load(p, User);
 
-            //if (p.ObserveObjectID != 0)
-            //{
-            //    MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
-            //    MapControl.Title = p.Title;
-            //    MapControl.MiniMap = p.MiniMap;
-            //    MapControl.BigMap = p.BigMap;
-            //    MapControl.Lights = p.Lights;
-            //    MapControl.MapDarkLight = p.MapDarkLight;
-            //    MapControl.Music = p.Music;
-            //    MapControl.LoadMap();
-            //    MapControl.NextAction = 0;
-            //    Observer.CurrentLocation = p.Location;
-            //    Observer.MapLocation = p.Location;
-            //    MapControl.AddObject(Observer);
-            //    MapControl.FloorValid = false;
-            //    MapControl.InputDelay = CMain.Time + 400;
-            //    //Observer.LockOnObject(p.ObserveObjectID, true);
-            //}
             MapControl.Objects.Remove(User);
-
             User = null;
 
             //BuffsDialog.Hide();
@@ -1796,9 +1777,10 @@ namespace Client.MirScenes
         }
         private void UserInformation(S.UserInformation p)
         {
+             Observer = null;
              User = new UserObject(p.ObjectID);
              User.Load(p);
-
+             
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
             Credit = p.Credit;
@@ -1866,6 +1848,7 @@ namespace Client.MirScenes
         private void ObjectRemove(S.ObjectRemove p)
         {
             if (!Observing && p.ObjectID == User.ObjectID) return;
+            if (Observing && p.ObjectID == Observer.ObjectID) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3290,6 +3273,12 @@ namespace Client.MirScenes
         }
         private void MapChanged(S.MapChanged p)
         {
+            if (Observing)
+            {
+                GameScene.Camera = Observer;
+                Observer.LockedOn = false;
+            }
+
             MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
             MapControl.Title = p.Title;
             MapControl.MiniMap = p.MiniMap;
@@ -3299,17 +3288,25 @@ namespace Client.MirScenes
             MapControl.Music = p.Music;
             MapControl.LoadMap();
             MapControl.NextAction = 0;
-        
-            User.CurrentLocation = p.Location;
-            User.MapLocation = p.Location;
-            MapControl.AddObject(User);
-            
-            User.Direction = p.Direction;
 
-            User.QueuedAction = null;
-            User.ActionFeed.Clear();
-            User.ClearMagic();
-            User.SetAction();
+            if (Observing)
+            {
+                Observer.CurrentLocation = p.Location;
+                Observer.MapLocation = p.Location;
+            }
+            else
+            {
+                User.CurrentLocation = p.Location;
+                User.MapLocation = p.Location;
+                MapControl.AddObject(User);
+
+                User.Direction = p.Direction;
+
+                User.QueuedAction = null;
+                User.ActionFeed.Clear();
+                User.ClearMagic();
+                User.SetAction();
+            }
 
             GameScene.CanRun = false;
 
@@ -3321,7 +3318,12 @@ namespace Client.MirScenes
         {
             if (!Observing) return;
 
-            MapControl.RemoveObject(Observer);
+            //Observer.FreeMovement();
+
+            GameScene.Camera = Observer;
+            Observer.LockedOn = false;
+
+            //MapControl.RemoveObject(Observer);
 
             MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
             MapControl.Title = p.Title;

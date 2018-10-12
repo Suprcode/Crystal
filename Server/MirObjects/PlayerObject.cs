@@ -52,14 +52,45 @@ namespace Server.MirObjects
             get { return Info.CurrentLocation; }
             set {
                 Info.CurrentLocation = value;
-                for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+                InformObservers();
+            }
+        }
+
+        public bool ObserverInform = true;
+        public void InformObservers()
+        {
+            if (!ObserverInform) return;
+            if (CurrentObservers.Count == 0) return;
+
+            for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+            {
+                if (CurrentObservers[i] != null)
                 {
-                    if (CurrentObservers[i] != null)
                         if (!CurrentObservers[i].LockedProcess())
                             CurrentObservers.Remove(CurrentObservers[i]);
                 }
+                else
+                    CurrentObservers.Remove(CurrentObservers[i]);
             }
         }
+
+        public override bool TeleportRandom(int attempts, int distance, Map map = null)
+        {
+            ObserverInform = false;
+
+            if (base.TeleportRandom(attempts, distance, map))
+            {
+                ObserverInform = true;
+                InformObservers();
+                return true;
+            }
+            else
+            {
+                ObserverInform = true;
+                return false;
+            }
+        }
+
         public override MirDirection Direction
         {
             get { return Info.Direction; }
@@ -441,8 +472,12 @@ namespace Server.MirObjects
 
             Envir.Players.Remove(this);
 
-            if (Observer)
-                CurrentMap.RemoveObject(Connection.Observer);
+            if (Observer & reason != 24)
+            {
+                Connection.Observer.CurrentMap.RemoveObject(Connection.Observer);
+                Envir.Observers.Remove(Connection.Observer);
+                Connection.Observer.LockedTarget = null;
+            }
             else
                 CurrentMap.RemoveObject(this);
 
@@ -540,6 +575,8 @@ namespace Server.MirObjects
                     return string.Format("{0} Has logged out. Reason: User closed game", Name);
                 case 23:
                     return string.Format("{0} Has logged out. Reason: User returned to select char", Name);
+                case 24:
+                    return string.Format("{0} Has logged out. Reason: Switching to observer", Name);
                 default:
                     return string.Format("{0} Has logged out. Reason: Unknown", Name);
             }
@@ -3591,7 +3628,7 @@ namespace Server.MirObjects
             }
             else if (message.StartsWith("!"))
             {
-                //Shout
+                //Shout 
                 if (Envir.Time < ShoutTime)
                 {
                     ReceiveChat(string.Format("You cannot shout for another {0} seconds.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
@@ -4662,6 +4699,7 @@ namespace Server.MirObjects
                     case "CLEARMOB":
                         if (!IsGM) return;
 
+
                         if (parts.Length > 1)
                         {
                             map = Envir.GetMapByNameAndInstance(parts[1]);
@@ -5329,6 +5367,7 @@ namespace Server.MirObjects
                         //OBS
                         if ((!IsGM) || parts.Length < 1) return;
 
+
                         PlayerObject play = null;
 
                         if (parts.Length >= 2)
@@ -5341,8 +5380,10 @@ namespace Server.MirObjects
                                 return;
                             }
                         }
-                        
-                        ObserverSetup(play);
+
+                        Connection.Observer = new ObserverObject(CurrentLocation, CurrentMapIndex, CurrentMap, Connection, IsGM, play == null ? 0 : play.ObjectID, Info.Index);
+
+                        StopGame(24);
 
                         break;
                     default:
@@ -5364,25 +5405,6 @@ namespace Server.MirObjects
                 Enqueue(p);
                 Broadcast(p);
             }
-        }
-
-
-        public void ObserverSetup(PlayerObject Observee = null)
-        {
-            Connection.Stage = GameStage.Observing;
-
-            Observer = true;
-            Connection.Observer = new ObserverObject(this, Observee);
-
-            if (Observee != null)
-                Observee.CurrentObservers.Add(Connection.Observer);
-
-            CurrentMap.RemoveObject(this);
-            // player.Observers.Add(this);
-            //S.ObjectPlayer p = (S.ObjectPlayer)player.GetInfoEx(this);
-            //p.Observing = true;
-
-            //GetObjectsPassive(player);
         }
 
         public void Turn(MirDirection dir)
@@ -6428,7 +6450,6 @@ namespace Server.MirObjects
                     return;
                 }
             }
-
         }
 
         public void Magic(Spell spell, MirDirection dir, uint targetID, Point location)
@@ -9787,7 +9808,12 @@ namespace Server.MirObjects
 
             bool mapChanged = temp != oldMap;
 
-            if (!base.Teleport(temp, location, effects)) return false;
+            ObserverInform = false;
+            if (!base.Teleport(temp, location, effects))
+            {
+                ObserverInform = true;
+                return false;
+            }
 
             Enqueue(new S.MapChanged
             {
@@ -9801,6 +9827,9 @@ namespace Server.MirObjects
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
                 Music = CurrentMap.Info.Music
             });
+
+            ObserverInform = true;
+            InformObservers();
 
             if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
@@ -14136,7 +14165,6 @@ namespace Server.MirObjects
         public override void ReceiveChat(string text, ChatType type)
         {
             Enqueue(new S.Chat { Message = text, Type = type });
-
             Report.ChatMessage(text);
         }
 
@@ -14157,8 +14185,7 @@ namespace Server.MirObjects
 
         public void Enqueue(Packet p)
         {
-            if (Connection == null) return;
-            if (Connection.Stage != GameStage.Observing)
+            if (Connection == null || Connection.Observer != null) return;
                 Connection.Enqueue(p);
         }
 

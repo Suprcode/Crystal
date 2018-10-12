@@ -978,7 +978,6 @@ namespace Client.MirObjects
                 QueuedAction action = ActionFeed[0];
                 ActionFeed.RemoveAt(0);
 
-
                 CurrentAction = action.Action;
 
                 if (RidingMount)

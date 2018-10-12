@@ -15,13 +15,11 @@ namespace Client.MirObjects
     public class ObserverObject : MapObject, ICamera
     {
         public string Name { get; set; }
-
         public bool LockedOn { get; set; }
         public ObserverObject(uint objectID) : base(objectID)
         {
             FreeMovement();
         }
-
         public uint LockedID;
 
         public void Load(S.Observe p, UserObject user = null)
@@ -29,36 +27,24 @@ namespace Client.MirObjects
             if (user != null && p.ObserveObjectID == 0)
             {
                 CurrentLocation = user.CurrentLocation;
+                MapLocation = user.CurrentLocation;
                 Name = user.Name;
-                GameScene.Scene.MapControl.AddObject(this);
                 LockedID = 0;
+                FreeMovement();
             }
             else
             {
                 LockedID = p.ObserveObjectID;
-                GameScene.Scene.MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
-                GameScene.Scene.MapControl.Title = p.Title;
-                GameScene.Scene.MapControl.MiniMap = p.MiniMap;
-                GameScene.Scene.MapControl.BigMap = p.BigMap;
-                GameScene.Scene.MapControl.Lights = p.Lights;
-                GameScene.Scene.MapControl.MapDarkLight = p.MapDarkLight;
-                GameScene.Scene.MapControl.Music = p.Music;
-                GameScene.Scene.MapControl.LoadMap();
-                MapControl.NextAction = 0;
-                CurrentLocation = p.Location;
-                MapLocation = p.Location;
-                GameScene.Scene.MapControl.AddObject(this);
-                GameScene.Scene.MapControl.FloorValid = false;
-                MapControl.InputDelay = CMain.Time + 400;
             }
+            GameScene.Scene.MapControl.AddObject(this);
         }
 
         public void LockOnObject(uint objectID, bool serverlock = false)
         {
             LockedOn = true;
 
-            if (!serverlock)
-                Network.Enqueue(new C.ObserveLock { ObjectID = objectID });
+           // if (!serverlock)
+                //Network.Enqueue(new C.ObserveLock { ObjectID = objectID });
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -79,34 +65,27 @@ namespace Client.MirObjects
                 CurrentLocation = GameScene.Camera.CurrentLocation;
                 Name = GameScene.Camera.Name;
             }
-            
             GameScene.Camera = this;
         }
 
         public override ObjectType Race => ObjectType.Observer;
-
         public override bool Blocking => false;
-
         public override void Draw()
         {
             
         }
-
         public override void DrawBehindEffects(bool effectsEnabled)
         {
             
         }
-
         public override void DrawEffects(bool effectsEnabled)
         {
            
         }
-
         public override bool MouseOver(Point p)
         {
             return false;
         }
-
         public override void Process()
         {
             Movement = CurrentLocation;
