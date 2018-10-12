@@ -46,6 +46,8 @@ namespace Server.MirObjects
         public abstract Point CurrentLocation { get; set; }
         public abstract MirDirection Direction { get; set; }
 
+        public List<ObserverObject> CurrentObservers = new List<ObserverObject>();
+
         public abstract ushort Level { get; set; }
 
         public abstract uint Health { get; }

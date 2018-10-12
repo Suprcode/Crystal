@@ -251,11 +251,11 @@ namespace Client.MirScenes.Dialogs
                 if (RowOffset + i >= RankList[RankType].Count) break;
                 Rows[i].Update(RankList[RankType][RowOffset + i], RowOffset + i + 1);
             }
+            
             if (Rank[RankType] == 0)
                 MyRank.Text = "Not Listed";
             else
                 MyRank.Text = string.Format("Ranked: {0}", Rank[RankType]); ;
-
         }
 
         public sealed class RankingRow : MirControl
@@ -269,7 +269,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA;
                 BorderColour = Color.Lime;
                 Visible = false;
-                Click += (o, e) => Inspect();
+                Click += Inspect;
 
                 RankLabel = new MirLabel
                 {
@@ -307,13 +307,23 @@ namespace Client.MirScenes.Dialogs
                 };
             }
 
-            public void Inspect()
+            public void Inspect(object sender, EventArgs e)
             {
-                if (CMain.Time <= GameScene.InspectTime/* && Index == InspectDialog.InspectID*/) return;
+                MouseEventArgs me = e as MouseEventArgs;
 
-                GameScene.InspectTime = CMain.Time + 500;
-                InspectDialog.InspectID = (uint)Index;
-                MirNetwork.Network.Enqueue(new ClientPackets.Inspect { ObjectID = (uint)Index, Ranking = true });
+                if (me.Button == MouseButtons.Left)
+                {
+                    if (CMain.Time <= GameScene.InspectTime/* && Index == InspectDialog.InspectID*/) return;
+
+                    GameScene.InspectTime = CMain.Time + 500;
+                    InspectDialog.InspectID = (uint)Index;
+                    MirNetwork.Network.Enqueue(new ClientPackets.Inspect { ObjectID = (uint)Index, Ranking = true });
+                }
+                else if (me.Button == MouseButtons.Right)
+                {
+                    MirNetwork.Network.Enqueue(new ClientPackets.StartObserve { ObjectID = (uint)Index });
+                }
+                
             }
 
             public void Clear()
@@ -353,7 +363,7 @@ namespace Client.MirScenes.Dialogs
                     LevelLabel.ForeColour = Color.RosyBrown;
                     ClassLabel.ForeColour = Color.RosyBrown;
                 }
-                else if (NameLabel.Text == GameScene.User.Name)
+                else if (GameScene.User != null && NameLabel.Text == GameScene.User.Name)
                 {
                     RankLabel.ForeColour = Color.Green;
                     NameLabel.ForeColour = Color.Green;

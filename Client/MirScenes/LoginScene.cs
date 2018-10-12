@@ -13,6 +13,7 @@ using S = ServerPackets;
 using C = ClientPackets;
 using System.Collections.Generic;
 using System.Linq;
+using Client.MirScenes.Dialogs;
 
 namespace Client.MirScenes
 {
@@ -24,6 +25,8 @@ namespace Client.MirScenes
         private LoginDialog _login;
         private NewAccountDialog _account;
         private ChangePasswordDialog _password;
+
+        public RankingDialog RankingDialog;
 
         private MirMessageBox _connectBox;
 
@@ -115,6 +118,8 @@ namespace Client.MirScenes
             //    Location = new Point(684, 10)
             //};
 
+            RankingDialog = new RankingDialog { Parent = this, Visible = false };
+
             _connectBox = new MirMessageBox("Attempting to connect to the server.", MirMessageBoxButtons.Cancel);
             _connectBox.CancelButton.Click += (o, e) => Program.Form.Close();
             Shown += (sender, args) =>
@@ -158,6 +163,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.LoginSuccess:
                     Login((S.LoginSuccess) p);
                     break;
+                case (short)ServerPacketIds.Rankings:
+                    Rankings((S.Rankings)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -196,6 +204,8 @@ namespace Client.MirScenes
                 case 1:
                     _connectBox.Dispose();
                     _login.Show();
+                    RankingDialog.Show();
+                    RankingDialog.Location = new Point(30, (600 - Size.Height) / 2);
                     break;
             }
         }
@@ -287,6 +297,10 @@ namespace Client.MirScenes
             TimeSpan d = p.ExpiryDate - CMain.Now;
             MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds ));
+        }
+        public void Rankings(S.Rankings p)
+        {
+            RankingDialog.RecieveRanks(p.Listings, p.RankType, p.MyRank);
         }
         private void Login(S.Login p)
         {

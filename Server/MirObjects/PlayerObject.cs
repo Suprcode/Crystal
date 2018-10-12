@@ -15,8 +15,6 @@ namespace Server.MirObjects
         public string GMPassword = Settings.GMPassword;
         public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor, HasMapShout, HasServerShout;
 
-        public List<ObserverObject> CurrentObservers = new List<ObserverObject>();
-
         public bool HasUpdatedBaseStats = true;
 
         public long LastRecallTime, LastRevivalTime, LastTeleportTime, LastProbeTime, MenteeEXP;
@@ -425,6 +423,8 @@ namespace Server.MirObjects
         }
         public void StopGame(byte reason)
         {
+
+
             if (Node == null) return;
 
             for (int i = 0; i < Pets.Count; i++)
@@ -472,14 +472,7 @@ namespace Server.MirObjects
 
             Envir.Players.Remove(this);
 
-            if (Observer & reason != 24)
-            {
-                Connection.Observer.CurrentMap.RemoveObject(Connection.Observer);
-                Envir.Observers.Remove(Connection.Observer);
-                Connection.Observer.LockedTarget = null;
-            }
-            else
-                CurrentMap.RemoveObject(this);
+            CurrentMap.RemoveObject(this);
 
             Despawn();
 

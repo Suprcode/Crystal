@@ -1500,7 +1500,7 @@ public enum ServerPacketIds : short
     ConfirmItemRental,
     NewRecipeInfo,
 
-    ObserveLockChanged
+    EndObserving,
 }
 
 public enum ClientPacketIds : short
@@ -1647,7 +1647,7 @@ public enum ClientPacketIds : short
     ConfirmItemRental,
     ObserveMove,
     ObserveLock,
-    
+    StartObserve,
 }
 
 public enum ConquestType : byte
@@ -4745,6 +4745,8 @@ public abstract class Packet
                 return new C.ObserveMove();
             case (short)ClientPacketIds.ObserveLock:
                 return new C.ObserveLock();
+            case (short)ClientPacketIds.StartObserve:
+                return new C.StartObserve();
             default:
                 return null;
         }
@@ -5228,8 +5230,8 @@ public abstract class Packet
                 return new S.ConfirmItemRental();
             case (short)ServerPacketIds.NewRecipeInfo:
                 return new S.NewRecipeInfo();
-            case (short)ServerPacketIds.ObserveLockChanged:
-                return new S.ObserveLockChanged();
+            case (short)ServerPacketIds.EndObserving:
+                return new S.EndObserving();
             default:
                 return null;
         }

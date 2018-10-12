@@ -643,6 +643,9 @@ namespace Server.MirNetwork
                 if (Player != null)
                     Player.StopGame(reason);
 
+                if (Observer != null)
+                    Observer.StopGame(reason);
+
                 if (Account != null && Account.Connection == this)
                     Account.Connection = null;
             }
@@ -664,6 +667,9 @@ namespace Server.MirNetwork
             {
                 if (Player != null)
                     Player.StopGame(reason);
+
+                if (Observer != null)
+                    Observer.StopGame(reason);
 
                 if (Account != null && Account.Connection == this)
                     Account.Connection = null;
@@ -720,6 +726,8 @@ namespace Server.MirNetwork
 
             SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
+
+            Enqueue(new S.Rankings { Listings = SMain.Envir.RankTop, RankType = 0, MyRank = 0 });
 
             Stage = GameStage.Login;
         }
@@ -849,6 +857,7 @@ namespace Server.MirNetwork
 
         public void LogOut()
         {
+            if (Stage == GameStage.Observing) ObserverLogout();
             if (Stage != GameStage.Game) return;
 
             if (SMain.Envir.Time < Player.LogTime)
@@ -861,6 +870,18 @@ namespace Server.MirNetwork
 
             Stage = GameStage.Select;
             Player = null;
+
+            Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
+        }
+
+        public void ObserverLogout()
+        {
+            if (Stage != GameStage.Observing) return;
+
+            Observer.StopGame(24);
+
+            Stage = GameStage.Select;
+            Observer = null;
 
             Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
         }
@@ -1816,6 +1837,18 @@ namespace Server.MirNetwork
                 _retryList.Enqueue(p);
             else
                 Observer.ObserveLock(p.ObjectID);
+        }
+
+        public void StartObserve(C.StartObserve p)
+        {
+            if (Stage != GameStage.Login) return;
+
+            SafeZoneInfo szi = SMain.Envir.StartPoints[SMain.Envir.Random.Next(SMain.Envir.StartPoints.Count)];
+
+            Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
+
+            Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, p.ObjectID, 0);
+
         }
     }
 }

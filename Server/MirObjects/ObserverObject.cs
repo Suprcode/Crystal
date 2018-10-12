@@ -71,7 +71,7 @@ namespace Server.MirObjects
                 CurrentMap = CurMap;
             }
 
-            
+
             IsGM = GM;
             CharIndex = CharInd;
 
@@ -106,13 +106,30 @@ namespace Server.MirObjects
             GetObjectsPassive();
         }
 
+        public void ObserveUnlock()
+        {
+            LockedTarget.CurrentObservers.Remove(this);
+            LockedTarget = null;
+        }
+
+        public void StopGame(byte reason)
+        {
+            if (LockedOn)
+                LockedTarget.CurrentObservers.Remove(this);
+
+            CurrentMap.RemoveObject(this);
+            Envir.Observers.Remove(this);
+            LockedTarget = null;
+            Connection.Observer = null;
+        }
+
         public void ObserveLock(uint ObjectID)
         {
             if (ObjectID == 0)
             {
                 if (LockedOn)
                 {
-                    LockedTarget = null;
+                    ObserveUnlock();
                 }
             }
             else
@@ -148,13 +165,15 @@ namespace Server.MirObjects
 
         }
 
-
-
         private void GetObjectsPassive()
         {
             MapObject player = this;
+            PlayerObject mainPlayer;
 
-            PlayerObject mainPlayer = LockedOn ? (PlayerObject)LockedTarget : Connection.Player;
+            if (LockedOn && LockedTarget is PlayerObject)
+                mainPlayer = (PlayerObject)LockedTarget;
+            else
+                mainPlayer = null;
 
             for (int y = player.CurrentLocation.Y - Globals.DataRange; y <= player.CurrentLocation.Y + Globals.DataRange; y++)
             {
@@ -197,17 +216,22 @@ namespace Server.MirObjects
                         {
                             NPCObject NPC = (NPCObject)ob;
 
-                            NPC.CheckVisible(mainPlayer);
+                            if (mainPlayer != null)
+                            {
+                                NPC.CheckVisible(mainPlayer);
 
-                            if (NPC.VisibleLog[mainPlayer.Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
+                                if (NPC.VisibleLog[mainPlayer.Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
+                            }
+                            else
+                                if (NPC.Visible) Enqueue(ob.GetInfo());
                         }
                         else
                         {
                             Enqueue(ob.GetInfo());
                         }
 
-                        if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster || ob == mainPlayer)
-                            ob.SendHealth(mainPlayer);
+                        //if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster || ob == mainPlayer)
+                            //ob.SendHealth(mainPlayer);
                     }
                 }
             }
@@ -939,17 +963,18 @@ namespace Server.MirObjects
             }
         }
 
-        public void ObserverCancel()
+        public void ObserverEnd()
         {
             if (CharIndex == 0)
             {
-
-
+                Enqueue(new S.EndObserving { });
+                StopGame(24);
             }
             else
             {
                 C.StartGame packet = new C.StartGame { CharacterIndex = CharIndex };
                 Connection.StartGame(packet);
+                StopGame(24);
             }
         }
 
@@ -1643,7 +1668,8 @@ namespace Server.MirObjects
                         //OBS
                         if ((!IsGM) || parts.Length < 1) return;
 
-                        ObserverCancel();
+
+                        ObserverEnd();
 
                         break;
                     default:

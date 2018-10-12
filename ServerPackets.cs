@@ -5655,49 +5655,6 @@ namespace ServerPackets
         }
     }
 
-    public sealed class ObserveLockChanged : Packet
-    {
-        public override short Index
-        {
-            get { return (short)ServerPacketIds.ObserveLockChanged; }
-        }
-
-        public string FileName = string.Empty;
-        public string Title = string.Empty;
-        public ushort MiniMap, BigMap, Music;
-        public LightSetting Lights;
-        public Point Location;
-        public MirDirection Direction;
-        public byte MapDarkLight;
-
-
-        protected override void ReadPacket(BinaryReader reader)
-        {
-            FileName = reader.ReadString();
-            Title = reader.ReadString();
-            MiniMap = reader.ReadUInt16();
-            BigMap = reader.ReadUInt16();
-            Lights = (LightSetting)reader.ReadByte();
-            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
-            Direction = (MirDirection)reader.ReadByte();
-            MapDarkLight = reader.ReadByte();
-            Music = reader.ReadUInt16();
-        }
-        protected override void WritePacket(BinaryWriter writer)
-        {
-            writer.Write(FileName);
-            writer.Write(Title);
-            writer.Write(MiniMap);
-            writer.Write(BigMap);
-            writer.Write((byte)Lights);
-            writer.Write(Location.X);
-            writer.Write(Location.Y);
-            writer.Write((byte)Direction);
-            writer.Write(MapDarkLight);
-            writer.Write(Music);
-        }
-    }
-
     public sealed class Observe : Packet
     {
         public uint ObserveObjectID;
@@ -5744,6 +5701,22 @@ namespace ServerPackets
             writer.Write((byte)Direction);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+        }
+    }
+
+    public sealed class EndObserving : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.EndObserving; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
         }
     }
 }

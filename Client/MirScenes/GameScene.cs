@@ -1737,8 +1737,8 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ConfirmItemRental:
                     ConfirmItemRental((S.ConfirmItemRental)p);
                     break;
-                case (short)ServerPacketIds.ObserveLockChanged:
-                    ObserveLockChanged((S.ObserveLockChanged)p);
+                case (short)ServerPacketIds.EndObserving:
+                    EndObserving((S.EndObserving)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -2622,6 +2622,19 @@ namespace Client.MirScenes
 
             Dispose();
         }
+
+        private void EndObserving(S.EndObserving p)
+        {
+            for (int i = 0; i <= 3; i++)//Fix for orbs sound
+                SoundManager.StopSound(20000 + 126 * 10 + 5 + i);
+
+            Observer = null;
+            if (Settings.Resolution != 800)
+                CMain.SetResolution(800, 600);
+            ActiveScene = new LoginScene();
+
+            Dispose();
+        }
         private void LogOutFailed(S.LogOutFailed p)
         {
             Enabled = true;
@@ -3314,33 +3327,6 @@ namespace Client.MirScenes
             MapControl.InputDelay = CMain.Time + 400;
         }
 
-        private void ObserveLockChanged(S.ObserveLockChanged p)
-        {
-            if (!Observing) return;
-
-            //Observer.FreeMovement();
-
-            GameScene.Camera = Observer;
-            Observer.LockedOn = false;
-
-            //MapControl.RemoveObject(Observer);
-
-            MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
-            MapControl.Title = p.Title;
-            MapControl.MiniMap = p.MiniMap;
-            MapControl.BigMap = p.BigMap;
-            MapControl.Lights = p.Lights;
-            MapControl.MapDarkLight = p.MapDarkLight;
-            MapControl.Music = p.Music;
-            MapControl.LoadMap();
-            MapControl.NextAction = 0;
-
-            Observer.CurrentLocation = p.Location;
-            Observer.MapLocation = p.Location;
-
-            MapControl.FloorValid = false;
-            MapControl.InputDelay = CMain.Time + 400;
-        }
         private void ObjectTeleportOut(S.ObjectTeleportOut p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
