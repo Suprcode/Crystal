@@ -166,8 +166,54 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.Rankings:
                     Rankings((S.Rankings)p);
                     break;
+                case (short)ServerPacketIds.StartGame:
+                    StartGame((S.StartGame)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
+                    break;
+            }
+        }
+
+        public void StartGame(S.StartGame p)
+        {
+
+            if (p.Resolution < Settings.Resolution || Settings.Resolution == 0) Settings.Resolution = p.Resolution;
+
+            if (p.Resolution < 1024 || Settings.Resolution < 1024) Settings.Resolution = 800;
+            else if (p.Resolution < 1366 || Settings.Resolution < 1280) Settings.Resolution = 1024;
+            else if (p.Resolution < 1366 || Settings.Resolution < 1366) Settings.Resolution = 1280;//not adding an extra setting for 1280 on server cause well it just depends on the aspect ratio of your screen
+            else if (p.Resolution >= 1366 && Settings.Resolution >= 1366) Settings.Resolution = 1366;
+
+            switch (p.Result)
+            {
+                case 0:
+                    MirMessageBox.Show("Starting the game is currently disabled.");
+                    break;
+                case 1:
+                    MirMessageBox.Show("You are not logged in.");
+                    break;
+                case 2:
+                    MirMessageBox.Show("Your character could not be found.");
+                    break;
+                case 3:
+                    MirMessageBox.Show("No active map and/or start point found.");
+                    break;
+                case 4:
+                    if (Settings.Resolution == 1024)
+                        CMain.SetResolution(1024, 768);
+                    else if (Settings.Resolution == 1280)
+                        CMain.SetResolution(1280, 800);
+                    else if (Settings.Resolution == 1366)
+                        CMain.SetResolution(1366, 768);
+                    ActiveScene = new GameScene();
+
+                    GameScene.Scene.MainDialog.Hide();
+                    GameScene.Scene.BeltDialog.Hide();
+                    GameScene.Scene.CharacterDuraPanel.Hide();
+                    GameScene.Scene.DuraStatusPanel.Hide();
+
+                    Dispose();
                     break;
             }
         }

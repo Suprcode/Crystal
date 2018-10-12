@@ -627,6 +627,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ObserveLock:
                     ObserveLock((C.ObserveLock)p);
                     break;
+                case (short)ClientPacketIds.StartObserve:
+                    StartObserve((C.StartObserve)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1847,7 +1850,9 @@ namespace Server.MirNetwork
 
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
 
-            Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, p.ObjectID, 0);
+            PlayerObject Player = SMain.Envir.GetPlayer(p.ObjectID);
+
+            Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, Player.ObjectID, 0);
 
         }
     }

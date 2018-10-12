@@ -1755,9 +1755,7 @@ namespace Client.MirScenes
 
             //BuffsDialog.Hide();
             MainDialog.Hide();
-            //ChatDialog.Hide();
             BeltDialog.Hide();
-            //ChatControl.Hide();
             CharacterDuraPanel.Hide();
             DuraStatusPanel.Hide();
         }
