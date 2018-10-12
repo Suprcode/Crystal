@@ -1747,11 +1747,14 @@ namespace Client.MirScenes
         }
         private void Observe(S.Observe p)
         {
-            Observer = new ObserverObject(User.ObjectID);
-            Observer.Load(p, User);
+            if (User != null)
+            {
+                MapControl.Objects.Remove(User);
+                User = null;
+            }
 
-            MapControl.Objects.Remove(User);
-            User = null;
+            Observer = new ObserverObject(0);
+            Observer.Load(p, User);
 
             //BuffsDialog.Hide();
             MainDialog.Hide();

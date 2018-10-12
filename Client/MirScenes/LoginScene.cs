@@ -40,6 +40,8 @@ namespace Client.MirScenes
             SoundManager.PlaySound(SoundList.IntroMusic, true);
             Disposing += (o, e) => SoundManager.StopSound(SoundList.IntroMusic);
 
+            
+
             _background = new MirAnimatedControl
                 {
                     Animated = false,
@@ -50,6 +52,14 @@ namespace Client.MirScenes
                     Loop = false,
                     Parent = this,
                 };
+
+            RankingDialog = new RankingDialog { Parent = _background, Visible = false };
+            RankingDialog.CloseButton.Click += (o, e) =>
+            {   
+                if (_ViewKey != null && !_ViewKey.IsDisposed) _ViewKey.Dispose();
+                RankingDialog.Visible = false;
+                _login.Visible = true;
+            };
 
             _login = new LoginDialog {Parent = _background, Visible = false};
             _login.AccountButton.Click += (o, e) =>
@@ -72,6 +82,13 @@ namespace Client.MirScenes
                 if (_ViewKey != null && !_ViewKey.IsDisposed) return;
 
                 _ViewKey = new InputKeyDialog(_login) { Parent = _background };
+            };
+            _login.RankButton.Click += (o, e) =>
+            {
+                if (_ViewKey != null && !_ViewKey.IsDisposed) return;
+
+                RankingDialog.Visible = true;
+                _login.Hide();
             };
 
             Version = new MirLabel
@@ -118,7 +135,7 @@ namespace Client.MirScenes
             //    Location = new Point(684, 10)
             //};
 
-            RankingDialog = new RankingDialog { Parent = this, Visible = false };
+            
 
             _connectBox = new MirMessageBox("Attempting to connect to the server.", MirMessageBoxButtons.Cancel);
             _connectBox.CancelButton.Click += (o, e) => Program.Form.Close();
@@ -250,8 +267,6 @@ namespace Client.MirScenes
                 case 1:
                     _connectBox.Dispose();
                     _login.Show();
-                    RankingDialog.Show();
-                    RankingDialog.Location = new Point(30, (600 - Size.Height) / 2);
                     break;
             }
         }
@@ -402,7 +417,7 @@ namespace Client.MirScenes
         public sealed class LoginDialog : MirImageControl
         {
             public MirImageControl TitleLabel, AccountIDLabel, PassLabel;
-            public MirButton AccountButton, CloseButton, OKButton, PassButton, ViewKeyButton;
+            public MirButton AccountButton, CloseButton, OKButton, RankButton, PassButton, ViewKeyButton;
             public MirTextBox AccountIDTextBox, PasswordTextBox;
             private bool _accountIDValid, _passwordValid;
 
@@ -450,6 +465,18 @@ namespace Client.MirScenes
                         PressedIndex = 322
                     };
                 OKButton.Click += (o, e) => Login();
+
+                RankButton = new MirButton
+                {
+                    Enabled = true,
+                    Size = new Size(42, 42),
+                    HoverIndex = 321,
+                    Index = 320,
+                    Library = Libraries.Title,
+                    Location = new Point(266, 170),
+                    Parent = this,
+                    PressedIndex = 322
+                };
 
                 AccountButton = new MirButton
                     {

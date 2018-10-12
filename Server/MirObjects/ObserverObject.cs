@@ -81,14 +81,35 @@ namespace Server.MirObjects
 
             Envir.Observers.Add(this);
 
+            if (CharIndex == 0)
+                GetMapInfo();
+            else
+                LocationChanged();
+
             if (player != null)
             {
-                FollowLockedTarget();
                 player.CurrentObservers.Add(this);
             }
         }
 
-        public void FollowLockedTarget()
+        private void GetMapInfo()
+        {
+
+            Enqueue(new S.MapInformation
+            {
+                FileName = CurrentMap.Info.FileName,
+                Title = CurrentMap.Info.Title,
+                MiniMap = CurrentMap.Info.MiniMap,
+                Lights = CurrentMap.Info.Light,
+                BigMap = CurrentMap.Info.BigMap,
+                Lightning = CurrentMap.Info.Lightning,
+                Fire = CurrentMap.Info.Fire,
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music,
+            });
+        }
+
+        public void LocationChanged()
         {
             Enqueue(new S.MapChanged
             {
@@ -943,7 +964,7 @@ namespace Server.MirObjects
 
                         CurrentMap.GetCell(CurrentLocation).Add(this);
 
-                        FollowLockedTarget();
+                        LocationChanged();
                     }
                     else
                     {

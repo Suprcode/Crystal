@@ -31,12 +31,22 @@ namespace Client.MirObjects
                 Name = user.Name;
                 LockedID = 0;
                 FreeMovement();
+
+            }
+            else if (user == null && p.ObserveObjectID == 0)
+            {
+                Name = "Observer";
+                LockedID = 0;
+                FreeMovement();
             }
             else
             {
                 LockedID = p.ObserveObjectID;
             }
-            GameScene.Scene.MapControl.AddObject(this);
+
+            if (GameScene.Scene.MapControl != null)
+                GameScene.Scene.MapControl.AddObject(this);
+
         }
 
         public void LockOnObject(uint objectID, bool serverlock = false)
