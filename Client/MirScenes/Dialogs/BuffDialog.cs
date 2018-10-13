@@ -64,7 +64,7 @@ namespace Client.MirScenes.Dialogs
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Font = new Font(Settings.FontName, 10F, FontStyle.Bold),
                 NotControl = true,
-                Sort = true,
+                Sort = false,
                 Visible = false,
                 ForeColour = Color.Yellow,
                 OutLineColour = Color.Black,
