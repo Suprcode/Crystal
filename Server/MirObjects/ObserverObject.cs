@@ -75,15 +75,16 @@ namespace Server.MirObjects
             IsGM = GM;
             CharIndex = CharInd;
 
+            if (CharIndex == 0)
+                GetMapInfo();
+
             Enqueue(new S.Observe { ObserveObjectID = ObjID });
 
             CurrentMap.GetCell(CurrentLocation).Add(this);
 
             Envir.Observers.Add(this);
 
-            if (CharIndex == 0)
-                GetMapInfo();
-            else
+            if (CharIndex != 0)
                 LocationChanged();
 
             if (player != null)

@@ -22,18 +22,18 @@ namespace Client.MirObjects
         }
         public uint LockedID;
 
-        public void Load(S.Observe p, UserObject user = null)
+        public void Load(uint ObjID)
         {
-            if (user != null && p.ObserveObjectID == 0)
-            {
-                CurrentLocation = user.CurrentLocation;
-                MapLocation = user.CurrentLocation;
-                Name = user.Name;
-                LockedID = 0;
-                FreeMovement();
-
-            }
-            else if (user == null && p.ObserveObjectID == 0)
+            //if (user != null && p.ObserveObjectID == 0)
+            //{
+            //    CurrentLocation = user.CurrentLocation;
+            //    MapLocation = user.CurrentLocation;
+            //    Name = user.Name;
+            //    LockedID = 0;
+            //    FreeMovement();
+            //
+            //}
+            if (ObjID == 0)
             {
                 Name = "Observer";
                 LockedID = 0;
@@ -41,11 +41,11 @@ namespace Client.MirObjects
             }
             else
             {
-                LockedID = p.ObserveObjectID;
+                LockedID = ObjID;
             }
 
-            if (GameScene.Scene.MapControl != null)
-                GameScene.Scene.MapControl.AddObject(this);
+            //if (GameScene.Scene.MapControl != null)
+                //GameScene.Scene.MapControl.AddObject(this);
 
         }
 

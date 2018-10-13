@@ -1754,9 +1754,9 @@ namespace Client.MirScenes
             }
 
             Observer = new ObserverObject(0);
-            Observer.Load(p, User);
+            Observer.Load(p.ObserveObjectID);
 
-            //BuffsDialog.Hide();
+            BuffsDialog.Hide();
             MainDialog.Hide();
             BeltDialog.Hide();
             CharacterDuraPanel.Hide();
@@ -1778,13 +1778,23 @@ namespace Client.MirScenes
         }
         private void UserInformation(S.UserInformation p)
         {
-             Observer = null;
-             User = new UserObject(p.ObjectID);
-             User.Load(p);
-             
+            User = new UserObject(p.ObjectID);
+            User.Load(p);
+
+            if (Observer != null)
+            {
+                MainDialog.Show();
+                BeltDialog.Show();
+                CharacterDuraPanel.Show();
+                DuraStatusPanel.Show();
+                Observer = null;
+            }
+
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
             Credit = p.Credit;
+
+            
 
             InventoryDialog.RefreshInventory();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
