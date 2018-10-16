@@ -186,10 +186,18 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.StartGame:
                     StartGame((S.StartGame)p);
                     break;
+                case (short)ServerPacketIds.StatusMessage:
+                    StatusMessage((S.StatusMessage)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
             }
+        }
+
+        public void StatusMessage(S.StatusMessage p)
+        {
+            MirMessageBox.Show(p.Message, true);
         }
 
         public void StartGame(S.StartGame p)
@@ -469,13 +477,12 @@ namespace Client.MirScenes
                 RankButton = new MirButton
                 {
                     Enabled = true,
-                    Size = new Size(42, 42),
-                    HoverIndex = 321,
-                    Index = 320,
+                    HoverIndex = 787,
+                    Index = 786,
                     Library = Libraries.Title,
-                    Location = new Point(266, 170),
+                    Location = new Point(235, 176),
                     Parent = this,
-                    PressedIndex = 322
+                    PressedIndex = 788
                 };
 
                 AccountButton = new MirButton
@@ -483,7 +490,7 @@ namespace Client.MirScenes
                         HoverIndex = 324,
                         Index = 323,
                         Library = Libraries.Title,
-                        Location = new Point(60, 163),
+                        Location = new Point(25, 163),
                         Parent = this,
                         PressedIndex = 325,
                     };
@@ -493,7 +500,7 @@ namespace Client.MirScenes
                         HoverIndex = 327,
                         Index = 326,
                         Library = Libraries.Title,
-                        Location = new Point(166, 163),
+                        Location = new Point(130, 163),
                         Parent = this,
                         PressedIndex = 328,
                     };
@@ -503,7 +510,7 @@ namespace Client.MirScenes
                     HoverIndex = 333,
                     Index = 332,
                     Library = Libraries.Title,
-                    Location = new Point(60, 189),
+                    Location = new Point(25, 189),
                     Parent = this,
                     PressedIndex = 334,
                 };
@@ -513,7 +520,7 @@ namespace Client.MirScenes
                         HoverIndex = 330,
                         Index = 329,
                         Library = Libraries.Title,
-                        Location = new Point(166, 189),
+                        Location = new Point(130, 189),
                         Parent = this,
                         PressedIndex = 331,
                     };

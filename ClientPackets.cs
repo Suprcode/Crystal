@@ -2332,4 +2332,20 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(ObjectID);
         }
     }
+
+    public sealed class ChangeObserve : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ChangeObserve; } }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
+        }
+    }
 }

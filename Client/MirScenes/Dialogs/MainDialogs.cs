@@ -3658,6 +3658,8 @@ namespace Client.MirScenes.Dialogs
         public MirButton HPViewOn, HPViewOff;
         public MirImageControl SoundBar, MusicSoundBar;
         public MirImageControl VolumeBar, MusicVolumeBar;
+        public MirButton ObserveOn, ObserveOff;
+
 
         public MirButton CloseButton;
 
@@ -3880,6 +3882,38 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
             };
 
+            ObserveOn = new MirButton
+            {
+                Library = Libraries.Prguse2,
+                Location = new Point(159, 271),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 457,
+            };
+            ObserveOn.Click += (o, e) =>
+            {
+                if (GameScene.Scene.AllowObserve) return;
+                GameScene.Scene.AllowObserve = true;
+                Network.Enqueue(new C.ChangeObserve { Allow = true });
+            };
+
+            ObserveOff = new MirButton
+            {
+                Library = Libraries.Prguse2,
+                Location = new Point(201, 271),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 460
+            };
+            ObserveOff.Click += (o, e) =>
+            {
+                if (!GameScene.Scene.AllowObserve) return;
+                GameScene.Scene.AllowObserve = false;
+                Network.Enqueue(new C.ChangeObserve { Allow = false });
+            };
+
         }
 
 
@@ -4055,7 +4089,16 @@ namespace Client.MirScenes.Dialogs
                 HPViewOff.Index = 467;
             }
 
-
+            if (GameScene.Scene.AllowObserve)
+            {
+                ObserveOn.Index = 458;
+                ObserveOff.Index = 459;
+            }
+            else
+            {
+                ObserveOn.Index = 456;
+                ObserveOff.Index = 461;
+            }
         }
 
         public void Show()

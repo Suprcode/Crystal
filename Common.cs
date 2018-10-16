@@ -1501,6 +1501,8 @@ public enum ServerPacketIds : short
     NewRecipeInfo,
 
     EndObserving,
+    StatusMessage,
+    ChangeObserve
 }
 
 public enum ClientPacketIds : short
@@ -1648,6 +1650,7 @@ public enum ClientPacketIds : short
     ObserveMove,
     ObserveLock,
     StartObserve,
+    ChangeObserve,
 }
 
 public enum ConquestType : byte
@@ -4747,6 +4750,8 @@ public abstract class Packet
                 return new C.ObserveLock();
             case (short)ClientPacketIds.StartObserve:
                 return new C.StartObserve();
+            case (short)ClientPacketIds.ChangeObserve:
+                return new C.ChangeObserve();
             default:
                 return null;
         }
@@ -5232,6 +5237,10 @@ public abstract class Packet
                 return new S.NewRecipeInfo();
             case (short)ServerPacketIds.EndObserving:
                 return new S.EndObserving();
+            case (short)ServerPacketIds.StatusMessage:
+                return new S.StatusMessage();
+            case (short)ServerPacketIds.ChangeObserve:
+                return new S.ChangeObserve();
             default:
                 return null;
         }
@@ -6274,9 +6283,10 @@ public class Rank_Character_Info
     public string Name;
     public MirClass Class;
     public int level;
+    public bool ShowObserve;
     //public int rank;
     public long Experience;//clients shouldnt care about this only server
-    public object info;//again only keep this on server!
+    public Object info;//again only keep this on server!
 
     public Rank_Character_Info()
     {
@@ -6289,7 +6299,7 @@ public class Rank_Character_Info
         Name = reader.ReadString();
         level = reader.ReadInt32();
         Class = (MirClass)reader.ReadByte();
-
+        ShowObserve = reader.ReadBoolean();
     }
     public void Save(BinaryWriter writer)
     {
@@ -6298,6 +6308,7 @@ public class Rank_Character_Info
         writer.Write(Name);
         writer.Write(level);
         writer.Write((byte)Class);
+        writer.Write(ShowObserve);
     }
 }
 #endregion

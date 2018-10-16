@@ -630,6 +630,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.StartObserve:
                     StartObserve((C.StartObserve)p);
                     break;
+                case (short)ClientPacketIds.ChangeObserve:
+                    ChangeObserve((C.ChangeObserve)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -730,9 +733,16 @@ namespace Server.MirNetwork
             SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
 
-            Enqueue(new S.Rankings { Listings = SMain.Envir.RankTop, RankType = 0, MyRank = 0 });
+            SendRankings();
+
+            
 
             Stage = GameStage.Login;
+        }
+
+        private void SendRankings()
+        {
+            Enqueue(new S.Rankings { Listings = SMain.Envir.RankTop, RankType = 0, MyRank = 0 });
         }
         private void ClientKeepAlive(C.KeepAlive p)
         {
@@ -1067,6 +1077,7 @@ namespace Server.MirNetwork
                 Player.Inspect((int)p.ObjectID);
             else
                 Player.Inspect(p.ObjectID);
+
         }
         private void ChangeAMode(C.ChangeAMode p)
         {
@@ -1852,8 +1863,22 @@ namespace Server.MirNetwork
 
             PlayerObject Player = SMain.Envir.GetPlayer(p.ObjectID);
 
-            Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, Player.ObjectID, 0);
+            uint ObjID = 0;
 
+            if (Player != null)
+                ObjID = Player.ObjectID;
+
+            Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, ObjID, 0);
         }
+
+        public void ChangeObserve(C.ChangeObserve p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.ObserveChange(p.Allow);
+
+            
+        }
+
     }
 }

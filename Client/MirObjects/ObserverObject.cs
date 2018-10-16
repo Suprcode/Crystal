@@ -26,16 +26,6 @@ namespace Client.MirObjects
 
         public void Load(uint ObjID)
         {
-            
-            //if (user != null && p.ObserveObjectID == 0)
-            //{
-            //    CurrentLocation = user.CurrentLocation;
-            //    MapLocation = user.CurrentLocation;
-            //    Name = user.Name;
-            //    LockedID = 0;
-            //    FreeMovement();
-            //
-            //}
             if (ObjID == 0)
             {
                 Name = "Observer";
@@ -46,10 +36,6 @@ namespace Client.MirObjects
             {
                 LockedID = ObjID;
             }
-
-            //if (GameScene.Scene.MapControl != null)
-                //GameScene.Scene.MapControl.AddObject(this);
-
         }
 
         public void LockOnObject(uint objectID, bool serverlock = false)

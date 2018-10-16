@@ -71,40 +71,17 @@ namespace Server.MirObjects
             IsGM = GM;
             CharIndex = CharInd;
 
-            if (CharIndex == 0)
-                GetMapInfo();
-
             Enqueue(new S.Observe { ObserveObjectID = ObjID });
 
             CurrentMap.GetCell(CurrentLocation).Add(this);
 
             Envir.Observers.Add(this);
 
-            if (CharIndex != 0)
-                LocationChanged();
+            LocationChanged();
 
             if (player != null)
-            {
                 player.CurrentObservers.Add(this);
-            }
-        }
 
-        private void GetMapInfo()
-        {
-            Enqueue(new S.MapInformation
-            {
-                FileName = CurrentMap.Info.FileName,
-                Title = CurrentMap.Info.Title,
-                MiniMap = CurrentMap.Info.MiniMap,
-                Lights = CurrentMap.Info.Light,
-                BigMap = CurrentMap.Info.BigMap,
-                Lightning = CurrentMap.Info.Lightning,
-                Fire = CurrentMap.Info.Fire,
-                MapDarkLight = CurrentMap.Info.MapDarkLight,
-                Music = CurrentMap.Info.Music,
-            });
-
-            GetObjectsPassive();
         }
 
         public void LocationChanged()

@@ -39,7 +39,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(300, 3),
+                Location = new Point(362, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -127,7 +127,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 208,
                 PressedIndex = 209,
                 Library = Libraries.Prguse2,
-                Location = new Point(299, 386),
+                Location = new Point(361, 386),
                 Parent = this,
                 Sound = SoundList.ButtonA,
             };
@@ -139,7 +139,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 198,
                 PressedIndex = 199,
                 Library = Libraries.Prguse2,
-                Location = new Point(299, 100),
+                Location = new Point(361, 100),
                 Parent = this,
                 Sound = SoundList.ButtonA,
             };
@@ -262,6 +262,7 @@ namespace Client.MirScenes.Dialogs
         {
             public Rank_Character_Info Listing;
             public MirLabel RankLabel, NameLabel, LevelLabel, ClassLabel;
+            public MirButton ViewButton;
             public long Index;
 
             public RankingRow()
@@ -305,6 +306,18 @@ namespace Client.MirScenes.Dialogs
                     Parent = this,
                     NotControl = true,
                 };
+
+                ViewButton = new MirButton
+                {
+                    Index = 789,
+                    HoverIndex = 790,
+                    PressedIndex = 791,
+                    Library = Libraries.Title,
+                    Location = new Point(280, 3),
+                    Parent = this,
+                    Sound = SoundList.ButtonA,
+                };
+                ViewButton.Click += (o, e) => Observe();
             }
 
             public void Inspect(object sender, EventArgs e)
@@ -319,11 +332,12 @@ namespace Client.MirScenes.Dialogs
                     InspectDialog.InspectID = (uint)Index;
                     MirNetwork.Network.Enqueue(new ClientPackets.Inspect { ObjectID = (uint)Index, Ranking = true });
                 }
-                else if (me.Button == MouseButtons.Right)
-                {
-                    MirNetwork.Network.Enqueue(new ClientPackets.StartObserve { ObjectID = (uint)Index });
-                }
-                
+            }
+
+
+            public void Observe()
+            {
+                MirNetwork.Network.Enqueue(new ClientPackets.StartObserve { ObjectID = (uint)Index });
             }
 
             public void Clear()
@@ -377,6 +391,11 @@ namespace Client.MirScenes.Dialogs
                     LevelLabel.ForeColour = Color.White;
                     ClassLabel.ForeColour = Color.White;
                 }
+
+                if (listing.ShowObserve)
+                    ViewButton.Visible = true;
+                else
+                    ViewButton.Visible = false;
 
                 Visible = true;
 

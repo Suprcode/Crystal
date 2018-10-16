@@ -156,6 +156,7 @@ namespace Client.MirScenes
         public AttackMode AMode;
         public PetMode PMode;
         public LightSetting Lights;
+        public bool AllowObserve;
 
         public static long NPCTime;
         public static uint NPCID;
@@ -364,10 +365,8 @@ namespace Client.MirScenes
 
             if (GameScene.Observing)
             {
-                
                 switch (e.KeyCode)
-                {
-                    
+                {  
                     case Keys.F1:
                         if (MapControl.NextAction > CMain.Time) return;
                         MapControl.NextAction = CMain.Time + 1000;
@@ -1771,11 +1770,25 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.EndObserving:
                     EndObserving((S.EndObserving)p);
                     break;
+                case (short)ServerPacketIds.ChangeObserve:
+                    ChangeObserve((S.ChangeObserve)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
             }
         }
+        public void ChangeObserve(S.ChangeObserve p)
+        {
+            AllowObserve = p.Allow;
+
+            if (AllowObserve)
+                ChatDialog.ReceiveChat("[Observing: Enabled]", ChatType.Hint);
+            else
+                ChatDialog.ReceiveChat("[Observing: Disabled]", ChatType.Hint);
+
+        }
+
         private void Observe(S.Observe p)
         {
             if (User != null)
@@ -1799,7 +1812,7 @@ namespace Client.MirScenes
         {
             if (MapControl != null && !MapControl.IsDisposed)
                 MapControl.Dispose();
-            MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight, Music = p.Music };
+            MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, MapDarkLight = p.MapDarkLight, Music = p.Music };
             MapControl.LoadMap();
             InsertControl(0, MapControl);
         }
@@ -2709,6 +2722,9 @@ namespace Client.MirScenes
                 CMain.SetResolution(800, 600);
             ActiveScene = new LoginScene();
 
+            if (MapControl != null && !MapControl.IsDisposed)
+                MapControl.Dispose();
+
             Dispose();
         }
         private void LogOutFailed(S.LogOutFailed p)
@@ -3368,13 +3384,19 @@ namespace Client.MirScenes
                 Observer.LockedOn = false;
             }
 
-            MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
-            MapControl.Title = p.Title;
-            MapControl.MiniMap = p.MiniMap;
-            MapControl.BigMap = p.BigMap;
-            MapControl.Lights = p.Lights;
-            MapControl.MapDarkLight = p.MapDarkLight;
-            MapControl.Music = p.Music;
+            if (MapControl == null)
+                MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, MapDarkLight = p.MapDarkLight, Music = p.Music };
+            else
+            {
+                MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
+                MapControl.Title = p.Title;
+                MapControl.MiniMap = p.MiniMap;
+                MapControl.BigMap = p.BigMap;
+                MapControl.Lights = p.Lights;
+                MapControl.MapDarkLight = p.MapDarkLight;
+                MapControl.Music = p.Music;
+            }
+            
             MapControl.LoadMap();
             MapControl.NextAction = 0;
 
@@ -3382,6 +3404,7 @@ namespace Client.MirScenes
             {
                 Observer.CurrentLocation = p.Location;
                 Observer.MapLocation = p.Location;
+                MapControl.AddObject(Observer);
 
                 Observer.Direction = p.Direction;
 
@@ -8575,7 +8598,6 @@ namespace Client.MirScenes
         public string Title = String.Empty;
         public ushort MiniMap, BigMap, Music, SetMusic;
         public LightSetting Lights;
-        public bool Lightning, Fire;
         public byte MapDarkLight;
         public long LightningTime, FireTime;
 

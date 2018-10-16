@@ -133,6 +133,12 @@ namespace Server.MirObjects
             set { Info.PMode = value; }
         }
 
+        public bool AllowObserve
+        {
+            get { return Info.AllowObserve & Info.Player != null; }
+            set { Info.AllowObserve = value; }
+        }
+
         public long Experience
         {
             set { Info.Experience = value; }
@@ -423,8 +429,6 @@ namespace Server.MirObjects
         }
         public void StopGame(byte reason)
         {
-
-
             if (Node == null) return;
 
             for (int i = 0; i < Pets.Count; i++)
@@ -543,6 +547,9 @@ namespace Server.MirObjects
             Report.Disconnected(logReason);
             Report.ForceSave();
 
+            Info.Player = null;
+            SetObserverRankVisible();
+
             CleanUp();
         }
 
@@ -578,6 +585,31 @@ namespace Server.MirObjects
                 default:
                     return string.Format("{0} Has logged out. Reason: Unknown", Name);
             }
+        }
+
+        public void SetObserverRankVisible()
+        {
+            List<Rank_Character_Info> Ranking;
+            int CurrentRank = -1;
+
+            Ranking = Envir.RankTop;
+            CurrentRank = Envir.FindRank(Ranking, Info, 0);
+            if (CurrentRank != -1)
+                Ranking[CurrentRank].ShowObserve = AllowObserve;
+
+            Ranking = Envir.RankClass[(byte)Info.Class];
+            CurrentRank = Envir.FindRank(Ranking, Info, 1);
+            if (CurrentRank != -1)
+                Ranking[CurrentRank].ShowObserve = AllowObserve;
+        }
+
+        public void ObserveChange(bool Allow)
+        {
+            AllowObserve = Allow;
+
+            SetObserverRankVisible();
+
+            Enqueue(new S.ChangeObserve { Allow = AllowObserve });
         }
 
         private void NewCharacter()
@@ -2149,8 +2181,9 @@ namespace Server.MirObjects
             GetObjectsPassive();
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });
+            Enqueue(new S.ChangeObserve { Allow = AllowObserve });
             //if (Class == MirClass.Wizard || Class == MirClass.Taoist)//why could an war, sin, archer not have pets?
-                Enqueue(new S.ChangePMode { Mode = PMode });
+            Enqueue(new S.ChangePMode { Mode = PMode });
             Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
 
             Enqueue(new S.DefaultNPC { ObjectID = DefaultNPC.ObjectID });
@@ -2244,6 +2277,8 @@ namespace Server.MirObjects
                 SMain.Envir.CheckRankUpdate(Info);
             }
 
+
+            SetObserverRankVisible();
         }
         private void StartGameFailed()
         {
@@ -2463,8 +2498,6 @@ namespace Server.MirObjects
                 MiniMap = CurrentMap.Info.MiniMap,
                 Lights = CurrentMap.Info.Light,
                 BigMap = CurrentMap.Info.BigMap,
-                Lightning = CurrentMap.Info.Lightning,
-                Fire = CurrentMap.Info.Fire,
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
                 Music = CurrentMap.Info.Music,
             });
