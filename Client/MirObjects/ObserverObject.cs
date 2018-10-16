@@ -16,14 +16,17 @@ namespace Client.MirObjects
     {
         public string Name { get; set; }
         public bool LockedOn { get; set; }
+        public QueuedAction QueuedAction;
         public ObserverObject(uint objectID) : base(objectID)
         {
+            Frames = FrameSet.Players;
             FreeMovement();
         }
         public uint LockedID;
 
         public void Load(uint ObjID)
         {
+            
             //if (user != null && p.ObserveObjectID == 0)
             //{
             //    CurrentLocation = user.CurrentLocation;
@@ -76,6 +79,29 @@ namespace Client.MirObjects
                 Name = GameScene.Camera.Name;
             }
             GameScene.Camera = this;
+
+            SetLibraries();
+        }
+
+        public virtual void SetLibraries()
+        {
+
+            bool altAnim = false;
+
+            bool showMount = true;
+            bool showFishing = true;
+
+                switch (CurrentAction)
+                {
+                    case MirAction.Standing:
+                        Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
+                        break;
+                    case MirAction.ObserveMove:
+                        Frames.Frames.TryGetValue(MirAction.Running, out Frame);
+                        break;
+                }
+            
+
         }
 
         public override ObjectType Race => ObjectType.Observer;
@@ -96,9 +122,301 @@ namespace Client.MirObjects
         {
             return false;
         }
+
+        public FrameSet Frames;
+        public Frame Frame, WingFrame;
+        public int FrameIndex = 0, FrameInterval = 0, EffectFrameIndex = 0, EffectFrameInterval = 0, SlowFrameIndex = 0;
+        public byte SkipFrameUpdate = 0;
+
         public override void Process()
         {
-            Movement = CurrentLocation;
+            bool update = CMain.Time >= NextMotion || GameScene.CanMove;
+
+            ProcessFrames();
+
+            switch (CurrentAction)
+            {
+                case MirAction.ObserveMove:
+                    if (Frame == null)
+                    {
+                        OffSetMove = Point.Empty;
+                        Movement = CurrentLocation;
+                        break;
+                    }
+
+                    var i = 3;
+
+                    Movement = Functions.PointMove(CurrentLocation, Direction, -3);
+
+                    int count = Frame.Count;
+                    int index = FrameIndex;
+
+                    switch (Direction)
+                    {
+                        case MirDirection.Up:
+                            OffSetMove = new Point(0, (int)((MapControl.CellHeight * i / (float)(count)) * (index + 1)));
+                            break;
+                        case MirDirection.UpRight:
+                            OffSetMove = new Point((int)((-MapControl.CellWidth * i / (float)(count)) * (index + 1)), (int)((MapControl.CellHeight * i / (float)(count)) * (index + 1)));
+                            break;
+                        case MirDirection.Right:
+                            OffSetMove = new Point((int)((-MapControl.CellWidth * i / (float)(count)) * (index + 1)), 0);
+                            break;
+                        case MirDirection.DownRight:
+                            OffSetMove = new Point((int)((-MapControl.CellWidth * i / (float)(count)) * (index + 1)), (int)((-MapControl.CellHeight * i / (float)(count)) * (index + 1)));
+                            break;
+                        case MirDirection.Down:
+                            OffSetMove = new Point(0, (int)((-MapControl.CellHeight * i / (float)(count)) * (index + 1)));
+                            break;
+                        case MirDirection.DownLeft:
+                            OffSetMove = new Point((int)((MapControl.CellWidth * i / (float)(count)) * (index + 1)), (int)((-MapControl.CellHeight * i / (float)(count)) * (index + 1)));
+                            break;
+                        case MirDirection.Left:
+                            OffSetMove = new Point((int)((MapControl.CellWidth * i / (float)(count)) * (index + 1)), 0);
+                            break;
+                        case MirDirection.UpLeft:
+                            OffSetMove = new Point((int)((MapControl.CellWidth * i / (float)(count)) * (index + 1)), (int)((MapControl.CellHeight * i / (float)(count)) * (index + 1)));
+                            break;
+                    }
+
+                    OffSetMove = new Point(OffSetMove.X % 2 + OffSetMove.X, OffSetMove.Y % 2 + OffSetMove.Y);
+                    break;
+                default:
+                    OffSetMove = Point.Empty;
+                    Movement = CurrentLocation;
+                    break;
+            }
+
+
+            DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
+
+
+            DrawLocation = new Point((Movement.X - (Camera.Movement.X) + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - (Camera.Movement.Y) + MapControl.OffSetY) * MapControl.CellHeight);
+
+
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
+
+            //if (this != Observer)
+            //{
+            //    UpdateDrawLocationOffset(Camera.OffSetMove);
+            //    UpdateDrawLocationOffset(-OffSetMove.X, -OffSetMove.Y);
+            //}
+
+            if (BodyLibrary != null && update)
+            {
+                FinalDrawLocation = DrawLocation.Add(BodyLibrary.GetOffSet(DrawFrame));
+                DisplayRectangle = new Rectangle(DrawLocation, BodyLibrary.GetTrueSize(DrawFrame));
+            }
+
         }
+
+
+        public int UpdateFrame(bool skip = true)
+        {
+            if (Frame == null) return 0;
+            if (Poison.HasFlag(PoisonType.Slow) && !skip)
+            {
+                SkipFrameUpdate++;
+                if (SkipFrameUpdate == 2)
+                    SkipFrameUpdate = 0;
+                else
+                    return FrameIndex;
+            }
+            if (Frame.Reverse) return Math.Abs(--FrameIndex);
+
+            return ++FrameIndex;
+        }
+
+        public virtual void ProcessFrames()
+        {
+            bool clear = CMain.Time >= NextMotion;
+
+            ProcFrames();
+
+            if (clear) QueuedAction = null;
+            if ((CurrentAction == MirAction.Standing || CurrentAction == MirAction.MountStanding || CurrentAction == MirAction.Stance || CurrentAction == MirAction.Stance2 || CurrentAction == MirAction.DashFail) && (QueuedAction != null || NextAction != null))
+                SetAction();
+        }
+
+        public virtual void ProcFrames()
+        {
+
+            if (Frame == null) return;
+
+            switch (CurrentAction)
+            {
+                case MirAction.ObserveMove:
+                    if (!GameScene.CanMove) return;
+
+
+                    GameScene.Scene.MapControl.TextureValid = false;
+
+                    GameScene.Scene.MapControl.FloorValid = false;
+
+                    //if (CMain.Time < NextMotion) return;
+
+                    if (SkipFrames) UpdateFrame();
+
+                    if (UpdateFrame(false) >= Frame.Count)
+                    {
+                        FrameIndex = Frame.Count - 1;
+                        SetAction();
+                    }
+                    else
+                    {
+                    }
+
+                    break;
+                case MirAction.Standing:
+                    if (CMain.Time >= NextMotion)
+                    {
+                        GameScene.Scene.MapControl.TextureValid = false;
+
+                        if (SkipFrames) UpdateFrame();
+
+                        if (UpdateFrame() >= Frame.Count)
+                        {
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                        {
+                            NextMotion += FrameInterval;
+                        }
+                    }
+                    break;
+            }
+
+            if ((CurrentAction == MirAction.Standing || CurrentAction == MirAction.MountStanding || CurrentAction == MirAction.Stance || CurrentAction == MirAction.Stance2 || CurrentAction == MirAction.DashFail) && NextAction != null)
+                SetAction();
+            //if Revive and dead set action
+
+        }
+
+        public virtual void SetAction()
+        {
+            if (QueuedAction != null)
+            {
+                if ((ActionFeed.Count == 0) || (ActionFeed.Count == 1 && NextAction.Action == MirAction.Stance))
+                {
+                    ActionFeed.Clear();
+                    ActionFeed.Add(QueuedAction);
+                    QueuedAction = null;
+                }
+            }
+
+            if (Observer == this && CMain.Time < MapControl.NextAction)// && CanSetAction)
+            {
+                //NextMagic = null;
+                return;
+            }
+
+            if (ActionFeed.Count == 0)
+            {
+                CurrentAction = MirAction.Standing;
+
+                Frames.Frames.TryGetValue(CurrentAction, out Frame);
+                FrameIndex = 0;
+                EffectFrameIndex = 0;
+
+                if (MapLocation != CurrentLocation)
+                {
+                    //GameScene.Scene.MapControl.RemoveObject(this);
+                    MapLocation = CurrentLocation;
+                    //GameScene.Scene.MapControl.AddObject(this);
+                }
+
+                if (Frame == null) return;
+
+                FrameInterval = Frame.Interval;
+                EffectFrameInterval = Frame.EffectInterval;
+
+                SetLibraries();
+            }
+            else
+            {
+                QueuedAction action = ActionFeed[0];
+                ActionFeed.RemoveAt(0);
+
+                CurrentAction = action.Action;
+
+                CurrentLocation = action.Location;
+                MirDirection olddirection = Direction;
+                Direction = action.Direction;
+
+                Point temp;
+                switch (CurrentAction)
+                {
+                    case MirAction.ObserveMove:
+                        var steps = 3;
+
+                        temp = Functions.PointMove(CurrentLocation, Direction, -steps);
+
+                        break;
+                    default:
+                        temp = CurrentLocation;
+                        break;
+                }
+
+                temp = new Point(action.Location.X, temp.Y > CurrentLocation.Y ? temp.Y : CurrentLocation.Y);
+
+                if (MapLocation != temp)
+                {
+                    //GameScene.Scene.MapControl.RemoveObject(this);
+                    MapLocation = temp;
+                    //GameScene.Scene.MapControl.AddObject(this);
+                }
+
+
+                SetLibraries();
+
+                FrameIndex = 0;
+                EffectFrameIndex = 0;
+
+                if (Frame == null) return;
+
+                FrameInterval = Frame.Interval;
+                EffectFrameInterval = Frame.EffectInterval;
+
+                if (this == Observer)
+                {
+                    switch (CurrentAction)
+                    {
+                        case MirAction.ObserveMove:
+                            //GameScene.LastRunTime = CMain.Time;
+                            Network.Enqueue(new C.ObserveMove { Direction = Direction });
+                            GameScene.Scene.MapControl.FloorValid = false;
+                            MapControl.NextAction = CMain.Time + (1000);
+                            break;
+                    }
+                }
+
+
+                switch (CurrentAction)
+                {
+                    case MirAction.ObserveMove:
+                        GameScene.Scene.Redraw();
+                        break;
+                    
+                }
+
+            }
+
+            GameScene.Scene.MapControl.TextureValid = false;
+
+            NextMotion = CMain.Time + FrameInterval;
+            NextMotion2 = CMain.Time + EffectFrameInterval;
+
+        }
+
+
+
+
+
+
+
+
+
+
     }
 }

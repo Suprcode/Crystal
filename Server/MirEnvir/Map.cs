@@ -611,6 +611,7 @@ namespace Server.MirEnvir
         {
             return location.X >= 0 && location.X < Width && location.Y >= 0 && location.Y < Height && GetCell(location).Valid;
         }
+
         public bool ValidPoint(int x, int y)
         {
             return x >= 0 && x < Width && y >= 0 && y < Height && GetCell(x, y).Valid;

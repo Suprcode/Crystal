@@ -474,7 +474,12 @@ namespace Server.MirObjects
 
             CurrentMap.RemoveObject(this);
 
-            Despawn();
+            for (int i = 0; i < CurrentObservers.Count; i++)
+            {
+                CurrentObservers[i].ObserverEnd();
+            }
+
+                Despawn();
 
             if (GroupMembers != null)
             {

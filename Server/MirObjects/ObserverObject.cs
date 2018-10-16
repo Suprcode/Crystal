@@ -13,9 +13,7 @@ using C = ClientPackets;
 /*
 NOTES
 Removing & Adding Objects when Locked on are loading for 3 x space movement.
-Need to add moving to new map (works on connect, fails on map change when already locked)
-Need to have access to chat / chat commands from Observer Scene
-Need to be able to return to Player
+Need to have access to chat / chat commands from Observer Scene - started
 */
 
 
@@ -35,8 +33,6 @@ namespace Server.MirObjects
         public bool LockedOn {
             get { return LockedTarget == null ? false : true; }
         }
-
-
 
         public void Enqueue(Packet p)
         {
@@ -95,7 +91,6 @@ namespace Server.MirObjects
 
         private void GetMapInfo()
         {
-
             Enqueue(new S.MapInformation
             {
                 FileName = CurrentMap.Info.FileName,
@@ -108,6 +103,8 @@ namespace Server.MirObjects
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
                 Music = CurrentMap.Info.Music,
             });
+
+            GetObjectsPassive();
         }
 
         public void LocationChanged()
@@ -147,7 +144,7 @@ namespace Server.MirObjects
 
         public void ObserveLock(uint ObjectID)
         {
-            if (ObjectID == 0)
+            if (ObjectID == 0 && IsGM)
             {
                 if (LockedOn)
                 {
@@ -165,23 +162,13 @@ namespace Server.MirObjects
                 }
                 else
                 {
+                    if (LockedTarget != null)
+                        LockedTarget.CurrentObservers.Remove(this);
+
                     player.CurrentObservers.Add(this);
                     LockedTarget = player;
 
-                    Enqueue(new S.MapChanged
-                    {
-                        FileName = CurrentMap.Info.FileName,
-                        Title = CurrentMap.Info.Title,
-                        MiniMap = CurrentMap.Info.MiniMap,
-                        BigMap = CurrentMap.Info.BigMap,
-                        Lights = CurrentMap.Info.Light,
-                        Location = CurrentLocation,
-                        Direction = Direction,
-                        MapDarkLight = CurrentMap.Info.MapDarkLight,
-                        Music = CurrentMap.Info.Music
-                    });
-
-                    GetObjectsPassive();
+                    LocationChanged();
                 }
             }
 
@@ -266,9 +253,14 @@ namespace Server.MirObjects
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
-
+           
             Point location = Functions.PointMove(CurrentLocation, dir, 3);
 
+            if (!(location.X >= 0 && location.X < CurrentMap.Width && location.Y >= 0 && location.Y < CurrentMap.Height))
+            {
+                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                return;
+            }
 
             if (!CurrentMap.CheckDoorOpen(location))
             {
@@ -289,10 +281,9 @@ namespace Server.MirObjects
             AddObjects(dir, 3);
 
             CellTime = Envir.Time + 500;
-            ActionTime = Envir.Time + GetDelayTime(MoveDelay);
+            ActionTime = Envir.Time + MoveDelay;
 
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-
         }
 
         public void RemoveObjects(MirDirection dir, int count)
@@ -872,15 +863,6 @@ namespace Server.MirObjects
             }
         }
 
-        public long GetDelayTime(long original)
-        {
-            if (CurrentPoison.HasFlag(PoisonType.Slow))
-            {
-                return original * 2;
-            }
-            return original;
-        }
-
         public bool CheckMovement(Point location)
         {
             if (Envir.Time < MovementTime) return false;
@@ -994,9 +976,16 @@ namespace Server.MirObjects
             }
             else
             {
-                C.StartGame packet = new C.StartGame { CharacterIndex = CharIndex };
-                Connection.StartGame(packet);
-                StopGame(24);
+                if (IsGM & LockedOn)
+                {
+                    ObserveUnlock();
+                }
+                else
+                {
+                    C.StartGame packet = new C.StartGame { CharacterIndex = CharIndex };
+                    Connection.StartGame(packet);
+                    StopGame(24);
+                }
             }
         }
 
@@ -1708,12 +1697,6 @@ namespace Server.MirObjects
                 Broadcast(p);
             }
         }
-
-
-
-
-
-
 
         public override ObjectType Race
         {

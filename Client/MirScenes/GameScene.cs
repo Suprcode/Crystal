@@ -192,6 +192,7 @@ namespace Client.MirScenes
             MoveTime = CMain.Time;
 
             KeyDown += GameScene_KeyDown;
+            KeyUp += GameScene_KeyUp;
 
             MainDialog = new MainDialog { Parent = this };
             ChatDialog = new ChatDialog { Parent = this };
@@ -327,69 +328,99 @@ namespace Client.MirScenes
                 }
             }
         }
+
+        public bool MRight = false;
+        public bool MLeft = false;
+        public bool MUp = false;
+        public bool MDown = false;
+
+        private void GameScene_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (GameScene.Observing)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.D:
+                        MRight = false;
+                        break;
+                    case Keys.A:
+                        MLeft = false;
+                        break;
+                    case Keys.W:
+                        MUp = false;
+                        break;
+                    case Keys.S:
+                        MDown = false;
+                        break;
+                }
+                return;
+            }
+        }
         private void GameScene_KeyDown(object sender, KeyEventArgs e)
         {
             //bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
             //bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
+            MirDirection dir = MirDirection.Up;
 
             if (GameScene.Observing)
             {
-                MirDirection dir = MirDirection.Right;
-
+                
                 switch (e.KeyCode)
                 {
+                    
                     case Keys.F1:
+                        if (MapControl.NextAction > CMain.Time) return;
+                        MapControl.NextAction = CMain.Time + 1000;
                         if (GameScene.Observer.LockedOn)
                         {
                             GameScene.Observer.FreeMovement();
                         }
                         else
                         {
-                            if (MapObject.TargetObject != null)
-                            {
-
-                            }
-
                             PlayerObject player = MapObject.MouseObject as PlayerObject;
                             if (player != null)
                                 GameScene.Observer.LockOnObject(player.ObjectID);
                         }
+                        
                         break;
                     case Keys.D:
-                        if (GameScene.Observer.LockedOn == true) return;
-                        dir = MirDirection.Right;
-                        Network.Enqueue(new C.ObserveMove { Direction = dir });
-                        GameScene.Scene.MapControl.FloorValid = false;
-                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
-                        MapControl.NextAction = CMain.Time + 100;
+                        MRight = true;
                         break;
                     case Keys.A:
-                        if (GameScene.Observer.LockedOn == true) return;
-                        dir = MirDirection.Left;
-                        Network.Enqueue(new C.ObserveMove { Direction = dir });
-                        GameScene.Scene.MapControl.FloorValid = false;
-                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
-                        MapControl.NextAction = CMain.Time + 100;
+                        MLeft = true;
                         break;
                     case Keys.W:
-                        if (GameScene.Observer.LockedOn == true) return;
-                        dir = MirDirection.Up;
-                        Network.Enqueue(new C.ObserveMove { Direction = dir });
-                        GameScene.Scene.MapControl.FloorValid = false;
-                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
-                        MapControl.NextAction = CMain.Time + 100;
+                        MUp = true;
                         break;
                     case Keys.S:
-                        if (GameScene.Observer.LockedOn == true) return;
-                        dir = MirDirection.Down;
-                        Network.Enqueue(new C.ObserveMove { Direction = dir });
-                        GameScene.Scene.MapControl.FloorValid = false;
-                        //GameScene.Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = GameScene.Observer.Direction, Location = Functions.PointMove(GameScene.Observer.CurrentLocation, GameScene.Observer.Direction, 1) };
-                        MapControl.NextAction = CMain.Time + 100;
+                        MDown = true;
                         break;
-
                 }
-                    return;
+                if ((MDown | MUp | MRight | MLeft) & (!GameScene.Observer.LockedOn))
+                {
+                    if (MapControl.NextAction > CMain.Time) return;
+                    if (MDown)
+                    {
+                        dir = MirDirection.Down;
+                        if (MRight) dir = MirDirection.DownRight;
+                        else if (MLeft) dir = MirDirection.DownLeft;
+                    }
+                    else if (MUp)
+                    {
+                        dir = MirDirection.Up;
+                        if (MRight) dir = MirDirection.UpRight;
+                            else if (MLeft) dir = MirDirection.UpLeft;
+                    }
+                    else if (MRight)
+                    dir = MirDirection.Right;
+                    else if (MLeft)
+                        dir = MirDirection.Left;
+
+
+                    Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = dir, Location = Functions.PointMove(Observer.CurrentLocation, dir, 3) };
+                }
+
+                return;
             }
 
             foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
@@ -1756,11 +1787,7 @@ namespace Client.MirScenes
             Observer = new ObserverObject(0);
             Observer.Load(p.ObserveObjectID);
 
-            BuffsDialog.Hide();
-            MainDialog.Hide();
-            BeltDialog.Hide();
-            CharacterDuraPanel.Hide();
-            DuraStatusPanel.Hide();
+            ObserverDialog();
         }
 
         private void KeepAlive(S.KeepAlive p)
@@ -1781,34 +1808,72 @@ namespace Client.MirScenes
             User = new UserObject(p.ObjectID);
             User.Load(p);
 
-            if (Observer != null)
+            if (Observing)
             {
-                MainDialog.Show();
-                BeltDialog.Show();
-                CharacterDuraPanel.Show();
-                DuraStatusPanel.Show();
+                MapControl.Objects.Remove(Observer);
                 Observer = null;
+                ObserverDialog();
             }
 
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             Gold = p.Gold;
             Credit = p.Credit;
 
-            
-
             InventoryDialog.RefreshInventory();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
+        }
+
+        public void ObserverDialog()
+        {
+            if (Observing)
+            {
+                MainDialog.Hide();
+                BeltDialog.Hide();
+                CharacterDuraPanel.Hide();
+                DuraStatusPanel.Hide();
+                BuffsDialog.Hide();
+            }
+            else
+            {
+                MainDialog.Show();
+                BeltDialog.Show();
+                CharacterDuraPanel.Show();
+                DuraStatusPanel.Show();
+                BuffsDialog.Show();
+            }
+
+        }
+
+        private void ObserveLocation(S.UserLocation p)
+        {
+            MapControl.NextAction = 0;
+
+            if (Observer.CurrentLocation == p.Location && Observer.Direction == p.Direction) return;
+
+            if (Settings.DebugMode)
+            {
+                ReceiveChat(new S.Chat { Message = "Displacement", Type = ChatType.System });
+            }
+
+            //MapControl.RemoveObject(Observer);
+            Observer.CurrentLocation = p.Location;
+            Observer.MapLocation = p.Location;
+            //MapControl.AddObject(Observer);
+
+            MapControl.FloorValid = false;
+            MapControl.InputDelay = CMain.Time + 400;
+
+            Observer.QueuedAction = null;
+            Observer.ActionFeed.Clear();
+            Observer.SetAction();
         }
 
         private void UserLocation(S.UserLocation p)
         {
             if(Observing)
             {
-                Camera.CurrentLocation = p.Location;
-                Camera.MapLocation = p.Location;
-                MapControl.FloorValid = false;
-                MapControl.InputDelay = CMain.Time + 400;
+                ObserveLocation(p);
                 return;
             }
 
@@ -3317,6 +3382,12 @@ namespace Client.MirScenes
             {
                 Observer.CurrentLocation = p.Location;
                 Observer.MapLocation = p.Location;
+
+                Observer.Direction = p.Direction;
+
+                Observer.QueuedAction = null;
+                Observer.ActionFeed.Clear();
+                Observer.SetAction();
             }
             else
             {
