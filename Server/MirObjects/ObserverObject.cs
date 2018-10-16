@@ -14,6 +14,8 @@ using C = ClientPackets;
 NOTES
 Removing & Adding Objects when Locked on are loading for 3 x space movement.
 Need to have access to chat / chat commands from Observer Scene - started
+When dying and reviving, it loses the locked target, check respawn in town.
+Check over code for permissions, FreeMovement is GM only, F1 should work for all players to jump between observees
 */
 
 
@@ -950,6 +952,7 @@ namespace Server.MirObjects
             {
                 Enqueue(new S.EndObserving { });
                 StopGame(24);
+                Enqueue(new S.StatusMessage { Message = "This player is no longer available for observing." });
             }
             else
             {

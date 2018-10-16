@@ -5689,7 +5689,7 @@ namespace ServerPackets
 
         public override short Index
         {
-            get { return (short)ServerPacketIds.EndObserving; }
+            get { return (short)ServerPacketIds.StatusMessage; }
         }
 
         protected override void ReadPacket(BinaryReader reader)

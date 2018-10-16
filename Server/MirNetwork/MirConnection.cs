@@ -1857,18 +1857,18 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Login) return;
 
-            SafeZoneInfo szi = SMain.Envir.StartPoints[SMain.Envir.Random.Next(SMain.Envir.StartPoints.Count)];
-
-            Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-
             PlayerObject Player = SMain.Envir.GetPlayer(p.ObjectID);
 
-            uint ObjID = 0;
-
-            if (Player != null)
-                ObjID = Player.ObjectID;
-
-            Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, ObjID, 0);
+            if (Player == null || !Player.AllowObserve)
+            {
+                Enqueue(new S.StatusMessage { Message = "This player is no longer available for observing." });
+            }
+            else
+            {
+                Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
+                SafeZoneInfo szi = SMain.Envir.StartPoints[SMain.Envir.Random.Next(SMain.Envir.StartPoints.Count)];
+                Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, Player.ObjectID, 0);
+            }
         }
 
         public void ChangeObserve(C.ChangeObserve p)

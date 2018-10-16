@@ -197,7 +197,7 @@ namespace Client.MirScenes
 
         public void StatusMessage(S.StatusMessage p)
         {
-            MirMessageBox.Show(p.Message, true);
+            MirMessageBox.Show(p.Message, false);
         }
 
         public void StartGame(S.StartGame p)
