@@ -3076,7 +3076,7 @@ namespace Server.MirEnvir
 
         public bool TryAddRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
         {
-            Rank_Character_Info NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info, ShowObserve = info.AllowObserve };
+            Rank_Character_Info NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info, ShowObserve = info.AllowObserve & info.Player != null };
             int NewRankIndex = InsertRank(Ranking, NewRank);
             if (NewRankIndex == 0) return false;
             for (int i = NewRankIndex; i < Ranking.Count; i++ )

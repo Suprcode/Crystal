@@ -248,7 +248,41 @@ namespace Server.MirObjects
         }
 
         public override int CurrentMapIndex { get; set; }
-        public override Point CurrentLocation { get; set; }
+
+        public Point CurLocation;
+
+        public override Point CurrentLocation
+        {
+            get { return CurLocation; }
+            set
+            {
+                CurLocation = value;
+                InformObservers();
+            }
+        }
+
+        //public bool ObserverInform = true;
+        public void InformObservers()
+        {
+            //if (!ObserverInform) return;
+            if (CurrentObservers.Count == 0) return;
+
+            for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+            {
+                if (CurrentObservers[i] != null)
+                {
+                    if (!CurrentObservers[i].LockedProcess())
+                    {
+                        CurrentObservers.Remove(CurrentObservers[i]);
+                    }
+                }
+                else
+                {
+                    CurrentObservers.Remove(CurrentObservers[i]);
+                }
+
+            }
+        }
         public override sealed MirDirection Direction { get; set; }
         public override ushort Level
         {

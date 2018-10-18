@@ -25,6 +25,7 @@ namespace Client.MirScenes
         private LoginDialog _login;
         private NewAccountDialog _account;
         private ChangePasswordDialog _password;
+        private bool RequestedRankings;
 
         public RankingDialog RankingDialog;
 
@@ -87,8 +88,18 @@ namespace Client.MirScenes
             {
                 if (_ViewKey != null && !_ViewKey.IsDisposed) return;
 
-                RankingDialog.Visible = true;
-                _login.Hide();
+                if (RequestedRankings)
+                {
+                    RankingDialog.Visible = true;
+                    _login.Hide();
+                }
+                else
+                {
+                    Network.Enqueue(new C.LoginRankings { });
+                    RequestedRankings = true;
+                    _login.Hide();
+                }
+
             };
 
             Version = new MirLabel
@@ -370,6 +381,7 @@ namespace Client.MirScenes
         public void Rankings(S.Rankings p)
         {
             RankingDialog.RecieveRanks(p.Listings, p.RankType, p.MyRank);
+            RankingDialog.Show();
         }
         private void Login(S.Login p)
         {

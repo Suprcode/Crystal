@@ -767,7 +767,8 @@ public enum ChatType : byte
     Relationship = 12,
     Mentor = 13,
     Shout2 = 14,
-    Shout3 = 15
+    Shout3 = 15,
+    Observer = 16,
 }
 
 public enum ItemType : byte
@@ -1502,7 +1503,8 @@ public enum ServerPacketIds : short
 
     EndObserving,
     StatusMessage,
-    ChangeObserve
+    ChangeObserve,
+    ObserverCount,
 }
 
 public enum ClientPacketIds : short
@@ -1651,6 +1653,8 @@ public enum ClientPacketIds : short
     ObserveLock,
     StartObserve,
     ChangeObserve,
+    LoginRankings,
+    EndObserver,
 }
 
 public enum ConquestType : byte
@@ -4752,6 +4756,10 @@ public abstract class Packet
                 return new C.StartObserve();
             case (short)ClientPacketIds.ChangeObserve:
                 return new C.ChangeObserve();
+            case (short)ClientPacketIds.LoginRankings:
+                return new C.LoginRankings();
+            case (short)ClientPacketIds.EndObserver:
+                return new C.EndObserver();
             default:
                 return null;
         }
@@ -5241,6 +5249,8 @@ public abstract class Packet
                 return new S.StatusMessage();
             case (short)ServerPacketIds.ChangeObserve:
                 return new S.ChangeObserve();
+            case (short)ServerPacketIds.ObserverCount:
+                return new S.ObserverCount();
             default:
                 return null;
         }

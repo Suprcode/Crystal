@@ -33,7 +33,7 @@ namespace Client.MirScenes.Dialogs
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel, ObserveLabel;
 
         public bool HPOnly
         {
@@ -337,7 +337,17 @@ namespace Client.MirScenes.Dialogs
                 ForeColour = Color.Yellow,
                 OutLineColour = Color.Black,
                 Parent = this,
-                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -448 : -280),
+                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -280),
+            };
+
+            ObserveLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.SlateBlue,
+                OutLineColour = Color.Black,
+                Parent = this,
+                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -235),
+                Text = "[Observers: 0]",
             };
 
             PModeLabel = new MirLabel
@@ -816,6 +826,10 @@ namespace Client.MirScenes.Dialogs
                 case ChatType.Mentor:
                     backColour = Color.White;
                     foreColour = Color.Purple;
+                    break;
+                case ChatType.Observer:
+                    backColour = Color.White;
+                    foreColour = Color.SlateBlue;
                     break;
                 default:
                     backColour = Color.White;
@@ -3231,8 +3245,10 @@ namespace Client.MirScenes.Dialogs
             (GameScene.Scene.MiniMapDialog.Size.Height + 165) - Settings.ScreenHeight);
             GameScene.Scene.MainDialog.PModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
             (GameScene.Scene.MiniMapDialog.Size.Height + 180) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+            GameScene.Scene.MainDialog.ObserveLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
             (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+            GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+            (GameScene.Scene.MiniMapDialog.Size.Height + 210) - Settings.ScreenHeight);
             if (GameScene.Scene.NewMail)
             {
                 double time = (CMain.Time) / 100D;

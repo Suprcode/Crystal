@@ -42,13 +42,14 @@ namespace Client.MirObjects
         {
             LockedOn = true;
 
-           // if (!serverlock)
-                //Network.Enqueue(new C.ObserveLock { ObjectID = objectID });
+            if (!serverlock)
+                Network.Enqueue(new C.ObserveLock { ObjectID = objectID });
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != objectID) continue;
+                LockedID = ObjectID;
                 GameScene.Camera = ob as ICamera;
                 return;
             }

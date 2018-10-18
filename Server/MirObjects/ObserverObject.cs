@@ -15,7 +15,7 @@ NOTES
 Removing & Adding Objects when Locked on are loading for 3 x space movement.
 Need to have access to chat / chat commands from Observer Scene - started
 When dying and reviving, it loses the locked target, check respawn in town.
-Check over code for permissions, FreeMovement is GM only, F1 should work for all players to jump between observees
+Check over code for permissions, FreeMovement is GM only, F1 should work for all players to jump between observees (F1 not working to lock on....)
 */
 
 
@@ -29,6 +29,7 @@ namespace Server.MirObjects
         public int CharIndex;
 
         public MapObject LockedTarget;
+        public PlayerObject LockedPlayer;
         public const long MoveDelay = 600, MovementDelay = 2000;
         public long ActionTime, MovementTime;
 
@@ -55,7 +56,7 @@ namespace Server.MirObjects
             if (player != null)
             {
                 LockedTarget = player;
-
+                LockedPlayer = player;
                 CurrentLocation = player.CurrentLocation;
                 CurrentMapIndex = player.CurrentMapIndex;
                 CurrentMap = player.CurrentMap;
@@ -63,15 +64,17 @@ namespace Server.MirObjects
             else
             {
                 LockedTarget = null;
-
+                LockedPlayer = null;
                 CurrentLocation = CurLoc;
                 CurrentMapIndex = CurMapIndex;
                 CurrentMap = CurMap;
             }
 
-
             IsGM = GM;
             CharIndex = CharInd;
+
+            if (CharIndex != 0)
+                Name = Envir.GetCharacterInfo(CharIndex).Name;
 
             Enqueue(new S.Observe { ObserveObjectID = ObjID });
 
@@ -81,9 +84,12 @@ namespace Server.MirObjects
 
             LocationChanged();
 
-            if (player != null)
-                player.CurrentObservers.Add(this);
-
+            if (LockedPlayer != null)
+            {
+                LockedPlayer.CurrentObservers.Add(this);
+                LockedPlayer.SendObserverCount();
+            }
+                
         }
 
         public void LocationChanged()
@@ -108,16 +114,22 @@ namespace Server.MirObjects
         {
             LockedTarget.CurrentObservers.Remove(this);
             LockedTarget = null;
+            LockedPlayer = null;
         }
 
         public void StopGame(byte reason)
         {
             if (LockedOn)
+            {
                 LockedTarget.CurrentObservers.Remove(this);
-
+                if (LockedPlayer != null)
+                    LockedPlayer.SendObserverCount();
+            }
+                
             CurrentMap.RemoveObject(this);
             Envir.Observers.Remove(this);
             LockedTarget = null;
+            LockedPlayer = null;
             Connection.Observer = null;
         }
 
@@ -132,20 +144,29 @@ namespace Server.MirObjects
             }
             else
             {
-                PlayerObject player = (PlayerObject)Envir.GetObject(ObjectID);
+                MapObject player = Envir.GetObject(ObjectID);
 
                 if (player == null)
                 {
-                    ReceiveChat(string.Format("Player {0} was not found.", ObjectID.ToString()), ChatType.System);
+                    ReceiveChat(string.Format("Object {0} was not found.", ObjectID.ToString()), ChatType.System);
                     return;
                 }
                 else
                 {
-                    if (LockedTarget != null)
+                    if (LockedOn)
+                    {
                         LockedTarget.CurrentObservers.Remove(this);
-
+                        if (LockedPlayer != null)
+                            LockedPlayer.SendObserverCount();
+                    }
+                        
                     player.CurrentObservers.Add(this);
+
                     LockedTarget = player;
+                    if (player is PlayerObject)
+                        LockedPlayer = player as PlayerObject;
+                    else
+                        LockedPlayer = null;
 
                     LocationChanged();
                 }
@@ -158,8 +179,8 @@ namespace Server.MirObjects
             MapObject player = this;
             PlayerObject mainPlayer;
 
-            if (LockedOn && LockedTarget is PlayerObject)
-                mainPlayer = (PlayerObject)LockedTarget;
+            if (LockedOn && LockedPlayer != null)
+                mainPlayer = LockedPlayer;
             else
                 mainPlayer = null;
 
@@ -912,7 +933,7 @@ namespace Server.MirObjects
 
         public bool LockedProcess()
         {
-            if (LockedTarget != null)
+            if (LockedOn)
             {
                 if (CurrentLocation != LockedTarget.CurrentLocation)
                 {
@@ -946,24 +967,32 @@ namespace Server.MirObjects
             }
         }
 
-        public void ObserverEnd()
+        public void ObserverEnd(bool forced = true)
         {
             if (CharIndex == 0)
             {
                 Enqueue(new S.EndObserving { });
                 StopGame(24);
-                Enqueue(new S.StatusMessage { Message = "This player is no longer available for observing." });
+                if (forced)
+                    Enqueue(new S.StatusMessage { Message = "This player is no longer available for observing." });
             }
             else
             {
-                if (IsGM & LockedOn)
+                if (IsGM & LockedOn & forced)
                 {
                     ObserveUnlock();
+                    ReceiveChat("You have entered Free Movement mode as the player is no longer available.", ChatType.Hint);
                 }
                 else
                 {
                     C.StartGame packet = new C.StartGame { CharacterIndex = CharIndex };
                     Connection.StartGame(packet);
+                    if (Connection.Player != null)
+                    {
+                        if (forced)
+                            Connection.Player.ReceiveChat("The player is no longer available for observing.", ChatType.Hint);
+                    }
+                        
                     StopGame(24);
                 }
             }
@@ -1072,25 +1101,25 @@ namespace Server.MirObjects
                 //ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
                 //player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
             }
-            else if (message.StartsWith("!!"))
-            {
-                if (GroupMembers == null) return;
-                //Group
-                message = String.Format("{0}:{1}", Name, message.Remove(0, 2));
-
-                p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Group };
-
-                for (int i = 0; i < GroupMembers.Count; i++)
-                    GroupMembers[i].Enqueue(p);
-            }
             else if (message.StartsWith("!~"))
             {
                 //if (MyGuild == null) return;
                 //
                 ////Guild
                 //message = message.Remove(0, 2);
-                //MyGuild.SendMessage(String.Format("{0}: {1}", Name, message));
+                //MyGuild.SendMessage(String.Format("{0}: {1}", Name, message))
+            }
+            else if (message.StartsWith("!="))
+            {
+                if (LockedPlayer == null) return;
 
+                message = Name + ":" + message.Remove(0, 2);
+
+                p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Observer };
+
+                Enqueue(p);
+
+                LockedPlayer.Enqueue(p);
             }
             else if (message.StartsWith("!#"))
             {
@@ -1669,12 +1698,28 @@ namespace Server.MirObjects
             }
             else
             {
-                message = String.Format("{0}:{1}", CurrentMap.Info.NoNames ? "?????" : Name, message);
+                if (LockedPlayer != null)
+                {
+                    message = String.Format("{0}:{1}", Name, message);
 
-                p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Normal };
+                    p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Observer };
 
-                Enqueue(p);
-                Broadcast(p);
+                    LockedPlayer.Enqueue(p);
+
+                    for (int i = LockedPlayer.CurrentObservers.Count - 1; i >= 0; i--)
+                        LockedPlayer.CurrentObservers[i].Enqueue(p);
+                }
+                else if (LockedTarget != null)
+                {
+                    message = String.Format("{0}:{1}", LockedTarget.Name, message);
+
+                    p = new S.ObjectChat { ObjectID = LockedTarget.ObjectID, Text = message, Type = ChatType.Normal };
+
+                    if (LockedTarget.Race == ObjectType.Monster)
+                    {
+                        LockedTarget.Broadcast(p);
+                    }
+                }
             }
         }
 
@@ -1690,10 +1735,12 @@ namespace Server.MirObjects
         {
             OperateTime = Envir.Time;
         }
+
+        public string name;
         public override string Name
         {
-            get { return ""; }
-            set { throw new NotSupportedException(); }
+            get { return name; }
+            set { name = value; }
         }
         public override MirDirection Direction { get; set; }
         public override uint Health

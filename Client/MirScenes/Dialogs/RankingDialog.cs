@@ -165,7 +165,7 @@ namespace Client.MirScenes.Dialogs
                 { 
                     Parent = this, 
                     Location = new Point(32, 98 + i * 15),
-                    Size = new Size(285,15),
+                    Size = new Size(315,15),
                 };
             }
             for (int i = 0; i < RankList.Length; i++)

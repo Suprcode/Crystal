@@ -40,6 +40,8 @@ namespace Server.MirNetwork
         public readonly long TimeConnected;
         public long TimeDisconnected, TimeOutTime;
 
+        public bool sentRankings;
+
         byte[] _rawData = new byte[0];
 
         public AccountInfo Account;
@@ -633,6 +635,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ChangeObserve:
                     ChangeObserve((C.ChangeObserve)p);
                     break;
+                case (short)ClientPacketIds.LoginRankings:
+                    LoginRankings((C.LoginRankings)p);
+                    break;
+                case (short)ClientPacketIds.EndObserver:
+                    EndObserver((C.EndObserver)p);
+                    break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -733,16 +741,21 @@ namespace Server.MirNetwork
             SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
 
-            SendRankings();
-
-            
-
             Stage = GameStage.Login;
+        }
+
+        private void LoginRankings(C.LoginRankings p)
+        {
+            if (Stage != GameStage.Login) return;
+
+            SendRankings();
         }
 
         private void SendRankings()
         {
+            if (sentRankings) return;
             Enqueue(new S.Rankings { Listings = SMain.Envir.RankTop, RankType = 0, MyRank = 0 });
+            sentRankings = true;
         }
         private void ClientKeepAlive(C.KeepAlive p)
         {
@@ -1876,8 +1889,13 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.ObserveChange(p.Allow);
+        }
 
+        public void EndObserver(C.EndObserver p)
+        {
+            if (Stage != GameStage.Observing) return;
             
+            Observer.ObserverEnd(false);
         }
 
     }

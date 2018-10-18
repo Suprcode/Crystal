@@ -5722,4 +5722,24 @@ namespace ServerPackets
             writer.Write(Allow);
         }
     }
+
+    public sealed class ObserverCount : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ObserverCount; }
+        }
+
+        public int Count;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Count = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Count);
+        }
+    }
 }

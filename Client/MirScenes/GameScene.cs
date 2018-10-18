@@ -143,6 +143,8 @@ namespace Client.MirScenes
 
         public static bool PickedUpGold;
         public MirControl ItemLabel, MailLabel, MemoLabel, GuildBuffLabel;
+        public MirButton EndObserve;
+        public MirLabel ObserverCount;
         public static long UseItemTime, PickUpTime, DropViewTime, TargetDeadTime;
         public static uint Gold, Credit;
         public static long InspectTime;
@@ -283,6 +285,19 @@ namespace Client.MirScenes
                     Location = new Point(20, 25 + i * 13),
                     OutLine = true,
                 };
+
+            EndObserve = new MirButton
+            {
+                Index = 792,
+                HoverIndex = 793,
+                PressedIndex = 794,
+                Library = Libraries.Title,
+                Location = new Point(20, 20),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Visible = false,
+            };
+            EndObserve.Click += (o, e) => EndObserverMode();
         }
 
         public void OutputMessage(string message, OutputMessageType type = OutputMessageType.Normal)
@@ -376,9 +391,9 @@ namespace Client.MirScenes
                         }
                         else
                         {
-                            PlayerObject player = MapObject.MouseObject as PlayerObject;
-                            if (player != null)
-                                GameScene.Observer.LockOnObject(player.ObjectID);
+                            MapObject Obj = MapObject.MouseObject;
+                            if (Obj != null)
+                                GameScene.Observer.LockOnObject(Obj.ObjectID);
                         }
                         
                         break;
@@ -766,6 +781,12 @@ namespace Client.MirScenes
                         break;
                 }
             }
+        }
+
+        public void EndObserverMode()
+        {
+            if (Observing)
+                Network.Enqueue(new C.EndObserver { });
         }
 
         public void UseSpell(int key)
@@ -1773,11 +1794,20 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ChangeObserve:
                     ChangeObserve((S.ChangeObserve)p);
                     break;
+                case (short)ServerPacketIds.ObserverCount:
+                    ObserverCountUpdate((S.ObserverCount)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
             }
         }
+
+        public void ObserverCountUpdate(S.ObserverCount p)
+        {
+            MainDialog.ObserveLabel.Text = "[Observers: " + p.Count.ToString() + "]";
+        }
+
         public void ChangeObserve(S.ChangeObserve p)
         {
             AllowObserve = p.Allow;
@@ -1846,6 +1876,7 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Hide();
                 DuraStatusPanel.Hide();
                 BuffsDialog.Hide();
+                GameScene.Scene.EndObserve.Visible = true;
             }
             else
             {
@@ -1854,6 +1885,8 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Show();
                 DuraStatusPanel.Show();
                 BuffsDialog.Show();
+                
+                GameScene.Scene.EndObserve.Visible = false;
             }
 
         }
@@ -4135,6 +4168,8 @@ namespace Client.MirScenes
         }
         private void ObjectRevived(S.ObjectRevived p)
         {
+
+
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
@@ -4147,6 +4182,7 @@ namespace Client.MirScenes
                 ob.Dead = false;
                 ob.ActionFeed.Clear();
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Revive, Direction = ob.Direction, Location = ob.CurrentLocation });
+
                 return;
             }
         }
@@ -9567,22 +9603,7 @@ namespace Client.MirScenes
             if (CMain.Time < InputDelay) return;
 
             if (GameScene.Observing)
-            {
-                if (true)
-                {
-                    switch(MapButtons)
-                    {
-                        case MouseButtons.Left:
-                            
-                        case MouseButtons.Right:
-                            
-
-                            break;
-                    }
-                }
-
                 return;
-            }
 
             if (AwakeningAction == true) return;
 

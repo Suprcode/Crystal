@@ -19,8 +19,8 @@ namespace Server.MirObjects
 
         public long LastRecallTime, LastRevivalTime, LastTeleportTime, LastProbeTime, MenteeEXP;
 
-		public short Looks_Armour = 0, Looks_Weapon = -1, Looks_WeaponEffect = 0;
-		public byte Looks_Wings = 0;
+        public short Looks_Armour = 0, Looks_Weapon = -1, Looks_WeaponEffect = 0;
+        public byte Looks_Wings = 0;
 
         public bool WarZone = false;
 
@@ -64,11 +64,19 @@ namespace Server.MirObjects
             {
                 if (CurrentObservers[i] != null)
                 {
-                        if (!CurrentObservers[i].LockedProcess())
-                            CurrentObservers.Remove(CurrentObservers[i]);
+                    if (!CurrentObservers[i].LockedProcess())
+                    {
+                        CurrentObservers.Remove(CurrentObservers[i]);
+                        SendObserverCount();
+                    }
+
                 }
                 else
+                {
                     CurrentObservers.Remove(CurrentObservers[i]);
+                    SendObserverCount();
+                }
+
             }
         }
 
@@ -463,7 +471,7 @@ namespace Server.MirObjects
                 }
             }
             Pets.Clear();
-            
+
             for (int i = 0; i < Info.Magics.Count; i++)
             {
                 if (Envir.Time < (Info.Magics[i].CastTime + Info.Magics[i].GetDelay()))
@@ -483,7 +491,7 @@ namespace Server.MirObjects
                 CurrentObservers[i].ObserverEnd();
             }
 
-                Despawn();
+            Despawn();
 
             if (GroupMembers != null)
             {
@@ -609,7 +617,23 @@ namespace Server.MirObjects
 
             SetObserverRankVisible();
 
+            if (!AllowObserve)
+            {
+                for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+                {
+                    CurrentObservers[i].ObserverEnd();
+                }
+                CurrentObservers.Clear();
+            }
+
+            SendObserverCount();
             Enqueue(new S.ChangeObserve { Allow = AllowObserve });
+        }
+
+        public void SendObserverCount()
+        {
+
+            Enqueue(new S.ObserverCount { Count = CurrentObservers.Count });
         }
 
         private void NewCharacter()
@@ -3634,6 +3658,19 @@ namespace Server.MirObjects
                 message = message.Remove(0, 2);
                 MyGuild.SendMessage(String.Format("{0}: {1}", Name, message));
 
+            }
+            else if (message.StartsWith("!="))
+            {
+                if (CurrentObservers.Count == 0) return;
+
+                message = Name + ":" + message.Remove(0, 2);
+
+                p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Observer };
+
+                Enqueue(p);
+
+                for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                    CurrentObservers[i].Enqueue(p);
             }
             else if (message.StartsWith("!#"))
             {
