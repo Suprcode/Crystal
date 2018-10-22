@@ -16,7 +16,7 @@ namespace Client.MirObjects
         Point Movement { get; set; }
         Point FinalDrawLocation { get; set; }
         Point OffSetMove { get; set; }
-        
+
         string Name { get; set; }
     }
 }

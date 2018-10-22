@@ -2198,7 +2198,12 @@ public static class Functions
     {
         return Math.Abs(a.X - b.X) <= i && Math.Abs(a.Y - b.Y) <= i;
     }
-
+    public static int GetDistance(Point a, Point b)
+    {
+        int x = Math.Abs(a.X - b.X);
+        int y = Math.Abs(a.Y - b.Y);
+        return x >= y ? x : y;
+    }
     public static bool FacingEachOther(MirDirection dirA, Point pointA, MirDirection dirB, Point pointB)
     {
         if (dirA == DirectionFromPoint(pointA, pointB) && dirB == DirectionFromPoint(pointB, pointA))

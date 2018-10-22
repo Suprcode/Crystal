@@ -12,11 +12,10 @@ using C = ClientPackets;
 
 /*
 NOTES
-Removing & Adding Objects when Locked on are loading for 3 x space movement.
-Need to have access to chat / chat commands from Observer Scene - started
+Need to have access to chat / chat commands from Observer Scene - started - finished i think!
 When dying and reviving, it loses the locked target, check respawn in town.
 Check over code for permissions, FreeMovement is GM only, F1 should work for all players to jump between observees (F1 not working to lock on....)
-*/
+ */
 
 
 namespace Server.MirObjects
@@ -24,9 +23,15 @@ namespace Server.MirObjects
     public sealed class ObserverObject : MapObject
     {
         public MirConnection Connection;
-        public bool IsGM, GMLogin;
+        public bool IsGM;
         public string GMPassword = Settings.GMPassword;
         public int CharIndex;
+
+        public byte ChatTick;
+        public long ChatTime;
+        public bool ChatBanned;
+        public DateTime ChatBanExpiryDate;
+
 
         public MapObject LockedTarget;
         public PlayerObject LockedPlayer;
@@ -35,6 +40,11 @@ namespace Server.MirObjects
 
         public bool LockedOn {
             get { return LockedTarget == null ? false : true; }
+        }
+
+        public bool HasAccount
+        {
+            get { return CharIndex == 0 ? false : true; }
         }
 
         public void Enqueue(Packet p)
@@ -144,30 +154,61 @@ namespace Server.MirObjects
             }
             else
             {
-                MapObject player = Envir.GetObject(ObjectID);
+                MapObject observee = Envir.GetObject(ObjectID);
 
-                if (player == null)
+                PlayerObject player = null;
+
+                if (observee == null)
                 {
                     ReceiveChat(string.Format("Object {0} was not found.", ObjectID.ToString()), ChatType.System);
                     return;
                 }
+                else if (observee.Race != ObjectType.Player && observee.Race != ObjectType.Monster)
+                {
+                    ReceiveChat(string.Format("Object {0} is not a player or monster.", ObjectID.ToString()), ChatType.System);
+                    return;
+                }
+                else if (observee.Race == ObjectType.Monster & !IsGM)
+                {
+                    return;
+                }
                 else
                 {
+                    if (observee.Race == ObjectType.Player)
+                    {
+                        player = observee as PlayerObject;
+                        if (!player.AllowObserve)
+                        {
+                            ReceiveChat(string.Format("{0} does not allow observers.", player.Name), ChatType.System);
+                            return;
+                        }
+                    }
+
                     if (LockedOn)
                     {
                         LockedTarget.CurrentObservers.Remove(this);
                         if (LockedPlayer != null)
                             LockedPlayer.SendObserverCount();
                     }
-                        
-                    player.CurrentObservers.Add(this);
 
-                    LockedTarget = player;
-                    if (player is PlayerObject)
-                        LockedPlayer = player as PlayerObject;
+                    observee.CurrentObservers.Add(this);
+
+                    LockedTarget = observee;
+                    if (player != null)
+                    {
+                        LockedPlayer = player;
+                        LockedPlayer.SendObserverCount();
+                    }
                     else
                         LockedPlayer = null;
 
+                    CurrentMap.GetCell(CurrentLocation).Remove(this);
+                    CurrentLocation = LockedTarget.CurrentLocation;
+                    CurrentMapIndex = LockedTarget.CurrentMapIndex;
+                    CurrentMap = LockedTarget.CurrentMap;
+                    CurrentMap.GetCell(CurrentLocation).Add(this);
+
+                    //Enqueue(new S.Observe { ObserveObjectID = player.ObjectID });
                     LocationChanged();
                 }
             }
@@ -951,12 +992,13 @@ namespace Server.MirObjects
                     }
                     else
                     {
+                        int steps = Functions.GetDistance(CurrentLocation, LockedTarget.CurrentLocation);
                         CurrentMap.GetCell(CurrentLocation).Remove(this);
-                        RemoveObjects(LockedTarget.Direction, 3);
+                        RemoveObjects(LockedTarget.Direction, steps);
 
                         CurrentLocation = LockedTarget.CurrentLocation;
                         CurrentMap.GetCell(CurrentLocation).Add(this);
-                        AddObjects(LockedTarget.Direction, 3);
+                        AddObjects(LockedTarget.Direction, steps);
                     }
                 }
                 return true;
@@ -1011,52 +1053,35 @@ namespace Server.MirObjects
 
             SMain.EnqueueChat(string.Format("{0}: {1}", Name, message));
 
-            if (GMLogin)
+            if (ChatBanned)
             {
-                if (message == GMPassword)
+                if (ChatBanExpiryDate > DateTime.Now)
                 {
-                    IsGM = true;
-                    SMain.Enqueue(string.Format("{0} is now a GM", Name));
-                    ReceiveChat("You have been made a GM", ChatType.System);
+                    ReceiveChat("You are currently banned from chatting.", ChatType.System);
+                    return;
+                }
+            
+                ChatBanned = false;
+            }
+            else
+            {
+                if (ChatTime > Envir.Time)
+                {
+                    if (ChatTick >= 5 & !IsGM)
+                    {
+                        ChatBanned = true;
+                        ChatBanExpiryDate = DateTime.Now.AddMinutes(5);
+                        ReceiveChat("You have been banned from chatting for 5 minutes.", ChatType.System);
+                        return;
+                    }
+            
+                    ChatTick++;
                 }
                 else
-                {
-                    SMain.Enqueue(string.Format("{0} attempted a GM login", Name));
-                    ReceiveChat("Incorrect login password", ChatType.System);
-                }
-                GMLogin = false;
-                return;
+                    ChatTick = 0;
+            
+                ChatTime = Envir.Time + 2000;
             }
-
-            //if (Info.ChatBanned)
-            //{
-            //    if (Info.ChatBanExpiryDate > DateTime.Now)
-            //    {
-            //        ReceiveChat("You are currently banned from chatting.", ChatType.System);
-            //        return;
-            //    }
-            //
-            //    Info.ChatBanned = false;
-            //}
-            //else
-            //{
-            //    if (ChatTime > Envir.Time)
-            //    {
-            //        if (ChatTick >= 5 & !IsGM)
-            //        {
-            //            Info.ChatBanned = true;
-            //            Info.ChatBanExpiryDate = DateTime.Now.AddMinutes(5);
-            //            ReceiveChat("You have been banned from chatting for 5 minutes.", ChatType.System);
-            //            return;
-            //        }
-            //
-            //        ChatTick++;
-            //    }
-            //    else
-            //        ChatTick = 0;
-            //
-            //    ChatTime = Envir.Time + 2000;
-            //}
 
             string[] parts;
 
@@ -1066,43 +1091,26 @@ namespace Server.MirObjects
             Packet p;
             if (message.StartsWith("/"))
             {
-                ////Private Message
-                //message = message.Remove(0, 1);
-                //parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                //
-                //if (parts.Length == 0) return;
-                //
-                //PlayerObject player = Envir.GetPlayer(parts[0]);
-                //
-                //if (player == null)
-                //{
-                //    IntelligentCreatureObject creature = GetCreatureByName(parts[0]);
-                //    if (creature != null)
-                //    {
-                //        creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
-                //        return;
-                //    }
-                //    ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
-                //    return;
-                //}
-                //
-                //if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
-                //{
-                //    ReceiveChat("Player is not accepting your messages.", ChatType.System);
-                //    return;
-                //}
-                //
-                //if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
-                //{
-                //    ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
-                //    return;
-                //}
-                //
-                //ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
-                //player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
+                if (!HasAccount) return;
+                //Private Message
+                message = message.Remove(0, 1);
+                parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                if (parts.Length == 0) return;
+                
+                PlayerObject player = Envir.GetPlayer(parts[0]);
+                
+                if (player == null)
+                {
+                    return;
+                }
+                
+                ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
+                player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
             }
             else if (message.StartsWith("!~"))
             {
+                if (!HasAccount) return;
                 //if (MyGuild == null) return;
                 //
                 ////Guild
@@ -1143,11 +1151,6 @@ namespace Server.MirObjects
                 //ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Mentor);
                 //player.ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Mentor);
             }
-            else if (message.StartsWith("!"))
-            {
-                return;
-
-            }
             else if (message.StartsWith(":)"))
             {
                 // //Relationship Message
@@ -1172,6 +1175,7 @@ namespace Server.MirObjects
             }
             else if (message.StartsWith("@!"))
             {
+                if (!HasAccount) return;
                 if (!IsGM) return;
 
                 message = String.Format("(*){0}:{1}", Name, message.Remove(0, 2));
@@ -1191,16 +1195,9 @@ namespace Server.MirObjects
 
                 PlayerObject player;
                 CharacterInfo data;
-                String hintstring;
-                UserItem item;
 
                 switch (parts[0].ToUpper())
                 {
-                    case "LOGIN":
-                        GMLogin = true;
-                        ReceiveChat("Please type the GM Password", ChatType.Hint);
-                        return;
-
                     case "KILL":
                         if (!IsGM) return;
 
@@ -1263,73 +1260,56 @@ namespace Server.MirObjects
                         break;
 
                     case "CHANGEGENDER":
-                        //if (!IsGM && !Settings.TestServer) return;
-                        //
-                        //data = parts.Length < 2 ? Info : Envir.GetCharacterInfo(parts[1]);
-                        //
-                        //if (data == null) return;
-                        //
-                        //switch (data.Gender)
-                        //{
-                        //    case MirGender.Male:
-                        //        data.Gender = MirGender.Female;
-                        //        break;
-                        //    case MirGender.Female:
-                        //        data.Gender = MirGender.Male;
-                        //        break;
-                        //}
-                        //
-                        //ReceiveChat(string.Format("Player {0} has been changed to {1}", data.Name, data.Gender), ChatType.System);
-                        //SMain.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Gender, Name));
-                        //
-                        //if (data.Player != null)
-                        //    data.Player.Connection.LogOut();
-                        //
+                        if (!IsGM && !Settings.TestServer) return;
+
+                        if (parts.Length < 2) return;
+
+                        data = Envir.GetCharacterInfo(parts[1]);
+                        
+                        if (data == null) return;
+                        
+                        switch (data.Gender)
+                        {
+                            case MirGender.Male:
+                                data.Gender = MirGender.Female;
+                                break;
+                            case MirGender.Female:
+                                data.Gender = MirGender.Male;
+                                break;
+                        }
+                        
+                        ReceiveChat(string.Format("Player {0} has been changed to {1}", data.Name, data.Gender), ChatType.System);
+                        SMain.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Gender, Name));
+                        
+                        if (data.Player != null)
+                            data.Player.Connection.LogOut();
+                        
                         break;
 
                     case "LEVEL":
-                        //if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
-                        //
-                        //ushort level;
-                        //ushort old;
-                        //if (parts.Length >= 3)
-                        //{
-                        //    if (!IsGM) return;
-                        //
-                        //    if (ushort.TryParse(parts[2], out level))
-                        //    {
-                        //        if (level == 0) return;
-                        //        player = Envir.GetPlayer(parts[1]);
-                        //        if (player == null) return;
-                        //        old = player.Level;
-                        //        player.Level = level;
-                        //        player.LevelUp();
-                        //
-                        //        ReceiveChat(string.Format("Player {0} has been Leveled {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
-                        //        SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
-                        //        return;
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    if (parts[1] == "-1")
-                        //    {
-                        //        parts[1] = ushort.MaxValue.ToString();
-                        //    }
-                        //
-                        //    if (ushort.TryParse(parts[1], out level))
-                        //    {
-                        //        if (level == 0) return;
-                        //        old = Level;
-                        //        Level = level;
-                        //        LevelUp();
-                        //
-                        //        ReceiveChat(string.Format("Leveled {0} -> {1}.", old, Level), ChatType.System);
-                        //        SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", Name, old, Level, Name));
-                        //        return;
-                        //    }
-                        //}
-                        //ReceiveChat("Could not level player", ChatType.System);
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+                        
+                        ushort level;
+                        ushort old;
+                        if (parts.Length >= 3)
+                        {
+                            if (!IsGM) return;
+                        
+                            if (ushort.TryParse(parts[2], out level))
+                            {
+                                if (level == 0) return;
+                                player = Envir.GetPlayer(parts[1]);
+                                if (player == null) return;
+                                old = player.Level;
+                                player.Level = level;
+                                player.LevelUp();
+                        
+                                ReceiveChat(string.Format("Player {0} has been Leveled {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
+                                SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
+                                return;
+                            }
+                        }
+                        ReceiveChat("Could not level player", ChatType.System);
                         break;
                     case "TIME":
                         ReceiveChat(string.Format("The time is : {0}", DateTime.Now.ToString("hh:mm tt")), ChatType.System);
@@ -1499,77 +1479,191 @@ namespace Server.MirObjects
                         }
 
                         break;
-                    case "TRIGGER":
-                        if (!IsGM) return;
-                        if (parts.Length < 2) return;
+                    case "GIVECREDIT":
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                        if (parts.Length >= 3)
+                        if (parts.Length < 3) return;
+                        player = null;
+
+                        if (parts.Length > 2)
                         {
-                            player = Envir.GetPlayer(parts[2]);
+                            if (!IsGM) return;
+
+                            if (!uint.TryParse(parts[2], out count)) return;
+                            player = Envir.GetPlayer(parts[1]);
 
                             if (player == null)
                             {
-                                ReceiveChat(string.Format("Player {0} was not found.", parts[2]), ChatType.System);
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
                                 return;
                             }
+                        }
 
-                            player.CallDefaultNPC(DefaultNPCType.Trigger, parts[1]);
+                        else if (!uint.TryParse(parts[1], out count)) return;
+
+                        if (count + player.Account.Credit >= uint.MaxValue)
+                            count = uint.MaxValue - player.Account.Credit;
+
+                        player.GainCredit(count);
+                        SMain.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
+                        break;
+                    case "GIVESKILL":
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 4) return;
+
+                        byte spellLevel = 0;
+
+                        player = null;
+                        Spell skill;
+
+                        if (!Enum.TryParse(parts.Length > 3 ? parts[2] : parts[1], true, out skill)) return;
+
+                        if (skill == Spell.None) return;
+
+                        spellLevel = byte.TryParse(parts.Length > 3 ? parts[3] : parts[2], out spellLevel) ? Math.Min((byte)3, spellLevel) : (byte)0;
+
+                        if (parts.Length > 3)
+                        {
+                            if (!IsGM) return;
+
+                            player = Envir.GetPlayer(parts[1]);
+
+                            if (player == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+
+                        var magic = new UserMagic(skill) { Level = spellLevel };
+
+                        if (player.Info.Magics.Any(e => e.Spell == skill))
+                        {
+                            player.Info.Magics.FirstOrDefault(e => e.Spell == skill).Level = spellLevel;
+                            player.ReceiveChat(string.Format("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
+                            return;
+                        }
+                        else
+                        {
+                            player.ReceiveChat(string.Format("You have learned {0} at level {1}", skill.ToString(), spellLevel), ChatType.Hint);
+
+                                ReceiveChat(string.Format("{0} has learned {1} at level {2}", player.Name, skill.ToString(), spellLevel), ChatType.Hint);
+
+                            player.Info.Magics.Add(magic);
+                        }
+
+                        player.Enqueue(magic.GetInfo());
+                        player.RefreshStats();
+                        break;
+
+                    case "FIND":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 2) return;
+                        player = Envir.GetPlayer(parts[1]);
+
+                        if (player == null)
+                        {
+                            ReceiveChat(parts[1] + " is not online", ChatType.System);
+                            return;
+                        }
+                        if (player.CurrentMap == null) return;
+
+
+                        ReceiveChat((string.Format("{0} is located at {1} ({2},{3})", player.Name, player.CurrentMap.Info.Title, player.CurrentLocation.X, player.CurrentLocation.Y)), ChatType.System);
+                        break;
+
+                    case "MOVE":
+                        if (!IsGM && !Settings.TestServer) return;
+                        if (LockedOn) return;
+                        if (!IsGM && CurrentMap.Info.NoPosition)
+                        {
+                            ReceiveChat(("You cannot position move on this map"), ChatType.System);
                             return;
                         }
 
-                        foreach (var pl in Envir.Players)
+                        int x, y;
+
+                        if (parts.Length <= 2 || !int.TryParse(parts[1], out x) || !int.TryParse(parts[2], out y))
                         {
-                            pl.CallDefaultNPC(DefaultNPCType.Trigger, parts[1]);
+                            TeleportRandom(200, 0);
+                            return;
                         }
 
+                        Teleport(CurrentMap, new Point(x, y));
                         break;
-                    case "CLEARFLAGS":
-                        //if (!IsGM && !Settings.TestServer) return;
-                        //
-                        //player = parts.Length > 1 && IsGM ? Envir.GetPlayer(parts[1]) : this;
-                        //
-                        //if (player == null)
-                        //{
-                        //    ReceiveChat(parts[1] + " is not online", ChatType.System);
-                        //    return;
-                        //}
-                        //
-                        //for (int i = 0; i < player.Info.Flags.Length; i++)
-                        //{
-                        //    player.Info.Flags[i] = false;
-                        //}
+                    case "MAPMOVE":
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2 || LockedOn) return;
+                        var instanceID = 1; x = 0; y = 0;
+
+                        if (parts.Length == 3 || parts.Length == 5)
+                            int.TryParse(parts[2], out instanceID);
+
+                        if (instanceID < 1) instanceID = 1;
+
+                        var map = SMain.Envir.GetMapByNameAndInstance(parts[1], instanceID);
+                        if (map == null)
+                        {
+                            ReceiveChat((string.Format("Map {0}:[{1}] could not be found", parts[1], instanceID)), ChatType.System);
+                            return;
+                        }
+
+                        if (parts.Length == 4 || parts.Length == 5)
+                        {
+                            int.TryParse(parts[parts.Length - 2], out x);
+                            int.TryParse(parts[parts.Length - 1], out y);
+                        }
+
+                        switch (parts.Length)
+                        {
+                            case 2:
+                                ReceiveChat(TeleportRandom(200, 0, map) ? (string.Format("Moved to Map {0}", map.Info.FileName)) :
+                                    (string.Format("Failed movement to Map {0}", map.Info.FileName)), ChatType.System);
+                                break;
+                            case 3:
+                                ReceiveChat(TeleportRandom(200, 0, map) ? (string.Format("Moved to Map {0}:[{1}]", map.Info.FileName, instanceID)) :
+                                    (string.Format("Failed movement to Map {0}:[{1}]", map.Info.FileName, instanceID)), ChatType.System);
+                                break;
+                            case 4:
+                                ReceiveChat(Teleport(map, new Point(x, y)) ? (string.Format("Moved to Map {0} at {1}:{2}", map.Info.FileName, x, y)) :
+                                    (string.Format("Failed movement to Map {0} at {1}:{2}", map.Info.FileName, x, y)), ChatType.System);
+                                break;
+                            case 5:
+                                ReceiveChat(Teleport(map, new Point(x, y)) ? (string.Format("Moved to Map {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)) :
+                                    (string.Format("Failed movement to Map {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)), ChatType.System);
+                                break;
+                        }
                         break;
                     case "CLEARMOB":
-                        //if (!IsGM) return;
-                        //
-                        //if (parts.Length > 1)
-                        //{
-                        //    map = Envir.GetMapByNameAndInstance(parts[1]);
-                        //
-                        //    if (map == null) return;
-                        //
-                        //}
-                        //else
-                        //{
-                        //    map = CurrentMap;
-                        //}
-                        //
-                        //foreach (var cell in map.Cells)
-                        //{
-                        //    if (cell == null || cell.Objects == null) continue;
-                        //
-                        //    int obCount = cell.Objects.Count();
-                        //
-                        //    for (int m = 0; m < obCount; m++)
-                        //    {
-                        //        MapObject ob = cell.Objects[m];
-                        //
-                        //        if (ob.Race != ObjectType.Monster) continue;
-                        //        if (ob.Dead) continue;
-                        //        ob.Die();
-                        //    }
-                        //}
-                        //
+                        if (!IsGM) return;
+                        
+                        if (parts.Length > 1)
+                        {
+                            map = Envir.GetMapByNameAndInstance(parts[1]);
+                        
+                            if (map == null) return;
+                        
+                        }
+                        else
+                        {
+                            map = CurrentMap;
+                        }
+                        
+                        foreach (var cell in map.Cells)
+                        {
+                            if (cell == null || cell.Objects == null) continue;
+                        
+                            int obCount = cell.Objects.Count();
+                        
+                            for (int m = 0; m < obCount; m++)
+                            {
+                                MapObject ob = cell.Objects[m];
+                        
+                                if (ob.Race != ObjectType.Monster) continue;
+                                if (ob.Dead) continue;
+                                ob.Die();
+                            }
+                        }
+                        
                         break;
 
                     case "INFO":
@@ -1617,80 +1711,6 @@ namespace Server.MirObjects
                                     break;
                             }
                         }
-                        break;
-
-                    case "CLEARQUESTS":
-                        // if (!IsGM && !Settings.TestServer) return;
-                        //
-                        // player = parts.Length > 1 && IsGM ? Envir.GetPlayer(parts[1]) : this;
-                        //
-                        // if (player == null)
-                        // {
-                        //     ReceiveChat(parts[1] + " is not online", ChatType.System);
-                        //     return;
-                        // }
-                        //
-                        // foreach (var quest in player.CurrentQuests)
-                        // {
-                        //     SendUpdateQuest(quest, QuestState.Remove);
-                        // }
-                        //
-                        // player.CurrentQuests.Clear();
-                        //
-                        // player.CompletedQuests.Clear();
-                        // player.GetCompletedQuests();
-                        //
-                        break;
-
-                    case "SETQUEST":
-                        //if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
-                        //
-                        //player = parts.Length > 3 && IsGM ? Envir.GetPlayer(parts[3]) : this;
-                        //
-                        //if (player == null)
-                        //{
-                        //    ReceiveChat(parts[3] + " is not online", ChatType.System);
-                        //    return;
-                        //}
-                        //
-                        //int questid = 0;
-                        //int questState = 0;
-                        //
-                        //int.TryParse(parts[1], out questid);
-                        //int.TryParse(parts[2], out questState);
-                        //
-                        //if (questid < 1) return;
-                        //
-                        //var activeQuest = player.CurrentQuests.FirstOrDefault(e => e.Index == questid);
-                        //
-                        ////remove from active list
-                        //if (activeQuest != null)
-                        //{
-                        //    player.SendUpdateQuest(activeQuest, QuestState.Remove);
-                        //    player.CurrentQuests.Remove(activeQuest);
-                        //}
-                        //
-                        //switch (questState)
-                        //{
-                        //    case 0: //cancel
-                        //        if (player.CompletedQuests.Contains(questid))
-                        //            player.CompletedQuests.Remove(questid);
-                        //        break;
-                        //    case 1: //complete
-                        //        if (!player.CompletedQuests.Contains(questid))
-                        //            player.CompletedQuests.Add(questid);
-                        //        break;
-                        //}
-                        //
-                        //player.GetCompletedQuests();
-                        break;
-                    case "OBS":
-                        //OBS
-                        if ((!IsGM) || parts.Length < 1) return;
-
-
-                        ObserverEnd();
-
                         break;
                     default:
                         break;

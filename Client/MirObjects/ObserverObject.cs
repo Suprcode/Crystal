@@ -15,15 +15,17 @@ namespace Client.MirObjects
     public class ObserverObject : MapObject, ICamera
     {
         public string Name { get; set; }
-        public bool LockedOn { get; set; }
+        public bool LockedOn { get { return GameScene.Camera == this ? false : true; }}
         public QueuedAction QueuedAction;
+        public uint LockedID;
+
+
         public ObserverObject(uint objectID) : base(objectID)
         {
             Frames = FrameSet.Players;
             FreeMovement();
         }
-        public uint LockedID;
-
+        
         public void Load(uint ObjID)
         {
             if (ObjID == 0)
@@ -38,41 +40,47 @@ namespace Client.MirObjects
             }
         }
 
-        public void LockOnObject(uint objectID, bool serverlock = false)
+        public void LockOnObject(uint objID)
         {
-            LockedOn = true;
+             Network.Enqueue(new C.ObserveLock { ObjectID = objID });
+        }
 
-            if (!serverlock)
-                Network.Enqueue(new C.ObserveLock { ObjectID = objectID });
+        public void SuccessfulLock(uint ObjID)
+        {
+            MapObject ob;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != objectID) continue;
-                LockedID = ObjectID;
+                ob = MapControl.Objects[i];
+                if (ob.ObjectID != ObjID) continue;
+
+                LockedID = ObjID;
                 GameScene.Camera = ob as ICamera;
+                Light = 0;
+
                 return;
             }
+
+            FreeMovement(true);
         }
 
-        public void FreeMovement()
+        public void FreeMovement(bool Failed = false)
         {
-            if (LockedOn)
+            if (LockedOn | Failed)
             {
-                LockedOn = false;
                 LockedID = 0;
                 Network.Enqueue(new C.ObserveLock { ObjectID = 0 });
                 CurrentLocation = GameScene.Camera.CurrentLocation;
                 Name = GameScene.Camera.Name;
+                Light = 100;
             }
-            GameScene.Camera = this;
 
+            GameScene.Camera = this;
             SetLibraries();
         }
 
         public virtual void SetLibraries()
-        {
-
+        { 
             bool altAnim = false;
 
             bool showMount = true;
@@ -87,8 +95,6 @@ namespace Client.MirObjects
                         Frames.Frames.TryGetValue(MirAction.Running, out Frame);
                         break;
                 }
-            
-
         }
 
         public override ObjectType Race => ObjectType.Observer;
@@ -196,7 +202,6 @@ namespace Client.MirObjects
             }
 
         }
-
 
         public int UpdateFrame(bool skip = true)
         {
@@ -308,9 +313,9 @@ namespace Client.MirObjects
 
                 if (MapLocation != CurrentLocation)
                 {
-                    //GameScene.Scene.MapControl.RemoveObject(this);
+                    GameScene.Scene.MapControl.RemoveObject(this);
                     MapLocation = CurrentLocation;
-                    //GameScene.Scene.MapControl.AddObject(this);
+                    GameScene.Scene.MapControl.AddObject(this);
                 }
 
                 if (Frame == null) return;
@@ -349,9 +354,9 @@ namespace Client.MirObjects
 
                 if (MapLocation != temp)
                 {
-                    //GameScene.Scene.MapControl.RemoveObject(this);
+                    GameScene.Scene.MapControl.RemoveObject(this);
                     MapLocation = temp;
-                    //GameScene.Scene.MapControl.AddObject(this);
+                    GameScene.Scene.MapControl.AddObject(this);
                 }
 
 
@@ -370,7 +375,6 @@ namespace Client.MirObjects
                     switch (CurrentAction)
                     {
                         case MirAction.ObserveMove:
-                            //GameScene.LastRunTime = CMain.Time;
                             Network.Enqueue(new C.ObserveMove { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.NextAction = CMain.Time + (1000);
@@ -384,7 +388,6 @@ namespace Client.MirObjects
                     case MirAction.ObserveMove:
                         GameScene.Scene.Redraw();
                         break;
-                    
                 }
 
             }

@@ -126,7 +126,6 @@ namespace Client
             DropView = true,
             NameView = true,
             HPView = true,
-            Observe = true,
             TransparentChat = false,
             DuraView = false,
             DisplayDamage = true,

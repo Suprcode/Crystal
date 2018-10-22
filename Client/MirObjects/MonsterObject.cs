@@ -11,7 +11,7 @@ using Client.MirControls;
 
 namespace Client.MirObjects
 {
-    class MonsterObject : MapObject
+    class MonsterObject : MapObject, ICamera
     {
         public override ObjectType Race
         {
@@ -65,6 +65,8 @@ namespace Client.MirObjects
 
         public long ShockTime;
         public bool BindingShotCenter;
+
+        public string Name { get { return base.Name; } set { base.Name = value; } }
 
         public Color OldNameColor;
 

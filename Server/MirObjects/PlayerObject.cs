@@ -619,7 +619,7 @@ namespace Server.MirObjects
 
             if (!AllowObserve)
             {
-                for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+                for (int i = CurrentObservers.Count - 1; i >= 0; i--)
                 {
                     CurrentObservers[i].ObserverEnd();
                 }
@@ -632,8 +632,13 @@ namespace Server.MirObjects
 
         public void SendObserverCount()
         {
+            int Cnt = 0;
 
-            Enqueue(new S.ObserverCount { Count = CurrentObservers.Count });
+            for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                if (!CurrentObservers[i].IsGM)
+                    Cnt++;
+
+            Enqueue(new S.ObserverCount { Count = Cnt });
         }
 
         private void NewCharacter()
@@ -4325,7 +4330,6 @@ namespace Server.MirObjects
                             LastTeleportTime = Envir.Time + 10000;
                         Teleport(CurrentMap, new Point(x, y));
                         break;
-
                     case "MAPMOVE":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
                         var instanceID = 1; x = 0; y = 0;

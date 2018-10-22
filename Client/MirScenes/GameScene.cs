@@ -392,9 +392,10 @@ namespace Client.MirScenes
                         else
                         {
                             MapObject Obj = MapObject.MouseObject;
-                            if (Obj != null)
+                            if (Obj != null && (Obj.Race == ObjectType.Player | Obj.Race == ObjectType.Monster))
                                 GameScene.Observer.LockOnObject(Obj.ObjectID);
                         }
+                        MapControl.NextAction = CMain.Time + 500;
                         
                         break;
                     case Keys.D:
@@ -1964,7 +1965,7 @@ namespace Client.MirScenes
 
             if (Observing)
                 if (player.ObjectID == Observer.LockedID)
-                    Observer.LockOnObject(player.ObjectID, true);
+                    Observer.SuccessfulLock(player.ObjectID);
         }
 
         private void ObjectRemove(S.ObjectRemove p)
@@ -2900,11 +2901,20 @@ namespace Client.MirScenes
                 {
                     mob = (MonsterObject)ob;
                     mob.Load(p, true);
+
+                    if (Observing)
+                        if (mob.ObjectID == Observer.LockedID)
+                            Observer.SuccessfulLock(mob.ObjectID);
+
                     return;
                 }
             }
             mob = new MonsterObject(p.ObjectID);
             mob.Load(p);
+
+            if (Observing)
+                if (mob.ObjectID == Observer.LockedID)
+                    Observer.SuccessfulLock(mob.ObjectID);
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
@@ -3412,10 +3422,7 @@ namespace Client.MirScenes
         private void MapChanged(S.MapChanged p)
         {
             if (Observing)
-            {
                 GameScene.Camera = Observer;
-                Observer.LockedOn = false;
-            }
 
             if (MapControl == null)
                 MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, MapDarkLight = p.MapDarkLight, Music = p.Music };
@@ -9330,6 +9337,10 @@ namespace Client.MirScenes
                     else if (ob.Race == ObjectType.Merchant)
                     {
                         lightColour = Color.FromArgb(255, 120, 120, 120);
+                    }
+                    else if (ob.Race == ObjectType.Observer)
+                    {
+                        lightColour = Color.FromArgb(255, 255, 255, 255);
                     }
 
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
