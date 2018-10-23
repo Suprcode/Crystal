@@ -15,68 +15,64 @@ namespace Client.MirObjects
     public class ObserverObject : MapObject, ICamera
     {
         public string Name { get; set; }
-        public bool LockedOn { get { return GameScene.Camera == this ? false : true; }}
+        public bool LockedOn { get { return LockedID == 0 ? false : true; }}
         public QueuedAction QueuedAction;
         public uint LockedID;
-
 
         public ObserverObject(uint objectID) : base(objectID)
         {
             Frames = FrameSet.Players;
-            FreeMovement();
-        }
-        
-        public void Load(uint ObjID)
-        {
-            if (ObjID == 0)
-            {
-                Name = "Observer";
-                LockedID = 0;
-                FreeMovement();
-            }
-            else
-            {
-                LockedID = ObjID;
-            }
+            //FreeMovement();
         }
 
-        public void LockOnObject(uint objID)
+        public void RequestLock(uint objID)
         {
-             Network.Enqueue(new C.ObserveLock { ObjectID = objID });
+            Network.Enqueue(new C.ObserveLock { ObjectID = objID });
         }
 
-        public void SuccessfulLock(uint ObjID)
+        public void SetCamera(uint objID)
         {
-            MapObject ob;
+            bool NewLock = false;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (LockedID != objID)
             {
-                ob = MapControl.Objects[i];
-                if (ob.ObjectID != ObjID) continue;
-
-                LockedID = ObjID;
-                GameScene.Camera = ob as ICamera;
-                Light = 0;
-
-                return;
+                LockedID = objID;
+                NewLock = true;
             }
 
-            FreeMovement(true);
-        }
-
-        public void FreeMovement(bool Failed = false)
-        {
-            if (LockedOn | Failed)
+            if (LockedOn && !NewLock)
             {
-                LockedID = 0;
-                Network.Enqueue(new C.ObserveLock { ObjectID = 0 });
+                MapObject ob;
+
+                for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+                {
+                    ob = MapControl.Objects[i];
+                    if (ob.ObjectID != LockedID) continue;
+
+                    GameScene.Scene.InspectObserve.Visible = (ob.Race == ObjectType.Player); //Show Inspect button if Locked is player
+                    GameScene.Scene.StatusObserve.Index = 798; //Set button to show as Locked
+                    Light = 0; //Set light to zero so we use the observees light
+
+                    GameScene.Camera = ob as ICamera;
+                    return;
+                }
+
+                RequestLock(0);
+            }
+            else if (!LockedOn)
+            {
                 CurrentLocation = GameScene.Camera.CurrentLocation;
-                Name = GameScene.Camera.Name;
-                Light = 100;
+                Name = "Observer";
+                Light = 100; //Set light so we can see ingame when in freemode
+
+                GameScene.Scene.InspectObserve.Visible = false; //Hide Inspect button
+                GameScene.Scene.StatusObserve.Index = 799; //Set button to show as Unlocked
+
+                GameScene.Camera = this;
+                SetLibraries();
             }
 
-            GameScene.Camera = this;
-            SetLibraries();
+
         }
 
         public virtual void SetLibraries()
@@ -398,15 +394,6 @@ namespace Client.MirObjects
             NextMotion2 = CMain.Time + EffectFrameInterval;
 
         }
-
-
-
-
-
-
-
-
-
 
     }
 }

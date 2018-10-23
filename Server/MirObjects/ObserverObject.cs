@@ -14,7 +14,7 @@ using C = ClientPackets;
 NOTES
 Need to have access to chat / chat commands from Observer Scene - started - finished i think!
 When dying and reviving, it loses the locked target, check respawn in town.
-Check over code for permissions, FreeMovement is GM only, F1 should work for all players to jump between observees (F1 not working to lock on....)
+Check over code for permissions, FreeMovement is GM only, F1 should work for all players to jump between observees
  */
 
 
@@ -122,9 +122,13 @@ namespace Server.MirObjects
 
         public void ObserveUnlock()
         {
-            LockedTarget.CurrentObservers.Remove(this);
+            if (LockedTarget != null)
+                LockedTarget.CurrentObservers.Remove(this);
+
             LockedTarget = null;
             LockedPlayer = null;
+
+            Enqueue(new S.Observe { ObserveObjectID = 0 });
         }
 
         public void StopGame(byte reason)
@@ -202,6 +206,8 @@ namespace Server.MirObjects
                     else
                         LockedPlayer = null;
 
+                    Enqueue(new S.Observe { ObserveObjectID = LockedTarget.ObjectID });
+
                     CurrentMap.GetCell(CurrentLocation).Remove(this);
                     CurrentLocation = LockedTarget.CurrentLocation;
                     CurrentMapIndex = LockedTarget.CurrentMapIndex;
@@ -213,6 +219,89 @@ namespace Server.MirObjects
                 }
             }
 
+        }
+
+        public void Inspect()
+        {
+            if (LockedPlayer == null) return;
+
+            int id = LockedPlayer.Info.Index;
+
+            if (ObjectID == id) return;
+            CharacterInfo player = Envir.GetCharacterInfo(id);
+            if (player == null) return;
+            CharacterInfo Lover = null;
+            string loverName = "";
+            if (player.Married != 0) Lover = Envir.GetCharacterInfo(player.Married);
+
+            if (Lover != null)
+                loverName = Lover.Name;
+
+            for (int i = 0; i < player.Equipment.Length; i++)
+            {
+                UserItem u = player.Equipment[i];
+                if (u == null) continue;
+
+                CheckItem(u);
+            }
+            string guildname = "";
+            string guildrank = "";
+            GuildObject Guild = null;
+            Rank GuildRank = null;
+            if (player.GuildIndex != -1)
+            {
+                Guild = Envir.GetGuild(player.GuildIndex);
+                if (Guild != null)
+                {
+                    GuildRank = Guild.FindRank(player.Name);
+                    if (GuildRank == null)
+                        Guild = null;
+                    else
+                    {
+                        guildname = Guild.Name;
+                        guildrank = GuildRank.Name;
+                    }
+                }
+            }
+            Enqueue(new S.PlayerInspect
+            {
+                Name = player.Name,
+                Equipment = player.Equipment,
+                GuildName = guildname,
+                GuildRank = guildrank,
+                Hair = player.Hair,
+                Gender = player.Gender,
+                Class = player.Class,
+                Level = player.Level,
+                LoverName = loverName
+            });
+        }
+
+        public void CheckItemInfo(ItemInfo info, bool dontLoop = false)
+        {
+            if ((dontLoop == false) && (info.ClassBased | info.LevelBased)) //send all potential data so client can display it
+            {
+                for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+                {
+                    if ((Envir.ItemInfoList[i] != info) && (Envir.ItemInfoList[i].Name.StartsWith(info.Name)))
+                        CheckItemInfo(Envir.ItemInfoList[i], true);
+                }
+            }
+
+            if (Connection.SentItemInfo.Contains(info)) return;
+            Enqueue(new S.NewItemInfo { Info = info });
+            Connection.SentItemInfo.Add(info);
+        }
+        public void CheckItem(UserItem item)
+        {
+            CheckItemInfo(item.Info);
+
+            for (int i = 0; i < item.Slots.Length; i++)
+            {
+                if (item.Slots[i] == null) continue;
+
+                CheckItemInfo(item.Slots[i].Info);
+            }
         }
 
         private void GetObjectsPassive()

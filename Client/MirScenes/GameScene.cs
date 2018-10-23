@@ -143,7 +143,7 @@ namespace Client.MirScenes
 
         public static bool PickedUpGold;
         public MirControl ItemLabel, MailLabel, MemoLabel, GuildBuffLabel;
-        public MirButton EndObserve;
+        public MirButton EndObserve, InspectObserve, StatusObserve;
         public MirLabel ObserverCount;
         public static long UseItemTime, PickUpTime, DropViewTime, TargetDeadTime;
         public static uint Gold, Credit;
@@ -298,6 +298,28 @@ namespace Client.MirScenes
                 Visible = false,
             };
             EndObserve.Click += (o, e) => EndObserverMode();
+
+            InspectObserve = new MirButton
+            {
+                Index = 795,
+                HoverIndex = 796,
+                PressedIndex = 797,
+                Library = Libraries.Title,
+                Location = new Point(20, 20),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Visible = false,
+            };
+            InspectObserve.Click += (o, e) => InspectObserverMode();
+
+            StatusObserve = new MirButton
+            {
+                Index = 798,
+                Library = Libraries.Title,
+                Location = new Point(20, 20),
+                Parent = this,
+                Visible = false,
+            };
         }
 
         public void OutputMessage(string message, OutputMessageType type = OutputMessageType.Normal)
@@ -384,17 +406,18 @@ namespace Client.MirScenes
                 {  
                     case Keys.F1:
                         if (MapControl.NextAction > CMain.Time) return;
-                        MapControl.NextAction = CMain.Time + 1000;
+
                         if (GameScene.Observer.LockedOn)
                         {
-                            GameScene.Observer.FreeMovement();
+                            GameScene.Observer.RequestLock(0);
                         }
                         else
                         {
                             MapObject Obj = MapObject.MouseObject;
                             if (Obj != null && (Obj.Race == ObjectType.Player | Obj.Race == ObjectType.Monster))
-                                GameScene.Observer.LockOnObject(Obj.ObjectID);
+                                GameScene.Observer.RequestLock(Obj.ObjectID);
                         }
+
                         MapControl.NextAction = CMain.Time + 500;
                         
                         break;
@@ -413,7 +436,7 @@ namespace Client.MirScenes
                 }
                 if ((MDown | MUp | MRight | MLeft) & (!GameScene.Observer.LockedOn))
                 {
-                    if (MapControl.NextAction > CMain.Time) return;
+                    
                     if (MDown)
                     {
                         dir = MirDirection.Down;
@@ -431,6 +454,7 @@ namespace Client.MirScenes
                     else if (MLeft)
                         dir = MirDirection.Left;
 
+                    if (MapControl.NextAction > CMain.Time) return;
 
                     Observer.QueuedAction = new QueuedAction { Action = MirAction.ObserveMove, Direction = dir, Location = Functions.PointMove(Observer.CurrentLocation, dir, 3) };
                 }
@@ -790,6 +814,17 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.EndObserver { });
         }
 
+        public void InspectObserverMode()
+        {
+            if (!Observing) return;
+            if (!GameScene.Observer.LockedOn) return;
+            if (CMain.Time <= GameScene.InspectTime && Observer.LockedID == InspectDialog.InspectID) return;
+
+            GameScene.InspectTime = CMain.Time + 500;
+            InspectDialog.InspectID = Observer.LockedID;
+            Network.Enqueue(new C.Inspect { });
+        }
+
         public void UseSpell(int key)
         {
             if (User.RidingMount || User.Fishing) return;
@@ -1063,6 +1098,18 @@ namespace Client.MirScenes
                 if (y + GuildBuffLabel.Size.Height > Settings.ScreenHeight)
                     y = Settings.ScreenHeight - GuildBuffLabel.Size.Height;
                 GuildBuffLabel.Location = new Point(x, y);
+            }
+
+            GameScene.Scene.EndObserve.Visible = Observing;
+            GameScene.Scene.StatusObserve.Visible = Observing;
+
+            if (Observing)
+            {
+                GameScene.Scene.EndObserve.Location = new Point(Settings.ScreenWidth - 75, (GameScene.Scene.MiniMapDialog.Size.Height) + 3);
+
+                GameScene.Scene.StatusObserve.Location = new Point(Settings.ScreenWidth - 75, (GameScene.Scene.MiniMapDialog.Size.Height) + 30);
+
+                GameScene.Scene.InspectObserve.Location = new Point(Settings.ScreenWidth - 75, (GameScene.Scene.MiniMapDialog.Size.Height) + 57);
             }
 
             //if (!User.Dead) ShowReviveMessage = false;
@@ -1828,8 +1875,11 @@ namespace Client.MirScenes
                 User = null;
             }
 
-            Observer = new ObserverObject(0);
-            Observer.Load(p.ObserveObjectID);
+            if (Observer == null)
+                Observer = new ObserverObject(0);
+
+            Observer.SetCamera(p.ObserveObjectID);
+
 
             ObserverDialog();
         }
@@ -1877,7 +1927,6 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Hide();
                 DuraStatusPanel.Hide();
                 BuffsDialog.Hide();
-                GameScene.Scene.EndObserve.Visible = true;
             }
             else
             {
@@ -1886,8 +1935,6 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Show();
                 DuraStatusPanel.Show();
                 BuffsDialog.Show();
-                
-                GameScene.Scene.EndObserve.Visible = false;
             }
 
         }
@@ -1965,7 +2012,7 @@ namespace Client.MirScenes
 
             if (Observing)
                 if (player.ObjectID == Observer.LockedID)
-                    Observer.SuccessfulLock(player.ObjectID);
+                    Observer.SetCamera(player.ObjectID);
         }
 
         private void ObjectRemove(S.ObjectRemove p)
@@ -2904,7 +2951,7 @@ namespace Client.MirScenes
 
                     if (Observing)
                         if (mob.ObjectID == Observer.LockedID)
-                            Observer.SuccessfulLock(mob.ObjectID);
+                            Observer.SetCamera(mob.ObjectID);
 
                     return;
                 }
@@ -2914,7 +2961,7 @@ namespace Client.MirScenes
 
             if (Observing)
                 if (mob.ObjectID == Observer.LockedID)
-                    Observer.SuccessfulLock(mob.ObjectID);
+                    Observer.SetCamera(mob.ObjectID);
         }
         private void ObjectAttack(S.ObjectAttack p)
         {

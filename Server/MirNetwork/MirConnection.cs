@@ -1084,12 +1084,19 @@ namespace Server.MirNetwork
         }
         private void Inspect(C.Inspect p)
         {
-            if (Stage != GameStage.Game) return;
+            if (Stage == GameStage.Game)
+            {
+                if (p.Ranking)
+                    Player.Inspect((int)p.ObjectID);
+                else
+                    Player.Inspect(p.ObjectID);
+            }
+            else if (Stage == GameStage.Observing)
+            {
+                Observer.Inspect();
+            }
 
-            if (p.Ranking)
-                Player.Inspect((int)p.ObjectID);
-            else
-                Player.Inspect(p.ObjectID);
+           
 
         }
         private void ChangeAMode(C.ChangeAMode p)
