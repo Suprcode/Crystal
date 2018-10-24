@@ -12,9 +12,8 @@ using C = ClientPackets;
 
 /*
 NOTES
-Need to have access to chat / chat commands from Observer Scene - started - finished i think!
 When dying and reviving, it loses the locked target, check respawn in town.
-Check over code for permissions, FreeMovement is GM only, F1 should work for all players to jump between observees
+Private message to Observers?
  */
 
 
@@ -85,6 +84,8 @@ namespace Server.MirObjects
 
             if (CharIndex != 0)
                 Name = Envir.GetCharacterInfo(CharIndex).Name;
+            else
+                Name = "OBS#" + Envir.ObserverNumber++.ToString("00000");
 
             Enqueue(new S.Observe { ObserveObjectID = ObjID });
 
@@ -369,8 +370,8 @@ namespace Server.MirObjects
                             Enqueue(ob.GetInfo());
                         }
 
-                        //if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster || ob == mainPlayer)
-                            //ob.SendHealth(mainPlayer);
+                        if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
+                            ob.SendHealth(this);
                     }
                 }
             }
@@ -1028,6 +1029,27 @@ namespace Server.MirObjects
             return false;
         }
 
+        public override void Remove(PlayerObject player)
+        {
+            Enqueue(new S.ObjectRemove { ObjectID = player.ObjectID });
+        }
+        public override void Add(PlayerObject player)
+        {
+            Enqueue(player.GetInfoEx(this));
+            player.SendHealth(this);
+        }
+
+        public override void Remove(MonsterObject monster)
+        {
+            Enqueue(new S.ObjectRemove { ObjectID = monster.ObjectID });
+        }
+
+        public override void Add(MonsterObject monster)
+        {
+            Enqueue(monster.GetInfo());
+            monster.SendHealth(this);
+        }
+
         private void CompleteMapMovement(params object[] data)
         {
             if (this == null) return;
@@ -1189,13 +1211,23 @@ namespace Server.MirObjects
                 
                 PlayerObject player = Envir.GetPlayer(parts[0]);
                 
-                if (player == null)
+                if (player != null)
                 {
+                    ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
+                    player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
                     return;
                 }
-                
-                ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
-                player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
+
+                ObserverObject observer = Envir.GetObserver(parts[0]);
+
+                if (observer != null && observer.HasAccount)
+                {
+                    ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
+                    observer.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
+                    return;
+                }
+
+                ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
             }
             else if (message.StartsWith("!~"))
             {
@@ -1898,6 +1930,10 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
         public override void SendHealth(PlayerObject player)
+        {
+            throw new NotSupportedException();
+        }
+        public override void SendHealth(ObserverObject observer)
         {
             throw new NotSupportedException();
         }

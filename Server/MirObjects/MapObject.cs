@@ -189,7 +189,6 @@ namespace Server.MirObjects
         {
             get { return true; }
         }
-
         public Point Front
         {
             get { return Functions.PointMove(CurrentLocation, Direction, 1); }
@@ -200,8 +199,6 @@ namespace Server.MirObjects
             get { return Functions.PointMove(CurrentLocation, Direction, -1); }
 
         }
-        
-        
         public virtual void Process()
         {
             if (Master != null && Master.Node == null) Master = null;
@@ -294,24 +291,7 @@ namespace Server.MirObjects
 
         public virtual void Add(ObserverObject observer)
         {
-            if (Race == ObjectType.Merchant)
-            {
-                //NPCObject NPC = (NPCObject)this;
-                //NPC.CheckVisible(player, true);
-                //return;
-            }
-
             observer.Enqueue(GetInfo());
-
-            //if (Race == ObjectType.Player)
-            //{
-            //    PlayerObject me = (PlayerObject)this;
-            //    player.Enqueue(me.GetInfoEx(player));
-            //}
-            //else
-            //{
-            //    player.Enqueue(GetInfo());
-            //}
         }
         public virtual void Remove(MonsterObject monster)
         {
@@ -720,6 +700,8 @@ namespace Server.MirObjects
         }
 
         public abstract void SendHealth(PlayerObject player);
+        public abstract void SendHealth(ObserverObject observer);
+
 
         public bool InTrapRock
         {

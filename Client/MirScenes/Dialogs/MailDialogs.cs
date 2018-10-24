@@ -373,7 +373,7 @@ namespace Client.MirScenes.Dialogs
 
         public void Toggle()
         {
-            if (!Visible)
+            if (!Visible && !GameScene.Observing)
                 Show();
             else
                 Hide();

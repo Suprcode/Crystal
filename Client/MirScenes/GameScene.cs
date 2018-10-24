@@ -419,7 +419,7 @@ namespace Client.MirScenes
                         }
 
                         MapControl.NextAction = CMain.Time + 500;
-                        
+
                         break;
                     case Keys.D:
                         MRight = true;
@@ -1950,10 +1950,10 @@ namespace Client.MirScenes
                 ReceiveChat(new S.Chat { Message = "Displacement", Type = ChatType.System });
             }
 
-            //MapControl.RemoveObject(Observer);
+            MapControl.RemoveObject(Observer);
             Observer.CurrentLocation = p.Location;
             Observer.MapLocation = p.Location;
-            //MapControl.AddObject(Observer);
+            MapControl.AddObject(Observer);
 
             MapControl.FloorValid = false;
             MapControl.InputDelay = CMain.Time + 400;
@@ -4236,6 +4236,10 @@ namespace Client.MirScenes
                 ob.Dead = false;
                 ob.ActionFeed.Clear();
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Revive, Direction = ob.Direction, Location = ob.CurrentLocation });
+
+                if (Observing)
+                    if (ob.ObjectID == Observer.LockedID)
+                        Observer.SetCamera(ob.ObjectID);
 
                 return;
             }
@@ -7223,66 +7227,67 @@ namespace Client.MirScenes
                 count++;
                 string text;
                 Color colour = Color.White;
+
                 switch (realItem.RequiredType)
                 {
                     case RequiredType.Level:
                         text = string.Format("Required Level : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.Level < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.Level < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxAC:
                         text = string.Format("Required AC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxAC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MaxAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMAC:
                         text = string.Format("Required MAC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxMAC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MaxMAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxDC:
                         text = string.Format("Required DC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxDC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MaxDC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMC:
                         text = string.Format("Required MC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxMC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MaxMC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxSC:
                         text = string.Format("Required SC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxSC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MaxSC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxLevel:
                         text = string.Format("Maximum Level : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.Level > realItem.RequiredAmount)
+                        if (Observing || MapObject.User.Level > realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinAC:
                         text = string.Format("Required Base AC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinAC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MinAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMAC:
                         text = string.Format("Required Base MAC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinMAC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MinMAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinDC:
                         text = string.Format("Required Base DC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinDC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MinDC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMC:
                         text = string.Format("Required Base MC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinMC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MinMC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinSC:
                         text = string.Format("Required Base SC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinSC < realItem.RequiredAmount)
+                        if (Observing || MapObject.User.MinSC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     default:
@@ -7315,23 +7320,23 @@ namespace Client.MirScenes
                 switch (MapObject.User.Class)
                 {
                     case MirClass.Warrior:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Warrior))
+                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Warrior))
                             colour = Color.Red;
                         break;
                     case MirClass.Wizard:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Wizard))
+                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Wizard))
                             colour = Color.Red;
                         break;
                     case MirClass.Taoist:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Taoist))
+                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Taoist))
                             colour = Color.Red;
                         break;
                     case MirClass.Assassin:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Assassin))
+                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Assassin))
                             colour = Color.Red;
                         break;
                     case MirClass.Archer:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Archer))
+                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Archer))
                             colour = Color.Red;
                         break;
                 }

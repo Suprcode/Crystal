@@ -373,7 +373,7 @@ namespace Client.MirObjects
                         case MirAction.ObserveMove:
                             Network.Enqueue(new C.ObserveMove { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
-                            MapControl.NextAction = CMain.Time + (1000);
+                            MapControl.NextAction = CMain.Time + 1000;
                             break;
                     }
                 }

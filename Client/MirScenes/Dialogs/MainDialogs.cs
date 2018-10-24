@@ -3340,7 +3340,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         int wingOffset = RealItem.Effect == 1 ? 2 : 4;
 
-                        int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
+                        int genderOffset = Gender == MirGender.Male ? 0 : 1;
 
                         Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                     }
@@ -3401,7 +3401,7 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
                     return;
                 }
-                if (GroupDialog.GroupList.Count > 0 && GroupDialog.GroupList[0] != MapObject.User.Name)
+                if (GroupDialog.GroupList.Count > 0 && GroupDialog.GroupList[0] != MapObject.Camera.Name)
                 {
 
                     GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
@@ -4904,8 +4904,8 @@ namespace Client.MirScenes.Dialogs
             float scaleY = Size.Height / (float)map.Height;
 
             viewRect.Location = new Point(
-                (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
-                (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
+                (int)(scaleX * MapObject.Camera.CurrentLocation.X) - viewRect.Width / 2,
+                (int)(scaleY * MapObject.Camera.CurrentLocation.Y) - viewRect.Height / 2);
 
             if (viewRect.Right >= Size.Width)
                 viewRect.X = Size.Width - viewRect.Width;
@@ -4931,7 +4931,7 @@ namespace Client.MirScenes.Dialogs
 
                 Color colour;
 
-                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.User != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
+                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.Camera != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.Camera.Name)))
                     colour = Color.FromArgb(0, 0, 255);
                 else
                     if (ob is PlayerObject)

@@ -1031,6 +1031,11 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
+        public override void SendHealth(ObserverObject observer)
+        {
+            throw new NotSupportedException();
+        }
+
         public override void Die()
         {
             throw new NotSupportedException();

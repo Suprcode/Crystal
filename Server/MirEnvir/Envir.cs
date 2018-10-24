@@ -67,6 +67,8 @@ namespace Server.MirEnvir
         public static int LoadVersion;
         public static int LoadCustomVersion;
 
+        public static int ObserverNumber = 1;
+
         private readonly DateTime _startTime = DateTime.Now;
         public readonly Stopwatch Stopwatch = Stopwatch.StartNew();
 
@@ -2776,6 +2778,15 @@ namespace Server.MirEnvir
             for (int i = 0; i < Players.Count; i++)
                 if (String.Compare(Players[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
                     return Players[i];
+
+            return null;
+        }
+
+        public ObserverObject GetObserver(string name)
+        {
+            for (int i = 0; i < Observers.Count; i++)
+                if (String.Compare(Observers[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+                    return Observers[i];
 
             return null;
         }

@@ -3617,32 +3617,46 @@ namespace Server.MirObjects
 
                 PlayerObject player = Envir.GetPlayer(parts[0]);
 
-                if (player == null)
+                if (player != null)
                 {
-                    IntelligentCreatureObject creature = GetCreatureByName(parts[0]);
-                    if (creature != null)
+                    if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
                     {
-                        creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
+                        ReceiveChat("Player is not accepting your messages.", ChatType.System);
                         return;
                     }
-                    ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
+
+                    if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
+                    {
+                        ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
+                        return;
+                    }
+
+                    ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
+                    player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
                     return;
                 }
 
-                if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
+                ObserverObject observer = Envir.GetObserver(parts[0]);
+
+                if (observer != null && observer.HasAccount)
                 {
-                    ReceiveChat("Player is not accepting your messages.", ChatType.System);
+                    ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
+                    observer.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
                     return;
                 }
 
-                if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
+                IntelligentCreatureObject creature = GetCreatureByName(parts[0]);
+
+                if (creature != null)
                 {
-                    ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
+                    creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
                     return;
                 }
 
-                ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
-                player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
+
+                ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
+                return;
+
             }
             else if (message.StartsWith("!!"))
             {
@@ -10061,6 +10075,19 @@ namespace Server.MirObjects
             return p;
         }
 
+        public Packet GetInfoEx(ObserverObject observer)
+        {
+            var p = (S.ObjectPlayer)GetInfo();
+
+            if (p != null)
+            {
+                if (observer?.LockedPlayer != null)
+                    p.NameColour = GetNameColour(observer.LockedPlayer);
+            }
+
+            return p;
+        }
+
         public override bool IsAttackTarget(PlayerObject attacker)
         {
             if (attacker == null || attacker.Node == null) return false;
@@ -14217,6 +14244,16 @@ namespace Server.MirObjects
             player.SendHealth(this);
             SendHealth(player);
         }
+        public override void Remove(ObserverObject observer)
+        {
+            base.Remove(observer);
+        }
+        public override void Add(ObserverObject observer)
+        {
+            observer.Enqueue(GetInfoEx(observer));
+            SendHealth(observer);
+        }
+
         public override void Remove(MonsterObject monster)
         {
             Enqueue(new S.ObjectRemove { ObjectID = monster.ObjectID });
@@ -14232,6 +14269,13 @@ namespace Server.MirObjects
             if (!player.IsMember(this) && Envir.Time > RevTime) return;
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
             player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+        }
+        public override void SendHealth(ObserverObject observer)
+        {
+            if (observer.LockedPlayer == null) return;
+            if (!observer.LockedPlayer.IsMember(this) && Envir.Time > RevTime) return;
+            byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
+            observer.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
         }
 
         public override void ReceiveChat(string text, ChatType type)
