@@ -40,7 +40,7 @@ namespace Server.MirNetwork
         public readonly long TimeConnected;
         public long TimeDisconnected, TimeOutTime;
 
-        public bool sentRankings;
+        private long[] LastRankRequest = new long[6];
 
         byte[] _rawData = new byte[0];
 
@@ -635,9 +635,6 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ChangeObserve:
                     ChangeObserve((C.ChangeObserve)p);
                     break;
-                case (short)ClientPacketIds.LoginRankings:
-                    LoginRankings((C.LoginRankings)p);
-                    break;
                 case (short)ClientPacketIds.EndObserver:
                     EndObserver((C.EndObserver)p);
                     break;
@@ -744,18 +741,21 @@ namespace Server.MirNetwork
             Stage = GameStage.Login;
         }
 
-        private void LoginRankings(C.LoginRankings p)
+        private void SendRankings(byte RankType)
         {
-            if (Stage != GameStage.Login) return;
+            if (RankType > 6) return;
+            if ((LastRankRequest[RankType] != 0) && ((LastRankRequest[RankType] + 300 * 1000) > SMain.Envir.Time)) return;
+            LastRankRequest[RankType] = SMain.Envir.Time;
 
-            SendRankings();
-        }
+            if (RankType == 0)
+            {
+                Enqueue(new S.Rankings { Listings = SMain.Envir.RankTop, RankType = RankType, MyRank = 0 });
+            }
+            else
+            {
+                Enqueue(new S.Rankings { Listings = SMain.Envir.RankClass[RankType - 1], RankType = RankType, MyRank = 0 });
+            }
 
-        private void SendRankings()
-        {
-            if (sentRankings) return;
-            Enqueue(new S.Rankings { Listings = SMain.Envir.RankTop, RankType = 0, MyRank = 0 });
-            sentRankings = true;
         }
         private void ClientKeepAlive(C.KeepAlive p)
         {
@@ -1764,8 +1764,14 @@ namespace Server.MirNetwork
         }
         private void GetRanking(C.GetRanking p)
         {
-            if (Stage != GameStage.Game) return;
-            Player.GetRanking(p.RankIndex);
+            if (Stage == GameStage.Game)
+            {
+                Player.GetRanking(p.RankIndex);
+            }
+            else if (Stage == GameStage.Login)
+            {
+                SendRankings(p.RankIndex);
+            }
         }
 
         private void Opendoor(C.Opendoor p)

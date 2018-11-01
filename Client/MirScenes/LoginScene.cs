@@ -95,7 +95,7 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    Network.Enqueue(new C.LoginRankings { });
+                    Network.Enqueue(new C.GetRanking { RankIndex = 0 });
                     RequestedRankings = true;
                     _login.Hide();
                 }

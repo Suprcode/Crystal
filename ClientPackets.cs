@@ -2348,18 +2348,6 @@ public sealed class AwakeningNeedMaterials : Packet
             writer.Write(Allow);
         }
     }
-
-    public sealed class LoginRankings : Packet
-    {
-        public override short Index { get { return (short)ClientPacketIds.LoginRankings; } }
-
-        protected override void ReadPacket(BinaryReader reader)
-        {
-        }
-        protected override void WritePacket(BinaryWriter writer)
-        {
-        }
-    }
     public sealed class EndObserver : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.EndObserver; } }

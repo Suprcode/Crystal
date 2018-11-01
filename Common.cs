@@ -1653,7 +1653,6 @@ public enum ClientPacketIds : short
     ObserveLock,
     StartObserve,
     ChangeObserve,
-    LoginRankings,
     EndObserver,
 }
 
@@ -4761,8 +4760,6 @@ public abstract class Packet
                 return new C.StartObserve();
             case (short)ClientPacketIds.ChangeObserve:
                 return new C.ChangeObserve();
-            case (short)ClientPacketIds.LoginRankings:
-                return new C.LoginRankings();
             case (short)ClientPacketIds.EndObserver:
                 return new C.EndObserver();
             default:

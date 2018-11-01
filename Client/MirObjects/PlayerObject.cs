@@ -11,6 +11,7 @@ using Client.MirControls;
 using S = ServerPackets;
 using C = ClientPackets;
 using Client.MirScenes.Dialogs;
+using System.Diagnostics;
 
 namespace Client.MirObjects
 {
@@ -737,6 +738,8 @@ namespace Client.MirObjects
 
         public override void Process()
         {
+
+
             bool update = CMain.Time >= NextMotion || GameScene.CanMove;
 
             if (this == User)
@@ -841,6 +844,7 @@ namespace Client.MirObjects
 
 
             DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
+
 
             DrawLocation = new Point((Movement.X - (Camera.Movement.X) + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - (Camera.Movement.Y) + MapControl.OffSetY) * MapControl.CellHeight);
             UpdateDrawLocationOffset(GlobalDisplayLocationOffset);

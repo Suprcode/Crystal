@@ -8,6 +8,7 @@ using Client.MirScenes;
 using Client.MirSounds;
 using S = ServerPackets;
 using Client.MirControls;
+using System.Diagnostics;
 
 namespace Client.MirObjects
 {

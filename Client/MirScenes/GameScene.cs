@@ -1880,7 +1880,6 @@ namespace Client.MirScenes
 
             Observer.SetCamera(p.ObserveObjectID);
 
-
             ObserverDialog();
         }
 
@@ -2621,7 +2620,7 @@ namespace Client.MirScenes
                 break;
             }
 
-            if (p.ObjectID != User.ObjectID) return;
+            if (Observing || p.ObjectID != User.ObjectID) return;
 
             CanRun = false;
 
@@ -2661,7 +2660,7 @@ namespace Client.MirScenes
                 break;
             }
 
-            if (p.ObjectID != User.ObjectID) return;
+            if (Observing || p.ObjectID != User.ObjectID) return;
 
             GameScene.Scene.FishingStatusDialog.ProgressPercent = p.ProgressPercent;
             GameScene.Scene.FishingStatusDialog.ChancePercent = p.ChancePercent;
@@ -7317,30 +7316,36 @@ namespace Client.MirScenes
                 count++;
                 Color colour = Color.White;
 
-                switch (MapObject.User.Class)
+                if (Observing)
                 {
-                    case MirClass.Warrior:
-                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Warrior))
-                            colour = Color.Red;
-                        break;
-                    case MirClass.Wizard:
-                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Wizard))
-                            colour = Color.Red;
-                        break;
-                    case MirClass.Taoist:
-                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Taoist))
-                            colour = Color.Red;
-                        break;
-                    case MirClass.Assassin:
-                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Assassin))
-                            colour = Color.Red;
-                        break;
-                    case MirClass.Archer:
-                        if (Observing || !realItem.RequiredClass.HasFlag(RequiredClass.Archer))
-                            colour = Color.Red;
-                        break;
+                    colour = Color.Red;
                 }
-
+                else
+                {
+                    switch (MapObject.User.Class)
+                    {
+                        case MirClass.Warrior:
+                            if (!realItem.RequiredClass.HasFlag(RequiredClass.Warrior))
+                                colour = Color.Red;
+                            break;
+                        case MirClass.Wizard:
+                            if (!realItem.RequiredClass.HasFlag(RequiredClass.Wizard))
+                                colour = Color.Red;
+                            break;
+                        case MirClass.Taoist:
+                            if (!realItem.RequiredClass.HasFlag(RequiredClass.Taoist))
+                                colour = Color.Red;
+                            break;
+                        case MirClass.Assassin:
+                            if (!realItem.RequiredClass.HasFlag(RequiredClass.Assassin))
+                                colour = Color.Red;
+                            break;
+                        case MirClass.Archer:
+                            if (!realItem.RequiredClass.HasFlag(RequiredClass.Archer))
+                                colour = Color.Red;
+                            break;
+                    }
+                }
                 MirLabel CLASSLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -8656,6 +8661,12 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
+        public static ObserverObject Observer
+        {
+            get { return MapObject.Observer; }
+            set { MapObject.Observer = value; }
+        }
+
         public static ICamera Camera
         {
             get { return MapObject.Camera; }
@@ -8796,15 +8807,17 @@ namespace Client.MirScenes
         {
             Processdoors();
 
-            if (User != null)
+            if (Camera != null)
             {
-                User.Process();
+                //if ((GameScene.Observing && !Observer.LockedOn) | (!GameScene.Observing))
+                Camera.Process();
             }
 
             for (int i = Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = Objects[i];
-                if (ob == User) continue;
+                //if ((!GameScene.Observing && ob == User) | (GameScene.Observing && ob == Observer && !Observer.LockedOn)) continue;
+                if (ob == Camera) continue;
                 //  if (ob.ActionFeed.Count > 0 || ob.Effects.Count > 0 || GameScene.CanMove || CMain.Time >= ob.NextMotion)
                 ob.Process();
             }
@@ -8889,7 +8902,7 @@ namespace Client.MirScenes
 
         protected override void CreateTexture()
         {
-            if (!FloorValid || GameScene.Observing)
+            if (!FloorValid || (GameScene.Observing && Observer.LockedOn))
                 DrawFloor();
 
 
@@ -9259,7 +9272,7 @@ namespace Client.MirScenes
             if (Camera is UserObject)
             {
                 MapObject.User.DrawBody();
-
+            
                 if ((MapObject.User.Direction == MirDirection.Up) ||
                     (MapObject.User.Direction == MirDirection.UpLeft) ||
                     (MapObject.User.Direction == MirDirection.UpRight) ||

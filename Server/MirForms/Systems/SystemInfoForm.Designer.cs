@@ -107,6 +107,7 @@
             this.GemStatCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lbltickmins = new System.Windows.Forms.Label();
             this.txtSpawnTickDefault = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
             this.pnlSpawnTickConfig = new System.Windows.Forms.Panel();
@@ -118,7 +119,10 @@
             this.btnSpawnTickRemove = new System.Windows.Forms.Button();
             this.btnSpawnTickAdd = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.lbltickmins = new System.Windows.Forms.Label();
+            this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.TB_ObserveExpBonus = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.CB_AllowObserving = new System.Windows.Forms.CheckBox();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -132,6 +136,7 @@
             this.tabPage8.SuspendLayout();
             this.panel1.SuspendLayout();
             this.pnlSpawnTickConfig.SuspendLayout();
+            this.tabPage9.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage1
@@ -148,7 +153,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(399, 229);
+            this.tabPage1.Size = new System.Drawing.Size(460, 229);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Fishing";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -280,10 +285,11 @@
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage8);
+            this.tabControl1.Controls.Add(this.tabPage9);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(407, 255);
+            this.tabControl1.Size = new System.Drawing.Size(468, 255);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage2
@@ -297,7 +303,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(399, 229);
+            this.tabPage2.Size = new System.Drawing.Size(460, 229);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Mail";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -391,7 +397,7 @@
             this.tabPage3.Controls.Add(this.GoodsOnCheckBox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(399, 229);
+            this.tabPage3.Size = new System.Drawing.Size(460, 229);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Goods";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -481,7 +487,7 @@
             this.tabPage4.Controls.Add(this.WeaponOnly_checkbox);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(399, 229);
+            this.tabPage4.Size = new System.Drawing.Size(460, 229);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Refining";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -664,7 +670,7 @@
             this.tabPage5.Controls.Add(this.LoverRecall_checkbox);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(399, 229);
+            this.tabPage5.Size = new System.Drawing.Size(460, 229);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Relationship";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -764,7 +770,7 @@
             this.tabPage6.Controls.Add(this.MenteeSkillBoost_checkbox);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(399, 229);
+            this.tabPage6.Size = new System.Drawing.Size(460, 229);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Mentor";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -899,7 +905,7 @@
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(399, 229);
+            this.tabPage8.Size = new System.Drawing.Size(460, 229);
             this.tabPage8.TabIndex = 7;
             this.tabPage8.Text = "SpawnTick";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -913,6 +919,15 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(241, 100);
             this.panel1.TabIndex = 4;
+            // 
+            // lbltickmins
+            // 
+            this.lbltickmins.AutoSize = true;
+            this.lbltickmins.Location = new System.Drawing.Point(175, 6);
+            this.lbltickmins.Name = "lbltickmins";
+            this.lbltickmins.Size = new System.Drawing.Size(54, 13);
+            this.lbltickmins.TabIndex = 2;
+            this.lbltickmins.Text = "in minutes";
             // 
             // txtSpawnTickDefault
             // 
@@ -1010,20 +1025,51 @@
             this.btnSpawnTickAdd.UseVisualStyleBackColor = true;
             this.btnSpawnTickAdd.Click += new System.EventHandler(this.btnSpawnTickAdd_Click);
             // 
-            // lbltickmins
+            // tabPage9
             // 
-            this.lbltickmins.AutoSize = true;
-            this.lbltickmins.Location = new System.Drawing.Point(175, 6);
-            this.lbltickmins.Name = "lbltickmins";
-            this.lbltickmins.Size = new System.Drawing.Size(54, 13);
-            this.lbltickmins.TabIndex = 2;
-            this.lbltickmins.Text = "in minutes";
+            this.tabPage9.Controls.Add(this.TB_ObserveExpBonus);
+            this.tabPage9.Controls.Add(this.label33);
+            this.tabPage9.Controls.Add(this.CB_AllowObserving);
+            this.tabPage9.Location = new System.Drawing.Point(4, 22);
+            this.tabPage9.Name = "tabPage9";
+            this.tabPage9.Size = new System.Drawing.Size(460, 229);
+            this.tabPage9.TabIndex = 8;
+            this.tabPage9.Text = "Observing";
+            this.tabPage9.UseVisualStyleBackColor = true;
+            // 
+            // TB_ObserveExpBonus
+            // 
+            this.TB_ObserveExpBonus.Location = new System.Drawing.Point(232, 39);
+            this.TB_ObserveExpBonus.Name = "TB_ObserveExpBonus";
+            this.TB_ObserveExpBonus.Size = new System.Drawing.Size(51, 20);
+            this.TB_ObserveExpBonus.TabIndex = 5;
+            this.TB_ObserveExpBonus.TextChanged += new System.EventHandler(this.TB_ExpBonus_TextChanged);
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(16, 42);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(215, 13);
+            this.label33.TabIndex = 4;
+            this.label33.Text = "EXP % Bonus for having Observing Enabled";
+            // 
+            // CB_AllowObserving
+            // 
+            this.CB_AllowObserving.AutoSize = true;
+            this.CB_AllowObserving.Location = new System.Drawing.Point(19, 12);
+            this.CB_AllowObserving.Name = "CB_AllowObserving";
+            this.CB_AllowObserving.Size = new System.Drawing.Size(102, 17);
+            this.CB_AllowObserving.TabIndex = 3;
+            this.CB_AllowObserving.Text = "Allow Observing";
+            this.CB_AllowObserving.UseVisualStyleBackColor = true;
+            this.CB_AllowObserving.CheckedChanged += new System.EventHandler(this.CB_AllowObserving_CheckedChanged);
             // 
             // SystemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 284);
+            this.ClientSize = new System.Drawing.Size(494, 284);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -1056,6 +1102,8 @@
             this.panel1.PerformLayout();
             this.pnlSpawnTickConfig.ResumeLayout(false);
             this.pnlSpawnTickConfig.PerformLayout();
+            this.tabPage9.ResumeLayout(false);
+            this.tabPage9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1152,5 +1200,9 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label lbltickmins;
+        private System.Windows.Forms.TabPage tabPage9;
+        private System.Windows.Forms.TextBox TB_ObserveExpBonus;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.CheckBox CB_AllowObserving;
     }
 }

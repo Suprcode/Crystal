@@ -398,9 +398,9 @@ namespace Server.MirObjects
                     player.Enqueue(p);
             }
 
-            for (int i = Envir.Observers.Count - 1; i >= 0; i--)
+            for (int i = CurrentMap.Observers.Count - 1; i >= 0; i--)
             {
-                ObserverObject observer = Envir.Observers[i];
+                ObserverObject observer = CurrentMap.Observers[i];
                 if (observer == this) continue;
 
                 if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))

@@ -18,5 +18,7 @@ namespace Client.MirObjects
         Point OffSetMove { get; set; }
 
         string Name { get; set; }
+
+        void Process();
     }
 }

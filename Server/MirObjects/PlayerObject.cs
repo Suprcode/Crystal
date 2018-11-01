@@ -143,7 +143,7 @@ namespace Server.MirObjects
 
         public bool AllowObserve
         {
-            get { return Info.AllowObserve & Info.Player != null; }
+            get { return Info.AllowObserve & Info.Player != null & Settings.ObserveEnabled; }
             set { Info.AllowObserve = value; }
         }
 
@@ -1417,7 +1417,11 @@ namespace Server.MirObjects
             LogTime = Envir.Time;
             BrownTime = Envir.Time;
 
-            Enqueue(new S.Death { Direction = Direction, Location = CurrentLocation });
+            for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                CurrentObservers[i].Died();
+
+
+                Enqueue(new S.Death { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             for (int i = 0; i < Buffs.Count; i++)
@@ -1809,6 +1813,9 @@ namespace Server.MirObjects
                     }
                 }
             }
+
+            if (AllowObserve)
+                amount += ((amount / 100) * (uint)Settings.ObserveEXPBoost);
 
             if (ExpRateOffset > 0)
                 amount += (uint)(amount * (ExpRateOffset / 100));

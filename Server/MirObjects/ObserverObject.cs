@@ -12,8 +12,9 @@ using C = ClientPackets;
 
 /*
 NOTES
-When dying and reviving, it loses the locked target, check respawn in town.
-Private message to Observers?
+Check permissions and what happens at death with Player & Monster without account and not GM
+Player logging in, not showing to ObserverObject?
+
  */
 
 
@@ -101,6 +102,28 @@ namespace Server.MirObjects
                 LockedPlayer.SendObserverCount();
             }
                 
+        }
+
+        public void Died()
+        {
+            if (LockedOn)
+            {
+                if (LockedPlayer != null) //Player
+                {
+                    
+                }
+                else //Monster
+                {
+                    if (IsGM)
+                    {
+                        ObserveUnlock();
+                    }
+                    else
+                    {
+                        ObserverEnd();
+                    }
+                }
+            }
         }
 
         public void LocationChanged()

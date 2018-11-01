@@ -676,6 +676,9 @@ namespace Server.MirObjects
 
             DeadTime = Envir.Time + DeadDelay;
 
+            for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                CurrentObservers[i].Died();
+
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))

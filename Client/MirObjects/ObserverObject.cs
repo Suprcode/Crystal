@@ -8,6 +8,7 @@ using Client.MirScenes;
 using S = ServerPackets;
 using C = ClientPackets;
 using System.IO;
+using System.Diagnostics;
 
 namespace Client.MirObjects
 {
@@ -22,7 +23,6 @@ namespace Client.MirObjects
         public ObserverObject(uint objectID) : base(objectID)
         {
             Frames = FrameSet.Players;
-            //FreeMovement();
         }
 
         public void RequestLock(uint objID)
@@ -88,7 +88,7 @@ namespace Client.MirObjects
                         Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
                         break;
                     case MirAction.ObserveMove:
-                        Frames.Frames.TryGetValue(MirAction.Running, out Frame);
+                        Frames.Frames.TryGetValue(MirAction.ObserveMove, out Frame);
                         break;
                 }
         }
@@ -135,7 +135,7 @@ namespace Client.MirObjects
 
                     var i = 3;
 
-                    Movement = Functions.PointMove(CurrentLocation, Direction, -3);
+                    Movement = Functions.PointMove(CurrentLocation, Direction, -i);
 
                     int count = Frame.Count;
                     int index = FrameIndex;
@@ -180,21 +180,16 @@ namespace Client.MirObjects
             DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
 
 
+           
             DrawLocation = new Point((Movement.X - (Camera.Movement.X) + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - (Camera.Movement.Y) + MapControl.OffSetY) * MapControl.CellHeight);
 
 
             UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
 
-            //if (this != Observer)
-            //{
-            //    UpdateDrawLocationOffset(Camera.OffSetMove);
-            //    UpdateDrawLocationOffset(-OffSetMove.X, -OffSetMove.Y);
-            //}
-
             if (BodyLibrary != null && update)
             {
-                FinalDrawLocation = DrawLocation.Add(BodyLibrary.GetOffSet(DrawFrame));
-                DisplayRectangle = new Rectangle(DrawLocation, BodyLibrary.GetTrueSize(DrawFrame));
+                //FinalDrawLocation = DrawLocation.Add(BodyLibrary.GetOffSet(DrawFrame));
+                //DisplayRectangle = new Rectangle(DrawLocation, BodyLibrary.GetTrueSize(DrawFrame));
             }
 
         }
@@ -222,7 +217,7 @@ namespace Client.MirObjects
             ProcFrames();
 
             if (clear) QueuedAction = null;
-            if ((CurrentAction == MirAction.Standing || CurrentAction == MirAction.MountStanding || CurrentAction == MirAction.Stance || CurrentAction == MirAction.Stance2 || CurrentAction == MirAction.DashFail) && (QueuedAction != null || NextAction != null))
+            if ((CurrentAction == MirAction.Standing) && (QueuedAction != null || NextAction != null))
                 SetAction();
         }
 
@@ -235,7 +230,6 @@ namespace Client.MirObjects
             {
                 case MirAction.ObserveMove:
                     if (!GameScene.CanMove) return;
-
 
                     GameScene.Scene.MapControl.TextureValid = false;
 
@@ -355,6 +349,7 @@ namespace Client.MirObjects
                     GameScene.Scene.MapControl.AddObject(this);
                 }
 
+                Frames.Frames.TryGetValue(CurrentAction, out Frame);
 
                 SetLibraries();
 
