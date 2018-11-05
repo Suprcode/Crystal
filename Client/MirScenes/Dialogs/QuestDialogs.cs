@@ -927,7 +927,6 @@ namespace Client.MirScenes.Dialogs
             }
 
             Settings.SaveTrackedQuests(GameScene.User.Name);
-            CMain.InputKeys.Save();
         }
 
         public void Hide()
