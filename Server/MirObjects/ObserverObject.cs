@@ -14,10 +14,7 @@ using C = ClientPackets;
 NOTES
 Check permissions and what happens at death with Player & Monster without account and not GM
 Player logging in, not showing to ObserverObject?
-
  */
-
-
 namespace Server.MirObjects
 {
     public sealed class ObserverObject : MapObject
@@ -91,6 +88,7 @@ namespace Server.MirObjects
             Enqueue(new S.Observe { ObserveObjectID = ObjID });
 
             CurrentMap.GetCell(CurrentLocation).Add(this);
+            CurrentMap.AddObject(this);
 
             Envir.Observers.Add(this);
 
@@ -180,7 +178,7 @@ namespace Server.MirObjects
                     ObserveUnlock();
                 }
             }
-            else
+            else if (ObjectID != 0)
             {
                 MapObject observee = Envir.GetObject(ObjectID);
 

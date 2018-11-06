@@ -348,6 +348,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -235),
                 Text = "[Observers: 0]",
+                Visible = false,
             };
 
             PModeLabel = new MirLabel
@@ -3245,10 +3246,25 @@ namespace Client.MirScenes.Dialogs
             (GameScene.Scene.MiniMapDialog.Size.Height + 165) - Settings.ScreenHeight);
             GameScene.Scene.MainDialog.PModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
             (GameScene.Scene.MiniMapDialog.Size.Height + 180) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.ObserveLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 210) - Settings.ScreenHeight);
+
+
+            if (GameScene.Scene.MainDialog.ObserveLabel.Visible)
+            {
+                GameScene.Scene.MainDialog.ObserveLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+                (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+                GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+                (GameScene.Scene.MiniMapDialog.Size.Height + 210) - Settings.ScreenHeight);
+            }
+            else
+            {
+                GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+                (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+            }
+
+            
+
+
+
             if (GameScene.Scene.NewMail)
             {
                 double time = (CMain.Time) / 100D;

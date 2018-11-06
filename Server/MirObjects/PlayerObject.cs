@@ -3539,17 +3539,29 @@ namespace Server.MirObjects
         {
             Packet p;
             if (CurrentMap == null) return;
-
+        
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];
                 if (player == this) continue;
-
+        
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                 {
                     p = GetInfoEx(player);
                     if (p != null)
                         player.Enqueue(p);
+                }
+            }
+
+            for (int i = CurrentMap.Observers.Count - 1; i >= 0; i--)
+            {
+                ObserverObject observer = CurrentMap.Observers[i];
+
+                if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))
+                {
+                    p = GetInfoEx(observer);
+                    if (p != null)
+                        observer.Enqueue(p);
                 }
             }
         }

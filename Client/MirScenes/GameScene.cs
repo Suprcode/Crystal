@@ -1112,25 +1112,30 @@ namespace Client.MirScenes
                 GameScene.Scene.InspectObserve.Location = new Point(Settings.ScreenWidth - 75, (GameScene.Scene.MiniMapDialog.Size.Height) + 57);
             }
 
-            //if (!User.Dead) ShowReviveMessage = false;
 
-            //if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
-            //{
-            //    ShowReviveMessage = false;
-            //    MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo, false);
+            if (!Observing)
+            {
+                if (!User.Dead) ShowReviveMessage = false;
 
-            //    messageBox.YesButton.Click += (o, e) =>
-            //    {
-            //        if (User.Dead) Network.Enqueue(new C.TownRevive());
-            //    };
+                if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
+                {
+                    ShowReviveMessage = false;
+                    MirMessageBox messageBox = new MirMessageBox("You have died, Do you want to revive in town?", MirMessageBoxButtons.YesNo, false);
 
-            //    messageBox.AfterDraw += (o, e) =>
-            //    {
-            //        if (!User.Dead) messageBox.Dispose();
-            //    };
+                    messageBox.YesButton.Click += (o, e) =>
+                    {
+                        if (User.Dead) Network.Enqueue(new C.TownRevive());
+                    };
 
-            //    messageBox.Show();
-            //}
+                    messageBox.AfterDraw += (o, e) =>
+                    {
+                        if (!User.Dead) messageBox.Dispose();
+                    };
+
+                    messageBox.Show();
+                }
+              
+            }
 
             BuffsDialog.Process();
 
@@ -1854,6 +1859,12 @@ namespace Client.MirScenes
         public void ObserverCountUpdate(S.ObserverCount p)
         {
             MainDialog.ObserveLabel.Text = "[Observers: " + p.Count.ToString() + "]";
+
+            if (p.Count == 0)
+                MainDialog.ObserveLabel.Visible = false;
+            else
+                MainDialog.ObserveLabel.Visible = true;
+
         }
 
         public void ChangeObserve(S.ChangeObserve p)
@@ -1934,6 +1945,7 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Show();
                 DuraStatusPanel.Show();
                 BuffsDialog.Show();
+                GameScene.Scene.InspectObserve.Visible = false;
             }
 
         }
