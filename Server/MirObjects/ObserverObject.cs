@@ -10,11 +10,6 @@ using System.Threading.Tasks;
 using S = ServerPackets;
 using C = ClientPackets;
 
-/*
-NOTES
-Check permissions and what happens at death with Player & Monster without account and not GM
-Player logging in, not showing to ObserverObject?
- */
 namespace Server.MirObjects
 {
     public sealed class ObserverObject : MapObject
