@@ -398,9 +398,9 @@ namespace Client.MirObjects
 
             DrawY = CurrentLocation.Y;
 
-            DrawLocation = new Point((Movement.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(User.OffSetMove);
-            DrawLocation.Offset(GlobalDisplayLocationOffset);
+            DrawLocation = new Point((Movement.X - Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+            UpdateDrawLocationOffset(Camera.OffSetMove);
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
 
             if (BodyLibrary != null)
                 FinalDrawLocation = DrawLocation.Add(BodyLibrary.GetOffSet(DrawFrame));
@@ -670,6 +670,8 @@ namespace Client.MirObjects
         public List<ClientQuestProgress> GetAvailableQuests(bool returnFirst = false)
         {
             List<ClientQuestProgress> quests = new List<ClientQuestProgress>();
+
+            if (User == null) return quests;
 
             foreach (ClientQuestProgress q in User.CurrentQuests.Where(q => !User.CompletedQuests.Contains(q.QuestInfo.Index)))
             {

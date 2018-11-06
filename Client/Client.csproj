@@ -97,22 +97,22 @@
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.dll</HintPath>
+      <HintPath>..\Build\Client\DirectX\Microsoft.DirectX.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.Direct3D.dll</HintPath>
+      <HintPath>..\Build\Client\DirectX\Microsoft.DirectX.Direct3D.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.Direct3DX.dll</HintPath>
+      <HintPath>..\Build\Client\DirectX\Microsoft.DirectX.Direct3DX.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.DirectX.DirectSound, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.DirectSound.dll</HintPath>
+      <HintPath>..\Build\Client\DirectX\Microsoft.DirectX.DirectSound.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -178,11 +178,13 @@
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\Effect.cs" />
     <Compile Include="MirObjects\Frames.cs" />
+    <Compile Include="MirObjects\ICamera.cs" />
     <Compile Include="MirObjects\ItemObject.cs" />
     <Compile Include="MirObjects\MapCode.cs" />
     <Compile Include="MirObjects\MapObject.cs" />
     <Compile Include="MirObjects\MonsterObject.cs" />
     <Compile Include="MirObjects\NPCObject.cs" />
+    <Compile Include="MirObjects\ObserverObject.cs" />
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirObjects\UserObject.cs" />

@@ -439,6 +439,11 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
+        public override void SendHealth(ObserverObject observer)
+        {
+            throw new NotSupportedException();
+        }
+
         public override int Pushed(MapObject pusher, MirDirection dir, int distance)
         {
             throw new NotSupportedException();

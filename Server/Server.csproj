@@ -365,6 +365,7 @@
     <Compile Include="MirObjects\NPCObject.cs" />
     <Compile Include="MirObjects\NPCPage.cs" />
     <Compile Include="MirObjects\NPCSegment.cs" />
+    <Compile Include="MirObjects\ObserverObject.cs" />
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirForms\Database\QuestInfoForm.cs">

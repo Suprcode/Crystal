@@ -2286,4 +2286,77 @@ public sealed class AwakeningNeedMaterials : Packet
         protected override void WritePacket(BinaryWriter writer)
         { }
     }
+
+    public sealed class ObserveMove : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ObserveMove; } }
+
+        public MirDirection Direction;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Direction = (MirDirection)reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Direction);
+        }
+    }
+
+    public sealed class ObserveLock : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ObserveLock; } }
+
+        public uint ObjectID;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+        }
+    }
+
+    public sealed class StartObserve : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.StartObserve; } }
+
+        public uint ObjectID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+        }
+    }
+
+    public sealed class ChangeObserve : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ChangeObserve; } }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
+        }
+    }
+    public sealed class EndObserver : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.EndObserver; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
 }

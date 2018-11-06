@@ -511,6 +511,8 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
+            if (GameScene.User == null) return;
+
             totalCredits.Text = GameScene.Credit.ToString("###,###,##0");
             totalGold.Text = GameScene.Gold.ToString("###,###,##0");
         }

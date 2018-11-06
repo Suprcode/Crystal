@@ -33,7 +33,7 @@ namespace Client.MirScenes.Dialogs
         public MirImageControl ExperienceBar, WeightBar, LeftCap, RightCap;
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
-        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
+        public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel, ObserveLabel;
 
         public bool HPOnly
         {
@@ -337,7 +337,18 @@ namespace Client.MirScenes.Dialogs
                 ForeColour = Color.Yellow,
                 OutLineColour = Color.Black,
                 Parent = this,
-                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -448 : -280),
+                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -280),
+            };
+
+            ObserveLabel = new MirLabel
+            {
+                AutoSize = true,
+                ForeColour = Color.SlateBlue,
+                OutLineColour = Color.Black,
+                Parent = this,
+                Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -443 : -235),
+                Text = "[Observers: 0]",
+                Visible = false,
             };
 
             PModeLabel = new MirLabel
@@ -373,6 +384,8 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
+            if (GameScene.User == null) return;
+
             switch (GameScene.Scene.AMode)
             {
                 case AttackMode.Peace:
@@ -814,6 +827,10 @@ namespace Client.MirScenes.Dialogs
                 case ChatType.Mentor:
                     backColour = Color.White;
                     foreColour = Color.Purple;
+                    break;
+                case ChatType.Observer:
+                    backColour = Color.White;
+                    foreColour = Color.SlateBlue;
                     break;
                 default:
                     backColour = Color.White;
@@ -1683,6 +1700,8 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
+            if (GameScene.User == null) return;
+
             WeightLabel.Text = GameScene.User.Inventory.Count(t => t == null).ToString();
             //WeightLabel.Text = (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight).ToString();
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
@@ -2110,6 +2129,8 @@ namespace Client.MirScenes.Dialogs
 
         private void ProcessSkillDelay()
         {
+            if (GameScene.User == null) return;
+
             if (!Visible) return;
 
             int offset = BarIndex * 8;
@@ -3038,8 +3059,8 @@ namespace Client.MirScenes.Dialogs
             float scaleY = miniMapSize.Height / (float)map.Height;
 
             viewRect.Location = new Point(
-                (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
-                (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
+                (int)(scaleX * MapObject.Camera.CurrentLocation.X) - viewRect.Width / 2,
+                (int)(scaleY * MapObject.Camera.CurrentLocation.Y) - viewRect.Height / 2);
 
             //   viewRect.Location = viewRect.Location.Subtract(1, 1);
             if (viewRect.Right >= miniMapSize.Width)
@@ -3066,7 +3087,7 @@ namespace Client.MirScenes.Dialogs
 
                 Color colour;
 
-                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.User != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
+                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.Camera != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.Camera.Name)))
                     colour = Color.FromArgb(0, 0, 255);
                 else
                     if (ob is PlayerObject)
@@ -3210,10 +3231,12 @@ namespace Client.MirScenes.Dialogs
 
         public void Process()
         {
+            if (GameScene.Camera == null) return;
+
             MapControl map = GameScene.Scene.MapControl;
             if (map == null) return;
             MapNameLabel.Text = map.Title;
-            LocationLabel.Text = Functions.PointToString(MapObject.User.CurrentLocation);
+            LocationLabel.Text = Functions.PointToString(MapObject.Camera.CurrentLocation);
 
             int offset = _realBigMode ? 0 : 108;
 
@@ -3223,8 +3246,25 @@ namespace Client.MirScenes.Dialogs
             (GameScene.Scene.MiniMapDialog.Size.Height + 165) - Settings.ScreenHeight);
             GameScene.Scene.MainDialog.PModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
             (GameScene.Scene.MiniMapDialog.Size.Height + 180) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+
+
+            if (GameScene.Scene.MainDialog.ObserveLabel.Visible)
+            {
+                GameScene.Scene.MainDialog.ObserveLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+                (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+                GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+                (GameScene.Scene.MiniMapDialog.Size.Height + 210) - Settings.ScreenHeight);
+            }
+            else
+            {
+                GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
+                (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+            }
+
+            
+
+
+
             if (GameScene.Scene.NewMail)
             {
                 double time = (CMain.Time) / 100D;
@@ -3316,7 +3356,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         int wingOffset = RealItem.Effect == 1 ? 2 : 4;
 
-                        int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
+                        int genderOffset = Gender == MirGender.Male ? 0 : 1;
 
                         Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                     }
@@ -3377,7 +3417,7 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
                     return;
                 }
-                if (GroupDialog.GroupList.Count > 0 && GroupDialog.GroupList[0] != MapObject.User.Name)
+                if (GroupDialog.GroupList.Count > 0 && GroupDialog.GroupList[0] != MapObject.Camera.Name)
                 {
 
                     GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
@@ -3650,6 +3690,8 @@ namespace Client.MirScenes.Dialogs
         public MirButton HPViewOn, HPViewOff;
         public MirImageControl SoundBar, MusicSoundBar;
         public MirImageControl VolumeBar, MusicVolumeBar;
+        public MirButton ObserveOn, ObserveOff;
+
 
         public MirButton CloseButton;
 
@@ -3872,6 +3914,38 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
             };
 
+            ObserveOn = new MirButton
+            {
+                Library = Libraries.Prguse2,
+                Location = new Point(159, 271),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 457,
+            };
+            ObserveOn.Click += (o, e) =>
+            {
+                if (GameScene.Scene.AllowObserve) return;
+                GameScene.Scene.AllowObserve = true;
+                Network.Enqueue(new C.ChangeObserve { Allow = true });
+            };
+
+            ObserveOff = new MirButton
+            {
+                Library = Libraries.Prguse2,
+                Location = new Point(201, 271),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 460
+            };
+            ObserveOff.Click += (o, e) =>
+            {
+                if (!GameScene.Scene.AllowObserve) return;
+                GameScene.Scene.AllowObserve = false;
+                Network.Enqueue(new C.ChangeObserve { Allow = false });
+            };
+
         }
 
 
@@ -4047,7 +4121,16 @@ namespace Client.MirScenes.Dialogs
                 HPViewOff.Index = 467;
             }
 
-
+            if (GameScene.Scene.AllowObserve)
+            {
+                ObserveOn.Index = 458;
+                ObserveOff.Index = 459;
+            }
+            else
+            {
+                ObserveOn.Index = 456;
+                ObserveOff.Index = 461;
+            }
         }
 
         public void Show()
@@ -4837,8 +4920,8 @@ namespace Client.MirScenes.Dialogs
             float scaleY = Size.Height / (float)map.Height;
 
             viewRect.Location = new Point(
-                (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
-                (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
+                (int)(scaleX * MapObject.Camera.CurrentLocation.X) - viewRect.Width / 2,
+                (int)(scaleY * MapObject.Camera.CurrentLocation.Y) - viewRect.Height / 2);
 
             if (viewRect.Right >= Size.Width)
                 viewRect.X = Size.Width - viewRect.Width;
@@ -4864,7 +4947,7 @@ namespace Client.MirScenes.Dialogs
 
                 Color colour;
 
-                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.User != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
+                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.Camera != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.Camera.Name)))
                     colour = Color.FromArgb(0, 0, 255);
                 else
                     if (ob is PlayerObject)

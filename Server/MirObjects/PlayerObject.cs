@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using Server.MirDatabase;
+using Server.MirEnvir;
+using Server.MirNetwork;
+using Server.MirObjects.Monsters;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ClientPackets;
-using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirNetwork;
 using S = ServerPackets;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
@@ -23,8 +19,8 @@ namespace Server.MirObjects
 
         public long LastRecallTime, LastRevivalTime, LastTeleportTime, LastProbeTime, MenteeEXP;
 
-		public short Looks_Armour = 0, Looks_Weapon = -1, Looks_WeaponEffect = 0;
-		public byte Looks_Wings = 0;
+        public short Looks_Armour = 0, Looks_Weapon = -1, Looks_WeaponEffect = 0;
+        public byte Looks_Wings = 0;
 
         public bool WarZone = false;
 
@@ -52,8 +48,55 @@ namespace Server.MirObjects
         public override Point CurrentLocation
         {
             get { return Info.CurrentLocation; }
-            set { Info.CurrentLocation = value; }
+            set {
+                Info.CurrentLocation = value;
+                InformObservers();
+            }
         }
+
+        public bool ObserverInform = true;
+        public void InformObservers()
+        {
+            if (!ObserverInform) return;
+            if (CurrentObservers.Count == 0) return;
+
+            for (int i = CurrentObservers.Count() - 1; i >= 0; i--)
+            {
+                if (CurrentObservers[i] != null)
+                {
+                    if (!CurrentObservers[i].LockedProcess())
+                    {
+                        CurrentObservers.Remove(CurrentObservers[i]);
+                        SendObserverCount();
+                    }
+
+                }
+                else
+                {
+                    CurrentObservers.Remove(CurrentObservers[i]);
+                    SendObserverCount();
+                }
+
+            }
+        }
+
+        public override bool TeleportRandom(int attempts, int distance, Map map = null)
+        {
+            ObserverInform = false;
+
+            if (base.TeleportRandom(attempts, distance, map))
+            {
+                ObserverInform = true;
+                InformObservers();
+                return true;
+            }
+            else
+            {
+                ObserverInform = true;
+                return false;
+            }
+        }
+
         public override MirDirection Direction
         {
             get { return Info.Direction; }
@@ -96,6 +139,12 @@ namespace Server.MirObjects
         {
             get { return Info.PMode; }
             set { Info.PMode = value; }
+        }
+
+        public bool AllowObserve
+        {
+            get { return Info.AllowObserve & Info.Player != null & Settings.ObserveEnabled; }
+            set { Info.AllowObserve = value; }
         }
 
         public long Experience
@@ -422,7 +471,7 @@ namespace Server.MirObjects
                 }
             }
             Pets.Clear();
-            
+
             for (int i = 0; i < Info.Magics.Count; i++)
             {
                 if (Envir.Time < (Info.Magics[i].CastTime + Info.Magics[i].GetDelay()))
@@ -432,8 +481,16 @@ namespace Server.MirObjects
             }
 
             if (MyGuild != null) MyGuild.PlayerLogged(this, false);
+
             Envir.Players.Remove(this);
+
             CurrentMap.RemoveObject(this);
+
+            for (int i = 0; i < CurrentObservers.Count; i++)
+            {
+                CurrentObservers[i].ObserverEnd();
+            }
+
             Despawn();
 
             if (GroupMembers != null)
@@ -498,6 +555,9 @@ namespace Server.MirObjects
             Report.Disconnected(logReason);
             Report.ForceSave();
 
+            Info.Player = null;
+            SetObserverRankVisible();
+
             CleanUp();
         }
 
@@ -528,9 +588,57 @@ namespace Server.MirObjects
                     return string.Format("{0} Has logged out. Reason: User closed game", Name);
                 case 23:
                     return string.Format("{0} Has logged out. Reason: User returned to select char", Name);
+                case 24:
+                    return string.Format("{0} Has logged out. Reason: Switching to observer", Name);
                 default:
                     return string.Format("{0} Has logged out. Reason: Unknown", Name);
             }
+        }
+
+        public void SetObserverRankVisible()
+        {
+            List<Rank_Character_Info> Ranking;
+            int CurrentRank = -1;
+
+            Ranking = Envir.RankTop;
+            CurrentRank = Envir.FindRank(Ranking, Info, 0);
+            if (CurrentRank != -1)
+                Ranking[CurrentRank].ShowObserve = AllowObserve;
+
+            Ranking = Envir.RankClass[(byte)Info.Class];
+            CurrentRank = Envir.FindRank(Ranking, Info, 1);
+            if (CurrentRank != -1)
+                Ranking[CurrentRank].ShowObserve = AllowObserve;
+        }
+
+        public void ObserveChange(bool Allow)
+        {
+            AllowObserve = Allow;
+
+            SetObserverRankVisible();
+
+            if (!AllowObserve)
+            {
+                for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                {
+                    CurrentObservers[i].ObserverEnd();
+                }
+                CurrentObservers.Clear();
+            }
+
+            SendObserverCount();
+            Enqueue(new S.ChangeObserve { Allow = AllowObserve });
+        }
+
+        public void SendObserverCount()
+        {
+            int Cnt = 0;
+
+            for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                if (!CurrentObservers[i].IsGM)
+                    Cnt++;
+
+            Enqueue(new S.ObserverCount { Count = Cnt });
         }
 
         private void NewCharacter()
@@ -1309,7 +1417,11 @@ namespace Server.MirObjects
             LogTime = Envir.Time;
             BrownTime = Envir.Time;
 
-            Enqueue(new S.Death { Direction = Direction, Location = CurrentLocation });
+            for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                CurrentObservers[i].Died();
+
+
+                Enqueue(new S.Death { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             for (int i = 0; i < Buffs.Count; i++)
@@ -1702,6 +1814,9 @@ namespace Server.MirObjects
                 }
             }
 
+            if (AllowObserve)
+                amount += ((amount / 100) * (uint)Settings.ObserveEXPBoost);
+
             if (ExpRateOffset > 0)
                 amount += (uint)(amount * (ExpRateOffset / 100));
             if (Info.Mentor != 0 && !Info.isMentor)
@@ -2017,6 +2132,12 @@ namespace Server.MirObjects
                 CallDefaultNPC(DefaultNPCType.Daily);
             }
         }
+        private void ObserveSuccess()
+        {
+
+
+        }
+
         private void StartGameSuccess()
         {
             Connection.Stage = GameStage.Game;
@@ -2096,8 +2217,9 @@ namespace Server.MirObjects
             GetObjectsPassive();
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });
+            Enqueue(new S.ChangeObserve { Allow = AllowObserve });
             //if (Class == MirClass.Wizard || Class == MirClass.Taoist)//why could an war, sin, archer not have pets?
-                Enqueue(new S.ChangePMode { Mode = PMode });
+            Enqueue(new S.ChangePMode { Mode = PMode });
             Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
 
             Enqueue(new S.DefaultNPC { ObjectID = DefaultNPC.ObjectID });
@@ -2191,6 +2313,8 @@ namespace Server.MirObjects
                 SMain.Envir.CheckRankUpdate(Info);
             }
 
+
+            SetObserverRankVisible();
         }
         private void StartGameFailed()
         {
@@ -2402,6 +2526,7 @@ namespace Server.MirObjects
         }
         private void GetMapInfo()
         {
+
             Enqueue(new S.MapInformation
             {
                 FileName = CurrentMap.Info.FileName,
@@ -2409,8 +2534,6 @@ namespace Server.MirObjects
                 MiniMap = CurrentMap.Info.MiniMap,
                 Lights = CurrentMap.Info.Light,
                 BigMap = CurrentMap.Info.BigMap,
-                Lightning = CurrentMap.Info.Lightning,
-                Fire = CurrentMap.Info.Fire,
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
                 Music = CurrentMap.Info.Music,
             });
@@ -2458,27 +2581,29 @@ namespace Server.MirObjects
                 }
             }
         }
-        private void GetObjectsPassive()
+        private void GetObjectsPassive(PlayerObject player = null)
         {
-            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
+            if (player == null) player = this;
+
+            for (int y = player.CurrentLocation.Y - Globals.DataRange; y <= player.CurrentLocation.Y + Globals.DataRange; y++)
             {
                 if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
+                if (y >= player.CurrentMap.Height) break;
 
-                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
+                for (int x = player.CurrentLocation.X - Globals.DataRange; x <= player.CurrentLocation.X + Globals.DataRange; x++)
                 {
                     if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
-                    if (x < 0 || x >= CurrentMap.Width) continue;
+                    if (x >= player.CurrentMap.Width) break;
+                    if (x < 0 || x >= player.CurrentMap.Width) continue;
 
-                    Cell cell = CurrentMap.GetCell(x, y);
+                    Cell cell = player.CurrentMap.GetCell(x, y);
 
                     if (!cell.Valid || cell.Objects == null) continue;
 
                     for (int i = 0; i < cell.Objects.Count; i++)
                     {
                         MapObject ob = cell.Objects[i];
-                        if (ob == this) continue;
+                        if (ob == player) continue;
 
                         if (ob.Race == ObjectType.Deco)
                         {
@@ -2490,7 +2615,7 @@ namespace Server.MirObjects
                         if (ob.Race == ObjectType.Player)
                         {
                             PlayerObject Player = (PlayerObject)ob;
-                            Enqueue(Player.GetInfoEx(this));
+                            Enqueue(Player.GetInfoEx(player));
                         }
                         else if (ob.Race == ObjectType.Spell)
                         {
@@ -2502,9 +2627,9 @@ namespace Server.MirObjects
                         {
                             NPCObject NPC = (NPCObject)ob;
 
-                            NPC.CheckVisible(this);
+                            NPC.CheckVisible(player);
 
-                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
+                            if (NPC.VisibleLog[player.Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
                         }
                         else
                         {
@@ -2512,7 +2637,7 @@ namespace Server.MirObjects
                         }
 
                         if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
-                            ob.SendHealth(this);
+                            ob.SendHealth(player);
                     }
                 }
             }
@@ -3414,17 +3539,29 @@ namespace Server.MirObjects
         {
             Packet p;
             if (CurrentMap == null) return;
-
+        
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];
                 if (player == this) continue;
-
+        
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                 {
                     p = GetInfoEx(player);
                     if (p != null)
                         player.Enqueue(p);
+                }
+            }
+
+            for (int i = CurrentMap.Observers.Count - 1; i >= 0; i--)
+            {
+                ObserverObject observer = CurrentMap.Observers[i];
+
+                if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))
+                {
+                    p = GetInfoEx(observer);
+                    if (p != null)
+                        observer.Enqueue(p);
                 }
             }
         }
@@ -3499,32 +3636,46 @@ namespace Server.MirObjects
 
                 PlayerObject player = Envir.GetPlayer(parts[0]);
 
-                if (player == null)
+                if (player != null)
                 {
-                    IntelligentCreatureObject creature = GetCreatureByName(parts[0]);
-                    if (creature != null)
+                    if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
                     {
-                        creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
+                        ReceiveChat("Player is not accepting your messages.", ChatType.System);
                         return;
                     }
-                    ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
+
+                    if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
+                    {
+                        ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
+                        return;
+                    }
+
+                    ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
+                    player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
                     return;
                 }
 
-                if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
+                ObserverObject observer = Envir.GetObserver(parts[0]);
+
+                if (observer != null && observer.HasAccount)
                 {
-                    ReceiveChat("Player is not accepting your messages.", ChatType.System);
+                    ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
+                    observer.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
                     return;
                 }
 
-                if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
+                IntelligentCreatureObject creature = GetCreatureByName(parts[0]);
+
+                if (creature != null)
                 {
-                    ReceiveChat("Cannot message player whilst they are on your blacklist.", ChatType.System);
+                    creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
                     return;
                 }
 
-                ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
-                player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
+
+                ReceiveChat(string.Format("Could not find {0}.", parts[0]), ChatType.System);
+                return;
+
             }
             else if (message.StartsWith("!!"))
             {
@@ -3545,6 +3696,19 @@ namespace Server.MirObjects
                 message = message.Remove(0, 2);
                 MyGuild.SendMessage(String.Format("{0}: {1}", Name, message));
 
+            }
+            else if (message.StartsWith("!="))
+            {
+                if (CurrentObservers.Count == 0) return;
+
+                message = Name + ":" + message.Remove(0, 2);
+
+                p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Observer };
+
+                Enqueue(p);
+
+                for (int i = CurrentObservers.Count - 1; i >= 0; i--)
+                    CurrentObservers[i].Enqueue(p);
             }
             else if (message.StartsWith("!#"))
             {
@@ -3570,7 +3734,7 @@ namespace Server.MirObjects
             }
             else if (message.StartsWith("!"))
             {
-                //Shout
+                //Shout 
                 if (Envir.Time < ShoutTime)
                 {
                     ReceiveChat(string.Format("You cannot shout for another {0} seconds.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
@@ -4199,7 +4363,6 @@ namespace Server.MirObjects
                             LastTeleportTime = Envir.Time + 10000;
                         Teleport(CurrentMap, new Point(x, y));
                         break;
-
                     case "MAPMOVE":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
                         var instanceID = 1; x = 0; y = 0;
@@ -4640,6 +4803,7 @@ namespace Server.MirObjects
                         break;
                     case "CLEARMOB":
                         if (!IsGM) return;
+
 
                         if (parts.Length > 1)
                         {
@@ -5304,6 +5468,29 @@ namespace Server.MirObjects
                         else ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
 
                         break;
+                    case "OBS":
+                        //OBS
+                        if ((!IsGM) || parts.Length < 1) return;
+
+
+                        PlayerObject play = null;
+
+                        if (parts.Length >= 2)
+                        {
+                            play = Envir.GetPlayer(parts[1]);
+
+                            if (play == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+
+                        Connection.Observer = new ObserverObject(CurrentLocation, CurrentMapIndex, CurrentMap, Connection, IsGM, play == null ? 0 : play.ObjectID, Info.Index);
+
+                        StopGame(24);
+
+                        break;
                     default:
                         break;
                 }
@@ -5368,6 +5555,7 @@ namespace Server.MirObjects
             }
 
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+
         }
         public void Harvest(MirDirection dir)
         {
@@ -5533,7 +5721,7 @@ namespace Server.MirObjects
 
 
             cell = CurrentMap.GetCell(CurrentLocation);
-
+            
             for (int i = 0; i < cell.Objects.Count; i++)
             {
                 if (cell.Objects[i].Race != ObjectType.Spell) continue;
@@ -6367,7 +6555,6 @@ namespace Server.MirObjects
                     return;
                 }
             }
-
         }
 
         public void Magic(Spell spell, MirDirection dir, uint targetID, Point location)
@@ -9726,7 +9913,12 @@ namespace Server.MirObjects
 
             bool mapChanged = temp != oldMap;
 
-            if (!base.Teleport(temp, location, effects)) return false;
+            ObserverInform = false;
+            if (!base.Teleport(temp, location, effects))
+            {
+                ObserverInform = true;
+                return false;
+            }
 
             Enqueue(new S.MapChanged
             {
@@ -9740,6 +9932,9 @@ namespace Server.MirObjects
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
                 Music = CurrentMap.Info.Music
             });
+
+            ObserverInform = true;
+            InformObservers();
 
             if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
@@ -9894,6 +10089,19 @@ namespace Server.MirObjects
             if (p != null)
             {
                 p.NameColour = GetNameColour(player);
+            }
+
+            return p;
+        }
+
+        public Packet GetInfoEx(ObserverObject observer)
+        {
+            var p = (S.ObjectPlayer)GetInfo();
+
+            if (p != null)
+            {
+                if (observer?.LockedPlayer != null)
+                    p.NameColour = GetNameColour(observer.LockedPlayer);
             }
 
             return p;
@@ -14055,6 +14263,16 @@ namespace Server.MirObjects
             player.SendHealth(this);
             SendHealth(player);
         }
+        public override void Remove(ObserverObject observer)
+        {
+            base.Remove(observer);
+        }
+        public override void Add(ObserverObject observer)
+        {
+            observer.Enqueue(GetInfoEx(observer));
+            SendHealth(observer);
+        }
+
         public override void Remove(MonsterObject monster)
         {
             Enqueue(new S.ObjectRemove { ObjectID = monster.ObjectID });
@@ -14071,11 +14289,17 @@ namespace Server.MirObjects
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
             player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
         }
+        public override void SendHealth(ObserverObject observer)
+        {
+            if (observer.LockedPlayer == null) return;
+            if (!observer.LockedPlayer.IsMember(this) && Envir.Time > RevTime) return;
+            byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
+            observer.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+        }
 
         public override void ReceiveChat(string text, ChatType type)
         {
             Enqueue(new S.Chat { Message = text, Type = type });
-
             Report.ChatMessage(text);
         }
 
@@ -14096,8 +14320,8 @@ namespace Server.MirObjects
 
         public void Enqueue(Packet p)
         {
-            if (Connection == null) return;
-            Connection.Enqueue(p);
+            if (Connection == null || Connection.Observer != null) return;
+                Connection.Enqueue(p);
         }
 
         public void SpellToggle(Spell spell, bool use)

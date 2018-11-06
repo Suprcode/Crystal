@@ -123,9 +123,9 @@ namespace Client.MirObjects
             }
             else
             {
-                DrawLocation = new Point((Source.X - MapObject.User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth,
-                                         (Source.Y - MapObject.User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-                DrawLocation.Offset(MapObject.User.OffSetMove);
+                DrawLocation = new Point((Source.X - MapObject.Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth,
+                                         (Source.Y - MapObject.Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+                DrawLocation.Offset(MapObject.Camera.OffSetMove);
             }
 
 
@@ -203,9 +203,9 @@ namespace Client.MirObjects
 
             int index = BaseIndex + (CurrentFrame % FrameCount) + Direction * (Skip + FrameCount);
 
-            DrawLocation = new Point((Source.X - MapObject.User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth,
-                                       (Source.Y - MapObject.User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(MapObject.User.OffSetMove);
+            DrawLocation = new Point((Source.X - MapObject.Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth,
+                                       (Source.Y - MapObject.Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+            DrawLocation.Offset(MapObject.Camera.OffSetMove);
 
             int x = (Destination.X - Source.X) * MapControl.CellWidth;
             int y = (Destination.Y - Source.Y) * MapControl.CellHeight;
@@ -497,9 +497,9 @@ namespace Client.MirObjects
             }
             else
             {
-                DrawLocation = new Point((Source.X - MapObject.User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth,
-                                         (Source.Y - MapObject.User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-                DrawLocation.Offset(MapObject.User.OffSetMove);
+                DrawLocation = new Point((Source.X - MapObject.Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth,
+                                         (Source.Y - MapObject.Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+                DrawLocation.Offset(MapObject.Camera.OffSetMove);
             }
         }
     }

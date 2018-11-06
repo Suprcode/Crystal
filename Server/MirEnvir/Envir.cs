@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 77;
+        public const int Version = 78;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -66,6 +66,8 @@ namespace Server.MirEnvir
 
         public static int LoadVersion;
         public static int LoadCustomVersion;
+
+        public static int ObserverNumber = 1;
 
         private readonly DateTime _startTime = DateTime.Now;
         public readonly Stopwatch Stopwatch = Stopwatch.StartNew();
@@ -138,6 +140,8 @@ namespace Server.MirEnvir
         public bool Saving = false;
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
+
+        public List<ObserverObject> Observers = new List<ObserverObject>();
 
         public List<ConquestInfo> ConquestInfos = new List<ConquestInfo>();
         public List<ConquestObject> Conquests = new List<ConquestObject>();
@@ -624,7 +628,7 @@ namespace Server.MirEnvir
 
                         for (int i = 0; i < MapList.Count; i++)
                             MapList[i].Process();
-
+                            
                         if (DragonSystem != null) DragonSystem.Process();
 
                         Process();
@@ -2777,6 +2781,15 @@ namespace Server.MirEnvir
 
             return null;
         }
+
+        public ObserverObject GetObserver(string name)
+        {
+            for (int i = 0; i < Observers.Count; i++)
+                if (String.Compare(Observers[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+                    return Observers[i];
+
+            return null;
+        }
         public PlayerObject GetPlayer(uint PlayerId)
         {
             for (int i = 0; i < Players.Count; i++)
@@ -3074,7 +3087,7 @@ namespace Server.MirEnvir
 
         public bool TryAddRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
         {
-            Rank_Character_Info NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info };
+            Rank_Character_Info NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info, ShowObserve = info.AllowObserve & info.Player != null };
             int NewRankIndex = InsertRank(Ranking, NewRank);
             if (NewRankIndex == 0) return false;
             for (int i = NewRankIndex; i < Ranking.Count; i++ )

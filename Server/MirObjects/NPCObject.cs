@@ -1031,6 +1031,11 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
+        public override void SendHealth(ObserverObject observer)
+        {
+            throw new NotSupportedException();
+        }
+
         public override void Die()
         {
             throw new NotSupportedException();
@@ -1301,7 +1306,6 @@ namespace Server.MirObjects
             else if (Force && Visible) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
 
             VisibleLog[Player.Info.Index] = true;
-
         }
 
         public override int CurrentMapIndex { get; set; }
