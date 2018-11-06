@@ -872,6 +872,7 @@ namespace Server.MirEnvir
         public void Broadcast(Packet p)
         {
             for (int i = 0; i < Players.Count; i++) Players[i].Enqueue(p);
+            for (int i = 0; i < Observers.Count; i++) Observers[i].Enqueue(p);
         }
 
         public void RequiresBaseStatUpdate()

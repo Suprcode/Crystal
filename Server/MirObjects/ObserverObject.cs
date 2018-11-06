@@ -82,7 +82,6 @@ namespace Server.MirObjects
 
             Enqueue(new S.Observe { ObserveObjectID = ObjID });
 
-            CurrentMap.GetCell(CurrentLocation).Add(this);
             CurrentMap.AddObject(this);
 
             Envir.Observers.Add(this);
@@ -94,7 +93,8 @@ namespace Server.MirObjects
                 LockedPlayer.CurrentObservers.Add(this);
                 LockedPlayer.SendObserverCount();
             }
-                
+
+            Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
         }
 
         public void Died()
@@ -1124,6 +1124,7 @@ namespace Server.MirObjects
                         RemoveObjects(LockedTarget.Direction, steps);
 
                         CurrentLocation = LockedTarget.CurrentLocation;
+
                         CurrentMap.GetCell(CurrentLocation).Add(this);
                         AddObjects(LockedTarget.Direction, steps);
                     }

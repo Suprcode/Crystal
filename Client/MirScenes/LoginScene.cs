@@ -489,12 +489,12 @@ namespace Client.MirScenes
                 RankButton = new MirButton
                 {
                     Enabled = true,
-                    HoverIndex = 787,
-                    Index = 786,
+                    HoverIndex = 803,
+                    Index = 802,
                     Library = Libraries.Title,
                     Location = new Point(235, 176),
                     Parent = this,
-                    PressedIndex = 788
+                    PressedIndex = 804
                 };
 
                 AccountButton = new MirButton

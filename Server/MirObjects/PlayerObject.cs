@@ -5512,6 +5512,30 @@ namespace Server.MirObjects
             }
         }
 
+        public void StartObserveMode(uint ObjectID)
+        {
+            if (!InSafeZone && !IsGM)
+            {
+                ReceiveChat("You need to be in a safe zone to start observing.", ChatType.Hint);
+                return;
+            }
+
+            PlayerObject play = SMain.Envir.GetPlayer(ObjectID);
+
+            if (play == null || !play.AllowObserve)
+            {
+                ReceiveChat("This player is no longer available for observing.", ChatType.Hint);
+            }
+            else
+            {
+                Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
+                SafeZoneInfo szi = SMain.Envir.StartPoints[SMain.Envir.Random.Next(SMain.Envir.StartPoints.Count)];
+                Connection.Observer = new ObserverObject(szi.Location, szi.Info.Index, Envir.GetMap(szi.Info.Index), Connection, false, play.ObjectID, Info.Index);
+
+                StopGame(24);
+            }
+        }
+
         public void Turn(MirDirection dir)
         {
             _stepCounter = 0;

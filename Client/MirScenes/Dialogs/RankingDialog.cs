@@ -309,9 +309,9 @@ namespace Client.MirScenes.Dialogs
 
                 ViewButton = new MirButton
                 {
-                    Index = 789,
-                    HoverIndex = 790,
-                    PressedIndex = 791,
+                    Index = 805,
+                    HoverIndex = 806,
+                    PressedIndex = 807,
                     Library = Libraries.Title,
                     Location = new Point(280, 3),
                     Parent = this,

@@ -1881,19 +1881,25 @@ namespace Server.MirNetwork
 
         public void StartObserve(C.StartObserve p)
         {
-            if (Stage != GameStage.Login) return;
-
-            PlayerObject Player = SMain.Envir.GetPlayer(p.ObjectID);
-
-            if (Player == null || !Player.AllowObserve)
+            if (Stage == GameStage.Login)
             {
-                Enqueue(new S.StatusMessage { Message = "This player is no longer available for observing." });
+                PlayerObject play = SMain.Envir.GetPlayer(p.ObjectID);
+
+                if (play == null || !play.AllowObserve)
+                {
+                    Enqueue(new S.StatusMessage { Message = "This player is no longer available for observing." });
+                }
+                else
+                {
+                    Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
+                    SafeZoneInfo szi = SMain.Envir.StartPoints[SMain.Envir.Random.Next(SMain.Envir.StartPoints.Count)];
+                    Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, play.ObjectID, 0);
+                }
             }
-            else
+            else if (Stage == GameStage.Game)
             {
-                Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-                SafeZoneInfo szi = SMain.Envir.StartPoints[SMain.Envir.Random.Next(SMain.Envir.StartPoints.Count)];
-                Observer = new ObserverObject(szi.Location, szi.Info.Index, SMain.Envir.GetMap(szi.Info.Index), this, false, Player.ObjectID, 0);
+                Player.StartObserveMode(p.ObjectID);
+
             }
         }
 

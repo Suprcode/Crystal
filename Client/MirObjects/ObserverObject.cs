@@ -50,7 +50,7 @@ namespace Client.MirObjects
                     if (ob.ObjectID != LockedID) continue;
 
                     GameScene.Scene.InspectObserve.Visible = (ob.Race == ObjectType.Player); //Show Inspect button if Locked is player
-                    GameScene.Scene.StatusObserve.Index = 798; //Set button to show as Locked
+                    GameScene.Scene.StatusObserve.Index = 814; //Set button to show as Locked
                     Light = 0; //Set light to zero so we use the observees light
 
                     GameScene.Camera = ob as ICamera;
@@ -66,13 +66,11 @@ namespace Client.MirObjects
                 Light = 100; //Set light so we can see ingame when in freemode
 
                 GameScene.Scene.InspectObserve.Visible = false; //Hide Inspect button
-                GameScene.Scene.StatusObserve.Index = 799; //Set button to show as Unlocked
+                GameScene.Scene.StatusObserve.Index = 815; //Set button to show as Unlocked
 
                 GameScene.Camera = this;
                 SetLibraries();
             }
-
-
         }
 
         public virtual void SetLibraries()

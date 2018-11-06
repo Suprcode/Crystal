@@ -288,9 +288,9 @@ namespace Client.MirScenes
 
             EndObserve = new MirButton
             {
-                Index = 792,
-                HoverIndex = 793,
-                PressedIndex = 794,
+                Index = 808,
+                HoverIndex = 809,
+                PressedIndex = 810,
                 Library = Libraries.Title,
                 Location = new Point(20, 20),
                 Parent = this,
@@ -301,9 +301,9 @@ namespace Client.MirScenes
 
             InspectObserve = new MirButton
             {
-                Index = 795,
-                HoverIndex = 796,
-                PressedIndex = 797,
+                Index = 811,
+                HoverIndex = 812,
+                PressedIndex = 813,
                 Library = Libraries.Title,
                 Location = new Point(20, 20),
                 Parent = this,
@@ -314,7 +314,7 @@ namespace Client.MirScenes
 
             StatusObserve = new MirButton
             {
-                Index = 798,
+                Index = 814,
                 Library = Libraries.Title,
                 Location = new Point(20, 20),
                 Parent = this,
@@ -1106,12 +1106,9 @@ namespace Client.MirScenes
             if (Observing)
             {
                 GameScene.Scene.EndObserve.Location = new Point(Settings.ScreenWidth - 75, (GameScene.Scene.MiniMapDialog.Size.Height) + 3);
-
                 GameScene.Scene.StatusObserve.Location = new Point(Settings.ScreenWidth - 75, (GameScene.Scene.MiniMapDialog.Size.Height) + 30);
-
                 GameScene.Scene.InspectObserve.Location = new Point(Settings.ScreenWidth - 75, (GameScene.Scene.MiniMapDialog.Size.Height) + 57);
             }
-
 
             if (!Observing)
             {
@@ -1136,6 +1133,8 @@ namespace Client.MirScenes
                 }
               
             }
+            
+            
 
             BuffsDialog.Process();
 
@@ -1937,6 +1936,10 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Hide();
                 DuraStatusPanel.Hide();
                 BuffsDialog.Hide();
+                SkillBarDialogs[0].Hide();
+                SkillBarDialogs[1].Hide();
+                OptionDialog.Hide();
+                RankingDialog.Hide();
             }
             else
             {
@@ -1945,6 +1948,8 @@ namespace Client.MirScenes
                 CharacterDuraPanel.Show();
                 DuraStatusPanel.Show();
                 BuffsDialog.Show();
+                SkillBarDialogs[0].Show();
+                SkillBarDialogs[1].Show();
                 GameScene.Scene.InspectObserve.Visible = false;
             }
 

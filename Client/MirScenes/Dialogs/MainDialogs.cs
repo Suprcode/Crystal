@@ -3033,6 +3033,8 @@ namespace Client.MirScenes.Dialogs
 
             QuestIcons.Clear();
 
+            MailButton.Visible = !GameScene.Observing;
+
             MapControl map = GameScene.Scene.MapControl;
             if (map == null) return;
 
@@ -3334,6 +3336,8 @@ namespace Client.MirScenes.Dialogs
             Movable = true;
             Sort = true;
 
+            BeforeDraw += InspectDialog_BeforeDraw;
+            
             CharacterPage = new MirImageControl
             {
                 Index = 340,
@@ -3622,6 +3626,14 @@ namespace Client.MirScenes.Dialogs
                 Parent = CharacterPage,
                 Location = new Point(203, 62),
             };
+        }
+
+        private void InspectDialog_BeforeDraw(object sender, EventArgs e)
+        {
+            GroupButton.Visible = !GameScene.Observing;
+            FriendButton.Visible = !GameScene.Observing;
+            MailButton.Visible = !GameScene.Observing;
+            TradeButton.Visible = !GameScene.Observing;
         }
 
         public void RefreshInferface()
