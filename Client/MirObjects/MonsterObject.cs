@@ -8,10 +8,11 @@ using Client.MirScenes;
 using Client.MirSounds;
 using S = ServerPackets;
 using Client.MirControls;
+using System.Diagnostics;
 
 namespace Client.MirObjects
 {
-    class MonsterObject : MapObject
+    class MonsterObject : MapObject, ICamera
     {
         public override ObjectType Race
         {
@@ -65,6 +66,8 @@ namespace Client.MirObjects
 
         public long ShockTime;
         public bool BindingShotCenter;
+
+        public string Name { get { return base.Name; } set { base.Name = value; } }
 
         public Color OldNameColor;
 
@@ -1172,11 +1175,11 @@ namespace Client.MirObjects
 
             DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
 
-            DrawLocation = new Point((Movement.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(-OffSetMove.X, -OffSetMove.Y);
-            DrawLocation.Offset(User.OffSetMove);
+            DrawLocation = new Point((Movement.X - Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+            UpdateDrawLocationOffset(-OffSetMove.X, -OffSetMove.Y);
+            UpdateDrawLocationOffset(Camera.OffSetMove);
             DrawLocation = DrawLocation.Add(ManualLocationOffset);
-            DrawLocation.Offset(GlobalDisplayLocationOffset);
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
 
             if (BodyLibrary != null && update)
             {

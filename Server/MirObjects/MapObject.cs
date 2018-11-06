@@ -21,6 +21,8 @@ namespace Server.MirObjects
 
         public abstract ObjectType Race { get; }
 
+
+
         public abstract string Name { get; set; }
 
         public long ExplosionInflictedTime;
@@ -43,6 +45,8 @@ namespace Server.MirObjects
         public abstract int CurrentMapIndex { get; set; }
         public abstract Point CurrentLocation { get; set; }
         public abstract MirDirection Direction { get; set; }
+
+        public List<ObserverObject> CurrentObservers = new List<ObserverObject>();
 
         public abstract ushort Level { get; set; }
 
@@ -103,6 +107,7 @@ namespace Server.MirObjects
         }
 
         private bool _observer;
+
         public bool Observer
         {
             get
@@ -184,7 +189,6 @@ namespace Server.MirObjects
         {
             get { return true; }
         }
-
         public Point Front
         {
             get { return Functions.PointMove(CurrentLocation, Direction, 1); }
@@ -195,8 +199,6 @@ namespace Server.MirObjects
             get { return Functions.PointMove(CurrentLocation, Direction, -1); }
 
         }
-        
-        
         public virtual void Process()
         {
             if (Master != null && Master.Node == null) Master = null;
@@ -261,6 +263,10 @@ namespace Server.MirObjects
         {
             player.Enqueue(new S.ObjectRemove {ObjectID = ObjectID});
         }
+        public virtual void Remove(ObserverObject observer)
+        {
+            observer.Enqueue(new S.ObjectRemove { ObjectID = ObjectID });
+        }
         public virtual void Add(PlayerObject player)
         {
             if (Race == ObjectType.Merchant)
@@ -281,6 +287,11 @@ namespace Server.MirObjects
             //{
             //    player.Enqueue(GetInfo());
             //}
+        }
+
+        public virtual void Add(ObserverObject observer)
+        {
+            observer.Enqueue(GetInfo());
         }
         public virtual void Remove(MonsterObject monster)
         {
@@ -381,10 +392,19 @@ namespace Server.MirObjects
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];
-                if (player == this) continue;
+                if (player == this || player.Observer) continue;
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                     player.Enqueue(p);
+            }
+
+            for (int i = CurrentMap.Observers.Count - 1; i >= 0; i--)
+            {
+                ObserverObject observer = CurrentMap.Observers[i];
+                if (observer == this) continue;
+
+                if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))
+                    observer.Enqueue(p);
             }
         }
 
@@ -516,7 +536,9 @@ namespace Server.MirObjects
             InTrapRock = false;
 
             CurrentMap.AddObject(this);
+
             BroadcastInfo();
+
 
             if (effects) Broadcast(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
             
@@ -678,6 +700,8 @@ namespace Server.MirObjects
         }
 
         public abstract void SendHealth(PlayerObject player);
+        public abstract void SendHealth(ObserverObject observer);
+
 
         public bool InTrapRock
         {

@@ -54,6 +54,7 @@ namespace Client.MirObjects
             Players.Frames.Add(MirAction.Revive, new Frame(384, 4, 0, 100, 416, 4, 0, 100) { Reverse = true });
             Players.Frames.Add(MirAction.Mine, new Frame(184, 6, 0, 100, 216, 6, 0, 100));
             Players.Frames.Add(MirAction.Lunge, new Frame(139, 1, 5, 1000, 300, 1, 5, 1000)); //slashingburst test
+            Players.Frames.Add(MirAction.ObserveMove, new Frame(512, 6, 0, 100, 544, 6, 0, 100));
 
             //Assassin
             Players.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100, 496, 6, 0, 100));

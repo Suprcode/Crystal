@@ -18,13 +18,17 @@ namespace Client.MirObjects
         public static List<MirLabel> LabelList = new List<MirLabel>();
 
         public static UserObject User;
+        public static ObserverObject Observer;
+        public static ICamera Camera;
+
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
         public abstract bool Blocking { get; }
 
         public uint ObjectID;
         public string Name = string.Empty;
-        public Point CurrentLocation, MapLocation;
+        public Point CurrentLocation { get; set; }
+        public Point MapLocation { get; set; }
         public MirDirection Direction;
         public bool Dead, Hidden, SitDown, Sneaking;
         public PoisonType Poison;
@@ -53,7 +57,12 @@ namespace Client.MirObjects
         public MirLabel NameLabel, ChatLabel, GuildLabel;
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;
-        public Point DrawLocation, Movement, FinalDrawLocation, OffSetMove;
+
+        public Point DrawLocation { get; set; }
+        public Point Movement { get; set; }
+        public Point FinalDrawLocation { get; set; }
+        public Point OffSetMove { get; set; }
+
         public Rectangle DisplayRectangle;
         public int Light, DrawY;
         public long NextMotion, NextMotion2;
@@ -67,6 +76,24 @@ namespace Client.MirObjects
 
         public static List<MirLabel> DamageLabelList = new List<MirLabel>();
         public List<Damage> Damages = new List<Damage>();
+
+        public void UpdateDrawLocationOffset(Point offset)
+        {
+            var p = DrawLocation;
+
+            p.Offset(offset);
+
+            DrawLocation = p;
+        }
+
+        public void UpdateDrawLocationOffset(int x, int y)
+        {
+            var p = DrawLocation;
+
+            p.Offset(x, y);
+
+            DrawLocation = p;
+        }
 
         protected Point GlobalDisplayLocationOffset
         {
@@ -92,7 +119,7 @@ namespace Client.MirObjects
             if (TargetObject == this) TargetObject = null;
             if (MagicObject == this) MagicObject = null;
 
-            if (this == User.NextMagicObject)
+            if (this == User?.NextMagicObject)
                 User.ClearMagic();
 
             MapControl.Objects.Remove(this);
@@ -308,6 +335,7 @@ namespace Client.MirObjects
         }
         public void DrawHealth()
         {
+            if(GameScene.User == null) return;
             string name = Name;
 
             if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);

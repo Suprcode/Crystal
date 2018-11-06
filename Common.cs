@@ -688,7 +688,9 @@ public enum MirAction : byte
 
     FishingCast,
     FishingWait,
-    FishingReel
+    FishingReel,
+
+    ObserveMove
 }
 
 public enum CellAttribute : byte
@@ -744,7 +746,8 @@ public enum ObjectType : byte
     Spell = 4,
     Monster = 5,
     Deco = 6,
-    Creature = 7
+    Creature = 7,
+    Observer = 8
 }
 
 public enum ChatType : byte
@@ -764,7 +767,8 @@ public enum ChatType : byte
     Relationship = 12,
     Mentor = 13,
     Shout2 = 14,
-    Shout3 = 15
+    Shout3 = 15,
+    Observer = 16,
 }
 
 public enum ItemType : byte
@@ -1258,6 +1262,7 @@ public enum ServerPacketIds : short
     ClientVersion,
     Disconnect,
     KeepAlive,
+    Observe,
     NewAccount,
     ChangePassword,
     ChangePasswordBanned,
@@ -1494,7 +1499,12 @@ public enum ServerPacketIds : short
     ItemRentalPartnerLock,
     CanConfirmItemRental,
     ConfirmItemRental,
-    NewRecipeInfo
+    NewRecipeInfo,
+
+    EndObserving,
+    StatusMessage,
+    ChangeObserve,
+    ObserverCount,
 }
 
 public enum ClientPacketIds : short
@@ -1638,7 +1648,12 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+    ObserveMove,
+    ObserveLock,
+    StartObserve,
+    ChangeObserve,
+    EndObserver,
 }
 
 public enum ConquestType : byte
@@ -2182,7 +2197,12 @@ public static class Functions
     {
         return Math.Abs(a.X - b.X) <= i && Math.Abs(a.Y - b.Y) <= i;
     }
-
+    public static int GetDistance(Point a, Point b)
+    {
+        int x = Math.Abs(a.X - b.X);
+        int y = Math.Abs(a.Y - b.Y);
+        return x >= y ? x : y;
+    }
     public static bool FacingEachOther(MirDirection dirA, Point pointA, MirDirection dirB, Point pointB)
     {
         if (dirA == DirectionFromPoint(pointA, pointB) && dirB == DirectionFromPoint(pointB, pointA))
@@ -4732,6 +4752,16 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.ObserveMove:
+                return new C.ObserveMove();
+            case (short)ClientPacketIds.ObserveLock:
+                return new C.ObserveLock();
+            case (short)ClientPacketIds.StartObserve:
+                return new C.StartObserve();
+            case (short)ClientPacketIds.ChangeObserve:
+                return new C.ChangeObserve();
+            case (short)ClientPacketIds.EndObserver:
+                return new C.EndObserver();
             default:
                 return null;
         }
@@ -4749,6 +4779,8 @@ public abstract class Packet
                 return new S.Disconnect();
             case (short)ServerPacketIds.KeepAlive:
                 return new S.KeepAlive();
+            case (short)ServerPacketIds.Observe:
+                return new S.Observe();
             case (short)ServerPacketIds.NewAccount:
                 return new S.NewAccount();
             case (short)ServerPacketIds.ChangePassword:
@@ -5213,6 +5245,14 @@ public abstract class Packet
                 return new S.ConfirmItemRental();
             case (short)ServerPacketIds.NewRecipeInfo:
                 return new S.NewRecipeInfo();
+            case (short)ServerPacketIds.EndObserving:
+                return new S.EndObserving();
+            case (short)ServerPacketIds.StatusMessage:
+                return new S.StatusMessage();
+            case (short)ServerPacketIds.ChangeObserve:
+                return new S.ChangeObserve();
+            case (short)ServerPacketIds.ObserverCount:
+                return new S.ObserverCount();
             default:
                 return null;
         }
@@ -6255,9 +6295,10 @@ public class Rank_Character_Info
     public string Name;
     public MirClass Class;
     public int level;
+    public bool ShowObserve;
     //public int rank;
     public long Experience;//clients shouldnt care about this only server
-    public object info;//again only keep this on server!
+    public Object info;//again only keep this on server!
 
     public Rank_Character_Info()
     {
@@ -6270,7 +6311,7 @@ public class Rank_Character_Info
         Name = reader.ReadString();
         level = reader.ReadInt32();
         Class = (MirClass)reader.ReadByte();
-
+        ShowObserve = reader.ReadBoolean();
     }
     public void Save(BinaryWriter writer)
     {
@@ -6279,6 +6320,7 @@ public class Rank_Character_Info
         writer.Write(Name);
         writer.Write(level);
         writer.Write((byte)Class);
+        writer.Write(ShowObserve);
     }
 }
 #endregion

@@ -8,7 +8,7 @@ using S = ServerPackets;
 
 namespace Client.MirObjects
 {
-    public class UserObject : PlayerObject
+    public class UserObject : PlayerObject, ICamera
     {
         public uint Id;
 
@@ -72,6 +72,7 @@ namespace Client.MirObjects
 
         public UserObject(uint objectID) : base(objectID)
         {
+            GameScene.Camera = this;
         }
 
         public void Load(S.UserInformation info)

@@ -71,7 +71,7 @@ namespace Client.MirObjects
                     Blend = false;
                     break;
                 case Spell.Blizzard:
-                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
+                    CurrentLocation = new Point(CurrentLocation.X, Math.Max(0, CurrentLocation.Y - 20));
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1550;
                     FrameInterval = 100;
@@ -82,7 +82,7 @@ namespace Client.MirObjects
                     break;
                 case Spell.MeteorStrike:
                     MapControl.Effects.Add(new Effect(Libraries.Magic2, 1600, 10, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
-                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
+                    CurrentLocation = new Point(CurrentLocation.X, Math.Max(0, CurrentLocation.Y - 20));
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1610;
                     FrameInterval = 100;
@@ -176,9 +176,9 @@ namespace Client.MirObjects
                 NextMotion = CMain.Time + FrameInterval;
             }
 
-            DrawLocation = new Point((CurrentLocation.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(GlobalDisplayLocationOffset);
-            DrawLocation.Offset(User.OffSetMove);
+            DrawLocation = new Point((CurrentLocation.X - Camera.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - Camera.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
+            UpdateDrawLocationOffset(Camera.OffSetMove);
         }
 
         public override void Draw()

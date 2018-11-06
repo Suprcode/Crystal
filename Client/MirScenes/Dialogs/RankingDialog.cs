@@ -39,7 +39,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(300, 3),
+                Location = new Point(362, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -127,7 +127,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 208,
                 PressedIndex = 209,
                 Library = Libraries.Prguse2,
-                Location = new Point(299, 386),
+                Location = new Point(361, 386),
                 Parent = this,
                 Sound = SoundList.ButtonA,
             };
@@ -139,7 +139,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 198,
                 PressedIndex = 199,
                 Library = Libraries.Prguse2,
-                Location = new Point(299, 100),
+                Location = new Point(361, 100),
                 Parent = this,
                 Sound = SoundList.ButtonA,
             };
@@ -165,7 +165,7 @@ namespace Client.MirScenes.Dialogs
                 { 
                     Parent = this, 
                     Location = new Point(32, 98 + i * 15),
-                    Size = new Size(285,15),
+                    Size = new Size(315,15),
                 };
             }
             for (int i = 0; i < RankList.Length; i++)
@@ -251,17 +251,18 @@ namespace Client.MirScenes.Dialogs
                 if (RowOffset + i >= RankList[RankType].Count) break;
                 Rows[i].Update(RankList[RankType][RowOffset + i], RowOffset + i + 1);
             }
+            
             if (Rank[RankType] == 0)
                 MyRank.Text = "Not Listed";
             else
                 MyRank.Text = string.Format("Ranked: {0}", Rank[RankType]); ;
-
         }
 
         public sealed class RankingRow : MirControl
         {
             public Rank_Character_Info Listing;
             public MirLabel RankLabel, NameLabel, LevelLabel, ClassLabel;
+            public MirButton ViewButton;
             public long Index;
 
             public RankingRow()
@@ -269,7 +270,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA;
                 BorderColour = Color.Lime;
                 Visible = false;
-                Click += (o, e) => Inspect();
+                Click += Inspect;
 
                 RankLabel = new MirLabel
                 {
@@ -305,15 +306,38 @@ namespace Client.MirScenes.Dialogs
                     Parent = this,
                     NotControl = true,
                 };
+
+                ViewButton = new MirButton
+                {
+                    Index = 805,
+                    HoverIndex = 806,
+                    PressedIndex = 807,
+                    Library = Libraries.Title,
+                    Location = new Point(280, 3),
+                    Parent = this,
+                    Sound = SoundList.ButtonA,
+                };
+                ViewButton.Click += (o, e) => Observe();
             }
 
-            public void Inspect()
+            public void Inspect(object sender, EventArgs e)
             {
-                if (CMain.Time <= GameScene.InspectTime/* && Index == InspectDialog.InspectID*/) return;
+                MouseEventArgs me = e as MouseEventArgs;
 
-                GameScene.InspectTime = CMain.Time + 500;
-                InspectDialog.InspectID = (uint)Index;
-                MirNetwork.Network.Enqueue(new ClientPackets.Inspect { ObjectID = (uint)Index, Ranking = true });
+                if (me.Button == MouseButtons.Left)
+                {
+                    if (CMain.Time <= GameScene.InspectTime/* && Index == InspectDialog.InspectID*/) return;
+
+                    GameScene.InspectTime = CMain.Time + 500;
+                    InspectDialog.InspectID = (uint)Index;
+                    MirNetwork.Network.Enqueue(new ClientPackets.Inspect { ObjectID = (uint)Index, Ranking = true });
+                }
+            }
+
+
+            public void Observe()
+            {
+                MirNetwork.Network.Enqueue(new ClientPackets.StartObserve { ObjectID = (uint)Index });
             }
 
             public void Clear()
@@ -353,7 +377,7 @@ namespace Client.MirScenes.Dialogs
                     LevelLabel.ForeColour = Color.RosyBrown;
                     ClassLabel.ForeColour = Color.RosyBrown;
                 }
-                else if (NameLabel.Text == GameScene.User.Name)
+                else if (GameScene.User != null && NameLabel.Text == GameScene.User.Name)
                 {
                     RankLabel.ForeColour = Color.Green;
                     NameLabel.ForeColour = Color.Green;
@@ -367,6 +391,11 @@ namespace Client.MirScenes.Dialogs
                     LevelLabel.ForeColour = Color.White;
                     ClassLabel.ForeColour = Color.White;
                 }
+
+                if (listing.ShowObserve)
+                    ViewButton.Visible = true;
+                else
+                    ViewButton.Visible = false;
 
                 Visible = true;
 

@@ -11,10 +11,11 @@ using Client.MirControls;
 using S = ServerPackets;
 using C = ClientPackets;
 using Client.MirScenes.Dialogs;
+using System.Diagnostics;
 
 namespace Client.MirObjects
 {
-    public class PlayerObject : MapObject
+    public class PlayerObject : MapObject, ICamera
     {
         public override ObjectType Race
         {
@@ -25,6 +26,8 @@ namespace Client.MirObjects
         {
             get { return !Dead; }
         }
+
+        public string Name { get; set; }
 
         public MirGender Gender;
         public MirClass Class;
@@ -735,6 +738,8 @@ namespace Client.MirObjects
 
         public override void Process()
         {
+
+
             bool update = CMain.Time >= NextMotion || GameScene.CanMove;
 
             if (this == User)
@@ -840,13 +845,14 @@ namespace Client.MirObjects
 
             DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
 
-            DrawLocation = new Point((Movement.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
-            DrawLocation.Offset(GlobalDisplayLocationOffset);
+
+            DrawLocation = new Point((Movement.X - (Camera.Movement.X) + MapControl.OffSetX) * MapControl.CellWidth, (Movement.Y - (Camera.Movement.Y) + MapControl.OffSetY) * MapControl.CellHeight);
+            UpdateDrawLocationOffset(GlobalDisplayLocationOffset);
 
             if (this != User)
             {
-                DrawLocation.Offset(User.OffSetMove);
-                DrawLocation.Offset(-OffSetMove.X, -OffSetMove.Y);
+                UpdateDrawLocationOffset(Camera.OffSetMove);
+                UpdateDrawLocationOffset(-OffSetMove.X, -OffSetMove.Y);
             }
 
             if (BodyLibrary != null && update)
@@ -975,7 +981,6 @@ namespace Client.MirObjects
             {
                 QueuedAction action = ActionFeed[0];
                 ActionFeed.RemoveAt(0);
-
 
                 CurrentAction = action.Action;
 
@@ -1316,7 +1321,7 @@ namespace Client.MirObjects
                 FrameInterval = Frame.Interval;
                 EffectFrameInterval = Frame.EffectInterval;
 
-                if (this == User)
+                if (this == User & !GameScene.Observing)
                 {
                     switch (CurrentAction)
                     {

@@ -5,6 +5,8 @@ using System.IO;
 
 namespace ServerPackets
 {
+
+
     public sealed class KeepAlive : Packet
     {
         public override short Index
@@ -23,6 +25,7 @@ namespace ServerPackets
             writer.Write(Time);
         }
     }
+    
     public sealed class Connected : Packet
     {
         public override short Index
@@ -412,7 +415,6 @@ namespace ServerPackets
         public string Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
         public LightSetting Lights;
-        public bool Lightning, Fire;
         public byte MapDarkLight;
 
         protected override void ReadPacket(BinaryReader reader)
@@ -422,9 +424,6 @@ namespace ServerPackets
             MiniMap = reader.ReadUInt16();
             BigMap = reader.ReadUInt16();
             Lights = (LightSetting)reader.ReadByte();
-            byte bools = reader.ReadByte();
-            if ((bools & 0x01) == 0x01) Lightning = true;
-            if ((bools & 0x02) == 0x02) Fire = true;
             MapDarkLight = reader.ReadByte();
             Music = reader.ReadUInt16();
         }
@@ -436,10 +435,6 @@ namespace ServerPackets
             writer.Write(MiniMap);
             writer.Write(BigMap);
             writer.Write((byte)Lights);
-            byte bools = 0;
-            bools |= (byte)(Lightning ? 0x01 : 0);
-            bools |= (byte)(Fire ? 0x02 : 0);
-            writer.Write(bools);
             writer.Write(MapDarkLight);
             writer.Write(Music);
         }
@@ -699,6 +694,8 @@ namespace ServerPackets
 
         public List<BuffType> Buffs = new List<BuffType>();
 
+        public bool Observing;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
@@ -739,6 +736,7 @@ namespace ServerPackets
             }
 
             LevelEffects = (LevelEffects)reader.ReadByte();
+            Observing = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -782,6 +780,7 @@ namespace ServerPackets
             }
 
             writer.Write((byte)LevelEffects);
+            writer.Write(Observing);
         }
     }
     public sealed class ObjectRemove : Packet
@@ -5645,6 +5644,102 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Success);
+        }
+    }
+
+    public sealed class Observe : Packet
+    {
+        public uint ObserveObjectID;
+
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.Observe; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObserveObjectID = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObserveObjectID);
+        }
+    }
+
+    public sealed class EndObserving : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.EndObserving; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class StatusMessage : Packet
+    {
+        public string Message;
+
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.StatusMessage; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Message = reader.ReadString();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Message);
+        }
+    }
+
+    public sealed class ChangeObserve : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ChangeObserve; }
+        }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
+        }
+    }
+
+    public sealed class ObserverCount : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ObserverCount; }
+        }
+
+        public int Count;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Count = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Count);
         }
     }
 }
