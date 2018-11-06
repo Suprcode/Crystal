@@ -392,7 +392,7 @@ namespace Client.MirScenes.Dialogs
                     ClassLabel.ForeColour = Color.White;
                 }
 
-                if (listing.ShowObserve)
+                if (listing.ShowObserve && listing.PlayerId != GameScene.User?.Id)
                     ViewButton.Visible = true;
                 else
                     ViewButton.Visible = false;

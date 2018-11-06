@@ -5525,7 +5525,12 @@ namespace Server.MirObjects
             if (play == null || !play.AllowObserve)
             {
                 ReceiveChat("This player is no longer available for observing.", ChatType.Hint);
+                return;
             }
+            else if (play == this)
+            {
+                ReceiveChat("You cannot observe yourself.", ChatType.Hint);
+                return;
             else
             {
                 Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });

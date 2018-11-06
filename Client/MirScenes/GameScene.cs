@@ -580,46 +580,7 @@ namespace Client.MirScenes
                         return;
 
                     case KeybindOptions.Closeall:
-                        InventoryDialog.Hide();
-                        CharacterDialog.Hide();
-                        OptionDialog.Hide();
-                        MenuDialog.Hide();
-                        if (NPCDialog.Visible) NPCDialog.Hide();
-                        HelpDialog.Hide();
-                        KeyboardLayoutDialog.Hide();
-                        RankingDialog.Hide();
-                        IntelligentCreatureDialog.Hide();
-                        IntelligentCreatureOptionsDialog.Hide();
-                        IntelligentCreatureOptionsGradeDialog.Hide();
-                        MountDialog.Hide();
-                        FishingDialog.Hide();
-                        FriendDialog.Hide();
-                        RelationshipDialog.Hide();
-                        MentorDialog.Hide();
-                        GameShopDialog.Hide();
-                        GroupDialog.Hide();
-                        GuildDialog.Hide();
-                        InspectDialog.Hide();
-                        StorageDialog.Hide();
-                        TrustMerchantDialog.Hide();
-                        //CharacterDuraPanel.Hide();
-                        QuestListDialog.Hide();
-                        QuestDetailDialog.Hide();
-                        QuestLogDialog.Hide();
-                        NPCAwakeDialog.Hide();
-                        RefineDialog.Hide();
-                        BigMapDialog.Visible = false;
-                        if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
-                        MailComposeLetterDialog.Hide();
-                        MailComposeParcelDialog.Hide();
-                        MailListDialog.Hide();
-                        MailReadLetterDialog.Hide();
-                        MailReadParcelDialog.Hide();
-                        ItemRentalDialog.Visible = false;
-
-
-
-                        GameScene.Scene.DisposeItemLabel();
+                        CloseAllDialog();
                         break;
                     case KeybindOptions.Options:
                     case KeybindOptions.Options2:
@@ -806,6 +767,47 @@ namespace Client.MirScenes
                         break;
                 }
             }
+        }
+
+        public void CloseAllDialog()
+        {
+            InventoryDialog.Hide();
+            CharacterDialog.Hide();
+            OptionDialog.Hide();
+            MenuDialog.Hide();
+            if (NPCDialog.Visible) NPCDialog.Hide();
+            HelpDialog.Hide();
+            KeyboardLayoutDialog.Hide();
+            RankingDialog.Hide();
+            IntelligentCreatureDialog.Hide();
+            IntelligentCreatureOptionsDialog.Hide();
+            IntelligentCreatureOptionsGradeDialog.Hide();
+            MountDialog.Hide();
+            FishingDialog.Hide();
+            FriendDialog.Hide();
+            RelationshipDialog.Hide();
+            MentorDialog.Hide();
+            GameShopDialog.Hide();
+            GroupDialog.Hide();
+            GuildDialog.Hide();
+            InspectDialog.Hide();
+            StorageDialog.Hide();
+            TrustMerchantDialog.Hide();
+            //CharacterDuraPanel.Hide();
+            QuestListDialog.Hide();
+            QuestDetailDialog.Hide();
+            QuestLogDialog.Hide();
+            NPCAwakeDialog.Hide();
+            RefineDialog.Hide();
+            BigMapDialog.Visible = false;
+            if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
+            MailComposeLetterDialog.Hide();
+            MailComposeParcelDialog.Hide();
+            MailListDialog.Hide();
+            MailReadLetterDialog.Hide();
+            MailReadParcelDialog.Hide();
+            ItemRentalDialog.Visible = false;
+            GameScene.Scene.DisposeItemLabel();
         }
 
         public void EndObserverMode()
@@ -1931,6 +1933,7 @@ namespace Client.MirScenes
         {
             if (Observing)
             {
+                CloseAllDialog();
                 MainDialog.Hide();
                 BeltDialog.Hide();
                 CharacterDuraPanel.Hide();
@@ -1939,7 +1942,6 @@ namespace Client.MirScenes
                 SkillBarDialogs[0].Hide();
                 SkillBarDialogs[1].Hide();
                 OptionDialog.Hide();
-                RankingDialog.Hide();
             }
             else
             {
