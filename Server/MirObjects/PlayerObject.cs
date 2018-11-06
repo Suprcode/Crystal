@@ -5531,6 +5531,7 @@ namespace Server.MirObjects
             {
                 ReceiveChat("You cannot observe yourself.", ChatType.Hint);
                 return;
+            }
             else
             {
                 Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
