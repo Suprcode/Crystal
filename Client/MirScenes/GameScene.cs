@@ -8866,10 +8866,6 @@ namespace Client.MirScenes
                     for (int i = cell.CellObjects.Count - 1; i >= 0; i--)
                     {
                         MapObject ob = cell.CellObjects[i];
-                        if (ob.Name != "Eli" & ob.Name != "")
-                        {
-                            ob.Name = ob.Name;
-                        }
                         if (ob == MapObject.Camera || !ob.MouseOver(CMain.MPoint)) continue;
 
                         if (MapObject.MouseObject != ob)
