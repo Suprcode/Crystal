@@ -1577,12 +1577,12 @@ namespace Server
             {
                 try
                 {
-                    int monsterIndex = Envir.MonsterInfoList.FindIndex(a => a.Name.Replace(" ", "") == MirForms.ConvertMonGenInfo.monGenList[i].Name.Replace('*', ' '));
+                    int monsterIndex = Envir.MonsterInfoList.Find(a => a.Name.Replace(" ", "") == MirForms.ConvertMonGenInfo.monGenList[i].Name.Replace('*', ' ')).Index;
                     if (monsterIndex == -1) continue;
 
                     RespawnInfo respawnInfo = new RespawnInfo
                     {
-                        MonsterIndex = monsterIndex + 1,
+                        MonsterIndex = monsterIndex,
                         Location = new Point(MirForms.ConvertMonGenInfo.monGenList[i].X, MirForms.ConvertMonGenInfo.monGenList[i].Y),
                         Count = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Count,
                         Spread = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Range,
