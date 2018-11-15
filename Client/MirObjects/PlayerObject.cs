@@ -3574,7 +3574,7 @@ namespace Client.MirObjects
         private void PlayWemadeStepSound(int x, int y, out int moveSound)
         {
             int index = (GameScene.Scene.MapControl.M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
-            index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
+            //index = (GameScene.Scene.MapControl.M2CellInfo[x, y].FrontIndex - 2) * 10000 + index;
 
             if (index >= 0 && index <= 10000)
             {

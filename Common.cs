@@ -1463,6 +1463,7 @@ public enum ServerPacketIds : short
     MailSent,
     ParcelCollected,
     MailCost,
+
 	ResizeInventory,
     ResizeStorage,
     NewIntelligentCreature,
