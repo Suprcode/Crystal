@@ -1141,10 +1141,13 @@ namespace Server.MirObjects
         {
             if (CharIndex == 0)
             {
+                Connection.Stage = GameStage.Login;
                 Enqueue(new S.EndObserving { });
                 StopGame(24);
                 if (forced)
                     Enqueue(new S.StatusMessage { Message = "This player is no longer available for observing." });
+
+                
             }
             else
             {

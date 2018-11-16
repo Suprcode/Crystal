@@ -9548,6 +9548,8 @@ namespace Client.MirScenes
             MouseEventArgs me = e as MouseEventArgs;
             if (me == null) return;
 
+            if (GameScene.Observing) return;
+
             if (AwakeningAction == true) return;
             switch (me.Button)
             {

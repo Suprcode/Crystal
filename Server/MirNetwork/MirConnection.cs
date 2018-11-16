@@ -906,10 +906,10 @@ namespace Server.MirNetwork
 
             Observer.StopGame(24);
 
-            Stage = GameStage.Select;
+            Stage = GameStage.Login;
             Observer = null;
 
-            Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
+            Enqueue(new S.EndObserving { });
         }
 
         private void Turn(C.Turn p)
