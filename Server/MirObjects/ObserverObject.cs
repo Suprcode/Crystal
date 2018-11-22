@@ -1107,13 +1107,13 @@ namespace Server.MirObjects
                 {
                     if (LockedTarget.CurrentMap != CurrentMap || !Functions.InRange(LockedTarget.CurrentLocation, CurrentLocation, Globals.DataRange))
                     {
-                        CurrentMap.GetCell(CurrentLocation).Remove(this);
+                        CurrentMap.RemoveObject(this);
 
                         CurrentMapIndex = LockedTarget.CurrentMapIndex;
                         CurrentMap = LockedTarget.CurrentMap;
                         CurrentLocation = LockedTarget.CurrentLocation;
 
-                        CurrentMap.GetCell(CurrentLocation).Add(this);
+                        CurrentMap.AddObject(this);
 
                         LocationChanged();
                     }

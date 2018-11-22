@@ -3083,6 +3083,8 @@ namespace Client.MirScenes.Dialogs
             {
                 MapObject ob = MapControl.Objects[i];
 
+                if (ob.Race == ObjectType.Observer) continue;
+
                 if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || ob.Sneaking) continue;
                 float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + drawLocation.X;
                 float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + drawLocation.Y;

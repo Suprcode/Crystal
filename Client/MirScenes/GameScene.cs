@@ -8829,7 +8829,9 @@ namespace Client.MirScenes
             if (Camera != null)
             {
                 //if ((GameScene.Observing && !Observer.LockedOn) | (!GameScene.Observing))
+
                 Camera.Process();
+
             }
 
             for (int i = Objects.Count - 1; i >= 0; i--)

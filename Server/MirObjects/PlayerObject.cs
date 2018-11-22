@@ -9881,7 +9881,11 @@ namespace Server.MirObjects
             Map checkmap = (Map)data[2];
             Point checklocation = (Point)data[3];
 
+            
+
             if (CurrentMap != checkmap || CurrentLocation != checklocation) return;
+
+            ObserverInform = false;
 
             bool mapChanged = temp != CurrentMap;
 
@@ -9891,6 +9895,8 @@ namespace Server.MirObjects
             CurrentMap.AddObject(this);
 
             MovementTime = Envir.Time + MovementDelay;
+
+            
 
             Enqueue(new S.MapChanged
             {
@@ -9904,6 +9910,8 @@ namespace Server.MirObjects
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
                 Music = CurrentMap.Info.Music
             });
+
+            
 
             if (RidingMount) RefreshMount();
 
@@ -9923,6 +9931,8 @@ namespace Server.MirObjects
             if (mapChanged)
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                ObserverInform = true;
+                InformObservers();
             }
 
             if (Info.Married != 0)
