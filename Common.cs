@@ -3358,6 +3358,7 @@ public class UserItem
             CurrentDura = CurrentDura,
             MaxDura = MaxDura,
             Count = Count,
+	    GemCount = GemCount,
 
             AC = AC,
             MAC = MAC,
