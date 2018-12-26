@@ -3525,13 +3525,23 @@ namespace Server.MirObjects
         {
             if (CurrentMap == null) return;
 
+	    Color myColour = GetNameColour(this);
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];
                 if (player == this) continue;
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                    player.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = GetNameColour(player) });
+                    player.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = myColour });
+            }
+	    
+	    for (int i = CurrentMap.Observers.Count - 1; i >= 0; i--)
+            {
+                ObserverObject observer = CurrentMap.Observers[i];
+                if (observer == null) continue;
+
+                if (Functions.InRange(CurrentLocation, observer.CurrentLocation, Globals.DataRange))
+                    observer.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = myColour });
             }
         }
 
