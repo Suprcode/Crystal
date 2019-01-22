@@ -12,10 +12,6 @@ namespace Server.MirForms
     {
         public static Envir EditEnvir = null;
 
-        public static List<MirDatabase.MapInfo> MapInfo = new List<MirDatabase.MapInfo>();
-        public static List<MirDatabase.MovementInfo> MapMovements = new List<MirDatabase.MovementInfo>();
-        public static List<MineZone> MineInfo = new List<MineZone>();
-
         private static int _endIndex = 0;
         public static string Path = string.Empty;
 
@@ -311,8 +307,8 @@ namespace Server.MirForms
         }
         public static void End()
         {
-            MapInfo.Clear();
-            MapMovements.Clear();
+            //MapInfo.Clear();
+            //MapMovements.Clear();
         }
     }
 
