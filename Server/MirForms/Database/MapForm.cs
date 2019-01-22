@@ -15,6 +15,8 @@ namespace Server.MirForms
         private static int _endIndex = 0;
         public static string Path = string.Empty;
 
+        private static List<String> errors = new List<String>();
+
         public static void Start(Envir envirToUpdate)
         {
             if (Path == string.Empty) return;
@@ -24,7 +26,6 @@ namespace Server.MirForms
 
             var lines = File.ReadAllLines(Path);
             _endIndex = EditEnvir.MapIndex; // Last map index number
-            List<String> errors = new List<String>();
             for (int i = 0; i < lines.Length; i++)
             {
 
@@ -307,8 +308,9 @@ namespace Server.MirForms
         }
         public static void End()
         {
-            //MapInfo.Clear();
-            //MapMovements.Clear();
+            SMain.Enqueue(String.Join("MapInfo Import Report:", errors.Count > 0 ? "" : "No Errors"));
+            foreach (String error in errors)
+                SMain.Enqueue(error);
         }
     }
 
