@@ -39,6 +39,8 @@ namespace Server
         public static string GMPassword = "C#Mir 4.0";
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
+        public static int MainThreadDelay = 1;
+        public static int MobThreadDelay = 50;
         public static bool TestServer = false;
         public static bool EnforceDBChecks = true;
 
@@ -281,6 +283,8 @@ namespace Server
             GMPassword = Reader.ReadString("General", "GMPassword", GMPassword);
             Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
             ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
+            MainThreadDelay = Reader.ReadInt32("General", "MainThreadDelay", MainThreadDelay);
+            MobThreadDelay = Reader.ReadInt32("General", "MobThreadDelay", MobThreadDelay);
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
             EnforceDBChecks = Reader.ReadBoolean("General", "EnforceDBChecks", EnforceDBChecks);
 
@@ -484,6 +488,8 @@ namespace Server
             Reader.Write("General", "RelogDelay", RelogDelay);
             Reader.Write("General", "Multithreaded", Multithreaded);
             Reader.Write("General", "ThreadLimit", ThreadLimit);
+            Reader.Write("General", "MainThreadDelay", MainThreadDelay);
+            Reader.Write("General", "MobThreadDelay", MobThreadDelay);
             Reader.Write("General", "TestServer", TestServer);
             Reader.Write("General", "EnforceDBChecks", EnforceDBChecks);
             

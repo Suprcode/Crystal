@@ -656,7 +656,7 @@ namespace Server.MirEnvir
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
                         //   GC.Collect();
-
+                        Thread.Sleep(Settings.MainThreadDelay);
 
                     }
 
@@ -733,6 +733,7 @@ namespace Server.MirEnvir
                             Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
                             //Info.LastRunTime = (Time - Info.StartTime) /*> 0 ? (Time - Info.StartTime) : Info.LastRunTime */;
                             Info.StartTime = Time;
+                            Thread.Sleep(Settings.MobThreadDelay);
                         }
                         if (Time > Info.current.Value.OperateTime)
                         {
