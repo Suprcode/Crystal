@@ -58,3 +58,5 @@ Client/Client.csproj
 /Build
 
 /.vs
+
+/packages
