@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
+using Server.MirEnvir;
 
 namespace Server
 {
@@ -35,9 +36,15 @@ namespace Server
             gameMasterEffect_CheckBox.Checked = Settings.GameMasterEffect;
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
+            ServerDbConnectionStringTextBox.Text = Settings.ServerDbConnectionString;
+            AccountDbConnectionStringTextBox.Text = Settings.AccountDbConnectionString;
+            UseSqlDbCheckBox.Checked = Settings.UseSqlDb;
 
             ServerVersionLabel.Text = Application.ProductVersion;
-            DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
+            if (Settings.UseSqlDb)
+                DBVersionLabel.Text = "Using Sql Data Source, View Database Tab To Get More Information";
+            else
+                DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
         }
 
         private void ConfigForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -78,6 +85,9 @@ namespace Server
 
             if (ushort.TryParse(SaveDelayTextBox.Text, out tempshort))
                 Settings.SaveDelay = tempshort;
+            Settings.ServerDbConnectionString = ServerDbConnectionStringTextBox.Text;
+            Settings.AccountDbConnectionString = AccountDbConnectionStringTextBox.Text;
+            Settings.UseSqlDb = UseSqlDbCheckBox.Checked;
 
             Settings.AllowNewAccount = AccountCheckBox.Checked;
             Settings.AllowChangePassword = PasswordCheckBox.Checked;
@@ -143,6 +153,16 @@ namespace Server
         private void SafeZoneHealingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void ConvertDbButton_Click(object sender, EventArgs e)
+        {
+            SMain.Envir.SaveSqlDB(true);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SMain.Envir.DragonInfo.Save();
         }
     }
 }

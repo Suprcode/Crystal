@@ -1689,7 +1689,7 @@ public class InIReader
             if (String.CompareOrdinal(_contents[a], "[" + section + "]") == 0)
                 for (int b = a + 1; b < _contents.Count; b++)
                     if (String.CompareOrdinal(_contents[b].Split('=')[0], key) == 0)
-                        return _contents[b].Split('=')[1];
+                        return _contents[b].Replace(key + "=", "");
                     else if (_contents[b].StartsWith("[") && _contents[b].EndsWith("]"))
                         return null;
         return null;
@@ -2588,49 +2588,82 @@ public class SelectInfo
 
 public class ItemInfo
 {
-    public int Index;
-    public string Name = string.Empty;
-    public ItemType Type;
-    public ItemGrade Grade;
-    public RequiredType RequiredType = RequiredType.Level;
-    public RequiredClass RequiredClass = RequiredClass.None;
-    public RequiredGender RequiredGender = RequiredGender.None;
-    public ItemSet Set;
+    public int Index { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public ItemType Type { get; set; }
+    public ItemGrade Grade { get; set; }
+    public RequiredType RequiredType { get; set; } = RequiredType.Level;
+    public RequiredClass RequiredClass { get; set; } = RequiredClass.None;
+    public RequiredGender RequiredGender { get; set; } = RequiredGender.None;
+    public ItemSet Set { get; set; }
 
 
 
-    public short Shape;
-    public byte Weight, Light, RequiredAmount;
+    public short Shape { get; set; }
+    public byte Weight { get; set; }
+    public byte Light { get; set; }
+    public byte RequiredAmount { get; set; }
 
-    public ushort Image, Durability;
+    public ushort Image { get; set; }
+    public ushort Durability { get; set; }
 
-    public uint Price, StackSize = 1;
+    public uint Price { get; set; }
+    public uint StackSize { get; set; } = 1;
 
-    public byte MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility;
-    public ushort HP, MP;
-    public sbyte AttackSpeed, Luck;
-    public byte BagWeight, HandWeight, WearWeight;
+    public byte MinAC { get; set; }
+    public byte MaxAC { get; set; }
+    public byte MinMAC { get; set; }
+    public byte MaxMAC { get; set; }
+    public byte MinDC { get; set; }
+    public byte MaxDC { get; set; }
+    public byte MinMC { get; set; }
+    public byte MaxMC { get; set; }
+    public byte MinSC { get; set; }
+    public byte MaxSC { get; set; }
+    public byte Accuracy { get; set; }
+    public byte Agility { get; set; }
+    public ushort HP { get; set; }
+    public ushort MP { get; set; }
+    public byte AttackSpeed { get; set; }
+    public byte Luck { get; set; }
+    public byte BagWeight { get; set; }
+    public byte HandWeight { get; set; }
+    public byte WearWeight { get; set; }
 
-    public bool StartItem;
-    public byte Effect;
+    public bool StartItem { get; set; }
+    public byte Effect { get; set; }
 
-    public byte Strong;
-    public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
-    public byte CriticalRate, CriticalDamage;
-    public bool NeedIdentify, ShowGroupPickup, GlobalDropNotify;
-    public bool ClassBased;
-    public bool LevelBased;
-    public bool CanMine;
-    public bool CanFastRun;
-    public bool CanAwakening;
-    public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
-    
-    public BindMode Bind = BindMode.none;
-    public byte Reflect;
-    public SpecialItemMode Unique = SpecialItemMode.None;
-    public byte RandomStatsId;
-    public RandomItemStat RandomStats;
-    public string ToolTip = string.Empty;
+    public byte Strong { get; set; }
+    public byte MagicResist { get; set; }
+    public byte PoisonResist { get; set; }
+    public byte HealthRecovery { get; set; }
+    public byte SpellRecovery { get; set; }
+    public byte PoisonRecovery { get; set; }
+    public byte HPrate { get; set; }
+    public byte MPrate { get; set; }
+    public byte CriticalRate { get; set; }
+    public byte CriticalDamage { get; set; }
+    public bool NeedIdentify { get; set; }
+    public bool ShowGroupPickup { get; set; }
+    public bool GlobalDropNotify { get; set; }
+    public bool ClassBased { get; set; }
+    public bool LevelBased { get; set; }
+    public bool CanMine { get; set; }
+    public bool CanFastRun { get; set; }
+    public bool CanAwakening { get; set; }
+    public byte MaxAcRate { get; set; }
+    public byte MaxMacRate { get; set; }
+    public byte Holy { get; set; }
+    public byte Freezing { get; set; }
+    public byte PoisonAttack { get; set; }
+    public byte HpDrainRate { get; set; }
+
+    public BindMode Bind { get; set; } = BindMode.none;
+    public byte Reflect { get; set; }
+    public SpecialItemMode Unique { get; set; } = SpecialItemMode.None;
+    public byte RandomStatsId { get; set; }
+    public RandomItemStat RandomStats { get; set; }
+    public string ToolTip { get; set; } = string.Empty;
 
 
     public bool IsConsumable
@@ -2698,8 +2731,8 @@ public class ItemInfo
         Accuracy = reader.ReadByte();
         Agility = reader.ReadByte();
 
-        Luck = reader.ReadSByte();
-        AttackSpeed = reader.ReadSByte();
+        Luck = (byte)reader.ReadSByte();
+        AttackSpeed = (byte)reader.ReadSByte();
 
         StartItem = reader.ReadBoolean();
 
@@ -2871,77 +2904,138 @@ public class ItemInfo
         if (data.Length < 33) return null;
 
         ItemInfo info = new ItemInfo { Name = data[0] };
+        if (!Enum.TryParse(data[1], out ItemType type)) return null;
+        info.Type = type;
+        if (!Enum.TryParse(data[2], out ItemGrade grade)) return null;
+        info.Grade = grade;
+        if (!Enum.TryParse(data[3], out RequiredType requiredType)) return null;
+        info.RequiredType = requiredType;
+        if (!Enum.TryParse(data[4], out RequiredClass requiredClass)) return null;
+        info.RequiredClass = requiredClass;
+        if (!Enum.TryParse(data[5], out RequiredGender requiredGender)) return null;
+        info.RequiredGender = requiredGender;
+        if (!Enum.TryParse(data[6], out ItemSet itemSet)) return null;
+        info.Set = itemSet;
+        if (!short.TryParse(data[7], out var outShort)) return null;
+        info.Shape = outShort;
 
-        if (!Enum.TryParse(data[1], out info.Type)) return null;
-        if (!Enum.TryParse(data[2], out info.Grade)) return null;
-        if (!Enum.TryParse(data[3], out info.RequiredType)) return null;
-        if (!Enum.TryParse(data[4], out info.RequiredClass)) return null;
-        if (!Enum.TryParse(data[5], out info.RequiredGender)) return null;
-        if (!Enum.TryParse(data[6], out info.Set)) return null;
-        if (!short.TryParse(data[7], out info.Shape)) return null;
+        if (!byte.TryParse(data[8], out var outByte)) return null;
+        info.Weight = outByte;
+        if (!byte.TryParse(data[9], out outByte)) return null;
+        info.Light = outByte;
+        if (!byte.TryParse(data[10], out outByte)) return null;
+        info.RequiredAmount = outByte;
 
-        if (!byte.TryParse(data[8], out info.Weight)) return null;
-        if (!byte.TryParse(data[9], out info.Light)) return null;
-        if (!byte.TryParse(data[10], out info.RequiredAmount)) return null;
+        if (!byte.TryParse(data[11], out outByte)) return null;
+        info.MinAC = outByte;
+        if (!byte.TryParse(data[12], out outByte)) return null;
+        info.MaxAC = outByte;
+        if (!byte.TryParse(data[13], out outByte)) return null;
+        info.MinMAC = outByte;
+        if (!byte.TryParse(data[14], out outByte)) return null;
+        info.MaxMAC = outByte;
+        if (!byte.TryParse(data[15], out outByte)) return null;
+        info.MinDC = outByte;
+        if (!byte.TryParse(data[16], out outByte)) return null;
+        info.MaxDC = outByte;
+        if (!byte.TryParse(data[17], out outByte)) return null;
+        info.MinMC = outByte;
+        if (!byte.TryParse(data[18], out outByte)) return null;
+        info.MaxMC = outByte;
+        if (!byte.TryParse(data[19], out outByte)) return null;
+        info.MinSC = outByte;
+        if (!byte.TryParse(data[20], out outByte)) return null;
+        info.MaxSC = outByte;
+        if (!byte.TryParse(data[21], out outByte)) return null;
+        info.Accuracy = outByte;
+        if (!byte.TryParse(data[22], out outByte)) return null;
+        info.Agility = outByte;
+        if (!ushort.TryParse(data[23], out var outUShort)) return null;
+        info.HP = outUShort;
+        if (!ushort.TryParse(data[24], out outUShort)) return null;
+        info.MP = outUShort;
 
-        if (!byte.TryParse(data[11], out info.MinAC)) return null;
-        if (!byte.TryParse(data[12], out info.MaxAC)) return null;
-        if (!byte.TryParse(data[13], out info.MinMAC)) return null;
-        if (!byte.TryParse(data[14], out info.MaxMAC)) return null;
-        if (!byte.TryParse(data[15], out info.MinDC)) return null;
-        if (!byte.TryParse(data[16], out info.MaxDC)) return null;
-        if (!byte.TryParse(data[17], out info.MinMC)) return null;
-        if (!byte.TryParse(data[18], out info.MaxMC)) return null;
-        if (!byte.TryParse(data[19], out info.MinSC)) return null;
-        if (!byte.TryParse(data[20], out info.MaxSC)) return null;
-        if (!byte.TryParse(data[21], out info.Accuracy)) return null;
-        if (!byte.TryParse(data[22], out info.Agility)) return null;
-        if (!ushort.TryParse(data[23], out info.HP)) return null;
-        if (!ushort.TryParse(data[24], out info.MP)) return null;
+        if (!sbyte.TryParse(data[25], out var outSByte)) return null;
+        info.AttackSpeed = (byte)outSByte;
+        if (!sbyte.TryParse(data[26], out outSByte)) return null;
+        info.Luck = (byte)outSByte;
 
-        if (!sbyte.TryParse(data[25], out info.AttackSpeed)) return null;
-        if (!sbyte.TryParse(data[26], out info.Luck)) return null;
+        if (!byte.TryParse(data[27], out outByte)) return null;
+        info.BagWeight = outByte;
 
-        if (!byte.TryParse(data[27], out info.BagWeight)) return null;
+        if (!byte.TryParse(data[28], out outByte)) return null;
+        info.HandWeight = outByte;
+        if (!byte.TryParse(data[29], out outByte)) return null;
+        info.WearWeight = outByte;
 
-        if (!byte.TryParse(data[28], out info.HandWeight)) return null;
-        if (!byte.TryParse(data[29], out info.WearWeight)) return null;
+        if (!bool.TryParse(data[30], out var outBool)) return null;
+        info.StartItem = outBool;
 
-        if (!bool.TryParse(data[30], out info.StartItem)) return null;
+        if (!ushort.TryParse(data[31], out outUShort)) return null;
+        info.Image = outUShort;
+        if (!ushort.TryParse(data[32], out outUShort)) return null;
+        info.Durability = outUShort;
+        if (!uint.TryParse(data[33], out var outUInt)) return null;
+        info.Price = outUInt;
+        if (!uint.TryParse(data[34], out outUInt)) return null;
+        info.StackSize = outUInt;
+        if (!byte.TryParse(data[35], out outByte)) return null;
+        info.Effect = outByte;
 
-        if (!ushort.TryParse(data[31], out info.Image)) return null;
-        if (!ushort.TryParse(data[32], out info.Durability)) return null;
-        if (!uint.TryParse(data[33], out info.Price)) return null;
-        if (!uint.TryParse(data[34], out info.StackSize)) return null;
-        if (!byte.TryParse(data[35], out info.Effect)) return null;
-
-        if (!byte.TryParse(data[36], out info.Strong)) return null;
-        if (!byte.TryParse(data[37], out info.MagicResist)) return null;
-        if (!byte.TryParse(data[38], out info.PoisonResist)) return null;
-        if (!byte.TryParse(data[39], out info.HealthRecovery)) return null;
-        if (!byte.TryParse(data[40], out info.SpellRecovery)) return null;
-        if (!byte.TryParse(data[41], out info.PoisonRecovery)) return null;
-        if (!byte.TryParse(data[42], out info.HPrate)) return null;
-        if (!byte.TryParse(data[43], out info.MPrate)) return null;
-        if (!byte.TryParse(data[44], out info.CriticalRate)) return null;
-        if (!byte.TryParse(data[45], out info.CriticalDamage)) return null;
-        if (!bool.TryParse(data[46], out info.NeedIdentify)) return null;
-        if (!bool.TryParse(data[47], out info.ShowGroupPickup)) return null;
-        if (!byte.TryParse(data[48], out info.MaxAcRate)) return null;
-        if (!byte.TryParse(data[49], out info.MaxMacRate)) return null;
-        if (!byte.TryParse(data[50], out info.Holy)) return null;
-        if (!byte.TryParse(data[51], out info.Freezing)) return null;
-        if (!byte.TryParse(data[52], out info.PoisonAttack)) return null;
-        if (!bool.TryParse(data[53], out info.ClassBased)) return null;
-        if (!bool.TryParse(data[54], out info.LevelBased)) return null;
-        if (!Enum.TryParse(data[55], out info.Bind)) return null;
-        if (!byte.TryParse(data[56], out info.Reflect)) return null;
-        if (!byte.TryParse(data[57], out info.HpDrainRate)) return null;
-        if (!Enum.TryParse(data[58], out info.Unique)) return null;
-        if (!byte.TryParse(data[59], out info.RandomStatsId)) return null;
-        if (!bool.TryParse(data[60], out info.CanMine)) return null;
-        if (!bool.TryParse(data[61], out info.CanFastRun)) return null;
-		if (!bool.TryParse(data[62], out info.CanAwakening)) return null;
+        if (!byte.TryParse(data[36], out outByte)) return null;
+        info.Strong = outByte;
+        if (!byte.TryParse(data[37], out outByte)) return null;
+        info.MagicResist = outByte;
+        if (!byte.TryParse(data[38], out outByte)) return null;
+        info.PoisonResist = outByte;
+        if (!byte.TryParse(data[39], out outByte)) return null;
+        info.HealthRecovery = outByte;
+        if (!byte.TryParse(data[40], out outByte)) return null;
+        info.SpellRecovery = outByte;
+        if (!byte.TryParse(data[41], out outByte)) return null;
+        info.PoisonRecovery = outByte;
+        if (!byte.TryParse(data[42], out outByte)) return null;
+        info.HPrate = outByte;
+        if (!byte.TryParse(data[43], out outByte)) return null;
+        info.MPrate = outByte;
+        if (!byte.TryParse(data[44], out outByte)) return null;
+        info.CriticalRate = outByte;
+        if (!byte.TryParse(data[45], out outByte)) return null;
+        info.CriticalDamage = outByte;
+        if (!bool.TryParse(data[46], out outBool)) return null;
+        info.NeedIdentify = outBool;
+        if (!bool.TryParse(data[47], out outBool)) return null;
+        info.ShowGroupPickup = outBool;
+        if (!byte.TryParse(data[48], out outByte)) return null;
+        info.MaxAcRate = outByte;
+        if (!byte.TryParse(data[49], out outByte)) return null;
+        info.MaxMacRate = outByte;
+        if (!byte.TryParse(data[50], out outByte)) return null;
+        info.Holy = outByte;
+        if (!byte.TryParse(data[51], out outByte)) return null;
+        info.Freezing = outByte;
+        if (!byte.TryParse(data[52], out outByte)) return null;
+        info.PoisonAttack = outByte;
+        if (!bool.TryParse(data[53], out outBool)) return null;
+        info.ClassBased = outBool;
+        if (!bool.TryParse(data[54], out outBool)) return null;
+        info.LevelBased = outBool;
+        if (!Enum.TryParse(data[55], out BindMode bindMode)) return null;
+        info.Bind = bindMode;
+        if (!byte.TryParse(data[56], out outByte)) return null;
+        info.Reflect = outByte;
+        if (!byte.TryParse(data[57], out outByte)) return null;
+        info.HpDrainRate = outByte;
+        if (!Enum.TryParse(data[58], out SpecialItemMode specialItemMode)) return null;
+        info.Unique = specialItemMode;
+        if (!byte.TryParse(data[59], out outByte)) return null;
+        info.RandomStatsId = outByte;
+        if (!bool.TryParse(data[60], out outBool)) return null;
+        info.CanMine = outBool;
+        if (!bool.TryParse(data[61], out outBool)) return null;
+        info.CanFastRun = outBool;
+        if (!bool.TryParse(data[62], out outBool)) return null;
+        info.CanAwakening = outBool;
         if (data[63] == "-")
             info.ToolTip = "";
         else
@@ -3452,19 +3546,19 @@ public class RentalInformation
 
 public class GameShopItem
 {
-    public int ItemIndex;
-    public int GIndex;
-    public ItemInfo Info;
-    public uint GoldPrice = 0;
-    public uint CreditPrice = 0;
-    public uint Count = 1;
-    public string Class = "";
-    public string Category = "";
-    public int Stock = 0;
-    public bool iStock = false;
-    public bool Deal = false;
-    public bool TopItem = false;
-    public DateTime Date;
+    public int ItemIndex{get; set;}
+    public int GIndex{get; set;}
+    public ItemInfo Info{get; set;}
+    public uint GoldPrice {get; set;} =  0;
+    public uint CreditPrice {get; set;} =  0;
+    public uint Count {get; set;} =  1;
+    public string Class {get; set;} =  "";
+    public string Category {get; set;} =  "";
+    public int Stock {get; set;} =  0;
+    public bool iStock {get; set;} =  false;
+    public bool Deal {get; set;} =  false;
+    public bool TopItem {get; set;} =  false;
+    public DateTime Date{get; set;}
     
     public GameShopItem()
     {

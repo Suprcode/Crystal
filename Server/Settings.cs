@@ -85,6 +85,10 @@ namespace Server
         public static int SaveDelay = 5;
         public static short CredxGold = 30;
 
+        public static bool UseSqlDb = false;
+        public static string ServerDbConnectionString = "data source=.\\Server.db";
+        public static string AccountDbConnectionString = "data source=.\\Account.db";
+
         //Game
         public static List<long> ExperienceList = new List<long>();
         public static List<long> OrbsExpList = new List<long>();
@@ -317,6 +321,12 @@ namespace Server
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
             CredxGold = Reader.ReadInt16("Database", "CredxGold", CredxGold);
 
+            UseSqlDb = Reader.ReadBoolean("Database", "UseSqlDb", UseSqlDb);
+            ServerDbConnectionString =
+                Reader.ReadString("Database", "ServerDbConnectionString", ServerDbConnectionString);
+            AccountDbConnectionString =
+                Reader.ReadString("Database", "AccountDbConnectionString", AccountDbConnectionString);
+
             //Game
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
             ExpRate = Reader.ReadSingle("Game", "ExpRate", ExpRate);
@@ -521,6 +531,10 @@ namespace Server
             //Database
             Reader.Write("Database", "SaveDelay", SaveDelay);
             Reader.Write("Database", "CredxGold", CredxGold);
+
+            Reader.Write("Database", "UseSqlDb", UseSqlDb);
+            Reader.Write("Database", "AccountDbConnectionString", AccountDbConnectionString);
+            Reader.Write("Database", "ServerDbConnectionString", ServerDbConnectionString);
 
             //Game
             Reader.Write("Game", "DropRate", DropRate);

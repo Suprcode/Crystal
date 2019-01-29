@@ -1,41 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
     public class NPCInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
 
-        public string FileName = string.Empty, Name = string.Empty;
+        public string FileName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-        public int MapIndex;
+        public int MapIndex { get; set; }
+        [NotMapped]
         public Point Location;
-        public ushort Rate = 100;
-        public ushort Image;
-        public Color Colour;
+        public string LocationString
+        {
+            get => $"{Location.X},{Location.Y}";
+            set
+            {
+                var array = value.Split(',');
+                Location = array.Length != 2 ? Point.Empty : new Point(int.Parse(array[0]), int.Parse(array[1]));
+            }
+        }
+        public ushort Rate { get; set; } = 100;
+        public ushort Image { get; set; }
+        [NotMapped]
+        public Color Colour { get; set; }
 
-        public bool TimeVisible = false;
-        public byte HourStart = 0;
-        public byte MinuteStart = 0;
-        public byte HourEnd = 0;
-        public byte MinuteEnd = 1;
-        public short MinLev = 0;
-        public short MaxLev = 0;
-        public string DayofWeek = "";
-        public string ClassRequired = "";
-        public bool Sabuk = false;
-        public int FlagNeeded = 0;
-        public int Conquest;
+        public int ColorData
+        {
+            get => Colour.ToArgb();
+            set => Colour = Color.FromArgb(value);
+        }
 
-        public bool IsDefault, IsRobot;
+        public bool TimeVisible { get; set; } = false;
+        public byte HourStart { get; set; } = 0;
+        public byte MinuteStart { get; set; } = 0;
+        public byte HourEnd { get; set; } = 0;
+        public byte MinuteEnd { get; set; } = 1;
+        public short MinLev { get; set; } = 0;
+        public short MaxLev { get; set; } = 0;
+        public string DayofWeek { get; set; } = "";
+        public string ClassRequired { get; set; } = "";
+        public bool Sabuk { get; set; } = false;
+        public int FlagNeeded { get; set; } = 0;
+        public int Conquest { get; set; }
 
+        public bool IsDefault { get; set; }
+        public bool IsRobot { get; set; }
+
+        [NotMapped]
         public List<int> CollectQuestIndexes = new List<int>();
+        [NotMapped]
         public List<int> FinishQuestIndexes = new List<int>();
         
         public NPCInfo()
@@ -90,6 +115,23 @@ namespace Server.MirDatabase
                 FlagNeeded = reader.ReadInt32();
             }
         }
+
+        public void Save()
+        {
+            //TODO: CollectQuestIndexes & FinishQuestIndexes Not Saving, Not Found Usage
+            using (Envir.ServerDb = new ServerDbContext())
+            {
+                if (this.Index == 0) Envir.ServerDb.NpcInfos.Add(this);
+                if (Envir.ServerDb.Entry(this).State == EntityState.Detached)
+                {
+                    Envir.ServerDb.NpcInfos.Attach(this);
+                    Envir.ServerDb.Entry(this).State = EntityState.Modified;
+                }
+
+                Envir.ServerDb.SaveChanges();
+            }
+        }
+
         public void Save(BinaryWriter writer)
         {
             writer.Write(Index);
@@ -144,8 +186,10 @@ namespace Server.MirDatabase
 
             info.Name = data[4];
 
-            if (!ushort.TryParse(data[5], out info.Image)) return;
-            if (!ushort.TryParse(data[6], out info.Rate)) return;
+            if (!ushort.TryParse(data[5], out var outUShort)) return;
+            info.Image = outUShort;
+            if (!ushort.TryParse(data[6], out outUShort)) return;
+            info.Rate = outUShort;
 
             info.Index = ++SMain.EditEnvir.NPCIndex;
             SMain.EditEnvir.NPCInfoList.Add(info);

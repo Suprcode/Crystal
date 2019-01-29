@@ -168,7 +168,8 @@ namespace Server
 
         private void QuestInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Envir.SaveDB();
+            if(Settings.UseSqlDb) Envir.SaveQuests();
+            else Envir.SaveDB();
         }
 
         private void PasteMButton_Click(object sender, EventArgs e)

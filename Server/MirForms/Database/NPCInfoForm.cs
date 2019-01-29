@@ -261,7 +261,8 @@ namespace Server
 
         private void NPCInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Envir.SaveDB();
+            if (Settings.UseSqlDb) Envir.SaveNpc();
+            else Envir.SaveDB();
         }
 
 

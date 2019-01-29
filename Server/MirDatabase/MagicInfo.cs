@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Server.MirEnvir;
 using S = ServerPackets;
 
@@ -10,16 +12,28 @@ namespace Server.MirDatabase
 {
     public class MagicInfo
     {
-        public string Name;
-        public Spell Spell;
-        public byte BaseCost, LevelCost, Icon;
-        public byte Level1, Level2, Level3;
-        public ushort Need1, Need2, Need3;
-        public uint DelayBase = 1800, DelayReduction;
-        public ushort PowerBase, PowerBonus;
-        public ushort MPowerBase, MPowerBonus;
-        public float MultiplierBase = 1.0f, MultiplierBonus;
-        public byte Range = 9;
+        [Key]
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public Spell Spell { get; set; }
+        public byte BaseCost { get; set; }
+        public byte LevelCost { get; set; }
+        public byte Icon { get; set; }
+        public byte Level1 { get; set; }
+        public byte Level2 { get; set; }
+        public byte Level3 { get; set; }
+        public ushort Need1 { get; set; }
+        public ushort Need2 { get; set; }
+        public ushort Need3 { get; set; }
+        public uint DelayBase { get; set; } = 1800;
+        public uint DelayReduction { get; set; }
+        public ushort PowerBase { get; set; }
+        public ushort PowerBonus { get; set; }
+        public ushort MPowerBase { get; set; }
+        public ushort MPowerBonus { get; set; }
+        public float MultiplierBase { get; set; } = 1.0f;
+        public float MultiplierBonus { get; set; }
+        public byte Range { get; set; } = 9;
 
         public override string ToString()
         {
@@ -57,6 +71,21 @@ namespace Server.MirDatabase
             {
                 MultiplierBase = reader.ReadSingle();
                 MultiplierBonus = reader.ReadSingle();
+            }
+        }
+
+        public void Save()
+        {
+            using (Envir.ServerDb = new ServerDbContext())
+            {
+                if (this.Index == 0) Envir.ServerDb.Magics.Add(this);
+                if (Envir.ServerDb.Entry(this).State == EntityState.Detached)
+                {
+                    Envir.ServerDb.Magics.Attach(this);
+                    Envir.ServerDb.Entry(this).State = EntityState.Modified;
+                }
+
+                Envir.ServerDb.SaveChanges();
             }
         }
 

@@ -937,7 +937,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].AttackSpeed = temp;
+                _selectedItemInfos[i].AttackSpeed = (byte)temp;
         }
         private void LuckTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -955,7 +955,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Luck = temp;
+                _selectedItemInfos[i].Luck = (byte)temp;
         }
         private void BWeightText_TextChanged(object sender, EventArgs e)
         {
@@ -1032,7 +1032,8 @@ namespace Server
 
         private void ItemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Envir.SaveDB();
+            if(Settings.UseSqlDb) Envir.SaveItems();
+            else Envir.SaveDB();
         }
 
         private void PasteButton_Click(object sender, EventArgs e)
@@ -1753,7 +1754,8 @@ namespace Server
         {
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 Envir.AddToGameShop(_selectedItemInfos[i]);
-            Envir.SaveDB();
+            if(Settings.UseSqlDb) Envir.SaveGameShopItems();
+            else Envir.SaveDB();
         }
 
         private void NoWeddingRingcheckbox_CheckedChanged(object sender, EventArgs e)

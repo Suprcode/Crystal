@@ -2,20 +2,42 @@
 using Server.MirObjects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
     public class QuestInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
 
-        public uint NpcIndex;
-        public NPCInfo NpcInfo;
+        public uint NpcIndex { get; set; }
+        public NPCInfo NpcInfo { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+        public string Group { get; set; } = string.Empty;
+        public string FileName { get; set; } = string.Empty;
+        public string GotoMessage { get; set; } = string.Empty;
+        public string KillMessage { get; set; } = string.Empty;
+        public string ItemMessage { get; set; } = string.Empty;
+        public string FlagMessage { get; set; } = string.Empty;
+
+        public int RequiredMinLevel { get; set; }
+        public int RequiredMaxLevel { get; set; }
+        public int RequiredQuest { get; set; }
+        public RequiredClass RequiredClass { get; set; } = RequiredClass.None;
+
+        public QuestType Type { get; set; }
+
+        public uint GoldReward { get; set; }
+        public uint ExpReward { get; set; }
+        public uint CreditReward { get; set; }
 
         private uint _finishNpcIndex;
 
@@ -25,33 +47,16 @@ namespace Server.MirDatabase
             set { _finishNpcIndex = value; }
         }
 
-        public string 
-            Name = string.Empty, 
-            Group = string.Empty, 
-            FileName = string.Empty, 
-            GotoMessage = string.Empty, 
-            KillMessage = string.Empty, 
-            ItemMessage = string.Empty,
-            FlagMessage = string.Empty;
-
-        public List<string> Description = new List<string>();
-        public List<string> TaskDescription = new List<string>(); 
-        public List<string> CompletionDescription = new List<string>(); 
-
-        public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
-        public RequiredClass RequiredClass = RequiredClass.None;
-
-        public QuestType Type;
-
         public List<QuestItemTask> CarryItems = new List<QuestItemTask>(); 
 
         public List<QuestKillTask> KillTasks = new List<QuestKillTask>();
         public List<QuestItemTask> ItemTasks = new List<QuestItemTask>();
         public List<QuestFlagTask> FlagTasks = new List<QuestFlagTask>();
 
-        public uint GoldReward;
-        public uint ExpReward;
-        public uint CreditReward;
+        public List<string> Description = new List<string>();
+        public List<string> TaskDescription = new List<string>(); 
+        public List<string> CompletionDescription = new List<string>(); 
+
         public List<QuestItemReward> FixedRewards = new List<QuestItemReward>();
         public List<QuestItemReward> SelectRewards = new List<QuestItemReward>();
 
@@ -83,6 +88,21 @@ namespace Server.MirDatabase
             if(Envir.LoadVersion >= 37) FlagMessage = reader.ReadString();
 
             LoadInfo();
+        }
+
+        public void Save()
+        {
+            using (Envir.ServerDb = new ServerDbContext())
+            {
+                if (this.Index == 0) Envir.ServerDb.Quests.Add(this);
+                if (Envir.ServerDb.Entry(this).State == EntityState.Detached)
+                {
+                    Envir.ServerDb.Quests.Attach(this);
+                    Envir.ServerDb.Entry(this).State = EntityState.Modified;
+                }
+
+                Envir.ServerDb.SaveChanges();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -211,13 +231,16 @@ namespace Server.MirDatabase
                                     break;
                                 }
                             case expRewardKey:
-                                uint.TryParse(innerLine, out ExpReward);
+                                uint.TryParse(innerLine, out var outUInt);
+                                ExpReward = outUInt;
                                 break;
                             case goldRewardKey:
-                                uint.TryParse(innerLine, out GoldReward);
+                                uint.TryParse(innerLine, out outUInt);
+                                GoldReward = outUInt;
                                 break;
                             case creditRewardKey:
-                                uint.TryParse(innerLine, out CreditReward);
+                                uint.TryParse(innerLine, out outUInt);
+                                CreditReward = outUInt;
                                 break;
                         }
                     }
@@ -401,9 +424,12 @@ namespace Server.MirDatabase
             info.ItemMessage = data[6];
             info.FlagMessage = data[7];
 
-            int.TryParse(data[8], out info.RequiredMinLevel);
-            int.TryParse(data[9], out info.RequiredMaxLevel);
-            int.TryParse(data[10], out info.RequiredQuest);
+            int.TryParse(data[8], out var outInt);
+            info.RequiredMinLevel = outInt;
+            int.TryParse(data[9], out outInt);
+            info.RequiredMaxLevel = outInt;
+            int.TryParse(data[10], out outInt);
+            info.RequiredQuest = outInt;
 
             byte.TryParse(data[11], out temp);
 

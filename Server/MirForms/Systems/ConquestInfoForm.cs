@@ -372,7 +372,8 @@ namespace Server
 
         private void ConquestInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Envir.SaveDB();
+            if (Settings.UseSqlDb) Envir.SaveConquestsDb();
+            else Envir.SaveDB();
         }
 
         private void Name_textbox_TextChanged(object sender, EventArgs e)

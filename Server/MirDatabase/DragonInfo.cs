@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
     public class DragonInfo
     {
+        public const string ConfigFile = "Dragon.ini";
+
         public bool Enabled;
         public string MapFileName, MonsterName, BodyName;
         public Point Location, DropAreaTop, DropAreaBottom;
@@ -60,6 +63,46 @@ namespace Server.MirDatabase
                 Drops[i] = new List<DropInfo>();
             }
         }
+
+        public void Load()
+        {
+            var reader = new InIReader(Settings.ConfigPath + ConfigFile);
+            Enabled = reader.ReadBoolean("Dragon", nameof(Enabled), Enabled);
+            MapFileName = reader.ReadString("Dragon", nameof(MapFileName), MapFileName);
+            MonsterName = reader.ReadString("Dragon", nameof(MonsterName), MonsterName);
+            BodyName = reader.ReadString("Dragon", nameof(BodyName), BodyName);
+            Location = new Point(reader.ReadInt32("Location", nameof(Location.X), Location.X), reader.ReadInt32("Location", nameof(Location.Y), Location.Y));
+            DropAreaTop = new Point(reader.ReadInt32("DropAreaTop", nameof(DropAreaTop.X), DropAreaTop.X), reader.ReadInt32("DropAreaTop", nameof(DropAreaTop.Y), DropAreaTop.Y));
+            DropAreaBottom = new Point(reader.ReadInt32("DropAreaBottom", nameof(DropAreaBottom.X), DropAreaBottom.X), reader.ReadInt32("DropAreaBottom", nameof(DropAreaBottom.Y), DropAreaBottom.Y));
+
+            Level = 1;
+
+            var expsString = reader.ReadString("Exps", nameof(Exps), "");
+            Exps = expsString.Split(',').Select(long.Parse).ToArray();
+
+            for (int i = 0; i < Drops.Length; i++)
+            {
+                Drops[i] = new List<DropInfo>();
+            }
+        }
+
+        public void Save()
+        {
+            //TODO:Use Config File To Save This
+            var writer = new InIReader(Settings.ConfigPath + ConfigFile);
+            writer.Write("Dragon", nameof(Enabled), Enabled);
+            writer.Write("Dragon", nameof(MapFileName), MapFileName);
+            writer.Write("Dragon", nameof(MonsterName), MonsterName);
+            writer.Write("Dragon", nameof(BodyName), BodyName);
+            writer.Write("Location", nameof(Location.X), Location.X);
+            writer.Write("Location", nameof(Location.Y), Location.Y);
+            writer.Write("DropAreaTop", nameof(DropAreaTop.X), DropAreaTop.X);
+            writer.Write("DropAreaTop", nameof(DropAreaTop.Y), DropAreaTop.Y);
+            writer.Write("DropAreaBottom", nameof(DropAreaBottom.X), DropAreaBottom.X);
+            writer.Write("DropAreaBottom", nameof(DropAreaBottom.Y), DropAreaBottom.Y);
+            writer.Write("Exps", nameof(Exps), string.Join(",",Exps));
+        }
+
         public void Save(BinaryWriter writer)
         {
             writer.Write(Enabled);

@@ -1,33 +1,67 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
     public class MapInfo
     {
-        public int Index;
-        public string FileName = string.Empty, Title = string.Empty;
-        public ushort MiniMap, BigMap, Music;
-        public LightSetting Light;
-        public byte MapDarkLight = 0, MineIndex = 0;
+        [Key]
+        public int Index { get; set; }
+        public string FileName { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public ushort MiniMap { get; set; }
+        public ushort BigMap { get; set; }
+        public ushort Music { get; set; }
+        public LightSetting Light { get; set; }
+        public byte MapDarkLight { get; set; } = 0;
+        public byte MineIndex { get; set; } = 0;
 
-        public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
-            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning;
+        public bool NoTeleport { get; set; }
+        public bool NoReconnect { get; set; }
+        public bool NoRandom { get; set; }
+        public bool NoEscape { get; set; }
+        public bool NoRecall { get; set; }
+        public bool NoDrug { get; set; }
+        public bool NoPosition { get; set; }
+        public bool NoFight { get; set; }
+        public bool NoThrowItem { get; set; }
+        public bool NoDropPlayer { get; set; }
+        public bool NoDropMonster { get; set; }
+        public bool NoNames { get; set; }
+        public bool NoMount { get; set; }
+        public bool NeedBridle { get; set; }
+        public bool Fight { get; set; }
+        public bool NeedHole { get; set; }
+        public bool Fire { get; set; }
+        public bool Lightning { get; set; }
 
-        public string NoReconnectMap = string.Empty;
-        public int FireDamage, LightningDamage;
+        public string NoReconnectMap { get; set; } = string.Empty;
+        public int FireDamage { get; set; }
+        public int LightningDamage { get; set; }
 
+        public byte[] SafeZoneBytes { get; set; }
+        [NotMapped]
         public List<SafeZoneInfo> SafeZones = new List<SafeZoneInfo>();
+        [NotMapped]
         public List<MovementInfo> Movements = new List<MovementInfo>();
+        [NotMapped]
         public List<RespawnInfo> Respawns = new List<RespawnInfo>();
+        [NotMapped]
         public List<NPCInfo> NPCs = new List<NPCInfo>();
+        public byte[] MineZoneBytes { get; set; }
+        [NotMapped]
         public List<MineZone> MineZones = new List<MineZone>();
+        [NotMapped]
         public List<Point> ActiveCoords = new List<Point>();
-
+        [NotMapped]
         public InstanceInfo Instance;
 
         public MapInfo()
@@ -103,6 +137,43 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion < 53) return;
                 Music = reader.ReadUInt16(); 
 
+        }
+
+        public void Save()
+        {
+            using (Envir.ServerDb = new ServerDbContext())
+            {
+                if (this.Index == 0) Envir.ServerDb.Maps.Add(this);
+                if (Envir.ServerDb.Entry(this).State == EntityState.Detached)
+                {
+                    Envir.ServerDb.Maps.Attach(this);
+                    Envir.ServerDb.Entry(this).State = EntityState.Modified;
+                }
+                using (var s = new MemoryStream())
+                using (var bw = new BinaryWriter(s))
+                {
+                    foreach (var z in SafeZones)
+                        z.Save(bw);
+
+                    SafeZoneBytes = s.GetBuffer();
+                }
+                using (var s = new MemoryStream())
+                using (var bw = new BinaryWriter(s))
+                {
+                    foreach (var z in MineZones)
+                        z.Save(bw);
+                    MineZoneBytes = s.GetBuffer();
+                }
+
+                Envir.ServerDb.SaveChanges();
+                Envir.ServerDb.Respawns.RemoveRange(Envir.ServerDb.Respawns.Where(r => r.MapIndex == Index));
+                Respawns.ForEach(r => r.MapIndex = Index);
+                Envir.ServerDb.Respawns.AddRange(Respawns);
+                Envir.ServerDb.Movements.RemoveRange(Envir.ServerDb.Movements.Where(m => m.MapIndex == Index));
+                Movements.ForEach(m => m.MapIndex = Index);
+                Envir.ServerDb.Movements.AddRange(Movements);
+                Envir.ServerDb.SaveChanges();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -231,9 +302,10 @@ namespace Server.MirDatabase
             MapInfo info = new MapInfo {FileName = data[0], Title = data[1]};
 
 
-            if (!ushort.TryParse(data[2], out info.MiniMap)) return;
-
-            if (!Enum.TryParse(data[3], out info.Light)) return;
+            if (!ushort.TryParse(data[2], out var infoMiniMap)) return;
+            info.MiniMap = infoMiniMap;
+            if (!Enum.TryParse(data[3], out LightSetting lightSetting)) return;
+            info.Light = lightSetting;
             int sziCount, miCount, riCount, npcCount;
 
             if (!int.TryParse(data[4], out sziCount)) return;
@@ -270,7 +342,8 @@ namespace Server.MirDatabase
                 if (!int.TryParse(data[start + 1 + (i * 5)], out y)) return;
                 temp.Source = new Point(x, y);
 
-                if (!int.TryParse(data[start + 2 + (i * 5)], out temp.MapIndex)) return;
+                if (!int.TryParse(data[start + 2 + (i * 5)], out var outInt)) return;
+                temp.MapIndex = outInt;
 
                 if (!int.TryParse(data[start + 3 + (i * 5)], out x)) return;
                 if (!int.TryParse(data[start + 4 + (i * 5)], out y)) return;
@@ -286,19 +359,28 @@ namespace Server.MirDatabase
                 RespawnInfo temp = new RespawnInfo();
                 int x, y;
 
-                if (!int.TryParse(data[start + (i * 7)], out temp.MonsterIndex)) return;
+                if (!int.TryParse(data[start + (i * 7)], out var outInt)) return;
+                temp.MonsterIndex = outInt;
+
                 if (!int.TryParse(data[start + 1 + (i * 7)], out x)) return;
                 if (!int.TryParse(data[start + 2 + (i * 7)], out y)) return;
 
                 temp.Location = new Point(x, y);
 
-                if (!ushort.TryParse(data[start + 3 + (i * 7)], out temp.Count)) return;
-                if (!ushort.TryParse(data[start + 4 + (i * 7)], out temp.Spread)) return;
-                if (!ushort.TryParse(data[start + 5 + (i * 7)], out temp.Delay)) return;
-                if (!byte.TryParse(data[start + 6 + (i * 7)], out temp.Direction)) return;
-                if (!int.TryParse(data[start + 7 + (i * 7)], out temp.RespawnIndex)) return;
-                if (!bool.TryParse(data[start + 8 + (i * 7)], out temp.SaveRespawnTime)) return;
-                if (!ushort.TryParse(data[start + 9 + (i * 7)], out temp.RespawnTicks)) return;
+                if (!ushort.TryParse(data[start + 3 + (i * 7)], out var outUShort)) return;
+                temp.Count = outUShort;
+                if (!ushort.TryParse(data[start + 4 + (i * 7)], out outUShort)) return;
+                temp.Spread = outUShort;
+                if (!ushort.TryParse(data[start + 5 + (i * 7)], out outUShort)) return;
+                temp.Delay = outUShort;
+                if (!byte.TryParse(data[start + 6 + (i * 7)], out var outByte)) return;
+                temp.Direction = outByte;
+                if (!int.TryParse(data[start + 7 + (i * 7)], out outInt)) return;
+                temp.RespawnIndex = outInt;
+                if (!bool.TryParse(data[start + 8 + (i * 7)], out var outBool)) return;
+                temp.SaveRespawnTime = outBool;
+                if (!ushort.TryParse(data[start + 9 + (i * 7)], out outUShort)) return;
+                temp.RespawnTicks = outUShort;
 
                 info.Respawns.Add(temp);
             }
@@ -315,15 +397,18 @@ namespace Server.MirDatabase
 
                 temp.Location = new Point(x, y);
 
-                if (!ushort.TryParse(data[start + 4 + (i * 6)], out temp.Rate)) return;
-                if (!ushort.TryParse(data[start + 5 + (i * 6)], out temp.Image)) return;
+                if (!ushort.TryParse(data[start + 4 + (i * 6)], out var outUShort)) return;
+                temp.Rate = outUShort;
+                if (!ushort.TryParse(data[start + 5 + (i * 6)], out outUShort)) return;
+                temp.Image = outUShort;
 
                 info.NPCs.Add(temp);
             }
 
 
 
-            info.Index = ++SMain.EditEnvir.MapIndex;
+            if (Settings.UseSqlDb) info.Index = 0;
+            else info.Index = ++SMain.EditEnvir.MapIndex;
             SMain.EditEnvir.MapInfoList.Add(info);
         }
     }

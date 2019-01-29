@@ -1,56 +1,90 @@
 ﻿using Server.MirEnvir;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server.MirDatabase
 {
     public class ConquestInfo
     {
-        public int Index;
-        public bool FullMap;
+        [Key]
+        public int Index { get; set; }
+        public bool FullMap { get; set; }
+        [NotMapped]
         public Point Location;
-        public ushort Size;
-        public string Name;
-        public int MapIndex;
-        public int PalaceIndex;
+
+        public string LocationString
+        {
+            get => $"{Location.X},{Location.Y}";
+            set
+            {
+                var array = value.Split(',');
+                Location = array.Length != 2 ? Point.Empty : new Point(int.Parse(array[0]), int.Parse(array[1]));
+            }
+        }
+        public ushort Size { get; set; }
+        public string Name { get; set; }
+        public int MapIndex { get; set; }
+        public int PalaceIndex { get; set; }
+        [NotMapped]
         public List<int> ExtraMaps = new List<int>();
+        [NotMapped]
         public List<ConquestArcherInfo> ConquestGuards = new List<ConquestArcherInfo>();
+        [NotMapped]
         public List<ConquestGateInfo> ConquestGates = new List<ConquestGateInfo>();
+        [NotMapped]
         public List<ConquestWallInfo> ConquestWalls = new List<ConquestWallInfo>();
+        [NotMapped]
         public List<ConquestSiegeInfo> ConquestSieges = new List<ConquestSiegeInfo>();
+        [NotMapped]
         public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
 
-        public int GuardIndex;
-        public int GateIndex;
-        public int WallIndex;
-        public int SiegeIndex;
-        public int FlagIndex;
+        public int GuardIndex { get; set; }
+        public int GateIndex { get; set; }
+        public int WallIndex { get; set; }
+        public int SiegeIndex { get; set; }
+        public int FlagIndex { get; set; }
 
-        public byte StartHour = 0;
-        public int WarLength = 60;
+        public byte StartHour { get; set; } = 0;
+        public int WarLength { get; set; } = 60;
 
-        private int counter;
+        private int counter { get; set; }
 
-        public ConquestType Type = ConquestType.Request;
-        public ConquestGame Game = ConquestGame.CapturePalace;
+        public ConquestType Type { get; set; } = ConquestType.Request;
+        public ConquestGame Game { get; set; } = ConquestGame.CapturePalace;
 
-        public bool Monday;
-        public bool Tuesday;
-        public bool Wednesday;
-        public bool Thursday;
-        public bool Friday;
-        public bool Saturday;
-        public bool Sunday;
+        public bool Monday { get; set; }
+        public bool Tuesday { get; set; }
+        public bool Wednesday { get; set; }
+        public bool Thursday { get; set; }
+        public bool Friday { get; set; }
+        public bool Saturday { get; set; }
+        public bool Sunday { get; set; }
 
         //King of the hill
+        public string KingLocationString
+        {
+            get => $"{KingLocation.X},{KingLocation.Y}";
+            set
+            {
+                var array = value.Split(',');
+                KingLocation = array.Length != 2 ? Point.Empty : new Point(int.Parse(array[0]), int.Parse(array[1]));
+            }
+        }
+        [NotMapped]
         public Point KingLocation;
-        public ushort KingSize;
+        public ushort KingSize { get; set; }
 
         //Control points
+        [NotMapped]
         public List<ConquestFlagInfo> ControlPoints = new List<ConquestFlagInfo>();
-        public int ControlPointIndex;
+        public int ControlPointIndex { get; set; }
+
+        public byte[] BinData { get; set; }
 
         public ConquestInfo()
         {
@@ -140,6 +174,61 @@ namespace Server.MirDatabase
                 {
                     ControlPoints.Add(new ConquestFlagInfo(reader));
                 }
+            }
+        }
+
+        public void Save()
+        {
+            //TODO:Use Config File To Save This
+            using (Envir.ServerDb = new ServerDbContext())
+            {
+                if (this.Index == 0) Envir.ServerDb.ConquestInfos.Add(this);
+                if (Envir.ServerDb.Entry(this).State == EntityState.Detached)
+                {
+                    Envir.ServerDb.ConquestInfos.Attach(this);
+                    Envir.ServerDb.Entry(this).State = EntityState.Modified;
+                }
+
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(ConquestGuards.Count);
+                    for (int i = 0; i < ConquestGuards.Count; i++)
+                    {
+                        ConquestGuards[i].Save(writer);
+                    }
+                    writer.Write(ExtraMaps.Count);
+                    for (int i = 0; i < ExtraMaps.Count; i++)
+                    {
+                        writer.Write(ExtraMaps[i]);
+                    }
+                    writer.Write(ConquestGates.Count);
+                    for (int i = 0; i < ConquestGates.Count; i++)
+                    {
+                        ConquestGates[i].Save(writer);
+                    }
+                    writer.Write(ConquestWalls.Count);
+                    for (int i = 0; i < ConquestWalls.Count; i++)
+                    {
+                        ConquestWalls[i].Save(writer);
+                    }
+                    writer.Write(ConquestSieges.Count);
+                    for (int i = 0; i < ConquestSieges.Count; i++)
+                    {
+                        ConquestSieges[i].Save(writer);
+                    }
+
+                    writer.Write(ConquestFlags.Count);
+                    for (int i = 0; i < ConquestFlags.Count; i++)
+                    {
+                        ConquestFlags[i].Save(writer);
+                    }
+                    for (int i = 0; i < ControlPoints.Count; i++)
+                    {
+                        ControlPoints[i].Save(writer);
+                    }
+                }
+                Envir.ServerDb.SaveChanges();
             }
         }
 

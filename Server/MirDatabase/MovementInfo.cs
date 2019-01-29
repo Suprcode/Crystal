@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,33 @@ namespace Server.MirDatabase
 {
     public class MovementInfo
     {
-        public int MapIndex;
-        public Point Source, Destination;
-        public bool NeedHole, NeedMove;
-        public int ConquestIndex;
+        [Key]
+        public int Index { get; set; }
+        public int MapIndex { get; set; }
+        public Point Source;
+
+        public string SourceString
+        {
+            get => $"{Source.X},{Source.Y}";
+            set
+            {
+                var array = value.Split(',');
+                Source = array.Length != 2 ? Point.Empty : new Point(int.Parse(array[0]), int.Parse(array[1]));
+            }
+        }
+        public Point Destination;
+        public string DestinationString
+        {
+            get => $"{Destination.X},{Destination.Y}";
+            set
+            {
+                var array = value.Split(',');
+                Destination = array.Length != 2 ? Point.Empty : new Point(int.Parse(array[0]), int.Parse(array[1]));
+            }
+        }
+        public bool NeedHole { get; set; }
+        public bool NeedMove { get; set; }
+        public int ConquestIndex { get; set; }
 
         public MovementInfo()
         {
@@ -45,6 +69,12 @@ namespace Server.MirDatabase
             writer.Write(NeedHole);
             writer.Write(NeedMove);
             writer.Write(ConquestIndex);
+        }
+
+        public void Save()
+        {
+            Envir.ServerDb.Movements.Add(this);
+            Envir.ServerDb.SaveChanges();
         }
 
 

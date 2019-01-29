@@ -8,10 +8,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
 using S = ServerPackets;
+using Server.MirDatabase.Extensions;
 
 namespace Server.MirEnvir
 {
@@ -119,6 +121,8 @@ namespace Server.MirEnvir
         public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();
         public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
 
+        public static ServerDbContext ServerDb;
+
         //User DB
         public int NextAccountID, NextCharacterID;
         public ulong NextUserItemID, NextAuctionID, NextMailID;
@@ -127,7 +131,8 @@ namespace Server.MirEnvir
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
         public int GuildCount, NextGuildID;
         public List<GuildObject> GuildList = new List<GuildObject>();
-       
+        
+        public static AccountDbContext AccountDb = new AccountDbContext();
 
         //Live Info
         public List<Map> MapList = new List<Map>();
@@ -876,6 +881,212 @@ namespace Server.MirEnvir
             for (int i = 0; i < Players.Count; i++) Players[i].HasUpdatedBaseStats = false;
         }
 
+        private void DebugLog(string log)
+        {
+            Debug.WriteLine($"[{DateTime.Now}]: {log}");
+            SMain.Enqueue(log);
+        }
+
+        #region SQL DB Save
+
+        public void DeleteAllData()
+        {
+            DebugLog("Delete All Data");
+            using (ServerDb = new ServerDbContext())
+            {
+                ServerDb.Maps.RemoveRange(ServerDb.Maps.Where(m => true));
+                ServerDb.Items.RemoveRange(ServerDb.Items.Where(i => true));
+                ServerDb.Monsters.RemoveRange(ServerDb.Monsters.Where(m => true));
+                ServerDb.NpcInfos.RemoveRange(ServerDb.NpcInfos.Where(n => true));
+                ServerDb.Quests.RemoveRange(ServerDb.Quests.Where(q => true));
+                ServerDb.Magics.RemoveRange(ServerDb.Magics.Where(m => true));
+                ServerDb.GameShopItems.RemoveRange(ServerDb.GameShopItems.Where(gs => true));
+                ServerDb.ConquestInfos.RemoveRange(ServerDb.ConquestInfos.Where(c => true));
+                ServerDb.SaveChanges();
+            }
+        }
+
+        public void SaveMonsters(bool convert = false)
+        {
+            DebugLog("Save Monsters");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = MonsterInfoList.Where(i => i.Index != 0).Select(i => i.Index).ToList();
+                    ServerDb.Monsters.RemoveRange(ServerDb.Monsters.Where(i => !ids.Contains(i.Index)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var monster in MonsterInfoList)
+            {
+                var orgIndex = monster.Index;
+                if (convert)
+                {
+                    monster.Index = 0;
+                }
+                monster.Save(orgIndex);
+            }
+        }
+
+        public void SaveMaps(bool convert = false)
+        {
+            DebugLog("Save Maps");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = MapInfoList.Where(i => i.Index != 0).Select(i => i.Index).ToList();
+                    ServerDb.Maps.RemoveRange(ServerDb.Maps.Where(i => !ids.Contains(i.Index)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var map in MapInfoList)
+            {
+                if (convert) map.Index = 0;
+                map.Save();
+            }
+        }
+
+        public void SaveItems(bool convert = false)
+        {
+            DebugLog("Save Items");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = ItemInfoList.Where(i => i.Index != 0).Select(i => i.Index).ToList();
+                    ServerDb.Items.RemoveRange(ServerDb.Items.Where(i => !ids.Contains(i.Index)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var item in ItemInfoList)
+            {
+                var orgIndex = item.Index;
+                if (convert) item.Index = 0;
+                item.Save(orgIndex);
+            }
+        }
+
+        public void SaveNpc(bool convert = false)
+        {
+            DebugLog("Save Npc");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = NPCInfoList.Where(i => i.Index != 0).Select(i => i.Index).ToList();
+                    ServerDb.NpcInfos.RemoveRange(ServerDb.NpcInfos.Where(i => !ids.Contains(i.Index)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var npc in NPCInfoList)
+            {
+                if (convert) npc.Index = 0;
+                npc.Save();
+            }
+        }
+
+        public void SaveQuests(bool convert = false)
+        {
+            DebugLog("Save Quests");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = QuestInfoList.Where(i => i.Index != 0).Select(i => i.Index).ToList();
+                    ServerDb.Quests.RemoveRange(ServerDb.Quests.Where(i => !ids.Contains(i.Index)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var quest in QuestInfoList)
+            {
+                if (convert) quest.Index = 0;
+                quest.Save();
+            }
+        }
+
+        public void SaveMagics(bool convert = false)
+        {
+            DebugLog("Save Magics");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = MagicInfoList.Where(i => i.Index != 0).Select(i => i.Index).ToList();
+                    ServerDb.Magics.RemoveRange(ServerDb.Magics.Where(i => !ids.Contains(i.Index)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var magic in MagicInfoList)
+            {
+                if (convert) magic.Index = 0;
+                magic.Save();
+            }
+        }
+
+        public void SaveGameShopItems(bool convert = false)
+        {
+            DebugLog("Save Game Shop Items");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = GameShopList.Where(i => i.GIndex != 0).Select(i => i.GIndex).ToList();
+                    ServerDb.GameShopItems.RemoveRange(ServerDb.GameShopItems.Where(i => !ids.Contains(i.GIndex)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var gs in GameShopList)
+            {
+                if (convert) gs.GIndex = 0;
+                gs.Save();
+            }
+        }
+
+        public void SaveConquestsDb(bool convert = false)
+        {
+            DebugLog("Save Conquests");
+            if (!convert)
+            {
+                using (ServerDb = new ServerDbContext())
+                {
+                    var ids = ConquestInfos.Where(i => i.Index != 0).Select(i => i.Index).ToList();
+                    ServerDb.ConquestInfos.RemoveRange(ServerDb.ConquestInfos.Where(i => !ids.Contains(i.Index)));
+                    ServerDb.SaveChanges();
+                }
+            }
+            foreach (var c in ConquestInfos)
+            {
+                if (convert) c.Index = 0;
+                c.Save();
+            }
+        }
+        #endregion
+
+        public void SaveSqlDB(bool convert = false)
+        {
+            new Thread(() =>
+            {
+                Stop();
+                DebugLog("Convert Start");
+                if (convert)
+                {
+                    DeleteAllData();
+                }
+                SaveMonsters(convert);
+                SaveMaps(convert);
+                SaveItems(convert);
+                SaveNpc(convert);
+                SaveQuests(convert);
+                DragonInfo.Save();
+                SaveMagics(convert);
+                SaveGameShopItems(convert);
+                SaveConquestsDb(convert);
+                DebugLog("Done");
+            }).Start();
+        }
+
         public void SaveDB()
         {
             using (FileStream stream = File.Create(DatabasePath))
@@ -1184,6 +1395,67 @@ namespace Server.MirEnvir
             }
 
             Saving = false;
+        }
+
+        public void LoadSqlDB()
+        {
+            using (ServerDb = new ServerDbContext())
+            {
+                MapInfoList.Clear();
+                MapInfoList = ServerDb.Maps.ToList();
+                MapInfoList.ForEach(map =>
+                {
+                    map.SafeZones.Clear();
+                    if(map.SafeZoneBytes.Length > 0)
+                    using (var ms = new MemoryStream(map.SafeZoneBytes))
+                    using (var reader = new BinaryReader(ms))
+                    {
+                        map.SafeZones.Add(new SafeZoneInfo(reader) { Info = map });
+                    }
+                    map.MineZones.Clear();
+                    if(map.MineZoneBytes.Length > 0)
+                    using (var ms = new MemoryStream(map.MineZoneBytes))
+                    using (var reader = new BinaryReader(ms))
+                    {
+                        map.MineZones.Add(new MineZone(reader));
+                    }
+
+                    map.Respawns = ServerDb.Respawns.Where(r => r.MapIndex == map.Index).ToList();
+                    map.Movements = ServerDb.Movements.Where(m => m.MapIndex == map.Index).ToList();
+                });
+                ItemInfoList.Clear();
+                ItemInfoList = ServerDb.Items.ToList();
+                foreach (var item in ItemInfoList)
+                {
+                    if ((item != null) && (item.RandomStatsId < Settings.RandomItemStatsList.Count))
+                    {
+                        item.RandomStats = Settings.RandomItemStatsList[item.RandomStatsId];
+                    }
+                }
+                MonsterInfoList.Clear();
+                MonsterInfoList = ServerDb.Monsters.ToList();
+                NPCInfoList.Clear();
+                NPCInfoList = ServerDb.NpcInfos.ToList();
+                QuestInfoList.Clear();
+                QuestInfoList = ServerDb.Quests.ToList();
+                DragonInfo.Load();
+                MagicInfoList.Clear();
+                MagicInfoList = ServerDb.Magics.ToList();
+                FillMagicInfoList();
+                UpdateMagicInfo();
+                GameShopList.Clear();
+                var dbGameShopList = ServerDb.GameShopItems.ToList();
+                foreach (var item in dbGameShopList)
+                {
+                    if (SMain.Envir.BindGameShop(item))
+                    {
+                        GameShopList.Add(item);
+                    }
+                }
+                ConquestInfos.Clear();
+                ConquestInfos = ServerDb.ConquestInfos.ToList();
+                Settings.LinkGuildCreationItems(ItemInfoList);
+            }
         }
 
         public void LoadDB()
@@ -1867,7 +2139,8 @@ namespace Server.MirEnvir
             CustomCommands.Clear();
             MonsterCount = 0;
 
-            LoadDB();
+            if (Settings.UseSqlDb) LoadSqlDB();
+            else LoadDB();
 
             RecipeInfoList.Clear();
             foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
@@ -2454,28 +2727,28 @@ namespace Server.MirEnvir
         }
         public void CreateMapInfo()
         {
-            MapInfoList.Add(new MapInfo {Index = ++MapIndex});
+            MapInfoList.Add(new MapInfo {Index = Settings.UseSqlDb ? 0 : ++MapIndex});
         }
         public void CreateItemInfo(ItemType type = ItemType.Nothing)
         {
-            ItemInfoList.Add(new ItemInfo { Index = ++ItemIndex, Type = type, RandomStatsId = 255});
+            ItemInfoList.Add(new ItemInfo { Index = Settings.UseSqlDb ? 0 : ++ItemIndex, Type = type, RandomStatsId = 255});
         }
         public void CreateMonsterInfo()
         {
-            MonsterInfoList.Add(new MonsterInfo {Index = ++MonsterIndex});
+            MonsterInfoList.Add(new MonsterInfo {Index = Settings.UseSqlDb ? 0 : ++MonsterIndex});
         }
         public void CreateNPCInfo()
         {
-            NPCInfoList.Add(new NPCInfo { Index = ++NPCIndex });
+            NPCInfoList.Add(new NPCInfo { Index = Settings.UseSqlDb ? 0 : ++NPCIndex });
         }
         public void CreateQuestInfo()
         {
-            QuestInfoList.Add(new QuestInfo { Index = ++QuestIndex });
+            QuestInfoList.Add(new QuestInfo { Index = Settings.UseSqlDb ? 0 : ++QuestIndex });
         }
 
         public void AddToGameShop(ItemInfo Info)
         {
-            GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
+            GameShopList.Add(new GameShopItem { GIndex = Settings.UseSqlDb ? 0 : ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
         }
 
         public void Remove(MapInfo info)

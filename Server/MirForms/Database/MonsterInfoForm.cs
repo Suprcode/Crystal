@@ -599,7 +599,8 @@ namespace Server
         }
         private void MonsterInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Envir.SaveDB();
+            if (Settings.UseSqlDb) Envir.SaveMonsters();
+            else Envir.SaveDB();
         }
 
         private void PasteMButton_Click(object sender, EventArgs e)

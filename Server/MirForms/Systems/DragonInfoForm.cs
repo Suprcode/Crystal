@@ -115,7 +115,8 @@ namespace Server
 
         private void DragonInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Envir.SaveDB();
+            if(Settings.UseSqlDb) Envir.DragonInfo.Save();
+            else Envir.SaveDB();
         }
 
         private void EnableDragonCheckBox_CheckStateChanged(object sender, EventArgs e)

@@ -118,7 +118,8 @@ namespace Server.MirForms.Systems
                 Envir.MonsterInfoList[i] = mob;
             }
 
-            Envir.SaveDB();
+            if (Settings.UseSqlDb) Envir.SaveMonsters();
+            else Envir.SaveDB();
         }
     }
 }

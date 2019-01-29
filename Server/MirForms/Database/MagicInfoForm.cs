@@ -698,7 +698,8 @@ namespace Server
         private void MagicInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             //do something to save it all
-            Envir.SaveDB();
+            if(Settings.UseSqlDb) Envir.SaveMagics();
+            else Envir.SaveDB();
         }
 
         private void MagiclistBox_SelectedIndexChanged(object sender, EventArgs e)
