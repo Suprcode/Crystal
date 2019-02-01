@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
@@ -43,6 +44,20 @@ namespace Server.MirDatabase
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(Settings.AccountDbConnectionString);
+        }
+
+        public DbSet<AccountInfo> Accounts { get; set; }
+        public DbSet<UserItem> UserItems { get; set; }
+        public DbSet<CharacterInfo> Characters { get; set; }
+        public DbSet<AuctionInfo> Auctions { get; set; }
+        public DbSet<MailInfo> Mails { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserItem>().HasKey(i => i.UniqueID);
+            modelBuilder.Entity<UserItem>().Ignore(i => i.Info);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

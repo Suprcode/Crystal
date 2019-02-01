@@ -388,7 +388,8 @@ namespace Server
         {
             if (SMain.Envir.Running) return;
 
-            SMain.Envir.SaveAccounts();
+            if(Settings.UseSqlDb) SMain.Envir.SaveAccountsSqlDb();
+            else SMain.Envir.SaveAccounts();
         }
 
         private void AdminCheckBox_CheckedChanged(object sender, EventArgs e)

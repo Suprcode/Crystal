@@ -3080,33 +3080,58 @@ public class ItemInfo
 }
 public class UserItem
 {
-    public ulong UniqueID;
-    public int ItemIndex;
+    public ulong UniqueID { get; set; }
+    public int ItemIndex { get; set; }
 
-    public ItemInfo Info;
-    public ushort CurrentDura, MaxDura;
-    public uint Count = 1, GemCount = 0;
+    public ItemInfo Info { get; set; }
+    public ushort CurrentDura { get; set; }
+    public ushort MaxDura { get; set; }
+    public uint Count { get; set; } = 1;
+    public uint GemCount { get; set; } = 0;
 
-    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
-    public sbyte AttackSpeed, Luck;
+    public byte AC { get; set; }
+    public byte MAC { get; set; }
+    public byte DC { get; set; }
+    public byte MC { get; set; }
+    public byte SC { get; set; }
+    public byte Accuracy { get; set; }
+    public byte Agility { get; set; }
+    public byte HP { get; set; }
+    public byte MP { get; set; }
+    public byte Strong { get; set; }
+    public byte MagicResist { get; set; }
+    public byte PoisonResist { get; set; }
+    public byte HealthRecovery { get; set; }
+    public byte ManaRecovery { get; set; }
+    public byte PoisonRecovery { get; set; }
+    public byte CriticalRate { get; set; }
+    public byte CriticalDamage { get; set; }
+    public byte Freezing { get; set; }
+    public byte PoisonAttack { get; set; }
+    public sbyte AttackSpeed { get; set; }
+    public sbyte Luck { get; set; }
 
-    public RefinedValue RefinedValue = RefinedValue.None;
-    public byte RefineAdded = 0;
+    public RefinedValue RefinedValue { get; set; } = RefinedValue.None;
+    public byte RefineAdded { get; set; } = 0;
 
-    public bool DuraChanged;
-    public int SoulBoundId = -1;
-    public bool Identified = false;
-    public bool Cursed = false;
+    public bool DuraChanged { get; set; }
+    public int SoulBoundId { get; set; } = -1;
+    public bool Identified { get; set; } = false;
+    public bool Cursed { get; set; } = false;
 
-    public int WeddingRing = -1;
+    public int WeddingRing { get; set; } = -1;
 
+    public DateTime BuybackExpiryDate { get; set; }
+
+    public string SlotString { get; set; }
     public UserItem[] Slots = new UserItem[5];
 
-    public DateTime BuybackExpiryDate;
-
+    public byte[] ExpireInfoBytes { get; set; }
     public ExpireInfo ExpireInfo;
+    public byte[] RentalInformationBytes { get; set; }
     public RentalInformation RentalInformation;
 
+    public byte[] AwakeBytes { get; set; }
 	public Awake Awake = new Awake();
     public bool IsAdded
     {
@@ -3130,6 +3155,11 @@ public class UserItem
     public string FriendlyName
     {
         get { return Count > 1 ? string.Format("{0} ({1})", Info.FriendlyName, Count) : Info.FriendlyName; }
+    }
+
+    public UserItem()
+    {
+
     }
 
     public UserItem(ItemInfo info)

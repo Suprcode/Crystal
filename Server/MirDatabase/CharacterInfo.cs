@@ -1,103 +1,171 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Server.MirEnvir;
 using Server.MirNetwork;
 using Server.MirObjects;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
+using Server.MirDatabase.Extensions;
 
 namespace Server.MirDatabase
 {
     public class CharacterInfo
     {
-        public int Index;
-        public string Name;
-        public ushort Level;
-        public MirClass Class;
-        public MirGender Gender;
-        public byte Hair;
-        public int GuildIndex = -1;
+        [Key]
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public ushort Level { get; set; }
+        public MirClass Class { get; set; }
+        public MirGender Gender { get; set; }
+        public byte Hair { get; set; }
+        public int GuildIndex { get; set; } = -1;
 
-        public string CreationIP;
-        public DateTime CreationDate;
+        public string CreationIP { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        public bool Banned;
-        public string BanReason = string.Empty;
-        public DateTime ExpiryDate;
+        public bool Banned { get; set; }
+        public string BanReason { get; set; } = string.Empty;
+        public DateTime ExpiryDate { get; set; }
 
-        public bool ChatBanned;
-        public DateTime ChatBanExpiryDate;
+        public bool ChatBanned { get; set; }
+        public DateTime ChatBanExpiryDate { get; set; }
 
-        public string LastIP = string.Empty;
-        public DateTime LastDate;
+        public string LastIP { get; set; } = string.Empty;
+        public DateTime LastDate { get; set; }
 
-        public bool Deleted;
-        public DateTime DeleteDate;
+        public bool Deleted { get; set; }
+        public DateTime DeleteDate { get; set; }
 
         public ListViewItem ListItem;
 
         //Marriage
-        public int Married = 0;
-        public DateTime MarriedDate;
+        public int Married { get; set; } = 0;
+        public DateTime MarriedDate { get; set; }
 
         //Mentor
-        public int Mentor = 0;
-        public DateTime MentorDate;
-        public bool isMentor;
-        public long MentorExp = 0;
+        public int Mentor { get; set; } = 0;
+        public DateTime MentorDate { get; set; }
+        public bool isMentor { get; set; }
+        public long MentorExp { get; set; } = 0;
 
         //Location
-        public int CurrentMapIndex;
+        public int CurrentMapIndex { get; set; }
+
+        public string CurrentLocationString
+        {
+            get => $"{CurrentLocation.X},{CurrentLocation.Y}";
+            set
+            {
+                var array = value.Split(',');
+                CurrentLocation = array.Length != 2 ? Point.Empty : new Point(int.Parse(array[0]), int.Parse(array[1]));
+            }
+        }
         public Point CurrentLocation;
-        public MirDirection Direction;
-        public int BindMapIndex;
+        public MirDirection Direction { get; set; }
+        public int BindMapIndex { get; set; }
+        public string BindLocationString
+        {
+            get => $"{BindLocation.X},{BindLocation.Y}";
+            set
+            {
+                var array = value.Split(',');
+                BindLocation = array.Length != 2 ? Point.Empty : new Point(int.Parse(array[0]), int.Parse(array[1]));
+            }
+        }
+
         public Point BindLocation;
 
-        public ushort HP, MP;
-        public long Experience;
+        public ushort HP { get; set; }
+        public ushort MP { get; set; }
+        public long Experience { get; set; }
 
-        public AttackMode AMode;
-        public PetMode PMode;
-        public bool AllowGroup;
-        public bool AllowTrade;
+        public AttackMode AMode { get; set; }
+        public PetMode PMode { get; set; }
+        public bool AllowGroup { get; set; }
+        public bool AllowTrade { get; set; }
 
-        public int PKPoints;
+        public int PKPoints { get; set; }
 
-        public bool NewDay;
+        public bool NewDay { get; set; }
 
-        public bool Thrusting, HalfMoon, CrossHalfMoon;
-        public bool DoubleSlash;
-        public byte MentalState;
-        public byte MentalStateLvl;
+        public bool Thrusting { get; set; }
+        public bool HalfMoon { get; set; }
+        public bool CrossHalfMoon { get; set; }
+        public bool DoubleSlash { get; set; }
+        public byte MentalState { get; set; }
+        public byte MentalStateLvl { get; set; }
 
-        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];
+        public string InventoryString { get; set; }
+        public string QuestInventoryString { get; set; }
+        public string EquipmentString { get; set; }
+        [NotMapped]
+        public UserItem[] Inventory = new UserItem[46];
+        [NotMapped]
+        public UserItem[] Equipment = new UserItem[14];
+        [NotMapped]
+        public UserItem[] Trade = new UserItem[10];
+        [NotMapped]
+        public UserItem[] QuestInventory = new UserItem[40];
+        [NotMapped]
+        public UserItem[] Refine = new UserItem[16];
+        [NotMapped]
         public List<ItemRentalInformation> RentedItems = new List<ItemRentalInformation>();
+        public byte[] RentedItemsBytes { get; set; }
+        [NotMapped]
         public List<ItemRentalInformation> RentedItemsToRemove = new List<ItemRentalInformation>();
-        public bool HasRentedItem;
+        public bool HasRentedItem { get; set; }
+        public ulong CurrentRefineItemIndex { get; set; } = 0;
+        [NotMapped]
         public UserItem CurrentRefine = null;
-        public long CollectTime = 0;
+        public long CollectTime { get; set; } = 0;
+        [NotMapped]
         public List<UserMagic> Magics = new List<UserMagic>();
+        public byte[] MagicsBytes { get; set; }
+        [NotMapped]
         public List<PetInfo> Pets = new List<PetInfo>();
+        public byte[] PetsBytes { get; set; }
+        [NotMapped]
         public List<Buff> Buffs = new List<Buff>();
+        public byte[] BuffsBytes { get; set; }
+        [NotMapped]
         public List<Poison> Poisons = new List<Poison>();
+        [NotMapped]
         public List<MailInfo> Mail = new List<MailInfo>();
+        [NotMapped]
         public List<FriendInfo> Friends = new List<FriendInfo>();
+        public byte[] FriendsBytes { get; set; }
 
         //IntelligentCreature
+        [NotMapped]
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
-        public int PearlCount;
+        public byte[] IntelligentCreaturesBytes { get; set; }
+        public int PearlCount { get; set; }
 
+        [NotMapped]
         public List<QuestProgressInfo> CurrentQuests = new List<QuestProgressInfo>();
+        public byte[] CurrentQuestsBytes { get; set; }
+        [NotMapped]
         public List<int> CompletedQuests = new List<int>();
+        public string CompletedQuestsString { get; set; }
 
+        [NotMapped]
         public bool[] Flags = new bool[Globals.FlagIndexCount];
+        public string FlagsString { get; set; }
 
+        public int AccountInfoIndex { get; set; }
         public AccountInfo AccountInfo;
+
         public PlayerObject Player;
         public MountInfo Mount;
 
+        [NotMapped]
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
+        [NotMapped]
         public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
 
         public CharacterInfo()
@@ -366,6 +434,119 @@ namespace Server.MirDatabase
                 }
             }
         }
+
+        public void Save(bool convert = false)
+        {
+            if (convert) Index = 0;
+            using (Envir.AccountDb = new AccountDbContext())
+            {
+                if(Index == 0) Envir.AccountDb.Characters.Add(this);
+                if (Envir.AccountDb.Entry(this).State == EntityState.Detached)
+                {
+                    Envir.AccountDb.Characters.Attach(this);
+                    Envir.AccountDb.Entry(this).State = EntityState.Modified;
+                }
+                AccountInfoIndex = AccountInfo.Index;
+
+                foreach (var item in Inventory)
+                {
+                    item?.Save(convert);
+                }
+                InventoryString = string.Join(",", Inventory.Select(item => item?.UniqueID ?? 0));
+
+                foreach (var item in Equipment)
+                {
+                    item?.Save(convert);
+                }
+                EquipmentString = string.Join(",", Equipment.Select(item => item?.UniqueID ?? 0));
+
+                foreach (var item in QuestInventory)
+                {
+                    item?.Save(convert);
+                }
+                QuestInventoryString = string.Join(",", QuestInventory.Select(item => item?.UniqueID ?? 0));
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(Magics.Count);
+                    foreach (var m in Magics)
+                        m.Save(writer);
+                    MagicsBytes = ms.ToArray();
+                }
+
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(Pets.Count);
+                    foreach (var pet in Pets)
+                        pet.Save(writer);
+                    PetsBytes = ms.ToArray();
+                }
+
+                FlagsString = string.Join(",", Flags);
+
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(CurrentQuests.Count);
+                    foreach (var quest in CurrentQuests)
+                        quest.Save(writer);
+                    CurrentQuestsBytes = ms.ToArray();
+                }
+
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(Buffs.Count);
+                    foreach (var buff in Buffs)
+                    {
+                        buff.Save(writer);
+                    }
+                    BuffsBytes = ms.ToArray();
+                }
+
+                //foreach (var m in Mail)
+                //    m.Save();
+
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(IntelligentCreatures.Count);
+                    foreach (var ic in IntelligentCreatures)
+                        ic.Save(writer);
+
+                    IntelligentCreaturesBytes = ms.ToArray();
+                }
+
+                CompletedQuestsString = string.Join(",", CompletedQuests);
+
+                CurrentRefineItemIndex = CurrentRefine?.UniqueID ?? 0;
+                if ((CollectTime - SMain.Envir.Time) < 0)
+                    CollectTime = 0;
+                else
+                    CollectTime = CollectTime - SMain.Envir.Time;
+
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(Friends.Count);
+                    foreach (var f in Friends)
+                        f.Save(writer);
+                    FriendsBytes = ms.ToArray();
+                }
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(RentedItems.Count);
+                    foreach (var rentedItemInformation in RentedItems)
+                        rentedItemInformation.Save(writer);
+                    RentedItemsBytes = ms.ToArray();
+                }
+
+                Envir.AccountDb.SaveChanges();
+            }
+        }
+
 
         public void Save(BinaryWriter writer)
         {

@@ -2,26 +2,34 @@
 using Server.MirObjects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Server.MirDatabase.Extensions;
 
 namespace Server.MirEnvir
 {
     public class MailInfo
     {
-        public ulong MailID;
+        [Key]
+        public ulong MailID { get; set; }
 
-        public string Sender;
+        public string Sender { get; set; }
 
-        public int RecipientIndex;
+        public int RecipientIndex { get; set; }
         public CharacterInfo RecipientInfo;
 
-        public string Message = string.Empty;
-        public uint Gold = 0;
+        public string Message { get; set; } = string.Empty;
+        public uint Gold { get; set; } = 0;
+        [NotMapped]
         public List<UserItem> Items = new List<UserItem>();
+        public string ItemsString { get; set; }
 
-        public DateTime DateSent, DateOpened;
+        public DateTime DateSent { get; set; }
+        public DateTime DateOpened { get; set; }
 
         public bool Sent
         {
@@ -33,16 +41,16 @@ namespace Server.MirEnvir
             get { return DateOpened > DateTime.MinValue; }
         }
 
-        public bool Locked;
+        public bool Locked { get; set; }
 
-        public bool Collected;
+        public bool Collected { get; set; }
 
         public bool Parcel //parcel if item contains gold or items.
         {
             get { return Gold > 0 || Items.Count > 0; }
         }
 
-        public bool CanReply;
+        public bool CanReply { get; set; }
 
         public MailInfo(int recipientIndex, bool canReply = false)
         {
@@ -50,6 +58,11 @@ namespace Server.MirEnvir
             RecipientIndex = recipientIndex;
 
             CanReply = canReply;
+            if (Settings.UseSqlDb)
+            {
+                MailID = 0;
+                Save();
+            }
         }
 
         public MailInfo(BinaryReader reader, int version, int customversion)
@@ -75,6 +88,30 @@ namespace Server.MirEnvir
             Locked = reader.ReadBoolean();
             Collected = reader.ReadBoolean();
             CanReply = reader.ReadBoolean();
+        }
+
+        public void Save(bool convert = false)
+        {
+            if (convert && MailID != 0) MailID = 0;
+            foreach (var userItem in Items)
+            {
+                userItem?.Save(convert);
+            }
+            using (var accountDb = new AccountDbContext())
+            {
+                if (MailID == 0) accountDb.Mails.Add(this);
+                if (accountDb.Entry(this).State == EntityState.Detached)
+                {
+                    accountDb.Mails.Attach(this);
+                    accountDb.Entry(this).State = EntityState.Modified;
+                }
+                
+                if (RecipientIndex != RecipientInfo.Index) RecipientIndex = RecipientInfo.Index;
+
+                ItemsString = string.Join(",", Items.Select(i => i.UniqueID));
+
+                accountDb.SaveChanges();
+            }
         }
 
         public void Save(BinaryWriter writer)

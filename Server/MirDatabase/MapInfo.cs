@@ -152,6 +152,7 @@ namespace Server.MirDatabase
                 using (var s = new MemoryStream())
                 using (var bw = new BinaryWriter(s))
                 {
+                    bw.Write(SafeZones.Count);
                     foreach (var z in SafeZones)
                         z.Save(bw);
 
@@ -160,6 +161,7 @@ namespace Server.MirDatabase
                 using (var s = new MemoryStream())
                 using (var bw = new BinaryWriter(s))
                 {
+                    bw.Write(MineZones.Count);
                     foreach (var z in MineZones)
                         z.Save(bw);
                     MineZoneBytes = s.GetBuffer();

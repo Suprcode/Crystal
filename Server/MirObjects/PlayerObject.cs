@@ -14577,7 +14577,11 @@ namespace Server.MirObjects
                     Item = temp,
                     Price = price
                 };
-
+                if (Settings.UseSqlDb)
+                {
+                    auction.AuctionID = 0;
+                    auction.Save();
+                }
                 Account.Auctions.AddLast(auction);
                 Envir.Auctions.AddFirst(auction);
 
@@ -17477,6 +17481,12 @@ namespace Server.MirObjects
                 Items = giftItems
             };
 
+            if (Settings.UseSqlDb)
+            {
+                mail.MailID = 0;
+                mail.Save();
+            }
+
             mail.Send();
 
             Enqueue(new S.MailSent { Result = 1 });
@@ -19599,7 +19609,11 @@ namespace Server.MirObjects
                     Items = mailItems,
                 };
                 mail.Send();
-
+                if (Settings.UseSqlDb)
+                {
+                    mail.MailID = 0;
+                    mail.Save();
+                }
             SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
             ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
         }

@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Server.MirDatabase.Extensions;
 
 namespace Server.MirDatabase
 {
     public class AuctionInfo
     {
-        public ulong AuctionID; 
+        [Key]
+        public ulong AuctionID { get; set; }
 
+        public ulong ItemUniqueID { get; set; }
         public UserItem Item;
-        public DateTime ConsignmentDate;
-        public uint Price;
+        public DateTime ConsignmentDate { get; set; }
+        public uint Price { get; set; }
 
-        public int CharacterIndex;
+
+        public int CharacterIndex { get; set; }
         public CharacterInfo CharacterInfo;
 
-        public bool Expired, Sold;
+        public bool Expired { get; set; }
+        public bool Sold { get; set; }
 
         public AuctionInfo()
         {
@@ -35,6 +43,28 @@ namespace Server.MirDatabase
 
             Expired = reader.ReadBoolean();
             Sold = reader.ReadBoolean();
+        }
+
+        public void Save(bool convert = false)
+        {
+            if (convert) AuctionID = 0;
+            Item?.Save(convert);
+            using (var accountDb = new AccountDbContext())
+            {
+                if (AuctionID == 0) accountDb.Auctions.Add(this);
+                if (accountDb.Entry(this).State == EntityState.Detached)
+                {
+                    accountDb.Auctions.Attach(this);
+                    accountDb.Characters.Attach(CharacterInfo);
+                    accountDb.UserItems.Attach(Item);
+                    accountDb.Entry(this).State = EntityState.Modified;
+                }
+
+                if (ItemUniqueID != Item?.UniqueID) ItemUniqueID = Item.UniqueID;
+                if (CharacterIndex != CharacterInfo.Index) CharacterIndex = CharacterInfo.Index;
+
+                accountDb.SaveChanges();
+            }
         }
 
         public void Save(BinaryWriter writer)

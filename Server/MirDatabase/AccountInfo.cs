@@ -1,52 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
 using Server.MirNetwork;
 using Server.MirEnvir;
 using C = ClientPackets;
-
+using Server.MirDatabase.Extensions;
 
 namespace Server.MirDatabase
 {
     public class AccountInfo
     {
-        public int Index;
+        [Key]
+        public int Index { get; set; }
 
-        public string AccountID = string.Empty;
-        public string Password = string.Empty;
+        public string AccountID { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
 
-        public string UserName = string.Empty;
-        public DateTime BirthDate;
-        public string SecretQuestion = string.Empty;
-        public string SecretAnswer = string.Empty;
-        public string EMailAddress = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public DateTime BirthDate { get; set; }
+        public string SecretQuestion { get; set; } = string.Empty;
+        public string SecretAnswer { get; set; } = string.Empty;
+        public string EMailAddress { get; set; } = string.Empty;
 
-        public string CreationIP = string.Empty;
-        public DateTime CreationDate;
+        public string CreationIP { get; set; } = string.Empty;
+        public DateTime CreationDate { get; set; }
 
-        public bool Banned;
-        public string BanReason = string.Empty;
-        public DateTime ExpiryDate;
-        public int WrongPasswordCount;
+        public bool Banned { get; set; }
+        public string BanReason { get; set; } = string.Empty;
+        public DateTime ExpiryDate { get; set; }
+        public int WrongPasswordCount { get; set; }
 
-        public string LastIP = string.Empty;
-        public DateTime LastDate;
+        public string LastIP { get; set; } = string.Empty;
+        public DateTime LastDate { get; set; }
 
-        public List<CharacterInfo> Characters = new List<CharacterInfo>();
 
-        public UserItem[] Storage = new UserItem[80];
-        public bool HasExpandedStorage;
-        public DateTime ExpandedStorageExpiryDate;
-        public uint Gold;
-        public uint Credit;
+        public bool HasExpandedStorage { get; set; }
+        public DateTime ExpandedStorageExpiryDate { get; set; }
+        public uint Gold { get; set; }
+        public uint Credit { get; set; }
 
         public ListViewItem ListItem;
         public MirConnection Connection;
-        
-        public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
-        public bool AdminAccount;
 
+
+        public bool AdminAccount { get; set; }
+        public string StorageString { get; set; }
+        public UserItem[] Storage = new UserItem[80];
+
+        [NotMapped]
+        public List<CharacterInfo> Characters = new List<CharacterInfo>();
+        [NotMapped]
+        public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
         public AccountInfo()
         {
 
@@ -127,6 +136,33 @@ namespace Server.MirDatabase
                         SMain.Envir.CheckRankUpdate(Characters[i]);
                     }
                 }
+            }
+        }
+
+        public void Save(bool convert = false)
+        {
+            using (Envir.AccountDb = new AccountDbContext())
+            {
+                if (Index == 0) Envir.AccountDb.Accounts.Add(this);
+                if (Envir.AccountDb.Entry(this).State == EntityState.Detached)
+                {
+                    Envir.AccountDb.Accounts.Attach(this);
+                    Envir.AccountDb.Entry(this).State = EntityState.Modified;
+                }
+
+                foreach (var userItem in Storage)
+                {
+                    userItem?.Save(convert);
+                }
+
+                StorageString = string.Join(",", Storage.Select(item => item?.UniqueID ?? 0));
+
+                Envir.AccountDb.SaveChanges();
+            }
+
+            foreach (var characterInfo in Characters)
+            {
+                characterInfo.Save(convert);
             }
         }
 

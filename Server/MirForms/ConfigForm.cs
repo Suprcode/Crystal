@@ -164,5 +164,10 @@ namespace Server
         {
             SMain.Envir.DragonInfo.Save();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SMain.Envir.SaveAccountsSqlDb(true);
+        }
     }
 }

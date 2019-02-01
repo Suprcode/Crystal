@@ -689,7 +689,8 @@ namespace Server.MirEnvir
 
                 StopNetwork();
                 StopEnvir();
-                SaveAccounts();
+                if(Settings.UseSqlDb) SaveAccountsSqlDb();
+                else SaveAccounts();
                 SaveGuilds(true);
                 SaveConquests(true);
 
@@ -1160,6 +1161,40 @@ namespace Server.MirEnvir
             }
         }
 
+        public void SaveAccountsSqlDb(bool convert = false)
+        {
+            if (convert)
+            {
+                using (var accountDb = new AccountDbContext())
+                {
+                    accountDb.Accounts.RemoveRange(accountDb.Accounts.Where(a => true));
+                    accountDb.UserItems.RemoveRange(accountDb.UserItems.Where(i => true));
+                    accountDb.Characters.RemoveRange(accountDb.Characters.Where(c => true));
+                    accountDb.Auctions.RemoveRange(accountDb.Auctions.Where(a => true));
+                    accountDb.Mails.RemoveRange(accountDb.Mails.Where(m => true));
+                    accountDb.SaveChanges();
+                }
+            }
+
+            foreach (var account in AccountList)
+            {
+                if (convert) account.Index = 0;
+                account.Save(convert);
+            }
+
+            foreach (var auction in Auctions)
+            {
+                if (convert) auction.AuctionID = 0;
+                auction.Save(convert);
+            }
+
+            foreach (var mail in Mail)
+            {
+                if (convert) mail.MailID = 0;
+                mail.Save(convert);
+            }
+        }
+
         private void SaveAccounts(Stream stream)
         {
             using (BinaryWriter writer = new BinaryWriter(stream))
@@ -1410,14 +1445,18 @@ namespace Server.MirEnvir
                     using (var ms = new MemoryStream(map.SafeZoneBytes))
                     using (var reader = new BinaryReader(ms))
                     {
-                        map.SafeZones.Add(new SafeZoneInfo(reader) { Info = map });
+                        var count = reader.ReadInt32();
+                        for (var i = 0; i < count; i++)
+                            map.SafeZones.Add(new SafeZoneInfo(reader) { Info = map });
                     }
                     map.MineZones.Clear();
                     if(map.MineZoneBytes.Length > 0)
                     using (var ms = new MemoryStream(map.MineZoneBytes))
                     using (var reader = new BinaryReader(ms))
                     {
-                        map.MineZones.Add(new MineZone(reader));
+                        var count = reader.ReadInt32();
+                        for (var i = 0; i < count; i++)
+                            map.MineZones.Add(new MineZone(reader));
                     }
 
                     map.Respawns = ServerDb.Respawns.Where(r => r.MapIndex == map.Index).ToList();
@@ -1454,6 +1493,10 @@ namespace Server.MirEnvir
                 }
                 ConquestInfos.Clear();
                 ConquestInfos = ServerDb.ConquestInfos.ToList();
+                foreach (var conquestInfo in ConquestInfos)
+                {
+                    conquestInfo.Load();
+                }
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
         }
@@ -1575,6 +1618,198 @@ namespace Server.MirEnvir
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
 
+        }
+
+        public void LoadAccountSqlDb()
+        {
+            //reset ranking
+            for (int i = 0; i < RankClass.Count(); i++)
+            {
+                if (RankClass[i] != null)
+                    RankClass[i].Clear();
+                else
+                    RankClass[i] = new List<Rank_Character_Info>();
+            }
+            RankTop.Clear();
+            for (int i = 0; i < RankBottomLevel.Count(); i++)
+            {
+                RankBottomLevel[i] = 0;
+            }
+            using (AccountDb = new AccountDbContext())
+            {
+                AccountList = AccountDb.Accounts.ToList();
+                CharacterList.Clear();
+                foreach (var accountInfo in AccountList)
+                {
+                    var itemIdArray = accountInfo.StorageString.Split(',').Select(ulong.Parse).ToArray();
+                    accountInfo.Storage = new UserItem[itemIdArray.Length];
+                    for (var i = 0; i < itemIdArray.Length; i++)
+                    {
+                        if (itemIdArray[i] > 0)
+                        {
+                            accountInfo.Storage[i] =
+                                AccountDb.UserItems.FirstOrDefault(item => item.UniqueID == itemIdArray[i]);
+                            if (accountInfo.Storage[i] != null)
+                            {
+                                BindItem(accountInfo.Storage[i]);
+                            }
+                        }
+                    }
+
+                    accountInfo.Characters = AccountDb.Characters.Where(c => c.AccountInfoIndex == accountInfo.Index)
+                        .ToList();
+                    foreach (var character in accountInfo.Characters)
+                    {
+                        character.AccountInfo = accountInfo;
+                        itemIdArray = character.InventoryString.Split(',').Select(ulong.Parse).ToArray();
+                        character.Inventory = new UserItem[itemIdArray.Length];
+                        for (var i = 0; i < itemIdArray.Length; i++)
+                        {
+                            if (itemIdArray[i] > 0)
+                            {
+                                character.Inventory[i] =
+                                    AccountDb.UserItems.FirstOrDefault(item => item.UniqueID == itemIdArray[i]);
+                                if (character.Inventory[i] != null)
+                                {
+                                    BindItem(character.Inventory[i]);
+                                }
+                            }
+                        }
+                        itemIdArray = character.EquipmentString.Split(',').Select(ulong.Parse).ToArray();
+                        character.Equipment = new UserItem[itemIdArray.Length];
+                        for (var i = 0; i < itemIdArray.Length; i++)
+                        {
+                            if (itemIdArray[i] > 0)
+                            {
+                                character.Equipment[i] =
+                                    AccountDb.UserItems.FirstOrDefault(item => item.UniqueID == itemIdArray[i]);
+                                if (character.Equipment[i] != null)
+                                {
+                                    BindItem(character.Equipment[i]);
+                                }
+                            }
+                        }
+                        itemIdArray = character.QuestInventoryString.Split(',').Select(ulong.Parse).ToArray();
+                        character.QuestInventory = new UserItem[itemIdArray.Length];
+                        for (var i = 0; i < itemIdArray.Length; i++)
+                        {
+                            if (itemIdArray[i] > 0)
+                            {
+                                character.QuestInventory[i] =
+                                    AccountDb.UserItems.FirstOrDefault(item => item.UniqueID == itemIdArray[i]);
+                                if (character.QuestInventory[i] != null)
+                                {
+                                    BindItem(character.QuestInventory[i]);
+                                }
+                            }
+                        }
+
+                        character.Flags = character.FlagsString.Split(',').Select(bool.Parse).ToArray();
+
+                        character.Magics = new List<UserMagic>();
+                        using (var ms = new MemoryStream(character.MagicsBytes))
+                        using (var reader = new BinaryReader(ms))
+                        {
+                            var count = reader.ReadInt32();
+                            for (var i = 0; i < count; i++)
+                                character.Magics.Add(new UserMagic(reader));
+                        }
+                        character.Pets = new List<PetInfo>();
+                        using (var ms = new MemoryStream(character.PetsBytes))
+                        using (var reader = new BinaryReader(ms))
+                        {
+                            var count = reader.ReadInt32();
+                            for (var i = 0; i < count; i++)
+                                character.Pets.Add(new PetInfo(reader));
+                        }
+                        character.CurrentQuests = new List<QuestProgressInfo>();
+                        using (var ms = new MemoryStream(character.CurrentQuestsBytes))
+                        using (var reader = new BinaryReader(ms))
+                        {
+                            var count = reader.ReadInt32();
+                            for (var i = 0; i < count; i++)
+                                character.CurrentQuests.Add(new QuestProgressInfo(reader));
+                        }
+                        character.Buffs = new List<Buff>();
+                        using (var ms = new MemoryStream(character.BuffsBytes))
+                        using (var reader = new BinaryReader(ms))
+                        {
+                            var count = reader.ReadInt32();
+                            for (var i = 0; i < count; i++)
+                                character.Buffs.Add(new Buff(reader));
+                        }
+                        character.IntelligentCreatures = new List<UserIntelligentCreature>();
+                        using (var ms = new MemoryStream(character.IntelligentCreaturesBytes))
+                        using (var reader = new BinaryReader(ms))
+                        {
+                            var count = reader.ReadInt32();
+                            for (var i = 0; i < count; i++)
+                                character.IntelligentCreatures.Add(new UserIntelligentCreature(reader));
+                        }
+                        character.Friends = new List<FriendInfo>();
+                        using (var ms = new MemoryStream(character.FriendsBytes))
+                        using (var reader = new BinaryReader(ms))
+                        {
+                            var count = reader.ReadInt32();
+                            for (var i = 0; i < count; i++)
+                                character.Friends.Add(new FriendInfo(reader));
+                        }
+                        character.RentedItems = new List<ItemRentalInformation>();
+                        using (var ms = new MemoryStream(character.RentedItemsBytes))
+                        using (var reader = new BinaryReader(ms))
+                        {
+                            var count = reader.ReadInt32();
+                            for (var i = 0; i < count; i++)
+                                character.RentedItems.Add(new ItemRentalInformation(reader));
+                        }
+
+                        character.CompletedQuests = new List<int>();
+                        if (!string.IsNullOrEmpty(character.CompletedQuestsString))
+                            character.CompletedQuests =
+                                character.CompletedQuestsString.Split(',').Select(int.Parse).ToList();
+
+                        if (character.CurrentRefineItemIndex > 0)
+                        {
+                            character.CurrentRefine = AccountDb.UserItems.FirstOrDefault(item =>
+                                item.UniqueID == character.CurrentRefineItemIndex);
+                            if (character.CurrentRefine != null) BindItem(character.CurrentRefine);
+                        }
+                        CharacterList.Add(character);
+                    }
+                }
+
+                foreach (AuctionInfo auction in Auctions)
+                    auction.CharacterInfo.AccountInfo.Auctions.Remove(auction);
+                Auctions.Clear();
+                var auctions = AccountDb.Auctions.ToList();
+                foreach (var auction in auctions)
+                {
+                    if (!BindItem(auction.Item) || !BindCharacter(auction)) continue;
+
+                    Auctions.AddLast(auction);
+                    auction.CharacterInfo.AccountInfo.Auctions.AddLast(auction);
+                }
+
+                Mail.Clear();
+                Mail = AccountDb.Mails.ToList();
+                foreach (var mailInfo in Mail)
+                {
+                    mailInfo.RecipientInfo = GetCharacterInfo(mailInfo.RecipientIndex);
+                    var itemIdArray = mailInfo.ItemsString.Split(',').Select(ulong.Parse).ToArray();
+                    mailInfo.Items = new List<UserItem>();
+                    if (itemIdArray.Length > 0)
+                    {
+                        for (int i = 0; i < itemIdArray.Length; i++)
+                        {
+                            if (itemIdArray[i] > 0)
+                            {
+                                var userItem = AccountDb.UserItems.FirstOrDefault(item => item.UniqueID == itemIdArray[i]);
+                                if(userItem != null && BindItem(userItem)) mailInfo.Items.Add(userItem);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void LoadAccounts()
@@ -2190,7 +2425,8 @@ namespace Server.MirEnvir
         {
             Connections.Clear();
 
-            LoadAccounts();
+            if(Settings.UseSqlDb)LoadAccountSqlDb();
+            else LoadAccounts();
 
             LoadGuilds();
 
@@ -2434,7 +2670,13 @@ namespace Server.MirEnvir
                     return;
                 }
 
-                AccountList.Add(new AccountInfo(p) {Index = ++NextAccountID, CreationIP = c.IPAddress});
+                var account = new AccountInfo(p) {Index = ++NextAccountID, CreationIP = c.IPAddress};
+                if (Settings.UseSqlDb)
+                {
+                    account.Index = 0;
+                    account.Save();
+                }
+                AccountList.Add(account);
 
 
                 c.Enqueue(new ServerPackets.NewAccount {Result = 8});
@@ -2639,7 +2881,11 @@ namespace Server.MirEnvir
                 }
 
                 CharacterInfo info = new CharacterInfo(p, c) { Index = ++NextCharacterID, AccountInfo = c.Account };
-
+                if (Settings.UseSqlDb)
+                {
+                    info.Index = 0;
+                    info.Save();
+                }
                 c.Account.Characters.Add(info);
                 CharacterList.Add(info);
 
@@ -2723,7 +2969,13 @@ namespace Server.MirEnvir
 
         public void CreateAccountInfo()
         {
-            AccountList.Add(new AccountInfo {Index = ++NextAccountID});
+            var account = new AccountInfo {Index = ++NextAccountID};
+            if (Settings.UseSqlDb)
+            {
+                account.Index = 0;
+                account.Save();
+            }
+            AccountList.Add(account);
         }
         public void CreateMapInfo()
         {
@@ -2796,7 +3048,11 @@ namespace Server.MirEnvir
                     CurrentDura = info.Durability,
                     MaxDura = info.Durability
                 };
-
+            if (Settings.UseSqlDb)
+            {
+                item.UniqueID = 0;
+                item.Save();
+            }
             UpdateItemExpiry(item);
 
             return item;
@@ -2815,7 +3071,11 @@ namespace Server.MirEnvir
                     MaxDura = info.Durability,
                     CurrentDura = (ushort) Math.Min(info.Durability, Random.Next(info.Durability) + 1000)
                 };
-
+            if (Settings.UseSqlDb)
+            {
+                item.UniqueID = 0;
+                item.Save();
+            }
             UpgradeItem(item);
 
             UpdateItemExpiry(item);
@@ -2834,7 +3094,11 @@ namespace Server.MirEnvir
                 CurrentDura = info.Durability,
                 MaxDura = info.Durability,
             };
-
+            if (Settings.UseSqlDb)
+            {
+                item.UniqueID = 0;
+                item.Save();
+            }
             return item;
         }
 

@@ -91,6 +91,50 @@ namespace Server.MirDatabase
 
         }
 
+        public void Load()
+        {
+            using (var ms = new MemoryStream(BinData))
+            using (var reader = new BinaryReader(ms))
+            {
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ConquestGuards.Add(new ConquestArcherInfo(reader));
+                }
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ExtraMaps.Add(reader.ReadInt32());
+                }
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ConquestGates.Add(new ConquestGateInfo(reader));
+                }
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ConquestWalls.Add(new ConquestWallInfo(reader));
+                }
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ConquestSieges.Add(new ConquestSiegeInfo(reader));
+                }
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ConquestFlags.Add(new ConquestFlagInfo(reader));
+                }
+
+                counter = reader.ReadInt32();
+                for (int i = 0; i < counter; i++)
+                {
+                    ControlPoints.Add(new ConquestFlagInfo(reader));
+                }
+            }
+        }
+
         public ConquestInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
@@ -227,6 +271,8 @@ namespace Server.MirDatabase
                     {
                         ControlPoints[i].Save(writer);
                     }
+
+                    BinData = ms.ToArray();
                 }
                 Envir.ServerDb.SaveChanges();
             }
