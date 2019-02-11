@@ -1477,6 +1477,10 @@ namespace Server.MirEnvir
                 NPCInfoList = ServerDb.NpcInfos.ToList();
                 QuestInfoList.Clear();
                 QuestInfoList = ServerDb.Quests.ToList();
+                foreach (var questInfo in QuestInfoList)
+                {
+                    questInfo.LoadInfo(true);
+                }
                 DragonInfo.Load();
                 MagicInfoList.Clear();
                 MagicInfoList = ServerDb.Magics.ToList();
