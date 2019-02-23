@@ -161,7 +161,7 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_Host = @"http://mirfiles.co.uk/mir2/cmir/patch/"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
