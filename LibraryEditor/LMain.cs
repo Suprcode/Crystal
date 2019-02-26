@@ -29,6 +29,21 @@ namespace LibraryEditor
             this.AllowDrop = true;
             this.DragEnter += new DragEventHandler(Form1_DragEnter);
             this.DragDrop += new DragEventHandler(Form1_DragDrop);
+            if (Program.openFileWith.Length > 0 &&
+                File.Exists(Program.openFileWith))
+            {
+                _library = new MLibraryV2(Program.openFileWith);
+                PreviewListView.VirtualListSize = _library.Images.Count;
+
+                // Show .Lib path in application title.
+                FileInfo fileInfo = new FileInfo(Program.openFileWith);
+                this.Text = fileInfo.FullName.ToString();
+
+                PreviewListView.SelectedIndices.Clear();
+
+                if (PreviewListView.Items.Count > 0)
+                    PreviewListView.Items[0].Selected = true;
+            }
         }
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
@@ -506,6 +521,7 @@ namespace LibraryEditor
             _indexList.Clear();
             PreviewListView.VirtualListSize = _library.Images.Count;
             toolStripProgressBar.Value = 0;
+            _library.Save();
         }
 
         private void safeToolStripMenuItem_Click(object sender, EventArgs e)
