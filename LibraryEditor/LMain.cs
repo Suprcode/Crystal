@@ -38,7 +38,7 @@ namespace LibraryEditor
                 // Show .Lib path in application title.
                 FileInfo fileInfo = new FileInfo(Program.openFileWith);
                 this.Text = fileInfo.FullName.ToString();
-
+                OpenLibraryDialog.FileName = fileInfo.Name;
                 PreviewListView.SelectedIndices.Clear();
 
                 if (PreviewListView.Items.Count > 0)
