@@ -363,7 +363,8 @@ namespace Server
 
         private void SMain_Load(object sender, EventArgs e)
         {
-            EditEnvir.LoadDB();
+            if(Settings.UseSqlDb) EditEnvir.LoadSqlDB();
+            else EditEnvir.LoadDB();
             Envir.Start();
             AutoResize();
         }
