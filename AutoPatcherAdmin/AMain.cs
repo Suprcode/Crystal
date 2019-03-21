@@ -34,6 +34,30 @@ namespace AutoPatcherAdmin
             LoginTextBox.Text = Settings.Login;
             PasswordTextBox.Text = Settings.Password;
             AllowCleanCheckBox.Checked = Settings.AllowCleanUp;
+
+            // 初始化悬停信息提示
+            ToolTip ttpInfo = new ToolTip();
+            ttpInfo.InitialDelay = 200;
+            ttpInfo.AutoPopDelay = 10 * 1000;
+            ttpInfo.ReshowDelay = 200;
+            ttpInfo.ShowAlways = true;
+            ttpInfo.IsBalloon = false;
+
+            // 设置悬停提示信息
+            string tipOverClientBox = "Mir2 客户端目录";
+            string tipOverHostBox = "FTP 服务器的地址";
+            string tipOverLoginBox = "用于登录服务器的用户名";
+            string tipOverPasswordtBox = "用于登录服务器的密码";
+            string tipOverCheckBox = "允许清理服务器上无用的文件";
+            string tipOverProcessButton = "生成及上传客户端补丁到服务器";
+            string tipOverListButton = "仅生成上传补丁列表 PList.gz";
+            ttpInfo.SetToolTip(ClientTextBox, tipOverClientBox);
+            ttpInfo.SetToolTip(HostTextBox, tipOverHostBox);
+            ttpInfo.SetToolTip(LoginTextBox, tipOverLoginBox);
+            ttpInfo.SetToolTip(PasswordTextBox, tipOverPasswordtBox);
+            ttpInfo.SetToolTip(AllowCleanCheckBox, tipOverCheckBox);
+            ttpInfo.SetToolTip(ProcessButton, tipOverProcessButton);
+            ttpInfo.SetToolTip(ListButton, tipOverListButton);
         }
 
 
