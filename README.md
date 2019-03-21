@@ -1,5 +1,7 @@
 # Legend of Mir 2
 
+基于Crystal Mir2的传奇中文本地化项目
+
 访问 [LOMCN](http://www.lomcn.org/forum/forumdisplay.php?633) 论坛进行讨论、帮助、更新。
 
 ## Wiki
