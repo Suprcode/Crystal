@@ -122,14 +122,14 @@
             this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fileToolStripMenuItem.Image")));
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(55, 21);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
             this.fileToolStripMenuItem.Text = "文件";
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.newToolStripMenuItem.Text = "新建";
             this.newToolStripMenuItem.ToolTipText = "新建 .Lib 文件";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
@@ -138,7 +138,7 @@
             // 
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.openToolStripMenuItem.Text = "打开";
             this.openToolStripMenuItem.ToolTipText = "打开盛大或者韩服文件.";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
@@ -146,13 +146,13 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(118, 6);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.saveToolStripMenuItem.Text = "保存";
             this.saveToolStripMenuItem.ToolTipText = "保存当前的 .Lib";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
@@ -161,7 +161,7 @@
             // 
             this.saveAsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAsToolStripMenuItem.Image")));
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.saveAsToolStripMenuItem.Text = "另存为...";
             this.saveAsToolStripMenuItem.ToolTipText = ".Lib Only.";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
@@ -169,13 +169,13 @@
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(118, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("closeToolStripMenuItem.Image")));
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.closeToolStripMenuItem.Text = "退出";
             this.closeToolStripMenuItem.ToolTipText = "退出程序.";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
@@ -189,14 +189,14 @@
             this.convertToolStripMenuItem});
             this.functionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("functionsToolStripMenuItem.Image")));
             this.functionsToolStripMenuItem.Name = "functionsToolStripMenuItem";
-            this.functionsToolStripMenuItem.Size = new System.Drawing.Size(90, 21);
+            this.functionsToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
             this.functionsToolStripMenuItem.Text = "功能";
             // 
             // copyToToolStripMenuItem
             // 
             this.copyToToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyToToolStripMenuItem.Image")));
             this.copyToToolStripMenuItem.Name = "copyToToolStripMenuItem";
-            this.copyToToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.copyToToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.copyToToolStripMenuItem.Text = "复制到..";
             this.copyToToolStripMenuItem.ToolTipText = "复制到新的 .Lib 文件或现有文件的末尾.";
             this.copyToToolStripMenuItem.Click += new System.EventHandler(this.copyToToolStripMenuItem_Click);
@@ -205,7 +205,7 @@
             // 
             this.countBlanksToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("countBlanksToolStripMenuItem.Image")));
             this.countBlanksToolStripMenuItem.Name = "countBlanksToolStripMenuItem";
-            this.countBlanksToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.countBlanksToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.countBlanksToolStripMenuItem.Text = "计算空白";
             this.countBlanksToolStripMenuItem.ToolTipText = "计算 .Lib 文件中的空图片";
             this.countBlanksToolStripMenuItem.Click += new System.EventHandler(this.countBlanksToolStripMenuItem_Click);
@@ -216,7 +216,7 @@
             this.safeToolStripMenuItem});
             this.removeBlanksToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeBlanksToolStripMenuItem.Image")));
             this.removeBlanksToolStripMenuItem.Name = "removeBlanksToolStripMenuItem";
-            this.removeBlanksToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.removeBlanksToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.removeBlanksToolStripMenuItem.Text = "移除空白";
             this.removeBlanksToolStripMenuItem.ToolTipText = "快速移除空白图片.";
             this.removeBlanksToolStripMenuItem.Click += new System.EventHandler(this.removeBlanksToolStripMenuItem_Click);
@@ -225,7 +225,7 @@
             // 
             this.safeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("safeToolStripMenuItem.Image")));
             this.safeToolStripMenuItem.Name = "safeToolStripMenuItem";
-            this.safeToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.safeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.safeToolStripMenuItem.Text = "安全模式";
             this.safeToolStripMenuItem.ToolTipText = "使用安全模式来移除空白图片.";
             this.safeToolStripMenuItem.Click += new System.EventHandler(this.safeToolStripMenuItem_Click);
@@ -234,7 +234,7 @@
             // 
             this.convertToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("convertToolStripMenuItem.Image")));
             this.convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            this.convertToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.convertToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.convertToolStripMenuItem.Text = "转换";
             this.convertToolStripMenuItem.ToolTipText = "转换 Wil/Wzl/Miz 到 .Lib";
             this.convertToolStripMenuItem.Click += new System.EventHandler(this.convertToolStripMenuItem_Click);
@@ -326,9 +326,9 @@
             // checkBoxPreventAntiAliasing
             // 
             this.checkBoxPreventAntiAliasing.AutoSize = true;
-            this.checkBoxPreventAntiAliasing.Location = new System.Drawing.Point(95, 276);
+            this.checkBoxPreventAntiAliasing.Location = new System.Drawing.Point(121, 280);
             this.checkBoxPreventAntiAliasing.Name = "checkBoxPreventAntiAliasing";
-            this.checkBoxPreventAntiAliasing.Size = new System.Drawing.Size(120, 16);
+            this.checkBoxPreventAntiAliasing.Size = new System.Drawing.Size(72, 16);
             this.checkBoxPreventAntiAliasing.TabIndex = 20;
             this.checkBoxPreventAntiAliasing.Text = "无抗锯齿";
             this.checkBoxPreventAntiAliasing.UseVisualStyleBackColor = true;
@@ -337,9 +337,9 @@
             // checkBoxQuality
             // 
             this.checkBoxQuality.AutoSize = true;
-            this.checkBoxQuality.Location = new System.Drawing.Point(11, 276);
+            this.checkBoxQuality.Location = new System.Drawing.Point(42, 280);
             this.checkBoxQuality.Name = "checkBoxQuality";
-            this.checkBoxQuality.Size = new System.Drawing.Size(90, 16);
+            this.checkBoxQuality.Size = new System.Drawing.Size(60, 16);
             this.checkBoxQuality.TabIndex = 19;
             this.checkBoxQuality.Text = "无模糊";
             this.checkBoxQuality.UseVisualStyleBackColor = true;
@@ -389,7 +389,7 @@
             // pictureBox
             // 
             this.pictureBox.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox.Image")));
-            this.pictureBox.Location = new System.Drawing.Point(10, 8);
+            this.pictureBox.Location = new System.Drawing.Point(10, 11);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(16, 16);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -442,7 +442,7 @@
             // 
             // OffSetYTextBox
             // 
-            this.OffSetYTextBox.Location = new System.Drawing.Point(123, 70);
+            this.OffSetYTextBox.Location = new System.Drawing.Point(121, 70);
             this.OffSetYTextBox.Name = "OffSetYTextBox";
             this.OffSetYTextBox.Size = new System.Drawing.Size(65, 21);
             this.OffSetYTextBox.TabIndex = 6;
@@ -450,7 +450,7 @@
             // 
             // OffSetXTextBox
             // 
-            this.OffSetXTextBox.Location = new System.Drawing.Point(123, 46);
+            this.OffSetXTextBox.Location = new System.Drawing.Point(121, 46);
             this.OffSetXTextBox.Name = "OffSetXTextBox";
             this.OffSetXTextBox.Size = new System.Drawing.Size(65, 21);
             this.OffSetXTextBox.TabIndex = 5;
@@ -490,9 +490,9 @@
             // 
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label10.Location = new System.Drawing.Point(67, 73);
+            this.label10.Location = new System.Drawing.Point(68, 73);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(59, 12);
+            this.label10.Size = new System.Drawing.Size(47, 12);
             this.label10.TabIndex = 12;
             this.label10.Text = "偏移 Y:";
             // 
@@ -500,9 +500,9 @@
             // 
             this.label8.AutoSize = true;
             this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label8.Location = new System.Drawing.Point(67, 49);
+            this.label8.Location = new System.Drawing.Point(68, 49);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(59, 12);
+            this.label8.Size = new System.Drawing.Size(47, 12);
             this.label8.TabIndex = 11;
             this.label8.Text = "偏移 X:";
             // 
@@ -510,7 +510,7 @@
             // 
             this.HeightLabel.AutoSize = true;
             this.HeightLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.HeightLabel.Location = new System.Drawing.Point(123, 28);
+            this.HeightLabel.Location = new System.Drawing.Point(121, 28);
             this.HeightLabel.Name = "HeightLabel";
             this.HeightLabel.Size = new System.Drawing.Size(65, 12);
             this.HeightLabel.TabIndex = 10;
@@ -520,9 +520,9 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label6.Location = new System.Drawing.Point(76, 28);
+            this.label6.Location = new System.Drawing.Point(92, 28);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(47, 12);
+            this.label6.Size = new System.Drawing.Size(23, 12);
             this.label6.TabIndex = 9;
             this.label6.Text = "高:";
             // 
@@ -530,7 +530,7 @@
             // 
             this.WidthLabel.AutoSize = true;
             this.WidthLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.WidthLabel.Location = new System.Drawing.Point(123, 11);
+            this.WidthLabel.Location = new System.Drawing.Point(121, 11);
             this.WidthLabel.Name = "WidthLabel";
             this.WidthLabel.Size = new System.Drawing.Size(65, 12);
             this.WidthLabel.TabIndex = 8;
@@ -540,9 +540,9 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(79, 11);
+            this.label1.Location = new System.Drawing.Point(92, 11);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.Size = new System.Drawing.Size(23, 12);
             this.label1.TabIndex = 7;
             this.label1.Text = "宽:";
             // 
@@ -625,7 +625,7 @@
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(101, 17);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(71, 17);
             this.toolStripStatusLabel.Text = "已选择图片:";
             // 
             // toolStripProgressBar
