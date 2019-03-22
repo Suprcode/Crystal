@@ -80,7 +80,7 @@ namespace LibraryEditor
                 toolStripProgressBar.Value = 0;
 
                 MessageBox.Show(
-                    string.Format("Successfully converted {0} {1}",
+                    string.Format("转换成功 {0} {1}",
                     (OpenWeMadeDialog.FileNames.Length).ToString(),
                     (OpenWeMadeDialog.FileNames.Length > 1) ? "libraries" : "library"));
             }
@@ -116,8 +116,8 @@ namespace LibraryEditor
             ImageBox.Image = null;
             ZoomTrackBar.Value = 1;
 
-            WidthLabel.Text = "<No Image>";
-            HeightLabel.Text = "<No Image>";
+            WidthLabel.Text = "<无图片>";
+            HeightLabel.Text = "<无图片>";
             OffSetXTextBox.Text = string.Empty;
             OffSetYTextBox.Text = string.Empty;
             OffSetXTextBox.BackColor = SystemColors.Window;
@@ -152,12 +152,12 @@ namespace LibraryEditor
             if (PreviewListView.SelectedIndices.Count > 1)
             {
                 toolStripStatusLabel.ForeColor = Color.Red;
-                toolStripStatusLabel.Text = "Multiple images selected.";
+                toolStripStatusLabel.Text = "选择了多张图片.";
             }
             else
             {
                 toolStripStatusLabel.ForeColor = SystemColors.ControlText;
-                toolStripStatusLabel.Text = "Selected Image: " + string.Format("{0} / {1}",
+                toolStripStatusLabel.Text = "已选择图片: " + string.Format("{0} / {1}",
                 PreviewListView.SelectedIndices[0].ToString(),
                 (PreviewListView.Items.Count - 1).ToString());
             }
@@ -247,6 +247,7 @@ namespace LibraryEditor
             if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
 
             ClearInterface();
+
             ImageList.Images.Clear();
             PreviewListView.Items.Clear();
             _indexList.Clear();
@@ -290,8 +291,8 @@ namespace LibraryEditor
             if (_library.FileName == null) return;
             if (PreviewListView.SelectedIndices.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to delete the selected Image?",
-                "Delete Selected.",
+            if (MessageBox.Show("确定要删除选中的图片?",
+                "删除选中.",
                 MessageBoxButtons.YesNoCancel) != DialogResult.Yes) return;
 
             List<int> removeList = new List<int>();
@@ -346,7 +347,7 @@ namespace LibraryEditor
 
             toolStripProgressBar.Value = 0;
 
-            MessageBox.Show(string.Format("Successfully converted {0} {1}",
+            MessageBox.Show(string.Format("转换成功 {0} {1}",
                 (OpenWeMadeDialog.FileNames.Length).ToString(),
                 (OpenWeMadeDialog.FileNames.Length > 1) ? "libraries" : "library"));
         }
@@ -376,8 +377,8 @@ namespace LibraryEditor
 
         private void removeBlanksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to remove the blank images?",
-                "Remove Blanks",
+            if (MessageBox.Show("确定要删除空白图片?",
+                "删除空白",
                 MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             _library.RemoveBlanks();
@@ -526,8 +527,8 @@ namespace LibraryEditor
 
         private void safeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to remove the blank images?",
-                "Remove Blanks", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show("确定要删除空白图片?",
+                "删除空白", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             _library.RemoveBlanks(true);
             ImageList.Images.Clear();
@@ -638,7 +639,7 @@ namespace LibraryEditor
             }
 
             toolStripProgressBar.Value = 0;
-            MessageBox.Show("Saving to " + _folder + "...", "Image Saved", MessageBoxButtons.OK);
+            MessageBox.Show("正在保存 " + _folder + "...", "保存图片", MessageBoxButtons.OK);
         }
 
         // Don't let the splitter go out of sight on resizing.
@@ -692,7 +693,7 @@ namespace LibraryEditor
                     ImageBox.Image = _newBMP;
 
                     toolStripStatusLabel.ForeColor = SystemColors.ControlText;
-                    toolStripStatusLabel.Text = "Selected Image: " + string.Format("{0} / {1}",
+                    toolStripStatusLabel.Text = "已选择图片: " + string.Format("{0} / {1}",
                         PreviewListView.SelectedIndices[0].ToString(),
                         (PreviewListView.Items.Count - 1).ToString());
                 }
@@ -724,7 +725,7 @@ namespace LibraryEditor
             if (_col.Count > 1)
             {
                 toolStripStatusLabel.ForeColor = Color.Red;
-                toolStripStatusLabel.Text = "Multiple images selected.";
+                toolStripStatusLabel.Text = "选择了多张图片.";
             }
         }
 
