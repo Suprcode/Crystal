@@ -7697,7 +7697,7 @@ namespace Server.MirObjects
             loc[0] = Functions.PointMove(CurrentLocation, Functions.PreviousDir(Direction), 1);
             loc[1] = Functions.PointMove(CurrentLocation, Direction, 1);
             loc[2] = Functions.PointMove(CurrentLocation, Functions.NextDir(Direction), 1);
-
+            bool train = false;
             for (int i = 0; i < col; i++)
             {
                 Point startPoint = loc[i];
@@ -7722,13 +7722,15 @@ namespace Server.MirObjects
                                 if (target.IsAttackTarget(this))
                                 {
                                     if (target.Attacked(this, j <= 1 ? damageFinal : (int)(damageFinal * 0.6), DefenceType.MAC, false) > 0)
-                                        LevelMagic(magic);
+                                        train = true;
                                 }
                                 break;
                         }
                     }
                 }
             }
+            if (train)
+                LevelMagic(magic);
         }
         private void ProtectionField(UserMagic magic)
         {

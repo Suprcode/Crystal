@@ -855,7 +855,7 @@ namespace Server.MirEnvir
                                 if (target.IsAttackTarget(player))
                                 {
                                     if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
-                                        player.LevelMagic(magic);
+                                        train = true;
                                     return;
                                 }
                                 break;
