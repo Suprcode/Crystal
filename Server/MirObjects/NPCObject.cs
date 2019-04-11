@@ -1362,8 +1362,10 @@ namespace Server.MirObjects
             }
 
             if (goods == null || count == 0 || count > goods.Info.StackSize) return;
-
-            goods.Count = count;
+            if (isBuyBack && count > goods.Count)
+                count = goods.Count;
+            else
+                goods.Count = count;
 
             uint cost = goods.Price();
             cost = (uint)(cost * PriceRate(player));
