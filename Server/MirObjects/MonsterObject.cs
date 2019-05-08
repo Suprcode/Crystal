@@ -1074,6 +1074,7 @@ namespace Server.MirObjects
                     {
                         MoveSpeed = Info.MoveSpeed;
                         AttackSpeed = Info.AttackSpeed;
+                        AttackTime = Envir.Time + AttackSpeed;
                     }
                     PoisonList.RemoveAt(i);
                     continue;
@@ -1090,6 +1091,7 @@ namespace Server.MirObjects
                         {
                             MoveSpeed = Info.MoveSpeed;
                             AttackSpeed = Info.AttackSpeed;
+                            AttackTime = Envir.Time + AttackSpeed;
                         }
                         PoisonList.RemoveAt(i);
                         continue;
@@ -1150,6 +1152,8 @@ namespace Server.MirObjects
                         {
                             MoveSpeed = Info.MoveSpeed;
                             AttackSpeed = Info.AttackSpeed;
+                            //Reset the Attack time
+                            AttackTime = Envir.Time + AttackSpeed;
                         }
                         break;
                 }
