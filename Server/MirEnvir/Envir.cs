@@ -2738,15 +2738,6 @@ namespace Server.MirEnvir
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
         }
 
-        public List<NPCObject> GetAllNPCs()
-        {
-            List<NPCObject> npcs = new List<NPCObject>();
-            foreach (var item in MapList)
-            {
-                npcs.AddRange(item.NPCs);
-            }
-            return npcs;
-        }
         /*
         public MonsterInfo GetMonsterInfo(string name)
         {
@@ -3236,6 +3227,30 @@ namespace Server.MirEnvir
                 }
             }
         }
+
+
+        public void ReloadNPCs()
+        {
+            List<NPCObject> npcs = new List<NPCObject>();
+            foreach (var msp in MapList)
+            {
+                npcs.AddRange(msp.NPCs);
+            }
+            foreach (var item in npcs)
+            {
+                item.LoadInfo(true);
+            }
+            SMain.Envir.DefaultNPC.LoadInfo(true);
+            SMain.Enqueue("NPCs reloaded...");
+        }
+
+        public void ReloadDrops()
+        {
+            foreach (var item in MonsterInfoList)
+                item.LoadDrops();
+            SMain.Enqueue("Drops reloaded...");
+        }
+   
     }
 }
 
