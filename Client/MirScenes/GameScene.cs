@@ -9870,7 +9870,7 @@ namespace Client.MirScenes
         {
             if (User.InTrapRock) return false;
             if (User.CurrentBagWeight > User.MaxBagWeight) return false;
-
+            if (User.CurrentWearWeight > User.MaxWearWeight) return false;
             if (CanWalk(dir) && EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 2)))
             {
                 if (User.RidingMount || User.Sprint && !User.Sneaking)

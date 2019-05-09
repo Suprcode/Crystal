@@ -1070,6 +1070,12 @@ namespace Server.MirObjects
                 Poison poison = PoisonList[i];
                 if (poison.Owner != null && poison.Owner.Node == null)
                 {
+                    if (poison.PType == PoisonType.Slow)
+                    {
+                        MoveSpeed = Info.MoveSpeed;
+                        AttackSpeed = Info.AttackSpeed;
+                        AttackTime = Envir.Time + AttackSpeed;
+                    }
                     PoisonList.RemoveAt(i);
                     continue;
                 }
@@ -1080,7 +1086,16 @@ namespace Server.MirObjects
                     poison.TickTime = Envir.Time + poison.TickSpeed;
 
                     if (poison.Time >= poison.Duration)
+                    {
+                        if (poison.PType == PoisonType.Slow)
+                        {
+                            MoveSpeed = Info.MoveSpeed;
+                            AttackSpeed = Info.AttackSpeed;
+                            AttackTime = Envir.Time + AttackSpeed;
+                        }
                         PoisonList.RemoveAt(i);
+                        continue;
+                    }
 
                     if (poison.PType == PoisonType.Green || poison.PType == PoisonType.Bleeding)
                     {
@@ -1129,13 +1144,16 @@ namespace Server.MirObjects
                         DamageRate += 0.5F;
                         break;
                     case PoisonType.Slow:
-                        MoveSpeed += 100;
-                        AttackSpeed += 100;
+
+                        MoveSpeed = (ushort)Math.Min(3500, MoveSpeed + 100);
+                        AttackSpeed = (ushort)Math.Min(3500, AttackSpeed + 100);
  
                         if (poison.Time >= poison.Duration)
                         {
                             MoveSpeed = Info.MoveSpeed;
                             AttackSpeed = Info.AttackSpeed;
+                            //Reset the Attack time
+                            AttackTime = Envir.Time + AttackSpeed;
                         }
                         break;
                 }

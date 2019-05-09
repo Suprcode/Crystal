@@ -6281,6 +6281,13 @@ namespace Server.MirObjects
             {
                 if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
                 if (!Info.Equipment[(int)EquipmentSlot.Weapon].Info.CanMine) return;
+                if (Info.Equipment[(int)EquipmentSlot.Weapon].CurrentDura <= 0)//Stop dura 0 working. use below if you wish to break the item.
+                /*{
+                    Enqueue(new S.DeleteItem { UniqueID = Info.Equipment[(int)EquipmentSlot.Weapon].UniqueID, Count = Info.Equipment[(int)EquipmentSlot.Weapon].Count });
+                    Info.Equipment[(int)EquipmentSlot.Weapon] = null;
+                    RefreshStats();*/
+                    return;
+                /*}*/
                 if (CurrentMap.Mine == null) return;
                 MineSpot Mine = CurrentMap.Mine[target.X, target.Y];
                 if ((Mine == null) || (Mine.Mine == null)) return;
@@ -13304,7 +13311,9 @@ namespace Server.MirObjects
         private void DamageDura()
         {
             if (!NoDuraLoss)
-                for (int i = 0; i < Info.Equipment.Length; i++) DamageItem(Info.Equipment[i], Envir.Random.Next(1) + 1);
+                for (int i = 0; i < Info.Equipment.Length; i++)
+                    if (i != (int)EquipmentSlot.Weapon)
+                        DamageItem(Info.Equipment[i], Envir.Random.Next(1) + 1);
         }
         public void DamageWeapon()
         {
