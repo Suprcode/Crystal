@@ -376,38 +376,38 @@ namespace Client.MirScenes.Dialogs
             switch (GameScene.Scene.AMode)
             {
                 case AttackMode.Peace:
-                    AModeLabel.Text = "[Mode: Peaceful]";
+                    AModeLabel.Text = GameLanguage.AttackMode_Peace;
                     break;
                 case AttackMode.Group:
-                    AModeLabel.Text = "[Mode: Group]";
+                    AModeLabel.Text = GameLanguage.AttackMode_Group;
                     break;
                 case AttackMode.Guild:
-                    AModeLabel.Text = "[Mode: Guild]";
+                    AModeLabel.Text = GameLanguage.AttackMode_Guild;
                     break;
                 case AttackMode.EnemyGuild:
-                    AModeLabel.Text = "[Mode: Enemy Guild]";
+                    AModeLabel.Text = GameLanguage.AttackMode_EnemyGuild;
                     break;
                 case AttackMode.RedBrown:
-                    AModeLabel.Text = "[Mode: Red/Brown]";
+                    AModeLabel.Text = GameLanguage.AttackMode_RedBrown;
                     break;
                 case AttackMode.All:
-                    AModeLabel.Text = "[Mode: Attack All]";
+                    AModeLabel.Text = GameLanguage.AttackMode_All;
                     break;
             }
 
             switch (GameScene.Scene.PMode)
             {
                 case PetMode.Both:
-                    PModeLabel.Text = "[Pet: Attack and Move]";
+                    PModeLabel.Text = GameLanguage.PetMode_Both;
                     break;
                 case PetMode.MoveOnly:
-                    PModeLabel.Text = "[Pet: Do Not Attack]";
+                    PModeLabel.Text = GameLanguage.PetMode_MoveOnly;
                     break;
                 case PetMode.AttackOnly:
-                    PModeLabel.Text = "[Pet: Do Not Move]";
+                    PModeLabel.Text = GameLanguage.PetMode_AttackOnly;
                     break;
                 case PetMode.None:
-                    PModeLabel.Text = "[Pet: Do Not Attack or Move]";
+                    PModeLabel.Text = GameLanguage.PetMode_None;
                     break;
             }
 

@@ -173,10 +173,13 @@ namespace Client
 
         public static void Load()
         {
+            //Languahe
+            LoadLanguage();
+
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
-
+           
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
@@ -347,5 +350,73 @@ namespace Client
                 Reader.Write("Q-" + Charname, "Quest-" + i.ToString(), TrackedQuests[i]);
             }
         }
+
+
+        public static void LoadLanguage()
+        {
+            if (!File.Exists(@".\Language.ini"))
+            {
+                SaveLanguage();
+                return;
+            }
+            InIReader reader = new InIReader(@".\Language.ini");
+            GameLanguage.PetMode_Both = reader.ReadString("Language", "PetMode_Both", GameLanguage.PetMode_Both);
+            GameLanguage.PetMode_MoveOnly = reader.ReadString("Language", "PetMode_MoveOnly", GameLanguage.PetMode_MoveOnly);
+            GameLanguage.PetMode_AttackOnly = reader.ReadString("Language", "PetMode_AttackOnly", GameLanguage.PetMode_AttackOnly);
+            GameLanguage.PetMode_None = reader.ReadString("Language", "PetMode_None", GameLanguage.PetMode_None);
+
+            GameLanguage.AttackMode_Peace = reader.ReadString("Language", "AttackMode_Peace", GameLanguage.AttackMode_Peace);
+            GameLanguage.AttackMode_Group = reader.ReadString("Language", "AttackMode_Group", GameLanguage.AttackMode_Group);
+            GameLanguage.AttackMode_Guild = reader.ReadString("Language", "AttackMode_Guild", GameLanguage.AttackMode_Guild);
+            GameLanguage.AttackMode_EnemyGuild = reader.ReadString("Language", "AttackMode_EnemyGuild", GameLanguage.AttackMode_EnemyGuild);
+            GameLanguage.AttackMode_RedBrown = reader.ReadString("Language", "AttackMode_RedBrown", GameLanguage.AttackMode_RedBrown);
+            GameLanguage.AttackMode_All = reader.ReadString("Language", "AttackMode_All", GameLanguage.AttackMode_All);
+
+            GameLanguage.LogOutTip = reader.ReadString("Language", "LogOutTip", GameLanguage.LogOutTip);
+            GameLanguage.ExitTip = reader.ReadString("Language", "ExitTip", GameLanguage.ExitTip);
+            GameLanguage.DiedTip = reader.ReadString("Language", "DiedTip", GameLanguage.DiedTip);
+        }
+
+
+        public static void SaveLanguage()
+        {
+            File.Delete(@".\Language.ini");
+            InIReader reader = new InIReader(@".\Language.ini");
+            reader.Write("Language", "PetMode_Both", GameLanguage.PetMode_Both);
+            reader.Write("Language", "PetMode_MoveOnly", GameLanguage.PetMode_MoveOnly);
+            reader.Write("Language", "PetMode_AttackOnly", GameLanguage.PetMode_AttackOnly);
+            reader.Write("Language", "PetMode_None", GameLanguage.PetMode_None);
+
+            reader.Write("Language", "AttackMode_Peace", GameLanguage.AttackMode_Peace);
+            reader.Write("Language", "AttackMode_Group", GameLanguage.AttackMode_Group);
+            reader.Write("Language", "AttackMode_Guild", GameLanguage.AttackMode_Guild);
+            reader.Write("Language", "AttackMode_EnemyGuild", GameLanguage.AttackMode_EnemyGuild);
+            reader.Write("Language", "AttackMode_RedBrown", GameLanguage.AttackMode_RedBrown);
+            reader.Write("Language", "AttackMode_All", GameLanguage.AttackMode_All);
+
+            reader.Write("Language", "LogOutTip", GameLanguage.LogOutTip);
+            reader.Write("Language", "ExitTip", GameLanguage.ExitTip);
+            reader.Write("Language", "DiedTip", GameLanguage.DiedTip);
+        }
+    }
+
+    //default is English
+    public class GameLanguage
+    {
+        public static string PetMode_Both = "[Pet: Attack and Move]",
+                             PetMode_MoveOnly = "[Pet: Do Not Attack]",
+                             PetMode_AttackOnly = "[Pet: Do Not Move]",
+                             PetMode_None = "[Pet: Do Not Attack or Move]",
+
+                             AttackMode_Peace = "[Mode: Peaceful]",
+                             AttackMode_Group = "[Mode: Group]",
+                             AttackMode_Guild = "[Mode: Guild]",
+                             AttackMode_EnemyGuild = "[Mode: Enemy Guild]",
+                             AttackMode_RedBrown = "[Mode: Red/Brown]",
+                             AttackMode_All = "[Mode: Attack All]",
+
+                             LogOutTip = "Do you want to log out of Legend of Mir?",
+                             ExitTip = "Do you want to quit Legend of Mir?？",
+                             DiedTip = "You have died, Do you want to revive in town?";
     }
 }
