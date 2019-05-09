@@ -2737,6 +2737,16 @@ namespace Server.MirEnvir
         {
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
         }
+
+        public List<NPCObject> GetAllNPCs()
+        {
+            List<NPCObject> npcs = new List<NPCObject>();
+            foreach (var item in MapList)
+            {
+                npcs.AddRange(item.NPCs);
+            }
+            return npcs;
+        }
         /*
         public MonsterInfo GetMonsterInfo(string name)
         {

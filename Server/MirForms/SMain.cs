@@ -408,6 +408,24 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void reloadNPCsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var allNPCs = Envir.GetAllNPCs();
+            foreach (var item in allNPCs)
+            {
+                item.LoadInfo(true);
+            }
+            SMain.Envir.DefaultNPC.LoadInfo(true);
+            SMain.Enqueue("NPCs reloaded...");
+        }
+
+        private void reloadDropsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var item in Envir.MonsterInfoList)
+                item.LoadDrops();
+            SMain.Enqueue("Drops reloaded...");
+        }
+
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();
