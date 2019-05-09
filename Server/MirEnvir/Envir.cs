@@ -3231,12 +3231,12 @@ namespace Server.MirEnvir
 
         public void ReloadNPCs()
         {
-            List<NPCObject> npcs = new List<NPCObject>();
-            foreach (var msp in MapList)
+            List<NPCObject> allNpcs = new List<NPCObject>();
+            foreach (var map in MapList)
             {
-                npcs.AddRange(msp.NPCs);
+                allNpcs.AddRange(map.NPCs);
             }
-            foreach (var item in npcs)
+            foreach (var item in allNpcs)
             {
                 item.LoadInfo(true);
             }
