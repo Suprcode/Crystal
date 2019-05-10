@@ -89,7 +89,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1905,
                 Sound = SoundList.ButtonA,
-                Hint = "Inventory (" + CMain.InputKeys.GetKey(KeybindOptions.Inventory) + ")"
+                Hint = GameLanguage.Inventory + " (" + CMain.InputKeys.GetKey(KeybindOptions.Inventory) + ")"
             };
             InventoryButton.Click += (o, e) =>
             {
@@ -108,7 +108,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1902,
                 Sound = SoundList.ButtonA,
-                Hint = "Character (" + CMain.InputKeys.GetKey(KeybindOptions.Equipment) + ")"
+                Hint = GameLanguage.Character + " (" + CMain.InputKeys.GetKey(KeybindOptions.Equipment) + ")"
             };
             CharacterButton.Click += (o, e) =>
             {
@@ -130,7 +130,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1908,
                 Sound = SoundList.ButtonA,
-                Hint = "Skills (" + CMain.InputKeys.GetKey(KeybindOptions.Skills) + ")"
+                Hint = GameLanguage.Skills + " (" + CMain.InputKeys.GetKey(KeybindOptions.Skills) + ")"
             };
             SkillButton.Click += (o, e) =>
             {
@@ -152,7 +152,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1911,
                 Sound = SoundList.ButtonA,
-                Hint = "Quests (" + CMain.InputKeys.GetKey(KeybindOptions.Quests) + ")"
+                Hint = GameLanguage.Quests + " (" + CMain.InputKeys.GetKey(KeybindOptions.Quests) + ")"
             };
             QuestButton.Click += (o, e) =>
             {
@@ -170,7 +170,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1914,
                 Sound = SoundList.ButtonA,
-                Hint = "Options (" + CMain.InputKeys.GetKey(KeybindOptions.Options) + ")"
+                Hint = GameLanguage.Options + " (" + CMain.InputKeys.GetKey(KeybindOptions.Options) + ")"
             };
             OptionButton.Click += (o, e) =>
             {
@@ -188,7 +188,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1962,
                 Sound = SoundList.ButtonC,
-                Hint = "Menu"
+                Hint = GameLanguage.Menu
             };
             MenuButton.Click += (o, e) =>
             {
@@ -205,7 +205,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 828,
                 Sound = SoundList.ButtonC,
-                Hint = "Game Shop (" + CMain.InputKeys.GetKey(KeybindOptions.GameShop) + ")"
+                Hint = GameLanguage.GameShop + " (" + CMain.InputKeys.GetKey(KeybindOptions.GameShop) + ")"
             };
             GameShopButton.Click += (o, e) =>
             {
@@ -2930,7 +2930,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(4, 131),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "Mail"
+                Hint = GameLanguage.Mail
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailListDialog.Toggle();
 
@@ -2953,7 +2953,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(25, 131),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "BigMap (" + CMain.InputKeys.GetKey(KeybindOptions.Bigmap) +")"
+                Hint = GameLanguage.BigMap + " (" + CMain.InputKeys.GetKey(KeybindOptions.Bigmap) +")"
             };
             BigMapButton.Click += (o, e) => GameScene.Scene.BigMapDialog.Toggle();
 
@@ -4096,7 +4096,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 12),
                 PressedIndex = 635,
-                Hint = "Exit (" + CMain.InputKeys.GetKey(KeybindOptions.Exit) + ")"
+                Hint = GameLanguage.Exit + " (" + CMain.InputKeys.GetKey(KeybindOptions.Exit) + ")"
             };
             ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
@@ -4108,7 +4108,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 31),
                 PressedIndex = 638,
-                Hint = "Log Out (" + CMain.InputKeys.GetKey(KeybindOptions.Logout) + ")"
+                Hint = GameLanguage.LogOut + " (" + CMain.InputKeys.GetKey(KeybindOptions.Logout) + ")"
             };
             LogOutButton.Click += (o, e) => GameScene.Scene.LogOut();
 
@@ -4121,7 +4121,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 50),
-                Hint = "Help (" + CMain.InputKeys.GetKey(KeybindOptions.Help) + ")"
+                Hint = GameLanguage.Help + " (" + CMain.InputKeys.GetKey(KeybindOptions.Help) + ")"
             };
             HelpButton.Click += (o, e) =>
             {
@@ -4139,7 +4139,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 69),
                 Visible = false,
-                Hint = "Keybinds"
+                Hint = GameLanguage.Keybinds
             };
             KeyboardLayoutButton.Click += (o, e) =>
             {
@@ -4156,7 +4156,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 88),
-                Hint = "Ranking (" + CMain.InputKeys.GetKey(KeybindOptions.Ranking) + ")"
+                Hint = GameLanguage.Ranking + " (" + CMain.InputKeys.GetKey(KeybindOptions.Ranking) + ")"
                 //Visible = false
             };
             RankingButton.Click += (o, e) =>
@@ -4189,7 +4189,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse2,
                 Location = new Point(3, 126),
-                Hint = "Creatures (" + CMain.InputKeys.GetKey(KeybindOptions.Creature) + ")"
+                Hint = GameLanguage.Creatures + " (" + CMain.InputKeys.GetKey(KeybindOptions.Creature) + ")"
             };
             IntelligentCreatureButton.Click += (o, e) =>
             {
@@ -4205,7 +4205,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 145),
-                Hint = "Mount (" + CMain.InputKeys.GetKey(KeybindOptions.MountWindow) + ")"
+                Hint = GameLanguage.Mount + " (" + CMain.InputKeys.GetKey(KeybindOptions.MountWindow) + ")"
             };
             RideButton.Click += (o, e) =>
             {
@@ -4222,7 +4222,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 164),
-                Hint = "Fishing (" + CMain.InputKeys.GetKey(KeybindOptions.Fishing) + ")"
+                Hint = GameLanguage.Fishing + " (" + CMain.InputKeys.GetKey(KeybindOptions.Fishing) + ")"
             };
             FishingButton.Click += (o, e) =>
             {
@@ -4240,7 +4240,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
                 Visible = true,
-                Hint = "Friends (" + CMain.InputKeys.GetKey(KeybindOptions.Friends) + ")"
+                Hint = GameLanguage.Friends + " (" + CMain.InputKeys.GetKey(KeybindOptions.Friends) + ")"
             };
             FriendButton.Click += (o, e) =>
             {
@@ -4258,7 +4258,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 202),
                 Visible = true,
-                Hint = "Mentor (" + CMain.InputKeys.GetKey(KeybindOptions.Mentor) + ")"
+                Hint = GameLanguage.Mentor + " (" + CMain.InputKeys.GetKey(KeybindOptions.Mentor) + ")"
             };
             MentorButton.Click += (o, e) =>
             {
@@ -4277,7 +4277,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
                 Visible = true,
-                Hint = "Relationship (" + CMain.InputKeys.GetKey(KeybindOptions.Relationship) + ")"
+                Hint = GameLanguage.Relationship + " (" + CMain.InputKeys.GetKey(KeybindOptions.Relationship) + ")"
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -4294,7 +4294,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 240),
-                Hint = "Groups (" + CMain.InputKeys.GetKey(KeybindOptions.Group) + ")"
+                Hint = GameLanguage.Groups + " (" + CMain.InputKeys.GetKey(KeybindOptions.Group) + ")"
             };
             GroupButton.Click += (o, e) =>
             {
@@ -4311,7 +4311,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 259),
-                Hint = "Guild (" + CMain.InputKeys.GetKey(KeybindOptions.Guilds) + ")"
+                Hint = GameLanguage.Guild + " (" + CMain.InputKeys.GetKey(KeybindOptions.Guilds) + ")"
             };
             GuildButton.Click += (o, e) =>
             {

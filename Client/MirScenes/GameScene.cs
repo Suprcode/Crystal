@@ -10298,7 +10298,7 @@ namespace Client.MirScenes
                     break;
             }
 
-            text += string.Format("Expire: {0}", Infinite ? "Never" : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
+            text += string.Format(GameLanguage.Expire + ": {0}", Infinite ? "Never" : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
 
             if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
 

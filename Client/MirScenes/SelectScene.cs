@@ -205,10 +205,10 @@ namespace Client.MirScenes
                 Border = true,
             };
             LastAccessLabelLabel = new MirLabel
-                {
-                    Location = new Point(-80, -1),
-                    Parent = LastAccessLabel,
-                    Text = "Last Online:",
+            {
+                Location = new Point(-80, -1),
+                Parent = LastAccessLabel,
+                Text = GameLanguage.LastOnline,
                     Size = new Size(100, 21),
                     DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                     Border = true,

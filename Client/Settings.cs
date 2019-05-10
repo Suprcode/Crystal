@@ -375,6 +375,33 @@ namespace Client
             GameLanguage.LogOutTip = reader.ReadString("Language", "LogOutTip", GameLanguage.LogOutTip);
             GameLanguage.ExitTip = reader.ReadString("Language", "ExitTip", GameLanguage.ExitTip);
             GameLanguage.DiedTip = reader.ReadString("Language", "DiedTip", GameLanguage.DiedTip);
+
+            GameLanguage.Inventory = reader.ReadString("Language", "Inventory", GameLanguage.Inventory);
+            GameLanguage.Character = reader.ReadString("Language", "Character", GameLanguage.Character);
+            GameLanguage.Skills = reader.ReadString("Language", "Skills", GameLanguage.Skills);
+            GameLanguage.Quests = reader.ReadString("Language", "Quests", GameLanguage.Quests);
+            GameLanguage.Options = reader.ReadString("Language", "Options", GameLanguage.Options);
+            GameLanguage.Menu = reader.ReadString("Language", "Menu", GameLanguage.Menu);
+            GameLanguage.GameShop = reader.ReadString("Language", "GameShop", GameLanguage.GameShop);
+            GameLanguage.BigMap = reader.ReadString("Language", "BigMap", GameLanguage.BigMap);
+            GameLanguage.Mail = reader.ReadString("Language", "Mail", GameLanguage.Mail);
+            GameLanguage.Exit = reader.ReadString("Language", "Exit", GameLanguage.Exit);
+            GameLanguage.LogOut = reader.ReadString("Language", "LogOut", GameLanguage.LogOut);
+            GameLanguage.Help = reader.ReadString("Language", "Help", GameLanguage.Help);
+            GameLanguage.Keybinds = reader.ReadString("Language", "Keybinds", GameLanguage.Keybinds);
+            GameLanguage.Ranking = reader.ReadString("Language", "Ranking", GameLanguage.Ranking);
+            GameLanguage.Creatures = reader.ReadString("Language", "Creatures", GameLanguage.Creatures);
+            GameLanguage.Mount = reader.ReadString("Language", "Mount", GameLanguage.Mount);
+            GameLanguage.Fishing = reader.ReadString("Language", "Fishing", GameLanguage.Fishing);
+            GameLanguage.Friends = reader.ReadString("Language", "Friends", GameLanguage.Friends);
+            GameLanguage.Mentor = reader.ReadString("Language", "Mentor", GameLanguage.Mentor);
+            GameLanguage.Relationship = reader.ReadString("Language", "Relationship", GameLanguage.Relationship);
+            GameLanguage.Groups = reader.ReadString("Language", "Groups", GameLanguage.Groups);
+            GameLanguage.Guild = reader.ReadString("Language", "Guild", GameLanguage.Guild);
+
+            GameLanguage.Expire = reader.ReadString("Language", "Expire", GameLanguage.Expire);
+            GameLanguage.PatchErr = reader.ReadString("Language", "PatchErr", GameLanguage.PatchErr);
+            GameLanguage.LastOnline = reader.ReadString("Language", "LastOnline", GameLanguage.LastOnline);
         }
 
 
@@ -397,6 +424,33 @@ namespace Client
             reader.Write("Language", "LogOutTip", GameLanguage.LogOutTip);
             reader.Write("Language", "ExitTip", GameLanguage.ExitTip);
             reader.Write("Language", "DiedTip", GameLanguage.DiedTip);
+
+            reader.Write("Language", "Inventory", GameLanguage.Inventory);
+            reader.Write("Language", "Character", GameLanguage.Character);
+            reader.Write("Language", "Skills", GameLanguage.Skills);
+            reader.Write("Language", "Quests", GameLanguage.Quests);
+            reader.Write("Language", "Options", GameLanguage.Options);
+            reader.Write("Language", "Menu", GameLanguage.Menu);
+            reader.Write("Language", "GameShop", GameLanguage.GameShop);
+            reader.Write("Language", "BigMap", GameLanguage.BigMap);
+            reader.Write("Language", "Mail", GameLanguage.Mail);
+            reader.Write("Language", "Exit", GameLanguage.Exit);
+            reader.Write("Language", "LogOut", GameLanguage.LogOut);
+            reader.Write("Language", "Help", GameLanguage.Help);
+            reader.Write("Language", "Keybinds", GameLanguage.Keybinds);
+            reader.Write("Language", "Ranking", GameLanguage.Ranking);
+            reader.Write("Language", "Creatures", GameLanguage.Creatures);
+            reader.Write("Language", "Mount", GameLanguage.Mount);
+            reader.Write("Language", "Fishing", GameLanguage.Fishing);
+            reader.Write("Language", "Friends", GameLanguage.Friends);
+            reader.Write("Language", "Mentor", GameLanguage.Mentor);
+            reader.Write("Language", "Relationship", GameLanguage.Relationship);
+            reader.Write("Language", "Groups", GameLanguage.Groups);
+            reader.Write("Language", "Guild", GameLanguage.Guild);
+
+            reader.Write("Language", "Expire", GameLanguage.Expire);
+            reader.Write("Language", "PatchErr", GameLanguage.PatchErr);
+            reader.Write("Language", "LastOnline", GameLanguage.LastOnline);
         }
     }
 
@@ -417,6 +471,37 @@ namespace Client
 
                              LogOutTip = "Do you want to log out of Legend of Mir?",
                              ExitTip = "Do you want to quit Legend of Mir?？",
-                             DiedTip = "You have died, Do you want to revive in town?";
+                             DiedTip = "You have died, Do you want to revive in town?",
+
+                             Inventory = "Inventory",
+                             Character = "Character",
+                             Skills = "Skills",
+                             Quests = "Quests",
+                             Options = "Options",
+                             Menu = "Menu",
+                             GameShop = "Game Shop",
+                             BigMap = "BigMap",
+                             Mail = "Mail",
+                             Exit = "Exit",
+                             LogOut = "Log Out",
+                             Help = "Help",
+                             Keybinds = "Keybinds",
+                             Ranking = "Ranking",
+                             Creatures = "Creatures",
+                             Mount = "Mount",
+                             Fishing = "Fishing",
+                             Friends = "Friends",
+                             Mentor = "Mentor",
+                             Relationship = "Relationship",
+                             Groups = "Groups",
+                             Guild = "Guild",
+                             Expire = "Expire",
+
+                             PatchErr = "Could not get Patch Information",
+                             LastOnline ="Last Online";
+                             //Resolution = "Resolution",
+                             //Autostart = "Auto start",
+                             //Usrname = "Username",
+                             //Password = "Password";
     }
 }
