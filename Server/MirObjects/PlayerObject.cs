@@ -2033,7 +2033,7 @@ namespace Server.MirObjects
                 Info.Magics[i].CastTime = Envir.Time > TimeSpend ? Envir.Time - TimeSpend : 0;
             }
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-            ReceiveChat("Welcome to the Legend of Mir 2 Crystal Server.", ChatType.Hint);
+            ReceiveChat(GameLanguage.Welcome, ChatType.Hint);
 
             if (Settings.TestServer)
             {
@@ -4891,7 +4891,7 @@ namespace Server.MirObjects
                             }
                             else
                             {
-                                ReceiveChat("Not enough gold.", ChatType.System);
+                                ReceiveChat(GameLanguage.LowGold, ChatType.System);
                             }
                             ChatTime = 0;
                         }
@@ -4923,7 +4923,7 @@ namespace Server.MirObjects
                             }
                             else
                             {
-                                ReceiveChat("Not enough gold.", ChatType.System);
+                                ReceiveChat(GameLanguage.LowGold, ChatType.System);
                             }
                             ChatTime = 0;
                         }
@@ -12785,7 +12785,7 @@ namespace Server.MirObjects
                 case RequiredType.Level:
                     if (Level < item.Info.RequiredAmount)
                     {
-                        ReceiveChat("You are not a high enough level.", ChatType.System);
+                        ReceiveChat(GameLanguage.LowLevel, ChatType.System);
                         return false;
                     }
                     break;

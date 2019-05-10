@@ -174,7 +174,7 @@ namespace Client
         public static void Load()
         {
             //Languahe
-            LoadLanguage();
+            GameLanguage.LoadClientLanguage(@".\Language.ini");
 
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
@@ -352,156 +352,8 @@ namespace Client
         }
 
 
-        public static void LoadLanguage()
-        {
-            if (!File.Exists(@".\Language.ini"))
-            {
-                SaveLanguage();
-                return;
-            }
-            InIReader reader = new InIReader(@".\Language.ini");
-            GameLanguage.PetMode_Both = reader.ReadString("Language", "PetMode_Both", GameLanguage.PetMode_Both);
-            GameLanguage.PetMode_MoveOnly = reader.ReadString("Language", "PetMode_MoveOnly", GameLanguage.PetMode_MoveOnly);
-            GameLanguage.PetMode_AttackOnly = reader.ReadString("Language", "PetMode_AttackOnly", GameLanguage.PetMode_AttackOnly);
-            GameLanguage.PetMode_None = reader.ReadString("Language", "PetMode_None", GameLanguage.PetMode_None);
-
-            GameLanguage.AttackMode_Peace = reader.ReadString("Language", "AttackMode_Peace", GameLanguage.AttackMode_Peace);
-            GameLanguage.AttackMode_Group = reader.ReadString("Language", "AttackMode_Group", GameLanguage.AttackMode_Group);
-            GameLanguage.AttackMode_Guild = reader.ReadString("Language", "AttackMode_Guild", GameLanguage.AttackMode_Guild);
-            GameLanguage.AttackMode_EnemyGuild = reader.ReadString("Language", "AttackMode_EnemyGuild", GameLanguage.AttackMode_EnemyGuild);
-            GameLanguage.AttackMode_RedBrown = reader.ReadString("Language", "AttackMode_RedBrown", GameLanguage.AttackMode_RedBrown);
-            GameLanguage.AttackMode_All = reader.ReadString("Language", "AttackMode_All", GameLanguage.AttackMode_All);
-
-            GameLanguage.LogOutTip = reader.ReadString("Language", "LogOutTip", GameLanguage.LogOutTip);
-            GameLanguage.ExitTip = reader.ReadString("Language", "ExitTip", GameLanguage.ExitTip);
-            GameLanguage.DiedTip = reader.ReadString("Language", "DiedTip", GameLanguage.DiedTip);
-
-            GameLanguage.Inventory = reader.ReadString("Language", "Inventory", GameLanguage.Inventory);
-            GameLanguage.Character = reader.ReadString("Language", "Character", GameLanguage.Character);
-            GameLanguage.Skills = reader.ReadString("Language", "Skills", GameLanguage.Skills);
-            GameLanguage.Quests = reader.ReadString("Language", "Quests", GameLanguage.Quests);
-            GameLanguage.Options = reader.ReadString("Language", "Options", GameLanguage.Options);
-            GameLanguage.Menu = reader.ReadString("Language", "Menu", GameLanguage.Menu);
-            GameLanguage.GameShop = reader.ReadString("Language", "GameShop", GameLanguage.GameShop);
-            GameLanguage.BigMap = reader.ReadString("Language", "BigMap", GameLanguage.BigMap);
-            GameLanguage.Mail = reader.ReadString("Language", "Mail", GameLanguage.Mail);
-            GameLanguage.Exit = reader.ReadString("Language", "Exit", GameLanguage.Exit);
-            GameLanguage.LogOut = reader.ReadString("Language", "LogOut", GameLanguage.LogOut);
-            GameLanguage.Help = reader.ReadString("Language", "Help", GameLanguage.Help);
-            GameLanguage.Keybinds = reader.ReadString("Language", "Keybinds", GameLanguage.Keybinds);
-            GameLanguage.Ranking = reader.ReadString("Language", "Ranking", GameLanguage.Ranking);
-            GameLanguage.Creatures = reader.ReadString("Language", "Creatures", GameLanguage.Creatures);
-            GameLanguage.Mount = reader.ReadString("Language", "Mount", GameLanguage.Mount);
-            GameLanguage.Fishing = reader.ReadString("Language", "Fishing", GameLanguage.Fishing);
-            GameLanguage.Friends = reader.ReadString("Language", "Friends", GameLanguage.Friends);
-            GameLanguage.Mentor = reader.ReadString("Language", "Mentor", GameLanguage.Mentor);
-            GameLanguage.Relationship = reader.ReadString("Language", "Relationship", GameLanguage.Relationship);
-            GameLanguage.Groups = reader.ReadString("Language", "Groups", GameLanguage.Groups);
-            GameLanguage.Guild = reader.ReadString("Language", "Guild", GameLanguage.Guild);
-
-            GameLanguage.Expire = reader.ReadString("Language", "Expire", GameLanguage.Expire);
-            GameLanguage.PatchErr = reader.ReadString("Language", "PatchErr", GameLanguage.PatchErr);
-            GameLanguage.LastOnline = reader.ReadString("Language", "LastOnline", GameLanguage.LastOnline);
-        }
-
-
-        public static void SaveLanguage()
-        {
-            File.Delete(@".\Language.ini");
-            InIReader reader = new InIReader(@".\Language.ini");
-            reader.Write("Language", "PetMode_Both", GameLanguage.PetMode_Both);
-            reader.Write("Language", "PetMode_MoveOnly", GameLanguage.PetMode_MoveOnly);
-            reader.Write("Language", "PetMode_AttackOnly", GameLanguage.PetMode_AttackOnly);
-            reader.Write("Language", "PetMode_None", GameLanguage.PetMode_None);
-
-            reader.Write("Language", "AttackMode_Peace", GameLanguage.AttackMode_Peace);
-            reader.Write("Language", "AttackMode_Group", GameLanguage.AttackMode_Group);
-            reader.Write("Language", "AttackMode_Guild", GameLanguage.AttackMode_Guild);
-            reader.Write("Language", "AttackMode_EnemyGuild", GameLanguage.AttackMode_EnemyGuild);
-            reader.Write("Language", "AttackMode_RedBrown", GameLanguage.AttackMode_RedBrown);
-            reader.Write("Language", "AttackMode_All", GameLanguage.AttackMode_All);
-
-            reader.Write("Language", "LogOutTip", GameLanguage.LogOutTip);
-            reader.Write("Language", "ExitTip", GameLanguage.ExitTip);
-            reader.Write("Language", "DiedTip", GameLanguage.DiedTip);
-
-            reader.Write("Language", "Inventory", GameLanguage.Inventory);
-            reader.Write("Language", "Character", GameLanguage.Character);
-            reader.Write("Language", "Skills", GameLanguage.Skills);
-            reader.Write("Language", "Quests", GameLanguage.Quests);
-            reader.Write("Language", "Options", GameLanguage.Options);
-            reader.Write("Language", "Menu", GameLanguage.Menu);
-            reader.Write("Language", "GameShop", GameLanguage.GameShop);
-            reader.Write("Language", "BigMap", GameLanguage.BigMap);
-            reader.Write("Language", "Mail", GameLanguage.Mail);
-            reader.Write("Language", "Exit", GameLanguage.Exit);
-            reader.Write("Language", "LogOut", GameLanguage.LogOut);
-            reader.Write("Language", "Help", GameLanguage.Help);
-            reader.Write("Language", "Keybinds", GameLanguage.Keybinds);
-            reader.Write("Language", "Ranking", GameLanguage.Ranking);
-            reader.Write("Language", "Creatures", GameLanguage.Creatures);
-            reader.Write("Language", "Mount", GameLanguage.Mount);
-            reader.Write("Language", "Fishing", GameLanguage.Fishing);
-            reader.Write("Language", "Friends", GameLanguage.Friends);
-            reader.Write("Language", "Mentor", GameLanguage.Mentor);
-            reader.Write("Language", "Relationship", GameLanguage.Relationship);
-            reader.Write("Language", "Groups", GameLanguage.Groups);
-            reader.Write("Language", "Guild", GameLanguage.Guild);
-
-            reader.Write("Language", "Expire", GameLanguage.Expire);
-            reader.Write("Language", "PatchErr", GameLanguage.PatchErr);
-            reader.Write("Language", "LastOnline", GameLanguage.LastOnline);
-        }
+      
     }
 
-    //default is English
-    public class GameLanguage
-    {
-        public static string PetMode_Both = "[Pet: Attack and Move]",
-                             PetMode_MoveOnly = "[Pet: Do Not Attack]",
-                             PetMode_AttackOnly = "[Pet: Do Not Move]",
-                             PetMode_None = "[Pet: Do Not Attack or Move]",
-
-                             AttackMode_Peace = "[Mode: Peaceful]",
-                             AttackMode_Group = "[Mode: Group]",
-                             AttackMode_Guild = "[Mode: Guild]",
-                             AttackMode_EnemyGuild = "[Mode: Enemy Guild]",
-                             AttackMode_RedBrown = "[Mode: Red/Brown]",
-                             AttackMode_All = "[Mode: Attack All]",
-
-                             LogOutTip = "Do you want to log out of Legend of Mir?",
-                             ExitTip = "Do you want to quit Legend of Mir?？",
-                             DiedTip = "You have died, Do you want to revive in town?",
-
-                             Inventory = "Inventory",
-                             Character = "Character",
-                             Skills = "Skills",
-                             Quests = "Quests",
-                             Options = "Options",
-                             Menu = "Menu",
-                             GameShop = "Game Shop",
-                             BigMap = "BigMap",
-                             Mail = "Mail",
-                             Exit = "Exit",
-                             LogOut = "Log Out",
-                             Help = "Help",
-                             Keybinds = "Keybinds",
-                             Ranking = "Ranking",
-                             Creatures = "Creatures",
-                             Mount = "Mount",
-                             Fishing = "Fishing",
-                             Friends = "Friends",
-                             Mentor = "Mentor",
-                             Relationship = "Relationship",
-                             Groups = "Groups",
-                             Guild = "Guild",
-                             Expire = "Expire",
-
-                             PatchErr = "Could not get Patch Information",
-                             LastOnline ="Last Online";
-                             //Resolution = "Resolution",
-                             //Autostart = "Auto start",
-                             //Usrname = "Username",
-                             //Password = "Password";
-    }
+    
 }

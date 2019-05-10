@@ -219,7 +219,7 @@ namespace Client.MirControls
                 }
                 else
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You can't afford the selected item.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
                     return;
                 }
 

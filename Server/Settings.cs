@@ -273,7 +273,7 @@ namespace Server
         }
 
         public static void Load()
-        {
+        {            
             //General
             VersionPath = Reader.ReadString("General", "VersionPath", VersionPath);
             CheckVersion = Reader.ReadBoolean("General", "CheckVersion", CheckVersion);
@@ -475,6 +475,8 @@ namespace Server
             LoadMentor();
             LoadGoods();
             LoadGem();
+            //Languahe
+            GameLanguage.LoadServerLanguage(ConfigPath + "Language.ini");
         }
         public static void Save()
         {

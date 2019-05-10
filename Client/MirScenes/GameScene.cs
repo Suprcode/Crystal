@@ -4517,7 +4517,7 @@ namespace Client.MirScenes
                     MirMessageBox.Show("This item has Expired and cannot be brought.");
                     break;
                 case 4:
-                    MirMessageBox.Show("You do not have enough gold to buy this item.");
+                    MirMessageBox.Show(GameLanguage.LowGold);
                     break;
                 case 5:
                     MirMessageBox.Show("You do not have enough weight or space spare to buy this item.");
@@ -5069,7 +5069,7 @@ namespace Client.MirScenes
                     MapControl.AwakeningAction = false;
                     break;
                 case -3:
-                    messageBox = new MirMessageBox("You do not have enough gold.", MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox(GameLanguage.LowGold, MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case -2:

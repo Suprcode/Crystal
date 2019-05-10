@@ -1692,7 +1692,7 @@ namespace Client.MirControls
                 case RequiredType.Level:
                     if (MapObject.User.Level < Item.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You are not a high enough level.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowLevel, ChatType.System);
                         return false;
                     }
                     break;
@@ -1872,7 +1872,7 @@ namespace Client.MirControls
                 case RequiredType.Level:
                     if (MapObject.User.Level < i.Info.RequiredAmount)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You are not a high enough level.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowLevel, ChatType.System);
                         return false;
                     }
                     break;
