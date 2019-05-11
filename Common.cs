@@ -6374,6 +6374,7 @@ public class GameLanguage
                          LogOutTip = "Do you want to log out of Legend of Mir?",
                          ExitTip = "Do you want to quit Legend of Mir?？",
                          DiedTip = "You have died, Do you want to revive in town?",
+                         DropTip =   "Are you sure you want to drop",
 
                          Inventory = "Inventory",
                          Character = "Character",
@@ -6415,11 +6416,14 @@ public class GameLanguage
                          ClassRequired = "Class Required",
                          Holy = "Holy",
                          Accuracy = "Accuracy",
+                         Agility= "Agility ",
                          DC = "DC",
                          MC = "MC",
                          SC = "SC",
                          Durability = "Durability",
-                         Weight = "W";
+                         Weight = "W",
+                         AC = "AC",
+                         MAC = "MAC";
     //Resolution = "Resolution",
     //Autostart = "Auto start",
     //Usrname = "Username",
@@ -6458,6 +6462,7 @@ public class GameLanguage
         GameLanguage.LogOutTip = reader.ReadString("Language", "LogOutTip", GameLanguage.LogOutTip);
         GameLanguage.ExitTip = reader.ReadString("Language", "ExitTip", GameLanguage.ExitTip);
         GameLanguage.DiedTip = reader.ReadString("Language", "DiedTip", GameLanguage.DiedTip);
+        GameLanguage.DropTip = reader.ReadString("Language", "DropTip", GameLanguage.DropTip);
 
         GameLanguage.Inventory = reader.ReadString("Language", "Inventory", GameLanguage.Inventory);
         GameLanguage.Character = reader.ReadString("Language", "Character", GameLanguage.Character);
@@ -6503,11 +6508,14 @@ public class GameLanguage
         GameLanguage.ClassRequired = reader.ReadString("Language", "ClassRequired", GameLanguage.ClassRequired);
         GameLanguage.Holy = reader.ReadString("Language", "Holy", GameLanguage.Holy);
         GameLanguage.Accuracy = reader.ReadString("Language", "Accuracy", GameLanguage.Accuracy);
+        GameLanguage.Agility = reader.ReadString("Language", "Agility", GameLanguage.Agility);
         GameLanguage.DC = reader.ReadString("Language", "DC", GameLanguage.DC);
         GameLanguage.MC = reader.ReadString("Language", "MC", GameLanguage.MC);
         GameLanguage.SC = reader.ReadString("Language", "SC", GameLanguage.SC);
         GameLanguage.Durability = reader.ReadString("Language", "Durability", GameLanguage.Durability);
         GameLanguage.Weight = reader.ReadString("Language", "Weight", GameLanguage.Weight);
+        GameLanguage.AC = reader.ReadString("Language", "AC", GameLanguage.AC);
+        GameLanguage.MAC = reader.ReadString("Language", "MAC", GameLanguage.MAC);
     }
 
 
@@ -6530,6 +6538,7 @@ public class GameLanguage
         reader.Write("Language", "LogOutTip", GameLanguage.LogOutTip);
         reader.Write("Language", "ExitTip", GameLanguage.ExitTip);
         reader.Write("Language", "DiedTip", GameLanguage.DiedTip);
+        reader.Write("Language", "DropTip", GameLanguage.DropTip);
 
         reader.Write("Language", "Inventory", GameLanguage.Inventory);
         reader.Write("Language", "Character", GameLanguage.Character);
@@ -6577,11 +6586,14 @@ public class GameLanguage
         reader.Write("Language", "ClassRequired", GameLanguage.ClassRequired);
         reader.Write("Language", "Holy", GameLanguage.Holy);
         reader.Write("Language", "Accuracy", GameLanguage.Accuracy);
+        reader.Write("Language", "Agility", GameLanguage.Agility);
         reader.Write("Language", "DC", GameLanguage.DC);
         reader.Write("Language", "MC", GameLanguage.MC);
         reader.Write("Language", "SC", GameLanguage.SC);
         reader.Write("Language", "Durability", GameLanguage.Durability);
         reader.Write("Language", "Weight", GameLanguage.Weight);
+        reader.Write("Language", "AC", GameLanguage.AC);
+        reader.Write("Language", "MAC", GameLanguage.MAC);
     }
 
 
