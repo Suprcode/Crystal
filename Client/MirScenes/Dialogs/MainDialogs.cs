@@ -1299,7 +1299,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(166, 1),
                 Parent = this,
                 Sound = SoundList.ButtonC,
-                Hint = "Trade (" + CMain.InputKeys.GetKey(KeybindOptions.Trade) + ")",
+                Hint = GameLanguage.Trade + " (" + CMain.InputKeys.GetKey(KeybindOptions.Trade) + ")",
             };
             TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 

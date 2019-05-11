@@ -725,7 +725,7 @@ namespace Client.MirScenes.Dialogs
             CreatureInfo2.Text = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.Info2;
             //Expire
             if (GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime == -9999)
-                CreatureDeadline.Text = "Expire: Never";
+                CreatureDeadline.Text = GameLanguage.Expire + ": " + GameLanguage.Never;
             else
                 CreatureDeadline.Text = string.Format("Expire: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
             //

@@ -6398,13 +6398,33 @@ public class GameLanguage
                          Groups = "Groups",
                          Guild = "Guild",
                          Expire = "Expire",
+                         Never = "Never",
+                         Trade = "Trade",
+                         GameMaster = "GameMaster",
 
                          PatchErr = "Could not get Patch Information",
-                         LastOnline = "Last Online";
-                        //Resolution = "Resolution",
-                        //Autostart = "Auto start",
-                        //Usrname = "Username",
-                        //Password = "Password";
+                         LastOnline = "Last Online",
+                         YouGained = "You gained",
+                         ExperienceGained = "Experience Gained",
+
+                         ItemDescription = "Item Description",
+                         RequiredLevel = "Required Level",
+                         RequiredDC = "Required DC",
+                         RequiredMC = "Required MC",
+                         RequiredSC = "Required SC",
+                         ClassRequired = "Class Required",
+                         Holy = "Holy",
+                         Accuracy = "Accuracy",
+                         DC = "DC",
+                         MC = "MC",
+                         SC = "SC",
+                         Durability = "Durability",
+                         Weight = "W";
+    //Resolution = "Resolution",
+    //Autostart = "Auto start",
+    //Usrname = "Username",
+    //Password = "Password";
+
 
     //Server
     public static string Welcome = "Welcome to the Legend of Mir 2 Crystal Server.",
@@ -6412,8 +6432,8 @@ public class GameLanguage
 
     //common
     public static string LowLevel = "You are not a high enough level.",
-                         LowGold = "Not enough gold.";                    
-
+                         LowGold = "Not enough gold.",
+                         LevelUp = "Congratulations! You have leveled up. Your HP and MP have been restored.";
 
     public static void LoadClientLanguage(string languageIniPath)
     {
@@ -6461,13 +6481,33 @@ public class GameLanguage
         GameLanguage.Relationship = reader.ReadString("Language", "Relationship", GameLanguage.Relationship);
         GameLanguage.Groups = reader.ReadString("Language", "Groups", GameLanguage.Groups);
         GameLanguage.Guild = reader.ReadString("Language", "Guild", GameLanguage.Guild);
-
+        GameLanguage.Trade = reader.ReadString("Language", "Trade", GameLanguage.Trade);
+        GameLanguage.GameMaster = reader.ReadString("Language", "GameMaster", GameLanguage.GameMaster);
         GameLanguage.Expire = reader.ReadString("Language", "Expire", GameLanguage.Expire);
+        GameLanguage.Never = reader.ReadString("Language", "Never", GameLanguage.Never);
+
         GameLanguage.PatchErr = reader.ReadString("Language", "PatchErr", GameLanguage.PatchErr);
         GameLanguage.LastOnline = reader.ReadString("Language", "LastOnline", GameLanguage.LastOnline);
 
         GameLanguage.LowLevel = reader.ReadString("Language", "LowLevel", GameLanguage.LowLevel);
         GameLanguage.LowGold = reader.ReadString("Language", "LowGold", GameLanguage.LowGold);
+        GameLanguage.YouGained = reader.ReadString("Language", "YouGained", GameLanguage.YouGained);
+        GameLanguage.ExperienceGained = reader.ReadString("Language", "ExperienceGained", GameLanguage.ExperienceGained);
+        GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
+
+        GameLanguage.ItemDescription = reader.ReadString("Language", "ItemDescription", GameLanguage.ItemDescription);
+        GameLanguage.RequiredLevel = reader.ReadString("Language", "RequiredLevel", GameLanguage.RequiredLevel);
+        GameLanguage.RequiredDC = reader.ReadString("Language", "RequiredDC", GameLanguage.RequiredDC);
+        GameLanguage.RequiredMC = reader.ReadString("Language", "RequiredMC", GameLanguage.RequiredMC);
+        GameLanguage.RequiredSC = reader.ReadString("Language", "RequiredSC", GameLanguage.RequiredSC);
+        GameLanguage.ClassRequired = reader.ReadString("Language", "ClassRequired", GameLanguage.ClassRequired);
+        GameLanguage.Holy = reader.ReadString("Language", "Holy", GameLanguage.Holy);
+        GameLanguage.Accuracy = reader.ReadString("Language", "Accuracy", GameLanguage.Accuracy);
+        GameLanguage.DC = reader.ReadString("Language", "DC", GameLanguage.DC);
+        GameLanguage.MC = reader.ReadString("Language", "MC", GameLanguage.MC);
+        GameLanguage.SC = reader.ReadString("Language", "SC", GameLanguage.SC);
+        GameLanguage.Durability = reader.ReadString("Language", "Durability", GameLanguage.Durability);
+        GameLanguage.Weight = reader.ReadString("Language", "Weight", GameLanguage.Weight);
     }
 
 
@@ -6513,13 +6553,35 @@ public class GameLanguage
         reader.Write("Language", "Relationship", GameLanguage.Relationship);
         reader.Write("Language", "Groups", GameLanguage.Groups);
         reader.Write("Language", "Guild", GameLanguage.Guild);
+        reader.Write("Language", "Trade", GameLanguage.Trade);
+        reader.Write("Language", "GameMaster", GameLanguage.GameMaster);
+
 
         reader.Write("Language", "Expire", GameLanguage.Expire);
+        reader.Write("Language", "Never", GameLanguage.Never);
         reader.Write("Language", "PatchErr", GameLanguage.PatchErr);
         reader.Write("Language", "LastOnline", GameLanguage.LastOnline);
 
         reader.Write("Language", "LowLevel", GameLanguage.LowLevel);
         reader.Write("Language", "LowGold", GameLanguage.LowGold);
+
+        reader.Write("Language", "YouGained", GameLanguage.YouGained);
+        reader.Write("Language", "ExperienceGained", GameLanguage.ExperienceGained);
+        reader.Write("Language", "LevelUp", GameLanguage.LevelUp);
+
+        reader.Write("Language", "ItemDescription", GameLanguage.ItemDescription);
+        reader.Write("Language", "RequiredLevel", GameLanguage.RequiredLevel);
+        reader.Write("Language", "RequiredDC", GameLanguage.RequiredDC);
+        reader.Write("Language", "RequiredMC", GameLanguage.RequiredMC);
+        reader.Write("Language", "RequiredSC", GameLanguage.RequiredSC);
+        reader.Write("Language", "ClassRequired", GameLanguage.ClassRequired);
+        reader.Write("Language", "Holy", GameLanguage.Holy);
+        reader.Write("Language", "Accuracy", GameLanguage.Accuracy);
+        reader.Write("Language", "DC", GameLanguage.DC);
+        reader.Write("Language", "MC", GameLanguage.MC);
+        reader.Write("Language", "SC", GameLanguage.SC);
+        reader.Write("Language", "Durability", GameLanguage.Durability);
+        reader.Write("Language", "Weight", GameLanguage.Weight);
     }
 
 
@@ -6535,6 +6597,7 @@ public class GameLanguage
         GameLanguage.OnlinePlayers = reader.ReadString("Language", "OnlinePlayers", GameLanguage.OnlinePlayers);
         GameLanguage.LowLevel = reader.ReadString("Language", "LowLevel", GameLanguage.LowLevel);
         GameLanguage.LowGold = reader.ReadString("Language", "LowGold", GameLanguage.LowGold);
+        GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6545,5 +6608,6 @@ public class GameLanguage
         reader.Write("Language", "OnlinePlayers", GameLanguage.OnlinePlayers);
         reader.Write("Language", "LowLevel", GameLanguage.LowLevel);
         reader.Write("Language", "LowGold", GameLanguage.LowGold);
+        reader.Write("Language", "LevelUp", GameLanguage.LevelUp);
     }
 }
