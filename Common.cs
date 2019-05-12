@@ -6374,7 +6374,7 @@ public class GameLanguage
                          LogOutTip = "Do you want to log out of Legend of Mir?",
                          ExitTip = "Do you want to quit Legend of Mir?？",
                          DiedTip = "You have died, Do you want to revive in town?",
-                         DropTip =   "Are you sure you want to drop",
+                         DropTip = "Are you sure you want to drop",
 
                          Inventory = "Inventory",
                          Character = "Character",
@@ -6416,14 +6416,19 @@ public class GameLanguage
                          ClassRequired = "Class Required",
                          Holy = "Holy",
                          Accuracy = "Accuracy",
-                         Agility= "Agility ",
+                         Agility = "Agility ",
                          DC = "DC",
                          MC = "MC",
                          SC = "SC",
                          Durability = "Durability",
                          Weight = "W",
                          AC = "AC",
-                         MAC = "MAC";
+                         MAC = "MAC",
+                         Luck = "Luck",
+
+                         DeleteCharacter = "Are you sure you want to Delete the character",
+                         CharacterDeleted ="Your character was deleted successfully.",
+                         CharacterCreated = "Your character was created successfully.";
     //Resolution = "Resolution",
     //Autostart = "Auto start",
     //Usrname = "Username",
@@ -6432,12 +6437,18 @@ public class GameLanguage
 
     //Server
     public static string Welcome = "Welcome to the Legend of Mir 2 Crystal Server.",
-                         OnlinePlayers = "Online Players";
+                         OnlinePlayers = "Online Players",
+                         WeaponLuck = "Luck dwells within your weapon.",
+                         WeaponCurse = "Curse dwells within your weapon.",
+                         WeaponNoEffect = "Curse dwells within your weapon.";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
                          LowGold = "Not enough gold.",
-                         LevelUp = "Congratulations! You have leveled up. Your HP and MP have been restored.";
+                         LevelUp = "Congratulations! You have leveled up. Your HP and MP have been restored.",
+                         LowDC = "You do not have enough DC.",
+                         LowMC = "You do not have enough MC.",
+                         LowSC = "You do not have enough SC.";
 
     public static void LoadClientLanguage(string languageIniPath)
     {
@@ -6496,6 +6507,10 @@ public class GameLanguage
 
         GameLanguage.LowLevel = reader.ReadString("Language", "LowLevel", GameLanguage.LowLevel);
         GameLanguage.LowGold = reader.ReadString("Language", "LowGold", GameLanguage.LowGold);
+        GameLanguage.LowDC = reader.ReadString("Language", "LowDC", GameLanguage.LowDC);
+        GameLanguage.LowMC = reader.ReadString("Language", "LowMC", GameLanguage.LowMC);
+        GameLanguage.LowSC = reader.ReadString("Language", "LowSC", GameLanguage.LowSC);
+
         GameLanguage.YouGained = reader.ReadString("Language", "YouGained", GameLanguage.YouGained);
         GameLanguage.ExperienceGained = reader.ReadString("Language", "ExperienceGained", GameLanguage.ExperienceGained);
         GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
@@ -6516,6 +6531,11 @@ public class GameLanguage
         GameLanguage.Weight = reader.ReadString("Language", "Weight", GameLanguage.Weight);
         GameLanguage.AC = reader.ReadString("Language", "AC", GameLanguage.AC);
         GameLanguage.MAC = reader.ReadString("Language", "MAC", GameLanguage.MAC);
+        GameLanguage.Luck = reader.ReadString("Language", "Luck", GameLanguage.Luck);
+
+        GameLanguage.DeleteCharacter = reader.ReadString("Language", "DeleteCharacter", GameLanguage.DeleteCharacter);
+        GameLanguage.CharacterDeleted = reader.ReadString("Language", "CharacterDeleted", GameLanguage.CharacterDeleted);
+        GameLanguage.CharacterCreated = reader.ReadString("Language", "CharacterCreated", GameLanguage.CharacterCreated);
     }
 
 
@@ -6573,6 +6593,9 @@ public class GameLanguage
 
         reader.Write("Language", "LowLevel", GameLanguage.LowLevel);
         reader.Write("Language", "LowGold", GameLanguage.LowGold);
+        reader.Write("Language", "LowDC", GameLanguage.LowDC);
+        reader.Write("Language", "LowMC", GameLanguage.LowMC);
+        reader.Write("Language", "LowSC", GameLanguage.LowSC);
 
         reader.Write("Language", "YouGained", GameLanguage.YouGained);
         reader.Write("Language", "ExperienceGained", GameLanguage.ExperienceGained);
@@ -6594,6 +6617,11 @@ public class GameLanguage
         reader.Write("Language", "Weight", GameLanguage.Weight);
         reader.Write("Language", "AC", GameLanguage.AC);
         reader.Write("Language", "MAC", GameLanguage.MAC);
+        reader.Write("Language", "Luck", GameLanguage.Luck);
+
+        reader.Write("Language", "DeleteCharacter", GameLanguage.DeleteCharacter);
+        reader.Write("Language", "CharacterDeleted", GameLanguage.CharacterDeleted);
+        reader.Write("Language", "CharacterCreated", GameLanguage.CharacterCreated);
     }
 
 
@@ -6609,7 +6637,15 @@ public class GameLanguage
         GameLanguage.OnlinePlayers = reader.ReadString("Language", "OnlinePlayers", GameLanguage.OnlinePlayers);
         GameLanguage.LowLevel = reader.ReadString("Language", "LowLevel", GameLanguage.LowLevel);
         GameLanguage.LowGold = reader.ReadString("Language", "LowGold", GameLanguage.LowGold);
+        GameLanguage.LowDC = reader.ReadString("Language", "LowDC", GameLanguage.LowDC);
+        GameLanguage.LowMC = reader.ReadString("Language", "LowMC", GameLanguage.LowMC);
+        GameLanguage.LowSC = reader.ReadString("Language", "LowSC", GameLanguage.LowSC);
+
         GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
+
+        GameLanguage.WeaponLuck = reader.ReadString("Language", "WeaponLuck", GameLanguage.WeaponLuck);
+        GameLanguage.WeaponCurse = reader.ReadString("Language", "WeaponCurse", GameLanguage.WeaponCurse);
+        GameLanguage.WeaponNoEffect = reader.ReadString("Language", "WeaponNoEffect", GameLanguage.WeaponNoEffect);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6620,6 +6656,14 @@ public class GameLanguage
         reader.Write("Language", "OnlinePlayers", GameLanguage.OnlinePlayers);
         reader.Write("Language", "LowLevel", GameLanguage.LowLevel);
         reader.Write("Language", "LowGold", GameLanguage.LowGold);
+        reader.Write("Language", "LowDC", GameLanguage.LowDC);
+        reader.Write("Language", "LowMC", GameLanguage.LowMC);
+        reader.Write("Language", "LowSC", GameLanguage.LowSC);
+
         reader.Write("Language", "LevelUp", GameLanguage.LevelUp);
+
+        reader.Write("Language", "WeaponLuck", GameLanguage.WeaponLuck);
+        reader.Write("Language", "WeaponCurse", GameLanguage.WeaponCurse);
+        reader.Write("Language", "WeaponNoEffect", GameLanguage.WeaponNoEffect);
     }
 }
