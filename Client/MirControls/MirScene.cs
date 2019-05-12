@@ -221,7 +221,7 @@ namespace Client.MirControls
             switch (p.Reason)
             {
                 case 0:
-                    MirMessageBox.Show("Disconnected: Server is shutting down.", true);
+                    MirMessageBox.Show(GameLanguage.ShuttingDown, true);
                     break;
                 case 1:
                     MirMessageBox.Show("Disconnected: Another user logged onto your account.", true);
