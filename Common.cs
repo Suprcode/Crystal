@@ -6427,7 +6427,7 @@ public class GameLanguage
                          Luck = "Luck",
 
                          DeleteCharacter = "Are you sure you want to Delete the character",
-                         CharacterDeleted ="Your character was deleted successfully.",
+                         CharacterDeleted = "Your character was deleted successfully.",
                          CharacterCreated = "Your character was created successfully.",
 
                          Resolution = "Resolution",
@@ -6435,15 +6435,29 @@ public class GameLanguage
                          Usrname = "Username",
                          Password = "Password",
 
-                         ShuttingDown =  "Disconnected: Server is shutting down.";
-
+                         ShuttingDown = "Disconnected: Server is shutting down.",
+                         MaxCombine = "Max Combine Count",
+                         SplitStack = "Shift + Left click to split the stack",
+                         Count = "Count",
+                         ExtraSlots8 = "Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
+                         "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.",
+                         ExtraSlots4 = "Are you sure you would like to unlock 4 extra slots? for gold:",
+                         
+                         Chat_All = "All",
+                         Chat_Short = "Shout",
+                         Chat_Whisper = "Whisper",
+                         Chat_Lover = "Lover",
+                         Chat_Mentor = "Mentor",
+                         Chat_Group = "Group",
+                         Chat_Guild = "Guild";
 
     //Server
     public static string Welcome = "Welcome to the Legend of Mir 2 Crystal Server.",
                          OnlinePlayers = "Online Players",
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",
-                         WeaponNoEffect = "Curse dwells within your weapon.";
+                         WeaponNoEffect = "Curse dwells within your weapon.",
+                         InventoryIncreased = "Inventory size increased.";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6546,6 +6560,20 @@ public class GameLanguage
         GameLanguage.Password = reader.ReadString("Language", "Password", GameLanguage.Password);
 
         GameLanguage.ShuttingDown = reader.ReadString("Language", "ShuttingDown", GameLanguage.ShuttingDown);
+
+        GameLanguage.MaxCombine = reader.ReadString("Language", "MaxCombine", GameLanguage.MaxCombine);
+        GameLanguage.SplitStack = reader.ReadString("Language", "SplitStack", GameLanguage.SplitStack);
+        GameLanguage.Count = reader.ReadString("Language", "Count", GameLanguage.Count);
+        GameLanguage.ExtraSlots8 = reader.ReadString("Language", "ExtraSlots8", GameLanguage.ExtraSlots8);
+        GameLanguage.ExtraSlots4 = reader.ReadString("Language", "ExtraSlots4", GameLanguage.ExtraSlots4);
+
+        GameLanguage.Chat_All = reader.ReadString("Language", "Chat_All", GameLanguage.Chat_All);
+        GameLanguage.Chat_Short = reader.ReadString("Language", "Chat_Short", GameLanguage.Chat_Short);
+        GameLanguage.Chat_Whisper = reader.ReadString("Language", "Chat_Whisper", GameLanguage.Chat_Whisper);
+        GameLanguage.Chat_Lover = reader.ReadString("Language", "Chat_Lover", GameLanguage.Chat_Lover);
+        GameLanguage.Chat_Mentor = reader.ReadString("Language", "Chat_Mentor", GameLanguage.Chat_Mentor);
+        GameLanguage.Chat_Group = reader.ReadString("Language", "Chat_Group", GameLanguage.Chat_Group);
+        GameLanguage.Chat_Guild = reader.ReadString("Language", "Chat_Guild", GameLanguage.Chat_Guild);
     }
 
 
@@ -6639,6 +6667,20 @@ public class GameLanguage
         reader.Write("Language", "Password", GameLanguage.Password);
 
         reader.Write("Language", "ShuttingDown", GameLanguage.ShuttingDown);
+
+        reader.Write("Language", "MaxCombine", GameLanguage.MaxCombine);
+        reader.Write("Language", "SplitStack", GameLanguage.SplitStack);
+        reader.Write("Language", "Count", GameLanguage.Count);
+        reader.Write("Language", "ExtraSlots8", GameLanguage.ExtraSlots8);
+        reader.Write("Language", "ExtraSlots4", GameLanguage.ExtraSlots4);
+
+        reader.Write("Language", "Chat_All", GameLanguage.Chat_All);
+        reader.Write("Language", "Chat_Short", GameLanguage.Chat_Short);
+        reader.Write("Language", "Chat_Whisper", GameLanguage.Chat_Whisper);
+        reader.Write("Language", "Chat_Lover", GameLanguage.Chat_Lover);
+        reader.Write("Language", "Chat_Mentor", GameLanguage.Chat_Mentor);
+        reader.Write("Language", "Chat_Group", GameLanguage.Chat_Group);
+        reader.Write("Language", "Chat_Guild", GameLanguage.Chat_Guild);
     }
 
 
@@ -6663,6 +6705,8 @@ public class GameLanguage
         GameLanguage.WeaponLuck = reader.ReadString("Language", "WeaponLuck", GameLanguage.WeaponLuck);
         GameLanguage.WeaponCurse = reader.ReadString("Language", "WeaponCurse", GameLanguage.WeaponCurse);
         GameLanguage.WeaponNoEffect = reader.ReadString("Language", "WeaponNoEffect", GameLanguage.WeaponNoEffect);
+
+        GameLanguage.InventoryIncreased = reader.ReadString("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6682,5 +6726,7 @@ public class GameLanguage
         reader.Write("Language", "WeaponLuck", GameLanguage.WeaponLuck);
         reader.Write("Language", "WeaponCurse", GameLanguage.WeaponCurse);
         reader.Write("Language", "WeaponNoEffect", GameLanguage.WeaponNoEffect);
+
+        reader.Write("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
     }
 }

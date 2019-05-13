@@ -1186,7 +1186,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(12, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "All"
+                Hint = GameLanguage.Chat_All
             };
             NormalButton.Click += (o, e) =>
             {
@@ -1202,7 +1202,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(34, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Shout"
+                Hint = GameLanguage.Chat_Short
             };
             ShoutButton.Click += (o, e) =>
             {
@@ -1218,7 +1218,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(56, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Whisper"
+                Hint = GameLanguage.Chat_Whisper
             };
             WhisperButton.Click += (o, e) =>
             {
@@ -1234,7 +1234,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(78, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Lover"
+                Hint = GameLanguage.Chat_Lover
             };
             LoverButton.Click += (o, e) =>
             {
@@ -1250,7 +1250,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(100, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Mentor"
+                Hint = GameLanguage.Mentor
             };
             MentorButton.Click += (o, e) =>
             {
@@ -1266,7 +1266,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(122, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Group"
+                Hint = GameLanguage.Chat_Group
             };
             GroupButton.Click += (o, e) =>
             {
@@ -1282,7 +1282,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(144, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Guild"
+                Hint = GameLanguage.Chat_Guild
             };
             GuildButton.Click += (o, e) =>
             {
@@ -1469,8 +1469,7 @@ namespace Client.MirScenes.Dialogs
             {
                 int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
-                MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you would like to unlock 4 extra slots for {0:###,###} gold ?\n" +
-                                                    "This will take your inventory space up to {1} slots in total.", openGold, GameScene.User.Inventory.Length + 4), MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ExtraSlots4 + " {0:###,###}" , openGold), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -1572,8 +1571,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
-                MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
-                    "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.", MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ExtraSlots8, MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {

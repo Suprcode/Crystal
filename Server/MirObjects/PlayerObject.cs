@@ -4887,7 +4887,7 @@ namespace Server.MirObjects
                                 Account.Gold -= openGold;
                                 Enqueue(new S.LoseGold { Gold = openGold });
                                 Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
-                                ReceiveChat("Inventory size increased.", ChatType.System);
+                                ReceiveChat(GameLanguage.InventoryIncreased, ChatType.System);
                             }
                             else
                             {
