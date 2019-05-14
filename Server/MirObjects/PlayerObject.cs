@@ -6163,16 +6163,15 @@ namespace Server.MirObjects
                         magic = GetMagic(Spell.TwinDrakeBlade);
                         damageFinal = magic.GetDamage(damageBase);
                         TwinDrakeBlade = false;
-                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, ob, damageFinal, DefenceType.Agility, false);
+                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 400,
+                            ob,                     //Object (Target)
+                            damageFinal,            //Damage
+                            DefenceType.Agility,    //Defence to target
+                            false,                  //Damage Weapon
+                            magic,                  //Magic
+                            true);                  //Final hit
                         ActionList.Add(action);
                         LevelMagic(magic);
-
-                        if ((((ob.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonAttackWeight) >= ob.PoisonResist)) && (ob.Level < Level + 10 && Envir.Random.Next(ob.Race == ObjectType.Player ? 40 : 20) <= magic.Level + 1))
-                        {
-                            ob.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = ob.Race == ObjectType.Player ? 2 : 2 + magic.Level, TickSpeed = 1000 }, this);
-                            ob.Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.TwinDrakeBlade });
-                        }
-
                         break;
                     case Spell.FlamingSword:
                         magic = GetMagic(Spell.FlamingSword);
@@ -9366,10 +9365,29 @@ namespace Server.MirObjects
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool damageWeapon = (bool)data[3];
-
+            UserMagic userMagic = null;
+            bool finalHit = false;
+            if (data.Count >= 5)
+                userMagic = (UserMagic)data[4];
+            if (data.Count >= 6)
+                finalHit = (bool)data[5];
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             if (target.Attacked(this, damage, defence, damageWeapon) <= 0) return;
+
+            if (userMagic != null && finalHit)
+            {
+                if (userMagic.Spell == Spell.TwinDrakeBlade)
+                {
+                    if ((((target.Race != ObjectType.Player) || Settings.PvpCanResistPoison) &&
+                        (Envir.Random.Next(Settings.PoisonAttackWeight) >= target.PoisonResist)) &&
+                        (target.Level < Level + 10 && Envir.Random.Next(target.Race == ObjectType.Player ? 40 : 20) <= userMagic.Level + 1))
+                    {
+                        target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = target.Race == ObjectType.Player ? 2 : 2 + userMagic.Level, TickSpeed = 1000 }, this);
+                        target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.TwinDrakeBlade });
+                    }
+                }
+            }
 
             //Level Fencing / SpiritSword
             foreach (UserMagic magic in Info.Magics)
