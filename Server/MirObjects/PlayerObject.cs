@@ -4910,12 +4910,12 @@ namespace Server.MirObjects
                                 if (Account.ExpandedStorageExpiryDate > Envir.Now)
                                 {
                                     Account.ExpandedStorageExpiryDate = Account.ExpandedStorageExpiryDate + addedTime;
-                                    ReceiveChat("Expanded storage time extended, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                    ReceiveChat(GameLanguage.ExpandedStorageExpiresOn + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
                                 else
                                 {
                                     Account.ExpandedStorageExpiryDate = Envir.Now + addedTime;
-                                    ReceiveChat("Storage expanded, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                    ReceiveChat(GameLanguage.ExpandedStorageExpiresOn + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
 
                                 Enqueue(new S.LoseGold { Gold = cost });

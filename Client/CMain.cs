@@ -73,7 +73,7 @@ namespace Client
 
         private void CMain_Load(object sender, EventArgs e)
         {
-
+            this.Text = GameLanguage.GameName;
             try
             {
                 ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
@@ -654,7 +654,7 @@ namespace Client
         {
             if (CMain.Time < GameScene.LogTime)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("Cannot leave game for " + (GameScene.LogTime - CMain.Time) / 1000 + " seconds.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(string.Format("{0}{1}{2}", GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000, GameLanguage.seconds), ChatType.System);
                 e.Cancel = true;
             }
         }

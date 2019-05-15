@@ -1941,9 +1941,9 @@ namespace Client.MirScenes.Dialogs
                 MirMessageBox messageBox;
 
                 if (GameScene.User.HasExpandedStorage)
-                    messageBox = new MirMessageBox("Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?", MirMessageBoxButtons.OKCancel);
+                    messageBox = new MirMessageBox(GameLanguage.ExtendYourRentalPeriod, MirMessageBoxButtons.OKCancel);
                 else
-                    messageBox = new MirMessageBox("Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?", MirMessageBoxButtons.OKCancel);
+                    messageBox = new MirMessageBox(GameLanguage.ExtraStorage, MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o1, a) =>
                 {
@@ -1982,7 +1982,7 @@ namespace Client.MirScenes.Dialogs
                 AutoSize = true,
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 NotControl = true,
-                Text = "Expanded Storage Locked",
+                Text = GameLanguage.ExpandedStorageLocked,
                 ForeColour = Color.Red
             };
 
@@ -2059,12 +2059,12 @@ namespace Client.MirScenes.Dialogs
             {
                 RentButton.Visible = true;
                 LockedPage.Visible = false;
-                RentalLabel.Text = "Expanded Storage Expires On: " + GameScene.User.ExpandedStorageExpiryTime.ToString();
+                RentalLabel.Text = GameLanguage.ExpandedStorageExpiresOn + GameScene.User.ExpandedStorageExpiryTime.ToString();
                 RentalLabel.ForeColour = Color.White;
             }
             else
             {
-                RentalLabel.Text = "Expanded Storage Locked";
+                RentalLabel.Text = GameLanguage.ExpandedStorageLocked;
                 RentalLabel.ForeColour = Color.Red;
                 RentButton.Visible = true;
                 LockedPage.Visible = true;

@@ -56,7 +56,7 @@ namespace Client.MirScenes
                     Location = new Point(322, 44),
                     Parent = Background,
                     Size = new Size(155, 17),
-                    Text = "Legend of Mir 2",
+                    Text = GameLanguage.GameName,
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
                 };
             

@@ -6401,7 +6401,7 @@ public class GameLanguage
                          Expire = "Expire",
                          Never = "Never",
                          Trade = "Trade",
-                         GameMaster = "GameMaster",                      
+                         GameMaster = "GameMaster",
 
                          PatchErr = "Could not get Patch Information",
                          LastOnline = "Last Online",
@@ -6442,14 +6442,22 @@ public class GameLanguage
                          ExtraSlots8 = "Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
                          "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.",
                          ExtraSlots4 = "Are you sure you would like to unlock 4 extra slots? for gold:",
-                         
+
                          Chat_All = "All",
                          Chat_Short = "Shout",
                          Chat_Whisper = "Whisper",
                          Chat_Lover = "Lover",
                          Chat_Mentor = "Mentor",
                          Chat_Group = "Group",
-                         Chat_Guild = "Guild";
+                         Chat_Guild = "Guild",
+                         ExpandedStorageLocked = "Expanded Storage Locked",
+                         ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
+                         ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
+                         ExpandedStorageExpiresOn = "Expanded Storage Expires On",
+                         GameName = "Legend of Mir2",
+                         CannotLeaveGame = "Cannot leave game for ",
+                         seconds = " seconds.";
+                
 
     //Server
     public static string Welcome = "Welcome to the Legend of Mir 2 Crystal Server.",
@@ -6574,6 +6582,13 @@ public class GameLanguage
         GameLanguage.Chat_Mentor = reader.ReadString("Language", "Chat_Mentor", GameLanguage.Chat_Mentor);
         GameLanguage.Chat_Group = reader.ReadString("Language", "Chat_Group", GameLanguage.Chat_Group);
         GameLanguage.Chat_Guild = reader.ReadString("Language", "Chat_Guild", GameLanguage.Chat_Guild);
+        GameLanguage.ExpandedStorageLocked = reader.ReadString("Language", "ExpandedStorageLocked", GameLanguage.ExpandedStorageLocked);
+        GameLanguage.ExtraStorage = reader.ReadString("Language", "ExtraStorage", GameLanguage.ExtraStorage);
+        GameLanguage.ExtendYourRentalPeriod = reader.ReadString("Language", "ExtendYourRentalPeriod", GameLanguage.ExtendYourRentalPeriod);
+        GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
+        GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
+        GameLanguage.CannotLeaveGame = reader.ReadString("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
+        GameLanguage.seconds = reader.ReadString("Language", "seconds", GameLanguage.seconds);
     }
 
 
@@ -6681,6 +6696,13 @@ public class GameLanguage
         reader.Write("Language", "Chat_Mentor", GameLanguage.Chat_Mentor);
         reader.Write("Language", "Chat_Group", GameLanguage.Chat_Group);
         reader.Write("Language", "Chat_Guild", GameLanguage.Chat_Guild);
+        reader.Write("Language", "ExpandedStorageLocked", GameLanguage.ExpandedStorageLocked);
+        reader.Write("Language", "ExtraStorage", GameLanguage.ExtraStorage);
+        reader.Write("Language", "ExtendYourRentalPeriod", GameLanguage.ExtendYourRentalPeriod);
+        reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
+        reader.Write("Language", "GameName", GameLanguage.GameName);
+        reader.Write("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
+        reader.Write("Language", "seconds", GameLanguage.seconds);
     }
 
 
@@ -6707,6 +6729,7 @@ public class GameLanguage
         GameLanguage.WeaponNoEffect = reader.ReadString("Language", "WeaponNoEffect", GameLanguage.WeaponNoEffect);
 
         GameLanguage.InventoryIncreased = reader.ReadString("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
+        GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6728,5 +6751,6 @@ public class GameLanguage
         reader.Write("Language", "WeaponNoEffect", GameLanguage.WeaponNoEffect);
 
         reader.Write("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
+        reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
     }
 }
