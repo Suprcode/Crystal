@@ -5527,7 +5527,7 @@ namespace Client.MirScenes
 
             if (HoverItem.Info.StackSize > 1)
             {
-                text += string.Format(" Count {0}", HoverItem.Count);
+                text += string.Format(" " + GameLanguage.Count + " {0}", HoverItem.Count);
             }
 
             if (HoverItem.Info.Durability > 0)
@@ -7744,7 +7744,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max Combine Count : {0}\nShift + Left click to split the stack", realItem.StackSize)
+                    Text = string.Format(GameLanguage.MaxCombine + " : {0}\n" + GameLanguage.SplitStack, realItem.StackSize)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SPLITUPLabel.DisplayRectangle.Right + 4),
