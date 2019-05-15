@@ -5527,7 +5527,7 @@ namespace Client.MirScenes
 
             if (HoverItem.Info.StackSize > 1)
             {
-                text += string.Format(" " + GameLanguage.Count + " {0}", HoverItem.Count);
+                text += string.Format(" {0} {1}", GameLanguage.Count, HoverItem.Count);
             }
 
             if (HoverItem.Info.Durability > 0)
@@ -7744,7 +7744,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(GameLanguage.MaxCombine + " : {0}\n" + GameLanguage.SplitStack, realItem.StackSize)
+                    Text = string.Format("{0} : {1}\n{2}" + GameLanguage.MaxCombine , realItem.StackSize, GameLanguage.SplitStack)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SPLITUPLabel.DisplayRectangle.Right + 4),
