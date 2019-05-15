@@ -341,7 +341,7 @@ namespace Client.MirScenes
         {
             if (_selected < 0 || _selected >= Characters.Count) return;
 
-            MirMessageBox message = new MirMessageBox(string.Format(GameLanguage.DeleteCharacter + " {0}", Characters[_selected].Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox message = new MirMessageBox(string.Format("{0} {1}", GameLanguage.DeleteCharacter, Characters[_selected].Name), MirMessageBoxButtons.YesNo);
             int index = Characters[_selected].Index;
 
             message.YesButton.Click += (o, e) =>

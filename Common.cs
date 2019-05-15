@@ -6401,7 +6401,7 @@ public class GameLanguage
                          Expire = "Expire",
                          Never = "Never",
                          Trade = "Trade",
-                         GameMaster = "GameMaster",
+                         GameMaster = "GameMaster",                      
 
                          PatchErr = "Could not get Patch Information",
                          LastOnline = "Last Online",

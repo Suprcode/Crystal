@@ -643,7 +643,7 @@ namespace Server.MirEnvir
                             userTime = Time + Settings.Minute * 5;
                             Broadcast(new S.Chat
                                 {
-                                    Message = string.Format(GameLanguage.OnlinePlayers + ": {0}", Players.Count),
+                                    Message = string.Format("{0}: {1}", GameLanguage.OnlinePlayers, Players.Count),
                                     Type = ChatType.Hint
                                 });
                         }
