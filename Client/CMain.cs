@@ -654,7 +654,7 @@ namespace Client
         {
             if (CMain.Time < GameScene.LogTime)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(string.Format("{0}{1}{2}", GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000, GameLanguage.seconds), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(string.Format("{0}{1}{2}", GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000, GameLanguage.Seconds), ChatType.System);
                 e.Cancel = true;
             }
         }

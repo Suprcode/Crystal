@@ -6374,59 +6374,75 @@ public class GameLanguage
                          LogOutTip = "Do you want to log out of Legend of Mir?",
                          ExitTip = "Do you want to quit Legend of Mir?？",
                          DiedTip = "You have died, Do you want to revive in town?",
-                         DropTip = "Are you sure you want to drop",
+                         DropTip = "Are you sure you want to drop {0}?",
 
-                         Inventory = "Inventory",
-                         Character = "Character",
-                         Skills = "Skills",
-                         Quests = "Quests",
-                         Options = "Options",
+                         Inventory = "Inventory ({0})",
+                         Character = "Character ({0})",
+                         Skills = "Skills ({0})",
+                         Quests = "Quests ({0})",
+                         Options = "Options ({0})",
                          Menu = "Menu",
-                         GameShop = "Game Shop",
-                         BigMap = "BigMap",
+                         GameShop = "Game Shop ({0})",
+                         BigMap = "BigMap ({0})",
                          Mail = "Mail",
-                         Exit = "Exit",
-                         LogOut = "Log Out",
-                         Help = "Help",
+                         Exit = "Exit ({0})",
+                         LogOut = "Log Out ({0})",
+                         Help = "Help ({0})",
                          Keybinds = "Keybinds",
-                         Ranking = "Ranking",
-                         Creatures = "Creatures",
-                         Mount = "Mount",
-                         Fishing = "Fishing",
-                         Friends = "Friends",
-                         Mentor = "Mentor",
-                         Relationship = "Relationship",
-                         Groups = "Groups",
-                         Guild = "Guild",
-                         Expire = "Expire",
+                         Ranking = "Ranking ({0})",
+                         Creatures = "Creatures ({0})",
+                         Mount = "Mount ({0})",
+                         Fishing = "Fishing ({0})",
+                         Friends = "Friends ({0})",
+                         Mentor = "Mentor ({0})",
+                         Relationship = "Relationship ({0})",
+                         Groups = "Groups ({0})",
+                         Guild = "Guild ({0})",
+                         Expire = "Expire: {0}",
                          Never = "Never",
-                         Trade = "Trade",
+                         Trade = "Trade ({0})",
                          GameMaster = "GameMaster",
 
                          PatchErr = "Could not get Patch Information",
                          LastOnline = "Last Online",
-                         YouGained = "You gained",
-                         ExperienceGained = "Experience Gained",
+
+                         Gold = "Gold",
+                         Credit = "Credit",
+
+                         YouGained = "You gained {0}.",
+
+                         YouGained2 = "You gained {0:###,###,###} {1}",
+
+                         ExperienceGained = "Experience Gained {0}",
 
                          ItemDescription = "Item Description",
-                         RequiredLevel = "Required Level",
-                         RequiredDC = "Required DC",
-                         RequiredMC = "Required MC",
-                         RequiredSC = "Required SC",
-                         ClassRequired = "Class Required",
-                         Holy = "Holy",
-                         Accuracy = "Accuracy",
-                         Agility = "Agility ",
-                         DC = "DC",
-                         MC = "MC",
-                         SC = "SC",
+                         RequiredLevel = "Required Level : {0}",
+                         RequiredDC = "Required DC : {0}",
+                         RequiredMC = "Required MC : {0}",
+                         RequiredSC = "Required SC : {0}",
+                         ClassRequired = "Class Required : {0}",
+
+                         Holy = "Holy: + {0} (+{1})",
+                         Holy2 = "Holy: + {0}",
+                         Accuracy = "Accuracy: + {0} (+{1})",
+                         Accuracy2 = "Accuracy: + {0}",
+                         Agility = "Agility: + {0} (+{1})",
+                         Agility2 = "Agility: + {0}",
+                         DC = "DC + {0}~{1} (+{2})",
+                         DC2 = "DC + {0}~{1}",
+                         MC = "MC + {0}~{1} (+{2})",
+                         MC2 = "MC + {0}~{1}",
+                         SC = "SC + {0}~{1} (+{2})",
+                         SC2 = "SC + {0}~{1}",
                          Durability = "Durability",
                          Weight = "W",
-                         AC = "AC",
-                         MAC = "MAC",
-                         Luck = "Luck",
+                         AC = "AC + {0}~{1} (+{2})",
+                         AC2 = "AC + {0}~{1}",
+                         MAC = "MAC + {0}~{1} (+{2})",
+                         MAC2 = "MAC + {0}~{1}",
+                         Luck = "Luck + {0}",
 
-                         DeleteCharacter = "Are you sure you want to Delete the character",
+                         DeleteCharacter = "Are you sure you want to Delete the character {0}",
                          CharacterDeleted = "Your character was deleted successfully.",
                          CharacterCreated = "Your character was created successfully.",
 
@@ -6436,12 +6452,12 @@ public class GameLanguage
                          Password = "Password",
 
                          ShuttingDown = "Disconnected: Server is shutting down.",
-                         MaxCombine = "Max Combine Count",
+                         MaxCombine = "Max Combine Count : {0}\n{1}",
                          SplitStack = "Shift + Left click to split the stack",
-                         Count = "Count",
+                         Count = " Count {0}",
                          ExtraSlots8 = "Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
                          "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.",
-                         ExtraSlots4 = "Are you sure you would like to unlock 4 extra slots? for gold:",
+                         ExtraSlots4 = "Are you sure you would like to unlock 4 extra slots? for gold: {0:###,###}",
 
                          Chat_All = "All",
                          Chat_Short = "Shout",
@@ -6453,15 +6469,15 @@ public class GameLanguage
                          ExpandedStorageLocked = "Expanded Storage Locked",
                          ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
                          ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
-                         ExpandedStorageExpiresOn = "Expanded Storage Expires On",
+                      
                          GameName = "Legend of Mir2",
-                         CannotLeaveGame = "Cannot leave game for ",
-                         seconds = " seconds.";
+                         CannotLeaveGame = "Cannot leave game for {0} {1}",
+                         Seconds = "seconds.";
                 
 
     //Server
-    public static string Welcome = "Welcome to the Legend of Mir 2 Crystal Server.",
-                         OnlinePlayers = "Online Players",
+    public static string Welcome = "Welcome to the Legend of {0} Server.",
+                         OnlinePlayers = "Online Players: {0}",
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",
                          WeaponNoEffect = "Curse dwells within your weapon.",
@@ -6473,7 +6489,8 @@ public class GameLanguage
                          LevelUp = "Congratulations! You have leveled up. Your HP and MP have been restored.",
                          LowDC = "You do not have enough DC.",
                          LowMC = "You do not have enough MC.",
-                         LowSC = "You do not have enough SC.";
+                         LowSC = "You do not have enough SC.",
+                         ExpandedStorageExpiresOn = "Expanded Storage Expires On";
 
     public static void LoadClientLanguage(string languageIniPath)
     {
@@ -6536,7 +6553,11 @@ public class GameLanguage
         GameLanguage.LowMC = reader.ReadString("Language", "LowMC", GameLanguage.LowMC);
         GameLanguage.LowSC = reader.ReadString("Language", "LowSC", GameLanguage.LowSC);
 
+        GameLanguage.Gold = reader.ReadString("Language", "Gold", GameLanguage.Gold);
+        GameLanguage.Credit = reader.ReadString("Language", "Credit", GameLanguage.Credit);
+
         GameLanguage.YouGained = reader.ReadString("Language", "YouGained", GameLanguage.YouGained);
+        GameLanguage.YouGained2 = reader.ReadString("Language", "YouGained2", GameLanguage.YouGained2);
         GameLanguage.ExperienceGained = reader.ReadString("Language", "ExperienceGained", GameLanguage.ExperienceGained);
         GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
 
@@ -6547,15 +6568,23 @@ public class GameLanguage
         GameLanguage.RequiredSC = reader.ReadString("Language", "RequiredSC", GameLanguage.RequiredSC);
         GameLanguage.ClassRequired = reader.ReadString("Language", "ClassRequired", GameLanguage.ClassRequired);
         GameLanguage.Holy = reader.ReadString("Language", "Holy", GameLanguage.Holy);
+        GameLanguage.Holy2 = reader.ReadString("Language", "Holy2", GameLanguage.Holy2);
         GameLanguage.Accuracy = reader.ReadString("Language", "Accuracy", GameLanguage.Accuracy);
+        GameLanguage.Accuracy2 = reader.ReadString("Language", "Accuracy2", GameLanguage.Accuracy2);
         GameLanguage.Agility = reader.ReadString("Language", "Agility", GameLanguage.Agility);
+        GameLanguage.Agility2 = reader.ReadString("Language", "Agility2", GameLanguage.Agility2);
         GameLanguage.DC = reader.ReadString("Language", "DC", GameLanguage.DC);
+        GameLanguage.DC2 = reader.ReadString("Language", "DC2", GameLanguage.DC2);
         GameLanguage.MC = reader.ReadString("Language", "MC", GameLanguage.MC);
+        GameLanguage.MC2 = reader.ReadString("Language", "MC2", GameLanguage.MC2);
         GameLanguage.SC = reader.ReadString("Language", "SC", GameLanguage.SC);
+        GameLanguage.SC2 = reader.ReadString("Language", "SC2", GameLanguage.SC2);
         GameLanguage.Durability = reader.ReadString("Language", "Durability", GameLanguage.Durability);
         GameLanguage.Weight = reader.ReadString("Language", "Weight", GameLanguage.Weight);
         GameLanguage.AC = reader.ReadString("Language", "AC", GameLanguage.AC);
+        GameLanguage.AC2 = reader.ReadString("Language", "AC2", GameLanguage.AC2);
         GameLanguage.MAC = reader.ReadString("Language", "MAC", GameLanguage.MAC);
+        GameLanguage.MAC2 = reader.ReadString("Language", "MAC2", GameLanguage.MAC2);
         GameLanguage.Luck = reader.ReadString("Language", "Luck", GameLanguage.Luck);
 
         GameLanguage.DeleteCharacter = reader.ReadString("Language", "DeleteCharacter", GameLanguage.DeleteCharacter);
@@ -6588,7 +6617,7 @@ public class GameLanguage
         GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
         GameLanguage.CannotLeaveGame = reader.ReadString("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
-        GameLanguage.seconds = reader.ReadString("Language", "seconds", GameLanguage.seconds);
+        GameLanguage.Seconds = reader.ReadString("Language", "Seconds", GameLanguage.Seconds);
     }
 
 
@@ -6650,7 +6679,11 @@ public class GameLanguage
         reader.Write("Language", "LowMC", GameLanguage.LowMC);
         reader.Write("Language", "LowSC", GameLanguage.LowSC);
 
+        reader.Write("Language", "Gold", GameLanguage.Gold);
+        reader.Write("Language", "Credit", GameLanguage.Credit);
+
         reader.Write("Language", "YouGained", GameLanguage.YouGained);
+        reader.Write("Language", "YouGained2", GameLanguage.YouGained2);
         reader.Write("Language", "ExperienceGained", GameLanguage.ExperienceGained);
         reader.Write("Language", "LevelUp", GameLanguage.LevelUp);
 
@@ -6702,7 +6735,7 @@ public class GameLanguage
         reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         reader.Write("Language", "GameName", GameLanguage.GameName);
         reader.Write("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
-        reader.Write("Language", "seconds", GameLanguage.seconds);
+        reader.Write("Language", "Seconds", GameLanguage.Seconds);
     }
 
 

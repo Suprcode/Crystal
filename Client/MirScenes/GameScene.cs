@@ -804,7 +804,7 @@ namespace Client.MirScenes
             }
             else
             {
-                ChatDialog.ReceiveChat(string.Format("{0}{1}{2}",GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000,GameLanguage.seconds), ChatType.System);
+                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000, GameLanguage.Seconds), ChatType.System);
             }
         }
         public void LogOut()
@@ -822,7 +822,7 @@ namespace Client.MirScenes
             }
             else
             {
-                ChatDialog.ReceiveChat(string.Format("{0}{1}{2}", GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000, GameLanguage.seconds), ChatType.System);
+                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000, GameLanguage.Seconds), ChatType.System);
             }
         }
 
@@ -2600,7 +2600,7 @@ namespace Client.MirScenes
             AddItem(p.Item);
             User.RefreshStats();
 
-            OutputMessage(string.Format("{0} {1}.", GameLanguage.YouGained, p.Item.FriendlyName));
+            OutputMessage(string.Format(GameLanguage.YouGained, p.Item.FriendlyName));
         }
         private void GainedQuestItem(S.GainedQuestItem p)
         {
@@ -2614,7 +2614,7 @@ namespace Client.MirScenes
 
             Gold += p.Gold;
             SoundManager.PlaySound(SoundList.Gold);
-            OutputMessage(string.Format("{0} {1:###,###,###} Gold.", GameLanguage.YouGained, p.Gold));
+            OutputMessage(string.Format(GameLanguage.YouGained2, p.Gold, GameLanguage.Gold));
         }
         private void LoseGold(S.LoseGold p)
         {
@@ -2627,7 +2627,7 @@ namespace Client.MirScenes
 
             Credit += p.Credit;
             SoundManager.PlaySound(SoundList.Gold);
-            OutputMessage(string.Format("{0} {1:###,###,###} Credit.", GameLanguage.YouGained, p.Credit));
+            OutputMessage(string.Format(GameLanguage.YouGained2, p.Credit, GameLanguage.Credit));
         }
         private void LoseCredit(S.LoseCredit p)
         {
@@ -3023,7 +3023,7 @@ namespace Client.MirScenes
         }
         private void GainExperience(S.GainExperience p)
         {
-            OutputMessage(string.Format("{0} {1}.", GameLanguage.ExperienceGained, p.Amount));
+            OutputMessage(string.Format(GameLanguage.ExperienceGained, p.Amount));
             MapObject.User.Experience += p.Amount;
         }
         private void LevelChanged(S.LevelChanged p)
@@ -5527,7 +5527,7 @@ namespace Client.MirScenes
 
             if (HoverItem.Info.StackSize > 1)
             {
-                text += string.Format(" {0} {1}", GameLanguage.Count, HoverItem.Count);
+                text += string.Format(GameLanguage.Count, HoverItem.Count);
             }
 
             if (HoverItem.Info.Durability > 0)
@@ -5680,7 +5680,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "{0} + {1}~{2} (+{3})" : "{0} + {1}~{2}", GameLanguage.DC, minValue, maxValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? GameLanguage.DC : GameLanguage.DC2, minValue, maxValue + addValue, addValue);
                 else
                     text = string.Format("Adds {0}DC",minValue + maxValue + addValue);
                 MirLabel DCLabel = new MirLabel
@@ -5710,7 +5710,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "{0} + {1}~{2} (+{3})" : "{0} + {1}~{2}", GameLanguage.MC, minValue, maxValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? GameLanguage.MC : GameLanguage.MC2, minValue, maxValue + addValue, addValue);
                 else
                     text = string.Format("Adds {0}MC", minValue + maxValue + addValue);
                 MirLabel MCLabel = new MirLabel
@@ -5740,7 +5740,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "{0} + {1}~{2} (+{3})" : "{0} + {1}~{2}", GameLanguage.SC, minValue, maxValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? GameLanguage.SC : GameLanguage.SC2, minValue, maxValue + addValue, addValue);
                 else
                     text = string.Format("Adds {0}SC", minValue + maxValue + addValue);
                 MirLabel SCLabel = new MirLabel
@@ -5780,7 +5780,7 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    text = string.Format(minValue + addValue > 0 ? GameLanguage.Luck + " + {0}" : "Curse + {0}", Math.Abs(minValue + addValue));
+                    text = string.Format(minValue + addValue > 0 ? GameLanguage.Luck: "Curse + {0}", Math.Abs(minValue + addValue));
                 }
 
                 MirLabel LUCKLabel = new MirLabel
@@ -5811,7 +5811,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "{0}: + {1} (+{2})" : "{0}: + {1}", GameLanguage.Accuracy, minValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? GameLanguage.Accuracy : GameLanguage.Accuracy2, minValue + addValue, addValue);
                 else
                     text = string.Format("Adds {0}Accuracy", minValue + maxValue + addValue);
                 MirLabel ACCLabel = new MirLabel
@@ -5848,7 +5848,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Holy + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "{0}: + {1} (+{2})" : "{0}: + {1}",GameLanguage.Holy, minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? GameLanguage.Holy : GameLanguage.Holy2, minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HOLYLabel.DisplayRectangle.Right + 4),
@@ -6135,7 +6135,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "{0} + {1}~{2} (+{3})" : "{0} + {1}~{2}", GameLanguage.AC, minValue, maxValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? GameLanguage.AC : GameLanguage.AC2, minValue, maxValue + addValue, addValue);
                 else
                     text = string.Format("Adds {0} AC", minValue + maxValue + addValue);
                 MirLabel ACLabel = new MirLabel
@@ -6181,7 +6181,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "{0} + {1}~{2} (+{3})" : "{0} + {1}~{2}", GameLanguage.MAC, minValue, maxValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? GameLanguage.MAC : GameLanguage.MAC2, minValue, maxValue + addValue, addValue);
                 else
                     text = string.Format("Adds {0} MAC", minValue + maxValue + addValue);
                 MirLabel MACLabel = new MirLabel
@@ -6457,7 +6457,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Agility + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "{0} + {1} (+{2})" : "{0} + {1}", GameLanguage.Agility, minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? GameLanguage.Agility : GameLanguage.Agility2, minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AGILITYLabel.DisplayRectangle.Right + 4),
@@ -6881,7 +6881,7 @@ namespace Client.MirScenes
                 switch (realItem.RequiredType)
                 {
                     case RequiredType.Level:
-                        text = string.Format("{0} : {1}", GameLanguage.RequiredLevel, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.RequiredLevel, realItem.RequiredAmount);
                         if (MapObject.User.Level < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
@@ -6896,17 +6896,17 @@ namespace Client.MirScenes
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxDC:
-                        text = string.Format("{0} : {1}", GameLanguage.RequiredDC, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.RequiredDC, realItem.RequiredAmount);
                         if (MapObject.User.MaxDC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMC:
-                        text = string.Format("{0} : {1}", GameLanguage.RequiredMC, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.RequiredMC, realItem.RequiredAmount);
                         if (MapObject.User.MaxMC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxSC:
-                        text = string.Format("{0} : {1}", GameLanguage.RequiredSC, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.RequiredSC, realItem.RequiredAmount);
                         if (MapObject.User.MaxSC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
@@ -6998,7 +6998,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("{0} : {1}", GameLanguage.ClassRequired, realItem.RequiredClass)
+                    Text = string.Format(GameLanguage.ClassRequired, realItem.RequiredClass)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CLASSLabel.DisplayRectangle.Right + 4),
@@ -7744,7 +7744,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("{0} : {1}\n{2}" + GameLanguage.MaxCombine , realItem.StackSize, GameLanguage.SplitStack)
+                    Text = string.Format(GameLanguage.MaxCombine, realItem.StackSize, GameLanguage.SplitStack)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SPLITUPLabel.DisplayRectangle.Right + 4),
@@ -9229,7 +9229,7 @@ namespace Client.MirScenes
                 }
                 if (cell.Item.Count == 1)
                 {
-                    MirMessageBox messageBox = new MirMessageBox(string.Format("{0} {1}?", GameLanguage.DropTip, cell.Item.FriendlyName), MirMessageBoxButtons.YesNo);
+                    MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.DropTip, cell.Item.FriendlyName), MirMessageBoxButtons.YesNo);
 
                     messageBox.YesButton.Click += (o, a) =>
                     {
@@ -10195,7 +10195,7 @@ namespace Client.MirScenes
                 //special
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)Values[0];
-                    text = string.Format("{0}\n", GameLanguage.GameMaster);
+                    text = string.Format(GameLanguage.GameMaster + "\n");
 
                     if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
                     if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
@@ -10298,7 +10298,7 @@ namespace Client.MirScenes
                     break;
             }
 
-            text += string.Format("{0}: {1}", GameLanguage.Expire, Infinite ? GameLanguage.Never : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
+            text += string.Format(GameLanguage.Expire, Infinite ? GameLanguage.Never : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
 
             if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
 
