@@ -6452,10 +6452,10 @@ public class GameLanguage
                          Password = "Password",
 
                          ShuttingDown = "Disconnected: Server is shutting down.",
-                         MaxCombine = "Max Combine Count : {0}\n{1}",
+                         MaxCombine = "Max Combine Count : {0}{1}",
                          SplitStack = "Shift + Left click to split the stack",
                          Count = " Count {0}",
-                         ExtraSlots8 = "Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
+                         ExtraSlots8 = "Are you sure you would like to buy 8 extra slots for 1,000,000 gold?" +
                          "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.",
                          ExtraSlots4 = "Are you sure you would like to unlock 4 extra slots? for gold: {0:###,###}",
 
@@ -6469,8 +6469,7 @@ public class GameLanguage
                          ExpandedStorageLocked = "Expanded Storage Locked",
                          ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
                          ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
-                      
-                         GameName = "Legend of Mir2",
+                                              
                          CannotLeaveGame = "Cannot leave game for {0} {1}",
                          Seconds = "seconds.";
                 
@@ -6490,7 +6489,9 @@ public class GameLanguage
                          LowDC = "You do not have enough DC.",
                          LowMC = "You do not have enough MC.",
                          LowSC = "You do not have enough SC.",
+                         GameName = "Legend of Mir2",
                          ExpandedStorageExpiresOn = "Expanded Storage Expires On";
+
 
     public static void LoadClientLanguage(string languageIniPath)
     {
@@ -6763,6 +6764,7 @@ public class GameLanguage
 
         GameLanguage.InventoryIncreased = reader.ReadString("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
         GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
+        GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6785,5 +6787,6 @@ public class GameLanguage
 
         reader.Write("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
         reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
+        reader.Write("Language", "GameName", GameLanguage.GameName);
     }
 }
