@@ -16320,7 +16320,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(string.Format("You must face someone to trade."), ChatType.System);
+                ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
                 return;
             }
 
@@ -16328,7 +16328,7 @@ namespace Server.MirObjects
             {
                 if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
                 {
-                    ReceiveChat(string.Format("You must face someone to trade."), ChatType.System);
+                    ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
                     return;
                 }
 

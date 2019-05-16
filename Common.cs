@@ -6470,7 +6470,7 @@ public class GameLanguage
                          ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
                          ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
                                               
-                         CannotLeaveGame = "Cannot leave game for {0} {1}",
+                         CannotLeaveGame = "Cannot leave game for{0}{1}",
                          Seconds = "seconds.";
                 
 
@@ -6480,7 +6480,8 @@ public class GameLanguage
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",
                          WeaponNoEffect = "Curse dwells within your weapon.",
-                         InventoryIncreased = "Inventory size increased.";
+                         InventoryIncreased = "Inventory size increased.",
+                         FaceToTrade =  "You must face someone to trade.";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6765,6 +6766,7 @@ public class GameLanguage
         GameLanguage.InventoryIncreased = reader.ReadString("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
         GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
+        GameLanguage.FaceToTrade = reader.ReadString("Language", "FaceToTrade", GameLanguage.FaceToTrade);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6788,5 +6790,6 @@ public class GameLanguage
         reader.Write("Language", "InventoryIncreased", GameLanguage.InventoryIncreased);
         reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         reader.Write("Language", "GameName", GameLanguage.GameName);
+        reader.Write("Language", "FaceToTrade", GameLanguage.FaceToTrade);
     }
 }
