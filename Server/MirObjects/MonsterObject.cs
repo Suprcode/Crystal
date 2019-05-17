@@ -748,6 +748,8 @@ namespace Server.MirObjects
 
         protected virtual void Drop()
         {
+            if (CurrentMap.Info.NoDropMonster)
+                return;
             for (int i = 0; i < Info.Drops.Count; i++)
             {
                 DropInfo drop = Info.Drops[i];
