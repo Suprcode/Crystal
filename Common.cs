@@ -6469,9 +6469,10 @@ public class GameLanguage
                          ExpandedStorageLocked = "Expanded Storage Locked",
                          ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
                          ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
-                                              
+
                          CannotLeaveGame = "Cannot leave game for{0}{1}",
-                         Seconds = "seconds.";
+                         Seconds = "seconds.",
+                         SelectKey = "Select the Key for: {0}";
                 
 
     //Server
@@ -6620,6 +6621,7 @@ public class GameLanguage
         GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
         GameLanguage.CannotLeaveGame = reader.ReadString("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
         GameLanguage.Seconds = reader.ReadString("Language", "Seconds", GameLanguage.Seconds);
+        GameLanguage.SelectKey = reader.ReadString("Language", "SelectKey", GameLanguage.SelectKey);
     }
 
 
@@ -6738,6 +6740,7 @@ public class GameLanguage
         reader.Write("Language", "GameName", GameLanguage.GameName);
         reader.Write("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
         reader.Write("Language", "Seconds", GameLanguage.Seconds);
+        reader.Write("Language", "SelectKey", GameLanguage.SelectKey);
     }
 
 
