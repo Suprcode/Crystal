@@ -3751,6 +3751,7 @@ public class Awake
 
 public class ClientMagic
 {
+    public string Name;
     public Spell Spell;
     public byte BaseCost, LevelCost, Icon;
     public byte Level1, Level2, Level3;
@@ -3768,6 +3769,7 @@ public class ClientMagic
 
     public ClientMagic(BinaryReader reader)
     {
+        Name = reader.ReadString();
         Spell = (Spell)reader.ReadByte();
 
         BaseCost = reader.ReadByte();
@@ -3792,6 +3794,7 @@ public class ClientMagic
 
     public void Save(BinaryWriter writer)
     {
+        writer.Write(Name);
         writer.Write((byte)Spell);
 
         writer.Write(BaseCost);
