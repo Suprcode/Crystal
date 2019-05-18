@@ -3924,9 +3924,9 @@ namespace Client.MirScenes
                 case Spell.FlamingSword:
                     FlamingSword = p.CanUse;
                     if (FlamingSword)
-                        ChatDialog.ReceiveChat("Your weapon is glowed by spirit of fire.", ChatType.Hint);
+                        ChatDialog.ReceiveChat(GameLanguage.WeaponSpiritFire, ChatType.Hint);
                     else
-                        ChatDialog.ReceiveChat("The spirits of fire disappeared.", ChatType.System);
+                        ChatDialog.ReceiveChat(GameLanguage.SpiritsFireDisappeared, ChatType.System);
                     break;
             }
         }

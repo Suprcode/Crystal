@@ -6475,8 +6475,10 @@ public class GameLanguage
 
                          CannotLeaveGame = "Cannot leave game for{0}{1}",
                          Seconds = "seconds.",
-                         SelectKey = "Select the Key for: {0}";
-                
+                         SelectKey = "Select the Key for: {0}",
+
+                         WeaponSpiritFire = "Your weapon is glowed by spirit of fire.",
+                         SpiritsFireDisappeared = "The spirits of fire disappeared.";
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
@@ -6625,6 +6627,8 @@ public class GameLanguage
         GameLanguage.CannotLeaveGame = reader.ReadString("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
         GameLanguage.Seconds = reader.ReadString("Language", "Seconds", GameLanguage.Seconds);
         GameLanguage.SelectKey = reader.ReadString("Language", "SelectKey", GameLanguage.SelectKey);
+        GameLanguage.WeaponSpiritFire = reader.ReadString("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
+        GameLanguage.SpiritsFireDisappeared = reader.ReadString("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
     }
 
 
@@ -6744,6 +6748,8 @@ public class GameLanguage
         reader.Write("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
         reader.Write("Language", "Seconds", GameLanguage.Seconds);
         reader.Write("Language", "SelectKey", GameLanguage.SelectKey);
+        reader.Write("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
+        reader.Write("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
     }
 
 
