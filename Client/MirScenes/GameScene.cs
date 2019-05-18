@@ -19,6 +19,7 @@ using Effect = Client.MirObjects.Effect;
 
 using Client.MirScenes.Dialogs;
 using System.Drawing.Imaging;
+using Client.Utils;
 
 namespace Client.MirScenes
 {
@@ -1656,6 +1657,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.ConfirmItemRental:
                     ConfirmItemRental((S.ConfirmItemRental)p);
+                    break;
+                case (short)ServerPacketIds.OpenBrowser:                  
+                    OpenBrowser((S.OpenBrowser)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -8224,6 +8228,11 @@ namespace Client.MirScenes
             ItemRentingDialog.Reset();
             ItemRentDialog.Reset();
         }
+
+        private void OpenBrowser(S.OpenBrowser p) {
+            BrowserHelper.OpenDefaultBrowserUrl(p.Url);
+        }
+
 
         #region Disposable
 

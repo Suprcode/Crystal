@@ -5647,4 +5647,25 @@ namespace ServerPackets
             writer.Write(Success);
         }
     }
+
+
+    public sealed class OpenBrowser : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.OpenBrowser; }
+        }
+
+        public string Url;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Url = reader.ReadString();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Url);
+        }
+    }
 }
