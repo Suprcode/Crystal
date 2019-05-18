@@ -6049,12 +6049,6 @@ namespace Server.MirObjects
                     {
                         damageFinal = magic.GetDamage(damageBase);
                         LevelMagic(magic);
-                        S.ObjectEffect p = new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.FatalSword };
-
-                        defence = DefenceType.Agility;
-                        CurrentMap.Broadcast(p, ob.CurrentLocation);
-
-                        FatalSword = false;
                     }
 
                     if (!FatalSword && Envir.Random.Next(10) == 0)
@@ -6163,16 +6157,15 @@ namespace Server.MirObjects
                         magic = GetMagic(Spell.TwinDrakeBlade);
                         damageFinal = magic.GetDamage(damageBase);
                         TwinDrakeBlade = false;
-                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, ob, damageFinal, DefenceType.Agility, false);
+                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 400,
+                            ob,                     //Object (Target)
+                            damageFinal,            //Damage
+                            DefenceType.Agility,    //Defence to target
+                            false,                  //Damage Weapon
+                            magic,                  //Magic
+                            true);                  //Final hit
                         ActionList.Add(action);
                         LevelMagic(magic);
-
-                        if ((((ob.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonAttackWeight) >= ob.PoisonResist)) && (ob.Level < Level + 10 && Envir.Random.Next(ob.Race == ObjectType.Player ? 40 : 20) <= magic.Level + 1))
-                        {
-                            ob.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = ob.Race == ObjectType.Player ? 2 : 2 + magic.Level, TickSpeed = 1000 }, this);
-                            ob.Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.TwinDrakeBlade });
-                        }
-
                         break;
                     case Spell.FlamingSword:
                         magic = GetMagic(Spell.FlamingSword);
@@ -6629,7 +6622,7 @@ namespace Server.MirObjects
                     PetEnhancer(target, magic, out cast);
                     break;
                 case Spell.TrapHexagon:
-                    TrapHexagon(magic, target, out cast);
+                    TrapHexagon(magic, target == null ? location : target.CurrentLocation, out cast);
                     break;
                 case Spell.Reincarnation:
                     Reincarnation(magic, target == null ? null : target as PlayerObject, out cast);
@@ -7435,15 +7428,39 @@ namespace Server.MirObjects
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
-        private void TrapHexagon(UserMagic magic, MapObject target, out bool cast)
+        private void TrapHexagon(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
-
-            if (target == null || !target.IsAttackTarget(this) || !(target is MonsterObject)) return;
-            if (target.Level > Level + 2) return;
+            bool anyTargetsFound = false;
+            for (int x = location.X - 1; x <= location.X + 1; x++)
+            {
+                if (x < 0 || x >= CurrentMap.Width) continue;
+                for (int y = location.Y - 1; y < location.Y + 1; y++)
+                {
+                    if (y < 0 || y >= CurrentMap.Height) continue;
+                    if (!CurrentMap.ValidPoint(x, y)) continue;
+                    var cell = CurrentMap.GetCell(x, y);
+                    if (cell == null ||
+                        cell.Objects == null ||
+                        cell.Objects.Count <= 0) continue;
+                    foreach (var target in cell.Objects)
+                    {
+                        switch (target.Race)
+                        {
+                            case ObjectType.Monster:
+                                if (!target.IsAttackTarget(this)) continue;
+                                if (target.Level > Level + 2) continue;
+                                anyTargetsFound = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            if (!anyTargetsFound)
+                return;
 
             UserItem item = GetAmulet(1);
-            Point location = target.CurrentLocation;
+            //Point location = target.CurrentLocation;
 
             if (item == null) return;
 
@@ -8083,13 +8100,13 @@ namespace Server.MirObjects
             if (target == null || !target.IsAttackTarget(this) || !(target is MonsterObject)) return;
             if (target.Level >= Level + 2) return;
 
-            Point location = target.CurrentLocation;
+            //Point location = target.CurrentLocation;
 
             LevelMagic(magic);
             uint duration = 60000;
             int value = (int)duration;
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, target);
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
@@ -9366,10 +9383,37 @@ namespace Server.MirObjects
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool damageWeapon = (bool)data[3];
-
+            UserMagic userMagic = null;
+            bool finalHit = false;
+            if (data.Count >= 5)
+                userMagic = (UserMagic)data[4];
+            if (data.Count >= 6)
+                finalHit = (bool)data[5];
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
+            if (FatalSword)
+                defence = DefenceType.Agility;
+
             if (target.Attacked(this, damage, defence, damageWeapon) <= 0) return;
+            if (FatalSword)
+            {
+                S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.FatalSword };
+                CurrentMap.Broadcast(p, target.CurrentLocation);
+                FatalSword = false;
+            }
+            if (userMagic != null && finalHit)
+            {
+                if (userMagic.Spell == Spell.TwinDrakeBlade)
+                {
+                    if ((((target.Race != ObjectType.Player) || Settings.PvpCanResistPoison) &&
+                        (Envir.Random.Next(Settings.PoisonAttackWeight) >= target.PoisonResist)) &&
+                        (target.Level < Level + 10 && Envir.Random.Next(target.Race == ObjectType.Player ? 40 : 20) <= userMagic.Level + 1))
+                    {
+                        target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = target.Race == ObjectType.Player ? 2 : 2 + userMagic.Level, TickSpeed = 1000 }, this);
+                        target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.TwinDrakeBlade });
+                    }
+                }
+            }
 
             //Level Fencing / SpiritSword
             foreach (UserMagic magic in Info.Magics)
