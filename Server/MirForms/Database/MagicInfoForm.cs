@@ -979,6 +979,13 @@ namespace Server
             if (ActiveControl != sender) return;
             _selectedMagicInfo.Name = ActiveControl.Text;
             UpdateMagicForm();
+            if (ActiveControl.Text == "")
+            {
+                ActiveControl.BackColor = Color.Red;
+            }
+            else {
+                ActiveControl.BackColor = SystemColors.Window;              
+            }            
         }
     }
 }
