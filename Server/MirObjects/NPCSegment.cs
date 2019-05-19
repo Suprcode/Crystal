@@ -1017,9 +1017,9 @@ namespace Server.MirObjects
                     if (parts.Length < 3) return;
                     acts.Add(new NPCActions(ActionType.CloseGate, parts[1], parts[2]));
                     break;
-                case "OPENBROWER":
+                case "OPENBROWSER":
                     if (parts.Length < 2) return;                    
-                    acts.Add(new NPCActions(ActionType.OpenBrower, parts[1]));
+                    acts.Add(new NPCActions(ActionType.OpenBrowser, parts[1]));
                     break;
             }
 
@@ -3499,7 +3499,7 @@ namespace Server.MirObjects
                         if (CloseGate.Gate == null) return;
                         CloseGate.Gate.CloseDoor();
                         break;
-                    case ActionType.OpenBrower:
+                    case ActionType.OpenBrowser:
                         player.Enqueue(new S.OpenBrowser { Url = param[0]});
                         break;
                 }

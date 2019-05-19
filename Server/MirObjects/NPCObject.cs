@@ -1651,7 +1651,7 @@ namespace Server.MirObjects
         AddGuildNameList,
         DelGuildNameList,
         ClearGuildNameList,
-        OpenBrower,
+        OpenBrowser,
     }
     public enum CheckType
     {
