@@ -12880,6 +12880,13 @@ namespace Server.MirObjects
                                 return false;
                             }
                             break;
+                        case 1:
+                            if (CurrentMap.Info.NoEscape)
+                            {
+                                ReceiveChat("You cannot back to city here", ChatType.System);
+                                return false;
+                            }
+                            break;
                         case 2:
                             if (CurrentMap.Info.NoRandom)
                             {
