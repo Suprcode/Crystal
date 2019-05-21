@@ -2033,7 +2033,7 @@ namespace Server.MirObjects
                 Info.Magics[i].CastTime = Envir.Time > TimeSpend ? Envir.Time - TimeSpend : 0;
             }
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-            ReceiveChat("Welcome to the Legend of Mir 2 Crystal Server.", ChatType.Hint);
+            ReceiveChat(string.Format(GameLanguage.Welcome, GameLanguage.GameName), ChatType.Hint);
 
             if (Settings.TestServer)
             {
@@ -3796,7 +3796,7 @@ namespace Server.MirObjects
                                 Level = level;
                                 LevelUp();
 
-                                ReceiveChat(string.Format("Leveled {0} -> {1}.", old, Level), ChatType.System);
+                                ReceiveChat(string.Format("{0} {1} -> {2}.", GameLanguage.LevelUp, old, Level), ChatType.System);
                                 SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", Name, old, Level, Name));
                                 return;
                             }
@@ -4887,11 +4887,11 @@ namespace Server.MirObjects
                                 Account.Gold -= openGold;
                                 Enqueue(new S.LoseGold { Gold = openGold });
                                 Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
-                                ReceiveChat("Inventory size increased.", ChatType.System);
+                                ReceiveChat(GameLanguage.InventoryIncreased, ChatType.System);
                             }
                             else
                             {
-                                ReceiveChat("Not enough gold.", ChatType.System);
+                                ReceiveChat(GameLanguage.LowGold, ChatType.System);
                             }
                             ChatTime = 0;
                         }
@@ -4910,12 +4910,12 @@ namespace Server.MirObjects
                                 if (Account.ExpandedStorageExpiryDate > Envir.Now)
                                 {
                                     Account.ExpandedStorageExpiryDate = Account.ExpandedStorageExpiryDate + addedTime;
-                                    ReceiveChat("Expanded storage time extended, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                    ReceiveChat(GameLanguage.ExpandedStorageExpiresOn + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
                                 else
                                 {
                                     Account.ExpandedStorageExpiryDate = Envir.Now + addedTime;
-                                    ReceiveChat("Storage expanded, expires on: " + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                    ReceiveChat(GameLanguage.ExpandedStorageExpiresOn + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
 
                                 Enqueue(new S.LoseGold { Gold = cost });
@@ -4923,7 +4923,7 @@ namespace Server.MirObjects
                             }
                             else
                             {
-                                ReceiveChat("Not enough gold.", ChatType.System);
+                                ReceiveChat(GameLanguage.LowGold, ChatType.System);
                             }
                             ChatTime = 0;
                         }
@@ -12829,7 +12829,7 @@ namespace Server.MirObjects
                 case RequiredType.Level:
                     if (Level < item.Info.RequiredAmount)
                     {
-                        ReceiveChat("You are not a high enough level.", ChatType.System);
+                        ReceiveChat(GameLanguage.LowLevel, ChatType.System);
                         return false;
                     }
                     break;
@@ -12850,21 +12850,21 @@ namespace Server.MirObjects
                 case RequiredType.MaxDC:
                     if (MaxDC < item.Info.RequiredAmount)
                     {
-                        ReceiveChat("You do not have enough DC.", ChatType.System);
+                        ReceiveChat(GameLanguage.LowDC, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxMC:
                     if (MaxMC < item.Info.RequiredAmount)
                     {
-                        ReceiveChat("You do not have enough MC.", ChatType.System);
+                        ReceiveChat(GameLanguage.LowMC, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxSC:
                     if (MaxSC < item.Info.RequiredAmount)
                     {
-                        ReceiveChat("You do not have enough SC.", ChatType.System);
+                        ReceiveChat(GameLanguage.LowSC, ChatType.System);
                         return false;
                     }
                     break;
@@ -13431,18 +13431,18 @@ namespace Server.MirObjects
                 Luck--;
                 item.Luck--;
                 Enqueue(new S.RefreshItem { Item = item });
-                ReceiveChat("Curse dwells within your weapon.", ChatType.System);
+                ReceiveChat(GameLanguage.WeaponCurse, ChatType.System);
             }
             else if (item.Luck <= 0 || Envir.Random.Next(10 * item.Luck) == 0)
             {
                 Luck++;
                 item.Luck++;
                 Enqueue(new S.RefreshItem { Item = item });
-                ReceiveChat("Luck dwells within your weapon.", ChatType.Hint);
+                ReceiveChat(GameLanguage.WeaponLuck, ChatType.Hint);
             }
             else
             {
-                ReceiveChat("No effect.", ChatType.Hint);
+                ReceiveChat(GameLanguage.WeaponNoEffect, ChatType.Hint);
             }
 
             return true;
@@ -16364,7 +16364,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(string.Format("You must face someone to trade."), ChatType.System);
+                ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
                 return;
             }
 
@@ -16372,7 +16372,7 @@ namespace Server.MirObjects
             {
                 if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
                 {
-                    ReceiveChat(string.Format("You must face someone to trade."), ChatType.System);
+                    ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
                     return;
                 }
 

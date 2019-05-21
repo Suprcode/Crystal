@@ -19,9 +19,9 @@ namespace Server
 
         public SMain()
         {
-                InitializeComponent();
+            InitializeComponent();
 
-                AutoResize();
+            AutoResize();
         }
 
         private void AutoResize()
@@ -39,7 +39,7 @@ namespace Server
         public static void Enqueue(Exception ex)
         {
             if (MessageLog.Count < 100)
-            MessageLog.Enqueue(String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
+                MessageLog.Enqueue(String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
             File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                                String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
         }
@@ -47,14 +47,14 @@ namespace Server
         public static void EnqueueDebugging(string msg)
         {
             if (DebugLog.Count < 100)
-            DebugLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+                DebugLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
             File.AppendAllText(Settings.LogPath + "DebugLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
         public static void EnqueueChat(string msg)
         {
             if (ChatLog.Count < 100)
-            ChatLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+                ChatLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
             File.AppendAllText(Settings.LogPath + "ChatLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
@@ -62,14 +62,14 @@ namespace Server
         public static void Enqueue(string msg)
         {
             if (MessageLog.Count < 100)
-            MessageLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
+                MessageLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
             File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
                                            String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
 
         private void configToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void InterfaceTimer_Tick(object sender, EventArgs e)
@@ -390,7 +390,7 @@ namespace Server
         private void respawnsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SystemInfoForm form = new SystemInfoForm(7);
-            
+
             form.ShowDialog();
         }
 
@@ -406,6 +406,16 @@ namespace Server
             MonsterTunerForm form = new MonsterTunerForm();
 
             form.ShowDialog();
+        }
+
+        private void reloadNPCsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.ReloadNPCs();
+        }
+
+        private void reloadDropsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.ReloadDrops();
         }
 
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)

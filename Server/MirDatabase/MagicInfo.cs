@@ -149,7 +149,8 @@ namespace Server.MirDatabase
         public ClientMagic CreateClientMagic()
         {
             return new ClientMagic
-                {
+            {
+                    Name = Info.Name,
                     Spell = Spell,
                     BaseCost = Info.BaseCost,
                     LevelCost = Info.LevelCost,

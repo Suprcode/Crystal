@@ -55,5 +55,8 @@
         private System.Windows.Forms.TextBox txtDmgMultBase;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox textBoxName;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
     }
 }
