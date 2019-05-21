@@ -12398,7 +12398,7 @@ namespace Server.MirObjects
 
             if (CurrentMap.Info.NoThrowItem)
             {
-                ReceiveChat("You cannot drop items on this map", ChatType.System);
+                ReceiveChat(GameLanguage.CanNotDrop, ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -12876,28 +12876,28 @@ namespace Server.MirObjects
                         case 0:
                             if (CurrentMap.Info.NoEscape)
                             {
-                                ReceiveChat("You cannot use Dungeon Escapes here", ChatType.System);
+                                ReceiveChat(GameLanguage.CanNotDungeon, ChatType.System);
                                 return false;
                             }
                             break;
                         case 1:
                             if (CurrentMap.Info.NoEscape)
                             {
-                                ReceiveChat("You cannot back to city here", ChatType.System);
+                                ReceiveChat(GameLanguage.CanNotBackCity, ChatType.System);
                                 return false;
                             }
                             break;
                         case 2:
                             if (CurrentMap.Info.NoRandom)
                             {
-                                ReceiveChat("You cannot use Random Teleports here", ChatType.System);
+                                ReceiveChat(GameLanguage.CanNotRandom, ChatType.System);
                                 return false;
                             }
                             break;
                         case 6:
                             if (!Dead)
                             {
-                                ReceiveChat("You cannot use Resurrection Scrolls whilst alive", ChatType.Hint);
+                                ReceiveChat(GameLanguage.CannotResurrection, ChatType.Hint);
                                 return false;
                             }
                             break;
