@@ -6405,6 +6405,7 @@ public class GameLanguage
                          Groups = "Groups ({0})",
                          Guild = "Guild ({0})",
                          Expire = "Expire: {0}",
+                         ExpireNever = "Expire: Never",
                          Never = "Never",
                          Trade = "Trade ({0})",
                          GameMaster = "GameMaster",
@@ -6441,7 +6442,7 @@ public class GameLanguage
                          SC = "SC + {0}~{1} (+{2})",
                          SC2 = "SC + {0}~{1}",
                          Durability = "Durability",
-                         Weight = "W",
+                         Weight = "W:",
                          AC = "AC + {0}~{1} (+{2})",
                          AC2 = "AC + {0}~{1}",
                          MAC = "MAC + {0}~{1} (+{2})",
@@ -6476,12 +6477,13 @@ public class GameLanguage
                          ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
                          ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
 
-                         CannotLeaveGame = "Cannot leave game for{0}{1}",
-                         Seconds = "seconds.",
+                         CannotLeaveGame = "Cannot leave game for {0} seconds",                      
                          SelectKey = "Select the Key for: {0}",
 
                          WeaponSpiritFire = "Your weapon is glowed by spirit of fire.",
-                         SpiritsFireDisappeared = "The spirits of fire disappeared.";
+                         SpiritsFireDisappeared = "The spirits of fire disappeared.",
+                         WeddingRing = "WeddingRing",
+                         WedRingName = "{0}{1}{2} {3}";
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
@@ -6558,6 +6560,7 @@ public class GameLanguage
         GameLanguage.Trade = reader.ReadString("Language", "Trade", GameLanguage.Trade);
         GameLanguage.GameMaster = reader.ReadString("Language", "GameMaster", GameLanguage.GameMaster);
         GameLanguage.Expire = reader.ReadString("Language", "Expire", GameLanguage.Expire);
+        GameLanguage.ExpireNever = reader.ReadString("Language", "ExpireNever", GameLanguage.ExpireNever);
         GameLanguage.Never = reader.ReadString("Language", "Never", GameLanguage.Never);
 
         GameLanguage.PatchErr = reader.ReadString("Language", "PatchErr", GameLanguage.PatchErr);
@@ -6633,10 +6636,11 @@ public class GameLanguage
         GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
         GameLanguage.CannotLeaveGame = reader.ReadString("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
-        GameLanguage.Seconds = reader.ReadString("Language", "Seconds", GameLanguage.Seconds);
         GameLanguage.SelectKey = reader.ReadString("Language", "SelectKey", GameLanguage.SelectKey);
         GameLanguage.WeaponSpiritFire = reader.ReadString("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
         GameLanguage.SpiritsFireDisappeared = reader.ReadString("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
+        GameLanguage.WeddingRing = reader.ReadString("Language", "WeddingRing", GameLanguage.WeddingRing);
+        GameLanguage.WedRingName = reader.ReadString("Language", "WedRingName", GameLanguage.WedRingName);
     }
 
 
@@ -6688,6 +6692,7 @@ public class GameLanguage
 
 
         reader.Write("Language", "Expire", GameLanguage.Expire);
+        reader.Write("Language", "ExpireNever", GameLanguage.ExpireNever);
         reader.Write("Language", "Never", GameLanguage.Never);
         reader.Write("Language", "PatchErr", GameLanguage.PatchErr);
         reader.Write("Language", "LastOnline", GameLanguage.LastOnline);
@@ -6754,10 +6759,11 @@ public class GameLanguage
         reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         reader.Write("Language", "GameName", GameLanguage.GameName);
         reader.Write("Language", "CannotLeaveGame", GameLanguage.CannotLeaveGame);
-        reader.Write("Language", "Seconds", GameLanguage.Seconds);
         reader.Write("Language", "SelectKey", GameLanguage.SelectKey);
         reader.Write("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
         reader.Write("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
+        reader.Write("Language", "WeddingRing", GameLanguage.WeddingRing);
+        reader.Write("Language", "WedRingName", GameLanguage.WedRingName);
     }
 
 
