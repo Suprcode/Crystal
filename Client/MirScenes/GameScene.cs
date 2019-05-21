@@ -804,7 +804,7 @@ namespace Client.MirScenes
             }
             else
             {
-                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000, GameLanguage.Seconds), ChatType.System);
+                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000), ChatType.System);
             }
         }
         public void LogOut()
@@ -822,7 +822,7 @@ namespace Client.MirScenes
             }
             else
             {
-                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000, GameLanguage.Seconds), ChatType.System);
+                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000), ChatType.System);
             }
         }
 
@@ -5572,13 +5572,11 @@ namespace Client.MirScenes
             String WedRingName = "";
             if (HoverItem.WeddingRing == -1)
             {
-                WedRingName = HoverItem.Info.Type.ToString() +
-                "\n" + GameLanguage.Weight + " " + HoverItem.Weight + text;
+                WedRingName = string.Format(GameLanguage.WedRingName, HoverItem.Info.Type.ToString(), "\n" , GameLanguage.Weight, HoverItem.Weight + text);
             }
             else
             {
-                WedRingName = "Wedding Ring" +
-                "\n" + GameLanguage.Weight + " " + HoverItem.Weight + text;
+                WedRingName = string.Format(GameLanguage.WedRingName, GameLanguage.WeddingRing, "\n", GameLanguage.Weight, HoverItem.Weight + text);
             }
 
             MirLabel etcLabel = new MirLabel
@@ -10298,7 +10296,7 @@ namespace Client.MirScenes
                     break;
             }
 
-            text += string.Format(GameLanguage.Expire, Infinite ? GameLanguage.Never : Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
+            text += Infinite ? GameLanguage.ExpireNever : string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
 
             if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
 
