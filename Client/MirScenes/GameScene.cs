@@ -8230,7 +8230,7 @@ namespace Client.MirScenes
         }
 
         private void OpenBrowser(S.OpenBrowser p) {
-            BrowserHelper.OpenDefaultBrowserUrl(p.Url);
+            BrowserHelper.OpenDefaultBrowser(p.Url);
         }
 
 

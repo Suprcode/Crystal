@@ -12,14 +12,13 @@ namespace Client.Utils
 {
     public class BrowserHelper
     {
-
         /// <summary>
         /// 调用系统浏览器打开网页
         /// http://m.jb51.net/article/44622.htm
         /// http://www.2cto.com/kf/201412/365633.html
         /// </summary>
         /// <param name="url">打开网页的链接</param>
-        public static void OpenBrowserUrl(string url)
+        public static void OpenChrometBrowser(string url)
         {
             try
             {
@@ -38,18 +37,18 @@ namespace Client.Utils
                     var result = Process.Start("chrome.exe", url);
                     if (result == null)
                     {
-                        OpenIe(url);
+                        OpenIetBrowser(url);
                     }
                 }
                 else
                 {
-                    OpenDefaultBrowserUrl(url);
+                    OpenDefaultBrowser(url);
                 }
             }
             catch
             {
                 // 出错调用用户默认设置的浏览器，还不行就调用IE
-                OpenDefaultBrowserUrl(url);
+                OpenDefaultBrowser(url);
             }
         }
 
@@ -57,7 +56,7 @@ namespace Client.Utils
         /// 用IE打开浏览器
         /// </summary>
         /// <param name="url"></param>
-        public static void OpenIe(string url)
+        public static void OpenIetBrowser(string url)
         {
             try
             {
@@ -99,7 +98,7 @@ namespace Client.Utils
                             if (MessageBox.Show("系统未安装IE浏览器，是否下载安装？", null, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 // 打开下载链接，从微软官网下载
-                                OpenDefaultBrowserUrl("http://windows.microsoft.com/zh-cn/internet-explorer/download-ie");
+                                OpenDefaultBrowser("http://windows.microsoft.com/zh-cn/internet-explorer/download-ie");
                             }
                         }
                     }
@@ -115,11 +114,10 @@ namespace Client.Utils
         /// 打开系统默认浏览器（用户自己设置了默认浏览器）
         /// </summary>
         /// <param name="url"></param>
-        public static void OpenDefaultBrowserUrl(string url)
+        public static void OpenDefaultBrowser(string url)
         {
             try
             {
-                // 方法1
                 //从注册表中读取默认浏览器可执行文件路径
                 RegistryKey key = Registry.ClassesRoot.OpenSubKey(@"http\shell\open\command\");
                 if (key != null)
@@ -132,31 +130,27 @@ namespace Client.Utils
                     var result = Process.Start(path, url);
                     if (result == null)
                     {
-                        // 方法2
                         // 调用系统默认的浏览器 
                         var result1 = Process.Start("explorer.exe", url);
                         if (result1 == null)
                         {
-                            // 方法3
                             Process.Start(url);
                         }
                     }
                 }
                 else
                 {
-                    // 方法2
                     // 调用系统默认的浏览器 
                     var result1 = Process.Start("explorer.exe", url);
                     if (result1 == null)
                     {
-                        // 方法3
                         Process.Start(url);
                     }
                 }
             }
             catch
             {
-                OpenIe(url);
+                OpenIetBrowser(url);
             }
         }
     }
