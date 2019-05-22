@@ -168,7 +168,7 @@ namespace Server.MirEnvir
         public List<Rank_Character_Info> RankTop = new List<Rank_Character_Info>();
         public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[5];
         public int[] RankBottomLevel = new int[6];
-
+        static HttpServer http;
         static Envir()
         {
             AccountIDReg =
@@ -196,6 +196,7 @@ namespace Server.MirEnvir
                     DisabledCharNames.Add(lines[i].ToUpper());
                 }
             }
+            http = new HttpServer();
         }
 
         public static int LastCount = 0, LastRealCount = 0;
@@ -526,7 +527,8 @@ namespace Server.MirEnvir
                 }
 
                 StartNetwork();
-
+                http = new HttpServer();
+                http.Start();
                 try
                 {
                     while (Running)
@@ -1840,6 +1842,7 @@ namespace Server.MirEnvir
                     MobThreading[i].Interrupt();
                 }
             }
+            http.Stop();
 
 
                 while (_thread != null)
@@ -2303,6 +2306,56 @@ namespace Server.MirEnvir
             SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
+
+        public int HTTPLogin(string AccountID, string Password)
+        {
+            if (!Settings.AllowLogin)
+            {
+                return 0;
+            }
+
+            if (!AccountIDReg.IsMatch(AccountID))
+            {
+                return 1;
+            }
+
+            if (!PasswordReg.IsMatch(Password))
+            {
+                return 2;
+            }
+
+            AccountInfo account = GetAccount(AccountID);
+
+            if (account == null)
+            {
+                return 3;
+            }
+
+            if (account.Banned)
+            {
+                if (account.ExpiryDate > DateTime.Now)
+                {
+                    return 4;
+                }
+                account.Banned = false;
+            }
+            account.BanReason = string.Empty;
+            account.ExpiryDate = DateTime.MinValue;
+            if (String.CompareOrdinal(account.Password, Password) != 0)
+            {
+                if (account.WrongPasswordCount++ >= 5)
+                {
+                    account.Banned = true;
+                    account.BanReason = "Too many Wrong Login Attempts.";
+                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
+                    return 5;
+                }
+                return 6;
+            }
+            account.WrongPasswordCount = 0;
+            return 7;
+        }
+
         public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c, bool IsGm)
         {
             if (!Settings.AllowNewCharacter)

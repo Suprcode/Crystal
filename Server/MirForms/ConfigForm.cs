@@ -20,6 +20,8 @@ namespace Server
             TimeOutTextBox.Text = Settings.TimeOut.ToString();
             MaxUserTextBox.Text = Settings.MaxUser.ToString();
 
+            HTTPIPAddressTextBox.Text = Settings.HTTPIPAddress;
+
             AccountCheckBox.Checked = Settings.AllowNewAccount;
             PasswordCheckBox.Checked = Settings.AllowChangePassword;
             LoginCheckBox.Checked = Settings.AllowLogin;
@@ -60,6 +62,9 @@ namespace Server
             IPAddress tempIP;
             if (IPAddress.TryParse(IPAddressTextBox.Text, out tempIP))
                 Settings.IPAddress = tempIP.ToString();
+
+            if (tryParseHttp())
+                Settings.HTTPIPAddress = HTTPIPAddressTextBox.Text.ToString();
 
             ushort tempshort;
             int tempint;
@@ -143,6 +148,21 @@ namespace Server
         private void SafeZoneHealingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void HTTPIPAddressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ActiveControl.BackColor = !tryParseHttp() ? Color.Red : SystemColors.Window;
+        }
+
+        bool tryParseHttp()
+        {
+            if ((HTTPIPAddressTextBox.Text.StartsWith("http://") || HTTPIPAddressTextBox.Text.StartsWith("https://")) && HTTPIPAddressTextBox.Text.EndsWith("/"))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
