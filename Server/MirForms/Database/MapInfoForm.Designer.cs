@@ -53,6 +53,7 @@ namespace Server
             this.FileNameTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.NoTownTeleportCheckbox = new System.Windows.Forms.CheckBox();
             this.NoFightCheckbox = new System.Windows.Forms.CheckBox();
             this.NeedBridleCheckbox = new System.Windows.Forms.CheckBox();
             this.NoMountCheckbox = new System.Windows.Forms.CheckBox();
@@ -157,7 +158,6 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.NoBackCityCheckbox = new System.Windows.Forms.CheckBox();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -358,7 +358,7 @@ namespace Server
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.NoBackCityCheckbox);
+            this.tabPage6.Controls.Add(this.NoTownTeleportCheckbox);
             this.tabPage6.Controls.Add(this.NoFightCheckbox);
             this.tabPage6.Controls.Add(this.NeedBridleCheckbox);
             this.tabPage6.Controls.Add(this.NoMountCheckbox);
@@ -388,6 +388,17 @@ namespace Server
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Attributes";
             this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // NoTownTeleportCheckbox
+            // 
+            this.NoTownTeleportCheckbox.AutoSize = true;
+            this.NoTownTeleportCheckbox.Location = new System.Drawing.Point(340, 110);
+            this.NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
+            this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(126, 16);
+            this.NoTownTeleportCheckbox.TabIndex = 44;
+            this.NoTownTeleportCheckbox.Text = "No NoTownTeleport";
+            this.NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
+            this.NoTownTeleportCheckbox.CheckedChanged += new System.EventHandler(this.NoTownTeleportCheckbox_CheckedChanged);
             // 
             // NoFightCheckbox
             // 
@@ -1479,17 +1490,6 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
-            // NoBackCityCheckbox
-            // 
-            this.NoBackCityCheckbox.AutoSize = true;
-            this.NoBackCityCheckbox.Location = new System.Drawing.Point(340, 104);
-            this.NoBackCityCheckbox.Name = "NoBackCityCheckbox";
-            this.NoBackCityCheckbox.Size = new System.Drawing.Size(90, 16);
-            this.NoBackCityCheckbox.TabIndex = 44;
-            this.NoBackCityCheckbox.Text = "No BackCity";
-            this.NoBackCityCheckbox.UseVisualStyleBackColor = true;
-            this.NoBackCityCheckbox.CheckedChanged += new System.EventHandler(this.NoBackCityCheckbox_CheckedChanged);
-            // 
             // MapInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1655,6 +1655,6 @@ namespace Server
         private CheckBox chkRespawnEnableTick;
         private ComboBox ConquestComboBox;
         private Label label25;
-        private CheckBox NoBackCityCheckbox;
+        private CheckBox NoTownTeleportCheckbox;
     }
 }

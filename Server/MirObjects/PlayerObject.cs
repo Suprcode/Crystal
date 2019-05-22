@@ -12925,7 +12925,7 @@ namespace Server.MirObjects
                             }
                             break;
                         case 1:
-                            if (CurrentMap.Info.NoEscape)
+                            if (CurrentMap.Info.NoTownTeleport)
                             {
                                 ReceiveChat(GameLanguage.CanNotBackCity, ChatType.System);
                                 return false;
