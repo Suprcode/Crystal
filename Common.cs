@@ -6483,7 +6483,9 @@ public class GameLanguage
                          WeaponSpiritFire = "Your weapon is glowed by spirit of fire.",
                          SpiritsFireDisappeared = "The spirits of fire disappeared.",
                          WeddingRing = "WeddingRing",
-                         WedRingName = "{0}{1}{2} {3}";
+                         WedRingName = "{0}{1}{2} {3}",
+                         DropAmount = "Drop Amount:",
+                         LowMana = "Not Enough Mana to cast.";
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
@@ -6507,7 +6509,10 @@ public class GameLanguage
                          LowMC = "You do not have enough MC.",
                          LowSC = "You do not have enough SC.",
                          GameName = "Legend of Mir2",
-                         ExpandedStorageExpiresOn = "Expanded Storage Expires On";
+                         ExpandedStorageExpiresOn = "Expanded Storage Expires On",
+
+                         NotFemale = "You are not Female.",
+                         NotMale = "You are not Male.";
 
 
     public static void LoadClientLanguage(string languageIniPath)
@@ -6641,6 +6646,11 @@ public class GameLanguage
         GameLanguage.SpiritsFireDisappeared = reader.ReadString("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         GameLanguage.WeddingRing = reader.ReadString("Language", "WeddingRing", GameLanguage.WeddingRing);
         GameLanguage.WedRingName = reader.ReadString("Language", "WedRingName", GameLanguage.WedRingName);
+        GameLanguage.DropAmount = reader.ReadString("Language", "DropAmount", GameLanguage.DropAmount);
+        GameLanguage.LowMana = reader.ReadString("Language", "LowMana", GameLanguage.LowMana);
+
+        GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
+        GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
     }
 
 
@@ -6764,6 +6774,11 @@ public class GameLanguage
         reader.Write("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         reader.Write("Language", "WeddingRing", GameLanguage.WeddingRing);
         reader.Write("Language", "WedRingName", GameLanguage.WedRingName);
+        reader.Write("Language", "DropAmount", GameLanguage.DropAmount);
+        reader.Write("Language", "LowMana", GameLanguage.LowMana);
+
+        reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
+        reader.Write("Language", "NotMale", GameLanguage.NotMale);
     }
 
 
@@ -6798,6 +6813,9 @@ public class GameLanguage
         GameLanguage.CanNotDungeon = reader.ReadString("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
         GameLanguage.CannotResurrection = reader.ReadString("Language", "CannotResurrection", GameLanguage.CannotResurrection);
         GameLanguage.CanNotDrop = reader.ReadString("Language", "CanNotDrop", GameLanguage.CanNotDrop);
+
+        GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
+        GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6827,5 +6845,8 @@ public class GameLanguage
         reader.Write("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
         reader.Write("Language", "CannotResurrection", GameLanguage.CannotResurrection);
         reader.Write("Language", "CanNotDrop", GameLanguage.CanNotDrop);
+
+        reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
+        reader.Write("Language", "NotMale", GameLanguage.NotMale);
     }
 }

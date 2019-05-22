@@ -1635,14 +1635,14 @@ namespace Client.MirControls
                 case MirGender.Male:
                     if (!Item.Info.RequiredGender.HasFlag(RequiredGender.Male))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You are not Female.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NotFemale, ChatType.System);
                         return false;
                     }
                     break;
                 case MirGender.Female:
                     if (!Item.Info.RequiredGender.HasFlag(RequiredGender.Female))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You are not Male.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NotMale, ChatType.System);
                         return false;
                     }
                     break;
@@ -1815,14 +1815,14 @@ namespace Client.MirControls
                 case MirGender.Male:
                     if (!i.Info.RequiredGender.HasFlag(RequiredGender.Male))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You are not Female.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NotFemale, ChatType.System);
                         return false;
                     }
                     break;
                 case MirGender.Female:
                     if (!i.Info.RequiredGender.HasFlag(RequiredGender.Female))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You are not Male.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NotMale, ChatType.System);
                         return false;
                     }
                     break;

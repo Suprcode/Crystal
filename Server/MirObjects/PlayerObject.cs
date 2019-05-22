@@ -12779,14 +12779,14 @@ namespace Server.MirObjects
                 case MirGender.Male:
                     if (!item.Info.RequiredGender.HasFlag(RequiredGender.Male))
                     {
-                        ReceiveChat("You are not Female.", ChatType.System);
+                        ReceiveChat(GameLanguage.NotFemale, ChatType.System);
                         return false;
                     }
                     break;
                 case MirGender.Female:
                     if (!item.Info.RequiredGender.HasFlag(RequiredGender.Female))
                     {
-                        ReceiveChat("You are not Male.", ChatType.System);
+                        ReceiveChat(GameLanguage.NotMale, ChatType.System);
                         return false;
                     }
                     break;
