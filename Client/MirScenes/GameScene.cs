@@ -2957,7 +2957,7 @@ namespace Client.MirScenes
                 if (item == null || item.UniqueID != p.UniqueID) continue;
 
                 if (item.Count == p.Count)
-                    User.Inventory[i] = null;
+                    Storage[i] = null;
                 else
                     item.Count -= p.Count;
                 break;
