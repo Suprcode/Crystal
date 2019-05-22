@@ -1134,6 +1134,19 @@ namespace Server.MirObjects
                 ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                 item.RentalInformation = null;
             }
+
+            for (int i = 0; i < Info.AccountInfo.Storage.Length; i++)
+            {
+                var item = Info.AccountInfo.Storage[i];
+                if (item?.ExpireInfo?.ExpiryDate <= Envir.Now)
+                {
+                    ReceiveChat($"{item.Info.FriendlyName} has just expired from your storage.", ChatType.Hint);
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.AccountInfo.Storage[i] = null;
+
+                    continue;
+                }
+            }
         }
 
         public override void Process(DelayedAction action)
@@ -11138,7 +11151,12 @@ namespace Server.MirObjects
                     Enqueue(p);
                     return;
                 }
-
+            if (Info.Equipment[to] != null &&
+                Info.Equipment[to].Info.Bind.HasFlag(BindMode.DontStore))
+            {
+                Enqueue(p);
+                return;
+            }
 
             if (CanEquipItem(temp, to))
             {
