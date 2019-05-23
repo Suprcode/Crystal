@@ -12927,7 +12927,7 @@ namespace Server.MirObjects
                         case 1:
                             if (CurrentMap.Info.NoTownTeleport)
                             {
-                                ReceiveChat(GameLanguage.CanNotBackCity, ChatType.System);
+                                ReceiveChat(GameLanguage.NoTownTeleport, ChatType.System);
                                 return false;
                             }
                             break;
@@ -16359,7 +16359,10 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
-            if (cell.Objects == null || cell.Objects.Count < 1) return;
+            if (cell.Objects == null || cell.Objects.Count < 1) {
+                ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
+                return;
+            } 
 
             for (int i = 0; i < cell.Objects.Count; i++)
             {

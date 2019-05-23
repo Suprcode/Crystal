@@ -6492,10 +6492,10 @@ public class GameLanguage
                          OnlinePlayers = "Online Players: {0}",
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",
-                         WeaponNoEffect = "Curse dwells within your weapon.",
+                         WeaponNoEffect = "No effect.",
                          InventoryIncreased = "Inventory size increased.",
                          FaceToTrade =  "You must face someone to trade.",
-                         CanNotBackCity = "You cannot back to city here",
+                         NoTownTeleport = "You cannot use Town Teleports here",
                          CanNotRandom =  "You cannot use Random Teleports here",
                          CanNotDungeon = "You cannot use Dungeon Escapes here",
                          CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
@@ -6808,7 +6808,7 @@ public class GameLanguage
         GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
         GameLanguage.FaceToTrade = reader.ReadString("Language", "FaceToTrade", GameLanguage.FaceToTrade);
-        GameLanguage.CanNotBackCity = reader.ReadString("Language", "CanNotBackCity", GameLanguage.CanNotBackCity);
+        GameLanguage.NoTownTeleport = reader.ReadString("Language", "NoTownTeleport", GameLanguage.NoTownTeleport);
         GameLanguage.CanNotRandom = reader.ReadString("Language", "CanNotRandom", GameLanguage.CanNotRandom);
         GameLanguage.CanNotDungeon = reader.ReadString("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
         GameLanguage.CannotResurrection = reader.ReadString("Language", "CannotResurrection", GameLanguage.CannotResurrection);
@@ -6840,7 +6840,7 @@ public class GameLanguage
         reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         reader.Write("Language", "GameName", GameLanguage.GameName);
         reader.Write("Language", "FaceToTrade", GameLanguage.FaceToTrade);
-        reader.Write("Language", "CanNotBackCity", GameLanguage.CanNotBackCity);
+        reader.Write("Language", "NoTownTeleport", GameLanguage.NoTownTeleport);
         reader.Write("Language", "CanNotRandom", GameLanguage.CanNotRandom);
         reader.Write("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
         reader.Write("Language", "CannotResurrection", GameLanguage.CannotResurrection);
