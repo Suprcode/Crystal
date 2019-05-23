@@ -142,7 +142,7 @@ namespace Server
             NoMountCheckbox.Checked = mi.NoMount;
             NeedBridleCheckbox.Checked = mi.NeedBridle;
             //MineIndextextBox.Text = mi.MineIndex.ToString();
-
+            NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -179,6 +179,7 @@ namespace Server
 
                 if (NoMountCheckbox.Checked != mi.NoMount) NoMountCheckbox.Checked = false;
                 if (NeedBridleCheckbox.Checked != mi.NeedBridle) NeedBridleCheckbox.Checked = false;
+                if (NoTownTeleportCheckbox.Checked != mi.NoTownTeleport) NoTownTeleportCheckbox.Checked = false;
             }
 
             UpdateSafeZoneInterface();
@@ -1475,6 +1476,7 @@ namespace Server
             if (map.Fight) textOut += " FIGHT";
             if (map.Fire) textOut += " FIRE(" + map.FireDamage + ")";
             if (map.Lightning) textOut += " LIGHTNING(" + map.LightningDamage + ")";
+            if (map.NoTownTeleport) textOut += " NOTownTeleport";
             return textOut;
         }
         private void ImportMonGenButton_Click(object sender, EventArgs e)
@@ -1709,6 +1711,14 @@ namespace Server
                 _selectedMovementInfos[i].ConquestIndex = info.Index;
 
             RefreshMovementList();
+        }
+
+        private void NoTownTeleportCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].NoTownTeleport = NoTownTeleportCheckbox.Checked;
         }
     }
 }

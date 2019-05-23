@@ -63,6 +63,7 @@ namespace Server.MirForms
                     newMapInfo.NoMount = mapAttributes.Any(s => s.Contains("NOMOUNT".ToUpper()));
                     newMapInfo.NeedBridle = mapAttributes.Any(s => s.Contains("NEEDBRIDLE".ToUpper()));
                     newMapInfo.Fight = mapAttributes.Any(s => s.Contains("FIGHT".ToUpper()));
+                    newMapInfo.NoTownTeleport = mapAttributes.Any(s => s.Contains("NOTOWNTELEPORT".ToUpper()));
 
                     newMapInfo.Fire = mapAttributes.Any(x => x.StartsWith("FIRE(".ToUpper()));
                     if (newMapInfo.Fire)

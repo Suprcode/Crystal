@@ -1495,7 +1495,8 @@ public enum ServerPacketIds : short
     ItemRentalPartnerLock,
     CanConfirmItemRental,
     ConfirmItemRental,
-    NewRecipeInfo
+    NewRecipeInfo,
+    OpenBrowser
 }
 
 public enum ClientPacketIds : short
@@ -4735,7 +4736,7 @@ public abstract class Packet
             case (short)ClientPacketIds.ItemRentalLockItem:
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
-                return new C.ConfirmItemRental();
+                return new C.ConfirmItemRental();           
             default:
                 return null;
         }
@@ -5217,6 +5218,8 @@ public abstract class Packet
                 return new S.ConfirmItemRental();
             case (short)ServerPacketIds.NewRecipeInfo:
                 return new S.NewRecipeInfo();
+            case (short)ServerPacketIds.OpenBrowser:
+                return new S.OpenBrowser();
             default:
                 return null;
         }
@@ -6480,16 +6483,23 @@ public class GameLanguage
                          WeaponSpiritFire = "Your weapon is glowed by spirit of fire.",
                          SpiritsFireDisappeared = "The spirits of fire disappeared.",
                          WeddingRing = "WeddingRing",
-                         WedRingName = "{0}{1}{2} {3}";
+                         WedRingName = "{0}{1}{2} {3}",
+                         DropAmount = "Drop Amount:",
+                         LowMana = "Not Enough Mana to cast.";
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",
-                         WeaponNoEffect = "Curse dwells within your weapon.",
+                         WeaponNoEffect = "No effect.",
                          InventoryIncreased = "Inventory size increased.",
-                         FaceToTrade =  "You must face someone to trade.";
+                         FaceToTrade =  "You must face someone to trade.",
+                         NoTownTeleport = "You cannot use Town Teleports here",
+                         CanNotRandom =  "You cannot use Random Teleports here",
+                         CanNotDungeon = "You cannot use Dungeon Escapes here",
+                         CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
+                         CanNotDrop = "You cannot drop items on this map";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6499,7 +6509,10 @@ public class GameLanguage
                          LowMC = "You do not have enough MC.",
                          LowSC = "You do not have enough SC.",
                          GameName = "Legend of Mir2",
-                         ExpandedStorageExpiresOn = "Expanded Storage Expires On";
+                         ExpandedStorageExpiresOn = "Expanded Storage Expires On",
+
+                         NotFemale = "You are not Female.",
+                         NotMale = "You are not Male.";
 
 
     public static void LoadClientLanguage(string languageIniPath)
@@ -6633,6 +6646,11 @@ public class GameLanguage
         GameLanguage.SpiritsFireDisappeared = reader.ReadString("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         GameLanguage.WeddingRing = reader.ReadString("Language", "WeddingRing", GameLanguage.WeddingRing);
         GameLanguage.WedRingName = reader.ReadString("Language", "WedRingName", GameLanguage.WedRingName);
+        GameLanguage.DropAmount = reader.ReadString("Language", "DropAmount", GameLanguage.DropAmount);
+        GameLanguage.LowMana = reader.ReadString("Language", "LowMana", GameLanguage.LowMana);
+
+        GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
+        GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
     }
 
 
@@ -6756,6 +6774,11 @@ public class GameLanguage
         reader.Write("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         reader.Write("Language", "WeddingRing", GameLanguage.WeddingRing);
         reader.Write("Language", "WedRingName", GameLanguage.WedRingName);
+        reader.Write("Language", "DropAmount", GameLanguage.DropAmount);
+        reader.Write("Language", "LowMana", GameLanguage.LowMana);
+
+        reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
+        reader.Write("Language", "NotMale", GameLanguage.NotMale);
     }
 
 
@@ -6785,6 +6808,14 @@ public class GameLanguage
         GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
         GameLanguage.FaceToTrade = reader.ReadString("Language", "FaceToTrade", GameLanguage.FaceToTrade);
+        GameLanguage.NoTownTeleport = reader.ReadString("Language", "NoTownTeleport", GameLanguage.NoTownTeleport);
+        GameLanguage.CanNotRandom = reader.ReadString("Language", "CanNotRandom", GameLanguage.CanNotRandom);
+        GameLanguage.CanNotDungeon = reader.ReadString("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
+        GameLanguage.CannotResurrection = reader.ReadString("Language", "CannotResurrection", GameLanguage.CannotResurrection);
+        GameLanguage.CanNotDrop = reader.ReadString("Language", "CanNotDrop", GameLanguage.CanNotDrop);
+
+        GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
+        GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6809,5 +6840,13 @@ public class GameLanguage
         reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         reader.Write("Language", "GameName", GameLanguage.GameName);
         reader.Write("Language", "FaceToTrade", GameLanguage.FaceToTrade);
+        reader.Write("Language", "NoTownTeleport", GameLanguage.NoTownTeleport);
+        reader.Write("Language", "CanNotRandom", GameLanguage.CanNotRandom);
+        reader.Write("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
+        reader.Write("Language", "CannotResurrection", GameLanguage.CannotResurrection);
+        reader.Write("Language", "CanNotDrop", GameLanguage.CanNotDrop);
+
+        reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
+        reader.Write("Language", "NotMale", GameLanguage.NotMale);
     }
 }

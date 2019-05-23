@@ -12460,7 +12460,7 @@ namespace Server.MirObjects
 
             if (CurrentMap.Info.NoThrowItem)
             {
-                ReceiveChat("You cannot drop items on this map", ChatType.System);
+                ReceiveChat(GameLanguage.CanNotDrop, ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -12797,14 +12797,14 @@ namespace Server.MirObjects
                 case MirGender.Male:
                     if (!item.Info.RequiredGender.HasFlag(RequiredGender.Male))
                     {
-                        ReceiveChat("You are not Female.", ChatType.System);
+                        ReceiveChat(GameLanguage.NotFemale, ChatType.System);
                         return false;
                     }
                     break;
                 case MirGender.Female:
                     if (!item.Info.RequiredGender.HasFlag(RequiredGender.Female))
                     {
-                        ReceiveChat("You are not Male.", ChatType.System);
+                        ReceiveChat(GameLanguage.NotMale, ChatType.System);
                         return false;
                     }
                     break;
@@ -12938,21 +12938,28 @@ namespace Server.MirObjects
                         case 0:
                             if (CurrentMap.Info.NoEscape)
                             {
-                                ReceiveChat("You cannot use Dungeon Escapes here", ChatType.System);
+                                ReceiveChat(GameLanguage.CanNotDungeon, ChatType.System);
+                                return false;
+                            }
+                            break;
+                        case 1:
+                            if (CurrentMap.Info.NoTownTeleport)
+                            {
+                                ReceiveChat(GameLanguage.NoTownTeleport, ChatType.System);
                                 return false;
                             }
                             break;
                         case 2:
                             if (CurrentMap.Info.NoRandom)
                             {
-                                ReceiveChat("You cannot use Random Teleports here", ChatType.System);
+                                ReceiveChat(GameLanguage.CanNotRandom, ChatType.System);
                                 return false;
                             }
                             break;
                         case 6:
                             if (!Dead)
                             {
-                                ReceiveChat("You cannot use Resurrection Scrolls whilst alive", ChatType.Hint);
+                                ReceiveChat(GameLanguage.CannotResurrection, ChatType.Hint);
                                 return false;
                             }
                             break;
@@ -16370,7 +16377,10 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
-            if (cell.Objects == null || cell.Objects.Count < 1) return;
+            if (cell.Objects == null || cell.Objects.Count < 1) {
+                ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
+                return;
+            } 
 
             for (int i = 0; i < cell.Objects.Count; i++)
             {
