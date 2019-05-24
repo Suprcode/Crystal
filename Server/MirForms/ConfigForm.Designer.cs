@@ -43,6 +43,8 @@
             this.VPathTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.HTTPTrustedIPAddressTextBox = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.HTTPIPAddressTextBox = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.MaxUserTextBox = new System.Windows.Forms.TextBox();
@@ -74,8 +76,7 @@
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
-            this.label14 = new System.Windows.Forms.Label();
-            this.HTTPTrustedIPAddressTextBox = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -232,6 +233,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label15);
             this.tabPage2.Controls.Add(this.HTTPTrustedIPAddressTextBox);
             this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.HTTPIPAddressTextBox);
@@ -251,6 +253,24 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Network";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // HTTPTrustedIPAddressTextBox
+            // 
+            this.HTTPTrustedIPAddressTextBox.Location = new System.Drawing.Point(177, 178);
+            this.HTTPTrustedIPAddressTextBox.MaxLength = 30;
+            this.HTTPTrustedIPAddressTextBox.Name = "HTTPTrustedIPAddressTextBox";
+            this.HTTPTrustedIPAddressTextBox.Size = new System.Drawing.Size(170, 21);
+            this.HTTPTrustedIPAddressTextBox.TabIndex = 21;
+            this.HTTPTrustedIPAddressTextBox.TextChanged += new System.EventHandler(this.HTTPTrustedIPAddressTextBox_TextChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(22, 181);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(149, 12);
+            this.label14.TabIndex = 20;
+            this.label14.Text = "HTTP Trusted IP Address:";
             // 
             // HTTPIPAddressTextBox
             // 
@@ -560,23 +580,14 @@
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
             // 
-            // label14
+            // label15
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(22, 181);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(149, 12);
-            this.label14.TabIndex = 20;
-            this.label14.Text = "HTTP Trusted IP Address:";
-            // 
-            // HTTPTrustedIPAddressTextBox
-            // 
-            this.HTTPTrustedIPAddressTextBox.Location = new System.Drawing.Point(177, 178);
-            this.HTTPTrustedIPAddressTextBox.MaxLength = 30;
-            this.HTTPTrustedIPAddressTextBox.Name = "HTTPTrustedIPAddressTextBox";
-            this.HTTPTrustedIPAddressTextBox.Size = new System.Drawing.Size(170, 21);
-            this.HTTPTrustedIPAddressTextBox.TabIndex = 21;
-            this.HTTPTrustedIPAddressTextBox.TextChanged += new System.EventHandler(this.HTTPTrustedIPAddressTextBox_TextChanged);
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(22, 219);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(275, 12);
+            this.label15.TabIndex = 22;
+            this.label15.Text = "(http service only allow trusted IP to visit)";
             // 
             // ConfigForm
             // 
@@ -655,5 +666,6 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox HTTPTrustedIPAddressTextBox;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
     }
 }

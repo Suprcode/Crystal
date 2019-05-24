@@ -16,7 +16,7 @@ namespace Server
         public void Listen() {
             if (!HttpListener.IsSupported) {
                 throw new System.InvalidOperationException(
-                    "使用 HttpListener 必须为 Windows XP SP2 或 Server 2003 以上系统！");
+                    "To use HttpListener the operating system must be Windows XP SP2 or Server 2003 or higher.");
             }
             string[] prefixes = new string[] { host };
 
@@ -46,9 +46,9 @@ namespace Server
                 Console.WriteLine("Connection: {0}", request.KeepAlive ? "Keep-Alive" : "close");
                 Console.WriteLine("Host: {0}", request.UserHostName);
                 HttpListenerResponse response = context.Response;
-                if (request.UserHostAddress != "")
+                if (request.UserHostAddress != Settings.HTTPTrustedIPAddress)
                 {
-                    writeRresponse(response, "");
+                    WriteRresponse(response, "");
                     continue;
                 }
                 if (request.HttpMethod == "GET") {
@@ -70,7 +70,7 @@ namespace Server
         public abstract void OnGetRequest(HttpListenerRequest request, HttpListenerResponse response);
         public abstract void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response);
 
-        public void writeRresponse(HttpListenerResponse response, string responseString)
+        public void WriteRresponse(HttpListenerResponse response, string responseString)
         {
             try
             {
