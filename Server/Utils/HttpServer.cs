@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 
 namespace Server
@@ -95,21 +94,6 @@ namespace Server
             }
         }
 
-
-        void writeRresponse(HttpListenerResponse response , string responseString) {          
-            try
-            {
-                response.ContentLength64 = Encoding.UTF8.GetByteCount(responseString);
-                response.ContentType = "text/html; charset=UTF-8";
-            }
-            finally
-            {
-                Stream output = response.OutputStream;
-                StreamWriter writer = new StreamWriter(output);
-                writer.Write(responseString);
-                writer.Close();
-            }
-        }
 
         public override void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response) {
             Console.WriteLine("POST request: {0}", request.Url);

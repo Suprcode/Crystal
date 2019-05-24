@@ -2169,6 +2169,56 @@ namespace Server.MirEnvir
                 c.Enqueue(new ServerPackets.NewAccount {Result = 8});
             }
         }
+
+        public int HTTPNewAccount(ClientPackets.NewAccount p, string ip)
+        {
+            if (!Settings.AllowNewAccount)
+            {                
+                return 0;
+            }
+
+            if (!AccountIDReg.IsMatch(p.AccountID))
+            {
+                return 1;
+            }
+
+            if (!PasswordReg.IsMatch(p.Password))
+            {
+                return 2;
+            }
+            if (!string.IsNullOrWhiteSpace(p.EMailAddress) && !EMailReg.IsMatch(p.EMailAddress) ||
+                p.EMailAddress.Length > 50)
+            {
+                return 3;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.UserName) && p.UserName.Length > 20)
+            {
+                return 4;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.SecretQuestion) && p.SecretQuestion.Length > 30)
+            {
+                return 5;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.SecretAnswer) && p.SecretAnswer.Length > 30)
+            {
+                return 6;
+            }
+
+            lock (AccountLock)
+            {
+                if (AccountExists(p.AccountID))
+                {
+                    return 7;
+                }
+
+                AccountList.Add(new AccountInfo(p) { Index = ++NextAccountID, CreationIP = ip });
+                return 8;
+            }
+        }
+
         public void ChangePassword(ClientPackets.ChangePassword p, MirConnection c)
         {
             if (!Settings.AllowChangePassword)

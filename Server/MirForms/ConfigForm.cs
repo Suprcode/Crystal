@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Server
@@ -21,6 +22,7 @@ namespace Server
             MaxUserTextBox.Text = Settings.MaxUser.ToString();
 
             HTTPIPAddressTextBox.Text = Settings.HTTPIPAddress;
+            HTTPTrustedIPAddressTextBox.Text = Settings.HTTPTrustedIPAddress;
 
             AccountCheckBox.Checked = Settings.AllowNewAccount;
             PasswordCheckBox.Checked = Settings.AllowChangePassword;
@@ -65,6 +67,9 @@ namespace Server
 
             if (tryParseHttp())
                 Settings.HTTPIPAddress = HTTPIPAddressTextBox.Text.ToString();
+
+            if (tryParseTrustedHttp())
+                Settings.HTTPTrustedIPAddress = HTTPTrustedIPAddressTextBox.Text.ToString();
 
             ushort tempshort;
             int tempint;
@@ -156,6 +161,13 @@ namespace Server
             ActiveControl.BackColor = !tryParseHttp() ? Color.Red : SystemColors.Window;
         }
 
+
+        private void HTTPTrustedIPAddressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ActiveControl.BackColor = !tryParseTrustedHttp() ? Color.Red : SystemColors.Window;
+        }
+
         bool tryParseHttp()
         {
             if ((HTTPIPAddressTextBox.Text.StartsWith("http://") || HTTPIPAddressTextBox.Text.StartsWith("https://")) && HTTPIPAddressTextBox.Text.EndsWith("/"))
@@ -163,6 +175,12 @@ namespace Server
                 return true;
             }
             return false;
+        }
+
+        bool tryParseTrustedHttp()
+        {
+            string pattern = @"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{2,5}";
+            return Regex.IsMatch(HTTPTrustedIPAddressTextBox.Text, pattern);
         }
     }
 }

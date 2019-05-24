@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Net;
+using System.Text;
 
 namespace Server
 {
@@ -43,8 +45,12 @@ namespace Server
                 Console.WriteLine("Accept-Encoding: {0}", request.Headers["Accept-Encoding"]);
                 Console.WriteLine("Connection: {0}", request.KeepAlive ? "Keep-Alive" : "close");
                 Console.WriteLine("Host: {0}", request.UserHostName);
-
                 HttpListenerResponse response = context.Response;
+                if (request.UserHostAddress != "")
+                {
+                    writeRresponse(response, "");
+                    continue;
+                }
                 if (request.HttpMethod == "GET") {
                     OnGetRequest(request, response);
                 } else {
@@ -63,5 +69,21 @@ namespace Server
 
         public abstract void OnGetRequest(HttpListenerRequest request, HttpListenerResponse response);
         public abstract void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response);
+
+        public void writeRresponse(HttpListenerResponse response, string responseString)
+        {
+            try
+            {
+                response.ContentLength64 = Encoding.UTF8.GetByteCount(responseString);
+                response.ContentType = "text/html; charset=UTF-8";
+            }
+            finally
+            {
+                Stream output = response.OutputStream;
+                StreamWriter writer = new StreamWriter(output);
+                writer.Write(responseString);
+                writer.Close();
+            }
+        }
     }
 }

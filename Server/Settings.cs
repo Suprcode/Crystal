@@ -61,6 +61,7 @@ namespace Server
 
         //HTTP
         public static string HTTPIPAddress = "http://127.0.0.1:5679/";
+        public static string HTTPTrustedIPAddress = "127.0.0.1:5679";
 
         //Permission
         public static bool AllowNewAccount = true,
@@ -295,6 +296,7 @@ namespace Server
 
             //HTTP
             HTTPIPAddress = Reader.ReadString("Network", "HTTPIPAddress", HTTPIPAddress);
+            HTTPTrustedIPAddress = Reader.ReadString("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
 
             //Permission
             AllowNewAccount = Reader.ReadBoolean("Permission", "AllowNewAccount", AllowNewAccount);
@@ -503,6 +505,7 @@ namespace Server
 
             //HTTP
             Reader.Write("Network", "HTTPIPAddress", HTTPIPAddress);
+            Reader.Write("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
 
             //Permission
             Reader.Write("Permission", "AllowNewAccount", AllowNewAccount);
