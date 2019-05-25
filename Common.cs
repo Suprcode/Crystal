@@ -6390,6 +6390,7 @@ public class GameLanguage
                          Menu = "Menu",
                          GameShop = "Game Shop ({0})",
                          BigMap = "BigMap ({0})",
+                         DuraPanel = "Dura Panel",
                          Mail = "Mail",
                          Exit = "Exit ({0})",
                          LogOut = "Log Out ({0})",
@@ -6408,6 +6409,10 @@ public class GameLanguage
                          ExpireNever = "Expire: Never",
                          Never = "Never",
                          Trade = "Trade ({0})",
+                         Size = "Size",
+                         ChatSettings = "Chat Settings",
+                         Rotate = "Rotate",
+                         Close = "Close ({0})",
                          GameMaster = "GameMaster",
 
                          PatchErr = "Could not get Patch Information",
@@ -6548,6 +6553,7 @@ public class GameLanguage
         GameLanguage.Menu = reader.ReadString("Language", "Menu", GameLanguage.Menu);
         GameLanguage.GameShop = reader.ReadString("Language", "GameShop", GameLanguage.GameShop);
         GameLanguage.BigMap = reader.ReadString("Language", "BigMap", GameLanguage.BigMap);
+        GameLanguage.DuraPanel = reader.ReadString("Language", "DuraPanel", GameLanguage.DuraPanel);
         GameLanguage.Mail = reader.ReadString("Language", "Mail", GameLanguage.Mail);
         GameLanguage.Exit = reader.ReadString("Language", "Exit", GameLanguage.Exit);
         GameLanguage.LogOut = reader.ReadString("Language", "LogOut", GameLanguage.LogOut);
@@ -6563,6 +6569,10 @@ public class GameLanguage
         GameLanguage.Groups = reader.ReadString("Language", "Groups", GameLanguage.Groups);
         GameLanguage.Guild = reader.ReadString("Language", "Guild", GameLanguage.Guild);
         GameLanguage.Trade = reader.ReadString("Language", "Trade", GameLanguage.Trade);
+        GameLanguage.Size = reader.ReadString("Language", "Size", GameLanguage.Size);
+        GameLanguage.ChatSettings = reader.ReadString("Language", "ChatSettings", GameLanguage.ChatSettings);
+        GameLanguage.Rotate = reader.ReadString("Language", "Rotate", GameLanguage.Rotate);
+        GameLanguage.Close = reader.ReadString("Language", "Close", GameLanguage.Close);
         GameLanguage.GameMaster = reader.ReadString("Language", "GameMaster", GameLanguage.GameMaster);
         GameLanguage.Expire = reader.ReadString("Language", "Expire", GameLanguage.Expire);
         GameLanguage.ExpireNever = reader.ReadString("Language", "ExpireNever", GameLanguage.ExpireNever);
@@ -6683,6 +6693,7 @@ public class GameLanguage
         reader.Write("Language", "Menu", GameLanguage.Menu);
         reader.Write("Language", "GameShop", GameLanguage.GameShop);
         reader.Write("Language", "BigMap", GameLanguage.BigMap);
+        reader.Write("Language", "DuraPanel", GameLanguage.DuraPanel);
         reader.Write("Language", "Mail", GameLanguage.Mail);
         reader.Write("Language", "Exit", GameLanguage.Exit);
         reader.Write("Language", "LogOut", GameLanguage.LogOut);
@@ -6698,6 +6709,10 @@ public class GameLanguage
         reader.Write("Language", "Groups", GameLanguage.Groups);
         reader.Write("Language", "Guild", GameLanguage.Guild);
         reader.Write("Language", "Trade", GameLanguage.Trade);
+        reader.Write("Language", "Size", GameLanguage.Size);
+        reader.Write("Language", "ChatSettings", GameLanguage.ChatSettings);
+        reader.Write("Language", "Rotate", GameLanguage.Rotate);
+        reader.Write("Language", "Close", GameLanguage.Close);
         reader.Write("Language", "GameMaster", GameLanguage.GameMaster);
 
 

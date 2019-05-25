@@ -394,9 +394,9 @@ namespace Server
             this.NoTownTeleportCheckbox.AutoSize = true;
             this.NoTownTeleportCheckbox.Location = new System.Drawing.Point(340, 110);
             this.NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
-            this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(126, 16);
+            this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(114, 16);
             this.NoTownTeleportCheckbox.TabIndex = 44;
-            this.NoTownTeleportCheckbox.Text = "No NoTownTeleport";
+            this.NoTownTeleportCheckbox.Text = "No TownTeleport";
             this.NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
             this.NoTownTeleportCheckbox.CheckedChanged += new System.EventHandler(this.NoTownTeleportCheckbox_CheckedChanged);
             // 
