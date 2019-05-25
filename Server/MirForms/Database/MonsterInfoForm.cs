@@ -66,6 +66,7 @@ namespace Server
                 MonsterNameTextBox.Text = string.Empty;
 
                 ImageComboBox.SelectedItem = null;
+                fileNameLabel.Text = "";
                 AITextBox.Text = string.Empty;
                 EffectTextBox.Text = string.Empty;
                 LevelTextBox.Text = string.Empty;
@@ -109,6 +110,7 @@ namespace Server
 
             ImageComboBox.SelectedItem = null;
             ImageComboBox.SelectedItem = info.Image;
+            fileNameLabel.Text = ((int)info.Image).ToString() + ".Lib";
             AITextBox.Text = info.AI.ToString();
             EffectTextBox.Text = info.Effect.ToString();
             LevelTextBox.Text = info.Level.ToString();
@@ -149,6 +151,7 @@ namespace Server
                 if (MonsterNameTextBox.Text != info.Name) MonsterNameTextBox.Text = string.Empty;
 
                 if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) ImageComboBox.SelectedItem = null;
+                if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) fileNameLabel.Text = "";
                 if (AITextBox.Text != info.AI.ToString()) AITextBox.Text = string.Empty;
                 if (EffectTextBox.Text != info.Effect.ToString()) EffectTextBox.Text = string.Empty;
                 if (LevelTextBox.Text != info.Level.ToString()) LevelTextBox.Text = string.Empty;
@@ -646,8 +649,10 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Image = (Monster)ImageComboBox.SelectedItem;
-
+                fileNameLabel.Text = ((int)((Monster)ImageComboBox.SelectedItem)).ToString() + ".Lib";
+            }
         }
 
         private void ExportAllButton_Click(object sender, EventArgs e)

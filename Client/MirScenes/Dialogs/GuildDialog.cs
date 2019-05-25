@@ -2268,7 +2268,7 @@ namespace Client.MirScenes.Dialogs
 
             if (MapControl.User.GuildName == "")
             {
-                MirMessageBox messageBox = new MirMessageBox("You are not in a guild.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NotInGuild, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
