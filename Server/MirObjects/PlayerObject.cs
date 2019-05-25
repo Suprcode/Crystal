@@ -4856,7 +4856,7 @@ namespace Server.MirObjects
 
                         if (MyGuild == null)
                         {
-                            ReceiveChat("You are not in a guild.", ChatType.System);
+                            ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                         }
 
                         if (MyGuild.Ranks[0] != MyGuildRank)
@@ -15726,7 +15726,7 @@ namespace Server.MirObjects
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
-                ReceiveChat("You are not in a guild!", ChatType.System);
+                ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                 return;
             }
             switch (ChangeType)
@@ -15842,7 +15842,7 @@ namespace Server.MirObjects
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
-                ReceiveChat("You are not in a guild!", ChatType.System);
+                ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                 return;
             }
             if (!MyGuildRank.Options.HasFlag(RankOptions.CanChangeNotice))
