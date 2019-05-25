@@ -21,6 +21,7 @@ namespace Server
             TimeOutTextBox.Text = Settings.TimeOut.ToString();
             MaxUserTextBox.Text = Settings.MaxUser.ToString();
 
+            StartHTTPCheckBox.Checked = Settings.StartHTTPService;
             HTTPIPAddressTextBox.Text = Settings.HTTPIPAddress;
             HTTPTrustedIPAddressTextBox.Text = Settings.HTTPTrustedIPAddress;
 
@@ -65,6 +66,7 @@ namespace Server
             if (IPAddress.TryParse(IPAddressTextBox.Text, out tempIP))
                 Settings.IPAddress = tempIP.ToString();
 
+            Settings.StartHTTPService = StartHTTPCheckBox.Checked;
             if (tryParseHttp())
                 Settings.HTTPIPAddress = HTTPIPAddressTextBox.Text.ToString();
 
@@ -181,6 +183,11 @@ namespace Server
         {
             string pattern = @"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{2,5}";
             return Regex.IsMatch(HTTPTrustedIPAddressTextBox.Text, pattern);
+        }
+
+        private void StartHTTPCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.StartHTTPService = StartHTTPCheckBox.Checked;
         }
     }
 }

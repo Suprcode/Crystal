@@ -527,8 +527,11 @@ namespace Server.MirEnvir
                 }
 
                 StartNetwork();
-                http = new HttpServer();
-                http.Start();
+                if (Settings.StartHTTPService)
+                {
+                    http = new HttpServer();
+                    http.Start();
+                }               
                 try
                 {
                     while (Running)
@@ -1842,8 +1845,7 @@ namespace Server.MirEnvir
                     MobThreading[i].Interrupt();
                 }
             }
-            http.Stop();
-
+                http.Stop();        
 
                 while (_thread != null)
                     Thread.Sleep(1);

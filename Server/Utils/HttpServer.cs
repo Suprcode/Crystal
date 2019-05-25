@@ -21,7 +21,10 @@ namespace Server
 
         public new void Stop() {
             base.Stop();
-            thread.Abort();
+            if (thread!=null)
+            {
+                thread.Abort();
+            }
         }
 
 
@@ -38,7 +41,7 @@ namespace Server
                 switch (url)
                 {
                     case "/":
-                        WriteRresponse(response, GameLanguage.GameName);
+                        WriteResponse(response, GameLanguage.GameName);
                         break;
                     case "/regist":
                         string id = request.QueryString["id"].ToString();
@@ -56,28 +59,28 @@ namespace Server
                         p.SecretQuestion = question;
                         p.SecretAnswer = answer;
                         int result = SMain.Envir.HTTPNewAccount(p,ip);
-                        WriteRresponse(response, result.ToString());
+                        WriteResponse(response, result.ToString());
                         break;
                     case "/login":
                         id = request.QueryString["id"].ToString();
                         psd = request.QueryString["psd"].ToString();
                         result = SMain.Envir.HTTPLogin(id, psd);
-                        WriteRresponse(response, result.ToString());                        
+                        WriteResponse(response, result.ToString());                        
                         break;
                     case "/addnamelist":
                         id = request.QueryString["id"].ToString();
                         string fileName = request.QueryString["fileName"].ToString();                   
                         addNameList(id, fileName);
-                        WriteRresponse(response, "true");
+                        WriteResponse(response, "true");
                         break;
                     default:
-                        WriteRresponse(response, "error");
+                        WriteResponse(response, "error");
                         break;
                 }
             }
             catch (Exception error)
             {
-                WriteRresponse(response, "request error: " + error);
+                WriteResponse(response, "request error: " + error);
             }
         }
 

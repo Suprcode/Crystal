@@ -60,6 +60,7 @@ namespace Server
                              MaxIP = 5;
 
         //HTTP
+        public static bool StartHTTPService = false;
         public static string HTTPIPAddress = "http://127.0.0.1:5679/";
         public static string HTTPTrustedIPAddress = "127.0.0.1:5679";
 
@@ -295,6 +296,7 @@ namespace Server
             MaxIP = Reader.ReadUInt16("Network", "MaxIP", MaxIP);
 
             //HTTP
+            StartHTTPService = Reader.ReadBoolean("Network", "StartHTTPService", StartHTTPService);
             HTTPIPAddress = Reader.ReadString("Network", "HTTPIPAddress", HTTPIPAddress);
             HTTPTrustedIPAddress = Reader.ReadString("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
 
@@ -504,6 +506,7 @@ namespace Server
             Reader.Write("Network", "MaxIP", MaxIP);
 
             //HTTP
+            Reader.Write("Network", "StartHTTPService", StartHTTPService);
             Reader.Write("Network", "HTTPIPAddress", HTTPIPAddress);
             Reader.Write("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
 

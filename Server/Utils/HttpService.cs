@@ -38,30 +38,37 @@ namespace Server
          
 
             while (is_active) {
-                HttpListenerContext context = listener.GetContext();
-                HttpListenerRequest request = context.Request;
-                Console.WriteLine("{0} {1} HTTP/1.1", request.HttpMethod, request.RawUrl);
-                Console.WriteLine("User-Agent: {0}", request.UserAgent);
-                Console.WriteLine("Accept-Encoding: {0}", request.Headers["Accept-Encoding"]);
-                Console.WriteLine("Connection: {0}", request.KeepAlive ? "Keep-Alive" : "close");
-                Console.WriteLine("Host: {0}", request.UserHostName);
-                HttpListenerResponse response = context.Response;
-                if (request.UserHostAddress != Settings.HTTPTrustedIPAddress)
+                try
                 {
-                    WriteRresponse(response, "");
-                    continue;
+                    HttpListenerContext context = listener.GetContext();
+                    HttpListenerRequest request = context.Request;
+                    Console.WriteLine("{0} {1} HTTP/1.1", request.HttpMethod, request.RawUrl);
+                    Console.WriteLine("User-Agent: {0}", request.UserAgent);
+                    Console.WriteLine("Accept-Encoding: {0}", request.Headers["Accept-Encoding"]);
+                    Console.WriteLine("Connection: {0}", request.KeepAlive ? "Keep-Alive" : "close");
+                    Console.WriteLine("Host: {0}", request.UserHostName);
+                    HttpListenerResponse response = context.Response;
+                    if (request.UserHostAddress != Settings.HTTPTrustedIPAddress)
+                    {
+                        WriteResponse(response, "");
+                        continue;
+                    }
+                    if (request.HttpMethod == "GET")
+                    {
+                        OnGetRequest(request, response);
+                    }
+                    else
+                    {
+                        OnPostRequest(request, response);
+                    }
                 }
-                if (request.HttpMethod == "GET") {
-                    OnGetRequest(request, response);
-                } else {
-                    OnPostRequest(request, response);
-                }
+                catch{}
             }
         }
 
         public void Stop() {
             is_active = false;
-            if (listener != null && listener.IsListening)
+            if (listener != null)
             {
                 listener.Stop();
             }           
@@ -70,7 +77,7 @@ namespace Server
         public abstract void OnGetRequest(HttpListenerRequest request, HttpListenerResponse response);
         public abstract void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response);
 
-        public void WriteRresponse(HttpListenerResponse response, string responseString)
+        public void WriteResponse(HttpListenerResponse response, string responseString)
         {
             try
             {
