@@ -225,6 +225,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="Utils\BrowserHelper.cs" />
     <EmbeddedResource Include="AMain.resx">
       <DependentUpon>AMain.cs</DependentUpon>
     </EmbeddedResource>

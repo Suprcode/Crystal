@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 77;
+        public const int Version = 78;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -643,7 +643,7 @@ namespace Server.MirEnvir
                             userTime = Time + Settings.Minute * 5;
                             Broadcast(new S.Chat
                                 {
-                                    Message = string.Format("Online Players: {0}", Players.Count),
+                                    Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                     Type = ChatType.Hint
                                 });
                         }
@@ -2737,6 +2737,7 @@ namespace Server.MirEnvir
         {
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
         }
+
         /*
         public MonsterInfo GetMonsterInfo(string name)
         {
@@ -3226,6 +3227,30 @@ namespace Server.MirEnvir
                 }
             }
         }
+
+
+        public void ReloadNPCs()
+        {
+            List<NPCObject> allNpcs = new List<NPCObject>();
+            foreach (var map in MapList)
+            {
+                allNpcs.AddRange(map.NPCs);
+            }
+            foreach (var item in allNpcs)
+            {
+                item.LoadInfo(true);
+            }
+            SMain.Envir.DefaultNPC.LoadInfo(true);
+            SMain.Enqueue("NPCs reloaded...");
+        }
+
+        public void ReloadDrops()
+        {
+            foreach (var item in MonsterInfoList)
+                item.LoadDrops();
+            SMain.Enqueue("Drops reloaded...");
+        }
+   
     }
 }
 

@@ -21,7 +21,10 @@ namespace Launcher
 
         private void Config_Load(object sender, EventArgs e)
         {
-
+            this.label10.Text = GameLanguage.Resolution;
+            this.AutoStart_label.Text = GameLanguage.Autostart;
+            this.ID_l.Text = GameLanguage.Usrname;
+            this.Password_l.Text = GameLanguage.Password;
         }
 
         private void Res1_pb_Click(object sender, EventArgs e)

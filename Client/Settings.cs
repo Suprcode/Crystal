@@ -173,10 +173,13 @@ namespace Client
 
         public static void Load()
         {
+            //Languahe
+            GameLanguage.LoadClientLanguage(@".\Language.ini");
+
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
-
+           
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
@@ -347,5 +350,10 @@ namespace Client
                 Reader.Write("Q-" + Charname, "Quest-" + i.ToString(), TrackedQuests[i]);
             }
         }
+
+
+      
     }
+
+    
 }

@@ -941,7 +941,7 @@ namespace Server.MirObjects
                     }
                     else
                     {
-                        player.ReceiveChat("You are not in a guild.", ChatType.System);
+                        player.ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                     }
                     break;
                 case SendParcelKey:
@@ -1651,6 +1651,7 @@ namespace Server.MirObjects
         AddGuildNameList,
         DelGuildNameList,
         ClearGuildNameList,
+        OpenBrowser,
     }
     public enum CheckType
     {
