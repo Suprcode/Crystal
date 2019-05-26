@@ -41,6 +41,9 @@ namespace Server
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
 
+            StartLevelBox.Text = Settings.StartLevel.ToString();
+            StartGoldBox.Text = Settings.StartGold.ToString();
+
             ServerVersionLabel.Text = Application.ProductVersion;
             DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
         }
@@ -106,6 +109,11 @@ namespace Server
             Settings.SafeZoneBorder = SafeZoneBorderCheckBox.Checked;
             Settings.SafeZoneHealing = SafeZoneHealingCheckBox.Checked;
             Settings.GameMasterEffect = gameMasterEffect_CheckBox.Checked;
+
+            if (Int32.TryParse(StartLevelBox.Text, out tempint))
+                Settings.StartLevel = tempint;
+            if (Int32.TryParse(StartGoldBox.Text, out tempint))
+                Settings.StartGold = tempint;
         }
 
         private void IPAddressCheck(object sender, EventArgs e)
@@ -188,6 +196,15 @@ namespace Server
         private void StartHTTPCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Settings.StartHTTPService = StartHTTPCheckBox.Checked;
+        }
+
+        private void StartLevelBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void StartGoldBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

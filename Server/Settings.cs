@@ -84,6 +84,8 @@ namespace Server
                            GatherOrbsPerLevel = true,
                            ExpMobLevelDifference = true;
 
+        public static int StartLevel = 1, StartGold = 0;
+
         //Database
         public static int SaveDelay = 5;
         public static short CredxGold = 30;
@@ -326,6 +328,8 @@ namespace Server
             //Game
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
             ExpRate = Reader.ReadSingle("Game", "ExpRate", ExpRate);
+            StartLevel = Reader.ReadInt32("Game", "StartLevel", StartLevel);
+            StartGold = Reader.ReadInt32("Game", "StartGold", StartGold);
             ItemTimeOut = Reader.ReadInt32("Game", "ItemTimeOut", ItemTimeOut);
             PlayerDiedItemTimeOut = Reader.ReadInt32("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             PetTimeOut = Reader.ReadInt64("Game", "PetTimeOut", PetTimeOut);
@@ -538,6 +542,8 @@ namespace Server
             //Game
             Reader.Write("Game", "DropRate", DropRate);
             Reader.Write("Game", "ExpRate", ExpRate);
+            Reader.Write("Game", "StartLevel", StartLevel);
+            Reader.Write("Game", "StartGold", StartGold);
             Reader.Write("Game", "ItemTimeOut", ItemTimeOut);
             Reader.Write("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             Reader.Write("Game", "PetTimeOut", PetTimeOut);
