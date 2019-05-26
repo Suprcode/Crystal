@@ -25,7 +25,8 @@ namespace Server
                             NameListPath = EnvirPath + @".\NameLists\",
                             ValuePath = EnvirPath + @".\Values\",
                             ReportPath = @".\Reports\",
-                            LogPath = @".\Logs\";
+                            LogPath = @".\Logs\",
+                            ErrorPath = LogPath + @".\Errors\";
 
 
 
@@ -432,6 +433,8 @@ namespace Server
                 Directory.CreateDirectory(NameListPath);
             if (!Directory.Exists(LogPath))
                 Directory.CreateDirectory(LogPath);
+            if (!Directory.Exists(ErrorPath))
+                Directory.CreateDirectory(ErrorPath);
             if (!Directory.Exists(ReportPath))
                 Directory.CreateDirectory(ReportPath);
             if (!Directory.Exists(RecipePath))
