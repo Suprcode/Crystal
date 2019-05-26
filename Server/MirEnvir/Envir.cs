@@ -196,7 +196,6 @@ namespace Server.MirEnvir
                     DisabledCharNames.Add(lines[i].ToUpper());
                 }
             }
-            http = new HttpServer();
         }
 
         public static int LastCount = 0, LastRealCount = 0;
@@ -1845,7 +1844,10 @@ namespace Server.MirEnvir
                     MobThreading[i].Interrupt();
                 }
             }
-                http.Stop();        
+            if (http!=null)
+            {
+                http.Stop();
+            }                     
 
                 while (_thread != null)
                     Thread.Sleep(1);
