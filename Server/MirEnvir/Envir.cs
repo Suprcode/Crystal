@@ -168,7 +168,7 @@ namespace Server.MirEnvir
         public List<Rank_Character_Info> RankTop = new List<Rank_Character_Info>();
         public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[5];
         public int[] RankBottomLevel = new int[6];
-
+        static HttpServer http;
         static Envir()
         {
             AccountIDReg =
@@ -526,7 +526,11 @@ namespace Server.MirEnvir
                 }
 
                 StartNetwork();
-
+                if (Settings.StartHTTPService)
+                {
+                    http = new HttpServer();
+                    http.Start();
+                }               
                 try
                 {
                     while (Running)
@@ -678,7 +682,7 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    File.AppendAllText(@".\Error.txt",
+                    File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                            string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
                 }
 
@@ -699,7 +703,7 @@ namespace Server.MirEnvir
                 var line = frame.GetFileLineNumber();
 
                 SMain.Enqueue("[outer workloop error]" + ex);
-                File.AppendAllText(@".\Error.txt",
+                File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
             }
             _thread = null;
@@ -776,7 +780,7 @@ namespace Server.MirEnvir
                 if (ex is ThreadInterruptedException) return;
                 SMain.Enqueue(ex);
 
-                File.AppendAllText(@".\Error.txt",
+                File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
             //Info.Stop = true;
@@ -1840,7 +1844,10 @@ namespace Server.MirEnvir
                     MobThreading[i].Interrupt();
                 }
             }
-
+            if (http!=null)
+            {
+                http.Stop();
+            }                     
 
                 while (_thread != null)
                     Thread.Sleep(1);
@@ -2166,6 +2173,56 @@ namespace Server.MirEnvir
                 c.Enqueue(new ServerPackets.NewAccount {Result = 8});
             }
         }
+
+        public int HTTPNewAccount(ClientPackets.NewAccount p, string ip)
+        {
+            if (!Settings.AllowNewAccount)
+            {                
+                return 0;
+            }
+
+            if (!AccountIDReg.IsMatch(p.AccountID))
+            {
+                return 1;
+            }
+
+            if (!PasswordReg.IsMatch(p.Password))
+            {
+                return 2;
+            }
+            if (!string.IsNullOrWhiteSpace(p.EMailAddress) && !EMailReg.IsMatch(p.EMailAddress) ||
+                p.EMailAddress.Length > 50)
+            {
+                return 3;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.UserName) && p.UserName.Length > 20)
+            {
+                return 4;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.SecretQuestion) && p.SecretQuestion.Length > 30)
+            {
+                return 5;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.SecretAnswer) && p.SecretAnswer.Length > 30)
+            {
+                return 6;
+            }
+
+            lock (AccountLock)
+            {
+                if (AccountExists(p.AccountID))
+                {
+                    return 7;
+                }
+
+                AccountList.Add(new AccountInfo(p) { Index = ++NextAccountID, CreationIP = ip });
+                return 8;
+            }
+        }
+
         public void ChangePassword(ClientPackets.ChangePassword p, MirConnection c)
         {
             if (!Settings.AllowChangePassword)
@@ -2303,6 +2360,56 @@ namespace Server.MirEnvir
             SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
+
+        public int HTTPLogin(string AccountID, string Password)
+        {
+            if (!Settings.AllowLogin)
+            {
+                return 0;
+            }
+
+            if (!AccountIDReg.IsMatch(AccountID))
+            {
+                return 1;
+            }
+
+            if (!PasswordReg.IsMatch(Password))
+            {
+                return 2;
+            }
+
+            AccountInfo account = GetAccount(AccountID);
+
+            if (account == null)
+            {
+                return 3;
+            }
+
+            if (account.Banned)
+            {
+                if (account.ExpiryDate > DateTime.Now)
+                {
+                    return 4;
+                }
+                account.Banned = false;
+            }
+            account.BanReason = string.Empty;
+            account.ExpiryDate = DateTime.MinValue;
+            if (String.CompareOrdinal(account.Password, Password) != 0)
+            {
+                if (account.WrongPasswordCount++ >= 5)
+                {
+                    account.Banned = true;
+                    account.BanReason = "Too many Wrong Login Attempts.";
+                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
+                    return 5;
+                }
+                return 6;
+            }
+            account.WrongPasswordCount = 0;
+            return 7;
+        }
+
         public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c, bool IsGm)
         {
             if (!Settings.AllowNewCharacter)

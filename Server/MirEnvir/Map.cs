@@ -765,7 +765,7 @@ namespace Server.MirEnvir
                         {
                             respawn.ErrorCount++;
 
-                            File.AppendAllText(@".\SpawnErrors.txt",
+                            File.AppendAllText(Settings.ErrorPath + "SpawnErrors.txt",
                                 String.Format("[{5}]Failed to spawn: mapindex: {0} ,mob info: index: {1} spawncoords ({2}:{3}) range {4}", respawn.Map.Info.Index, respawn.Info.MonsterIndex, respawn.Info.Location.X, respawn.Info.Location.Y, respawn.Info.Spread, DateTime.Now)
                                        + Environment.NewLine);
                             //*/
