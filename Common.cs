@@ -6494,8 +6494,13 @@ public class GameLanguage
                          NoCreatures = "You do not own any creatures.",
                          NoMount = "You do not own a mount.",
                          NoFishingRod = "You are not holding a fishing rod.",
-                         AttemptingConnect = "Attempting to connect to the server.{0}Attempt:{1}";
+                         AttemptingConnect = "Attempting to connect to the server.{0}Attempt:{1}",
 
+                         CreatingCharactersDisabled = "Creating new characters is currently disabled.",
+                         InvalidCharacterName = "Your Character Name is not acceptable.",
+                         NoClass = "The class you selected does not exist. Contact a GM for assistance.",
+                         ToManyCharacters = "You cannot make anymore then {0} Characters.",
+                         CharacterNameExists = "A Character with this name already exists.";                       
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
@@ -6672,6 +6677,12 @@ public class GameLanguage
         GameLanguage.NoFishingRod = reader.ReadString("Language", "NoFishingRod", GameLanguage.NoFishingRod);
         GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
         GameLanguage.AttemptingConnect = reader.ReadString("Language", "AttemptingConnect", GameLanguage.AttemptingConnect);
+
+        GameLanguage.CreatingCharactersDisabled = reader.ReadString("Language", "CreatingCharactersDisabled", GameLanguage.CreatingCharactersDisabled);
+        GameLanguage.InvalidCharacterName = reader.ReadString("Language", "InvalidCharacterName", GameLanguage.InvalidCharacterName);
+        GameLanguage.NoClass = reader.ReadString("Language", "NoClass", GameLanguage.NoClass);
+        GameLanguage.ToManyCharacters = reader.ReadString("Language", "ToManyCharacters", GameLanguage.ToManyCharacters);
+        GameLanguage.CharacterNameExists = reader.ReadString("Language", "CharacterNameExists", GameLanguage.CharacterNameExists);
     }
 
 
@@ -6810,6 +6821,12 @@ public class GameLanguage
         reader.Write("Language", "NoFishingRod", GameLanguage.NoFishingRod);
         reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
         reader.Write("Language", "AttemptingConnect", GameLanguage.AttemptingConnect);
+
+        reader.Write("Language", "CreatingCharactersDisabled", GameLanguage.CreatingCharactersDisabled);
+        reader.Write("Language", "InvalidCharacterName", GameLanguage.InvalidCharacterName);
+        reader.Write("Language", "NoClass", GameLanguage.NoClass);
+        reader.Write("Language", "ToManyCharacters", GameLanguage.ToManyCharacters);
+        reader.Write("Language", "CharacterNameExists", GameLanguage.CharacterNameExists);
     }
 
 

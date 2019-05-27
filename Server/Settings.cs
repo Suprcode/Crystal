@@ -25,7 +25,8 @@ namespace Server
                             NameListPath = EnvirPath + @".\NameLists\",
                             ValuePath = EnvirPath + @".\Values\",
                             ReportPath = @".\Reports\",
-                            LogPath = @".\Logs\";
+                            LogPath = @".\Logs\",
+                            ErrorPath = LogPath + @".\Errors\";
 
 
 
@@ -59,6 +60,10 @@ namespace Server
                              RelogDelay = 50,
                              MaxIP = 5;
 
+        //HTTP
+        public static bool StartHTTPService = false;
+        public static string HTTPIPAddress = "http://127.0.0.1:5679/";
+        public static string HTTPTrustedIPAddress = "127.0.0.1:5679";
 
         //Permission
         public static bool AllowNewAccount = true,
@@ -291,6 +296,11 @@ namespace Server
             MaxUser = Reader.ReadUInt16("Network", "MaxUser", MaxUser);
             MaxIP = Reader.ReadUInt16("Network", "MaxIP", MaxIP);
 
+            //HTTP
+            StartHTTPService = Reader.ReadBoolean("Network", "StartHTTPService", StartHTTPService);
+            HTTPIPAddress = Reader.ReadString("Network", "HTTPIPAddress", HTTPIPAddress);
+            HTTPTrustedIPAddress = Reader.ReadString("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
+
             //Permission
             AllowNewAccount = Reader.ReadBoolean("Permission", "AllowNewAccount", AllowNewAccount);
             AllowChangePassword = Reader.ReadBoolean("Permission", "AllowChangePassword", AllowChangePassword);
@@ -432,6 +442,8 @@ namespace Server
                 Directory.CreateDirectory(NameListPath);
             if (!Directory.Exists(LogPath))
                 Directory.CreateDirectory(LogPath);
+            if (!Directory.Exists(ErrorPath))
+                Directory.CreateDirectory(ErrorPath);
             if (!Directory.Exists(ReportPath))
                 Directory.CreateDirectory(ReportPath);
             if (!Directory.Exists(RecipePath))
@@ -495,6 +507,11 @@ namespace Server
             Reader.Write("Network", "TimeOut", TimeOut);
             Reader.Write("Network", "MaxUser", MaxUser);
             Reader.Write("Network", "MaxIP", MaxIP);
+
+            //HTTP
+            Reader.Write("Network", "StartHTTPService", StartHTTPService);
+            Reader.Write("Network", "HTTPIPAddress", HTTPIPAddress);
+            Reader.Write("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
 
             //Permission
             Reader.Write("Permission", "AllowNewAccount", AllowNewAccount);
