@@ -302,25 +302,25 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show("Creating new characters is currently disabled.");
+                    MirMessageBox.Show(GameLanguage.CreatingCharactersDisabled);
                     _character.Dispose();
                     break;
                 case 1:
-                    MirMessageBox.Show("Your Character Name is not acceptable.");
+                    MirMessageBox.Show(GameLanguage.InvalidCharacterName);
                     _character.NameTextBox.SetFocus();
                     break;
                 case 2:
                     MirMessageBox.Show("The gender you selected does not exist.\n Contact a GM for assistance.");
                     break;
                 case 3:
-                    MirMessageBox.Show("The class you selected does not exist.\n Contact a GM for assistance.");
+                    MirMessageBox.Show(GameLanguage.NoClass);
                     break;
                 case 4:
-                    MirMessageBox.Show("You cannot make anymore then " + Globals.MaxCharacterCount + " Characters.");
+                    MirMessageBox.Show(string.Format(GameLanguage.ToManyCharacters, Globals.MaxCharacterCount));
                     _character.Dispose();
                     break;
                 case 5:
-                    MirMessageBox.Show("A Character with this name already exists.");
+                    MirMessageBox.Show(GameLanguage.CharacterNameExists);
                     _character.NameTextBox.SetFocus();
                     break;
             }

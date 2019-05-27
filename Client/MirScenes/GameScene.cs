@@ -2955,7 +2955,17 @@ namespace Client.MirScenes
                     item.Count -= p.Count;
                 break;
             }
+            for (int i = 0; i < Storage.Length; i++)
+            {
+                var item = Storage[i];
+                if (item == null || item.UniqueID != p.UniqueID) continue;
 
+                if (item.Count == p.Count)
+                    Storage[i] = null;
+                else
+                    item.Count -= p.Count;
+                break;
+            }
             User.RefreshStats();
         }
         private void Death(S.Death p)

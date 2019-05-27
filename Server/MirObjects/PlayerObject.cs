@@ -1134,6 +1134,19 @@ namespace Server.MirObjects
                 ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                 item.RentalInformation = null;
             }
+
+            for (int i = 0; i < Info.AccountInfo.Storage.Length; i++)
+            {
+                var item = Info.AccountInfo.Storage[i];
+                if (item?.ExpireInfo?.ExpiryDate <= Envir.Now)
+                {
+                    ReceiveChat($"{item.Info.FriendlyName} has just expired from your storage.", ChatType.Hint);
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Info.AccountInfo.Storage[i] = null;
+
+                    continue;
+                }
+            }
         }
 
         public override void Process(DelayedAction action)
@@ -4843,7 +4856,7 @@ namespace Server.MirObjects
 
                         if (MyGuild == null)
                         {
-                            ReceiveChat("You are not in a guild.", ChatType.System);
+                            ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                         }
 
                         if (MyGuild.Ranks[0] != MyGuildRank)
@@ -11138,7 +11151,12 @@ namespace Server.MirObjects
                     Enqueue(p);
                     return;
                 }
-
+            if (Info.Equipment[to] != null &&
+                Info.Equipment[to].Info.Bind.HasFlag(BindMode.DontStore))
+            {
+                Enqueue(p);
+                return;
+            }
 
             if (CanEquipItem(temp, to))
             {
@@ -12925,9 +12943,9 @@ namespace Server.MirObjects
                             }
                             break;
                         case 1:
-                            if (CurrentMap.Info.NoEscape)
+                            if (CurrentMap.Info.NoTownTeleport)
                             {
-                                ReceiveChat(GameLanguage.CanNotBackCity, ChatType.System);
+                                ReceiveChat(GameLanguage.NoTownTeleport, ChatType.System);
                                 return false;
                             }
                             break;
@@ -15708,7 +15726,7 @@ namespace Server.MirObjects
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
-                ReceiveChat("You are not in a guild!", ChatType.System);
+                ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                 return;
             }
             switch (ChangeType)
@@ -15824,7 +15842,7 @@ namespace Server.MirObjects
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
-                ReceiveChat("You are not in a guild!", ChatType.System);
+                ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                 return;
             }
             if (!MyGuildRank.Options.HasFlag(RankOptions.CanChangeNotice))
@@ -16359,7 +16377,10 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
-            if (cell.Objects == null || cell.Objects.Count < 1) return;
+            if (cell.Objects == null || cell.Objects.Count < 1) {
+                ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
+                return;
+            } 
 
             for (int i = 0; i < cell.Objects.Count; i++)
             {

@@ -127,7 +127,7 @@ namespace Client.MirScenes
         public override void Process()
         {
             if (!Network.Connected && _connectBox.Label != null)
-                _connectBox.Label.Text = string.Format("Attempting to connect to the server.\nAttempt:{0}", Network.ConnectAttempt);
+                _connectBox.Label.Text = string.Format(GameLanguage.AttemptingConnect,"\n\n", Network.ConnectAttempt);
         }
         public override void ProcessPacket(Packet p)
         {

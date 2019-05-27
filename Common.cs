@@ -6390,6 +6390,7 @@ public class GameLanguage
                          Menu = "Menu",
                          GameShop = "Game Shop ({0})",
                          BigMap = "BigMap ({0})",
+                         DuraPanel = "Dura Panel",
                          Mail = "Mail",
                          Exit = "Exit ({0})",
                          LogOut = "Log Out ({0})",
@@ -6408,6 +6409,10 @@ public class GameLanguage
                          ExpireNever = "Expire: Never",
                          Never = "Never",
                          Trade = "Trade ({0})",
+                         Size = "Size",
+                         ChatSettings = "Chat Settings",
+                         Rotate = "Rotate",
+                         Close = "Close ({0})",
                          GameMaster = "GameMaster",
 
                          PatchErr = "Could not get Patch Information",
@@ -6477,7 +6482,7 @@ public class GameLanguage
                          ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
                          ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
 
-                         CannotLeaveGame = "Cannot leave game for {0} seconds",                      
+                         CannotLeaveGame = "Cannot leave game for {0} seconds",
                          SelectKey = "Select the Key for: {0}",
 
                          WeaponSpiritFire = "Your weapon is glowed by spirit of fire.",
@@ -6485,17 +6490,27 @@ public class GameLanguage
                          WeddingRing = "WeddingRing",
                          WedRingName = "{0}{1}{2} {3}",
                          DropAmount = "Drop Amount:",
-                         LowMana = "Not Enough Mana to cast.";
+                         LowMana = "Not Enough Mana to cast.",
+                         NoCreatures = "You do not own any creatures.",
+                         NoMount = "You do not own a mount.",
+                         NoFishingRod = "You are not holding a fishing rod.",
+                         AttemptingConnect = "Attempting to connect to the server.{0}Attempt:{1}",
+
+                         CreatingCharactersDisabled = "Creating new characters is currently disabled.",
+                         InvalidCharacterName = "Your Character Name is not acceptable.",
+                         NoClass = "The class you selected does not exist. Contact a GM for assistance.",
+                         ToManyCharacters = "You cannot make anymore then {0} Characters.",
+                         CharacterNameExists = "A Character with this name already exists.";                       
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",
-                         WeaponNoEffect = "Curse dwells within your weapon.",
+                         WeaponNoEffect = "No effect.",
                          InventoryIncreased = "Inventory size increased.",
                          FaceToTrade =  "You must face someone to trade.",
-                         CanNotBackCity = "You cannot back to city here",
+                         NoTownTeleport = "You cannot use Town Teleports here",
                          CanNotRandom =  "You cannot use Random Teleports here",
                          CanNotDungeon = "You cannot use Dungeon Escapes here",
                          CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
@@ -6512,7 +6527,8 @@ public class GameLanguage
                          ExpandedStorageExpiresOn = "Expanded Storage Expires On",
 
                          NotFemale = "You are not Female.",
-                         NotMale = "You are not Male.";
+                         NotMale = "You are not Male.",
+                         NotInGuild = "You are not in a guild";
 
 
     public static void LoadClientLanguage(string languageIniPath)
@@ -6548,6 +6564,7 @@ public class GameLanguage
         GameLanguage.Menu = reader.ReadString("Language", "Menu", GameLanguage.Menu);
         GameLanguage.GameShop = reader.ReadString("Language", "GameShop", GameLanguage.GameShop);
         GameLanguage.BigMap = reader.ReadString("Language", "BigMap", GameLanguage.BigMap);
+        GameLanguage.DuraPanel = reader.ReadString("Language", "DuraPanel", GameLanguage.DuraPanel);
         GameLanguage.Mail = reader.ReadString("Language", "Mail", GameLanguage.Mail);
         GameLanguage.Exit = reader.ReadString("Language", "Exit", GameLanguage.Exit);
         GameLanguage.LogOut = reader.ReadString("Language", "LogOut", GameLanguage.LogOut);
@@ -6563,6 +6580,10 @@ public class GameLanguage
         GameLanguage.Groups = reader.ReadString("Language", "Groups", GameLanguage.Groups);
         GameLanguage.Guild = reader.ReadString("Language", "Guild", GameLanguage.Guild);
         GameLanguage.Trade = reader.ReadString("Language", "Trade", GameLanguage.Trade);
+        GameLanguage.Size = reader.ReadString("Language", "Size", GameLanguage.Size);
+        GameLanguage.ChatSettings = reader.ReadString("Language", "ChatSettings", GameLanguage.ChatSettings);
+        GameLanguage.Rotate = reader.ReadString("Language", "Rotate", GameLanguage.Rotate);
+        GameLanguage.Close = reader.ReadString("Language", "Close", GameLanguage.Close);
         GameLanguage.GameMaster = reader.ReadString("Language", "GameMaster", GameLanguage.GameMaster);
         GameLanguage.Expire = reader.ReadString("Language", "Expire", GameLanguage.Expire);
         GameLanguage.ExpireNever = reader.ReadString("Language", "ExpireNever", GameLanguage.ExpireNever);
@@ -6651,6 +6672,17 @@ public class GameLanguage
 
         GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
         GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
+        GameLanguage.NoCreatures = reader.ReadString("Language", "NoCreatures", GameLanguage.NoCreatures);
+        GameLanguage.NoMount = reader.ReadString("Language", "NoMount", GameLanguage.NoMount);
+        GameLanguage.NoFishingRod = reader.ReadString("Language", "NoFishingRod", GameLanguage.NoFishingRod);
+        GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
+        GameLanguage.AttemptingConnect = reader.ReadString("Language", "AttemptingConnect", GameLanguage.AttemptingConnect);
+
+        GameLanguage.CreatingCharactersDisabled = reader.ReadString("Language", "CreatingCharactersDisabled", GameLanguage.CreatingCharactersDisabled);
+        GameLanguage.InvalidCharacterName = reader.ReadString("Language", "InvalidCharacterName", GameLanguage.InvalidCharacterName);
+        GameLanguage.NoClass = reader.ReadString("Language", "NoClass", GameLanguage.NoClass);
+        GameLanguage.ToManyCharacters = reader.ReadString("Language", "ToManyCharacters", GameLanguage.ToManyCharacters);
+        GameLanguage.CharacterNameExists = reader.ReadString("Language", "CharacterNameExists", GameLanguage.CharacterNameExists);
     }
 
 
@@ -6683,6 +6715,7 @@ public class GameLanguage
         reader.Write("Language", "Menu", GameLanguage.Menu);
         reader.Write("Language", "GameShop", GameLanguage.GameShop);
         reader.Write("Language", "BigMap", GameLanguage.BigMap);
+        reader.Write("Language", "DuraPanel", GameLanguage.DuraPanel);
         reader.Write("Language", "Mail", GameLanguage.Mail);
         reader.Write("Language", "Exit", GameLanguage.Exit);
         reader.Write("Language", "LogOut", GameLanguage.LogOut);
@@ -6698,6 +6731,10 @@ public class GameLanguage
         reader.Write("Language", "Groups", GameLanguage.Groups);
         reader.Write("Language", "Guild", GameLanguage.Guild);
         reader.Write("Language", "Trade", GameLanguage.Trade);
+        reader.Write("Language", "Size", GameLanguage.Size);
+        reader.Write("Language", "ChatSettings", GameLanguage.ChatSettings);
+        reader.Write("Language", "Rotate", GameLanguage.Rotate);
+        reader.Write("Language", "Close", GameLanguage.Close);
         reader.Write("Language", "GameMaster", GameLanguage.GameMaster);
 
 
@@ -6779,6 +6816,17 @@ public class GameLanguage
 
         reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
         reader.Write("Language", "NotMale", GameLanguage.NotMale);
+        reader.Write("Language", "NoCreatures", GameLanguage.NoCreatures);
+        reader.Write("Language", "NoMount", GameLanguage.NoMount);
+        reader.Write("Language", "NoFishingRod", GameLanguage.NoFishingRod);
+        reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
+        reader.Write("Language", "AttemptingConnect", GameLanguage.AttemptingConnect);
+
+        reader.Write("Language", "CreatingCharactersDisabled", GameLanguage.CreatingCharactersDisabled);
+        reader.Write("Language", "InvalidCharacterName", GameLanguage.InvalidCharacterName);
+        reader.Write("Language", "NoClass", GameLanguage.NoClass);
+        reader.Write("Language", "ToManyCharacters", GameLanguage.ToManyCharacters);
+        reader.Write("Language", "CharacterNameExists", GameLanguage.CharacterNameExists);
     }
 
 
@@ -6808,7 +6856,7 @@ public class GameLanguage
         GameLanguage.ExpandedStorageExpiresOn = reader.ReadString("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         GameLanguage.GameName = reader.ReadString("Language", "GameName", GameLanguage.GameName);
         GameLanguage.FaceToTrade = reader.ReadString("Language", "FaceToTrade", GameLanguage.FaceToTrade);
-        GameLanguage.CanNotBackCity = reader.ReadString("Language", "CanNotBackCity", GameLanguage.CanNotBackCity);
+        GameLanguage.NoTownTeleport = reader.ReadString("Language", "NoTownTeleport", GameLanguage.NoTownTeleport);
         GameLanguage.CanNotRandom = reader.ReadString("Language", "CanNotRandom", GameLanguage.CanNotRandom);
         GameLanguage.CanNotDungeon = reader.ReadString("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
         GameLanguage.CannotResurrection = reader.ReadString("Language", "CannotResurrection", GameLanguage.CannotResurrection);
@@ -6816,6 +6864,7 @@ public class GameLanguage
 
         GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
         GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
+        GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6840,7 +6889,7 @@ public class GameLanguage
         reader.Write("Language", "ExpandedStorageExpiresOn", GameLanguage.ExpandedStorageExpiresOn);
         reader.Write("Language", "GameName", GameLanguage.GameName);
         reader.Write("Language", "FaceToTrade", GameLanguage.FaceToTrade);
-        reader.Write("Language", "CanNotBackCity", GameLanguage.CanNotBackCity);
+        reader.Write("Language", "NoTownTeleport", GameLanguage.NoTownTeleport);
         reader.Write("Language", "CanNotRandom", GameLanguage.CanNotRandom);
         reader.Write("Language", "CanNotDungeon", GameLanguage.CanNotDungeon);
         reader.Write("Language", "CannotResurrection", GameLanguage.CannotResurrection);
@@ -6848,5 +6897,6 @@ public class GameLanguage
 
         reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
         reader.Write("Language", "NotMale", GameLanguage.NotMale);
+        reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
     }
 }

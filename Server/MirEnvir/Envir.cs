@@ -682,7 +682,7 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    File.AppendAllText(@".\Error.txt",
+                    File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                            string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
                 }
 
@@ -703,7 +703,7 @@ namespace Server.MirEnvir
                 var line = frame.GetFileLineNumber();
 
                 SMain.Enqueue("[outer workloop error]" + ex);
-                File.AppendAllText(@".\Error.txt",
+                File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
             }
             _thread = null;
@@ -780,7 +780,7 @@ namespace Server.MirEnvir
                 if (ex is ThreadInterruptedException) return;
                 SMain.Enqueue(ex);
 
-                File.AppendAllText(@".\Error.txt",
+                File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
             //Info.Stop = true;

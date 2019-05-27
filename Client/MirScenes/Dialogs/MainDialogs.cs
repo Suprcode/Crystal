@@ -1145,7 +1145,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(Settings.Resolution != 800 ? 574 : 350, 1),
                 Visible = true,
                 Sound = SoundList.ButtonA,
-                Hint = "Size"
+                Hint = GameLanguage.Size
             };
             SizeButton.Click += (o, e) =>
             {
@@ -1164,7 +1164,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 596 : 372, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Chat Settings"
+                Hint = GameLanguage.ChatSettings
             };
             SettingsButton.Click += (o, e) =>
             {
@@ -1800,7 +1800,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1928,
                 Sound = SoundList.ButtonA,
-                Hint = "Rotate"
+                Hint = GameLanguage.Rotate
             };
             RotateButton.Click += (o, e) => Flip();
 
@@ -1813,7 +1813,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1925,
                 Sound = SoundList.ButtonA,
-                Hint = "Close (" + CMain.InputKeys.GetKey(KeybindOptions.Belt) + ")"
+                Hint = string.Format(GameLanguage.Close, CMain.InputKeys.GetKey(KeybindOptions.Belt))
             };
             CloseButton.Click += (o, e) => Hide();
 
@@ -4903,7 +4903,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 2111,
                 PressedIndex = 2112,
                 Sound = SoundList.ButtonA,
-                Hint = "Dura Panel"
+                Hint = GameLanguage.DuraPanel
             };
             Character.Click += (o, e) =>
             {
