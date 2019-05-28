@@ -399,8 +399,9 @@ namespace Server.MirObjects
         public abstract int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
         public abstract int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility);
 
-        public virtual void GetArmour(DefenceType type, MapObject attacker, out bool hit, ref int armour)
+        public virtual int GetArmour(DefenceType type, MapObject attacker, out bool hit)
         {
+            var armour = 0;
             hit = true;
             switch (type)
             {
@@ -444,6 +445,7 @@ namespace Server.MirObjects
                     }
                     break;
             }
+            return armour;
         }
 
         public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort LevelOffset)

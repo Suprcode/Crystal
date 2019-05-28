@@ -10068,31 +10068,31 @@ namespace Server.MirObjects
         }
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-            int armour = 0;
 
-                for (int i = 0; i < Buffs.Count; i++)
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                switch (Buffs[i].Type)
                 {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                        case BuffType.EnergyShield:
-                            int rate = Buffs[i].Values[0];
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
 
-                            if (Envir.Random.Next(rate) == 0)
-                            {
-                            if (HP + ( (ushort)Buffs[i].Values[1] ) >= MaxHP)
-                                    SetHP(MaxHP);
-                                else
-                                    ChangeHP(Buffs[i].Values[1]);
-                            }
-                            break;
-                    }
+                        if (Envir.Random.Next(rate) == 0)
+                        {
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                SetHP(MaxHP);
+                            else
+                                ChangeHP(Buffs[i].Values[1]);
+                        }
+                        break;
                 }
+            }
 
-            GetArmour(type, attacker, out bool hit, ref armour);
+            var armour = GetArmour(type, attacker, out bool hit);
             if (!hit)
                 return 0;
 
@@ -10195,31 +10195,29 @@ namespace Server.MirObjects
         }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
-            int armour = 0;
-
-                for (int i = 0; i < Buffs.Count; i++)
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                switch (Buffs[i].Type)
                 {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                        case BuffType.EnergyShield:
-                            int rate = Buffs[i].Values[0];
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
 
-                            if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
-                            {
-                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                    SetHP(MaxHP);
-                                else
-                                    ChangeHP(Buffs[i].Values[1]);
-                            }
-                            break;
-                    }
+                        if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
+                        {
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                SetHP(MaxHP);
+                            else
+                                ChangeHP(Buffs[i].Values[1]);
+                        }
+                        break;
                 }
+            }
 
-            GetArmour(type, attacker, out bool hit, ref armour);
+            var armour = GetArmour(type, attacker, out bool hit);
             if (!hit)
                 return 0;
 

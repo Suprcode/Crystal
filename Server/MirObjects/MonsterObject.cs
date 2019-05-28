@@ -1954,9 +1954,7 @@ namespace Server.MirObjects
                 Target = attacker;
             }
 
-            int armour = 0;
-
-            GetArmour(type, attacker, out bool hit, ref armour);
+            var armour = GetArmour(type, attacker, out bool hit);
             if (!hit)
                 return 0;
 
@@ -2071,9 +2069,8 @@ namespace Server.MirObjects
             if (Target == null && attacker.IsAttackTarget(this))
                 Target = attacker;
 
-            int armour = 0;
-
-            GetArmour(type, attacker, out bool hit, ref armour);
+            
+            var armour = GetArmour(type, attacker, out bool hit);
             if (!hit)
                 return 0;
 
