@@ -67,7 +67,7 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <DebugSymbols>false</DebugSymbols>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <LangVersion>4</LangVersion>
+    <LangVersion>6</LangVersion>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
