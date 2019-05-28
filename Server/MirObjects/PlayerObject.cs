@@ -6059,10 +6059,7 @@ namespace Server.MirObjects
                 if (magic != null)
                 {
                     if (FatalSword)
-                    {
                         damageFinal = magic.GetDamage(damageBase);
-                        LevelMagic(magic);
-                    }
 
                     if (!FatalSword && Envir.Random.Next(10) == 0)
                         FatalSword = true;
@@ -9413,6 +9410,8 @@ namespace Server.MirObjects
                 S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.FatalSword };
                 CurrentMap.Broadcast(p, target.CurrentLocation);
                 FatalSword = false;
+                var magic = GetMagic(Spell.FatalSword);
+                if (magic != null) LevelMagic(magic);
             }
             if (userMagic != null && finalHit)
             {
@@ -10069,72 +10068,33 @@ namespace Server.MirObjects
         }
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-            int armour = 0;
 
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                        case BuffType.EnergyShield:
-                            int rate = Buffs[i].Values[0];
 
-                            if (Envir.Random.Next(rate) == 0)
-                            {
-                            if (HP + ( (ushort)Buffs[i].Values[1] ) >= MaxHP)
-                                    SetHP(MaxHP);
-                                else
-                                    ChangeHP(Buffs[i].Values[1]);
-                            }
-                            break;
-                    }
-                }
-
-            switch (type)
+            for (int i = 0; i < Buffs.Count; i++)
             {
-                case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    armour = GetDefencePower(MinAC, MaxAC);
-                    break;
-                case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
-                    break;
-                case DefenceType.MACAgility:
-                    if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist))
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
-                    break;
-                case DefenceType.MAC:
-                    if ((Settings.PvpCanResistMagic) && (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist))
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
-                    break;
-                case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    break;
+                switch (Buffs[i].Type)
+                {
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
+
+                        if (Envir.Random.Next(rate) == 0)
+                        {
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                SetHP(MaxHP);
+                            else
+                                ChangeHP(Buffs[i].Values[1]);
+                        }
+                        break;
+                }
             }
+
+            var armour = GetArmour(type, attacker, out bool hit);
+            if (!hit)
+                return 0;
 
             armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
             damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
@@ -10215,21 +10175,7 @@ namespace Server.MirObjects
 
             ushort LevelOffset = (byte)(Level > attacker.Level ? 0 : Math.Min(10, attacker.Level - Level));
 
-            if (attacker.HasParalysisRing && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
-            {
-                ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
-            }
-            if ((attacker.Freezing > 0) && (Settings.PvpCanFreeze) && type != DefenceType.MAC && type != DefenceType.MACAgility)
-            {
-                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Freezing) && (Envir.Random.Next(LevelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Freezing))), TickSpeed = 1000 }, attacker);
-            }
-
-            if (attacker.PoisonAttack > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
-            {
-                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.PoisonAttack) && (Envir.Random.Next(LevelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.PoisonAttack)) }, attacker);
-            }
+            ApplyNegativeEffects(attacker, type, LevelOffset);
 
             attacker.GatherElement();
 
@@ -10249,71 +10195,31 @@ namespace Server.MirObjects
         }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
-            int armour = 0;
-
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                        case BuffType.EnergyShield:
-                            int rate = Buffs[i].Values[0];
-
-                            if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
-                            {
-                                if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                    SetHP(MaxHP);
-                                else
-                                    ChangeHP(Buffs[i].Values[1]);
-                            }
-                            break;
-                    }
-                }
-
-            switch (type)
+            for (int i = 0; i < Buffs.Count; i++)
             {
-                case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    armour = GetDefencePower(MinAC, MaxAC);
-                    break;
-                case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
-                    break;
-                case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
-                    {
-                        return 0;
-                    }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
-                    break;
-                case DefenceType.MAC:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
-                    break;
-                case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
-                    {
-                        BroadcastDamageIndicator(DamageType.Miss);
-                        return 0;
-                    }
-                    break;
+                switch (Buffs[i].Type)
+                {
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
+
+                        if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
+                        {
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                SetHP(MaxHP);
+                            else
+                                ChangeHP(Buffs[i].Values[1]);
+                        }
+                        break;
+                }
             }
+
+            var armour = GetArmour(type, attacker, out bool hit);
+            if (!hit)
+                return 0;
 
             if (Envir.Random.Next(100) < Reflect)
             {
