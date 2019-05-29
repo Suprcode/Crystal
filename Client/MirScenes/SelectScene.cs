@@ -519,7 +519,7 @@ namespace Client.MirScenes
         #endregion
         public sealed class NewCharacterDialog : MirImageControl
         {
-            private static readonly Regex Reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+            private static readonly Regex Reg = new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
 
             public MirImageControl TitleLabel;
             public MirAnimatedControl CharacterDisplay;
