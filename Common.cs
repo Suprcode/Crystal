@@ -6514,7 +6514,15 @@ public class GameLanguage
                                         " multiple enemies due to their weak vitality and strength.",
                          ArcherDes = "Archers are a class of great accuracy and strength, using their powerful skills with bows to deal extraordinary damage from range. Much like" +
                                         " wizards, they rely on their keen instincts to dodge oncoming attacks as they tend to leave themselves open to frontal attacks. However, their" +
-                                        " physical prowess and deadly aim allows them to instil fear into anyone they hit.";
+                                        " physical prowess and deadly aim allows them to instil fear into anyone they hit.",
+                         DateSent = "Date Sent : {0}",
+                         Send = "Send",
+                         Reply = "Reply",
+                         Read = "Read",
+                         Delete = "Delete",
+                         BlockList = "Block List",
+                         EnterMailToName = "Please enter the name of the person you would like to mail.";
+                        
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
@@ -6527,7 +6535,9 @@ public class GameLanguage
                          CanNotRandom =  "You cannot use Random Teleports here",
                          CanNotDungeon = "You cannot use Dungeon Escapes here",
                          CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
-                         CanNotDrop = "You cannot drop items on this map";
+                         CanNotDrop = "You cannot drop items on this map",
+                         NewMail = "New mail has arrived.",
+                         CouldNotFindPlayer = "Could not find player {0}";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6701,6 +6711,14 @@ public class GameLanguage
         GameLanguage.TaoistDes = reader.ReadString("Language", "TaoistDes", GameLanguage.TaoistDes);
         GameLanguage.AssassinDes = reader.ReadString("Language", "AssassinDes", GameLanguage.AssassinDes);
         GameLanguage.ArcherDes = reader.ReadString("Language", "ArcherDes", GameLanguage.ArcherDes);
+
+        GameLanguage.DateSent = reader.ReadString("Language", "DateSent", GameLanguage.DateSent);
+        GameLanguage.Send = reader.ReadString("Language", "Send", GameLanguage.Send);
+        GameLanguage.Reply = reader.ReadString("Language", "Reply", GameLanguage.Reply);
+        GameLanguage.Read = reader.ReadString("Language", "Read", GameLanguage.Read);
+        GameLanguage.Delete = reader.ReadString("Language", "Delete", GameLanguage.Delete);
+        GameLanguage.BlockList = reader.ReadString("Language", "BlockList", GameLanguage.BlockList);
+        GameLanguage.EnterMailToName = reader.ReadString("Language", "EnterMailToName", GameLanguage.EnterMailToName);    
     }
 
 
@@ -6850,6 +6868,14 @@ public class GameLanguage
         reader.Write("Language", "TaoistDes", GameLanguage.TaoistDes);
         reader.Write("Language", "AssassinDes", GameLanguage.AssassinDes);
         reader.Write("Language", "ArcherDes", GameLanguage.ArcherDes);
+
+        reader.Write("Language", "DateSent", GameLanguage.DateSent);
+        reader.Write("Language", "Send", GameLanguage.Send);
+        reader.Write("Language", "Reply", GameLanguage.Reply);
+        reader.Write("Language", "Read", GameLanguage.Read);
+        reader.Write("Language", "Delete", GameLanguage.Delete);
+        reader.Write("Language", "BlockList", GameLanguage.BlockList);
+        reader.Write("Language", "EnterMailToName", GameLanguage.EnterMailToName);
     }
 
 
@@ -6888,6 +6914,8 @@ public class GameLanguage
         GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
         GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
         GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
+        GameLanguage.NewMail = reader.ReadString("Language", "NewMail", GameLanguage.NewMail);
+        GameLanguage.CouldNotFindPlayer = reader.ReadString("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6921,5 +6949,7 @@ public class GameLanguage
         reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
         reader.Write("Language", "NotMale", GameLanguage.NotMale);
         reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
+        reader.Write("Language", "NewMail", GameLanguage.NewMail);
+        reader.Write("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
     }
 }
