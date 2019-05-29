@@ -6464,8 +6464,7 @@ public class GameLanguage
                          Password = "Password",
 
                          ShuttingDown = "Disconnected: Server is shutting down.",
-                         MaxCombine = "Max Combine Count : {0}{1}",
-                         SplitStack = "Shift + Left click to split the stack",
+                         MaxCombine = "Max Combine Count : {0}{1}Shift + Left click to split the stack",
                          Count = " Count {0}",
                          ExtraSlots8 = "Are you sure you would like to buy 8 extra slots for 1,000,000 gold?" +
                          "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.",
@@ -6500,8 +6499,30 @@ public class GameLanguage
                          InvalidCharacterName = "Your Character Name is not acceptable.",
                          NoClass = "The class you selected does not exist. Contact a GM for assistance.",
                          ToManyCharacters = "You cannot make anymore then {0} Characters.",
-                         CharacterNameExists = "A Character with this name already exists.";                       
-
+                         CharacterNameExists = "A Character with this name already exists.",
+                         WarriorsDes = "Warriors are a class of great strength and vitality. They are not easily killed in battle and have the advantage of being able to use" +
+                                        " a variety of heavy weapons and Armour. Therefore, Warriors favor attacks that are based on melee physical damage. They are weak in ranged" +
+                                        " attacks, however the variety of equipment that are developed specifically for Warriors complement their weakness in ranged combat.",
+                         WizardDes = "Wizards are a class of low strength and stamina, but have the ability to use powerful spells. Their offensive spells are very effective, but" +
+                                        " because it takes time to cast these spells, they're likely to leave themselves open for enemy's attacks. Therefore, the physically weak wizards" +
+                                        " must aim to attack their enemies from a safe distance.",
+                         TaoistDes = "Taoists are well disciplined in the study of Astronomy, Medicine, and others aside from Mu-Gong. Rather then directly engaging the enemies, their" +
+                                        " specialty lies in assisting their allies with support. Taoists can summon powerful creatures and have a high resistance to magic, and is a class" +
+                                        " with well balanced offensive and defensive abilities.",
+                         AssassinDes = "Assassins are members of a secret organization and their history is relatively unknown. They're capable of hiding themselves and performing attacks" +
+                                        " while being unseen by others, which naturally makes them excellent at making fast kills. It is necessary for them to avoid being in battles with" +
+                                        " multiple enemies due to their weak vitality and strength.",
+                         ArcherDes = "Archers are a class of great accuracy and strength, using their powerful skills with bows to deal extraordinary damage from range. Much like" +
+                                        " wizards, they rely on their keen instincts to dodge oncoming attacks as they tend to leave themselves open to frontal attacks. However, their" +
+                                        " physical prowess and deadly aim allows them to instil fear into anyone they hit.",
+                         DateSent = "Date Sent : {0}",
+                         Send = "Send",
+                         Reply = "Reply",
+                         Read = "Read",
+                         Delete = "Delete",
+                         BlockList = "Block List",
+                         EnterMailToName = "Please enter the name of the person you would like to mail.";
+                        
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
@@ -6514,7 +6535,9 @@ public class GameLanguage
                          CanNotRandom =  "You cannot use Random Teleports here",
                          CanNotDungeon = "You cannot use Dungeon Escapes here",
                          CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
-                         CanNotDrop = "You cannot drop items on this map";
+                         CanNotDrop = "You cannot drop items on this map",
+                         NewMail = "New mail has arrived.",
+                         CouldNotFindPlayer = "Could not find player {0}";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6644,7 +6667,6 @@ public class GameLanguage
         GameLanguage.ShuttingDown = reader.ReadString("Language", "ShuttingDown", GameLanguage.ShuttingDown);
 
         GameLanguage.MaxCombine = reader.ReadString("Language", "MaxCombine", GameLanguage.MaxCombine);
-        GameLanguage.SplitStack = reader.ReadString("Language", "SplitStack", GameLanguage.SplitStack);
         GameLanguage.Count = reader.ReadString("Language", "Count", GameLanguage.Count);
         GameLanguage.ExtraSlots8 = reader.ReadString("Language", "ExtraSlots8", GameLanguage.ExtraSlots8);
         GameLanguage.ExtraSlots4 = reader.ReadString("Language", "ExtraSlots4", GameLanguage.ExtraSlots4);
@@ -6683,6 +6705,20 @@ public class GameLanguage
         GameLanguage.NoClass = reader.ReadString("Language", "NoClass", GameLanguage.NoClass);
         GameLanguage.ToManyCharacters = reader.ReadString("Language", "ToManyCharacters", GameLanguage.ToManyCharacters);
         GameLanguage.CharacterNameExists = reader.ReadString("Language", "CharacterNameExists", GameLanguage.CharacterNameExists);
+
+        GameLanguage.WarriorsDes = reader.ReadString("Language", "WarriorsDes", GameLanguage.WarriorsDes);
+        GameLanguage.WizardDes = reader.ReadString("Language", "WizardDes", GameLanguage.WizardDes);
+        GameLanguage.TaoistDes = reader.ReadString("Language", "TaoistDes", GameLanguage.TaoistDes);
+        GameLanguage.AssassinDes = reader.ReadString("Language", "AssassinDes", GameLanguage.AssassinDes);
+        GameLanguage.ArcherDes = reader.ReadString("Language", "ArcherDes", GameLanguage.ArcherDes);
+
+        GameLanguage.DateSent = reader.ReadString("Language", "DateSent", GameLanguage.DateSent);
+        GameLanguage.Send = reader.ReadString("Language", "Send", GameLanguage.Send);
+        GameLanguage.Reply = reader.ReadString("Language", "Reply", GameLanguage.Reply);
+        GameLanguage.Read = reader.ReadString("Language", "Read", GameLanguage.Read);
+        GameLanguage.Delete = reader.ReadString("Language", "Delete", GameLanguage.Delete);
+        GameLanguage.BlockList = reader.ReadString("Language", "BlockList", GameLanguage.BlockList);
+        GameLanguage.EnterMailToName = reader.ReadString("Language", "EnterMailToName", GameLanguage.EnterMailToName);    
     }
 
 
@@ -6788,7 +6824,6 @@ public class GameLanguage
         reader.Write("Language", "ShuttingDown", GameLanguage.ShuttingDown);
 
         reader.Write("Language", "MaxCombine", GameLanguage.MaxCombine);
-        reader.Write("Language", "SplitStack", GameLanguage.SplitStack);
         reader.Write("Language", "Count", GameLanguage.Count);
         reader.Write("Language", "ExtraSlots8", GameLanguage.ExtraSlots8);
         reader.Write("Language", "ExtraSlots4", GameLanguage.ExtraSlots4);
@@ -6827,6 +6862,20 @@ public class GameLanguage
         reader.Write("Language", "NoClass", GameLanguage.NoClass);
         reader.Write("Language", "ToManyCharacters", GameLanguage.ToManyCharacters);
         reader.Write("Language", "CharacterNameExists", GameLanguage.CharacterNameExists);
+
+        reader.Write("Language", "WarriorsDes", GameLanguage.WarriorsDes);
+        reader.Write("Language", "WizardDes", GameLanguage.WizardDes);
+        reader.Write("Language", "TaoistDes", GameLanguage.TaoistDes);
+        reader.Write("Language", "AssassinDes", GameLanguage.AssassinDes);
+        reader.Write("Language", "ArcherDes", GameLanguage.ArcherDes);
+
+        reader.Write("Language", "DateSent", GameLanguage.DateSent);
+        reader.Write("Language", "Send", GameLanguage.Send);
+        reader.Write("Language", "Reply", GameLanguage.Reply);
+        reader.Write("Language", "Read", GameLanguage.Read);
+        reader.Write("Language", "Delete", GameLanguage.Delete);
+        reader.Write("Language", "BlockList", GameLanguage.BlockList);
+        reader.Write("Language", "EnterMailToName", GameLanguage.EnterMailToName);
     }
 
 
@@ -6865,6 +6914,8 @@ public class GameLanguage
         GameLanguage.NotFemale = reader.ReadString("Language", "NotFemale", GameLanguage.NotFemale);
         GameLanguage.NotMale = reader.ReadString("Language", "NotMale", GameLanguage.NotMale);
         GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
+        GameLanguage.NewMail = reader.ReadString("Language", "NewMail", GameLanguage.NewMail);
+        GameLanguage.CouldNotFindPlayer = reader.ReadString("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6898,5 +6949,7 @@ public class GameLanguage
         reader.Write("Language", "NotFemale", GameLanguage.NotFemale);
         reader.Write("Language", "NotMale", GameLanguage.NotMale);
         reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
+        reader.Write("Language", "NewMail", GameLanguage.NewMail);
+        reader.Write("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
     }
 }

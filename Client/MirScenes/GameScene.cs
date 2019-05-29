@@ -7756,7 +7756,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(GameLanguage.MaxCombine, realItem.StackSize, GameLanguage.SplitStack)
+                    Text = string.Format(GameLanguage.MaxCombine, realItem.StackSize, "\n")
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SPLITUPLabel.DisplayRectangle.Right + 4),
@@ -7996,7 +7996,7 @@ namespace Client.MirScenes
                 Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
                 OutLine = true,
                 Parent = MailLabel,
-                Text = "Date Sent : " + mail.DateSent.ToString("dd/MM/yy H:mm:ss")
+                Text = string.Format(GameLanguage.DateSent, mail.DateSent.ToString("dd/MM/yy H:mm:ss"))
             };
 
             MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, dateLabel.DisplayRectangle.Right + 4),

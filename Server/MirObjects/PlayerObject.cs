@@ -662,7 +662,7 @@ namespace Server.MirObjects
 
             if (NewMail)
             {
-                ReceiveChat("New mail has arrived.", ChatType.System);
+                ReceiveChat(GameLanguage.NewMail, ChatType.System);
 
                 GetMail();
             }
@@ -17351,7 +17351,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(string.Format("Could not find player {0}", name), ChatType.System);
+                ReceiveChat(string.Format(GameLanguage.CouldNotFindPlayer, name), ChatType.System);
                 return;
             }
 
@@ -17384,7 +17384,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(string.Format("Could not find player {0}", name), ChatType.System);
+                ReceiveChat(string.Format(GameLanguage.CouldNotFindPlayer, name), ChatType.System);
                 return;
             }
 
