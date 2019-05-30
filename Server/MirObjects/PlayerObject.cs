@@ -16,6 +16,9 @@ namespace Server.MirObjects
 {
     public sealed class PlayerObject : MapObject
     {
+        private long NextTradeTime;
+        private long NextGroupInviteTime;
+
         public string GMPassword = Settings.GMPassword;
         public bool IsGM, GMLogin, GMNeverDie, GMGameMaster, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor, HasMapShout, HasServerShout;
 
@@ -15293,6 +15296,8 @@ namespace Server.MirObjects
         }
         public void AddMember(string name)
         {
+            if (Envir.Time < NextGroupInviteTime) return;
+            NextGroupInviteTime = Envir.Time + Settings.GroupInviteDelay;
             if (GroupMembers != null && GroupMembers[0] != this)
             {
                 ReceiveChat("You are not the group leader.", ChatType.System);
@@ -16271,8 +16276,13 @@ namespace Server.MirObjects
             Enqueue(p);
         }
 
+        
+
         public void TradeRequest()
         {
+            if (Envir.Time < NextTradeTime) return;
+            NextTradeTime = Envir.Time + Settings.TradeDelay;
+
             if (TradePartner != null)
             {
                 ReceiveChat("You are already trading.", ChatType.System);
