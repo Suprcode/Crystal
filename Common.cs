@@ -6521,8 +6521,15 @@ public class GameLanguage
                          Read = "Read",
                          Delete = "Delete",
                          BlockList = "Block List",
-                         EnterMailToName = "Please enter the name of the person you would like to mail.";
-                        
+                         EnterMailToName = "Please enter the name of the person you would like to mail.",
+                         AddFriend = "Add",
+                         RemoveFriend = "Remove",
+                         FriendMemo = "Memo",
+                         FriendMail = "Mail",
+                         FriendWhisper = "Whisper",
+                         FriendEnterAddName = "Please enter the name of the person you would like to Add.",
+                         FriendEnterBlockName = "Please enter the name of the person you would like to Block.";
+
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
@@ -6537,7 +6544,8 @@ public class GameLanguage
                          CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
                          CanNotDrop = "You cannot drop items on this map",
                          NewMail = "New mail has arrived.",
-                         CouldNotFindPlayer = "Could not find player {0}";
+                         CouldNotFindPlayer = "Could not find player {0}",
+                         BeenPoisoned = "You have been poisoned";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6718,7 +6726,15 @@ public class GameLanguage
         GameLanguage.Read = reader.ReadString("Language", "Read", GameLanguage.Read);
         GameLanguage.Delete = reader.ReadString("Language", "Delete", GameLanguage.Delete);
         GameLanguage.BlockList = reader.ReadString("Language", "BlockList", GameLanguage.BlockList);
-        GameLanguage.EnterMailToName = reader.ReadString("Language", "EnterMailToName", GameLanguage.EnterMailToName);    
+        GameLanguage.EnterMailToName = reader.ReadString("Language", "EnterMailToName", GameLanguage.EnterMailToName);
+        GameLanguage.BeenPoisoned = reader.ReadString("Language", "BeenPoisoned", GameLanguage.BeenPoisoned);
+        GameLanguage.AddFriend = reader.ReadString("Language", "AddFriend", GameLanguage.AddFriend);
+        GameLanguage.RemoveFriend = reader.ReadString("Language", "RemoveFriend", GameLanguage.RemoveFriend);
+        GameLanguage.FriendMemo = reader.ReadString("Language", "FriendMemo", GameLanguage.FriendMemo);
+        GameLanguage.FriendMail = reader.ReadString("Language", "FriendMail", GameLanguage.FriendMail);
+        GameLanguage.FriendWhisper = reader.ReadString("Language", "FriendWhisper", GameLanguage.FriendWhisper);
+        GameLanguage.FriendEnterAddName = reader.ReadString("Language", "FriendEnterAddName", GameLanguage.FriendEnterAddName);
+        GameLanguage.FriendEnterBlockName = reader.ReadString("Language", "FriendEnterBlockName", GameLanguage.FriendEnterBlockName);
     }
 
 
@@ -6876,6 +6892,14 @@ public class GameLanguage
         reader.Write("Language", "Delete", GameLanguage.Delete);
         reader.Write("Language", "BlockList", GameLanguage.BlockList);
         reader.Write("Language", "EnterMailToName", GameLanguage.EnterMailToName);
+        reader.Write("Language", "BeenPoisoned", GameLanguage.BeenPoisoned);
+        reader.Write("Language", "AddFriend", GameLanguage.AddFriend);
+        reader.Write("Language", "RemoveFriend", GameLanguage.RemoveFriend);
+        reader.Write("Language", "FriendMemo", GameLanguage.FriendMemo);
+        reader.Write("Language", "FriendMail", GameLanguage.FriendMail);
+        reader.Write("Language", "FriendWhisper", GameLanguage.FriendWhisper);
+        reader.Write("Language", "FriendEnterAddName", GameLanguage.FriendEnterAddName);
+        reader.Write("Language", "FriendEnterBlockName", GameLanguage.FriendEnterBlockName);
     }
 
 

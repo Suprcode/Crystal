@@ -144,12 +144,16 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(60, 241),
                 Parent = this,
-                Sound = SoundList.ButtonA
+                Sound = SoundList.ButtonA,
+                Hint = GameLanguage.AddFriend
             };
             AddButton.Click += (o, e) =>
             {
-                ;
-                string message = string.Format("Please enter the name of the person you would like to {0}.", _blockedTab ? "block" : "add");
+                string message = GameLanguage.FriendEnterAddName;
+                if (_blockedTab)
+                {
+                    message = GameLanguage.FriendEnterBlockName;
+                }
 
                 MirInputBox inputBox = new MirInputBox(message);
 
@@ -170,7 +174,8 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(88, 241),
                 Parent = this,
-                Sound = SoundList.ButtonA
+                Sound = SoundList.ButtonA,
+                Hint = GameLanguage.RemoveFriend,
             };
             RemoveButton.Click += (o, e) =>
             {
@@ -195,7 +200,9 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(116, 241),
                 Parent = this,
-                Sound = SoundList.ButtonA
+                Sound = SoundList.ButtonA,
+                Hint = GameLanguage.FriendMemo
+
             };
             MemoButton.Click += (o, e) =>
             {
@@ -213,7 +220,8 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(144, 241),
                 Parent = this,
-                Sound = SoundList.ButtonA
+                Sound = SoundList.ButtonA,
+                Hint = GameLanguage.FriendMail,
             };
             EmailButton.Click += (o, e) =>
             {
@@ -230,7 +238,8 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(172, 241),
                 Parent = this,
-                Sound = SoundList.ButtonA
+                Sound = SoundList.ButtonA,
+                Hint = GameLanguage.FriendWhisper
             };
             WhisperButton.Click += (o, e) =>
             {
