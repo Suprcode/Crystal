@@ -261,6 +261,8 @@ namespace Server
         public static List<long> Guild_ExperienceList = new List<long>();
         public static List<int> Guild_MembercapList = new List<int>();
         public static List<GuildBuffInfo> Guild_BuffList = new List<GuildBuffInfo>();
+        public static long GroupInviteDelay { get; internal set; } = 2000;
+        public static long TradeDelay { get; internal set; } = 2000;
 
         public static void LoadVersion()
         {
@@ -370,6 +372,8 @@ namespace Server
             ToadName = Reader.ReadString("Game", "ToadName", ToadName);
             SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);
             SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);
+            GroupInviteDelay = Reader.ReadInt64("Game", "GroupInviteDelay", GroupInviteDelay);
+            TradeDelay = Reader.ReadInt64("Game", "TradeDelay", TradeDelay);
 
             //Rested
             RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
@@ -588,6 +592,8 @@ namespace Server
             Reader.Write("Game", "ToadName", ToadName);
             Reader.Write("Game", "SnakeTotemName", SnakeTotemName);
             Reader.Write("Game", "SnakesName", SnakesName);
+            Reader.Write("Game", "GroupInviteDelay", GroupInviteDelay);
+            Reader.Write("Game", "TradeDelay", TradeDelay);
 
             Reader.Write("Rested", "Period", RestedPeriod);
             Reader.Write("Rested", "BuffLength", RestedBuffLength);
@@ -604,7 +610,7 @@ namespace Server
 
             Reader.Write("DropGold", "DropGold", DropGold);
             Reader.Write("DropGold", "MaxDropGold", MaxDropGold);
-
+            
             Reader.Write("Items", "MaxMagicResist", MaxMagicResist);
             Reader.Write("Items", "MagicResistWeight", MagicResistWeight);
             Reader.Write("Items", "MaxPoisonResist", MaxPoisonResist);
