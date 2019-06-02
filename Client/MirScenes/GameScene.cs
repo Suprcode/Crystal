@@ -5520,6 +5520,24 @@ namespace Client.MirScenes
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
 
+            string GradeString = "";
+            switch (HoverItem.Info.Grade)
+            {
+                case ItemGrade.None:                   
+                    break;
+                case ItemGrade.Common:
+                    GradeString = GameLanguage.ItemGradeCommon;
+                    break;
+                case ItemGrade.Rare:
+                    GradeString = GameLanguage.ItemGradeRare;
+                    break;
+                case ItemGrade.Legendary:
+                    GradeString = GameLanguage.ItemGradeLegendary;
+                    break;
+                case ItemGrade.Mythical:
+                    GradeString = GameLanguage.ItemGradeMythical;
+                    break;              
+            }
             MirLabel nameLabel = new MirLabel
             {
                 AutoSize = true,
@@ -5527,7 +5545,7 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Grade != ItemGrade.None ? HoverItem.Info.FriendlyName + "\n" + HoverItem.Info.Grade.ToString() : 
+                Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", HoverItem.Info.FriendlyName, "\n", GradeString) : 
                 (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName,
             };
 

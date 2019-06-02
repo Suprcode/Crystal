@@ -6570,8 +6570,12 @@ public class GameLanguage
                          ItemTypeQuest = "Quest",
                          ItemTypeAwakening = "Awakening",
                          ItemTypePets = "Pets",
-                         ItemTypeTransform = "Transform";
+                         ItemTypeTransform = "Transform",
 
+                         ItemGradeCommon = "Common",
+                         ItemGradeRare = "Rare",
+                         ItemGradeLegendary = "Legendary",
+                         ItemGradeMythical = "Mythical";
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
@@ -6824,6 +6828,11 @@ public class GameLanguage
         GameLanguage.ItemTypeAwakening = reader.ReadString("Language", "ItemTypeAwakening", GameLanguage.ItemTypeAwakening);
         GameLanguage.ItemTypePets = reader.ReadString("Language", "ItemTypePets", GameLanguage.ItemTypePets);
         GameLanguage.ItemTypeTransform = reader.ReadString("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
+
+        GameLanguage.ItemGradeCommon = reader.ReadString("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
+        GameLanguage.ItemGradeRare = reader.ReadString("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
+        GameLanguage.ItemGradeLegendary = reader.ReadString("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
+        GameLanguage.ItemGradeMythical = reader.ReadString("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
     }
 
 
@@ -7032,6 +7041,11 @@ public class GameLanguage
         reader.Write("Language", "ItemTypeAwakening", GameLanguage.ItemTypeAwakening);
         reader.Write("Language", "ItemTypePets", GameLanguage.ItemTypePets);
         reader.Write("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
+
+        reader.Write("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
+        reader.Write("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
+        reader.Write("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
+        reader.Write("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
     }
 
 
