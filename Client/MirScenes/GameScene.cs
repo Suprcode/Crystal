@@ -5586,7 +5586,121 @@ namespace Client.MirScenes
             String WedRingName = "";
             if (HoverItem.WeddingRing == -1)
             {
-                WedRingName = string.Format(GameLanguage.WedRingName, HoverItem.Info.Type.ToString(), "\n" , GameLanguage.Weight, HoverItem.Weight + text);
+                string InfoLanguageString = "";
+                switch (HoverItem.Info.Type)
+                {
+                    case ItemType.Nothing:
+                        break;
+                    case ItemType.Weapon:
+                        InfoLanguageString = GameLanguage.ItemTypeWeapon;
+                        break;
+                    case ItemType.Armour:
+                        InfoLanguageString = GameLanguage.ItemTypeArmour;
+                        break;
+                    case ItemType.Helmet:
+                        InfoLanguageString = GameLanguage.ItemTypeHelmet;
+                        break;
+                    case ItemType.Necklace:
+                        InfoLanguageString = GameLanguage.ItemTypeNecklace;
+                        break;
+                    case ItemType.Bracelet:
+                        InfoLanguageString = GameLanguage.ItemTypeBracelet;
+                        break;
+                    case ItemType.Ring:
+                        InfoLanguageString = GameLanguage.ItemTypeRing;
+                        break;
+                    case ItemType.Amulet:
+                        InfoLanguageString = GameLanguage.ItemTypeAmulet;
+                        break;
+                    case ItemType.Belt:
+                        InfoLanguageString = GameLanguage.ItemTypeBelt;
+                        break;
+                    case ItemType.Boots:
+                        InfoLanguageString = GameLanguage.ItemTypeBoots;
+                        break;
+                    case ItemType.Stone:
+                        InfoLanguageString = GameLanguage.ItemTypeStone;
+                        break;
+                    case ItemType.Torch:
+                        InfoLanguageString = GameLanguage.ItemTypeTorch;
+                        break;
+                    case ItemType.Potion:
+                        InfoLanguageString = GameLanguage.ItemTypePotion;
+                        break;
+                    case ItemType.Ore:
+                        InfoLanguageString = GameLanguage.ItemTypeOre;
+                        break;
+                    case ItemType.Meat:
+                        InfoLanguageString = GameLanguage.ItemTypeMeat;
+                        break;
+                    case ItemType.CraftingMaterial:
+                        InfoLanguageString = GameLanguage.ItemTypeCraftingMaterial;
+                        break;
+                    case ItemType.Scroll:
+                        InfoLanguageString = GameLanguage.ItemTypeScroll;
+                        break;
+                    case ItemType.Gem:
+                        InfoLanguageString = GameLanguage.ItemTypeGem;
+                        break;
+                    case ItemType.Mount:
+                        InfoLanguageString = GameLanguage.ItemTypeMount;
+                        break;
+                    case ItemType.Book:
+                        InfoLanguageString = GameLanguage.ItemTypeBook;
+                        break;
+                    case ItemType.Script:
+                        InfoLanguageString = GameLanguage.ItemTypeScript;
+                        break;
+                    case ItemType.Reins:
+                        InfoLanguageString = GameLanguage.ItemTypeReins;
+                        break;
+                    case ItemType.Bells:
+                        InfoLanguageString = GameLanguage.ItemTypeBells;
+                        break;
+                    case ItemType.Saddle:
+                        InfoLanguageString = GameLanguage.ItemTypeSaddle;
+                        break;
+                    case ItemType.Ribbon:
+                        InfoLanguageString = GameLanguage.ItemTypeRibbon;
+                        break;
+                    case ItemType.Mask:
+                        InfoLanguageString = GameLanguage.ItemTypeMask;
+                        break;
+                    case ItemType.Food:
+                        InfoLanguageString = GameLanguage.ItemTypeFood;
+                        break;
+                    case ItemType.Hook:
+                        InfoLanguageString = GameLanguage.ItemTypeHook;
+                        break;
+                    case ItemType.Float:
+                        InfoLanguageString = GameLanguage.ItemTypeFloat;
+                        break;
+                    case ItemType.Bait:
+                        InfoLanguageString = GameLanguage.ItemTypeBait;
+                        break;
+                    case ItemType.Finder:
+                        InfoLanguageString = GameLanguage.ItemTypeFinder;
+                        break;
+                    case ItemType.Reel:
+                        InfoLanguageString = GameLanguage.ItemTypeReel;
+                        break;
+                    case ItemType.Fish:
+                        InfoLanguageString = GameLanguage.ItemTypeFish;
+                        break;
+                    case ItemType.Quest:
+                        InfoLanguageString = GameLanguage.ItemTypeQuest;
+                        break;
+                    case ItemType.Awakening:
+                        InfoLanguageString = GameLanguage.ItemTypeAwakening;
+                        break;
+                    case ItemType.Pets:
+                        InfoLanguageString = GameLanguage.ItemTypePets;
+                        break;
+                    case ItemType.Transform:
+                        InfoLanguageString = GameLanguage.ItemTypeTransform;
+                        break;
+                }
+                WedRingName = string.Format(GameLanguage.WedRingName, InfoLanguageString, "\n" , GameLanguage.Weight, HoverItem.Weight + text);
             }
             else
             {
@@ -10255,7 +10369,7 @@ namespace Client.MirScenes
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
                 case BuffType.Rested:
-                    text = string.Format("Rested\nIncreases Exp Rate by {0}%\n", Values[0]);
+                    text = string.Format(GameLanguage.RestedBuff, "\n", Values[0], "\n");
                     break;
 
                 //stats
